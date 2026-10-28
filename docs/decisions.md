@@ -60,3 +60,19 @@ Files outside the Files block:
 - scripts/check.sh — bug fix: `node --test` with a bare directory arg fails with MODULE_NOT_FOUND on both Node 24 (v24.22.0) and Node 22 (verified on v22.21.0); changed to the `*.test.mjs` glob, which is correct on both. Required for the iteration gate to run this spike's tests.
 - docs/decisions.md — plan Architecture requires a decisions entry per spike.
 Supersedes: —
+
+### v0.1 Task 5 — R reference fixture pipeline (2026-10-28)
+
+Decision: go — R fixtures regenerate byte-identically under renv 1.3.1 (R
+4.5.2, epitools 0.5-10.1, jsonlite 2.0.0, all lockfile-pinned); pinning
+choice is "renv" over "Docker image". CI validates each fixture against
+fixtures/schema/fixture.schema.json and fails on any drift after
+regeneration (proven in run 40783827413).
+Evidence: docs/spikes/r-fixtures.md
+Files outside the Files block:
+- fixtures/.Rprofile — renv activation entry point (sources renv/activate.R) written by renv::init.
+- fixtures/renv/activate.R — renv bootstrap; pins renv itself to 1.3.1, written by renv::init.
+- fixtures/renv/settings.json — renv project settings written by renv::init.
+- fixtures/renv/.gitignore — excludes the project library (renv/library/) from git, written by renv::init.
+- docs/decisions.md — plan Architecture requires a decisions entry per spike.
+Supersedes: —
