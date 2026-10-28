@@ -91,6 +91,16 @@ function Write-WindowDiagnostics {
             foreach ($t in $texts) {
                 $name = $t.Current.Name
                 if ($name) { Write-Host ("    {0}: {1}" -f $t.Current.ControlType.ProgrammaticName, $name) }
+                if ($t.Current.ControlType.ProgrammaticName -match 'Document|Edit') {
+                    try {
+                        $tp = $t.GetCurrentPattern([System.Windows.Automation.TextPattern]::Pattern)
+                        $txt = $tp.DocumentRange.GetText(4000)
+                        if ($txt -and $txt.Trim()) {
+                            Write-Host "    --- control text ---"
+                            $txt | Write-Host
+                        }
+                    } catch {}
+                }
             }
         }
     } catch { Write-Host "run-pgm: UIA dump failed: $_" }
@@ -110,6 +120,13 @@ function Write-WindowDiagnostics {
             Write-Host "run-pgm: --- $($_.FullName) ---"
             Get-Content $_.FullName | ForEach-Object { $_ -replace '<[^>]+>', ' ' -replace '\s+', ' ' } |
                 Where-Object { $_.Trim() } | Select-Object -Last 40 | Write-Host
+        }
+    Get-ChildItem -Path $ExeDir -Recurse -File -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -in @('IHistory.html','IResults.html') -or $_.Extension -eq '.txt' } |
+        ForEach-Object {
+            Write-Host "run-pgm: --- $($_.FullName) ---"
+            Get-Content $_.FullName | ForEach-Object { $_ -replace '<[^>]+>', ' ' -replace '\s+', ' ' } |
+                Where-Object { $_.Trim() } | Select-Object -Last 20 | Write-Host
         }
 }
 
