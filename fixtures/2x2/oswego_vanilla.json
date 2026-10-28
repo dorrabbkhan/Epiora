@@ -1,0 +1,63 @@
+{
+  "id": "oswego_vanilla",
+  "procedure": "2x2",
+  "inputs": {
+    "exposure": "ate_vanilla_ice_cream",
+    "outcome": "ill",
+    "exposed_ill": 43,
+    "exposed_well": 11,
+    "unexposed_ill": 3,
+    "unexposed_well": 18
+  },
+  "expected": {
+    "attack_rate": {
+      "exposed": 0.79629629629629628,
+      "unexposed": 0.14285714285714285
+    },
+    "risk_ratio": {
+      "estimate": 5.5740740740740745,
+      "ci_95_wald": {
+        "lower": 1.938339835538607,
+        "upper": 16.029336658930724
+      },
+      "ci_95_small_sample": {
+        "lower": 1.5229812993517629,
+        "upper": 12.594478803445574
+      }
+    },
+    "odds_ratio": {
+      "estimate": 23.454545454545453,
+      "ci_95_wald": {
+        "lower": 5.8411907167196002,
+        "upper": 94.178692180809691
+      },
+      "ci_95_midp_exact": {
+        "lower": 5.9279628483523865,
+        "upper": 109.4384017485941
+      },
+      "ci_95_fisher_exact": {
+        "lower": 5.2160635028517648,
+        "upper": 138.86503356049587
+      }
+    },
+    "chi_square_uncorrected": {
+      "statistic": 27.222549439565935,
+      "df": 1,
+      "p_value": 1.8133141427979893e-07
+    },
+    "fisher_exact_test": {
+      "p_value": 2.5974506918372895e-07,
+      "odds_ratio_estimate": 22.156060936201403,
+      "ci_95": {
+        "lower": 5.216063502851771,
+        "upper": 138.86503356049562
+      }
+    }
+  },
+  "tolerance": 1.0000000000000001e-09,
+  "source": {
+    "package": "epitools",
+    "version": "0.5-10.1",
+    "r_version": "R version 4.5.2 (2025-10-31)"
+  }
+}
