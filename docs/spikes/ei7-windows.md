@@ -1,6 +1,6 @@
 # Epi Info 7 on Windows CI — can it run a .pgm headless as a stats reference?
 
-**Status:** go-with-changes
+**Status:** go
 
 ## Question
 
@@ -15,10 +15,11 @@ ILL`, `ROUTEOUT` to HTML) unattended, ending in a CI artifact?
 
 Workflow `.github/workflows/spike-ei7.yml` (windows-latest): checks out
 `Epi-Info/Epi-Info-Community-Edition` at the D2 commit, `nuget restore`,
-`msbuild "Epi Info 7.sln" /p:Configuration=Release`, downloads and extracts
-the official signed release ZIP `7.2.7.0` (the "archived installer" — CDC no
-longer hosts downloads, but the GitHub release of 2025-03-09 remains), then
-runs `spikes/ei7-windows/run-pgm.ps1`.
+`msbuild "Epi Info 7.sln" /p:Configuration=Release`, downloads the official
+signed release ZIP `7.2.7.0` (the "archived installer" — CDC no longer hosts
+downloads, but the GitHub release of 2025-03-09 remains), verifies its
+SHA256 against a pinned value and fails the job on mismatch, extracts it,
+then runs `spikes/ei7-windows/run-pgm.ps1`.
 
 `run-pgm.ps1` renders `oswego-tables.pgm` with absolute paths into a `*.pgm7`
 file (Analysis.exe's command-line scan only accepts arguments containing
@@ -26,8 +27,13 @@ file (Analysis.exe's command-line scan only accepts arguments containing
 command closes the app (the only exit route — `Application.Run` otherwise
 idles forever). On timeout it dumps the window's UI-Automation tree plus
 `Configuration\`, `Output\` and `Logs\` contents before killing the process.
-The check asserts `ei7-output/*.html` contains `VANILLA`; the folder is
-uploaded as a workflow artifact.
+Each route reads its own `Sample.mdb`: the official binary uses the copy
+inside the release ZIP, the source-built binary uses the copy in its build
+output (`Projects\Sample\Sample.mdb`, copied there by MSBuild from the
+pinned checkout's `Epi.Core\Projects\Sample\`). The check asserts
+`ei7-output/oswego-tables-built.html` (source-built route) contains
+`VANILLA`; the folder, including the official route's output, is uploaded
+as a workflow artifact.
 
 ## Environment
 
@@ -38,6 +44,10 @@ uploaded as a workflow artifact.
 - Official binary: GitHub release `7.2.7.0`,
   `2025.3.9.Epi.Info.7.2.7.0.signed.dual.keys.en-US.es-ES.fr-FR.pt-BR.zip`
   (85 MB, extracted and run in place — no installation or elevation).
+  SHA256 pinned in the workflow:
+  `8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609`
+  (`sha256sum` of the asset downloaded 2026-10-28 with
+  `curl -sL -o ei7-rel.zip <release URL>`).
 - No RNG used.
 
 ## Measurements
@@ -122,16 +132,18 @@ direct `.mdb`/`.db` table READs work identically on both binaries.
 
 ## Decision
 
-**go-with-changes: Epi Info 7 is usable as a CI reference on `windows-latest`
-— both from a Release build of `Epi Info 7.sln` and from the official
-7.2.7.0 release ZIP.** `Analysis.exe <file>.pgm7` runs Classic Analysis
-programs headless and exits cleanly on `QUIT`; `ROUTEOUT … REPLACE` yields
-HTML artifacts. **Change required:** reference `.pgm`s must `READ` data
-tables directly (`'file.mdb':table`) — no binary can decrypt the shipped
-`.prj` connection strings, so `.prj` view READs are unavailable.
+**Epi Info 7 usable as a CI reference** on `windows-latest` — both from a
+Release build of `Epi Info 7.sln` (self-contained route reading the source
+checkout's own `Sample.mdb`) and from the official 7.2.7.0 release ZIP.
+`Analysis.exe <file>.pgm7` runs Classic Analysis programs headless and
+exits cleanly on `QUIT`; `ROUTEOUT … REPLACE` yields HTML artifacts.
 
 ## Consequences
 
+- Constraint on the decision: reference `.pgm`s must `READ` `.mdb` data
+  tables directly (`'file.mdb':table`). No binary — source-built or
+  official — can decrypt the shipped `.prj` connection strings, so `.prj`
+  view READs are unavailable.
 - For the §12.2 reference corpus: author `.pgm`s that `READ` `.mdb` data
   tables (table names via `DISPLAY TABLES`; e.g. the Oswego data is table
   `Oswego12`, not `Oswego`). `.prj` view READs are unusable from CI binaries
@@ -152,8 +164,18 @@ tables directly (`'file.mdb':table`) — no binary can decrypt the shipped
 ## Licences
 
 - `Epi-Info/Epi-Info-Community-Edition` @ `4cd353c` (source + bundled
-  third-party DLLs + Sample data + official 7.2.7.0 release ZIP): Apache-2.0
-  per D2; "Epi Info" trademark remains CDC's.
+  third-party DLLs + Sample data): Apache-2.0 per D2; "Epi Info" trademark
+  remains CDC's.
+- Official 7.2.7.0 release ZIP
+  (`2025.3.9.Epi.Info.7.2.7.0.signed.dual.keys.en-US.es-ES.fr-FR.pt-BR.zip`):
+  **release ZIP licence: not stated in the archive; not covered by D2; used
+  only as a downloaded CI tool, never redistributed.** D2 licensed the
+  source at `4cd353c`, not CDC's signed release binaries. The archive (416
+  files) contains no licence, EULA, notice, readme, copying, terms or
+  attribution file:
+  `unzip -Z1 ei7-rel.zip | grep -iE "licen[cs]e|eula|notice|copying|legal|terms|readme|third.?party|attribution|copyright"`
+  returned no matches (run locally 2026-10-28 on the checksum-pinned
+  archive above).
 - `com.calitha.goldparser` (linked inside the interpreter): licence still
   undetermined (D2 open item — matters only if its code is reused).
 - GitHub Actions used: `actions/checkout@v4`, `microsoft/setup-msbuild@v2`,

@@ -3,7 +3,8 @@ name: spike-ei7-windows
 # v0.1 Task 3 spike: can Epi Info 7 be built and run headless on a Windows CI
 # runner to produce reference output for the compatibility interpreter?
 # Check (plan): build "Epi Info 7.sln" with MSBuild (Release), run
-# run-pgm.ps1, then assert ei7-output/*.html exists and contains "VANILLA".
+# run-pgm.ps1, then assert ei7-output/oswego-tables-built.html (source-built
+# route) exists and contains "VANILLA".
 
 on:
   pull_request:
@@ -46,6 +47,13 @@ jobs:
         run: |
           $url = "https://github.com/Epi-Info/Epi-Info-Community-Edition/releases/download/7.2.7.0/2025.3.9.Epi.Info.7.2.7.0.signed.dual.keys.en-US.es-ES.fr-FR.pt-BR.zip"
           Invoke-WebRequest -Uri $url -OutFile ei7-rel.zip
+          # Pinned SHA256 of the release asset (see docs/spikes/ei7-windows.md).
+          $pinned = "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609"
+          $actual = (Get-FileHash ei7-rel.zip -Algorithm SHA256).Hash
+          if ($actual -ne $pinned) {
+            Write-Error "FAIL: ei7-rel.zip SHA256 $actual does not match pinned $pinned"; exit 1
+          }
+          Write-Output "ei7-rel.zip SHA256 verified: $actual"
           Expand-Archive ei7-rel.zip -DestinationPath ei7-rel
           Get-ChildItem ei7-rel -Recurse -Filter Analysis.exe | ForEach-Object { Write-Output "Analysis.exe: $($_.FullName)" }
           $cfg = Get-ChildItem ei7-rel -Recurse -Filter EpiInfo.Config.xml | Select-Object -First 1
@@ -59,15 +67,15 @@ jobs:
           if ($rel) { $env:EI7_ANALYSIS_EXE = $rel.FullName; Write-Output "official Analysis.exe: $($rel.FullName)" }
           ./spikes/ei7-windows/run-pgm.ps1 -Ei7Dir ei7 -OutputDir ei7-output
 
-      - name: Assert ei7-output contains VANILLA
+      - name: Assert source-built route produced VANILLA output
         shell: pwsh
         run: |
-          $html = Get-ChildItem ei7-output -Filter *.html -Recurse -File | Select-Object -First 1
-          if (-not $html) { Write-Error "FAIL: no ei7-output/*.html produced"; exit 1 }
-          if (-not (Select-String -Path $html.FullName -Pattern 'VANILLA' -Quiet)) {
-            Write-Error "FAIL: VANILLA not found in $($html.FullName)"; exit 1
+          $html = "ei7-output/oswego-tables-built.html"
+          if (-not (Test-Path $html)) { Write-Error "FAIL: $html was not produced"; exit 1 }
+          if (-not (Select-String -Path $html -Pattern 'VANILLA' -Quiet)) {
+            Write-Error "FAIL: VANILLA not found in $html"; exit 1
           }
-          Write-Output "PASS: $($html.FullName) contains VANILLA"
+          Write-Output "PASS: $html contains VANILLA"
 
       - name: Upload ei7-output artifact
         if: always()
