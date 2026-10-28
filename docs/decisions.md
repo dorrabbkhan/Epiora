@@ -19,4 +19,5 @@ including `Sample.mdb`) under Apache §4 notice obligations; the "Epi Info"
 trademark remains CDC's and may be referenced descriptively only. Nested
 third-party assets (Modern UI icons, CC BY-ND 3.0) are excluded from reuse.
 Evidence: docs/spikes/d2-epi-info-licence.md
+Owner sign-off: Dorrabb Khan, 2026-10-28 — accepted Apache-2.0 with notice (PR #2, Option 1).
 Supersedes: —
