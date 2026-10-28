@@ -1,14 +1,14 @@
 *** oswego-tables.pgm — Epi Info 7 Classic Analysis program (Epiora v0.1 Task 3 spike)
-*** READ the Oswego table in the Sample.mdb shipped in the Epi Info 7 repo
-*** (a .prj read would need FipsCrypto.dll configured as the config's
-*** TextEncryptionModule — the shipped .prj connection strings are encrypted
-*** with it; a direct .mdb read does not go through Project.Construct), run a
+*** READ the Oswego view in the Sample project shipped in the Epi Info 7
+*** repo (requires FipsCrypto.dll configured as the config's
+*** TextEncryptionModule — the shipped .prj connection strings are
+*** encrypted with it; run-pgm.ps1 seeds and patches the config), run a
 *** VANILLA x ILL 2x2 TABLES command, route output to HTML, then QUIT so the
 *** Analysis.exe process exits on its own (required for headless CI use).
-*** run-pgm.ps1 substitutes @SAMPLE_MDB@ and @OUTPUT_HTML@ with absolute
+*** run-pgm.ps1 substitutes @SAMPLE_PRJ@ and @OUTPUT_HTML@ with absolute
 *** paths and saves the result as *.pgm7 — Analysis.exe only picks up
 *** command-line arguments whose file name contains ".pgm7".
-READ '@SAMPLE_MDB@':Oswego
+READ {@SAMPLE_PRJ@}:Oswego
 ROUTEOUT "@OUTPUT_HTML@" REPLACE
 TABLES VANILLA ILL
 CLOSEOUT

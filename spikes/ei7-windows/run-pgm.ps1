@@ -44,32 +44,81 @@ if (-not $analysis -or -not (Test-Path $analysis)) {
 $exeDir = Split-Path $analysis -Parent
 Write-Host "run-pgm: Analysis.exe=$analysis"
 
-# --- 2. Locate the Oswego sample database ------------------------------------
+# --- 2. Locate the Oswego sample project -------------------------------------
+$samplePrj = Join-Path $exeDir "Projects\Sample\Sample.prj"
 $sampleMdb = Join-Path $exeDir "Projects\Sample\Sample.mdb"
+if (-not (Test-Path $samplePrj)) {
+    $samplePrj = Get-ChildItem -Path $ei7 -Recurse -Filter "Sample.prj" -File -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -match 'Sample' } |
+        Select-Object -First 1 -ExpandProperty FullName
+}
 if (-not (Test-Path $sampleMdb)) {
     $sampleMdb = Get-ChildItem -Path $ei7 -Recurse -Filter "Sample.mdb" -File -ErrorAction SilentlyContinue |
         Where-Object { $_.FullName -match 'Sample' } |
         Select-Object -First 1 -ExpandProperty FullName
 }
-if (-not $sampleMdb -or -not (Test-Path $sampleMdb)) {
-    Write-Error "run-pgm: Sample.mdb (Oswego sample database) not found"
+if (-not $samplePrj -or -not $sampleMdb) {
+    Write-Error "run-pgm: Sample.prj / Sample.mdb (Oswego sample project) not found"
     exit 1
 }
+Write-Host "run-pgm: Sample.prj=$samplePrj"
 Write-Host "run-pgm: Sample.mdb=$sampleMdb"
 
-# --- 3. Render the .pgm7 -------------------------------------------------------
-New-Item -ItemType Directory -Force -Path $outDir | Out-Null
-$outHtml = Join-Path $outDir "oswego-tables.html"
-$pgmText = Get-Content (Join-Path $PSScriptRoot "oswego-tables.pgm") -Raw
-$pgmText = $pgmText.Replace("@SAMPLE_MDB@", ($sampleMdb -replace '\\', '/'))
-$pgmText = $pgmText.Replace("@OUTPUT_HTML@", ($outHtml -replace '\\', '/'))
+# --- 3. Seed and patch EpiInfo.Config.xml -------------------------------------
+# The shipped .prj files' connection strings are FipsCrypto-encrypted; the
+# default generated config leaves TextEncryptionModule/FileName empty, which
+# makes Epi.Configuration.Decrypt use the built-in key and fail. An installed
+# copy names the module, so do the same: ensure the config exists (launching
+# Analysis.exe creates it), then point it at FipsCrypto.dll next to the exe.
+$configDir  = Join-Path $exeDir "Configuration"
+$configFile = Join-Path $configDir "EpiInfo.Config.xml"
+if (-not (Test-Path $configFile)) {
+    Write-Host "run-pgm: seeding $configFile via a brief Analysis.exe launch"
+    $seed = Start-Process -FilePath $analysis -WorkingDirectory $exeDir -PassThru
+    $deadline = (Get-Date).AddSeconds(60)
+    $stable = 0
+    while ((Get-Date) -lt $deadline -and $stable -lt 3) {
+        Start-Sleep -Seconds 2
+        if (Test-Path $configFile) { $stable++ }
+    }
+    if (-not $seed.HasExited) { $seed.Kill() }
+}
+if (Test-Path $configFile) {
+    $cfg = [xml](Get-Content $configFile -Raw)
+    $tem = $cfg.SelectSingleNode("//*[local-name()='TextEncryptionModule']")
+    $fips = Join-Path $exeDir "FipsCrypto.dll"
+    Write-Host "run-pgm: FipsCrypto.dll present: $(Test-Path $fips)"
+    if ($tem -and (Test-Path $fips)) {
+        $fn = $tem.SelectSingleNode("*[local-name()='FileName']")
+        if (-not $fn) { $fn = $cfg.CreateElement("FileName"); [void]$tem.AppendChild($fn) }
+        Write-Host "run-pgm: TextEncryptionModule/FileName was '$($fn.InnerText)' -> '$fips'"
+        $fn.InnerText = $fips
+        $cfg.Save($configFile)
+    } else {
+        Write-Host "run-pgm: no TextEncryptionModule node or no FipsCrypto.dll — .prj reads will fail"
+    }
+} else {
+    Write-Host "run-pgm: $configFile was not created — .prj reads will fail"
+}
 
+# --- 4. Render the .pgm7 -------------------------------------------------------
+New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 $workDir = Join-Path $outDir "work"
 New-Item -ItemType Directory -Force -Path $workDir | Out-Null
-$pgm7 = Join-Path $workDir "oswego-tables.pgm7"
-Set-Content -Path $pgm7 -Value $pgmText -Encoding ASCII
-Write-Host "run-pgm: rendered $pgm7"
-Get-Content $pgm7 | Write-Host
+$outHtml = Join-Path $outDir "oswego-tables.html"
+$pgmBase = Get-Content (Join-Path $PSScriptRoot "oswego-tables.pgm") -Raw
+
+function New-Pgm7([string]$text, [string]$prj, [string]$html, [string]$name) {
+    $t = $text.Replace("@SAMPLE_PRJ@", ($prj -replace '\\', '/'))
+    $t = $t.Replace("@OUTPUT_HTML@", ($html -replace '\\', '/'))
+    $p = Join-Path $workDir $name
+    Set-Content -Path $p -Value $t -Encoding ASCII
+    Write-Host "run-pgm: rendered $p"
+    Get-Content $p | Write-Host
+    return $p
+}
+
+$pgm7 = New-Pgm7 $pgmBase $samplePrj $outHtml "oswego-tables.pgm7"
 
 # --- 4. Run Analysis.exe and wait for QUIT ------------------------------------
 function Write-WindowDiagnostics {
@@ -130,27 +179,46 @@ function Write-WindowDiagnostics {
         }
 }
 
-$proc = Start-Process -FilePath $analysis -ArgumentList "`"$pgm7`"" `
-    -WorkingDirectory $exeDir -PassThru
-Write-Host "run-pgm: started PID $($proc.Id), waiting up to ${TimeoutSeconds}s"
-
-if (-not $proc.WaitForExit($TimeoutSeconds * 1000)) {
-    $proc.Refresh()
-    Write-Host "run-pgm: timeout — MainWindowTitle='$($proc.MainWindowTitle)' Responding=$($proc.Responding)"
-    Write-WindowDiagnostics -ProcessId $proc.Id -ExeDir $exeDir
-    $proc.Kill()
-    Write-Error "run-pgm: Analysis.exe did not exit within ${TimeoutSeconds}s (headless run failed)"
-    exit 1
+# --- 5. Run Analysis.exe and wait for QUIT ------------------------------------
+function Invoke-Analysis {
+    param([string]$Pgm7, [string]$ExpectedHtml)
+    $proc = Start-Process -FilePath $analysis -ArgumentList "`"$Pgm7`"" `
+        -WorkingDirectory $exeDir -PassThru
+    Write-Host "run-pgm: started PID $($proc.Id), waiting up to ${TimeoutSeconds}s"
+    if (-not $proc.WaitForExit($TimeoutSeconds * 1000)) {
+        $proc.Refresh()
+        Write-Host "run-pgm: timeout — MainWindowTitle='$($proc.MainWindowTitle)' Responding=$($proc.Responding)"
+        Write-WindowDiagnostics -ProcessId $proc.Id -ExeDir $exeDir
+        $proc.Kill()
+        return $false
+    }
+    Write-Host "run-pgm: Analysis.exe exited with code $($proc.ExitCode)"
+    $deadline = (Get-Date).AddSeconds(15)
+    while (-not (Test-Path $ExpectedHtml) -and (Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 500
+    }
+    return (Test-Path $ExpectedHtml)
 }
-Write-Host "run-pgm: Analysis.exe exited with code $($proc.ExitCode)"
 
-# --- 5. Verify output ----------------------------------------------------------
-$deadline = (Get-Date).AddSeconds(15)
-while (-not (Test-Path $outHtml) -and (Get-Date) -lt $deadline) {
-    Start-Sleep -Milliseconds 500
-}
-if (-not (Test-Path $outHtml)) {
-    Write-Error "run-pgm: no output at $outHtml — ROUTEOUT did not produce html"
+$ok = Invoke-Analysis -Pgm7 $pgm7 -ExpectedHtml $outHtml
+if (-not $ok) {
+    # Fallback diagnostic attempt: read Sample.mdb directly (no .prj crypto)
+    # and LIST all fields — the listing reveals the physical column names so
+    # the TABLES line can be fixed. Derived from the committed .pgm by string
+    # replacement only; recorded in the spike report.
+    Write-Host "run-pgm: primary attempt produced no output; trying mdb LIST fallback"
+    $fbHtml = Join-Path $outDir "oswego-tables-list.html"
+    $fbText = $pgmBase `
+        -replace [regex]::Escape("READ {@SAMPLE_PRJ@}:Oswego"), "READ '@SAMPLE_MDB@':Oswego" `
+        -replace "(?m)^TABLES VANILLA ILL.*$", "LIST *"
+    $fbText = $fbText.Replace("@SAMPLE_MDB@", ($sampleMdb -replace '\\', '/'))
+    $fb7 = New-Pgm7 $fbText $samplePrj $fbHtml "oswego-tables-list.pgm7"
+    $ok = Invoke-Analysis -Pgm7 $fb7 -ExpectedHtml $fbHtml
+    if (-not $ok) {
+        Write-Error "run-pgm: neither the .prj READ nor the .mdb LIST produced output — headless run failed"
+        exit 1
+    }
+    Write-Host "run-pgm: fallback produced $fbHtml (LIST output; TABLES VANILLA ILL still unproven)"
     exit 1
 }
 Write-Host "run-pgm: OK — $outHtml ($((Get-Item $outHtml).Length) bytes)"
