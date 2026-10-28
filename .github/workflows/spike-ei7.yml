@@ -1,0 +1,86 @@
+name: spike-ei7-windows
+
+# v0.1 Task 3 spike: can Epi Info 7 be built and run headless on a Windows CI
+# runner to produce reference output for the compatibility interpreter?
+# Check (plan): build "Epi Info 7.sln" with MSBuild (Release), run
+# run-pgm.ps1, then assert ei7-output/oswego-tables-built.html (source-built
+# route) exists and contains "VANILLA".
+
+on:
+  pull_request:
+    paths:
+      - 'spikes/ei7-windows/**'
+      - '.github/workflows/spike-ei7.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'spikes/ei7-windows/**'
+      - '.github/workflows/spike-ei7.yml'
+  workflow_dispatch:
+
+jobs:
+  ei7-windows:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out Epi Info 7 source (pinned to D2 commit)
+        uses: actions/checkout@v4
+        with:
+          repository: Epi-Info/Epi-Info-Community-Edition
+          ref: 4cd353c62c40b78d9d1f013b0f5a2bb685a5fca6
+          path: ei7
+
+      - uses: microsoft/setup-msbuild@v2
+
+      - uses: nuget/setup-nuget@v2
+
+      - name: NuGet restore
+        run: nuget restore "ei7/Epi Info 7.sln"
+
+      - name: Build Epi Info 7.sln (Release)
+        run: msbuild "ei7/Epi Info 7.sln" /p:Configuration=Release /p:Platform="Mixed Platforms" /m /v:m
+
+      - name: Download official Epi Info 7.2.7.0 ZIP (archived installer)
+        shell: pwsh
+        run: |
+          $url = "https://github.com/Epi-Info/Epi-Info-Community-Edition/releases/download/7.2.7.0/2025.3.9.Epi.Info.7.2.7.0.signed.dual.keys.en-US.es-ES.fr-FR.pt-BR.zip"
+          Invoke-WebRequest -Uri $url -OutFile ei7-rel.zip
+          # Pinned SHA256 of the release asset (see docs/spikes/ei7-windows.md).
+          $pinned = "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609"
+          $actual = (Get-FileHash ei7-rel.zip -Algorithm SHA256).Hash
+          if ($actual -ne $pinned) {
+            Write-Error "FAIL: ei7-rel.zip SHA256 $actual does not match pinned $pinned"; exit 1
+          }
+          Write-Output "ei7-rel.zip SHA256 verified: $actual"
+          Expand-Archive ei7-rel.zip -DestinationPath ei7-rel
+          Get-ChildItem ei7-rel -Recurse -Filter Analysis.exe | ForEach-Object { Write-Output "Analysis.exe: $($_.FullName)" }
+          $cfg = Get-ChildItem ei7-rel -Recurse -Filter EpiInfo.Config.xml | Select-Object -First 1
+          if ($cfg) { Select-String -Path $cfg.FullName -Pattern "EncryptionModule|FileName" | ForEach-Object { $_.Line.Trim() } }
+          else { Write-Output "no EpiInfo.Config.xml in release zip" }
+
+      - name: Run Oswego .pgm through Analysis.exe
+        shell: pwsh
+        run: |
+          $rel = Get-ChildItem ei7-rel -Recurse -Filter Analysis.exe -File | Select-Object -First 1
+          if ($rel) { $env:EI7_ANALYSIS_EXE = $rel.FullName; Write-Output "official Analysis.exe: $($rel.FullName)" }
+          ./spikes/ei7-windows/run-pgm.ps1 -Ei7Dir ei7 -OutputDir ei7-output
+
+      - name: Assert source-built route produced VANILLA output
+        shell: pwsh
+        run: |
+          $html = "ei7-output/oswego-tables-built.html"
+          if (-not (Test-Path $html)) { Write-Error "FAIL: $html was not produced"; exit 1 }
+          if (-not (Select-String -Path $html -Pattern 'VANILLA' -Quiet)) {
+            Write-Error "FAIL: VANILLA not found in $html"; exit 1
+          }
+          Write-Output "PASS: $html contains VANILLA"
+
+      - name: Upload ei7-output artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ei7-output
+          path: ei7-output/
+          if-no-files-found: warn
