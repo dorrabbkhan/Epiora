@@ -1,0 +1,64 @@
+name: spike-ei7-windows
+
+# v0.1 Task 3 spike: can Epi Info 7 be built and run headless on a Windows CI
+# runner to produce reference output for the compatibility interpreter?
+# Check (plan): build "Epi Info 7.sln" with MSBuild (Release), run
+# run-pgm.ps1, then assert ei7-output/*.html exists and contains "VANILLA".
+
+on:
+  pull_request:
+    paths:
+      - 'spikes/ei7-windows/**'
+      - '.github/workflows/spike-ei7.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'spikes/ei7-windows/**'
+      - '.github/workflows/spike-ei7.yml'
+  workflow_dispatch:
+
+jobs:
+  ei7-windows:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out Epi Info 7 source (pinned to D2 commit)
+        uses: actions/checkout@v4
+        with:
+          repository: Epi-Info/Epi-Info-Community-Edition
+          ref: 4cd353c62c40b78d9d1f013b0f5a2bb685a5fca6
+          path: ei7
+
+      - uses: microsoft/setup-msbuild@v2
+
+      - uses: nuget/setup-nuget@v2
+
+      - name: NuGet restore
+        run: nuget restore "ei7/Epi Info 7.sln"
+
+      - name: Build Epi Info 7.sln (Release)
+        run: msbuild "ei7/Epi Info 7.sln" /p:Configuration=Release /p:Platform="Mixed Platforms" /m /v:m
+
+      - name: Run Oswego .pgm through Analysis.exe
+        shell: pwsh
+        run: ./spikes/ei7-windows/run-pgm.ps1 -Ei7Dir ei7 -OutputDir ei7-output
+
+      - name: Assert ei7-output contains VANILLA
+        shell: pwsh
+        run: |
+          $html = Get-ChildItem ei7-output -Filter *.html -Recurse -File | Select-Object -First 1
+          if (-not $html) { Write-Error "FAIL: no ei7-output/*.html produced"; exit 1 }
+          if (-not (Select-String -Path $html.FullName -Pattern 'VANILLA' -Quiet)) {
+            Write-Error "FAIL: VANILLA not found in $($html.FullName)"; exit 1
+          }
+          Write-Output "PASS: $($html.FullName) contains VANILLA"
+
+      - name: Upload ei7-output artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ei7-output
+          path: ei7-output/
+          if-no-files-found: warn
