@@ -88,14 +88,26 @@ if (Test-Path $configFile) {
     $tem = $cfg.SelectSingleNode("//*[local-name()='TextEncryptionModule']")
     $fips = Join-Path $exeDir "FipsCrypto.dll"
     Write-Host "run-pgm: FipsCrypto.dll present: $(Test-Path $fips)"
-    if ($tem -and (Test-Path $fips)) {
+    if (Test-Path $fips) {
+        if (-not $tem) {
+            # An empty typed table serializes to no element; create the row so
+            # config.TextEncryptionModule[0].FileName resolves.
+            $tem = $cfg.CreateElement("TextEncryptionModule")
+            foreach ($n in "DisplayName", "Type", "FileName") {
+                [void]$tem.AppendChild($cfg.CreateElement($n))
+            }
+            $tem.DisplayName = "FIPS cryptography"
+            $tem.Type = "FipsCrypto"
+            [void]$cfg.DocumentElement.AppendChild($tem)
+            Write-Host "run-pgm: created TextEncryptionModule row (config had none)"
+        }
         $fn = $tem.SelectSingleNode("*[local-name()='FileName']")
         if (-not $fn) { $fn = $cfg.CreateElement("FileName"); [void]$tem.AppendChild($fn) }
         Write-Host "run-pgm: TextEncryptionModule/FileName was '$($fn.InnerText)' -> '$fips'"
         $fn.InnerText = $fips
         $cfg.Save($configFile)
     } else {
-        Write-Host "run-pgm: no TextEncryptionModule node or no FipsCrypto.dll — .prj reads will fail"
+        Write-Host "run-pgm: no FipsCrypto.dll — .prj reads will fail"
     }
 } else {
     Write-Host "run-pgm: $configFile was not created — .prj reads will fail"
@@ -203,14 +215,14 @@ function Invoke-Analysis {
 $ok = Invoke-Analysis -Pgm7 $pgm7 -ExpectedHtml $outHtml
 if (-not $ok) {
     # Fallback diagnostic attempt: read Sample.mdb directly (no .prj crypto)
-    # and LIST all fields — the listing reveals the physical column names so
-    # the TABLES line can be fixed. Derived from the committed .pgm by string
+    # and DISPLAY TABLES — the listing reveals the real table names so the
+    # READ line can be fixed. Derived from the committed .pgm by string
     # replacement only; recorded in the spike report.
-    Write-Host "run-pgm: primary attempt produced no output; trying mdb LIST fallback"
+    Write-Host "run-pgm: primary attempt produced no output; trying mdb DISPLAY TABLES fallback"
     $fbHtml = Join-Path $outDir "oswego-tables-list.html"
     $fbText = $pgmBase `
         -replace [regex]::Escape("READ {@SAMPLE_PRJ@}:Oswego"), "READ '@SAMPLE_MDB@':Oswego" `
-        -replace "(?m)^TABLES VANILLA ILL.*$", "LIST *"
+        -replace "(?m)^TABLES VANILLA ILL.*$", "DISPLAY TABLES"
     $fbText = $fbText.Replace("@SAMPLE_MDB@", ($sampleMdb -replace '\\', '/'))
     $fb7 = New-Pgm7 $fbText $samplePrj $fbHtml "oswego-tables-list.pgm7"
     $ok = Invoke-Analysis -Pgm7 $fb7 -ExpectedHtml $fbHtml
