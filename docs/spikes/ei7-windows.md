@@ -130,6 +130,30 @@ neither the repo nor the release ZIP (likely bound to CDC's install-time
 config). `.prj` view READs are therefore off the table for CI reference use;
 direct `.mdb`/`.db` table READs work identically on both binaries.
 
+### Iteration 9 — run [40753151711](https://github.com/dorrabbkhan/Epiora/actions/runs/40753151711) — PASS (review fixes)
+
+- `ei7-rel.zip SHA256 verified:
+  8440A628A28FD1C1993EBC8211FE0104FDB2572AE8BCB3427E07BACEB08DF609` — the
+  workflow now pins the release ZIP's SHA256 and fails on mismatch; **this
+  is the first CI run that verified the pinned checksum**.
+- Each route read its own `Sample.mdb` (job log):
+  `official route … ei7-rel\Epi Info 7\Projects\Sample\Sample.mdb`
+  (release-ZIP copy);
+  `built route … ei7\build\Release\Projects\Sample\Sample.mdb` (the copy
+  MSBuild made from the pinned checkout's
+  `Epi.Core\Projects\Sample\Sample.mdb`). The source-built route no longer
+  touches the release ZIP.
+
+| Route | Result |
+|---|---|
+| official 7.2.7.0 exe + release-ZIP `Sample.mdb:Oswego12` + TABLES | exit 0 in ~3 s → `oswego-tables.html` (7,828 B; artifact) |
+| **source-built** exe + source-checkout `Sample.mdb:Oswego12` + TABLES | exit 0 in ~1.5 s → `oswego-tables-built.html` (7,828 B; canonical 2×2) |
+| official exe + `{Sample.prj}:Oswego` + TABLES | **fails as before**: idles past the `.prj` READ → killed at 300 s |
+
+- Check: `PASS: ei7-output/oswego-tables-built.html contains VANILLA` — the
+  assertion now names the source-built route's output file.
+- Run duration: 6 m 48 s on `windows-latest`.
+
 ## Decision
 
 **Epi Info 7 usable as a CI reference** on `windows-latest` — both from a
