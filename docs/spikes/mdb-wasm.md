@@ -83,7 +83,23 @@ Wasm (commands run on the host; CI links below):
 - Module size: `dist/mdb.wasm` 92,280 bytes (43,320 gzipped), `dist/mdb.js`
   62,753 bytes (17,556 gzipped) — ~60.9 KB gzipped total.
 
-CI run: _added after the first workflow run._
+CI run [40766020082](https://github.com/dorrabbkhan/Epiora/actions/runs/40766020082)
+(`spike-mdb-wasm`, green in 1 m 23 s, job log + `mdb-wasm-build` artifact):
+
+- Pinned-checksum step verified all three committed data files
+  (`Sample.mdb`, `testV1997.mdb`, `Oswego12.native.csv`) — `OK`.
+- Native `mdb-ver` → `JET4` / `JET3`; native `mdb-export` regenerated
+  `Oswego12.native.csv` and `diff` against the committed copy passed.
+- `node --test` → `pass 4`.
+- Measure step (`export_ms_runs=19.6,21.7,22.6,23.7,30.7,63.7`,
+  `export_ms_median=23.7`, `csv_bytes=131198`): Epi105 export ≈ 24 ms median.
+- The CI-built `mdb.wasm` (artifact `mdb-wasm-build`) is **byte-identical**
+  to the committed local build — SHA-256
+  `3d245ed45f80bb0b0cec3e68f3f9c99c83ef3e64b81059856de4f72d9c7372ab`
+  (`sha256sum` on the downloaded artifact vs `dist/mdb.wasm`): the pinned
+  toolchain makes the build bit-reproducible.
+- `spikes` workflow run 40765905982 (`spike-reports` job: bats +
+  `check-spikes.sh`) also green.
 
 ## Decision
 
