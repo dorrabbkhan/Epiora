@@ -10,9 +10,6 @@ on:
 env:
   R_VERSION: '4.5.2'
   NODE_VERSION: '22.23.4'
-  AJV_CLI_VERSION: '5.0.0'
-  # npm tarball https://registry.npmjs.org/ajv-cli/-/ajv-cli-5.0.0.tgz
-  AJV_CLI_SHA256: 'd5bec37d30a8ed0add0ee1c63bb2b6e3ea279124e1a615b0a7806fe089963737'
 
 jobs:
   fixtures:
@@ -35,18 +32,33 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install ajv-cli (pinned version + SHA-256)
-        run: |
-          url="https://registry.npmjs.org/ajv-cli/-/ajv-cli-$AJV_CLI_VERSION.tgz"
-          curl -sSfLo "$RUNNER_TEMP/ajv-cli-$AJV_CLI_VERSION.tgz" "$url"
-          echo "$AJV_CLI_SHA256  $RUNNER_TEMP/ajv-cli-$AJV_CLI_VERSION.tgz" | sha256sum -c -
-          npm install -g "$RUNNER_TEMP/ajv-cli-$AJV_CLI_VERSION.tgz"
+      - name: Install validator tooling (npm ci, lockfile-pinned)
+        working-directory: fixtures/tools
+        run: npm ci
 
       - name: Validate fixtures against schema
         run: |
-          find fixtures \( -path fixtures/renv -o -path fixtures/schema \) -prune \
-            -o -name '*.json' -print0 \
-            | xargs -0 -r -n1 ajv validate -s fixtures/schema/fixture.schema.json -d
+          mapfile -d '' files < <(
+            find fixtures \( -path fixtures/renv -o -path fixtures/schema -o -path fixtures/tools \) -prune \
+              -o -name '*.json' -print0
+          )
+          echo "fixture JSON files found: ${#files[@]}"
+          printf '  %s\n' "${files[@]}"
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "ERROR: no fixture JSON files found; refusing to pass vacuously" >&2
+            exit 1
+          fi
+          for f in "${files[@]}"; do
+            fixtures/tools/node_modules/.bin/ajv validate \
+              -s fixtures/schema/fixture.schema.json -d "$f"
+          done
 
       - name: No fixture drift after regeneration
-        run: git diff --exit-code fixtures/
+        run: |
+          git diff --exit-code fixtures/
+          status="$(git status --porcelain --untracked-files=all -- fixtures/)"
+          if [ -n "$status" ]; then
+            echo "ERROR: regeneration left uncommitted changes under fixtures/:" >&2
+            echo "$status" >&2
+            exit 1
+          fi
