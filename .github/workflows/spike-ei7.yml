@@ -41,9 +41,23 @@ jobs:
       - name: Build Epi Info 7.sln (Release)
         run: msbuild "ei7/Epi Info 7.sln" /p:Configuration=Release /p:Platform="Mixed Platforms" /m /v:m
 
+      - name: Download official Epi Info 7.2.7.0 ZIP (archived installer)
+        shell: pwsh
+        run: |
+          $url = "https://github.com/Epi-Info/Epi-Info-Community-Edition/releases/download/7.2.7.0/2025.3.9.Epi.Info.7.2.7.0.signed.dual.keys.en-US.es-ES.fr-FR.pt-BR.zip"
+          Invoke-WebRequest -Uri $url -OutFile ei7-rel.zip
+          Expand-Archive ei7-rel.zip -DestinationPath ei7-rel
+          Get-ChildItem ei7-rel -Recurse -Filter Analysis.exe | ForEach-Object { Write-Output "Analysis.exe: $($_.FullName)" }
+          $cfg = Get-ChildItem ei7-rel -Recurse -Filter EpiInfo.Config.xml | Select-Object -First 1
+          if ($cfg) { Select-String -Path $cfg.FullName -Pattern "EncryptionModule|FileName" | ForEach-Object { $_.Line.Trim() } }
+          else { Write-Output "no EpiInfo.Config.xml in release zip" }
+
       - name: Run Oswego .pgm through Analysis.exe
         shell: pwsh
-        run: ./spikes/ei7-windows/run-pgm.ps1 -Ei7Dir ei7 -OutputDir ei7-output
+        run: |
+          $rel = Get-ChildItem ei7-rel -Recurse -Filter Analysis.exe -File | Select-Object -First 1
+          if ($rel) { $env:EI7_ANALYSIS_EXE = $rel.FullName; Write-Output "official Analysis.exe: $($rel.FullName)" }
+          ./spikes/ei7-windows/run-pgm.ps1 -Ei7Dir ei7 -OutputDir ei7-output
 
       - name: Assert ei7-output contains VANILLA
         shell: pwsh

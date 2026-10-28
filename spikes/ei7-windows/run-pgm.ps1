@@ -120,8 +120,9 @@ New-Item -ItemType Directory -Force -Path $workDir | Out-Null
 $outHtml = Join-Path $outDir "oswego-tables.html"
 $pgmBase = Get-Content (Join-Path $PSScriptRoot "oswego-tables.pgm") -Raw
 
-function New-Pgm7([string]$text, [string]$prj, [string]$html, [string]$name) {
+function New-Pgm7([string]$text, [string]$prj, [string]$mdb, [string]$html, [string]$name) {
     $t = $text.Replace("@SAMPLE_PRJ@", ($prj -replace '\\', '/'))
+    $t = $t.Replace("@SAMPLE_MDB@", ($mdb -replace '\\', '/'))
     $t = $t.Replace("@OUTPUT_HTML@", ($html -replace '\\', '/'))
     $p = Join-Path $workDir $name
     Set-Content -Path $p -Value $t -Encoding ASCII
@@ -130,7 +131,7 @@ function New-Pgm7([string]$text, [string]$prj, [string]$html, [string]$name) {
     return $p
 }
 
-$pgm7 = New-Pgm7 $pgmBase $samplePrj $outHtml "oswego-tables.pgm7"
+$pgm7 = New-Pgm7 $pgmBase $samplePrj $sampleMdb $outHtml "oswego-tables.pgm7"
 
 # --- 4. Run Analysis.exe and wait for QUIT ------------------------------------
 function Write-WindowDiagnostics {
@@ -193,14 +194,14 @@ function Write-WindowDiagnostics {
 
 # --- 5. Run Analysis.exe and wait for QUIT ------------------------------------
 function Invoke-Analysis {
-    param([string]$Pgm7, [string]$ExpectedHtml)
-    $proc = Start-Process -FilePath $analysis -ArgumentList "`"$Pgm7`"" `
-        -WorkingDirectory $exeDir -PassThru
-    Write-Host "run-pgm: started PID $($proc.Id), waiting up to ${TimeoutSeconds}s"
+    param([string]$Exe, [string]$ExeDir, [string]$Pgm7, [string]$ExpectedHtml)
+    $proc = Start-Process -FilePath $Exe -ArgumentList "`"$Pgm7`"" `
+        -WorkingDirectory $ExeDir -PassThru
+    Write-Host "run-pgm: started PID $($proc.Id) [$Exe], waiting up to ${TimeoutSeconds}s"
     if (-not $proc.WaitForExit($TimeoutSeconds * 1000)) {
         $proc.Refresh()
         Write-Host "run-pgm: timeout — MainWindowTitle='$($proc.MainWindowTitle)' Responding=$($proc.Responding)"
-        Write-WindowDiagnostics -ProcessId $proc.Id -ExeDir $exeDir
+        Write-WindowDiagnostics -ProcessId $proc.Id -ExeDir $ExeDir
         $proc.Kill()
         return $false
     }
@@ -212,26 +213,36 @@ function Invoke-Analysis {
     return (Test-Path $ExpectedHtml)
 }
 
-$ok = Invoke-Analysis -Pgm7 $pgm7 -ExpectedHtml $outHtml
-if (-not $ok) {
-    # Fallback diagnostic attempt: read Sample.mdb directly (no .prj crypto)
-    # and DISPLAY TABLES — the listing reveals the real table names so the
-    # READ line can be fixed. Derived from the committed .pgm by string
-    # replacement only; recorded in the spike report.
-    Write-Host "run-pgm: primary attempt produced no output; trying mdb DISPLAY TABLES fallback"
+$ok = Invoke-Analysis -Exe $analysis -ExeDir $exeDir -Pgm7 $pgm7 -ExpectedHtml $outHtml
+
+# Exploratory measurement: can an OFFICIAL (installed) Analysis.exe read the
+# shipped .prj where the source build cannot? Run only when a second binary
+# is provided via EI7_ANALYSIS_EXE. Failure is recorded, not fatal.
+$prjOk = $false
+$official = $env:EI7_ANALYSIS_EXE
+if ($official -and (Test-Path $official) -and $official -ne $analysis) {
+    $officialDir = Split-Path $official -Parent
+    $offPrj = Join-Path $officialDir "Projects\Sample\Sample.prj"
+    if (Test-Path $offPrj) { $samplePrj = $offPrj }
+    $prjHtml = Join-Path $outDir "oswego-tables-prj.html"
+    $prjText = $pgmBase -replace [regex]::Escape("READ '@SAMPLE_MDB@':Oswego12"), "READ {@SAMPLE_PRJ@}:Oswego"
+    $prj7 = New-Pgm7 $prjText $samplePrj $sampleMdb $prjHtml "oswego-tables-prj.pgm7"
+    Write-Host "run-pgm: attempting .prj READ on official binary $official"
+    $prjOk = Invoke-Analysis -Exe $official -ExeDir $officialDir -Pgm7 $prj7 -ExpectedHtml $prjHtml
+    Write-Host "run-pgm: official .prj READ produced html: $prjOk"
+}
+
+if (-not $ok -and -not $prjOk) {
+    # Fallback diagnostic attempt: LIST Oswego12 — reveals the real column
+    # names so the TABLES line can be fixed. Derived from the committed .pgm
+    # by string replacement only; recorded in the spike report.
+    Write-Host "run-pgm: no output yet; trying LIST fallback on Oswego12"
     $fbHtml = Join-Path $outDir "oswego-tables-list.html"
-    $fbText = $pgmBase `
-        -replace [regex]::Escape("READ {@SAMPLE_PRJ@}:Oswego"), "READ '@SAMPLE_MDB@':Oswego" `
-        -replace "(?m)^TABLES VANILLA ILL.*$", "DISPLAY TABLES"
-    $fbText = $fbText.Replace("@SAMPLE_MDB@", ($sampleMdb -replace '\\', '/'))
-    $fb7 = New-Pgm7 $fbText $samplePrj $fbHtml "oswego-tables-list.pgm7"
-    $ok = Invoke-Analysis -Pgm7 $fb7 -ExpectedHtml $fbHtml
-    if (-not $ok) {
-        Write-Error "run-pgm: neither the .prj READ nor the .mdb LIST produced output — headless run failed"
-        exit 1
-    }
-    Write-Host "run-pgm: fallback produced $fbHtml (LIST output; TABLES VANILLA ILL still unproven)"
+    $fbText = $pgmBase -replace "(?m)^TABLES VANILLA ILL.*$", "LIST *"
+    $fb7 = New-Pgm7 $fbText $samplePrj $sampleMdb $fbHtml "oswego-tables-list.pgm7"
+    $fbOk = Invoke-Analysis -Exe $analysis -ExeDir $exeDir -Pgm7 $fb7 -ExpectedHtml $fbHtml
+    Write-Error "run-pgm: TABLES VANILLA ILL produced no html on any route (LIST fallback produced html: $fbOk)"
     exit 1
 }
-Write-Host "run-pgm: OK — $outHtml ($((Get-Item $outHtml).Length) bytes)"
+Write-Host "run-pgm: OK — primary $outHtml exists: $ok; official .prj html exists: $prjOk"
 exit 0
