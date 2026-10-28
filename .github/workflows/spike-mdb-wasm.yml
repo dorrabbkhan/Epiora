@@ -50,7 +50,7 @@ jobs:
       - name: Verify emsdk-downloaded archive checksums
         run: |
           ls -l "$EMSDK/downloads/"
-          echo "$EMSDK_SDK_SHA256  $EMSDK/downloads/wasm-binaries.tar.xz" | sha256sum -c -
+          echo "$EMSDK_SDK_SHA256  $EMSDK"/downloads/*-wasm-binaries.tar.xz | sha256sum -c -
           echo "$EMSDK_NODE_SHA256  $EMSDK/downloads/node-v24.19.0-linux-x64.tar.xz" | sha256sum -c -
 
       - name: Fetch mdbtools tarball (pinned SHA-256)
