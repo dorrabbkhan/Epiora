@@ -57,56 +57,54 @@ corrupt: cannot read table catalog`).
   `c3f70af4…`); `testV1997.mdb` (JET3) from `jahlborn/jackcess` @ `be0a213`
   (Apache-2.0, SHA-256 `27788b47…`); `Oswego12.native.csv` produced by native
   `mdb-export` (SHA-256 `ada20497…` — regenerated and diffed in CI).
-- CI: `.github/workflows/spike-mdb-wasm.yml` on `ubuntu-latest`, Node.js 22
-  via `actions/setup-node` (exact version in the run log cited below).
+- CI: `.github/workflows/spike-mdb-wasm.yml` on `ubuntu-latest`, Node.js
+  v22.23.4 via `actions/setup-node` (`node-version: '22'`).
 - No RNG used.
 
 ## Measurements
 
-Native (commands run on the host):
+All numbers below come from CI run
+[40769040858](https://github.com/dorrabbkhan/Epiora/actions/runs/40769040858)
+(`spike-mdb-wasm`, green in 1 m 7 s, job log + `mdb-wasm-build` artifact)
+unless an exact command is given.
 
-- `mdb-ver test/data/Sample.mdb` → `JET4`; `mdb-tables -1` lists 93 user
-  tables including `Oswego` and `Oswego12` (Task 3's Oswego data table).
-- `mdb-ver test/data/testV1997.mdb` → `JET3`; `mdb-tables -1` → `Table1`–`Table4`.
-- `mdb-ver` on the first-4 KB truncation of `Sample.mdb` still prints `JET4`
-  (header-only check) — confirming that the produced `mdb_version` must open
-  the catalog, not just the header.
-- `mdb-export Sample.mdb Oswego12` → 76 lines (header + 75 rows), SHA-256
-  `ada2049737fcb31412692a979b1017ce11583a4c03d41d66b2b1ea7113d5de67`,
-  committed as `test/data/Oswego12.native.csv`. Largest table in `Sample.mdb`
-  by `mdb-export | wc -l`: `Epi105`, 2,152 data rows.
-
-Wasm (commands run on the host; CI links below):
-
-- `node --test spikes/mdb-wasm/test/*.test.mjs` → 4/4 pass:
-  table list contains `Oswego`+`Oswego12`; `mdb_export_csv(..., "Oswego12")`
-  is **byte-identical** to the native reference CSV; the 4 KB truncation
-  returns `ERROR:JET4 file truncated or corrupt: cannot read table catalog`
-  with no throw; the JET3 file returns `JET3` and tables `Table1`–`Table4`.
-- `node -e` timing script (see workflow "Measure" step for the exact script):
-  `mdb_export_csv(Sample.mdb, "Epi105")` → 131,198 bytes, identical to native;
-  6 runs: 50.8 ms cold then 26.9 / 23.2 / 20.4 / 20.5 / 19.2 ms — median of
-  the 5 warm runs ≈ 20.5 ms.
-- Module size: `dist/mdb.wasm` 92,280 bytes (43,320 gzipped), `dist/mdb.js`
-  62,753 bytes (17,556 gzipped) — ~60.9 KB gzipped total.
-
-CI run [40766020082](https://github.com/dorrabbkhan/Epiora/actions/runs/40766020082)
-(`spike-mdb-wasm`, green in 1 m 23 s, job log + `mdb-wasm-build` artifact):
-
+- Native `mdb-ver` → `JET4` on `Sample.mdb`, `JET3` on `testV1997.mdb`;
+  native `mdb-tables -1` on `Sample.mdb` lists 93 user tables including
+  `Oswego` and `Oswego12` (Task 3's Oswego data table). The wasm
+  `mdb_tables` returns the same 93 user tables — `MSys*` system tables are
+  filtered via `mdb_is_system_table`, the same rule native `mdb-tables`
+  applies by default. Wasm count:
+  `node -e 'import("./spikes/mdb-wasm/mdb.mjs").then(m => m.mdb_tables("spikes/mdb-wasm/test/data/Sample.mdb")).then(t => console.log(t.length))'`
+  → `93`, and the "no name starts with `MSys`" assertion in
+  `test/read.test.mjs` passes.
+- Largest user table by rows (the "Largest user table by rows" step:
+  native `mdb-export | wc -l` over every `mdb-tables -1` entry):
+  `largest_table=Epi105 rows=2152`.
 - Pinned-checksum step verified all three committed data files
-  (`Sample.mdb`, `testV1997.mdb`, `Oswego12.native.csv`) — `OK`.
-- Native `mdb-ver` → `JET4` / `JET3`; native `mdb-export` regenerated
-  `Oswego12.native.csv` and `diff` against the committed copy passed.
-- `node --test` → `pass 4`.
-- Measure step (`export_ms_runs=19.6,21.7,22.6,23.7,30.7,63.7`,
-  `export_ms_median=23.7`, `csv_bytes=131198`): Epi105 export ≈ 24 ms median.
-- The CI-built `mdb.wasm` (artifact `mdb-wasm-build`) is **byte-identical**
-  to the committed local build — SHA-256
-  `3d245ed45f80bb0b0cec3e68f3f9c99c83ef3e64b81059856de4f72d9c7372ab`
-  (`sha256sum` on the downloaded artifact vs `dist/mdb.wasm`): the pinned
-  toolchain makes the build bit-reproducible.
-- `spikes` workflow run 40765905982 (`spike-reports` job: bats +
-  `check-spikes.sh`) also green.
+  (`Sample.mdb`, `testV1997.mdb`, `Oswego12.native.csv`) — `OK`; the two
+  emsdk-downloaded archives matched their pinned SHA-256s; native
+  `mdb-export` regenerated `Oswego12.native.csv` (76 lines: header + 75
+  rows) and `diff` against the committed copy passed.
+- `node --test` on Node v22.23.4 → 4/4 pass: table list contains
+  `Oswego`+`Oswego12` and no `MSys*`; `mdb_export_csv(..., "Oswego12")` is
+  byte-identical to the native reference CSV; the 4 KB truncation returns
+  `ERROR:JET4 file truncated or corrupt: cannot read table catalog` with no
+  throw; the JET3 file returns `JET3` and tables `Table1`–`Table4`.
+- Epi105 parity step: native `mdb-export` vs the wasm module — `cmp` on the
+  two CSVs passed (byte-identical).
+- The CI-built `dist/mdb.wasm` and `dist/mdb.js` are **byte-identical** to
+  the committed copies (`cmp` against `git show HEAD:…` passed): the pinned
+  toolchain keeps the build bit-reproducible.
+- Measure step (`Buffer.byteLength(csv)` for the byte count):
+  `csv_bytes=131198`, `export_ms_runs=12.3,12.6,13.7,15.1,16.3,32.3`,
+  `export_ms_median=15.1` — Epi105 export ≈ 15 ms median.
+- Module size (build step `ls -l`: 92,310 / 62,753 bytes; gzip sizes from
+  `gzip -c dist/mdb.wasm | wc -c` etc. on the byte-identical committed
+  files): `dist/mdb.wasm` 92,310 bytes (43,334 gzipped), `dist/mdb.js`
+  62,753 bytes (17,556 gzipped) — ~60.9 KB gzipped total.
+- `spikes` workflow run
+  [40769041436](https://github.com/dorrabbkhan/Epiora/actions/runs/40769041436)
+  (`spike-reports` job: `check-spikes.sh`) also green.
 
 ## Decision
 
