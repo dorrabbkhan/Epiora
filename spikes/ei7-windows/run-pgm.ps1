@@ -30,19 +30,20 @@ $outDir = Join-Path $repoRoot $OutputDir
 
 Write-Host "run-pgm: Ei7Dir=$ei7 OutputDir=$outDir Timeout=${TimeoutSeconds}s"
 
-# --- 1. Locate Analysis.exe ---------------------------------------------------
-$analysis = $env:EI7_ANALYSIS_EXE
-if (-not $analysis) {
-    $candidates = Get-ChildItem -Path $ei7 -Recurse -Filter "Analysis.exe" -File -ErrorAction SilentlyContinue |
-        Sort-Object { if ($_.FullName -match 'release') { 0 } else { 1 } }, FullName
-    $analysis = $candidates | Select-Object -First 1 -ExpandProperty FullName
-}
-if (-not $analysis -or -not (Test-Path $analysis)) {
-    Write-Error "run-pgm: Analysis.exe not found under $ei7 (set EI7_ANALYSIS_EXE to point at an installed copy)"
+# --- 1. Locate Analysis.exe (built and/or official install) -------------------
+$built = Get-ChildItem -Path $ei7 -Recurse -Filter "Analysis.exe" -File -ErrorAction SilentlyContinue |
+    Sort-Object { if ($_.FullName -match 'release') { 0 } else { 1 } }, FullName |
+    Select-Object -First 1 -ExpandProperty FullName
+$official = $env:EI7_ANALYSIS_EXE
+if (-not $built -and -not ($official -and (Test-Path $official))) {
+    Write-Error "run-pgm: no Analysis.exe found under $ei7 and EI7_ANALYSIS_EXE not set"
     exit 1
 }
+$analysis = if ($official -and (Test-Path $official)) { $official } else { $built }
 $exeDir = Split-Path $analysis -Parent
-Write-Host "run-pgm: Analysis.exe=$analysis"
+Write-Host "run-pgm: built Analysis.exe=$built"
+Write-Host "run-pgm: official Analysis.exe=$official"
+Write-Host "run-pgm: primary Analysis.exe=$analysis"
 
 # --- 2. Locate the Oswego sample project -------------------------------------
 $samplePrj = Join-Path $exeDir "Projects\Sample\Sample.prj"
@@ -131,8 +132,6 @@ function New-Pgm7([string]$text, [string]$prj, [string]$mdb, [string]$html, [str
     return $p
 }
 
-$pgm7 = New-Pgm7 $pgmBase $samplePrj $sampleMdb $outHtml "oswego-tables.pgm7"
-
 # --- 4. Run Analysis.exe and wait for QUIT ------------------------------------
 function Write-WindowDiagnostics {
     param([int]$ProcessId, [string]$ExeDir)
@@ -213,26 +212,43 @@ function Invoke-Analysis {
     return (Test-Path $ExpectedHtml)
 }
 
-$ok = Invoke-Analysis -Exe $analysis -ExeDir $exeDir -Pgm7 $pgm7 -ExpectedHtml $outHtml
-
-# Exploratory measurement: can an OFFICIAL (installed) Analysis.exe read the
-# shipped .prj where the source build cannot? Run only when a second binary
-# is provided via EI7_ANALYSIS_EXE. Failure is recorded, not fatal.
-$prjOk = $false
-$official = $env:EI7_ANALYSIS_EXE
-if ($official -and (Test-Path $official) -and $official -ne $analysis) {
-    $officialDir = Split-Path $official -Parent
-    $offPrj = Join-Path $officialDir "Projects\Sample\Sample.prj"
-    if (Test-Path $offPrj) { $samplePrj = $offPrj }
+# Attempt matrix (each route gets its own ROUTEOUT target so every outcome
+# is kept):
+#   official + mdb Oswego12 TABLES -> oswego-tables.html     (primary, check target)
+#   built    + mdb Oswego12 TABLES -> oswego-tables-built.html
+#   official + prj Oswego   TABLES -> oswego-tables-prj.html (does the installed
+#                                                            binary decrypt .prj?)
+$attempts = @()
+if ($official -and (Test-Path $official)) {
+    $offDir = Split-Path $official -Parent
+    $offPrj = Join-Path $offDir "Projects\Sample\Sample.prj"
+    $offMdb = Join-Path $offDir "Projects\Sample\Sample.mdb"
+    if (-not (Test-Path $offPrj)) { $offPrj = $samplePrj }
+    if (-not (Test-Path $offMdb)) { $offMdb = $sampleMdb }
+    $attempts += @{ Label = "official+mdb"; Exe = $official; Dir = $offDir;
+        Pgm = (New-Pgm7 $pgmBase $offPrj $offMdb $outHtml "oswego-tables.pgm7"); Html = $outHtml }
     $prjHtml = Join-Path $outDir "oswego-tables-prj.html"
     $prjText = $pgmBase -replace [regex]::Escape("READ '@SAMPLE_MDB@':Oswego12"), "READ {@SAMPLE_PRJ@}:Oswego"
-    $prj7 = New-Pgm7 $prjText $samplePrj $sampleMdb $prjHtml "oswego-tables-prj.pgm7"
-    Write-Host "run-pgm: attempting .prj READ on official binary $official"
-    $prjOk = Invoke-Analysis -Exe $official -ExeDir $officialDir -Pgm7 $prj7 -ExpectedHtml $prjHtml
-    Write-Host "run-pgm: official .prj READ produced html: $prjOk"
+    $attempts += @{ Label = "official+prj"; Exe = $official; Dir = $offDir;
+        Pgm = (New-Pgm7 $prjText $offPrj $offMdb $prjHtml "oswego-tables-prj.pgm7"); Html = $prjHtml }
+}
+if ($built) {
+    $builtHtml = Join-Path $outDir "oswego-tables-built.html"
+    $bDir = Split-Path $built -Parent
+    $attempts += @{ Label = "built+mdb"; Exe = $built; Dir = $bDir;
+        Pgm = (New-Pgm7 $pgmBase $samplePrj $sampleMdb $builtHtml "oswego-tables-built.pgm7"); Html = $builtHtml }
 }
 
-if (-not $ok -and -not $prjOk) {
+$produced = @()
+foreach ($a in $attempts) {
+    Write-Host "run-pgm: === attempt $($a.Label) ==="
+    if (Invoke-Analysis -Exe $a.Exe -ExeDir $a.Dir -Pgm7 $a.Pgm -ExpectedHtml $a.Html) {
+        $produced += $a.Label
+    }
+}
+Write-Host "run-pgm: routes that produced html: $($produced -join ', ')"
+
+if ($produced.Count -eq 0) {
     # Fallback diagnostic attempt: LIST Oswego12 — reveals the real column
     # names so the TABLES line can be fixed. Derived from the committed .pgm
     # by string replacement only; recorded in the spike report.
