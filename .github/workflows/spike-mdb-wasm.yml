@@ -1,0 +1,105 @@
+name: spike-mdb-wasm
+
+on:
+  pull_request:
+    paths:
+      - 'spikes/mdb-wasm/**'
+      - '.github/workflows/spike-mdb-wasm.yml'
+      - 'scripts/check.sh'
+  workflow_dispatch:
+
+env:
+  MDB_VERSION: '1.0.1'
+  MDB_SHA256: 'ff9c425a88bc20bf9318a332eec50b17e77896eef65a0e69415ccb4e396d1812'
+  SAMPLE_MDB_SHA256: 'c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e'
+  JET3_MDB_SHA256: '27788b47e17412427830e80c2cb69366885aa11b12c61422de73029194bef135'
+  NATIVE_CSV_SHA256: 'ada2049737fcb31412692a979b1017ce11583a4c03d41d66b2b1ea7113d5de67'
+  EMSDK_COMMIT: 'd7b4130688bfa348392b921ab04015aa15c4f154'
+  EMSDK_VERSION: '6.0.13'
+
+jobs:
+  mdb-wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify pinned test-data checksums
+        run: |
+          echo "$SAMPLE_MDB_SHA256  spikes/mdb-wasm/test/data/Sample.mdb" | sha256sum -c -
+          echo "$JET3_MDB_SHA256  spikes/mdb-wasm/test/data/testV1997.mdb" | sha256sum -c -
+          echo "$NATIVE_CSV_SHA256  spikes/mdb-wasm/test/data/Oswego12.native.csv" | sha256sum -c -
+
+      - name: Install Emscripten (pinned commit + SDK version)
+        run: |
+          git clone --depth 1 https://github.com/emscripten-core/emsdk.git "$RUNNER_TEMP/emsdk"
+          git -C "$RUNNER_TEMP/emsdk" fetch --depth 1 origin "$EMSDK_COMMIT"
+          git -C "$RUNNER_TEMP/emsdk" checkout "$EMSDK_COMMIT"
+          "$RUNNER_TEMP/emsdk/emsdk" install "$EMSDK_VERSION"
+          "$RUNNER_TEMP/emsdk/emsdk" activate "$EMSDK_VERSION"
+          echo "EMSDK=$RUNNER_TEMP/emsdk" >> "$GITHUB_ENV"
+
+      - name: Fetch mdbtools tarball (pinned SHA-256)
+        run: |
+          curl -sSL -o "$RUNNER_TEMP/mdbtools-$MDB_VERSION.tar.gz" \
+            "https://github.com/mdbtools/mdbtools/releases/download/v$MDB_VERSION/mdbtools-$MDB_VERSION.tar.gz"
+          echo "$MDB_SHA256  $RUNNER_TEMP/mdbtools-$MDB_VERSION.tar.gz" | sha256sum -c -
+          tar xzf "$RUNNER_TEMP/mdbtools-$MDB_VERSION.tar.gz" -C "$RUNNER_TEMP"
+
+      - name: Build native mdbtools (reference)
+        run: |
+          cd "$RUNNER_TEMP/mdbtools-$MDB_VERSION"
+          ./configure --disable-glib --disable-man
+          make -C src -j"$(nproc)"
+          echo "MDBTOOLS_SRC=$RUNNER_TEMP/mdbtools-$MDB_VERSION" >> "$GITHUB_ENV"
+
+      - name: Native mdb-ver / mdb-tables on test data
+        run: |
+          cd "$MDBTOOLS_SRC/src/util"
+          ./mdb-ver "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/Sample.mdb"
+          ./mdb-ver "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/testV1997.mdb"
+          ./mdb-tables -1 "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/Sample.mdb"
+
+      - name: Regenerate native reference CSV and compare
+        run: |
+          "$MDBTOOLS_SRC/src/util/mdb-export" \
+            "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/Sample.mdb" Oswego12 \
+            > "$RUNNER_TEMP/Oswego12.native.csv"
+          diff -u "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/Oswego12.native.csv" \
+                  "$RUNNER_TEMP/Oswego12.native.csv"
+
+      - name: Build wasm module
+        run: spikes/mdb-wasm/build.sh
+
+      - name: Node tests
+        run: node --test spikes/mdb-wasm/test/*.test.mjs
+
+      - name: Measure wasm size and export time (largest table Epi105)
+        run: |
+          {
+            echo "### mdb-wasm measurements (run $GITHUB_RUN_ID)"
+            echo "- mdb.js bytes: $(stat -c%s spikes/mdb-wasm/dist/mdb.js)"
+            echo "- mdb.wasm bytes: $(stat -c%s spikes/mdb-wasm/dist/mdb.wasm)"
+            echo "- mdb.wasm gzip bytes: $(gzip -c spikes/mdb-wasm/dist/mdb.wasm | wc -c)"
+            echo "- mdb.js gzip bytes: $(gzip -c spikes/mdb-wasm/dist/mdb.js | wc -c)"
+          } | tee "$RUNNER_TEMP/summary.md" >> "$GITHUB_STEP_SUMMARY"
+          node -e '
+            import("./spikes/mdb-wasm/mdb.mjs").then(async (mdb) => {
+              const ts = [];
+              for (let i = 0; i < 6; i++) {
+                const s = performance.now();
+                const csv = await mdb.mdb_export_csv("spikes/mdb-wasm/test/data/Sample.mdb", "Epi105");
+                ts.push(performance.now() - s);
+                if (i === 0) console.log("csv_bytes=" + csv.length);
+              }
+              ts.sort((a, b) => a - b);
+              console.log("export_ms_runs=" + ts.map((t) => t.toFixed(1)).join(","));
+              console.log("export_ms_median=" + ts[Math.floor(ts.length / 2)].toFixed(1));
+            })' | tee -a "$RUNNER_TEMP/summary.md" "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mdb-wasm-build
+          path: |
+            spikes/mdb-wasm/dist/
+          retention-days: 30
