@@ -46,7 +46,7 @@ for dir in spikes/*/; do
     cargo test --manifest-path "$dir/Cargo.toml"
   fi
   if [ -d "$dir/test" ] && ls "$dir"/test/*.test.mjs >/dev/null 2>&1; then
-    step "node --test $name"; node --test "$dir"/test/
+    step "node --test $name"; node --test "$dir"/test/*.test.mjs
   fi
   if ls "$dir"/*.spec.mjs >/dev/null 2>&1; then
     if [ "${E2E:-0}" = 1 ]; then step "playwright $name"; npx playwright test "$dir"; else echo "playwright $name skipped (E2E=1 to run)"; fi

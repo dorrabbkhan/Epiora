@@ -1,0 +1,21 @@
+Test data provenance and licences (v0.1 Task 4 spike)
+
+1. Sample.mdb
+   Origin:  github.com/Epi-Info/Epi-Info-Community-Edition
+   Commit:  4cd353c62c40b78d9d1f013b0f5a2bb685a5fca6
+   Path:    Epi.Core/Projects/Sample/Sample.mdb
+   Licence: Apache License 2.0 (per repo license.md; decision D2,
+            docs/spikes/d2-epi-info-licence.md)
+   SHA-256: c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e
+   Copied unmodified, as permitted by D2. "Epi Info" is a trademark of
+   CDC; used here only to describe origin. The Apache License 2.0 text:
+   https://www.apache.org/licenses/LICENSE-2.0.txt (quoted in full in
+   docs/spikes/d2-epi-info-licence.md).
+
+2. testV1997.mdb  (JET3 / Access 97 test file)
+   Origin:  github.com/jahlborn/jackcess
+   Commit:  be0a2139b087a227d14cafd4ea231306a5a3a862
+   Path:    src/test/data/V1997/testV1997.mdb
+   Licence: Apache License 2.0 (repo LICENSE.txt)
+   SHA-256: 27788b47e17412427830e80c2cb69366885aa11b12c61422de73029194bef135
+   Copied unmodified.
