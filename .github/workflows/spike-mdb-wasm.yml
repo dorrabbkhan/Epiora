@@ -50,23 +50,25 @@ jobs:
           cd "$RUNNER_TEMP/mdbtools-$MDB_VERSION"
           ./configure --disable-glib --disable-man
           make -C src -j"$(nproc)"
-          echo "MDBTOOLS_SRC=$RUNNER_TEMP/mdbtools-$MDB_VERSION" >> "$GITHUB_ENV"
+          echo "NATIVE_SRC=$RUNNER_TEMP/mdbtools-$MDB_VERSION" >> "$GITHUB_ENV"
 
       - name: Native mdb-ver / mdb-tables on test data
         run: |
-          cd "$MDBTOOLS_SRC/src/util"
+          cd "$NATIVE_SRC/src/util"
           ./mdb-ver "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/Sample.mdb"
           ./mdb-ver "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/testV1997.mdb"
           ./mdb-tables -1 "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/Sample.mdb"
 
       - name: Regenerate native reference CSV and compare
         run: |
-          "$MDBTOOLS_SRC/src/util/mdb-export" \
+          "$NATIVE_SRC/src/util/mdb-export" \
             "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/Sample.mdb" Oswego12 \
             > "$RUNNER_TEMP/Oswego12.native.csv"
           diff -u "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/Oswego12.native.csv" \
                   "$RUNNER_TEMP/Oswego12.native.csv"
 
+      # build.sh fetches its own tarball into spikes/mdb-wasm/build/ and runs
+      # emconfigure there; it must NOT see the natively-configured source.
       - name: Build wasm module
         run: spikes/mdb-wasm/build.sh
 
