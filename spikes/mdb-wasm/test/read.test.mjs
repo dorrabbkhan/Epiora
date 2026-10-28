@@ -17,6 +17,9 @@ test('tables lists the sample project tables', async () => {
   for (const name of ['Oswego', 'Oswego12']) {
     assert.ok(tables.includes(name), `missing table ${name}`);
   }
+  // matches native `mdb-tables` default output: user tables only, no MSys*
+  assert.ok(tables.every((n) => !n.startsWith('MSys')),
+    `system tables leaked: ${tables.filter((n) => n.startsWith('MSys'))}`);
 });
 
 test('export matches native mdb-export', async () => {
@@ -38,7 +41,7 @@ test('truncated file reports an error', async () => {
   const trunc = join(dir, 'truncated-4k.mdb');
   writeFileSync(trunc, buf);
   const v = await mdb.mdb_version(trunc);   // must not throw
-  assert.match(v, /^ERROR:/, `expected ERROR:…, got ${v}`);
+  assert.match(v, /^ERROR:JET4/, `expected ERROR:JET4…, got ${v}`);
 });
 
 test('JET3 file reports its format', async () => {

@@ -16,12 +16,21 @@ env:
   NATIVE_CSV_SHA256: 'ada2049737fcb31412692a979b1017ce11583a4c03d41d66b2b1ea7113d5de67'
   EMSDK_COMMIT: 'd7b4130688bfa348392b921ab04015aa15c4f154'
   EMSDK_VERSION: '6.0.13'
+  # emsdk install 6.0.13 on linux-x64 downloads these two archives into
+  # $EMSDK/downloads/ (kept via EMSDK_KEEP_DOWNLOADS); pinned by SHA-256.
+  EMSDK_KEEP_DOWNLOADS: '1'
+  EMSDK_SDK_SHA256: 'cda6801012ff3319a539111826ed02a9abd7eff135c2ef261c8941caf5a3763e'  # wasm-binaries.tar.xz
+  EMSDK_NODE_SHA256: '14b342e71204f811bde6153be8e04b62aef63c236fef92b55f9c83154b409647'  # node-v24.19.0-linux-x64.tar.xz
 
 jobs:
   mdb-wasm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
       - name: Verify pinned test-data checksums
         run: |
@@ -37,6 +46,12 @@ jobs:
           "$RUNNER_TEMP/emsdk/emsdk" install "$EMSDK_VERSION"
           "$RUNNER_TEMP/emsdk/emsdk" activate "$EMSDK_VERSION"
           echo "EMSDK=$RUNNER_TEMP/emsdk" >> "$GITHUB_ENV"
+
+      - name: Verify emsdk-downloaded archive checksums
+        run: |
+          ls -l "$EMSDK/downloads/"
+          echo "$EMSDK_SDK_SHA256  $EMSDK/downloads/wasm-binaries.tar.xz" | sha256sum -c -
+          echo "$EMSDK_NODE_SHA256  $EMSDK/downloads/node-v24.19.0-linux-x64.tar.xz" | sha256sum -c -
 
       - name: Fetch mdbtools tarball (pinned SHA-256)
         run: |
@@ -67,13 +82,44 @@ jobs:
           diff -u "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/Oswego12.native.csv" \
                   "$RUNNER_TEMP/Oswego12.native.csv"
 
+      # mdb-tables lists user tables by default; export each and count rows.
+      - name: Largest user table by rows (native mdb-export)
+        run: |
+          db="$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/Sample.mdb"
+          best='' bestn=-1
+          while IFS= read -r t; do
+            n=$("$NATIVE_SRC/src/util/mdb-export" "$db" "$t" | wc -l)
+            n=$((n - 1))
+            if [ "$n" -gt "$bestn" ]; then bestn=$n; best=$t; fi
+          done < <("$NATIVE_SRC/src/util/mdb-tables" -1 "$db")
+          echo "largest_table=$best rows=$bestn" | tee -a "$RUNNER_TEMP/summary.md" "$GITHUB_STEP_SUMMARY"
+
       # build.sh fetches its own tarball into spikes/mdb-wasm/build/ and runs
       # emconfigure there; it must NOT see the natively-configured source.
       - name: Build wasm module
         run: spikes/mdb-wasm/build.sh
 
+      - name: Committed dist is byte-identical to CI build
+        run: |
+          git show HEAD:spikes/mdb-wasm/dist/mdb.wasm | cmp - spikes/mdb-wasm/dist/mdb.wasm
+          git show HEAD:spikes/mdb-wasm/dist/mdb.js | cmp - spikes/mdb-wasm/dist/mdb.js
+
       - name: Node tests
         run: node --test spikes/mdb-wasm/test/*.test.mjs
+
+      - name: Epi105 CSV parity: native vs wasm
+        run: |
+          "$NATIVE_SRC/src/util/mdb-export" \
+            "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/Sample.mdb" Epi105 \
+            > "$RUNNER_TEMP/Epi105.native.csv"
+          node -e '
+            import("./spikes/mdb-wasm/mdb.mjs").then(async (mdb) => {
+              const fs = await import("node:fs");
+              const csv = await mdb.mdb_export_csv("spikes/mdb-wasm/test/data/Sample.mdb", "Epi105");
+              if (csv.startsWith("ERROR:")) throw new Error(csv);
+              fs.writeFileSync(process.env.RUNNER_TEMP + "/Epi105.wasm.csv", csv);
+            })'
+          cmp "$RUNNER_TEMP/Epi105.native.csv" "$RUNNER_TEMP/Epi105.wasm.csv"
 
       - name: Measure wasm size and export time (largest table Epi105)
         run: |
@@ -91,7 +137,7 @@ jobs:
                 const s = performance.now();
                 const csv = await mdb.mdb_export_csv("spikes/mdb-wasm/test/data/Sample.mdb", "Epi105");
                 ts.push(performance.now() - s);
-                if (i === 0) console.log("csv_bytes=" + csv.length);
+                if (i === 0) console.log("csv_bytes=" + Buffer.byteLength(csv));
               }
               ts.sort((a, b) => a - b);
               console.log("export_ms_runs=" + ts.map((t) => t.toFixed(1)).join(","));

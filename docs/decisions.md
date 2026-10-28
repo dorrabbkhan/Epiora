@@ -40,6 +40,14 @@ compiles to wasm with Emscripten, reads Epi Info's Sample.mdb with CSV output
 byte-identical to native `mdb-export`, handles JET3 files, reports truncated
 input as an `ERROR:` naming the format, at ~61 KB gzipped total.
 Evidence: docs/spikes/mdb-wasm.md
+Interface deviation: `mdb_version` returns `ACE12`–`ACE18` (mdb-ver's names)
+for `.accdb` inputs, outside the plan's union `"JET3"|"JET4"|"ERROR:<message>"`.
+Kept because folding ACE formats into `JET4` would misreport the format and
+lose the distinction mdb-ver itself makes; `.accdb` import is a later task and
+can widen the union then. `mdb_tables` returns user tables only (the
+`mdb-tables` default); system (`MSys*`) catalog entries are filtered via
+libmdb's `mdb_is_system_table`, matching the native tool and the report's
+93-table count.
 Files outside the Files block:
 - spikes/mdb-wasm/test/data/Sample.mdb — Epi Info sample DB copied under D2 (Apache-2.0); the task's Consumes item permits copying.
 - spikes/mdb-wasm/test/data/NOTICE — Apache §4 attribution for the copied data files (D2 consequence).
@@ -49,6 +57,6 @@ Files outside the Files block:
 - spikes/mdb-wasm/dist/mdb.js, dist/mdb.wasm — built module committed so `node --test` passes without Emscripten; CI rebuilds it and re-runs the tests and measurements.
 - spikes/mdb-wasm/.gitignore — ignores the build/ scratch dir (downloaded tarball + extracted source).
 - .github/workflows/spike-mdb-wasm.yml — CI run producing the linked measurements.
-- scripts/check.sh — bug fix: `node --test` on Node 24 cannot run a bare directory arg (MODULE_NOT_FOUND); changed to the `*.test.mjs` glob. Required for the iteration gate to run this spike's tests.
+- scripts/check.sh — bug fix: `node --test` with a bare directory arg fails with MODULE_NOT_FOUND on both Node 24 (v24.22.0) and Node 22 (verified on v22.21.0); changed to the `*.test.mjs` glob, which is correct on both. Required for the iteration gate to run this spike's tests.
 - docs/decisions.md — plan Architecture requires a decisions entry per spike.
 Supersedes: —
