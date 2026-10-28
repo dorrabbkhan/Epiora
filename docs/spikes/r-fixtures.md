@@ -33,11 +33,22 @@ deterministically? And should pinning use `renv` or a Docker image?
   source{package, version, r_version}}` and rejects extra or missing
   fields.
 - `.github/workflows/spike-fixtures.yml` (ubuntu-24.04) restores renv,
-  runs `Rscript fixtures/generate.R`, validates every fixture JSON with
-  ajv-cli (excluding `fixtures/renv` and `fixtures/schema`), then runs
-  `git diff --exit-code fixtures/` so any drift after regeneration fails.
-  Every action is pinned by commit SHA; R, Node and ajv-cli are pinned by
-  version, and the ajv-cli tarball additionally by SHA-256.
+  runs `Rscript fixtures/generate.R`, installs the schema validator with
+  `npm ci` under `fixtures/tools` (ajv-cli 5.0.0 and every transitive
+  dependency pinned by integrity hash in the committed
+  `package-lock.json`), then validates every fixture JSON with
+  `fixtures/tools/node_modules/.bin/ajv`. The find prunes `fixtures/renv`,
+  `fixtures/schema` and `fixtures/tools`, and the step prints the fixture
+  count and exits 1 when it is zero, so validation cannot pass
+  vacuously. Drift is then checked two ways: `git diff --exit-code
+  fixtures/` for tracked changes, and `git status --porcelain
+  --untracked-files=all -- fixtures/` must print nothing or the step
+  exits 1 — a fixture deleted from git or a stray file left by
+  regeneration fails too. renv's library dirs (`fixtures/renv/.gitignore`)
+  and `fixtures/tools/node_modules` (`fixtures/tools/.gitignore`) are
+  ignored and do not trip the guard. Every action is pinned by commit
+  SHA; R and Node are pinned by version; all npm packages by lockfile
+  integrity hashes.
 
 ## Environment
 
@@ -46,8 +57,9 @@ deterministically? And should pinning use `renv` or a Docker image?
   v2.14.0 (@ `f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05`) with
   `r-version: 4.5.2`; `actions/setup-node` v7.1.0 (@
   `949feb2413d6458794dcd2491c4babbbce0c15c1`) with `node-version:
-  22.23.4`; ajv-cli 5.0.0 npm tarball, SHA-256
-  `d5bec37d30a8ed0add0ee1c63bb2b6e3ea279124e1a615b0a7806fe089963737`.
+  22.23.4`; ajv-cli 5.0.0 installed by `npm ci` in `fixtures/tools`,
+  pinned by `fixtures/tools/package-lock.json` (lockfileVersion 3: all
+  26 resolved tarballs carry sha512 integrity hashes).
 - Local development: Ubuntu resolute x86-64, R 4.5.2 (2025-10-31).
 - R packages (fixtures/renv.lock): epitools 0.5-10.1, jsonlite 2.0.0,
   renv 1.3.1 — all restored from the lockfile by `renv::restore`.
@@ -72,6 +84,21 @@ deterministically? And should pinning use `renv` or a Docker image?
 - Run [40784084908](https://github.com/dorrabbkhan/Epiora/actions/runs/40784084908)
   — `workflow_dispatch` re-run on the same head content, no changes:
   green.
+- Run [40787018374](https://github.com/dorrabbkhan/Epiora/actions/runs/40787018374)
+  — fix round 1 head (workflow + `fixtures/tools` committed): `npm ci`
+  installs ajv-cli 5.0.0 with its 25 locked dependencies in ~1 s;
+  validation prints `fixture JSON files found: 1` and
+  `fixtures/2x2/oswego_vanilla.json valid`; the drift + untracked-file
+  guard is clean; all steps green in 45 s.
+- Untracked-file guard, local demonstration on the committed tree
+  (command): `touch fixtures/2x2/untracked_probe.json`, then the
+  workflow's drift step prints `ERROR: regeneration left uncommitted
+  changes under fixtures:` and `?? fixtures/2x2/untracked_probe.json` and
+  exits 1; the probe file was removed afterwards. With only committed
+  files present, `git status --porcelain --untracked-files=all --
+  fixtures/` prints nothing — `fixtures/renv/.gitignore` and
+  `fixtures/tools/.gitignore` keep the renv library and `node_modules`
+  out of it.
 - Fixture values (command `Rscript fixtures/generate.R`, output committed
   and reproduced byte-for-byte in run 40783984886): risk ratio
   5.5740740740740744 (Wald 95% CI 1.938339835538607–16.029336658930724;
@@ -100,10 +127,15 @@ itself, already pinned by setup-r.
   local Ubuntu resolute and CI ubuntu-24.04 (both R 4.5.2 + lockfile
   versions).
 - Any diff between a committed fixture and its regeneration fails CI
-  (run 40783827413). Caveat: `git diff --exit-code` does not flag a
-  fixture that is missing from git entirely — untracked files are
-  invisible to `git diff`. A `git status --porcelain fixtures/` guard is
-  a noted follow-up, not part of the plan's check.
+  (run 40783827413), and since fix round 1 so does any untracked file
+  under `fixtures/` (`git status --porcelain --untracked-files=all`),
+  closing the gap where a fixture deleted from git was invisible to
+  `git diff` (demonstrated locally — see Measurements).
+- Schema validation cannot pass vacuously: the step prints the fixture
+  JSON count and exits 1 when it is zero.
+- ajv-cli is no longer a floating global install: `npm ci` under
+  `fixtures/tools/` resolves it and all transitive dependencies from the
+  committed `package-lock.json` integrity hashes.
 - v0.2 engine tests consume `fixtures/2x2/oswego_vanilla.json` under the
   plan's interface; the 17-significant-digit serialization keeps every
   number exact at the 1e-9 tolerance.
@@ -126,4 +158,10 @@ DESCRIPTION file:
 - jsonlite 2.0.0 — MIT + file LICENSE
 - renv 1.3.1 — MIT + file LICENSE
 - stats (`chisq.test`, `fisher.test`) — GPL-2 | GPL-3 (part of R 4.5.2)
-- ajv-cli 5.0.0 — MIT (LICENSE file in the pinned npm tarball)
+- ajv-cli 5.0.0 — MIT; CI tooling only (validates fixtures), installed
+  with its transitive dependencies from
+  `fixtures/tools/package-lock.json`. Licences read from the lockfile's
+  `license` fields: MIT for ajv-cli, ajv and most dependencies; ISC for
+  fs.realpath, glob, inflight, inherits, minimatch, once,
+  path-is-absolute and wrappy; BSD-2-Clause for esprima; BSD-3-Clause
+  for fast-uri and sprintf-js.

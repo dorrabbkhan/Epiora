@@ -74,5 +74,7 @@ Files outside the Files block:
 - fixtures/renv/activate.R — renv bootstrap; pins renv itself to 1.3.1, written by renv::init.
 - fixtures/renv/settings.json — renv project settings written by renv::init.
 - fixtures/renv/.gitignore — excludes the project library (renv/library/) from git, written by renv::init.
+- fixtures/tools/package.json, fixtures/tools/package-lock.json — committed npm manifest + lockfile (ajv-cli 5.0.0 with integrity-pinned transitive deps) installed by `npm ci` in CI; added in fix round 1 so the schema validator's dependencies are locked.
+- fixtures/tools/.gitignore — ignores fixtures/tools/node_modules so `npm ci` output cannot trip the drift guard; added in fix round 1.
 - docs/decisions.md — plan Architecture requires a decisions entry per spike.
 Supersedes: —
