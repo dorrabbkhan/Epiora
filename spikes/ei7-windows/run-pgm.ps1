@@ -72,11 +72,55 @@ Write-Host "run-pgm: rendered $pgm7"
 Get-Content $pgm7 | Write-Host
 
 # --- 4. Run Analysis.exe and wait for QUIT ------------------------------------
+function Write-WindowDiagnostics {
+    param([int]$ProcessId, [string]$ExeDir)
+    # Dump the UI Automation tree of the hung process: on a headless CI
+    # runner the window station is invisible, so UIA is the only way to see
+    # which dialog (if any) is blocking the message loop.
+    try {
+        Add-Type -AssemblyName UIAutomationClient, UIAutomationTypes
+        $root = [System.Windows.Automation.AutomationElement]::RootElement
+        $cond = New-Object System.Windows.Automation.PropertyCondition(
+            [System.Windows.Automation.AutomationElement]::ProcessIdProperty, $ProcessId)
+        $wins = $root.FindAll([System.Windows.Automation.TreeScope]::Children, $cond)
+        Write-Host "run-pgm: $($wins.Count) top-level window(s) for PID $ProcessId"
+        foreach ($w in $wins) {
+            Write-Host ("  window: '{0}' [{1}]" -f $w.Current.Name, $w.Current.ClassName)
+            $texts = $w.FindAll([System.Windows.Automation.TreeScope]::Descendants,
+                [System.Windows.Automation.Condition]::TrueCondition)
+            foreach ($t in $texts) {
+                $name = $t.Current.Name
+                if ($name) { Write-Host ("    {0}: {1}" -f $t.Current.ControlType.ProgrammaticName, $name) }
+            }
+        }
+    } catch { Write-Host "run-pgm: UIA dump failed: $_" }
+    foreach ($sub in "Configuration", "Output", "Logs") {
+        $d = Join-Path $ExeDir $sub
+        if (Test-Path $d) {
+            Write-Host "run-pgm: $d"
+            Get-ChildItem $d -Recurse -File | ForEach-Object {
+                Write-Host ("    {0} ({1} bytes, {2})" -f $_.FullName, $_.Length, $_.LastWriteTime)
+            }
+        }
+    }
+    # Epi Info writes each run's output to <config output dir>\output*.html —
+    # its text shows which command failed and why.
+    Get-ChildItem -Path $ExeDir -Recurse -Filter "output*.html" -File -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending | Select-Object -First 2 | ForEach-Object {
+            Write-Host "run-pgm: --- $($_.FullName) ---"
+            Get-Content $_.FullName | ForEach-Object { $_ -replace '<[^>]+>', ' ' -replace '\s+', ' ' } |
+                Where-Object { $_.Trim() } | Select-Object -Last 40 | Write-Host
+        }
+}
+
 $proc = Start-Process -FilePath $analysis -ArgumentList "`"$pgm7`"" `
     -WorkingDirectory $exeDir -PassThru
 Write-Host "run-pgm: started PID $($proc.Id), waiting up to ${TimeoutSeconds}s"
 
 if (-not $proc.WaitForExit($TimeoutSeconds * 1000)) {
+    $proc.Refresh()
+    Write-Host "run-pgm: timeout — MainWindowTitle='$($proc.MainWindowTitle)' Responding=$($proc.Responding)"
+    Write-WindowDiagnostics -ProcessId $proc.Id -ExeDir $exeDir
     $proc.Kill()
     Write-Error "run-pgm: Analysis.exe did not exit within ${TimeoutSeconds}s (headless run failed)"
     exit 1
