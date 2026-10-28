@@ -1,0 +1,20 @@
+name: spikes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  spike-reports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install bats
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bats
+      - name: Shell tests
+        run: bats scripts/tests
+      - name: Spike reports
+        run: scripts/check-spikes.sh
