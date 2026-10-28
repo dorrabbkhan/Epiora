@@ -153,10 +153,12 @@ All present in the repo:
   examples (`Case Control DatabaseExample.xls`, `MXState.shp`, …). `Sample.mdb`
   is the canonical Epi Info sample database that ships the Oswego outbreak
   table.
-- `Epi.Core/Projects/<Name>/` — 20+ bundled projects each with `.prj` + `.mdb`:
-  Cholera, EColi, H1N1(x3), HansensDisease, HIV, HuttYouthSurvey, JohnSnow,
-  LandmineStudy, Legionellosis, Lyme, Mumps, Nutrition, PHIN, Salmonellosis,
-  STEPS, CommunityHealthAssessment, BeefPrevention (`BeefPrevention.prj`).
+- `Epi.Core/Projects/` — 22 bundled project folders holding 21 `.prj` files;
+  18 pair a `.prj` with `.mdb` data (Cholera, CommunityHealthAssessment, EColi,
+  H1N1 ×3, HansensDisease, HIV, HuttYouthSurvey, JohnSnow, LandmineStudy,
+  Legionellosis, Lyme, Mumps, Nutrition, Salmonellosis, Sample, STEPS). The
+  rest: BeefPrevention (`.prj` + SQLite `.db`), PHIN (`PHINVS.mdb`, no `.prj`),
+  KML_Example (`.kml` + `.xls`), Rates (`.cvs7`/`.xlsx`/`.docx`).
 - `Epi.Core/Resources/Training Projects/CommunityHealthAssessment/` — duplicate
   training copy of that project.
 - `.pgm` files: **none** (0 matches for `*.pgm` in the recursive tree). `.pgm`
