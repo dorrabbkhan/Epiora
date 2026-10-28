@@ -131,6 +131,9 @@ char *mdb_tables(const char *path)
 		MdbCatalogEntry *e = g_ptr_array_index(mdb->catalog, i);
 		const char *p;
 		if (e->object_type != MDB_TABLE) continue;
+		/* mdb-tables lists user tables only by default (skip_sys):
+		 * entries whose catalog Flags mark them as system tables. */
+		if (mdb_is_system_table(e)) continue;
 		if (len && out[len - 1] != '[') out[len++] = ',';
 		out[len++] = '"';
 		for (p = e->object_name; *p; p++) {
