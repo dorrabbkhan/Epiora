@@ -1,0 +1,6 @@
+.claude/settings.local.json
+.devin/config.local.json
+node_modules/
+target/
+test-results/
+playwright-report/

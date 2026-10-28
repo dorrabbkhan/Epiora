@@ -1,7 +1,7 @@
-# Kestrel — platform design and roadmap
+# Epiora — platform design and roadmap
 
 **Status:** draft for owner review · **Date:** 2026-10-28 · **Owner:** Dorrabb
-**Working name:** "Kestrel" is a placeholder; the final name is open decision D1 (§17).
+**Name:** Epiora (chosen 2026-10-28; formal trademark clearance is open decision D1, §17).
 
 This is the platform-level spec: intent, decisions, architecture, modules, integrations,
 security, validation, business model and the versioned roadmap. It is deliberately too large
@@ -53,7 +53,7 @@ StatCalc and AnthStat (child growth), plus data packaging and import/export tool
 ## 3. Goals, non-goals and success criteria
 
 **Goals.**
-1. Every Epi Info workflow can be done in Kestrel, and legacy projects open in one click.
+1. Every Epi Info workflow can be done in Epiora, and legacy projects open in one click.
 2. Four hero differentiators (§5) ship early, each in usable form.
 3. Every number is verifiable: validated against reference software, reproducible, and receipted.
 4. Works fully offline on a laptop or a low-end Android phone.
@@ -71,7 +71,7 @@ StatCalc and AnthStat (child growth), plus data packaging and import/export tool
   7 and R on the reference corpus; the CDC sample projects import and their scripts run
   unchanged; the open app is listed as a Digital Public Good candidate.
 - *Field-ready (after v2.5):* paying Team customers (NGOs or health departments) in at least
-  two countries; at least three courses teaching with Kestrel.
+  two countries; at least three courses teaching with Epiora.
 - *Powerhouse (after v3.4):* SOC 2 Type II report; the outbreak module used in at least one
   real investigation with a published or internal report.
 - *Agency production (after v4.4):* a ministry or agency running a multi-level deployment.
@@ -88,7 +88,7 @@ StatCalc and AnthStat (child growth), plus data packaging and import/export tool
 | US federal agencies | FedRAMP or agency-hosted deployment | v4.4 |
 
 Order principle: segments that need no certification come first. Agencies adopt early through
-self-hosting (§11), long before Kestrel holds certifications itself.
+self-hosting (§11), long before Epiora holds certifications itself.
 
 ## 5. Unique selling points
 
@@ -132,22 +132,22 @@ use (open decision D9).
 
 | Unit | Purpose | Depends on | Licence tier |
 |---|---|---|---|
-| `kestrel-core` (Rust) | Statistics, form model, check-code language, `.pgm` compatibility interpreter, importers (CSV, Excel, stats files, `.prj`), receipts | `statrs`, `faer`/`nalgebra`, `calamine`, `rust_xlsxwriter`, ReadStat (C, via FFI), `arrow-rs` | Open |
-| `kestrel-mdb` | Read-only Access `.mdb` reader, mdbtools' LGPL libraries compiled to wasm and native; loaded only for legacy import | mdbtools (LGPL) | Open |
-| `kestrel-wasm` | Type conversion between engine and browser; no logic; TypeScript types generated from Rust | `wasm-bindgen`, `serde`, `ts-rs` | Open |
-| `kestrel-app` (React + TypeScript) | Form Designer, Entry, Analysis workspace, Dashboards, Maps, StatCalc, Growth, Outbreak, Reports; PWA, and the same code in a Tauri 2 shell for desktop, Android and iOS | ECharts, MapLibre GL JS, PMTiles, Typst (wasm), WebR | Open (premium screens gated) |
+| `epiora-core` (Rust) | Statistics, form model, check-code language, `.pgm` compatibility interpreter, importers (CSV, Excel, stats files, `.prj`), receipts | `statrs`, `faer`/`nalgebra`, `calamine`, `rust_xlsxwriter`, ReadStat (C, via FFI), `arrow-rs` | Open |
+| `epiora-mdb` | Read-only Access `.mdb` reader, mdbtools' LGPL libraries compiled to wasm and native; loaded only for legacy import | mdbtools (LGPL) | Open |
+| `epiora-wasm` | Type conversion between engine and browser; no logic; TypeScript types generated from Rust | `wasm-bindgen`, `serde`, `ts-rs` | Open |
+| `epiora-app` (React + TypeScript) | Form Designer, Entry, Analysis workspace, Dashboards, Maps, StatCalc, Growth, Outbreak, Reports; PWA, and the same code in a Tauri 2 shell for desktop, Android and iOS | ECharts, MapLibre GL JS, PMTiles, Typst (wasm), WebR | Open (premium screens gated) |
 | Local store | SQLite on the device (browser private file system via sqlite-wasm; native SQLite in Tauri); every edit appended to a local change log | sqlite-wasm; SQLite3MultipleCiphers in Tauri | Open |
-| `kestrel-sync` (Rust + Postgres) | Receives change logs, orders them, detects field conflicts, sends updates; connectors run here so credentials never sit on devices | Axum, Postgres | Open (basic) |
-| `kestrel-cloud` | Multi-tenant hosting, billing, SSO and SCIM, enterprise admin, compliance tooling, AI gateway, managed self-hosting | Keycloak, Paddle | Closed |
+| `epiora-sync` (Rust + Postgres) | Receives change logs, orders them, detects field conflicts, sends updates; connectors run here so credentials never sit on devices | Axum, Postgres | Open (basic) |
+| `epiora-cloud` | Multi-tenant hosting, billing, SSO and SCIM, enterprise admin, compliance tooling, AI gateway, managed self-hosting | Keycloak, Paddle | Closed |
 
 ### 7.2 Data flow
 
 1. A versioned form definition is published to devices.
 2. Records are entered offline into the local SQLite store; each change is appended to the change log.
-3. When connected, the change log syncs to `kestrel-sync`; the server orders changes and returns
+3. When connected, the change log syncs to `epiora-sync`; the server orders changes and returns
    updates from other devices. Concurrent edits to the same field on different devices create a
    conflict item in a reviewer queue; nothing is silently merged.
-4. Analyses always run in `kestrel-core` on local data, identically offline and online, and emit a
+4. Analyses always run in `epiora-core` on local data, identically offline and online, and emit a
    receipt (§8.8).
 5. Connectors on the server pull from and push to external systems (§10) and land data in the
    same project model.
@@ -174,7 +174,7 @@ only to generate expected values; its code is not copied.
 
 ### 8.1 Form Designer
 - Parity: Epi Info field types, related child forms, grids, check code.
-- Check code is translated into a typed, sandboxed expression language (`kestrel-core`).
+- Check code is translated into a typed, sandboxed expression language (`epiora-core`).
 - Additions: versioned forms, multi-language forms, template library (outbreak investigation,
   contact tracing, standard surveys), XLSForm import and export.
 
@@ -248,13 +248,13 @@ unacceptable, advanced methods are hosted-only on mobile.
 
 ## 10. Integrations and connectors
 
-Credentialed connectors run on `kestrel-sync`; file imports run in the browser. Every connector
+Credentialed connectors run on `epiora-sync`; file imports run in the browser. Every connector
 has a field-mapping screen, dry-run preview, incremental pull and a change log.
 
 | Order | Integration | Notes | Version |
 |---|---|---|---|
 | 1 | CSV, Excel, SPSS `.sav`, Stata `.dta`, SAS `.sas7bdat`, Parquet, XLSForm | `calamine`, `rust_xlsxwriter`, ReadStat, `arrow-rs` | v0.3, v1.1, v1.5 |
-| 1 | Epi Info `.prj`/`.mdb`, SQL Server-backed projects | `kestrel-mdb`; direct DB connection for SQL Server | v1.2 |
+| 1 | Epi Info `.prj`/`.mdb`, SQL Server-backed projects | `epiora-mdb`; direct DB connection for SQL Server | v1.2 |
 | 2 | ODK Central, KoboToolbox | ODK Central is Apache-2.0 with REST, OpenRosa and OData APIs; Kobo shares the form standard | v2.2 |
 | 3 | REDCap | Per-project API tokens; export and import of records and metadata | v2.2 |
 | 4 | Go.Data | WHO open-sourced it in April 2024; exchange cases and contacts; OpenFn adaptor exists | v3.2 |
@@ -298,8 +298,8 @@ Until v3.4, US health departments handling protected health information use self
 
 ### 11.3 The self-hosting route
 An agency or ministry running the open-source server in its own authorized cloud or data centre
-is covered by its own security authorization, not Kestrel's. This is how agencies, ministries and
-WHO-linked teams adopt Kestrel before it holds certifications, and it matches data-sovereignty
+is covered by its own security authorization, not Epiora's. This is how agencies, ministries and
+WHO-linked teams adopt Epiora before it holds certifications, and it matches data-sovereignty
 and Digital Public Goods requirements.
 
 ## 12. Validation and testing
@@ -334,7 +334,7 @@ tolerances, fixtures and baselines).
 
 Competitor anchors (October 2026): KoboToolbox is free for nonprofits, government, UN and
 education (Community plan, 5,000 submissions/month) and $99/month for others; ODK Cloud from
-$199/month; SurveyCTO $225–630/month. Kestrel does not compete on collection price.
+$199/month; SurveyCTO $225–630/month. Epiora does not compete on collection price.
 
 | Tier | For | Includes | Starting price hypothesis |
 |---|---|---|---|
@@ -372,9 +372,9 @@ analytic queries on one million rows (D3); mdbtools compiled to wasm reading Epi
 `.mdb` files; building and running Epi Info 7 on a Windows CI runner; Tauri 2 shell on Android
 and iOS; a two-device sync prototype with a conflict; R-to-fixture corpus pipeline.
 
-**v0.2 Engine core (L).** `kestrel-core` with the project and dataset model, frequencies and 2×2
+**v0.2 Engine core (L).** `epiora-core` with the project and dataset model, frequencies and 2×2
 tables (odds and risk ratios, confidence intervals, chi-square, Fisher's exact,
-Mantel–Haenszel), receipts v1, corpus and tolerances, `proptest`, `cargo-fuzz`, `kestrel-wasm`,
+Mantel–Haenszel), receipts v1, corpus and tolerances, `proptest`, `cargo-fuzz`, `epiora-wasm`,
 native/wasm parity in CI.
 
 **v0.3 App shell and local store (M).** PWA and Tauri desktop shell, local SQLite store and change
@@ -391,7 +391,7 @@ offline PWA. First university pilot. *Hero USP 2 (receipts) in usable form.*
 skip logic, child forms and grids, form versioning, XLSForm import and export, double-entry
 verification, template library v1.
 
-**v1.2 Legacy import (L).** `kestrel-mdb`, `.prj` and SQL Server project import, check-code
+**v1.2 Legacy import (L).** `epiora-mdb`, `.prj` and SQL Server project import, check-code
 translation, the `.pgm` compatibility interpreter, migration report with parity results against
 Epi Info 7. Public "home for Epi Info users" launch; apply for Digital Public Good listing.
 
@@ -407,7 +407,7 @@ and export; design-system pass; independent WCAG 2.1 AA audit. **🏠 Epi Info p
 
 ### Phase 2 — Field and teams (v2.0–v2.5)
 
-**v2.0 Sync and solo cloud (L).** `kestrel-sync` with the conflict review queue (own spec);
+**v2.0 Sync and solo cloud (L).** `epiora-sync` with the conflict review queue (own spec);
 sync simulation suite; Tauri Android and iOS apps; device encryption; hosted solo cloud with
 backups; Paddle billing; DPA template and EU hosting. *First paid tier.*
 
@@ -494,7 +494,7 @@ around month 14–21; university pilots start earlier, at v1.0.
 
 | # | Decision | Resolve by |
 |---|---|---|
-| D1 | Final product name and trademark check | Before v1.2 public launch |
+| D1 | Formal trademark clearance for "Epiora" (USPTO, EUIPO/TMview), domain and package names | Before v1.2 public launch |
 | D2 | Exact licence of the Epi Info 7 source (Apache 2.0 or public domain) before reusing its grammar or code | v0.1 |
 | D3 | DuckDB-wasm alongside SQLite, or SQLite alone | v0.1 spike |
 | D4 | Licence for bundling WHO growth reference tables | Before v1.3 |
