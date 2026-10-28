@@ -107,7 +107,7 @@ jobs:
       - name: Node tests
         run: node --test spikes/mdb-wasm/test/*.test.mjs
 
-      - name: Epi105 CSV parity: native vs wasm
+      - name: Epi105 CSV parity (native vs wasm)
         run: |
           "$NATIVE_SRC/src/util/mdb-export" \
             "$GITHUB_WORKSPACE/spikes/mdb-wasm/test/data/Sample.mdb" Epi105 \
