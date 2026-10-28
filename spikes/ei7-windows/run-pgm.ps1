@@ -44,24 +44,24 @@ if (-not $analysis -or -not (Test-Path $analysis)) {
 $exeDir = Split-Path $analysis -Parent
 Write-Host "run-pgm: Analysis.exe=$analysis"
 
-# --- 2. Locate the Oswego sample project -------------------------------------
-$samplePrj = Join-Path $exeDir "Projects\Sample\Sample.prj"
-if (-not (Test-Path $samplePrj)) {
-    $samplePrj = Get-ChildItem -Path $ei7 -Recurse -Filter "Sample.prj" -File -ErrorAction SilentlyContinue |
+# --- 2. Locate the Oswego sample database ------------------------------------
+$sampleMdb = Join-Path $exeDir "Projects\Sample\Sample.mdb"
+if (-not (Test-Path $sampleMdb)) {
+    $sampleMdb = Get-ChildItem -Path $ei7 -Recurse -Filter "Sample.mdb" -File -ErrorAction SilentlyContinue |
         Where-Object { $_.FullName -match 'Sample' } |
         Select-Object -First 1 -ExpandProperty FullName
 }
-if (-not $samplePrj -or -not (Test-Path $samplePrj)) {
-    Write-Error "run-pgm: Sample.prj (Oswego sample project) not found"
+if (-not $sampleMdb -or -not (Test-Path $sampleMdb)) {
+    Write-Error "run-pgm: Sample.mdb (Oswego sample database) not found"
     exit 1
 }
-Write-Host "run-pgm: Sample.prj=$samplePrj"
+Write-Host "run-pgm: Sample.mdb=$sampleMdb"
 
 # --- 3. Render the .pgm7 -------------------------------------------------------
 New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 $outHtml = Join-Path $outDir "oswego-tables.html"
 $pgmText = Get-Content (Join-Path $PSScriptRoot "oswego-tables.pgm") -Raw
-$pgmText = $pgmText.Replace("@SAMPLE_PRJ@", ($samplePrj -replace '\\', '/'))
+$pgmText = $pgmText.Replace("@SAMPLE_MDB@", ($sampleMdb -replace '\\', '/'))
 $pgmText = $pgmText.Replace("@OUTPUT_HTML@", ($outHtml -replace '\\', '/'))
 
 $workDir = Join-Path $outDir "work"
