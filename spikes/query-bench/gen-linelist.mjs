@@ -83,10 +83,19 @@ const toLine = (r) =>
 
 // Whole dataset as one CSV string. For rowCount ~5e7 the accumulated text
 // exceeds the maximum JS string length and throws RangeError — recorded by
-// the bench harness as the "allocation failure" measurement.
+// the bench harness as the "allocation failure" measurement. Rows are joined
+// in CHUNK-sized slices so the cons-string tree carries few nodes: the live
+// allocation when the length limit trips is ~the serialized bytes, not
+// ~50M small nodes (which OOM-crashes the renderer before it can throw).
+const CHUNK = 250_000;
 export function generateLinelistCSV(rowCount = DEFAULT_ROWS, seed = SEED) {
   let csv = HEADER;
-  for (const row of generateRows(rowCount, seed)) csv += '\n' + toLine(row);
+  let parts = [];
+  for (const row of generateRows(rowCount, seed)) {
+    parts.push(toLine(row));
+    if (parts.length === CHUNK) { csv += '\n' + parts.join('\n'); parts = []; }
+  }
+  if (parts.length) csv += '\n' + parts.join('\n');
   return csv;
 }
 
