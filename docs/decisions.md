@@ -78,3 +78,22 @@ Files outside the Files block:
 - fixtures/tools/.gitignore — ignores fixtures/tools/node_modules so `npm ci` output cannot trip the drift guard; added in fix round 1.
 - docs/decisions.md — plan Architecture requires a decisions entry per spike.
 Supersedes: —
+
+### v0.1 Task 6 — D3 query engine benchmark (2026-10-29)
+
+Decision: SQLite alone — applying the plan's rule (every SQLite median
+≤ 1000 ms → SQLite alone): sqlite-wasm medians on 1,000,000 rows were
+789.5 ms (weekly epi-curve), 394.5 ms (exposed × ill 2×2) and 67.6 ms
+(district × under-5 by sex) in Chrome 151. DuckDB-wasm was faster
+(88.7 / 12.7 / 40.6 ms) but adds ~7.7 MB gz of bundle over sqlite-wasm's
+~0.59 MB gz — unusable inside the 5 MB first-load budget and unnecessary
+while SQLite meets the 1 s budget. The 50M-row run records `error:
+"Invalid string length"` on all rows while later queries still produce
+result rows (Review Focus 5).
+Evidence: docs/spikes/d3-query-engine.md
+Files outside the Files block:
+- spikes/query-bench/package.json, spikes/query-bench/package-lock.json — committed npm manifest + integrity-pinned lockfile so CI installs the exact measured versions via `npm ci` (kept inside the spike folder per conductor note; npm cache lives outside the repo).
+- spikes/query-bench/.gitignore — ignores node_modules/ and the generated results.json (a run artifact, never committed).
+- .github/workflows/spike-query-bench.yml — CI run producing the linked measurements (npm ci, generator SHA-256, playwright bench + OOM case, results.json artifact).
+- docs/decisions.md — plan Architecture requires a decisions entry per spike.
+Supersedes: —

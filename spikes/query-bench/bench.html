@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>Epiora query-bench (D3)</title>
+<script type="importmap">
+{ "imports": { "apache-arrow": "/node_modules/apache-arrow/Arrow.dom.mjs",
+               "tslib": "/node_modules/tslib/tslib.es6.mjs",
+               "flatbuffers": "/node_modules/flatbuffers/mjs/flatbuffers.js" } }
+</script>
+</head>
+<body>
+<h1>query-bench — SQLite vs DuckDB-wasm</h1>
+<pre id="log">running…
+</pre>
+<script type="module">
+import { generateLinelistCSV, SEED } from './gen-linelist.mjs';
+import sqlite3InitModule from '/node_modules/@sqlite.org/sqlite-wasm/dist/index.mjs';
+import * as duckdb from '/node_modules/@duckdb/duckdb-wasm/dist/duckdb-browser.mjs';
+
+const log = (m) => { document.getElementById('log').textContent += m + '\n'; };
+const ROWS = Number(new URLSearchParams(location.search).get('rows')) || 1_000_000;
+const NM = '/node_modules';
+const REPS = 5;
+
+// ---------- shared helpers ----------
+
+async function gzBytes(urls) { // gzip each engine asset, sum the bytes
+  let total = 0;
+  for (const u of urls) {
+    const raw = await (await fetch(u)).arrayBuffer();
+    const stream = new Blob([raw]).stream().pipeThrough(new CompressionStream('gzip'));
+    total += (await new Response(stream).blob()).size;
+  }
+  return total;
+}
+
+const median = (ts) => {
+  const s = [...ts].sort((a, b) => a - b);
+  return s[Math.floor(s.length / 2)];
+};
+
+// ---------- queries (logical names; SQL is engine-specific where needed) ----------
+
+const CROSSTAB_SQL =
+  'SELECT exposed, ill, COUNT(*) AS n FROM linelist GROUP BY exposed, ill ORDER BY exposed, ill';
+const DISTRICT_SQL =
+  `SELECT sex, COUNT(*) AS n FROM linelist WHERE district IN (` +
+  `'district-01','district-02','district-03','district-04','district-05',` +
+  `'district-06','district-07','district-08','district-09','district-10'` +
+  `) AND age < 5 GROUP BY sex ORDER BY sex`;
+
+// ---------- engine: sqlite-wasm ----------
+
+async function loadSqlite() {
+  const sqlite3 = await sqlite3InitModule();
+  const db = new sqlite3.oo1.DB(':memory:');
+  db.exec('CREATE TABLE linelist(onset_date TEXT, age INT, sex TEXT, district TEXT, exposed INT, ill INT)');
+  const csv = generateLinelistCSV(ROWS); // throws RangeError when ROWS ~ 5e7
+  const stmt = db.prepare('INSERT INTO linelist VALUES (?,?,?,?,?,?)');
+  db.exec('BEGIN');
+  for (const line of csv.split('\n')) {
+    if (line === 'onset_date,age,sex,district,exposed,ill') continue;
+    const f = line.split(',');
+    stmt.bind([f[0], Number(f[1]), f[2], f[3], Number(f[4]), Number(f[5])]);
+    stmt.step();
+    stmt.reset();
+  }
+  stmt.finalize();
+  db.exec('COMMIT');
+  return {
+    run: async (sql) => db.exec({ sql, returnValue: 'resultRows', rowMode: 'array' }),
+    close: () => db.close(),
+  };
+}
+
+const sqliteQueries = [
+  { name: 'weekly_epi_curve',
+    sql: `SELECT CAST(strftime('%W', onset_date) AS INTEGER) AS week, COUNT(*) AS n
+          FROM linelist GROUP BY week ORDER BY week` },
+  { name: 'crosstab_exposed_ill', sql: CROSSTAB_SQL },
+  { name: 'district_under5_by_sex', sql: DISTRICT_SQL },
+];
+
+// ---------- engine: duckdb-wasm ----------
+
+const DUCKDB_BUNDLES = {
+  mvp: {
+    mainModule: `${NM}/@duckdb/duckdb-wasm/dist/duckdb-mvp.wasm`,
+    mainWorker: `${NM}/@duckdb/duckdb-wasm/dist/duckdb-browser-mvp.worker.js`,
+  },
+  eh: {
+    mainModule: `${NM}/@duckdb/duckdb-wasm/dist/duckdb-eh.wasm`,
+    mainWorker: `${NM}/@duckdb/duckdb-wasm/dist/duckdb-browser-eh.worker.js`,
+  },
+};
+
+async function loadDuckdb() {
+  const bundle = await duckdb.selectBundle(DUCKDB_BUNDLES);
+  const worker = new Worker(bundle.mainWorker);
+  const db = new duckdb.AsyncDuckDB(new duckdb.VoidLogger(), worker);
+  await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+  const csv = generateLinelistCSV(ROWS); // throws RangeError when ROWS ~ 5e7
+  await db.registerFileText('linelist.csv', csv);
+  const conn = await db.connect();
+  await conn.query(
+    'CREATE TABLE linelist(onset_date DATE, age INTEGER, sex VARCHAR, district VARCHAR, exposed INTEGER, ill INTEGER)');
+  await conn.query("COPY linelist FROM 'linelist.csv' (HEADER true)");
+  return {
+    bundle,
+    run: async (sql) => (await conn.query(sql)).toArray(),
+    close: async () => { await conn.close(); await db.terminate(); await worker.terminate(); },
+  };
+}
+
+const duckdbQueries = [
+  { name: 'weekly_epi_curve',
+    sql: `SELECT CAST(strftime(onset_date, '%W') AS INTEGER) AS week, COUNT(*) AS n
+          FROM linelist GROUP BY week ORDER BY week` },
+  { name: 'crosstab_exposed_ill', sql: CROSSTAB_SQL },
+  { name: 'district_under5_by_sex', sql: DISTRICT_SQL },
+];
+
+// ---------- harness ----------
+
+async function benchEngine(engine, load, queries, assetUrls) {
+  const bundleGz = await gzBytes(await assetUrls());
+  let handle = null; // stays null once load has failed
+  let loadError = null;
+  const rows = [];
+  for (const q of queries) {
+    const row = { engine, query: q.name, rows: ROWS, median_ms: null, error: null, bundle_gz_bytes: bundleGz };
+    try {
+      if (!handle) {
+        if (loadError) throw loadError;
+        log(`${engine}: loading ${ROWS} rows…`);
+        handle = await load();
+      }
+      const times = [];
+      for (let i = 0; i < REPS; i++) {
+        const t0 = performance.now();
+        await q.run(handle);
+        times.push(performance.now() - t0);
+      }
+      row.median_ms = Math.round(median(times) * 10) / 10;
+      log(`${engine}/${q.name}: median ${row.median_ms} ms  [${times.map((t) => t.toFixed(0)).join(', ')}]`);
+    } catch (e) {
+      if (!handle && !loadError) loadError = e;
+      row.error = (e && e.message) || String(e);
+      log(`${engine}/${q.name}: ERROR ${row.error}`);
+    }
+    rows.push(row);
+  }
+  try { await handle?.close?.(); } catch { /* ignore cleanup errors */ }
+  return rows;
+}
+
+const ENGINES = {
+  sqlite: {
+    load: loadSqlite,
+    queries: sqliteQueries,
+    assets: () => [`${NM}/@sqlite.org/sqlite-wasm/dist/index.mjs`,
+                   `${NM}/@sqlite.org/sqlite-wasm/dist/sqlite3.wasm`],
+  },
+  duckdb: {
+    load: loadDuckdb,
+    queries: duckdbQueries,
+    assets: async () => {
+      const bundle = await duckdb.selectBundle(DUCKDB_BUNDLES);
+      return [`${NM}/@duckdb/duckdb-wasm/dist/duckdb-browser.mjs`,
+              bundle.mainModule, bundle.mainWorker,
+              ...(bundle.pthreadWorker ? [bundle.pthreadWorker] : [])];
+    },
+  },
+};
+
+try {
+  const results = [];
+  for (const name of Object.keys(ENGINES)) {
+    const e = ENGINES[name];
+    results.push(...await benchEngine(name, e.load, e.queries.map((q) => ({
+      name: q.name, run: (h) => h.run(q.sql),
+    })), e.assets));
+  }
+  window.__results = results;
+  log('done: ' + JSON.stringify(results.map((r) => [r.engine, r.query, r.median_ms, r.error])));
+} catch (e) {
+  document.getElementById('log').textContent += 'HARNESS FAILURE: ' + (e && e.stack || e);
+  window.__results = window.__results ?? [];
+}
+</script>
+</body>
+</html>
