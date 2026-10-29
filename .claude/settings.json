@@ -12,7 +12,10 @@
       "Bash(gh run download:*)", "Bash(gh workflow run:*)", "Bash(gh api repos/*/issues/*/comments*)",
       "Bash(git fetch:*)", "Bash(git status:*)", "Bash(git diff:*)", "Bash(git log:*)", "Bash(git show:*)",
       "Bash(git switch:*)", "Bash(git worktree:*)", "Bash(git rev-parse:*)", "Bash(git pull:*)",
-      "Bash(notify-send:*)", "Bash(mkdir:*)", "Bash(cat:*)", "Bash(grep:*)", "Bash(wc:*)", "Bash(sleep:*)"
+      "Bash(notify-send:*)", "Bash(mkdir:*)", "Bash(cat:*)", "Bash(grep:*)", "Bash(wc:*)", "Bash(sleep:*)",
+      "Bash(git checkout:*)", "Bash(git branch:*)", "Bash(git stash:*)", "Bash(git ls-remote:*)",
+      "Bash(ls:*)", "Bash(head:*)", "Bash(tail:*)", "Bash(sed -n:*)", "Bash(tee:*)", "Bash(bwrap:*)",
+      "Bash(gh pr checks:*)", "Bash(gh pr view:*)"
     ],
     "deny": [
       "Bash(gh pr merge:*)", "Bash(gh pr review:*)", "Bash(gh release:*)", "Bash(gh api -X PUT*)",
