@@ -94,8 +94,7 @@ artifact; all six checks passed in 3.0 m):
 - Field crypto: 1,000 sequential encrypts = 85,783.5 ms total,
   85.3 ms/field median; 1,000 sequential decrypts = 85,157.8 ms total,
   85.1 ms/field median — i.e. ~85 s per 1,000 fields each way, dominated
-  by the 600,000-iteration PBKDF2 derivation (AES-GCM itself is ~0.2 ms
-  measured separately locally).
+  by the 600,000-iteration PBKDF2 derivation.
 - Whole-DB write throughput (10,000 rows, one txn, + serialize + OPFS
   write, median of 3 reps): plain sqlite-wasm 14.4 ms
   (insert 9.6 / export 0.3 / persist 4.7), sqlcipher-wasm 13.6 ms
@@ -118,7 +117,9 @@ end (encrypted OPFS file, wrong key rejected, ~0 ms write overhead at
 10k rows), but (a) the only ready-made open build keeps the database in
 MEMFS and rewrites the entire encrypted file on every persist — no
 page-level OPFS VFS, so durability between commits is a copy of the
-last export and write cost grows O(file size); (b) it adds 1.66 MB gz
+last export and write cost is expected to grow with file size — an
+inference from the MEMFS whole-file-export design, not measured beyond
+10k rows); (b) it adds 1.66 MB gz
 to first load (a third of the §12.8 5 MB budget) for a layer §11.1 does
 not require — field-level encryption of identifying fields is already
 mandated; and (c) shipping a third-party crypto binary raises the
@@ -156,8 +157,10 @@ SQLCipher + an OPFS VFS from the upstream `sqlcipher/sqlcipher`
   upstream `sqlcipher/sqlcipher` LICENSE.
 - OpenSSL 3.3.2 inside the build: Apache-2.0, per the project's README
   ("OpenSSL 3.3.2 compiled to WebAssembly").
-- `@sqlite.org/sqlite-wasm` 3.54.1-build1: SQLite — public domain,
-  linked as an ES module; used only as the unencrypted comparison.
+- `@sqlite.org/sqlite-wasm` 3.54.1-build1: Apache-2.0, per the pinned
+  package's `license` field in `package-lock.json`; the embedded SQLite
+  core itself is public domain. Linked as an ES module; used only as the
+  unencrypted comparison.
 - `@playwright/test` 1.64.1: Apache-2.0 (devDependency, test only).
 - Rejected licences respected: no GADM data, no SQLite Encryption
   Extension (SEE), no PowerSync (spec A4, A6, A7). The
