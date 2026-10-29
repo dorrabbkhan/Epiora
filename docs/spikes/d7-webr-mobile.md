@@ -84,8 +84,18 @@ artifact):
   re-requested asset, also under `--disk-cache-size=2147483648`), so a
   "warm" load re-downloads ~12.3 MB; `ready_ms` 70,197.3; `fisher_ms`
   14.4; `fisher_p` identical.
-- CI run: see the `spike-webr-mobile` workflow run linked from this
-  task's PR (the `webr-results.json` step summary / artifact).
+
+CI run
+[40944952563](https://github.com/dorrabbkhan/Epiora/actions/runs/40944952563)
+(`ubuntu-latest`, job `webr-mobile` in 2m45s — `webr-results.json` in
+the "Report webr-results.json" step summary and the
+`webr-mobile-results` artifact; HeadlessChrome 156, Node 22):
+
+- Cold: `transfer_bytes` 13,309,580 (identical — server-side byte count
+  is deterministic), `ready_ms` 80,034.5, `fisher_ms` 16.8, `fisher_p`
+  2.5974506918372895e-07 → parity PASS.
+- Warm: `transfer_bytes` 12,336,585 (R.wasm re-fetched again on CI),
+  `ready_ms` 70,612.1, `fisher_ms` 30.1.
 
 ## Decision
 

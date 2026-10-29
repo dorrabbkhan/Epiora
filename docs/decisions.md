@@ -127,7 +127,7 @@ Decision: INTERIM pending the OWNER GATE — on the plan's interim proxy
 ("Pixel emulator + Chrome DevTools 4× CPU throttle and Slow 4G", run as
 desktop Chromium per Step 2), WebR 0.6.0 loads ~13.3 MB gz on the wire
 (12.3 MB of it re-downloaded even on a warm load — Chrome does not
-retain the streamed R.wasm) and reaches ready in ~70–79 s, far over the
+retain the streamed R.wasm) and reaches ready in ~70–80 s, far over the
 proposed 10,000 ms warm budget, so the task's rule points at "advanced
 methods are hosted-only on mobile (spec §9)". The D7 device choice
 (Step 1) and the real-device run (Step 5) are human steps that close
