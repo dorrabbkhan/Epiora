@@ -1,0 +1,13 @@
+{
+  "name": "epiora-spike-query-bench",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@duckdb/duckdb-wasm": "1.33.1-dev57.0",
+    "@sqlite.org/sqlite-wasm": "3.54.1-build1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1"
+  }
+}

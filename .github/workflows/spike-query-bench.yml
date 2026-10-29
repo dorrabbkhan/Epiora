@@ -1,0 +1,58 @@
+name: spike-query-bench
+
+on:
+  pull_request:
+    paths:
+      - 'spikes/query-bench/**'
+      - '.github/workflows/spike-query-bench.yml'
+      - 'scripts/check.sh'
+  workflow_dispatch:
+
+jobs:
+  query-bench:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install spike dependencies (npm ci)
+        working-directory: spikes/query-bench
+        run: npm ci
+
+      # channel 'chrome' in bench.spec.mjs uses the runner's preinstalled
+      # google-chrome-stable, so no Playwright browser download is needed.
+      - name: Environment versions
+        run: |
+          node --version
+          google-chrome --version
+          cd spikes/query-bench && npx playwright --version
+
+      - name: Generator determinism (seed 42 CSV SHA-256)
+        run: |
+          node spikes/query-bench/gen-linelist.mjs | sha256sum | tee "$RUNNER_TEMP/linelist.sha256"
+
+      - name: Playwright benchmark (1M rows + OOM case)
+        working-directory: spikes/query-bench
+        run: npx playwright test
+
+      - name: Report results.json
+        working-directory: spikes/query-bench
+        run: |
+          cat results.json | tee -a "$GITHUB_STEP_SUMMARY"
+          {
+            echo '### query-bench results (run '"$GITHUB_RUN_ID"')'
+            echo '```json'
+            cat results.json
+            echo '```'
+            echo 'CSV SHA-256: `'"$(cat "$RUNNER_TEMP/linelist.sha256")"'`'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: query-bench-results
+          path: spikes/query-bench/results.json
+          retention-days: 30
