@@ -82,16 +82,20 @@ Supersedes: —
 ### v0.1 Task 6 — D3 query engine benchmark (2026-10-29)
 
 Decision: SQLite for storage plus DuckDB-wasm for analytic queries —
-applying the plan's rule verbatim (every SQLite median ≤ 1000 ms →
-SQLite alone; otherwise SQLite + DuckDB-wasm) to the recorded CI run
-40883881690: sqlite-wasm medians on 1,000,000 rows were 1060.4 ms
-(weekly epi-curve — over budget), 655.1 ms (exposed × ill 2×2) and
-123.9 ms (district × under-5 by sex); duckdb-wasm 75.3 / 9.9 / 34.8 ms.
-DuckDB-wasm adds ~8.0 MB gz (8,326,520 bytes vs sqlite-wasm's 586,888),
-so it must lazy-load outside the §12.8 first-load budget. The 50M-row
-run records `error: "Invalid string length"` on all rows while later
-queries still produce result rows (Review Focus 5); a pre-chunking run
-40883237792 crashed the renderer instead — recorded as a measurement.
+by owner decision on PR #8 (2026-10-29), the plan's rule (every SQLite
+median ≤ 1000 ms → SQLite alone; otherwise SQLite + DuckDB-wasm) is
+applied to the worst observed CI median across all recorded runs on the
+measured code. The worst SQLite median is the weekly epi-curve at
+1065.7 ms (CI run 40884469336), and 3 of the 7 recorded CI runs exceed
+1000 ms on it (40883881690, 40884469336, 40890984797); every other
+SQLite median and all duckdb-wasm medians are under budget in every
+run. DuckDB-wasm adds ~8.0 MB gz (8,326,520 bytes vs sqlite-wasm's
+586,888), so it must lazy-load outside the §12.8 first-load budget. On
+the 50M-row case the sqlite rows record
+`error: "SQLITE_NOMEM: sqlite3 result code 7: out of memory"` while
+duckdb ingests all 50M rows and answers its queries (Review Focus 5);
+a pre-chunking run 40883237792 crashed the renderer instead — recorded
+as a measurement.
 Evidence: docs/spikes/d3-query-engine.md
 Files outside the Files block:
 - spikes/query-bench/package.json, spikes/query-bench/package-lock.json — committed npm manifest + integrity-pinned lockfile so CI installs the exact measured versions via `npm ci` (kept inside the spike folder per conductor note; npm cache lives outside the repo).

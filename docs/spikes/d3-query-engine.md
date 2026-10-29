@@ -115,9 +115,9 @@ the PR checks list.)
   it in CI runs 40884720733 (741.6), 40889431190 (926.0), 40889903879
   (981.0) and 40890489262 (779.3), and the earlier local runs
   (789.5, 855.5). The other five medians are under budget in every
-  recorded run. Which run(s) the plan's Step-5 rule applies to is
-  escalated to the owner by the conductor; the Decision section
-  below is unchanged pending that decision.
+  recorded run. The owner decided on 2026-10-29 (PR #8 comment) that
+  the plan's Step-5 rule applies to the worst observed CI median
+  across all recorded runs — see Decision.
 - Engine download weight (`bundle_gz_bytes`, measured in-page with
   `CompressionStream('gzip')`, identical on every run): sqlite 586,888
   bytes (`index.mjs` + `sqlite3.wasm`); duckdb 8,326,520 bytes
@@ -159,11 +159,18 @@ the PR checks list.)
 
 ## Decision
 
-Applying the plan's Step 5 rule verbatim — *"if every SQLite median
-≤ 1000 ms, D3 = SQLite alone; otherwise SQLite for storage plus
-DuckDB-wasm for analytic queries, noting the added bundle size"* — to the
-recorded run's medians (1060.4 / 655.1 / 123.9 ms; the weekly epi-curve
-median exceeds 1000 ms):
+The plan's Step 5 rule is *"if every SQLite median ≤ 1000 ms, D3 =
+SQLite alone; otherwise SQLite for storage plus DuckDB-wasm for
+analytic queries, noting the added bundle size"*. The owner decided
+(2026-10-29, PR #8 comment) that the rule applies to the worst observed
+CI median across all recorded runs on the measured code — any SQLite
+median > 1000 ms in any CI run counts. The worst SQLite median is the
+weekly epi-curve at 1065.7 ms (CI run
+[40884469336](https://github.com/dorrabbkhan/Epiora/actions/runs/40884469336)),
+and 3 of the 7 recorded CI runs exceed 1000 ms on it
+([40883881690](https://github.com/dorrabbkhan/Epiora/actions/runs/40883881690),
+[40884469336](https://github.com/dorrabbkhan/Epiora/actions/runs/40884469336),
+[40890984797](https://github.com/dorrabbkhan/Epiora/actions/runs/40890984797)):
 
 **D3 = SQLite for storage plus DuckDB-wasm for analytic queries.**
 
@@ -179,9 +186,10 @@ on SQLite alone meeting 1 s.
 - The sqlite weekly epi-curve (a per-row `strftime` + GROUP BY over 1M
   rows) measured on **both** sides of the 1000 ms budget across runs,
   including on identical spike code — above it in three CI runs and
-  one local run, below it in four CI runs and two local runs — so
-  whether SQLite alone meets §12.8 depends on which run(s) the plan's
-  rule applies to (escalated to the owner). The D7 reference device and
+  one local run, below it in four CI runs and two local runs. Under the
+  owner's ruling (PR #8 comment, 2026-10-29) that the plan's rule
+  applies to the worst observed CI median across all recorded runs,
+  SQLite alone does not meet §12.8. The D7 reference device and
   field phones will be slower than `ubuntu-latest`, not faster.
 - `epiora-app` therefore keeps SQLite as the on-device store (spec §7.1)
   and lazy-loads DuckDB-wasm (~8.0 MB gz, fetched once and cached by the
