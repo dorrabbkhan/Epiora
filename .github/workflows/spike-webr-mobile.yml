@@ -1,0 +1,54 @@
+name: spike-webr-mobile
+
+on:
+  pull_request:
+    paths:
+      - 'spikes/webr-mobile/**'
+      - '.github/workflows/spike-webr-mobile.yml'
+      - 'scripts/check.sh'
+  workflow_dispatch:
+
+jobs:
+  webr-mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install spike dependencies (npm ci)
+        working-directory: spikes/webr-mobile
+        run: npm ci
+
+      # channel 'chrome' in measure.mjs uses the runner's preinstalled
+      # google-chrome-stable, so no Playwright browser download is needed.
+      - name: Environment versions
+        run: |
+          node --version
+          google-chrome --version
+
+      - name: "WebR measurement (interim proxy: 4x CPU + Slow 4G)"
+        working-directory: spikes/webr-mobile
+        run: node measure.mjs
+
+      - name: Report webr-results.json
+        working-directory: spikes/webr-mobile
+        if: always()
+        run: |
+          {
+            echo '### webr-mobile measurements (run '"$GITHUB_RUN_ID"')'
+            echo '```json'
+            cat webr-results.json 2>/dev/null || echo 'webr-results.json missing'
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: webr-mobile-results
+          path: spikes/webr-mobile/webr-results.json
+          retention-days: 30
+          if-no-files-found: warn
