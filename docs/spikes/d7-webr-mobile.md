@@ -14,12 +14,12 @@ p-value?
 
 ## Method
 
-- Reference device (plan Step 1, human step): **pending the owner.**
-  Until the owner names a ≤ 4 GB RAM Android phone with Chrome, all
-  measurements use the plan's interim proxy, recorded verbatim:
-  *"Pixel emulator + Chrome DevTools 4× CPU throttle and Slow 4G"*
-  (run as desktop Chromium with the throttling applied — what plan
-  Step 2 specifies for the check).
+- Reference device (plan Step 1, human step — resolved by the owner):
+  **the plan's proxy, recorded verbatim:** *"Pixel emulator + Chrome
+  DevTools 4× CPU throttle and Slow 4G"* (run as desktop Chromium with
+  the throttling applied — what plan Step 2 specifies for the check).
+  The owner chose (2026-10-29) the proxy as the D7 reference because
+  no physical ≤ 4 GB device is available.
 - `spikes/webr-mobile/index.html` loads WebR from the npm package
   `webr@0.6.0` (its `browser` export `dist/webr.js`; `dist/webr.mjs` is
   the Node build and fails in Chrome on `import 'module'`), pinned and
@@ -99,18 +99,16 @@ the "Report webr-results.json" step summary and the
 
 ## Decision
 
-Applying the task's proposed rule — *"WebR acceptable on mobile if warm
-`ready_ms` ≤ 10,000 on the reference device; otherwise advanced methods
-are hosted-only on mobile (spec §9)"* — to the only environment
-available so far (the interim proxy, warm `ready_ms` 70,197 ms ≫
-10,000 ms):
+Applying the task's rule as written — *"WebR acceptable on mobile if
+warm `ready_ms` ≤ 10,000 on the reference device; otherwise advanced
+methods are hosted-only on mobile (spec §9)"* — with the proxy as the
+recorded reference device: the deciding number is the CI warm
+`ready_ms` of 70,612.1 ms from run
+[40944952563](https://github.com/dorrabbkhan/Epiora/actions/runs/40944952563),
+≫ 10,000 ms (the local warm run measured 70,197.3 ms).
 
-**advanced methods are hosted-only on mobile (spec §9)** — *interim*,
-pending the owner's reference-device run (OWNER GATE; plan Steps 1 and
-5 are human steps). The proxy margin is ~7× over budget, and a real ≤
-4 GB device is expected to be slower, not faster, so the device run is
-confirmation rather than a likely flip; but the rule's letter and the
-D7 device choice itself remain the owner's to close.
+**advanced methods are hosted-only on mobile (spec §9)** — the margin
+is ~7× over budget on the reference device.
 
 ## Consequences
 
@@ -131,11 +129,12 @@ D7 device choice itself remain the owner's to close.
   worker fetches — measure wire bytes at the server or via CDP; the
   npm `webr` package's `browser` export (`dist/webr.js`) is the
   browser load, not `dist/webr.mjs`.
-- Pending human steps (owner): choose the D7 reference device (Step 1)
-  and run `node measure.mjs --cdp http://127.0.0.1:9222` on it via
-  Chrome remote debugging (Step 5; `adb forward tcp:9222
-  localabstract:chrome_devtools_remote` plus `adb reverse tcp:<port>
-  tcp:<port>` so the phone reaches the harness server).
+- Real-device confirmation is deferred to a later plan: plan Step 5 on
+  a physical ≤ 4 GB Android phone, running `node measure.mjs --cdp
+  http://127.0.0.1:9222` on it via Chrome remote debugging (`adb
+  forward tcp:9222 localabstract:chrome_devtools_remote` plus `adb
+  reverse tcp:<port> tcp:<port>` so the phone reaches the harness
+  server).
 
 ## Licences
 

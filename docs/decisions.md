@@ -123,15 +123,16 @@ Supersedes: —
 
 ### v0.1 Task 8 — D7 reference device and WebR on low-end Android (2026-10-29)
 
-Decision: INTERIM pending the OWNER GATE — on the plan's interim proxy
-("Pixel emulator + Chrome DevTools 4× CPU throttle and Slow 4G", run as
-desktop Chromium per Step 2), WebR 0.6.0 loads ~13.3 MB gz on the wire
-(12.3 MB of it re-downloaded even on a warm load — Chrome does not
-retain the streamed R.wasm) and reaches ready in ~70–80 s, far over the
-proposed 10,000 ms warm budget, so the task's rule points at "advanced
-methods are hosted-only on mobile (spec §9)". The D7 device choice
-(Step 1) and the real-device run (Step 5) are human steps that close
-the gate.
+Decision: The plan's proxy ("Pixel emulator + Chrome DevTools 4× CPU
+throttle and Slow 4G", run as desktop Chromium per Step 2) is the
+recorded D7 reference device, by owner choice (2026-10-29) — no
+physical ≤ 4 GB device is available. On it, WebR 0.6.0 loads ~13.3 MB
+gz on the wire (12.3 MB of it re-downloaded even on a warm load —
+Chrome does not retain the streamed R.wasm) and reaches ready in
+~70–80 s, far over the 10,000 ms warm budget, so the task's rule
+decides "advanced methods are hosted-only on mobile (spec §9)". A
+real-device confirmation (plan Step 5 on a physical ≤ 4 GB Android
+phone) is deferred to a later plan.
 Evidence: docs/spikes/d7-webr-mobile.md
 Files outside the Files block:
 - spikes/webr-mobile/package.json, spikes/webr-mobile/package-lock.json — committed npm manifest + integrity-pinned lockfile so CI installs the exact measured versions via `npm ci` (Task-6/7 convention).
