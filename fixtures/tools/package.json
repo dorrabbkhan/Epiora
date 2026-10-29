@@ -1,0 +1,9 @@
+{
+  "name": "epiora-fixture-tools",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Validator tooling for fixtures/: ajv-cli, installed by npm ci in the spike-fixtures workflow.",
+  "devDependencies": {
+    "ajv-cli": "5.0.0"
+  }
+}
