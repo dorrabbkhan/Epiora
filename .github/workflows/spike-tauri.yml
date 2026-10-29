@@ -64,6 +64,16 @@ jobs:
           find src-tauri/gen/android -name '*.apk' -exec ls -l {} +
           find src-tauri/gen/android -name '*.apk' -exec du -h {} + | tee apk-size.txt
 
+      # GitHub's ubuntu runners expose /dev/kvm but the action user lacks
+      # access; without this the emulator runs with `-accel off` and an
+      # x86_64 system image never finishes booting (seen in run 40970658633).
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm
+
       - name: Run on emulator and check RR = 5.57
         uses: reactivecircus/android-emulator-runner@v2
         with:
