@@ -140,3 +140,17 @@ Files outside the Files block:
 - .github/workflows/spike-webr-mobile.yml — CI run producing the linked measurements (npm ci, `node measure.mjs`, webr-results.json artifact).
 - docs/decisions.md — plan Architecture requires a decisions entry per spike.
 Supersedes: —
+
+### v0.1 Task 9 — Sync protocol prototype (2026-10-29)
+
+Decision: go — the spec §7.3 sync outline (Lamport clocks, server-assigned
+per-field versions, base-version conflicts keeping both writes) holds its
+invariants under simulation: no lost write, every conflict surfaced, all
+devices converge, and ordering is deterministic under 1-hour wall-clock skew
+and identical timestamps. The v2.0 sync spec must add tombstones,
+form-version migration and persistence; Electric remains a fallback for D8.
+Evidence: docs/spikes/sync-proto.md
+Files outside the Files block:
+- spikes/sync-proto/Cargo.lock — lockfile pinning rand 0.9.5 / rand_chacha 0.9.0 and transitive deps for reproducible runs (cargo-generated).
+- docs/decisions.md — plan Architecture requires a decisions entry per spike.
+Supersedes: —
