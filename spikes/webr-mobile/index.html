@@ -1,0 +1,86 @@
+<!doctype html>
+<!-- D7 spike probe (plan v0.1 Task 8): loads WebR (npm package webr@0.6.0,
+     served from ./node_modules/webr/dist/) and produces
+     window.__webr = { transfer_bytes, ready_ms, fisher_ms, fisher_p }.
+
+     transfer_bytes: sum of PerformanceResourceTiming transferSize for every
+       /node_modules/webr/ asset fetched during the load (wire bytes; ~0 on a
+       warm, HTTP-cached load).
+     ready_ms: ms from module-script start until WebR reports ready
+       (download + instantiate + engine init).
+     fisher_ms: ms to evaluate fisher.test(matrix(c(43,3,11,18), 2))$p.value.
+     fisher_p: the p-value itself.
+
+     On failure the probe sets window.__webr_error instead so the harness
+     records an error instead of timing out. window.__webr_meta carries
+     environment facts for the report (not part of the produced interface). -->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Epiora spike: WebR on low-end mobile</title>
+</head>
+<body>
+<pre id="log">loading webR&hellip;</pre>
+<script type="module">
+const WEBR_BASE = './node_modules/webr/dist/';
+
+// transferSize in the page only sees main-thread fetches; the worker's
+// R.wasm/vfs requests are not listed here, so the authoritative number comes
+// from the harness server (it counts wire bytes under /node_modules/webr/).
+function pageTransferBytes() {
+  let bytes = 0;
+  for (const e of performance.getEntriesByType('resource'))
+    if (e.name.includes('/node_modules/webr/'))
+      bytes += e.transferSize || e.encodedBodySize || 0;
+  return bytes;
+}
+
+async function wireBytes() {
+  try {
+    const r = await fetch('/__wire');
+    if (r.ok) return (await r.json()).bytes;
+  } catch { /* standalone open without the harness: fall back */ }
+  return pageTransferBytes();
+}
+
+async function main() {
+  const t0 = performance.now();
+  // dist/webr.js is the package's "browser" export condition; dist/webr.mjs
+  // is the Node build (imports node: builtins) and does not load in Chrome.
+  const { WebR } = await import(WEBR_BASE + 'webr.js');
+  const webR = new WebR({ baseUrl: new URL(WEBR_BASE, location.href).href });
+  await webR.init();
+  const t1 = performance.now();
+
+  const rVersion = await webR.evalRString('R.version.string');
+
+  const tf = performance.now();
+  const pObj = await webR.evalR('fisher.test(matrix(c(43,3,11,18), 2))$p.value');
+  const fisherP = (await pObj.toJs()).values[0];
+  const t2 = performance.now();
+
+  window.__webr_meta = {
+    r_version: rVersion,
+    crossOriginIsolated: self.crossOriginIsolated === true,
+    sharedArrayBuffer: typeof SharedArrayBuffer !== 'undefined',
+    hardwareConcurrency: navigator.hardwareConcurrency,
+    deviceMemory: navigator.deviceMemory ?? null,
+    userAgent: navigator.userAgent,
+    transfer_bytes_page_scope: pageTransferBytes(),
+  };
+  window.__webr = {
+    transfer_bytes: await wireBytes(),
+    ready_ms: t1 - t0,
+    fisher_ms: t2 - tf,
+    fisher_p: fisherP,
+  };
+  document.getElementById('log').textContent = JSON.stringify(window.__webr);
+}
+
+main().catch((e) => {
+  window.__webr_error = { message: String(e?.message ?? e), stack: String(e?.stack ?? '') };
+});
+</script>
+</body>
+</html>

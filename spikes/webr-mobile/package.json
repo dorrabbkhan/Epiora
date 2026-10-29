@@ -1,0 +1,12 @@
+{
+  "name": "epiora-spike-webr-mobile",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "webr": "0.6.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1"
+  }
+}
