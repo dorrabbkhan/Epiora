@@ -78,6 +78,12 @@ the "Report results.json" step and the `query-bench-results` artifact).
   | crosstab_exposed_ill | 655.1 | 9.9 |
   | district_under5_by_sex | 123.9 | 34.8 |
 
+  Reproduced in run
+  [40884469336](https://github.com/dorrabbkhan/Epiora/actions/runs/40884469336)
+  (same head content): sqlite 1065.7 / 535.2 / 98.0 ms, duckdb 57.2 /
+  8.7 / 29.0 ms — the weekly-curve breach of the 1000 ms budget is
+  repeatable, not noise.
+
 - Local run for comparison, exact command:
   `cd spikes/query-bench && npx playwright test` on the dev machine
   (Ubuntu resolute, Chrome 151.0.7922.137): sqlite 789.5 / 394.5 / 67.6
