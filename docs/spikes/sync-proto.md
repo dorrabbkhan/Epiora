@@ -40,14 +40,20 @@ seeded `ChaCha8Rng` asserting all three invariants.
 ## Measurements
 
 - `cargo test --offline --manifest-path spikes/sync-proto/Cargo.toml`: **5
-  passed, 0 failed, finished in 0.52 s** — the random-interleavings run covers
-  1,000 seeds × 200 steps over 3 devices (records 0–4, fields f0–f2).
+  passed, 0 failed, finished in 0.51 s** — the random-interleavings run covers
+  1,000 seeds × 200 steps over 3 devices (records 0–4, fields f0–f2). Raw
+  output: <https://github.com/dorrabbkhan/Epiora/pull/11#issuecomment-6508998989>
 - `cargo clippy --offline --manifest-path spikes/sync-proto/Cargo.toml
-  --all-targets -- -D warnings`: clean (0 warnings).
-- `cargo fmt --manifest-path spikes/sync-proto/Cargo.toml --check`: clean.
-- `CARGO_NET_OFFLINE=1 ./scripts/check.sh quick`: all gates pass, including
-  the cargo fmt/clippy/test block for `spikes/sync-proto` (run output: "test
-  result: ok. 5 passed").
+  --all-targets -- -D warnings`: clean (0 warnings). Raw output:
+  <https://github.com/dorrabbkhan/Epiora/pull/11#issuecomment-6508998989>
+- `cargo fmt --manifest-path spikes/sync-proto/Cargo.toml --check`: clean
+  (no output, exit 0). Raw output:
+  <https://github.com/dorrabbkhan/Epiora/pull/11#issuecomment-6508998989>
+- `CARGO_NET_OFFLINE=1 ./scripts/check.sh`: all gates pass ("ALL CHECKS
+  PASSED"), including the cargo fmt/clippy/test block for
+  `spikes/sync-proto` (run output: "test result: ok. 5 passed", 0.54 s).
+  Raw output:
+  <https://github.com/dorrabbkhan/Epiora/pull/11#issuecomment-6508998989>
 - Skewed-clock check (Review Focus 3): with `wall_ms` 1 hour apart and
   identical Lamport timestamps, submitting the wall-later device's change
   first still orders by (lamport, device) — A's value wins, B's becomes a
