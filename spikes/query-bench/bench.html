@@ -15,7 +15,7 @@
 <pre id="log">running…
 </pre>
 <script type="module">
-import { generateLinelistCSV, SEED } from './gen-linelist.mjs';
+import { generateRows, toLine, HEADER } from './gen-linelist.mjs';
 import sqlite3InitModule from '/node_modules/@sqlite.org/sqlite-wasm/dist/index.mjs';
 import * as duckdb from '/node_modules/@duckdb/duckdb-wasm/dist/duckdb-browser.mjs';
 
@@ -23,6 +23,12 @@ const log = (m) => { document.getElementById('log').textContent += m + '\n'; };
 const ROWS = Number(new URLSearchParams(location.search).get('rows')) || 1_000_000;
 const NM = '/node_modules';
 const REPS = 5;
+// Rows are ingested in bounded chunks — the harness never holds the whole
+// dataset as one JS value, so a ?rows=N failure can only come from inside
+// an engine, not from the harness's own string limit.
+const SQLITE_HEAP_LIMIT = 256 * 1024 * 1024; // 256 MiB engine heap cap
+const SQLITE_BATCH = 8192; // rows per INSERT ... VALUES statement
+const DUCKDB_CHUNK = 1_000_000; // rows per registered CSV file
 
 // ---------- shared helpers ----------
 
@@ -57,17 +63,27 @@ async function loadSqlite() {
   const sqlite3 = await sqlite3InitModule();
   const db = new sqlite3.oo1.DB(':memory:');
   db.exec('CREATE TABLE linelist(onset_date TEXT, age INT, sex TEXT, district TEXT, exposed INT, ill INT)');
-  const csv = generateLinelistCSV(ROWS); // throws RangeError when ROWS ~ 5e7
-  const stmt = db.prepare('INSERT INTO linelist VALUES (?,?,?,?,?,?)');
+  // Cap the engine's own heap: past SQLITE_HEAP_LIMIT bytes every SQLite
+  // allocation returns SQLITE_NOMEM, i.e. the engine reports "out of
+  // memory" itself while ingesting chunks — a low-end device's memory
+  // ceiling, deterministic across machines. The 1M-row table is ~50 MB,
+  // far below the cap; only the ?rows=50000000 stress run trips it.
+  db.exec(`PRAGMA hard_heap_limit=${SQLITE_HEAP_LIMIT}`);
   db.exec('BEGIN');
-  for (const line of csv.split('\n')) {
-    if (line === 'onset_date,age,sex,district,exposed,ill') continue;
-    const f = line.split(',');
-    stmt.bind([f[0], Number(f[1]), f[2], f[3], Number(f[4]), Number(f[5])]);
-    stmt.step();
-    stmt.reset();
+  const batch = [];
+  const insert = () => {
+    db.exec('INSERT INTO linelist VALUES ' + batch.join(','));
+    batch.length = 0;
+  };
+  let sinceYield = 0;
+  for (const r of generateRows(ROWS)) {
+    batch.push(`('${r.onset_date}',${r.age},'${r.sex}','${r.district}',${r.exposed},${r.ill})`);
+    if (batch.length === SQLITE_BATCH) {
+      insert();
+      if (++sinceYield === 8) { sinceYield = 0; await new Promise((r2) => setTimeout(r2)); }
+    }
   }
-  stmt.finalize();
+  if (batch.length) insert();
   db.exec('COMMIT');
   return {
     run: async (sql) => db.exec({ sql, returnValue: 'resultRows', rowMode: 'array' }),
@@ -101,12 +117,23 @@ async function loadDuckdb() {
   const worker = new Worker(bundle.mainWorker);
   const db = new duckdb.AsyncDuckDB(new duckdb.VoidLogger(), worker);
   await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
-  const csv = generateLinelistCSV(ROWS); // throws RangeError when ROWS ~ 5e7
-  await db.registerFileText('linelist.csv', csv);
   const conn = await db.connect();
   await conn.query(
     'CREATE TABLE linelist(onset_date DATE, age INTEGER, sex VARCHAR, district VARCHAR, exposed INTEGER, ill INTEGER)');
-  await conn.query("COPY linelist FROM 'linelist.csv' (HEADER true)");
+  let lines = [HEADER];
+  let part = 0;
+  const ingest = async () => {
+    const name = `linelist-${part++}.csv`;
+    await db.registerFileText(name, lines.join('\n'));
+    lines = [HEADER];
+    await conn.query(`COPY linelist FROM '${name}' (HEADER true)`);
+    await db.dropFile(name);
+  };
+  for (const r of generateRows(ROWS)) {
+    lines.push(toLine(r));
+    if (lines.length > DUCKDB_CHUNK) await ingest();
+  }
+  if (lines.length > 1) await ingest();
   return {
     bundle,
     run: async (sql) => (await conn.query(sql)).toArray(),

@@ -82,19 +82,35 @@ test('six rows: 2 engines x 3 queries on 1,000,000 rows', async ({ page }) => {
 });
 
 test('records OOM as error', async ({ page }) => {
-  // rows=50000000 forces the serialized dataset past V8's maximum string
-  // length (~536M chars): a real allocation failure, recorded per row.
+  // rows=50000000 makes each engine ingest the seeded rows in bounded
+  // chunks. sqlite-wasm runs with a 256 MiB hard heap limit, so its own
+  // allocator returns SQLITE_NOMEM mid-ingest — an allocation failure
+  // inside the engine, not a limit of the harness. DuckDB-wasm ingests
+  // the same 50M rows successfully, so its queries still run afterwards.
+  test.setTimeout(600_000);
   await page.goto(`${baseURL}/spikes/query-bench/bench.html?rows=50000000`);
-  await page.waitForFunction(() => window.__results !== undefined, null, { timeout: 170_000 });
+  await page.waitForFunction(() => window.__results !== undefined, null, { timeout: 570_000 });
   const rows = await page.evaluate(() => window.__results);
+  // The failure and the later successful queries are a measurement: print
+  // the rows so the run log keeps them (results.json is the 1M case only).
+  console.log('OOM rows: ' + JSON.stringify(rows));
 
   expect(rows).toHaveLength(6);
   const affected = rows.filter((r) => r.error !== null);
   expect(affected.length).toBeGreaterThan(0);
-  // Later queries still ran: every query after the first failure still
-  // produced a result row (median_ms or error), i.e. the harness continued.
+  for (const r of affected) {
+    // The recorded error names the engine's out-of-memory failure.
+    expect(r.error, `${r.engine}/${r.query} error names the failure`)
+      .toMatch(/out of memory|memory|SQLITE_NOMEM/i);
+  }
+  // Later queries still ran: at least one query AFTER the first failed
+  // row actually executed and produced a median, i.e. the harness kept
+  // going past the engine failure instead of re-throwing a cached error.
   const firstError = rows.findIndex((r) => r.error !== null);
-  for (const r of rows.slice(firstError + 1)) {
+  const later = rows.slice(firstError + 1);
+  expect(later.some((r) => r.median_ms !== null),
+    'a query after the first failed row executed (median_ms set)').toBe(true);
+  for (const r of later) {
     expect(r.median_ms !== null || r.error !== null).toBe(true);
   }
   expect(rows.at(-1), 'last query row exists').toBeTruthy();

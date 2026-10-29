@@ -2,13 +2,13 @@
 // spike (plan v0.1 Task 6). Seed 42, ChaCha20 keystream RNG (spec §7.4:
 // seeded ChaCha; Math.random is never used).
 //
-// Browser:  import { generateLinelistCSV } from './gen-linelist.mjs'
+// Browser:  import { generateRows, toLine } from './gen-linelist.mjs'
+//           (the bench engines ingest the rows in bounded chunks)
 // CLI:      node gen-linelist.mjs [rows] > linelist.csv
 //
-// generateLinelistCSV materializes the whole dataset as one CSV string —
-// that is also how both engines ingest it (sqlite: parsed inserts; duckdb:
-// registerFileText + COPY), so requesting ~50M rows overflows V8's maximum
-// string length and throws a catchable RangeError instead of stalling.
+// generateLinelistCSV materializes the whole dataset as one CSV string for
+// the CLI determinism check; the benchmark never builds a string bigger
+// than one ingest chunk.
 
 export const SEED = 42;
 export const DEFAULT_ROWS = 1_000_000;
@@ -78,15 +78,14 @@ export function* generateRows(rowCount = DEFAULT_ROWS, seed = SEED) {
   }
 }
 
-const toLine = (r) =>
+export const toLine = (r) =>
   `${r.onset_date},${r.age},${r.sex},${r.district},${r.exposed},${r.ill}`;
 
-// Whole dataset as one CSV string. For rowCount ~5e7 the accumulated text
-// exceeds the maximum JS string length and throws RangeError — recorded by
-// the bench harness as the "allocation failure" measurement. Rows are joined
-// in CHUNK-sized slices so the cons-string tree carries few nodes: the live
-// allocation when the length limit trips is ~the serialized bytes, not
-// ~50M small nodes (which OOM-crashes the renderer before it can throw).
+// Whole dataset as one CSV string (CLI path only — the benchmark ingests
+// generateRows() chunk by chunk instead). For rowCount ~5e7 the accumulated
+// text would exceed the maximum JS string length; the CLI never requests
+// that many rows. Rows are joined in CHUNK-sized slices so the cons-string
+// tree carries few nodes.
 const CHUNK = 250_000;
 export function generateLinelistCSV(rowCount = DEFAULT_ROWS, seed = SEED) {
   let csv = HEADER;
