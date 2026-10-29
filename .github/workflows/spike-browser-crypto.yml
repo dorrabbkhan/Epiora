@@ -1,0 +1,59 @@
+name: spike-browser-crypto
+
+on:
+  pull_request:
+    paths:
+      - 'spikes/browser-crypto/**'
+      - '.github/workflows/spike-browser-crypto.yml'
+      - 'scripts/check.sh'
+  workflow_dispatch:
+
+jobs:
+  browser-crypto:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install spike dependencies (npm ci)
+        working-directory: spikes/browser-crypto
+        run: npm ci
+
+      - name: Fetch pinned sqlcipher-wasm assets (SHA-256 verified)
+        working-directory: spikes/browser-crypto
+        run: ./vendor/fetch-vendor.sh
+
+      # channel 'chrome' in crypto.spec.mjs uses the runner's preinstalled
+      # google-chrome-stable, so no Playwright browser download is needed.
+      - name: Environment versions
+        run: |
+          node --version
+          google-chrome --version
+          cd spikes/browser-crypto && npx playwright --version
+
+      - name: Playwright checks + measurements
+        working-directory: spikes/browser-crypto
+        run: npx playwright test
+
+      - name: Report crypto-results.json
+        working-directory: spikes/browser-crypto
+        if: always()
+        run: |
+          {
+            echo '### browser-crypto measurements (run '"$GITHUB_RUN_ID"')'
+            echo '```json'
+            cat crypto-results.json 2>/dev/null || echo 'crypto-results.json missing'
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-crypto-results
+          path: spikes/browser-crypto/crypto-results.json
+          retention-days: 30
+          if-no-files-found: warn

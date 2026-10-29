@@ -103,3 +103,20 @@ Files outside the Files block:
 - .github/workflows/spike-query-bench.yml — CI run producing the linked measurements (npm ci, generator SHA-256, playwright bench + OOM case, results.json artifact).
 - docs/decisions.md — plan Architecture requires a decisions entry per spike.
 Supersedes: —
+
+### v0.1 Task 7 — D6 browser encryption (2026-10-29)
+
+Decision: field-level only — WebCrypto AES-GCM 256 field encryption
+(§11.1 interface produced by this spike) is the browser path; whole-DB
+encryption via the pinned open SQLCipher wasm build works end to end on
+OPFS (marker absent from raw bytes, wrong key rejected, ~0 ms write
+overhead at 10k rows) but its MEMFS+whole-file-export persistence model
+has no page-level OPFS VFS, and it adds 1.66 MB gz to first load.
+Evidence: docs/spikes/d6-browser-encryption.md
+Files outside the Files block:
+- spikes/browser-crypto/package.json, spikes/browser-crypto/package-lock.json — committed npm manifest + integrity-pinned lockfile so CI installs the exact measured versions via `npm ci` (kept inside the spike folder per Task-6 convention).
+- spikes/browser-crypto/.gitignore — ignores node_modules/, the vendored sqlcipher-wasm assets (downloaded by fetch-vendor.sh) and the generated crypto-results.json (a run artifact, never committed).
+- spikes/browser-crypto/vendor/fetch-vendor.sh — downloads the pinned 7mind/sqlcipher-wasm v1.4.0 release zip and tagged wrapper/LICENSE, each verified by SHA-256; needed because the build is not published on npm.
+- .github/workflows/spike-browser-crypto.yml — CI run producing the linked measurements (npm ci, SHA-256-verified vendor fetch, playwright checks + measurements, crypto-results.json artifact).
+- docs/decisions.md — plan Architecture requires a decisions entry per spike.
+Supersedes: —
