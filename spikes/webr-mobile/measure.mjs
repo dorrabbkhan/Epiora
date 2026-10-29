@@ -17,7 +17,7 @@
 // which DevTools sends to the browser as latency 562.5 ms (150 x 3.75),
 // download 180,000 B/s and upload 84,375 B/s. CPU throttle rate 4 matches
 // the plan's "4x CPU throttle".
-import { chromium } from 'playwright';
+import { chromium } from '@playwright/test';
 import http from 'node:http';
 import { promises as fs } from 'node:fs';
 import zlib from 'node:zlib';
