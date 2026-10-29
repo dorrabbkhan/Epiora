@@ -74,7 +74,8 @@ command is:
 
     cd spikes/browser-crypto && ./vendor/fetch-vendor.sh && npx playwright test
 
-Functional checks (local run, command above; same checks in CI):
+Functional checks (CI run 40907412732, step "Playwright checks +
+measurements"; the identical local command above passes all six):
 
 - `field round trip`, `wrong passphrase rejects`,
   `encrypted db hides plaintext` (raw OPFS bytes of `epiora-d6.db`
@@ -84,24 +85,28 @@ Functional checks (local run, command above; same checks in CI):
   (`{ opfs:false, error:"OPFS unavailable … fallback: keep the exported
   encrypted bytes in memory or IndexedDB" }`): all pass.
 
-Measured numbers (local `E2E=1 ./scripts/check.sh` run — the
-"measurements" test output, reproduced in `crypto-results.json`):
+Measured numbers (CI run
+[40907412732](https://github.com/dorrabbkhan/Epiora/actions/runs/40907412732)
+on `ubuntu-latest` — `crypto-results.json` printed in the "Report
+crypto-results.json" step and uploaded as the `browser-crypto-results`
+artifact; all six checks passed in 3.0 m):
 
-- Field crypto: 1,000 sequential encrypts = 74,984.3 ms total,
-  73.7 ms/field median; 1,000 sequential decrypts = 75,294.1 ms total,
-  73.0 ms/field median — i.e. ~75 s per 1,000 fields each way, dominated
+- Field crypto: 1,000 sequential encrypts = 85,783.5 ms total,
+  85.3 ms/field median; 1,000 sequential decrypts = 85,157.8 ms total,
+  85.1 ms/field median — i.e. ~85 s per 1,000 fields each way, dominated
   by the 600,000-iteration PBKDF2 derivation (AES-GCM itself is ~0.2 ms
-  measured separately).
+  measured separately locally).
 - Whole-DB write throughput (10,000 rows, one txn, + serialize + OPFS
-  write, median of 3 reps): plain sqlite-wasm 11.2 ms
-  (insert 8.7 / export 0.2 / persist 2.3), sqlcipher-wasm 12.2 ms
-  (insert 7.9 / export 0.2 / persist 2.8); db bytes 188,416 vs 184,320.
+  write, median of 3 reps): plain sqlite-wasm 14.4 ms
+  (insert 9.6 / export 0.3 / persist 4.7), sqlcipher-wasm 13.6 ms
+  (insert 9.4 / export 0.2 / persist 4.4); db bytes 188,416 vs 184,320.
 - sqlcipher-wasm payload: `vendor/dist/sqlcipher.mjs` 4,271,260 bytes
   raw, 1,658,937 bytes gzipped (measured in-page via
   `CompressionStream`).
 
-CI run: pending — this report will cite the run URL in a follow-up
-commit once `spike-browser-crypto` has run on the PR.
+For comparison, the local `E2E=1 ./scripts/check.sh` run measured
+74,984.3 ms / 75,294.1 ms per 1,000 fields and 11.2 / 12.2 ms db medians
+on the machine above.
 
 ## Decision
 
