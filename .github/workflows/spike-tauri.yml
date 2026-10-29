@@ -79,13 +79,17 @@ jobs:
       # emulator.log is cat'ed at the end whatever happens.
       - name: Create AVD
         run: |
+          export ANDROID_AVD_HOME="$HOME/.android/avd"
           SDKTOOLS="$ANDROID_HOME/cmdline-tools/latest/bin"
           "$SDKTOOLS/sdkmanager" --install 'system-images;android-34;default;x86_64' 'emulator' 'platform-tools'
           echo no | "$SDKTOOLS/avdmanager" create avd --force -n test --package 'system-images;android-34;default;x86_64'
+          ls -la "$ANDROID_AVD_HOME" || true
+          "$ANDROID_HOME/emulator/emulator" -list-avds || true
 
       - name: Run on emulator and check RR = 5.57
         run: |
           set -x
+          export ANDROID_AVD_HOME="$HOME/.android/avd"
           "$ANDROID_HOME/emulator/emulator" -port 5554 -avd test -accel on \
             -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio \
             -no-boot-anim -camera-access none > emulator.log 2>&1 &
