@@ -1,0 +1,7 @@
+node_modules/
+vendor/dist/
+vendor/lib/
+vendor/LICENSE
+crypto-results.json
+test-results/
+playwright-report/

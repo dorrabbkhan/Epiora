@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>Epiora browser-crypto (D6)</title>
+</head>
+<body>
+<h1>browser-crypto — D6 encryption in the browser</h1>
+<pre id="log">running…
+</pre>
+<script type="module">
+import { init as initSqlcipherApi } from './vendor/lib/sqlite-api.mjs';
+import sqlite3InitModule from '/node_modules/@sqlite.org/sqlite-wasm/dist/index.mjs';
+
+const log = (m) => { document.getElementById('log').textContent += m + '\n'; };
+const te = new TextEncoder(), td = new TextDecoder();
+const PBKDF2_ITERATIONS = 600_000;
+const OPFS_DB = 'epiora-d6.db';
+const PROBE_KEY = 'epiora-d6-probe-key';
+const MARKER = 'EPIORA_PLAINTEXT_MARKER';
+const FALLBACK = 'fallback: keep the exported encrypted bytes in memory or IndexedDB';
+const Q = new URLSearchParams(location.search);
+const FIELDS = Number(Q.get('fields')) || 1_000;
+const WRITES = Number(Q.get('writes')) || 10_000;
+const REPS = Number(Q.get('reps')) || 3;
+const BATCH = 500;
+
+// ---------- field-level crypto: AES-GCM 256 over PBKDF2-SHA256 ----------
+
+async function deriveKey(passphrase, salt) {
+  const material = await crypto.subtle.importKey(
+    'raw', te.encode(passphrase), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: PBKDF2_ITERATIONS, hash: 'SHA-256' },
+    material, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+}
+
+const toB64 = (u8) => {
+  let s = '';
+  for (let i = 0; i < u8.length; i += 0x8000)
+    s += String.fromCharCode(...u8.subarray(i, i + 0x8000));
+  return btoa(s);
+};
+const fromB64 = (s) => {
+  const b = atob(s);
+  const u8 = new Uint8Array(b.length);
+  for (let i = 0; i < b.length; i++) u8[i] = b.charCodeAt(i);
+  return u8;
+};
+
+window.fieldCrypto = {
+  // blob = base64( salt(16) ‖ iv(12) ‖ ciphertext+tag )
+  async encrypt(passphrase, plaintext) {
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const key = await deriveKey(passphrase, salt);
+    const ct = new Uint8Array(
+      await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, te.encode(plaintext)));
+    const blob = new Uint8Array(28 + ct.length);
+    blob.set(salt, 0); blob.set(iv, 16); blob.set(ct, 28);
+    return toB64(blob);
+  },
+  async decrypt(passphrase, blob) {
+    const raw = fromB64(blob);
+    const key = await deriveKey(passphrase, raw.slice(0, 16));
+    const pt = await crypto.subtle.decrypt(
+      { name: 'AES-GCM', iv: raw.slice(16, 28) }, key, raw.slice(28));
+    return td.decode(pt);
+  },
+};
+
+// ---------- whole-database crypto: sqlcipher-wasm on OPFS ----------
+
+let apiP, sqlite3P;
+const sqlcipher = () => (apiP ??= initSqlcipherApi());
+const sqlite3 = () => (sqlite3P ??= sqlite3InitModule());
+
+function containsMarker(bytes) {
+  const m = te.encode(MARKER);
+  outer: for (let i = 0; i + m.length <= bytes.length; i++) {
+    for (let j = 0; j < m.length; j++) if (bytes[i + j] !== m[j]) continue outer;
+    return true;
+  }
+  return false;
+}
+
+async function opfsDir() {
+  const get = navigator.storage && navigator.storage.getDirectory;
+  if (typeof get !== 'function') return null;
+  try { return await navigator.storage.getDirectory(); } catch { return null; }
+}
+
+async function writeOpfs(name, bytes) {
+  const fh = await (await opfsDir()).getFileHandle(name, { create: true });
+  const w = await fh.createWritable();
+  await w.write(bytes);
+  await w.close();
+}
+
+window.dbCrypto = {
+  async probe() {
+    try {
+      const api = await sqlcipher();
+      const db = api.open(OPFS_DB, PROBE_KEY); // MEMFS file inside the wasm FS
+      db.exec('DROP TABLE IF EXISTS probe');
+      db.exec('CREATE TABLE probe(v TEXT NOT NULL)');
+      db.exec(`INSERT INTO probe VALUES ('${MARKER}')`);
+      db.close();
+      const bytes = api.module.FS.readFile(OPFS_DB);
+      const encrypted = !containsMarker(bytes);
+      if (!(await opfsDir())) {
+        return { opfs: false, encrypted,
+          error: `OPFS unavailable (navigator.storage.getDirectory missing or rejected); ${FALLBACK}` };
+      }
+      try {
+        await writeOpfs(OPFS_DB, bytes);
+      } catch (e) {
+        return { opfs: false, encrypted,
+          error: `OPFS write failed: ${e.message}; ${FALLBACK}` };
+      }
+      return { opfs: true, encrypted, error: null };
+    } catch (e) {
+      return { opfs: false, encrypted: false, error: String(e?.message || e) };
+    }
+  },
+  // Spike-internal helper used by the "reopen" test: read the OPFS bytes
+  // back into the wasm FS and open them with the given key.
+  async reopen(key) {
+    try {
+      const dir = await opfsDir();
+      if (!dir) return { ok: false, error: 'OPFS unavailable' };
+      const file = await (await dir.getFileHandle(OPFS_DB)).getFile();
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const api = await sqlcipher();
+      const name = 'reopen.db';
+      api.module.FS.writeFile(name, bytes);
+      const db = api.open(name, key);
+      try {
+        const rows = db.query('SELECT v FROM probe');
+        return { ok: true, error: null, rows: rows.map((r) => r.v) };
+      } finally {
+        db.close();
+      }
+    } catch (e) {
+      return { ok: false, error: String(e?.message || e) };
+    }
+  },
+};
+
+// ---------- measurements (?bench=1) ----------
+
+const median = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
+
+async function fieldBench(n) {
+  const blobs = new Array(n), et = [], dt = [];
+  for (let i = 0; i < n; i++) {
+    const t0 = performance.now();
+    blobs[i] = await window.fieldCrypto.encrypt('pw', 'field-' + i);
+    et.push(performance.now() - t0);
+    if (i % 200 === 0) log(`field encrypt ${i}/${n}`);
+  }
+  for (let i = 0; i < n; i++) {
+    const t0 = performance.now();
+    await window.fieldCrypto.decrypt('pw', blobs[i]);
+    dt.push(performance.now() - t0);
+    if (i % 200 === 0) log(`field decrypt ${i}/${n}`);
+  }
+  return {
+    count: n,
+    encrypt_total_ms: et.reduce((a, b) => a + b, 0),
+    encrypt_ms_per_field: median(et),
+    decrypt_total_ms: dt.reduce((a, b) => a + b, 0),
+    decrypt_ms_per_field: median(dt),
+  };
+}
+
+const INSERT_SQL = (rows) =>
+  'INSERT INTO t(v) VALUES ' + rows.map((i) => `('value-${i}')`).join(',');
+
+async function dbWriteBench(engine, rows) {
+  const insert_ms = [], export_ms = [], persist_ms = [];
+  let bytes = 0;
+  for (let rep = 0; rep < REPS; rep++) {
+    let db, api;
+    if (engine === 'sqlcipher') {
+      api = await sqlcipher();
+      try { api.module.FS.unlink(`bench-${engine}.db`); } catch { /* first rep */ }
+      db = api.open(`bench-${engine}.db`, 'bench-key');
+    } else {
+      db = new (await sqlite3()).oo1.DB(':memory:');
+    }
+    try {
+      db.exec('CREATE TABLE t(v TEXT NOT NULL)');
+      const t0 = performance.now();
+      db.exec('BEGIN');
+      for (let i = 0; i < rows; i += BATCH)
+        db.exec(INSERT_SQL(Array.from({ length: Math.min(BATCH, rows - i) }, (_, j) => i + j)));
+      db.exec('COMMIT');
+      insert_ms.push(performance.now() - t0);
+
+      const t1 = performance.now();
+      const raw = engine === 'sqlcipher'
+        ? api.module.FS.readFile(`bench-${engine}.db`)
+        : (await sqlite3()).capi.sqlite3_js_db_export(db.pointer);
+      bytes = raw.length;
+      export_ms.push(performance.now() - t1);
+
+      const t2 = performance.now();
+      await writeOpfs(`bench-${engine}.db`, raw);
+      persist_ms.push(performance.now() - t2);
+    } finally {
+      db.close();
+    }
+  }
+  const totals = insert_ms.map((v, i) => v + export_ms[i] + persist_ms[i]);
+  return {
+    engine, rows, reps: REPS,
+    median_ms: median(totals),
+    insert_ms: median(insert_ms),
+    export_ms: median(export_ms),
+    persist_ms: median(persist_ms),
+    bytes, error: null,
+  };
+}
+
+async function runBench() {
+  const m = { field: null, db: { rows: WRITES, engines: [] } };
+  try { m.field = await fieldBench(FIELDS); }
+  catch (e) { m.field = { count: 0, error: String(e?.message || e) }; }
+  for (const engine of ['sqlite', 'sqlcipher']) {
+    try { m.db.engines.push(await dbWriteBench(engine, WRITES)); }
+    catch (e) { m.db.engines.push({ engine, rows: WRITES, median_ms: null, error: String(e?.message || e) }); }
+  }
+  try {
+    const raw = await (await fetch('./vendor/dist/sqlcipher.mjs')).arrayBuffer();
+    const stream = new Blob([raw]).stream().pipeThrough(new CompressionStream('gzip'));
+    m.sqlcipher_mjs_bytes = raw.byteLength;
+    m.sqlcipher_mjs_gz_bytes = (await new Response(stream).blob()).size;
+  } catch (e) { m.asset_error = String(e?.message || e); }
+  window.__measure = m;
+  log('measurements done');
+}
+
+window.__ready = true;
+log('ready');
+if (Q.get('bench')) runBench().catch((e) => { window.__measure = { error: String(e) }; log('bench failed: ' + e); });
+</script>
+</body>
+</html>
