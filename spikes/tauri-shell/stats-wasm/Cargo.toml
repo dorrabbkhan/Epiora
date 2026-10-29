@@ -1,0 +1,14 @@
+[package]
+name = "stats-wasm"
+version = "0.1.0"
+edition = "2021"
+license = "AGPL-3.0-only"
+publish = false
+
+# `cdylib` is what `cargo build --target wasm32-unknown-unknown` turns into a
+# .wasm module; `rlib` lets `cargo test` exercise the same code natively.
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[profile.release]
+panic = "abort"
