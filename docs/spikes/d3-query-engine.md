@@ -79,10 +79,10 @@ code is listed below (`ubuntu-latest`; versions printed in each run's
 "Environment versions" step; `results.json` in the "Report results.json"
 step and the `query-bench-results` artifact). Runs 40883881690,
 40884469336 and 40884720733 executed identical spike code — commits
-30120cb..eddc900 changed docs only; runs 40889431190, 40889903879 and
-40890489262 are the fix-round heads (chunked ingest — same queries,
-seed and reps; ingest is not timed). Each number is the median of 5
-timed repetitions on 1,000,000 rows, in ms.
+30120cb..eddc900 changed docs only; runs 40889431190, 40889903879,
+40890489262 and 40890984797 are the fix-round heads (chunked ingest —
+same queries, seed and reps; ingest is not timed). Each number is the
+median of 5 timed repetitions on 1,000,000 rows, in ms.
 
 | CI run | head | sqlite weekly | sqlite 2×2 | sqlite district | duckdb weekly | duckdb 2×2 | duckdb district |
 |---|---|---|---|---|---|---|---|
@@ -92,6 +92,7 @@ timed repetitions on 1,000,000 rows, in ms.
 | [40889431190](https://github.com/dorrabbkhan/Epiora/actions/runs/40889431190) | bc634f4 | 926.0 | 370.4 | 69.9 | 43.8 | 7.1 | 23.4 |
 | [40889903879](https://github.com/dorrabbkhan/Epiora/actions/runs/40889903879) | 079f731 | 981.0 | 627.6 | 120.1 | 77.4 | 10.5 | 34.0 |
 | [40890489262](https://github.com/dorrabbkhan/Epiora/actions/runs/40890489262) | 3c11185 | 779.3 | 487.0 | 95.6 | 58.8 | 7.4 | 27.8 |
+| [40890984797](https://github.com/dorrabbkhan/Epiora/actions/runs/40890984797) | d65847d | **1036.0** | 638.2 | 121.0 | 82.2 | 11.3 | 40.1 |
 
 (The workflow's `pull_request` path filter evaluates the whole PR diff,
 so each push — including the docs-only commit carrying this table —
@@ -109,13 +110,13 @@ the PR checks list.)
   1042.0 / 369.1 / 65.6 ms, duckdb 43.7 / 9.9 / 39.3 ms.
 - **The sqlite weekly-epi-curve median falls on both sides of the
   1000 ms budget across runs, including on identical spike code**:
-  above it in CI runs 40883881690 (1060.4) and 40884469336 (1065.7)
-  and in the fix-round local run (1042.0), below it in CI runs
-  40884720733 (741.6), 40889431190 (926.0), 40889903879 (981.0) and
-  40890489262 (779.3), and the earlier local runs (789.5, 855.5). The
-  other five medians are under budget in
-  every recorded run. Which run(s) the plan's Step-5 rule applies to
-  is escalated to the owner by the conductor; the Decision section
+  above it in CI runs 40883881690 (1060.4), 40884469336 (1065.7) and
+  40890984797 (1036.0) and in the fix-round local run (1042.0), below
+  it in CI runs 40884720733 (741.6), 40889431190 (926.0), 40889903879
+  (981.0) and 40890489262 (779.3), and the earlier local runs
+  (789.5, 855.5). The other five medians are under budget in every
+  recorded run. Which run(s) the plan's Step-5 rule applies to is
+  escalated to the owner by the conductor; the Decision section
   below is unchanged pending that decision.
 - Engine download weight (`bundle_gz_bytes`, measured in-page with
   `CompressionStream('gzip')`, identical on every run): sqlite 586,888
@@ -131,11 +132,12 @@ the PR checks list.)
   50,000,000 rows and executed all three queries (`OOM rows:` line in
   the "Playwright benchmark" step). CI runs
   [40889431190](https://github.com/dorrabbkhan/Epiora/actions/runs/40889431190),
-  [40889903879](https://github.com/dorrabbkhan/Epiora/actions/runs/40889903879)
-  and [40890489262](https://github.com/dorrabbkhan/Epiora/actions/runs/40890489262):
+  [40889903879](https://github.com/dorrabbkhan/Epiora/actions/runs/40889903879),
+  [40890489262](https://github.com/dorrabbkhan/Epiora/actions/runs/40890489262)
+  and [40890984797](https://github.com/dorrabbkhan/Epiora/actions/runs/40890984797):
   duckdb medians on the 50M-row table 1900.7 / 213.8 / 811.5 ms,
-  3366.7 / 323.2 / 1380.8 ms and 2693.4 / 280.0 / 1044.1 ms. Local
-  run, exact command
+  3366.7 / 323.2 / 1380.8 ms, 2693.4 / 280.0 / 1044.1 ms and
+  3482.7 / 342.0 / 1338.6 ms. Local run, exact command
   `cd spikes/query-bench && npx playwright test -g "records OOM"`
   (1.6 min, `OOM rows:` line in the test output): duckdb medians
   2005.7 / 216.3 / 796.8 ms; no renderer crash, no hang.
@@ -176,10 +178,10 @@ on SQLite alone meeting 1 s.
 
 - The sqlite weekly epi-curve (a per-row `strftime` + GROUP BY over 1M
   rows) measured on **both** sides of the 1000 ms budget across runs,
-  including on identical spike code — above it in two CI runs and one
-  local run, below it in four CI runs and two local runs — so whether
-  SQLite alone meets §12.8 depends on which run(s) the plan's rule
-  applies to (escalated to the owner). The D7 reference device and
+  including on identical spike code — above it in three CI runs and
+  one local run, below it in four CI runs and two local runs — so
+  whether SQLite alone meets §12.8 depends on which run(s) the plan's
+  rule applies to (escalated to the owner). The D7 reference device and
   field phones will be slower than `ubuntu-latest`, not faster.
 - `epiora-app` therefore keeps SQLite as the on-device store (spec §7.1)
   and lazy-loads DuckDB-wasm (~8.0 MB gz, fetched once and cached by the
