@@ -192,12 +192,14 @@ its merged report's Decision line verbatim and linking the report and this
 log. `docs/spikes/README.md` indexes the nine reports (status, verbatim
 decision, link) and lists the inputs v0.2 consumes. The sentences the
 decisions change in §8.3 (data wrangling engine), §9 (WebR mobile fallback)
-and §11.1 (browser whole-DB encryption) are left unchanged — writing them
-records architecture facts and is an owner gate; they are listed as proposed
-spec changes in the PR for the owner to apply or reject.
+and §11.1 (browser whole-DB encryption), plus the stale references in §2
+(D2 licence) and §12.8 (D7 reference proxy), were updated on the owner's
+decision in fix round 1 with the wording proposed in the PR.
 Evidence: docs/spikes/README.md; spec §17; the nine reports under docs/spikes/
 Files outside the Files block:
 - scripts/check-spikes.sh — README.md added to the exempt list alongside
   TEMPLATE.md so the new spike index is not linted as a report (the task's
   Files block did not anticipate the index tripping the checker).
+- scripts/tests/check-spikes.bats — "ignores README.md" case covering the
+  README.md exemption.
 Supersedes: —

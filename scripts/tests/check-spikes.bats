@@ -72,3 +72,9 @@ EOF
   run "$CHECK" "$DIR"
   [ "$status" -eq 0 ]
 }
+
+@test "ignores README.md" {
+  echo "# Index without headings or status" >"$DIR/README.md"
+  run "$CHECK" "$DIR"
+  [ "$status" -eq 0 ]
+}
