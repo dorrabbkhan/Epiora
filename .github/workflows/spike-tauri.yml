@@ -80,14 +80,17 @@ jobs:
       # and the UI dump in the step output/artifact.
       - name: Run on emulator and check RR = 5.57
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          # Deterministic build output; the action's script env does not
+          # reliably expose GITHUB_WORKSPACE (seen in run 40978035931).
+          APK: /home/runner/work/Epiora/Epiora/spikes/tauri-shell/src-tauri/gen/android/app/build/outputs/apk/universal/debug/app-universal-debug.apk
         with:
           api-level: 34
           target: google_apis
           arch: x86_64
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: |
-            APK=$(find "$GITHUB_WORKSPACE" /home/runner/work -name '*.apk' 2>/dev/null | head -1)
-            echo "APK=$APK"
+            echo "APK=$APK"; ls -l "$APK"
             echo "Installing $APK"
             adb -s emulator-5554 install -r "$APK"
             adb -s emulator-5554 shell monkey -p com.epiora.spike -c android.intent.category.LAUNCHER 1
