@@ -26,7 +26,7 @@ jobs:
       - name: Rust toolchain + Android/wasm targets
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: x86_64-linux-android, wasm32-unknown-unknown
+          targets: x86_64-linux-android, aarch64-linux-android, wasm32-unknown-unknown
 
       - name: Install spike dependencies (npm ci)
         working-directory: spikes/tauri-shell
@@ -68,6 +68,21 @@ jobs:
           find src-tauri/gen/android -name '*.apk' -exec ls -l {} +
           find src-tauri/gen/android -name '*.apk' -exec du -h {} + | tee apk-size.txt
 
+      # Plan Task 10 Step 4 (owner choice A): the APK-size number is a
+      # release aarch64 build. No keystore is configured, so Gradle
+      # produces *-release-unsigned.apk — unsigned is fine for a spike.
+      - name: tauri android build (release APK, aarch64)
+        working-directory: spikes/tauri-shell
+        run: |
+          export NDK_HOME="${NDK_HOME:-$ANDROID_NDK_LATEST_HOME}"
+          npx tauri android build --apk --target aarch64
+
+      - name: Record release APK size (aarch64)
+        working-directory: spikes/tauri-shell
+        run: |
+          find src-tauri/gen/android -name '*release*.apk' -exec ls -l {} +
+          find src-tauri/gen/android -name '*release*.apk' -exec stat -c '%s bytes  %n' {} \; | tee apk-size-release.txt
+
       # GitHub's ubuntu runners expose /dev/kvm but the action user lacks
       # access; without this the emulator runs with `-accel off` and an
       # x86_64 system image never finishes booting (seen in run 40970658633).
@@ -107,6 +122,7 @@ jobs:
             ui.xml
             emulator.log
             spikes/tauri-shell/apk-size.txt
+            spikes/tauri-shell/apk-size-release.txt
           retention-days: 30
           if-no-files-found: warn
 
