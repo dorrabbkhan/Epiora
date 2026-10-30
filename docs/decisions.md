@@ -168,7 +168,12 @@ keying needs connect-time pragma support or a fork before v0.3 (the
 plugin's pool and auto-create defeat a raw `PRAGMA key` execute —
 measured on-device); the vendored libsqlite3-sys patch must track
 upstream bumps.
-APK size and cold start on the D7 device: human step, pending owner run.
+APK size and cold start on the D7 reference: measured on the D7 proxy
+(CI emulator) per the owner's Task 8 decision and owner option A for
+Step 4 — aarch64 release APK (unsigned, arm64-v8a only) 8,560,415
+bytes; cold start `am start -W` TotalTime 1716/1354/740 ms on the
+x86_64 debug APK (the aarch64 APK cannot run on the x86_64 emulator);
+real-device confirmation deferred to a later plan.
 Evidence: docs/spikes/tauri-mobile.md
 Files outside the Files block:
 - spikes/tauri-shell/package.json, package-lock.json — npm manifest + lockfile for `npm ci` (create-tauri-app generated + edited).

@@ -52,10 +52,14 @@ built with SQLite3MultipleCiphers?
   command to prove the file is not plain SQLite.
 - `.github/workflows/spike-tauri.yml`: the `android` job runs the
   `stats-wasm` `cargo test` (Oswego RR), builds a debug APK for
-  `x86_64`, runs it on an API-34 emulator and asserts
-  `adb shell uiautomator dump` contains both `RR = 5.57` and the
-  sqlite3mc read-back line (`epiora-sqlite3mc-ok`, `SQLite3 Multiple
-  Ciphers`, `chacha20`); the `ios` job runs
+  `x86_64`, builds an unsigned release APK for `aarch64` (the Step 4
+  APK-size number), runs the debug APK on an API-34 emulator and
+  asserts `adb shell uiautomator dump` contains both `RR = 5.57` and
+  the sqlite3mc read-back line (`epiora-sqlite3mc-ok`, `SQLite3
+  Multiple Ciphers`, `chacha20`), then measures cold start on the D7
+  proxy: `am force-stop` + `am start -W` three times (the launcher
+  activity name is resolved from the installed manifest, giving
+  `com.epiora.spike/.MainActivity`); the `ios` job runs
   `tauri ios build --debug --target aarch64-sim`, installs the .app on
   a created iPhone 15 simulator and asserts `simctl launch` returns the
   app PID.
@@ -148,10 +152,26 @@ built with SQLite3MultipleCiphers?
   first 16 bytes are ciphertext (no `SQLite format 3` magic). iOS:
   `tauri-shell.app` built for aarch64-sim and launched on an iPhone 15
   simulator.
-- APK size and cold-start on the D7 reference device: **human step
-  (plan Task 10 Step 4) — pending the owner's real-device run.** The
-  debug universal APK size above is the CI number; it is not the D7
-  measurement.
+- Run
+  [41042829556](https://github.com/dorrabbkhan/Epiora/actions/runs/41042829556):
+  **plan Task 10 Step 4, measured on the D7 proxy** — the recorded D7
+  reference is the emulator (owner's Task 8 decision, 2026-10-29), and
+  the owner chose option A for this step (2026-10-30); real-device
+  confirmation is deferred to a later plan, as for Task 8. Proxy
+  environment recorded in the job log: API level 34 / Android 14,
+  `sdk_gphone64_x86_64` (`google_apis`, x86_64, ranchu, `ro.kernel.qemu=1`),
+  `/dev/kvm` present on the host (KVM), emulator options
+  `-no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio
+  -no-boot-anim`.
+  - APK size: `app-universal-release-unsigned.apk` — release, unsigned,
+    containing only `lib/arm64-v8a/libtauri_shell_lib.so` (aarch64) —
+    **8,560,415 bytes** (`stat` in the "Record release APK size
+    (aarch64)" step; the APK is also in the `tauri-android` artifact).
+  - Cold start, three cold runs of `am force-stop com.epiora.spike`
+    then `am start -W -n com.epiora.spike/.MainActivity`
+    (LaunchState: COLD each run) — measured on the **x86_64 debug APK**
+    because the aarch64 release APK cannot run on the x86_64 emulator:
+    TotalTime **1716 / 1354 / 740 ms** (WaitTime 1781 / 1389 / 749 ms).
 
 ## Decision
 
