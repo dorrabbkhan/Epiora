@@ -86,7 +86,8 @@ jobs:
           arch: x86_64
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: |
-            APK=$(find "$GITHUB_WORKSPACE/spikes/tauri-shell/src-tauri/gen/android" -name '*.apk' | head -1)
+            APK=$(find "$GITHUB_WORKSPACE" /home/runner/work -name '*.apk' 2>/dev/null | head -1)
+            echo "APK=$APK"
             echo "Installing $APK"
             adb -s emulator-5554 install -r "$APK"
             adb -s emulator-5554 shell monkey -p com.epiora.spike -c android.intent.category.LAUNCHER 1
