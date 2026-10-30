@@ -495,12 +495,12 @@ around month 14–21; university pilots start earlier, at v1.0.
 | # | Decision | Resolve by |
 |---|---|---|
 | D1 | Formal trademark clearance for "Epiora" (USPTO, EUIPO/TMview), domain and package names | Before v1.2 public launch |
-| D2 | Exact licence of the Epi Info 7 source (Apache 2.0 or public domain) before reusing its grammar or code | v0.1 |
-| D3 | DuckDB-wasm alongside SQLite, or SQLite alone | v0.1 spike |
+| D2 | Exact licence of the Epi Info 7 source (Apache 2.0 or public domain) before reusing its grammar or code | **Resolved (v0.1):** "Reuse permitted with notice (Apache-2.0)" — [report](../../spikes/d2-epi-info-licence.md), [decision](../../decisions.md) |
+| D3 | DuckDB-wasm alongside SQLite, or SQLite alone | **Resolved (v0.1):** "SQLite for storage plus DuckDB-wasm for analytic queries" — [report](../../spikes/d3-query-engine.md), [decision](../../decisions.md) |
 | D4 | Licence for bundling WHO growth reference tables | Before v1.3 |
 | D5 | geoBoundaries commercial-use terms | Before v1.4 |
-| D6 | Whole-database encryption in the browser (open SQLCipher wasm build or field-level only) | v0.1 spike |
-| D7 | Low-end Android reference device | v0.1 |
+| D6 | Whole-database encryption in the browser (open SQLCipher wasm build or field-level only) | **Resolved (v0.1):** "field-level only" — [report](../../spikes/d6-browser-encryption.md), [decision](../../decisions.md) |
+| D7 | Low-end Android reference device | **Resolved (v0.1):** "Pixel emulator + Chrome DevTools 4× CPU throttle and Slow 4G" (owner-chosen proxy); "advanced methods are hosted-only on mobile (spec §9)" — [report](../../spikes/d7-webr-mobile.md), [decision](../../decisions.md) |
 | D8 | Whether Electric replaces the custom sync protocol | v2.0 spec |
 | D9 | Competitor scan confirming USP claims | Before v1.0 |
 

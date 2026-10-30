@@ -184,3 +184,20 @@ Files outside the Files block:
 - spikes/tauri-shell/src-tauri/vendor/libsqlite3-sys/ — vendored 0.30.1 with the bundled amalgamation swapped for sqlite3mc-src (MIT); implements "SQL plugin built with SQLite3MultipleCiphers".
 - docs/decisions.md — plan Architecture requires a decisions entry per spike.
 Supersedes: —
+
+### v0.1 Task 11 — v0.1 closed: §17 rows D2, D3, D6, D7 resolved (2026-10-30)
+
+Decision: spec §17 rows D2, D3, D6 and D7 are marked resolved, each quoting
+its merged report's Decision line verbatim and linking the report and this
+log. `docs/spikes/README.md` indexes the nine reports (status, verbatim
+decision, link) and lists the inputs v0.2 consumes. The sentences the
+decisions change in §8.3 (data wrangling engine), §9 (WebR mobile fallback)
+and §11.1 (browser whole-DB encryption) are left unchanged — writing them
+records architecture facts and is an owner gate; they are listed as proposed
+spec changes in the PR for the owner to apply or reject.
+Evidence: docs/spikes/README.md; spec §17; the nine reports under docs/spikes/
+Files outside the Files block:
+- scripts/check-spikes.sh — README.md added to the exempt list alongside
+  TEMPLATE.md so the new spike index is not linted as a report (the task's
+  Files block did not anticipate the index tripping the checker).
+Supersedes: —

@@ -2,7 +2,7 @@
 # Spike report checker. Usage: scripts/check-spikes.sh [DIR]
 #
 # Exits 0 when every *.md file in DIR (default: docs/spikes) except
-# TEMPLATE.md contains the headings:
+# TEMPLATE.md and README.md (the v0.1 index, not a report) contains the headings:
 #   ## Question  ## Method  ## Environment  ## Measurements
 #   ## Decision  ## Consequences  ## Licences
 # and a line "**Status:** go|no-go|go-with-changes".
@@ -21,7 +21,7 @@ fail=0
 
 for f in "$dir"/*.md; do
   [ -e "$f" ] || continue
-  [ "$(basename "$f")" = TEMPLATE.md ] && continue
+  case "$(basename "$f")" in TEMPLATE.md|README.md) continue ;; esac
   for h in "${headings[@]}"; do
     if ! grep -q "^## $h\b" "$f"; then
       echo "$f: missing '## $h'" >&2
