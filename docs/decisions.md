@@ -154,6 +154,7 @@ Files outside the Files block:
 - spikes/sync-proto/Cargo.lock — lockfile pinning rand 0.9.5 / rand_chacha 0.9.0 and transitive deps for reproducible runs (cargo-generated).
 - docs/decisions.md — plan Architecture requires a decisions entry per spike.
 Supersedes: —
+
 ### v0.1 Task 10 — Tauri 2 shell on Android and iOS (2026-10-29)
 
 Decision: go-with-changes — Tauri for desktop and mobile. A Tauri 2 app
@@ -161,9 +162,12 @@ Decision: go-with-changes — Tauri for desktop and mobile. A Tauri 2 app
 shows `2x2 RR = 5.57` from a wasm `risk_ratio` on an emulator, and
 builds + launches on the iOS simulator; the SQL plugin opens
 `epiora.db` keyed via `PRAGMA key` on SQLite3MultipleCiphers (vendored
-libsqlite3-sys compiling sqlite3mc-src 2.5.1, chacha20). Changes:
-per-connection keying needs plugin pragma support or a fork before
-v0.3; the vendored libsqlite3-sys patch must track upstream bumps.
+libsqlite3-sys compiling sqlite3mc-src 2.5.1, chacha20), verified
+on-device in CI (row write + read-back, ciphertext header). Changes:
+keying needs connect-time pragma support or a fork before v0.3 (the
+plugin's pool and auto-create defeat a raw `PRAGMA key` execute —
+measured on-device); the vendored libsqlite3-sys patch must track
+upstream bumps.
 APK size and cold start on the D7 device: human step, pending owner run.
 Evidence: docs/spikes/tauri-mobile.md
 Files outside the Files block:
