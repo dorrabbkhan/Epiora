@@ -74,51 +74,32 @@ jobs:
           sudo udevadm trigger --name-match=kvm
           ls -l /dev/kvm
 
-      # Manual emulator run (android-emulator-runner hides the emulator's
-      # own output, which made run 40970658633/40972949756 undebuggable);
-      # emulator.log is cat'ed at the end whatever happens.
-      - name: Create AVD
-        run: |
-          export ANDROID_AVD_HOME="$HOME/.android/avd"
-          SDKTOOLS="$ANDROID_HOME/cmdline-tools/latest/bin"
-          "$SDKTOOLS/sdkmanager" --install 'system-images;android-34;default;x86_64' 'emulator' 'platform-tools'
-          echo no | "$SDKTOOLS/avdmanager" create avd --force -n test --package 'system-images;android-34;default;x86_64'
-          ls -la "$ANDROID_AVD_HOME" || true
-          "$ANDROID_HOME/emulator/emulator" -list-avds || true
-
+      # google_apis target + swiftshader is the recipe that boots on GH's
+      # ubuntu runners (the `default` image never reached adb in runs
+      # 40970658633 and 40972949756). The script also leaves emulator.log
+      # and the UI dump in the step output/artifact.
       - name: Run on emulator and check RR = 5.57
-        run: |
-          set -x
-          export ANDROID_AVD_HOME="$HOME/.android/avd"
-          "$ANDROID_HOME/emulator/emulator" -port 5554 -avd test -accel on \
-            -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio \
-            -no-boot-anim -camera-access none > emulator.log 2>&1 &
-          EMU_PID=$!
-          booted=0
-          for i in $(seq 1 90); do
-            if adb -s emulator-5554 shell getprop sys.boot_completed 2>/dev/null | grep -q 1; then
-              booted=1; break
-            fi
-            if ! kill -0 "$EMU_PID" 2>/dev/null; then echo "emulator process died"; break; fi
-            sleep 5
-          done
-          echo "booted=$booted"
-          if [ "$booted" != 1 ]; then tail -50 emulator.log; exit 1; fi
-          APK=$(find spikes/tauri-shell/src-tauri/gen/android -name '*.apk' | head -1)
-          echo "Installing $APK"
-          adb -s emulator-5554 install -r "$APK"
-          adb -s emulator-5554 shell monkey -p com.epiora.spike -c android.intent.category.LAUNCHER 1
-          ok=0
-          for i in $(seq 1 30); do
-            adb -s emulator-5554 shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1 || true
-            adb -s emulator-5554 pull /sdcard/ui.xml ui.xml >/dev/null 2>&1 || true
-            if grep -q 'RR = 5.57' ui.xml 2>/dev/null; then ok=1; break; fi
-            sleep 2
-          done
-          echo "uiautomator texts:"; grep -o 'text="[^"]*"' ui.xml 2>/dev/null | head -10 || true
-          tail -30 emulator.log
-          if [ "$ok" != 1 ]; then echo "RR = 5.57 not found in UI"; head -50 ui.xml; exit 1; fi
-          echo "FOUND: RR = 5.57"
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          script: |
+            APK=$(find spikes/tauri-shell/src-tauri/gen/android -name '*.apk' | head -1)
+            echo "Installing $APK"
+            adb -s emulator-5554 install -r "$APK"
+            adb -s emulator-5554 shell monkey -p com.epiora.spike -c android.intent.category.LAUNCHER 1
+            ok=0
+            for i in $(seq 1 30); do
+              adb -s emulator-5554 shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1 || true
+              adb -s emulator-5554 pull /sdcard/ui.xml ui.xml >/dev/null 2>&1 || true
+              if grep -q 'RR = 5.57' ui.xml 2>/dev/null; then ok=1; break; fi
+              sleep 2
+            done
+            echo "uiautomator texts:"; grep -o 'text="[^"]*"' ui.xml 2>/dev/null | head -10 || true
+            if [ "$ok" != 1 ]; then echo "RR = 5.57 not found in UI"; head -50 ui.xml; exit 1; fi
+            echo "FOUND: RR = 5.57"
 
       - name: Upload APK and UI dump
         uses: actions/upload-artifact@v4
