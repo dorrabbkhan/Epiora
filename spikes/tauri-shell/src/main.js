@@ -19,26 +19,34 @@ async function showRiskRatio() {
 async function showDatabase() {
   const el = document.querySelector("#db");
   try {
+    // The plugin's auto-create opens a WAL connection that writes a PLAIN
+    // SQLite header before any `PRAGMA key` could run (NOTADB on-device).
+    // `db_prepare` creates epiora.db already keyed instead.
+    await window.__TAURI__.core.invoke("db_prepare");
     const Database = window.__TAURI__.sql;
     const db = await Database.load("sqlite:epiora.db");
-    // sqlite3mc keys the connection; it must run before any file access on
-    // this pooled connection (the plugin exposes no key option — see report).
-    await db.execute("PRAGMA key = 'epiora-spike-key'");
-    await db.execute("CREATE TABLE IF NOT EXISTS marker (v TEXT NOT NULL)");
-    await db.execute("INSERT INTO marker (v) VALUES ('epiora-sqlite3mc-ok')");
-    const rows = await db.select("SELECT v FROM marker ORDER BY rowid LIMIT 1");
-    const version = await db.select("SELECT sqlite3mc_version() AS v");
-    const cipher = await db.select("PRAGMA cipher");
+    // sqlx pools hand each call a possibly different connection and the
+    // plugin exposes no key option, so every call keys whichever pooled
+    // connection runs it (same-connection batch) before touching the file.
+    const K = "PRAGMA key = 'epiora-spike-key'; ";
+    await db.execute(K + "CREATE TABLE IF NOT EXISTS marker (v TEXT NOT NULL)");
+    await db.execute(K + "INSERT INTO marker (v) VALUES ('epiora-sqlite3mc-ok')");
+    // Each call returns the PRAGMA's `ok` row first, then the data rows.
+    const rows = await db.select(K + "SELECT v FROM marker ORDER BY rowid LIMIT 1");
+    const version = await db.select(K + "SELECT sqlite3mc_version() AS v");
+    const cipher = await db.select(K + "PRAGMA cipher");
     const header = await window.__TAURI__.core.invoke("db_header");
     // `PRAGMA cipher` returns one row whose column name is the cipher name
     // itself ({ "chacha20": "chacha20" }), so read the value positionally.
-    const cipherName = Object.values(cipher[0] ?? {})[0];
+    const cipherName = Object.values(cipher[cipher.length - 1] ?? {})[0];
     // First bytes of a plain SQLite file, hex — proves epiora.db is ciphertext.
     const sqliteMagic = "53514c69746520666f726d61742033";
     const enc = header.startsWith(sqliteMagic) ? "PLAINTEXT" : "encrypted";
     el.textContent =
-      `sqlite3mc: ${version[0].v} | cipher: ${cipherName}` +
-      ` | read-back: ${rows[0].v} | header: ${header} (${enc})`;
+      `sqlite3mc: ${version[version.length - 1].v}` +
+      ` | cipher: ${cipherName}` +
+      ` | read-back: ${rows[rows.length - 1].v}` +
+      ` | header: ${header} (${enc})`;
   } catch (e) {
     el.textContent = `sqlite3mc: error: ${e}`;
   }

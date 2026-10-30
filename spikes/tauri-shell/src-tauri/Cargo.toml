@@ -20,6 +20,11 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 tauri = { version = "2", features = [] }
 tauri-plugin-sql = { version = "2", features = ["sqlite"] }
+# Direct dep so `db_prepare` can create epiora.db already keyed: the SQL
+# plugin's auto-create opens a WAL connection that writes a plain SQLite
+# header before the page could run `PRAGMA key` (seen on-device in run
+# 40983238304: "file is not a database"). Already in the tree via the plugin.
+sqlx = { version = "0.8", default-features = false, features = ["sqlite", "runtime-tokio"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
