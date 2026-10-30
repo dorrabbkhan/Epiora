@@ -30,9 +30,15 @@ async function showDatabase() {
     const version = await db.select("SELECT sqlite3mc_version() AS v");
     const cipher = await db.select("PRAGMA cipher");
     const header = await window.__TAURI__.core.invoke("db_header");
+    // `PRAGMA cipher` returns one row whose column name is the cipher name
+    // itself ({ "chacha20": "chacha20" }), so read the value positionally.
+    const cipherName = Object.values(cipher[0] ?? {})[0];
+    // First bytes of a plain SQLite file, hex — proves epiora.db is ciphertext.
+    const sqliteMagic = "53514c69746520666f726d61742033";
+    const enc = header.startsWith(sqliteMagic) ? "PLAINTEXT" : "encrypted";
     el.textContent =
-      `sqlite3mc: ${version[0].v} | cipher: ${cipher[0].cipher}` +
-      ` | read-back: ${rows[0].v} | header: ${header}`;
+      `sqlite3mc: ${version[0].v} | cipher: ${cipherName}` +
+      ` | read-back: ${rows[0].v} | header: ${header} (${enc})`;
   } catch (e) {
     el.textContent = `sqlite3mc: error: ${e}`;
   }

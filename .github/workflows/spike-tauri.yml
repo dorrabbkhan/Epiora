@@ -36,6 +36,10 @@ jobs:
         working-directory: spikes/tauri-shell
         run: npm run build:wasm
 
+      - name: stats-wasm unit test (Oswego RR)
+        working-directory: spikes/tauri-shell
+        run: cargo test --manifest-path stats-wasm/Cargo.toml
+
       - name: Android toolchain versions
         run: |
           echo "ANDROID_HOME=$ANDROID_HOME"
