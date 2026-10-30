@@ -1,0 +1,178 @@
+name: spike-tauri
+
+on:
+  pull_request:
+    paths:
+      - 'spikes/tauri-shell/**'
+      - '.github/workflows/spike-tauri.yml'
+      - 'scripts/check.sh'
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Rust toolchain + Android/wasm targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-linux-android, aarch64-linux-android, wasm32-unknown-unknown
+
+      - name: Install spike dependencies (npm ci)
+        working-directory: spikes/tauri-shell
+        run: npm ci
+
+      - name: Build stats wasm module
+        working-directory: spikes/tauri-shell
+        run: npm run build:wasm
+
+      - name: stats-wasm unit test (Oswego RR)
+        working-directory: spikes/tauri-shell
+        run: cargo test --manifest-path stats-wasm/Cargo.toml
+
+      - name: Android toolchain versions
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          echo "ANDROID_NDK_HOME=$ANDROID_NDK_HOME"
+          echo "ANDROID_NDK_LATEST_HOME=$ANDROID_NDK_LATEST_HOME"
+          ls "$ANDROID_HOME/ndk" 2>/dev/null || true
+          rustc --version
+          java -version 2>&1 | head -1
+
+      - name: tauri android init
+        working-directory: spikes/tauri-shell
+        run: npx tauri android init
+
+      - name: tauri android build (debug APK, x86_64)
+        working-directory: spikes/tauri-shell
+        # ANDROID_NDK_LATEST_HOME is set by the ubuntu runner image;
+        # cargo-mobile2 also looks for NDK under $ANDROID_HOME/ndk.
+        run: |
+          export NDK_HOME="${NDK_HOME:-$ANDROID_NDK_LATEST_HOME}"
+          echo "NDK_HOME=$NDK_HOME"
+          npx tauri android build --debug --apk --target x86_64
+
+      - name: Record APK size
+        working-directory: spikes/tauri-shell
+        run: |
+          find src-tauri/gen/android -name '*.apk' -exec ls -l {} +
+          find src-tauri/gen/android -name '*.apk' -exec du -h {} + | tee apk-size.txt
+
+      # Plan Task 10 Step 4 (owner choice A): the APK-size number is a
+      # release aarch64 build. No keystore is configured, so Gradle
+      # produces *-release-unsigned.apk — unsigned is fine for a spike.
+      - name: tauri android build (release APK, aarch64)
+        working-directory: spikes/tauri-shell
+        run: |
+          export NDK_HOME="${NDK_HOME:-$ANDROID_NDK_LATEST_HOME}"
+          npx tauri android build --apk --target aarch64
+
+      - name: Record release APK size (aarch64)
+        working-directory: spikes/tauri-shell
+        run: |
+          find src-tauri/gen/android -name '*release*.apk' -exec ls -l {} +
+          find src-tauri/gen/android -name '*release*.apk' -exec stat -c '%s bytes  %n' {} \; | tee apk-size-release.txt
+
+      # GitHub's ubuntu runners expose /dev/kvm but the action user lacks
+      # access; without this the emulator runs with `-accel off` and an
+      # x86_64 system image never finishes booting (seen in run 40970658633).
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm
+
+      # google_apis target + swiftshader is the recipe that boots on GH's
+      # ubuntu runners (the `default` image never reached adb in runs
+      # 40970658633 and 40972949756). The script also leaves emulator.log
+      # and the UI dump in the step output/artifact.
+      - name: Run on emulator and check RR = 5.57
+        uses: reactivecircus/android-emulator-runner@v2
+        env:
+          # Deterministic build output; the action's script env does not
+          # reliably expose GITHUB_WORKSPACE (seen in run 40978035931).
+          APK: /home/runner/work/Epiora/Epiora/spikes/tauri-shell/src-tauri/gen/android/app/build/outputs/apk/universal/debug/app-universal-debug.apk
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          # Each `script:` line is its own `sh -c`, so the check lives in
+          # one committed script invoked as a single line.
+          script: bash /home/runner/work/Epiora/Epiora/spikes/tauri-shell/ci-android-check.sh
+
+      - name: Upload APK and UI dump
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tauri-android
+          path: |
+            spikes/tauri-shell/src-tauri/gen/android/app/build/outputs/apk/**/*.apk
+            ui.xml
+            emulator.log
+            spikes/tauri-shell/apk-size.txt
+            spikes/tauri-shell/apk-size-release.txt
+          retention-days: 30
+          if-no-files-found: warn
+
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Rust toolchain + iOS-sim/wasm targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios-sim, wasm32-unknown-unknown
+
+      - name: Install spike dependencies (npm ci)
+        working-directory: spikes/tauri-shell
+        run: npm ci
+
+      - name: Build stats wasm module
+        working-directory: spikes/tauri-shell
+        run: npm run build:wasm
+
+      - name: Xcode + toolchain versions
+        run: |
+          xcodebuild -version
+          rustc --version
+
+      - name: tauri ios init
+        working-directory: spikes/tauri-shell
+        run: npx tauri ios init
+
+      - name: tauri ios build (debug, aarch64-sim)
+        working-directory: spikes/tauri-shell
+        run: npx tauri ios build --debug --target aarch64-sim
+
+      - name: Launch on iOS simulator
+        working-directory: spikes/tauri-shell
+        run: |
+          APP=$(find src-tauri/gen/apple -name '*.app' -path '*iphonesimulator*' | head -1)
+          if [ -z "$APP" ]; then APP=$(find src-tauri/gen/apple -name '*.app' | head -1); fi
+          echo "App bundle: $APP"
+          test -n "$APP"
+          DEV=$(xcrun simctl create "epiora-spike" "iPhone 15" 2>/dev/null || xcrun simctl create "epiora-spike" "com.apple.CoreSimulator.SimDeviceType.iPhone-15" "com.apple.CoreSimulator.SimRuntime.iOS-17-5")
+          echo "Simulator: $DEV"
+          xcrun simctl boot "$DEV" || true
+          sleep 5
+          xcrun simctl install "$DEV" "$APP"
+          LAUNCH_OUT=$(xcrun simctl launch "$DEV" com.epiora.spike 2>&1) || true
+          echo "$LAUNCH_OUT"
+          echo "$LAUNCH_OUT" | grep -q 'com.epiora.spike'

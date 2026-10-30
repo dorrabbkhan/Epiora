@@ -1,0 +1,44 @@
+[package]
+name = "tauri-shell"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "tauri_shell_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-sql = { version = "2", features = ["sqlite"] }
+# Direct dep so `db_prepare` can create epiora.db already keyed: the SQL
+# plugin's auto-create opens a WAL connection that writes a plain SQLite
+# header before the page could run `PRAGMA key` (seen on-device in run
+# 40983238304: "file is not a database"). Already in the tree via the plugin.
+sqlx = { version = "0.8", default-features = false, features = ["sqlite", "runtime-tokio"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# The SQL plugin's sqlx sqlite driver builds its bundled SQLite through
+# libsqlite3-sys; this vendored copy swaps the bundled amalgamation for
+# SQLite3 Multiple Ciphers so `PRAGMA key` encrypts epiora.db (spec §11.1).
+[patch.crates-io]
+libsqlite3-sys = { path = "vendor/libsqlite3-sys" }
+
+
+# Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true
