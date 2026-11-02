@@ -1,8 +1,9 @@
 # AGENTS.md — Epiora
 
 Epiora is a local-first, open-core successor to CDC's Epi Info: a Rust statistics engine compiled to wasm and
-native, a React app, and R (WebR) on demand. The current version, v0.1, is a set of throwaway **spikes** that
-test risky technical bets and record decisions.
+native, a React app, and R (WebR) on demand. The current version, v0.2, builds `epiora-core` — a validated,
+deterministic statistics engine — and its browser binding `epiora-wasm` under `crates/`. The v0.1 **spikes**
+are frozen: they stay under `spikes/` for reference, and nothing outside `spikes/` ever imports them.
 
 **The source of truth is `docs/superpowers/specs/2026-10-28-epiora-platform-design.md`, and for each task, the
 plan named by the conductor.** Read the spec sections your task references before writing code. If the spec
@@ -11,12 +12,17 @@ or plan and this file disagree, the spec and plan win. If they are ambiguous or 
 
 ## Commands
 
-- **`./scripts/check.sh quick` — the iteration gate.** Spike report checker, shell tests, and the tests of
-  any spike whose folder changed (`cargo test` for Rust spikes, `node --test` for Node spikes).
+- **`./scripts/check.sh quick` — the iteration gate.** Spike report checker, shell tests (bats), the engine
+  gate (`scripts/check-engine.sh quick`: `cargo fmt --check`, `cargo clippy --workspace --all-targets
+  --all-features -- -D warnings`, `cargo test --workspace --all-features`, `cargo deny check`) when `crates/`,
+  `Cargo.toml` or `deny.toml` changed, and the tests of any spike whose folder changed.
 - **`./scripts/check.sh` — the full local gate; run it once before every push.** All of the above for every
-  spike, plus Playwright spikes when `E2E=1`. CI-only checks (Windows, macOS, Android emulator) run on GitHub.
+  spike plus `scripts/check-engine.sh full`, and Playwright spikes when `E2E=1`. CI-only checks (Windows,
+  macOS, Android emulator) run on GitHub.
 - Spike report checker: `scripts/check-spikes.sh` (created by v0.1 Task 1).
 - Regenerate R fixtures (only when the task says so): `Rscript fixtures/generate.R`.
+- Offline machines: `CARGO_NET_OFFLINE=true` makes cargo use the local registry cache and cargo-deny run
+  `--offline` against the advisory DB mirrored under `target/`.
 
 ## Hard rules
 
@@ -27,19 +33,27 @@ or plan and this file disagree, the spec and plan win. If they are ambiguous or 
    exact command that produced it. Never estimate, round up or invent a measurement; if a run fails, the
    failure is the measurement.
 4. **Decision rules are fixed by the plan.** Apply the rule written in your task; do not change thresholds.
-5. **Spike code stays in `spikes/<name>/`** and is never imported from outside it.
+5. **Spike code stays in `spikes/<name>/`** and is never imported from outside it. Spikes are frozen in v0.2.
 6. **Licences:** record the licence of every dependency you add. Never use GADM data, the SQLite Encryption
-   Extension (SEE) or PowerSync (spec decisions A4, A6, A7).
+   Extension (SEE) or PowerSync (spec decisions A4, A6, A7). `deny.toml` enforces the allow list.
 7. Any randomness uses a seeded RNG, and the seed is recorded in the report. No `Math.random` in measured code.
 8. Keep files single-purpose and under ~400 lines.
 9. Do not add dependencies beyond the plan's Tech Stack without saying why in the PR description.
 10. After editing, verify every changed file with `git diff` before committing. If a write doesn't land,
     rewrite the whole file and re-verify.
 11. **Human steps:** a step marked "(human step)" is never simulated. Stop with a `STOP:` line naming it.
+12. **No std float maths in `epiora-core`.** Every floating-point function goes through `libm`;
+    `crates/epiora-core/clippy.toml` bans the std `f64` transcendental methods (spec §3.4, E1).
+13. **Tolerance classes are fixed.** `closed_form` 1e-9, `iterative` 1e-6; comparison rule E7: pass iff
+    `|actual − expected| ≤ tol × |expected|`, or `|actual| ≤ tol` when `expected = 0` (spec §6.2).
+14. **Undefined, never NaN.** Statistically undefined values are `Estimate::Undefined { reason }`; no input
+    may panic the engine — every failure is an `EngineError` with a stable `code()` (spec §8).
+15. **No clock, no environment.** The engine reads neither at run time; the git SHA is fixed at build time
+    from `GIT_SHA` (fallback `"unknown"`).
 
 ## Workflow
 
-- One task per branch, named `v0.1/task-<N>-<short-name>`.
+- One task per branch, named `v0.2/task-<N>-<short-name>` (v0.1 used `v0.1/task-<N>-<short-name>`).
 - Iterate with `./scripts/check.sh quick`; run the full `./scripts/check.sh` once before pushing. Do not
   disable, skip or loosen tests to make it pass.
 - Push the branch and open a PR with `gh pr create`; the PR body is the final summary.
@@ -54,7 +68,9 @@ or plan and this file disagree, the spec and plan win. If they are ambiguous or 
 
 ## Layout
 
-- `spikes/<name>/`: throwaway probe code, one folder per spike
+- `crates/epiora-core/`: the statistics engine (product code). `crates/epiora-wasm/`: its browser binding —
+  type conversion only.
+- `spikes/<name>/`: frozen v0.1 probe code, one folder per spike
 - `docs/spikes/`: one report per spike; `docs/decisions.md`: decision log
 - `fixtures/`: R-generated reference values and the script that generates them
 - `docs/superpowers/`: spec and plans · `docs/conductor/`: conductor notes and rulesets

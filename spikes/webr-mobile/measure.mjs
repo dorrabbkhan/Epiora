@@ -106,8 +106,12 @@ await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const baseURL = `http://127.0.0.1:${server.address().port}`;
 
 const fixture = JSON.parse(await fs.readFile(FIXTURE, 'utf8'));
-const expectedP = fixture.expected.fisher_exact_test.p_value;
-const tolerance = fixture.tolerance;
+// E8: read both fixture shapes — v1 (fisher_exact_test.p_value number +
+// top-level tolerance) and v2 (fisher_exact.p_two_sided leaf
+// {value, class} + tolerance_classes[class]).
+const pv = fixture.expected.fisher_exact_test?.p_value ?? fixture.expected.fisher_exact.p_two_sided;
+const expectedP = typeof pv === 'object' ? pv.value : pv;
+const tolerance = fixture.tolerance ?? fixture.tolerance_classes[pv.class];
 
 const pageErrors = [];
 async function measuredLoad(page, url) {
