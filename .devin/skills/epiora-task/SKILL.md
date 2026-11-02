@@ -11,6 +11,7 @@ number was given, ask for one and stop.
 Map `<plan>` to a file:
 
 - `v0.1` → `docs/superpowers/plans/2026-10-28-epiora-v0.1-spikes.md`
+- `v0.2` → `docs/superpowers/plans/2026-10-31-epiora-v0.2-engine-core.md`
 - A missing `<plan>` (only a task number was given) means the newest file in `docs/superpowers/plans/` (by
   date in the filename).
 
