@@ -1,0 +1,91 @@
+name: ei7
+
+# v0.2 Task 3 (spec §6.4): run fixtures/ei7/oswego.pgm through the official
+# Epi Info 7.2.7.0 Analysis.exe on windows-latest and fail on any drift of
+# the committed reference output fixtures/ei7/oswego.html + oswego.json.
+# The release ZIP is pinned by SHA-256; the bundled Sample.mdb's SHA-256 is
+# recorded in the run log and inside oswego.json's source block.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1' # weekly, Monday 06:00 UTC
+
+env:
+  NODE_VERSION: '22.23.4'
+
+jobs:
+  ei7:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download and verify the pinned Epi Info 7.2.7.0 release ZIP
+        shell: pwsh
+        run: |
+          $url = "https://github.com/Epi-Info/Epi-Info-Community-Edition/releases/download/7.2.7.0/2025.3.9.Epi.Info.7.2.7.0.signed.dual.keys.en-US.es-ES.fr-FR.pt-BR.zip"
+          Invoke-WebRequest -Uri $url -OutFile ei7-rel.zip
+          # Pinned SHA256 of the release asset (same pin as spike-ei7.yml).
+          $pinned = "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609"
+          $actual = (Get-FileHash ei7-rel.zip -Algorithm SHA256).Hash
+          if ($actual -ne $pinned) {
+            Write-Error "FAIL: ei7-rel.zip SHA256 $actual does not match pinned $pinned"; exit 1
+          }
+          Write-Output "ei7-rel.zip SHA256 verified: $actual"
+          Expand-Archive ei7-rel.zip -DestinationPath ei7-rel
+
+      - name: Record the bundled Sample.mdb SHA-256
+        id: mdb
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem ei7-rel -Recurse -Filter Analysis.exe -File | Select-Object -First 1
+          if (-not $exe) { Write-Error "FAIL: no Analysis.exe in the release ZIP"; exit 1 }
+          $mdb = Join-Path (Split-Path $exe.FullName) "Projects\Sample\Sample.mdb"
+          if (-not (Test-Path $mdb)) { Write-Error "FAIL: Sample.mdb not at $mdb"; exit 1 }
+          $hash = (Get-FileHash $mdb -Algorithm SHA256).Hash.ToLower()
+          Write-Output "Sample.mdb: $mdb"
+          Write-Output "Sample.mdb SHA256: $hash"
+          "sample_mdb_sha256=$hash" >> $env:GITHUB_OUTPUT
+          if ($hash -ne "c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e") {
+            Write-Output "::warning::Sample.mdb SHA256 $hash differs from the fixture's c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e"
+          }
+
+      - name: Run oswego.pgm through Analysis.exe
+        shell: pwsh
+        run: ./fixtures/ei7/run.ps1 -Ei7Dir ei7-rel -OutputDir ei7-out
+
+      - name: Parse output into fixtures/ei7/
+        shell: pwsh
+        run: |
+          Copy-Item ei7-out/oswego.html fixtures/ei7/oswego.html -Force
+          node fixtures/ei7/parse.mjs --html ei7-out/oswego.html --labels fixtures/ei7/labels.json --out fixtures/ei7/oswego.json --build "7.2.7.0" --zip-sha256 "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609" --sample-mdb-sha256 "${{ steps.mdb.outputs.sample_mdb_sha256 }}" --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+      - name: Install validator tooling (npm ci, lockfile-pinned)
+        working-directory: fixtures/tools
+        run: npm ci
+
+      - name: Validate oswego.json against ei7.schema.json
+        shell: bash
+        run: fixtures/tools/node_modules/.bin/ajv validate -s fixtures/schema/ei7.schema.json -d fixtures/ei7/oswego.json
+
+      - name: Parser tests
+        shell: bash
+        run: node --test "fixtures/ei7/*.test.mjs"
+
+      - name: Upload ei7-output artifact
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ei7-output
+          path: |
+            fixtures/ei7/oswego.html
+            fixtures/ei7/oswego.json
+
+      - name: No drift in fixtures/ei7
+        shell: bash
+        run: git diff --exit-code fixtures/ei7

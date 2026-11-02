@@ -77,7 +77,7 @@ jobs:
 
       - name: Epi Info 7 parser tests
         if: hashFiles('fixtures/ei7/**') != ''
-        run: node --test fixtures/ei7
+        run: node --test "fixtures/ei7/*.test.mjs"
 
       - name: No fixture drift after regeneration
         run: |
