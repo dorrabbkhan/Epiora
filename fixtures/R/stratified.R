@@ -79,7 +79,8 @@ stratified_expected <- function(strata, labels, id) {
 # dataset/exposure/outcome/stratify_by for Oswego cases.
 stratified_write <- function(id, strata, labels, inputs = list()) {
   inputs$strata <- strata
-  inputs$labels <- labels
+  # I() keeps a length-1 labels vector a JSON array under auto_unbox.
+  inputs$labels <- I(labels)
   write_fixture("stratified", id, "stratified_two_by_two", inputs,
                 stratified_expected(strata, labels, id),
                 packages = c("stats", "epitools", "epiR", "DescTools"))
