@@ -1,0 +1,21 @@
+{
+  "id": "missing",
+  "version": 1,
+  "columns": [
+    {
+      "name": "EXPOSED",
+      "type": "boolean",
+      "values": [true, false, true, false, null, false, true, false, true, false, true, false, true, false, null, false, true, false, true, false, true, false, null, false]
+    },
+    {
+      "name": "ILL",
+      "type": "boolean",
+      "values": [null, true, false, true, false, true, false, true, false, null, false, true, false, true, false, true, false, true, false, null, false, true, false, null]
+    },
+    {
+      "name": "GROUP",
+      "type": "text",
+      "values": ["a", null, "c", "a", "b", "c", "a", null, "c", "a", "b", "c", "a", null, "c", "a", "b", "c", null, "b", "c", "a", "b", "c"]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "text_levels",
+  "version": 1,
+  "columns": [
+    {
+      "name": "T2",
+      "type": "text",
+      "values": ["a", "b", "a", "b", "a", "b", null, "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b", "a", "b"]
+    },
+    {
+      "name": "T3",
+      "type": "text",
+      "values": ["x", "y", "z", "x", "y", "z", "x", "y", "z", "x", "y", "z", null, "y", "z", "x", "y", "z", "x", "y", "z", "x", "y", "z"]
+    },
+    {
+      "name": "ILL",
+      "type": "boolean",
+      "values": [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false]
+    }
+  ]
+}

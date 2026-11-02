@@ -1,0 +1,100 @@
+{
+  "id": "ln_gamma",
+  "procedure": "special.ln_gamma",
+  "inputs": {
+    "points": [
+      [
+        1e-300
+      ],
+      [
+        1e-08
+      ],
+      [
+        0.5
+      ],
+      [
+        1
+      ],
+      [
+        1.5
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        10.5
+      ],
+      [
+        100
+      ],
+      [
+        100000
+      ],
+      [
+        1000000000000000
+      ]
+    ]
+  },
+  "expected": {
+    "values": [
+      {
+        "value": 690.77552789821368,
+        "class": "closed_form"
+      },
+      {
+        "value": 18.420680738180209,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.57236494292470008,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": -0.12078223763524518,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.69314718055994529,
+        "class": "closed_form"
+      },
+      {
+        "value": 13.940625219403763,
+        "class": "closed_form"
+      },
+      {
+        "value": 359.1342053695754,
+        "class": "closed_form"
+      },
+      {
+        "value": 1051287.7089736569,
+        "class": "closed_form"
+      },
+      {
+        "value": 33538776394910668,
+        "class": "closed_form"
+      }
+    ]
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "packages": {
+      "stats": "4.5.2",
+      "jsonlite": "2.0.0"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "table_3x2",
+  "procedure": "rxc",
+  "inputs": {
+    "table": [
+      [12, 8],
+      [5, 20],
+      [9, 3]
+    ]
+  },
+  "expected": {
+    "chi_square": {
+      "statistic": {
+        "value": 12.457258064516131,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 2,
+        "class": "closed_form"
+      },
+      "p_value": {
+        "value": 0.00197215380334956,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "packages": {
+      "stats": "4.5.2"
+    }
+  }
+}

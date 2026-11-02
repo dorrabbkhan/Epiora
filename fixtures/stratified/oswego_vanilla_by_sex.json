@@ -1,0 +1,264 @@
+{
+  "id": "oswego_vanilla_by_sex",
+  "procedure": "stratified_two_by_two",
+  "inputs": {
+    "dataset": "oswego",
+    "exposure": "VANILLA",
+    "outcome": "ILL",
+    "stratify_by": "SEX",
+    "strata": [
+      [
+        [27, 4],
+        [3, 10]
+      ],
+      [
+        [16, 7],
+        [0, 8]
+      ]
+    ],
+    "labels": ["Female", "Male"]
+  },
+  "expected": {
+    "crude": {
+      "risk": {
+        "exposed": {
+          "value": 0.79629629629629628,
+          "class": "closed_form"
+        },
+        "unexposed": {
+          "value": 0.14285714285714285,
+          "class": "closed_form"
+        },
+        "difference": {
+          "value": 0.65343915343915349,
+          "class": "closed_form"
+        },
+        "difference_ci_95_wald": {
+          "lower": {
+            "value": 0.469215414740773,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 0.83766289213753398,
+            "class": "closed_form"
+          }
+        }
+      },
+      "risk_ratio": {
+        "estimate": {
+          "value": 5.5740740740740744,
+          "class": "closed_form"
+        },
+        "ci_95_wald": {
+          "lower": {
+            "value": 1.938339835538607,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 16.029336658930724,
+            "class": "closed_form"
+          }
+        },
+        "small_sample": {
+          "estimate": {
+            "value": 4.3796296296296298,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 1.5229812993517629,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 12.594478803445574,
+            "class": "closed_form"
+          }
+        }
+      },
+      "odds_ratio": {
+        "estimate": {
+          "value": 23.454545454545453,
+          "class": "closed_form"
+        },
+        "cmle": {
+          "value": 22.149035514258824,
+          "class": "iterative",
+          "r_default": 22.156060936201403
+        },
+        "ci_95_wald": {
+          "lower": {
+            "value": 5.8411907167196002,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 94.178692180809691,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_fisher_exact": {
+          "lower": {
+            "value": 5.2152833268875254,
+            "class": "iterative",
+            "r_default": 5.216063502851771
+          },
+          "upper": {
+            "value": 138.39347928707681,
+            "class": "iterative",
+            "r_default": 138.86503356049562
+          }
+        },
+        "ci_95_midp_exact": {
+          "lower": {
+            "value": 5.9279621624518324,
+            "class": "iterative",
+            "r_default": 5.9279628483523865
+          },
+          "upper": {
+            "value": 109.14734799046235,
+            "class": "iterative",
+            "r_default": 109.4384017485941
+          }
+        }
+      },
+      "chi_square": {
+        "df": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "uncorrected": {
+          "statistic": {
+            "value": 27.222549439565935,
+            "class": "closed_form"
+          },
+          "p_value": {
+            "value": 1.8133141427979893e-07,
+            "class": "closed_form"
+          }
+        },
+        "yates": {
+          "statistic": {
+            "value": 24.536950274862573,
+            "class": "closed_form"
+          },
+          "p_value": {
+            "value": 7.2898377498970997e-07,
+            "class": "closed_form"
+          }
+        },
+        "mantel_haenszel": {
+          "statistic": {
+            "value": 26.859582113705066,
+            "class": "closed_form"
+          },
+          "p_value": {
+            "value": 2.1878688090982861e-07,
+            "class": "closed_form"
+          }
+        }
+      },
+      "fisher_exact": {
+        "p_lower": {
+          "value": 0.99999998992360939,
+          "class": "closed_form"
+        },
+        "p_upper": {
+          "value": 2.5974506918372921e-07,
+          "class": "closed_form"
+        },
+        "p_two_sided": {
+          "value": 2.5974506918372895e-07,
+          "class": "closed_form"
+        }
+      },
+      "midp_exact": {
+        "p_two_sided": {
+          "value": 2.6982145984177919e-07,
+          "class": "closed_form"
+        }
+      }
+    },
+    "mantel_haenszel": {
+      "odds_ratio": {
+        "estimate": {
+          "value": 37.63978494623656,
+          "class": "closed_form"
+        },
+        "ci_95": {
+          "lower": {
+            "value": 7.1916327822638912,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 197.00024371279832,
+            "class": "closed_form"
+          }
+        }
+      },
+      "risk_ratio": {
+        "estimate": {
+          "value": 5.727714186611168,
+          "class": "closed_form"
+        },
+        "ci_95": {
+          "lower": {
+            "value": 1.9867924565455399,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 16.512399015520849,
+            "class": "closed_form"
+          }
+        }
+      },
+      "chi_square": {
+        "uncorrected": {
+          "statistic": {
+            "value": 28.009849413840637,
+            "class": "closed_form"
+          },
+          "p_value": {
+            "value": 1.2069954887776427e-07,
+            "class": "closed_form"
+          }
+        },
+        "corrected": {
+          "statistic": {
+            "value": 25.27693686978505,
+            "class": "closed_form"
+          },
+          "p_value": {
+            "value": 4.9661141665768016e-07,
+            "class": "closed_form"
+          }
+        }
+      }
+    },
+    "breslow_day_tarone": {
+      "statistic": {
+        "value": 0.81558281223721651,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 1,
+        "class": "closed_form"
+      },
+      "p_value": {
+        "value": 0.36647482129294984,
+        "class": "closed_form"
+      }
+    },
+    "excluded_strata": []
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "packages": {
+      "stats": "4.5.2",
+      "epitools": "0.5.10.1",
+      "epiR": "2.0.38",
+      "DescTools": "0.99.60"
+    }
+  }
+}

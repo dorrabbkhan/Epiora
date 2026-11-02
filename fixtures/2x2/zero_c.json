@@ -1,0 +1,174 @@
+{
+  "id": "zero_c",
+  "procedure": "two_by_two",
+  "inputs": {
+    "table": [
+      [5, 7],
+      [0, 9]
+    ]
+  },
+  "expected": {
+    "risk": {
+      "exposed": {
+        "value": 0.41666666666666669,
+        "class": "closed_form"
+      },
+      "unexposed": {
+        "value": 0,
+        "class": "closed_form"
+      },
+      "difference": {
+        "value": 0.41666666666666669,
+        "class": "closed_form"
+      },
+      "difference_ci_95_wald": {
+        "lower": {
+          "value": 0.13772702149116772,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.69560631184216559,
+          "class": "closed_form"
+        }
+      }
+    },
+    "risk_ratio": {
+      "estimate": {
+        "value": null,
+        "class": "closed_form"
+      },
+      "ci_95_wald": {
+        "lower": {
+          "value": null,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": null,
+          "class": "closed_form"
+        }
+      },
+      "small_sample": {
+        "estimate": {
+          "value": 4.166666666666667,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 0,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": null,
+          "class": "closed_form"
+        }
+      }
+    },
+    "odds_ratio": {
+      "estimate": {
+        "value": null,
+        "class": "closed_form"
+      },
+      "cmle": {
+        "value": null,
+        "class": "iterative"
+      },
+      "ci_95_wald": {
+        "lower": {
+          "value": null,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": null,
+          "class": "closed_form"
+        }
+      },
+      "ci_95_fisher_exact": {
+        "lower": {
+          "value": 0.82069386666795718,
+          "class": "iterative",
+          "r_default": 0.82068813894167303
+        },
+        "upper": {
+          "value": null,
+          "class": "iterative"
+        }
+      },
+      "ci_95_midp_exact": {
+        "lower": {
+          "value": null,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": null,
+          "class": "iterative"
+        }
+      }
+    },
+    "chi_square": {
+      "df": {
+        "value": 1,
+        "class": "closed_form"
+      },
+      "uncorrected": {
+        "statistic": {
+          "value": 4.921875,
+          "class": "closed_form"
+        },
+        "p_value": {
+          "value": 0.026518721959430783,
+          "class": "closed_form"
+        }
+      },
+      "yates": {
+        "statistic": {
+          "value": 2.8929687499999996,
+          "class": "closed_form"
+        },
+        "p_value": {
+          "value": 0.088966849352550392,
+          "class": "closed_form"
+        }
+      },
+      "mantel_haenszel": {
+        "statistic": {
+          "value": 4.6875,
+          "class": "closed_form"
+        },
+        "p_value": {
+          "value": 0.030382821976577493,
+          "class": "closed_form"
+        }
+      }
+    },
+    "fisher_exact": {
+      "p_lower": {
+        "value": 1,
+        "class": "closed_form"
+      },
+      "p_upper": {
+        "value": 0.038920831490490956,
+        "class": "closed_form"
+      },
+      "p_two_sided": {
+        "value": 0.045112781954887236,
+        "class": "closed_form"
+      }
+    },
+    "midp_exact": {
+      "p_two_sided": {
+        "value": 0.03892083149049097,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "packages": {
+      "stats": "4.5.2",
+      "epitools": "0.5.10.1"
+    }
+  }
+}

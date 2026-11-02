@@ -1,0 +1,181 @@
+{
+  "id": "oswego_brownbread",
+  "procedure": "two_by_two",
+  "inputs": {
+    "dataset": "oswego",
+    "exposure": "BROWNBREAD",
+    "outcome": "ILL",
+    "table": [
+      [18, 9],
+      [28, 20]
+    ]
+  },
+  "expected": {
+    "risk": {
+      "exposed": {
+        "value": 0.66666666666666663,
+        "class": "closed_form"
+      },
+      "unexposed": {
+        "value": 0.58333333333333337,
+        "class": "closed_form"
+      },
+      "difference": {
+        "value": 0.083333333333333259,
+        "class": "closed_form"
+      },
+      "difference_ci_95_wald": {
+        "lower": {
+          "value": -0.14265068477181375,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.30931735143848027,
+          "class": "closed_form"
+        }
+      }
+    },
+    "risk_ratio": {
+      "estimate": {
+        "value": 1.1428571428571428,
+        "class": "closed_form"
+      },
+      "ci_95_wald": {
+        "lower": {
+          "value": 0.79878595594117574,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 1.6351344678320525,
+          "class": "closed_form"
+        }
+      },
+      "small_sample": {
+        "estimate": {
+          "value": 1.1264367816091954,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 0.7873091462293772,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 1.6116411565126265,
+          "class": "closed_form"
+        }
+      }
+    },
+    "odds_ratio": {
+      "estimate": {
+        "value": 1.4285714285714286,
+        "class": "closed_form"
+      },
+      "cmle": {
+        "value": 1.4218501872018503,
+        "class": "iterative",
+        "r_default": 1.4218382297350625
+      },
+      "ci_95_wald": {
+        "lower": {
+          "value": 0.5336780251980493,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 3.8240591333571592,
+          "class": "closed_form"
+        }
+      },
+      "ci_95_fisher_exact": {
+        "lower": {
+          "value": 0.48390064252785464,
+          "class": "iterative",
+          "r_default": 0.48389935537626211
+        },
+        "upper": {
+          "value": 4.3790741794194368,
+          "class": "iterative",
+          "r_default": 4.3791366128838742
+        }
+      },
+      "ci_95_midp_exact": {
+        "lower": {
+          "value": 0.53009041436504989,
+          "class": "iterative",
+          "r_default": 0.53009048125074887
+        },
+        "upper": {
+          "value": 3.9492018259621386,
+          "class": "iterative",
+          "r_default": 3.9492011156908733
+        }
+      }
+    },
+    "chi_square": {
+      "df": {
+        "value": 1,
+        "class": "closed_form"
+      },
+      "uncorrected": {
+        "statistic": {
+          "value": 0.50599700149925086,
+          "class": "closed_form"
+        },
+        "p_value": {
+          "value": 0.47687687702780429,
+          "class": "closed_form"
+        }
+      },
+      "yates": {
+        "statistic": {
+          "value": 0.21561484882558749,
+          "class": "closed_form"
+        },
+        "p_value": {
+          "value": 0.64240169150382809,
+          "class": "closed_form"
+        }
+      },
+      "mantel_haenszel": {
+        "statistic": {
+          "value": 0.49925037481259471,
+          "class": "closed_form"
+        },
+        "p_value": {
+          "value": 0.47982968627885952,
+          "class": "closed_form"
+        }
+      }
+    },
+    "fisher_exact": {
+      "p_lower": {
+        "value": 0.83084173465766675,
+        "class": "closed_form"
+      },
+      "p_upper": {
+        "value": 0.3229804147773333,
+        "class": "closed_form"
+      },
+      "p_two_sided": {
+        "value": 0.62214722163866354,
+        "class": "closed_form"
+      }
+    },
+    "midp_exact": {
+      "p_two_sided": {
+        "value": 0.49213868011966655,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "packages": {
+      "stats": "4.5.2",
+      "epitools": "0.5.10.1"
+    }
+  }
+}

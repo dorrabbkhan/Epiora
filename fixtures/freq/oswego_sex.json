@@ -1,0 +1,100 @@
+{
+  "id": "oswego_sex",
+  "procedure": "freq",
+  "inputs": {
+    "dataset": "oswego",
+    "variable": "SEX",
+    "include_missing": false,
+    "labels": ["Female", "Male"]
+  },
+  "expected": {
+    "total": {
+      "value": 75,
+      "class": "closed_form"
+    },
+    "missing": {
+      "value": 0,
+      "class": "closed_form"
+    },
+    "categories": [
+      {
+        "count": {
+          "value": 44,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 58.666666666666664,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 58.666666666666664,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 46.702714134037912,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 69.924636631094842,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 47.366515860704368,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 69.122270869593663,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 31,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 41.333333333333336,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 100,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 30.075363368905162,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 53.297285865962095,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 30.877729130406333,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 52.633484139295625,
+            "class": "closed_form"
+          }
+        }
+      }
+    ]
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "packages": {
+      "stats": "4.5.2"
+    }
+  }
+}

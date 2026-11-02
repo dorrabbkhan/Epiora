@@ -1,0 +1,79 @@
+{
+  "id": "normal_quantile",
+  "procedure": "special.normal_quantile",
+  "inputs": {
+    "points": [
+      [
+        1e-300
+      ],
+      [
+        1e-10
+      ],
+      [
+        0.001
+      ],
+      [
+        0.025000000000000001
+      ],
+      [
+        0.5
+      ],
+      [
+        0.97499999999999998
+      ],
+      [
+        0.999
+      ],
+      [
+        0.99999999989999999
+      ]
+    ]
+  },
+  "expected": {
+    "values": [
+      {
+        "value": -37.047096299361201,
+        "class": "closed_form"
+      },
+      {
+        "value": -6.3613409024040557,
+        "class": "closed_form"
+      },
+      {
+        "value": -3.0902323061678132,
+        "class": "closed_form"
+      },
+      {
+        "value": -1.9599639845400538,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 1.9599639845400536,
+        "class": "closed_form"
+      },
+      {
+        "value": 3.0902323061678132,
+        "class": "closed_form"
+      },
+      {
+        "value": 6.3613408896974208,
+        "class": "closed_form"
+      }
+    ]
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "packages": {
+      "stats": "4.5.2",
+      "jsonlite": "2.0.0"
+    }
+  }
+}

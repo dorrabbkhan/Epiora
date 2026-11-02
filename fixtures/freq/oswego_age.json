@@ -1,0 +1,1562 @@
+{
+  "id": "oswego_age",
+  "procedure": "freq",
+  "inputs": {
+    "dataset": "oswego",
+    "variable": "AGE",
+    "include_missing": false,
+    "labels": [3, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 24, 25, 32, 33, 35, 36, 37, 38, 40, 44, 45, 48, 50, 52, 53, 54, 57, 58, 59, 60, 62, 63, 64, 65, 68, 69, 70, 72, 74, 77]
+  },
+  "expected": {
+    "total": {
+      "value": 75,
+      "class": "closed_form"
+    },
+    "missing": {
+      "value": 0,
+      "class": "closed_form"
+    },
+    "categories": [
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 2,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 2.666666666666667,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 4,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.32459309289660288,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.303153222072547,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.73436890061313953,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.2114881877591479,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 2,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 2.666666666666667,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 6.666666666666667,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.32459309289660288,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.303153222072547,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.73436890061313953,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.2114881877591479,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 8,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 9.3333333333333339,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 4,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 5.3333333333333339,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 14.666666666666666,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 1.4720764659178194,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 13.09608072784747,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 2.0933427746654329,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 12.925987153798554,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 16,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 2,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 2.666666666666667,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 18.666666666666668,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.32459309289660288,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.303153222072547,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.73436890061313953,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.2114881877591479,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 20,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 3,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 4,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 24,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.83261656660794015,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 11.247682176000984,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 1.3696064260143923,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 11.112987082403745,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 25.333333333333336,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 4,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 5.3333333333333339,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 30.666666666666664,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 1.4720764659178194,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 13.09608072784747,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 2.0933427746654329,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 12.925987153798554,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 32,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 2,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 2.666666666666667,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 34.666666666666671,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.32459309289660288,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.303153222072547,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.73436890061313953,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.2114881877591479,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 36,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 37.333333333333336,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 2,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 2.666666666666667,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 40,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.32459309289660288,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.303153222072547,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.73436890061313953,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.2114881877591479,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 41.333333333333336,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 2,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 2.666666666666667,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 44,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.32459309289660288,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.303153222072547,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.73436890061313953,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.2114881877591479,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 4,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 5.3333333333333339,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 49.333333333333336,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 1.4720764659178194,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 13.09608072784747,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 2.0933427746654329,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 12.925987153798554,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 3,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 4,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 53.333333333333336,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.83261656660794015,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 11.247682176000984,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 1.3696064260143923,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 11.112987082403745,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 2,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 2.666666666666667,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 56.000000000000007,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.32459309289660288,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.303153222072547,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.73436890061313953,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.2114881877591479,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 57.333333333333336,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 2,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 2.666666666666667,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 60,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.32459309289660288,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.303153222072547,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.73436890061313953,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.2114881877591479,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 61.333333333333329,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 62.666666666666671,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 64,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 2,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 2.666666666666667,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 66.666666666666657,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.32459309289660288,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.303153222072547,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.73436890061313953,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.2114881877591479,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 3,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 4,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 70.666666666666671,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.83261656660794015,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 11.247682176000984,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 1.3696064260143923,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 11.112987082403745,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 72,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 73.333333333333329,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 74.666666666666671,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 76,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 2,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 2.666666666666667,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 78.666666666666657,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.32459309289660288,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.303153222072547,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.73436890061313953,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 9.2114881877591479,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 80,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 4,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 5.3333333333333339,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 85.333333333333343,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 1.4720764659178194,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 13.09608072784747,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 2.0933427746654329,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 12.925987153798554,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 86.666666666666671,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 88,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 3,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 4,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 92,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.83261656660794015,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 11.247682176000984,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 1.3696064260143923,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 11.112987082403745,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 93.333333333333329,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 94.666666666666671,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 96,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 97.333333333333343,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 98.666666666666671,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 1,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 1.3333333333333335,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 100,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 0.033751380252114882,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.2063497243167518,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 0.23575511390486617,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.1733655544215695,
+            "class": "closed_form"
+          }
+        }
+      }
+    ]
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.5.2 (2025-10-31)",
+    "packages": {
+      "stats": "4.5.2"
+    }
+  }
+}
