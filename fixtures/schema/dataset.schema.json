@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Epiora corpus dataset",
+  "description": "Engine input dataset written by fixtures/R/data.R and read by the corpus loader (spec §3.3).",
+  "type": "object",
+  "required": ["id", "version", "columns"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "columns": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/column"
+      }
+    }
+  },
+  "definitions": {
+    "column": {
+      "type": "object",
+      "required": ["name", "type", "values"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": ["integer", "real", "text", "boolean", "date"]
+        },
+        "values": {
+          "type": "array"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "integer" }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "items": { "type": ["integer", "null"] }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "real" }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "items": { "type": ["number", "null"] }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "text" }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "items": { "type": ["string", "null"] }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "boolean" }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "items": { "type": ["boolean", "null"] }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "date" }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                    },
+                    { "type": "null" }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

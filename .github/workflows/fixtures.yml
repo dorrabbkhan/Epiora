@@ -1,10 +1,10 @@
-name: spike-fixtures
+name: fixtures
 
 on:
   pull_request:
     paths:
       - 'fixtures/**'
-      - '.github/workflows/spike-fixtures.yml'
+      - '.github/workflows/fixtures.yml'
   workflow_dispatch:
 
 env:
@@ -38,20 +38,34 @@ jobs:
 
       - name: Validate fixtures against schema
         run: |
-          mapfile -d '' files < <(
-            find fixtures \( -path fixtures/renv -o -path fixtures/schema -o -path fixtures/tools \) -prune \
-              -o -name '*.json' -print0
-          )
-          echo "fixture JSON files found: ${#files[@]}"
-          printf '  %s\n' "${files[@]}"
-          if [ "${#files[@]}" -eq 0 ]; then
-            echo "ERROR: no fixture JSON files found; refusing to pass vacuously" >&2
+          set -u
+          fail=0
+          for dir in special 2x2 stratified rxc freq; do
+            mapfile -d '' files < <(find "fixtures/$dir" -maxdepth 1 -name '*.json' -print0 2>/dev/null)
+            if [ "${#files[@]}" -eq 0 ]; then
+              echo "ERROR: fixtures/$dir has no fixture JSON files" >&2
+              fail=1
+              continue
+            fi
+            for f in "${files[@]}"; do
+              fixtures/tools/node_modules/.bin/ajv validate \
+                -s fixtures/schema/fixture.schema.json -d "$f" || fail=1
+            done
+          done
+          mapfile -d '' datasets < <(find fixtures/data -maxdepth 1 -name '*.dataset.json' -print0 2>/dev/null)
+          for f in "${datasets[@]:-}"; do
+            [ -n "$f" ] || continue
+            fixtures/tools/node_modules/.bin/ajv validate \
+              -s fixtures/schema/dataset.schema.json -d "$f" || fail=1
+          done
+          if [ "$fail" -ne 0 ]; then
+            echo "ERROR: fixture validation failed" >&2
             exit 1
           fi
-          for f in "${files[@]}"; do
-            fixtures/tools/node_modules/.bin/ajv validate \
-              -s fixtures/schema/fixture.schema.json -d "$f"
-          done
+
+      - name: Epi Info 7 parser tests
+        if: hashFiles('fixtures/ei7/**') != ''
+        run: node --test fixtures/ei7
 
       - name: No fixture drift after regeneration
         run: |
