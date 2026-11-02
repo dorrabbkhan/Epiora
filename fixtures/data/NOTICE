@@ -1,0 +1,17 @@
+Corpus data provenance and licences (v0.2 Task 2)
+
+oswego.csv
+  Origin:   copied byte for byte from spikes/mdb-wasm/test/data/Oswego12.native.csv,
+            which is the native `mdb-export` 1.0.1 of table Oswego12 from
+            Sample.mdb at github.com/Epi-Info/Epi-Info-Community-Edition
+            commit 4cd353c62c40b78d9d1f013b0f5a2bb685a5fca6
+            (Epi.Core/Projects/Sample/Sample.mdb).
+            Command that produced the source CSV:
+              mdb-export Sample.mdb Oswego12 > Oswego12.native.csv
+  Sample.mdb SHA-256: c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e
+  oswego.csv SHA-256: ada2049737fcb31412692a979b1017ce11583a4c03d41d66b2b1ea7113d5de67
+  Licence:  Apache License 2.0 (per the source repo's license.md; decision D2,
+            docs/spikes/d2-epi-info-licence.md); a changed form of the original
+            file, stated here per Apache-2.0 §4(b). "Epi Info" is a trademark
+            of CDC; used here only to describe origin.
+            https://www.apache.org/licenses/LICENSE-2.0.txt
