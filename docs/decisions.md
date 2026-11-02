@@ -236,3 +236,111 @@ Files outside the Files block:
   edit; the spike code is untouched.
 - docs/decisions.md — this entry.
 Supersedes: —
+
+### v0.2 Task 2 — corpus v2 in R (2026-11-02)
+
+Decision: The corpus moves to fixture format v2 (spec §6.2): every expected
+leaf is `{value, class, r_default?}` under `tolerance_classes`
+`{closed_form: 1e-9, iterative: 1e-6}`; root-found values are solved with
+`uniroot(tol = 1e-14)` inside verbatim ports of R 4.6.2's `fisher.test`
+internals and `epitools` 0.5-10.1's `or.midp`/`ormidp.test`, with a
+generation-time check that each tight root agrees with R's
+default-tolerance result within 1e-2 relative. The corpus covers
+`special`, `2x2` (incl. a regenerated `oswego_vanilla`), `stratified`,
+`rxc`, `freq` and `data/*.dataset.json` (spec §3.3). The
+`spike-fixtures` workflow is renamed `fixtures.yml`; it validates all
+five fixture folders plus the dataset JSONs and keeps the
+regenerate-then-diff drift guard.
+Package versions and licences (reference generation only, never
+distributed), as of the owner-approved upgrade round below:
+epitools 0.5-10.1 GPL (>= 2); epiR 3.0.0 GPL (>= 2); DescTools 0.99.60
+GPL (>= 2); fs 2.1.0 MIT + file LICENSE; sf 1.1-3 GPL-2 | MIT + file
+LICENSE; s2 1.1.13 Apache License (== 2.0); units 1.0-1 GPL-2;
+flextable 0.10.3 GPL-3; officer 0.7.7 MIT + file LICENSE; gdtools 0.5.2
+GPL-3 | file LICENSE; DFBA 0.1.0 GPL-2; BiasedUrn 2.0.12 GPL-3;
+pander 0.6.6 AGPL-3; remaining transitive deps MIT/GPL/LGPL/BSD per
+`fixtures/renv.lock` (107 packages).
+Interface deviation (recorded for the owner): the plan's "MH (N−1) from
+`mantelhaen.test` on the single-stratum array" cannot run literally —
+R 4.6.2's `mantelhaen.test` requires every dimension ≥ 2, i.e. at least
+two strata. `fixtures/R/common.R` therefore carries a verbatim port of
+the non-exact 2×2×K branch of `mantelhaen.test` with only the dimension
+guard removed; on every fixture where the stock function can run (≥ 2
+non-empty strata) generation asserts the port reproduces it bit for bit.
+This supplies `chi_square.mantel_haenszel` in the `two_by_two` fixtures
+and the `mantel_haenszel` block of `stratified` `one_stratum`. For the
+same reason `one_stratum`'s `mantel_haenszel.risk_ratio` uses epiR's
+per-stratum `RR.strata.wald` (identical to the pooled MH value for one
+stratum), and `breslow_day_tarone` is undefined there (df = K−1 = 0).
+`freq` `inputs.labels` mirrors `expected.categories[]` positionally and
+includes `"(missing)"` last only when `include_missing` is true and the
+column has missing values; percentage and CI denominators include the
+missing category only in that case. `midp_exact.p_two_sided` is classed
+`closed_form` because it is a direct pnhyper sum, not a root-found value.
+Evidence: local `Rscript fixtures/generate.R` runs byte-identical twice;
+`fixtures.yml` workflow run linked in the PR; `oswego_vanilla`
+`odds_ratio.ci_95_fisher_exact.upper` moved from 138.86503356049562
+(v1 default tolerance) to 138.39347928707681 (tight) — both expected
+values named in the plan.
+Files outside the Files block: none.
+Supersedes: —
+
+#### Task 2 upgrade round (2026-11-02)
+
+Owner decision (PR #17 conversation, verbatim): "i don't care about
+slower CI or whatever as long as quality is high and we have parity
+with latest equivalent tools" and "R can also update while we're at it".
+On that authority the following deviations from the plan's "R 4.5.2"
+wording and from the earlier pins were made:
+
+- R 4.5.2 → 4.6.2 (2026-10-29). `fixtures/renv.lock` `R.Version` and
+  `fixtures.yml` `R_VERSION` now say 4.6.2; `r-lib/actions/setup-r`
+  installs it in CI. The lockfile's pins of R 4.5.2's recommended
+  packages could not all be kept: Matrix 1.7-4 fails to build on R 4.6.2
+  (`error: implicit declaration of function 'Rf_findVarInFrame'` /
+  `assignment to 'SEXP' from 'int'` in `cholmod-common.c` — R 4.6 removed
+  that non-API entry point). The recommended packages in the lockfile
+  moved to the versions shipped with R 4.6.2 (which are also current
+  CRAN): Matrix 1.7-6, MASS 7.3-66, class 7.3-24, lattice 0.23-1,
+  survival 3.8-12 (boot stayed 1.3-32; KernSmooth 2.23-27 came in as a
+  new transitive dep).
+- Ports re-verified against R 4.6.2 sources before the "R 4.6.2"
+  citations were kept: `deparse(body(stats::fisher.test))` 2×2 branch is
+  unchanged vs the ported `dnhyper`/`mnhyper`/`pnhyper`/`mle`/`ncp.L`/
+  `ncp.U`; `deparse(body(stats::mantelhaen.test))` non-exact 2×2×K
+  branch is unchanged vs `mh_2x2xk` (dimension guard still present
+  upstream, so the port deviation stands); `epitools` is still 0.5-10.1,
+  so the mid-p ports are unchanged.
+- epiR 2.0.38 → 3.0.0 (latest CRAN): the sf-avoidance pin is dropped;
+  epiR 3.0.0 hard-imports `sf` (plus `flextable`, `officer`, `DFBA`,
+  `zoo`), so `sf` and its deps (s2, units, wk, classInt, DBI, …) are now
+  in the lockfile. fs 1.6.6 → 2.1.0 (latest CRAN): the libuv/cmake
+  avoidance pin is dropped; `libuv1-dev` and `cmake` are installed in CI.
+- `fixtures.yml` apt step extended beyond the task's named list
+  (libgdal/geos/proj/udunits2/uv/cmake): epiR 3.0.0's tree needs
+  `libsqlite3-dev` (sf), `libabsl-dev` (s2), `libcairo2-dev` (gdtools),
+  `libharfbuzz-dev` + `libfribidi-dev` (textshaping), `libfreetype-dev` +
+  `libfontconfig-dev` (systemfonts/gdtools), `libpng-dev` + `libtiff-dev`
+  + `libjpeg-dev` + `libwebp-dev` (ragg), plus `libicu-dev` (stringi),
+  `libcurl4-openssl-dev`/`libssl-dev`/`libxml2-dev`/`zlib1g-dev` and
+  `gfortran` for the rest of the source builds.
+- Local regeneration note: this host lacks the cairo/harfbuzz/fribidi
+  headers, so packages were installed locally from Posit Package
+  Manager's Ubuntu 26.04 (resolute) R-4.6 binaries; the lockfile records
+  only `Repository: CRAN` (P3M "RSPM" source fields normalised), so CI
+  restores the identical versions from source.
+- Regeneration under R 4.6.2: two consecutive
+  `Rscript fixtures/generate.R` runs are byte-identical (sha256 over all
+  39 fixture JSONs). Compared leaf-by-leaf against the previous commit
+  (every `value`/`r_default` under `expected`, excluding
+  `source.r_version`/`source.packages`): **no fixture value changed**.
+  The only diffs are `source.r_version` → "R version 4.6.2 (2026-10-29)"
+  and `source.packages` (stats 4.5.2 → 4.6.2, epiR 2.0.38 → 3.0.0) on
+  every fixture. All generation-time checks pass unchanged: tight-root
+  1e-2, `check_mh_port` bitwise vs stock `mantelhaen.test`,
+  `check_mh_single_table` ((N−1)/N identity), `check_rr_mh` (epiR MH risk
+  ratio vs port), the VANILLA sanity table, Breslow-Day p < 0.01. The 16
+  `chisq.test` warnings are unchanged degenerate-table notices.
+  Command used for the value diff: recursive JSON leaf walk of
+  `git show HEAD:<file>` vs each regenerated file (script in the PR
+  body).

@@ -1,0 +1,90 @@
+name: fixtures
+
+on:
+  pull_request:
+    paths:
+      - 'fixtures/**'
+      - '.github/workflows/fixtures.yml'
+  workflow_dispatch:
+
+env:
+  R_VERSION: '4.6.2'
+  NODE_VERSION: '22.23.4'
+
+jobs:
+  fixtures:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: r-lib/actions/setup-r@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
+        with:
+          r-version: ${{ env.R_VERSION }}
+
+      - name: Install system libraries for R packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libgdal-dev libgeos-dev libproj-dev libsqlite3-dev \
+            libudunits2-dev libuv1-dev cmake libabsl-dev \
+            libcairo2-dev libfreetype-dev libfontconfig-dev \
+            libharfbuzz-dev libfribidi-dev libpng-dev libtiff-dev \
+            libjpeg-dev libwebp-dev libicu-dev \
+            libcurl4-openssl-dev libssl-dev libxml2-dev zlib1g-dev \
+            gfortran
+
+      - name: Restore pinned R packages (renv)
+        working-directory: fixtures
+        run: Rscript -e 'source("renv/activate.R"); renv::restore(prompt = FALSE)'
+
+      - name: Regenerate fixtures
+        run: Rscript fixtures/generate.R
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install validator tooling (npm ci, lockfile-pinned)
+        working-directory: fixtures/tools
+        run: npm ci
+
+      - name: Validate fixtures against schema
+        run: |
+          set -u
+          fail=0
+          for dir in special 2x2 stratified rxc freq; do
+            mapfile -d '' files < <(find "fixtures/$dir" -maxdepth 1 -name '*.json' -print0 2>/dev/null)
+            if [ "${#files[@]}" -eq 0 ]; then
+              echo "ERROR: fixtures/$dir has no fixture JSON files" >&2
+              fail=1
+              continue
+            fi
+            for f in "${files[@]}"; do
+              fixtures/tools/node_modules/.bin/ajv validate \
+                -s fixtures/schema/fixture.schema.json -d "$f" || fail=1
+            done
+          done
+          mapfile -d '' datasets < <(find fixtures/data -maxdepth 1 -name '*.dataset.json' -print0 2>/dev/null)
+          for f in "${datasets[@]:-}"; do
+            [ -n "$f" ] || continue
+            fixtures/tools/node_modules/.bin/ajv validate \
+              -s fixtures/schema/dataset.schema.json -d "$f" || fail=1
+          done
+          if [ "$fail" -ne 0 ]; then
+            echo "ERROR: fixture validation failed" >&2
+            exit 1
+          fi
+
+      - name: Epi Info 7 parser tests
+        if: hashFiles('fixtures/ei7/**') != ''
+        run: node --test fixtures/ei7
+
+      - name: No fixture drift after regeneration
+        run: |
+          git diff --exit-code fixtures/
+          status="$(git status --porcelain --untracked-files=all -- fixtures/)"
+          if [ -n "$status" ]; then
+            echo "ERROR: regeneration left uncommitted changes under fixtures/:" >&2
+            echo "$status" >&2
+            exit 1
+          fi

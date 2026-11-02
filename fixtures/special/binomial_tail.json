@@ -1,0 +1,98 @@
+{
+  "id": "binomial_tail",
+  "procedure": "special.binomial_tail",
+  "inputs": {
+    "points": [
+      [5, 10, 0.5, 1],
+      [5, 10, 0.5, 0],
+      [0, 10, 0.29999999999999999, 1],
+      [10, 10, 0.69999999999999996, 0],
+      [3, 20, 0.25, 1],
+      [17, 20, 0.75, 0],
+      [8, 15, 0.5, 1],
+      [43, 54, 0.5, 1],
+      [2, 12, 0.10000000000000001, 0],
+      [9, 30, 0.40000000000000002, 1],
+      [1, 5, 0.5, 0],
+      [49, 50, 0.90000000000000002, 0],
+      [0, 1, 0.5, 1],
+      [6, 8, 0.875, 1],
+      [13, 25, 0.59999999999999998, 0]
+    ]
+  },
+  "expected": {
+    "values": [
+      {
+        "value": 0.62304687499999989,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.37695312500000011,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.028247524899999987,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.22515604766431363,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.091260432464878263,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.69638061523437478,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.99999830715702331,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.11086997774500014,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.17628648474401235,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.8125,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.005153775207320117,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.5,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.26369518041610729,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.73228217336120183,
+        "class": "closed_form"
+      }
+    ]
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "jsonlite": "2.0.0"
+    }
+  }
+}

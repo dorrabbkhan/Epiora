@@ -1,0 +1,98 @@
+{
+  "id": "hypergeom_pmf",
+  "procedure": "special.hypergeom_pmf",
+  "inputs": {
+    "points": [
+      [5, 10, 8, 6],
+      [0, 4, 6, 3],
+      [3, 5, 7, 5],
+      [7, 12, 9, 10],
+      [1, 2, 3, 2],
+      [10, 20, 15, 12],
+      [8, 13, 17, 11],
+      [43, 46, 29, 54],
+      [0, 5, 16, 5],
+      [4, 9, 12, 8],
+      [6, 15, 15, 10],
+      [2000000, 2000000, 2000000, 3000000],
+      [999999, 2000000, 2000000, 2000000],
+      [50, 100, 60, 80],
+      [3, 7, 5, 4]
+    ]
+  },
+  "expected": {
+    "values": [
+      {
+        "value": 0.10859728506787326,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.1666666666666666,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.26515151515151514,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.18861633722314844,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.59999999999999987,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.023248053392658553,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.016020561147997433,
+        "class": "closed_form"
+      },
+      {
+        "value": 2.4966867855290939e-07,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.21465428276573784,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.3065015479876162,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.2273863068465766,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.00079788281543309559,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.12963068430525232,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.35353535353535354,
+        "class": "closed_form"
+      }
+    ]
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "jsonlite": "2.0.0"
+    }
+  }
+}

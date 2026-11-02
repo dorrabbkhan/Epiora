@@ -1,0 +1,168 @@
+{
+  "id": "missing_group_incl_missing",
+  "procedure": "freq",
+  "inputs": {
+    "dataset": "missing",
+    "variable": "GROUP",
+    "include_missing": true,
+    "labels": ["a", "b", "c", "(missing)"]
+  },
+  "expected": {
+    "total": {
+      "value": 24,
+      "class": "closed_form"
+    },
+    "missing": {
+      "value": 4,
+      "class": "closed_form"
+    },
+    "categories": [
+      {
+        "count": {
+          "value": 7,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 29.166666666666668,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 29.166666666666668,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 12.61520885236914,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 51.094781385783293,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 14.914648196960872,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 49.167693664496632,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 5,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 20.833333333333336,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 50,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 7.131861719805495,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 42.15128436372526,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 9.2448253528518549,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 40.470453253188651,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 8,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 33.333333333333329,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 83.333333333333343,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 15.630228570913529,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 55.321961565964806,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 17.972190327297753,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 53.293683161868245,
+            "class": "closed_form"
+          }
+        }
+      },
+      {
+        "count": {
+          "value": 4,
+          "class": "closed_form"
+        },
+        "percent": {
+          "value": 16.666666666666664,
+          "class": "closed_form"
+        },
+        "cumulative_percent": {
+          "value": 100,
+          "class": "closed_form"
+        },
+        "ci_95_clopper_pearson": {
+          "lower": {
+            "value": 4.7353626607257127,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 37.384171348868279,
+            "class": "closed_form"
+          }
+        },
+        "ci_95_wilson": {
+          "lower": {
+            "value": 6.6786763286329505,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 35.853070649699056,
+            "class": "closed_form"
+          }
+        }
+      }
+    ]
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

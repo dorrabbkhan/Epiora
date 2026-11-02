@@ -1,0 +1,21 @@
+{
+  "id": "strata",
+  "version": 1,
+  "columns": [
+    {
+      "name": "EXPOSED",
+      "type": "boolean",
+      "values": [true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false]
+    },
+    {
+      "name": "ILL",
+      "type": "boolean",
+      "values": [true, true, true, true, true, false, false, false, false, false, true, true, true, false, false, false, true, true, true, true, false, false, false, false]
+    },
+    {
+      "name": "S",
+      "type": "text",
+      "values": ["x", "x", "x", "x", "x", "x", "x", "x", "y", "y", "y", "y", "y", "y", "y", "y", "z", "z", "z", "z", "z", "z", "z", "z"]
+    }
+  ]
+}
