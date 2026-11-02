@@ -236,3 +236,53 @@ Files outside the Files block:
   edit; the spike code is untouched.
 - docs/decisions.md — this entry.
 Supersedes: —
+
+### v0.2 Task 2 — corpus v2 in R (2026-11-02)
+
+Decision: The corpus moves to fixture format v2 (spec §6.2): every expected
+leaf is `{value, class, r_default?}` under `tolerance_classes`
+`{closed_form: 1e-9, iterative: 1e-6}`; root-found values are solved with
+`uniroot(tol = 1e-14)` inside verbatim ports of R 4.5.2's `fisher.test`
+internals and `epitools` 0.5-10.1's `or.midp`/`ormidp.test`, with a
+generation-time check that each tight root agrees with R's
+default-tolerance result within 1e-2 relative. The corpus covers
+`special`, `2x2` (incl. a regenerated `oswego_vanilla`), `stratified`,
+`rxc`, `freq` and `data/*.dataset.json` (spec §3.3). The
+`spike-fixtures` workflow is renamed `fixtures.yml`; it validates all
+five fixture folders plus the dataset JSONs and keeps the
+regenerate-then-diff drift guard.
+Package pins and licences (reference generation only, never distributed):
+epitools 0.5-10.1 GPL (>= 2); epiR 2.0.38 GPL (>= 2) — pinned at 2.0.38,
+the last release not importing `sf` (added in 2.0.39): `sf` needs the
+GDAL system library, and 2.0.38 already provides
+`epi.2by2(method = "cohort.count")$massoc.detail$RR.mh.wald` (the MH risk
+ratio with Greenland–Robins CI); DescTools 0.99.60 GPL (>= 2);
+fs 1.6.6 MIT — pinned because fs 2.x's configure fails without the
+system `libuv1-dev` and its bundled fallback needs `cmake`, which is not
+installed on the fixture-generation host (fs 1.6.6 builds libuv with a
+plain Makevars); BiasedUrn 2.0.12 GPL-3; pander 0.6.6 AGPL-3; remaining
+transitive deps MIT per `fixtures/renv.lock`.
+Interface deviation (recorded for the owner): the plan's "MH (N−1) from
+`mantelhaen.test` on the single-stratum array" cannot run literally —
+R 4.5.2's `mantelhaen.test` requires every dimension ≥ 2, i.e. at least
+two strata. `fixtures/R/common.R` therefore carries a verbatim port of
+the non-exact 2×2×K branch of `mantelhaen.test` with only the dimension
+guard removed; on every fixture where the stock function can run (≥ 2
+non-empty strata) generation asserts the port reproduces it bit for bit.
+This supplies `chi_square.mantel_haenszel` in the `two_by_two` fixtures
+and the `mantel_haenszel` block of `stratified` `one_stratum`. For the
+same reason `one_stratum`'s `mantel_haenszel.risk_ratio` uses epiR's
+per-stratum `RR.strata.wald` (identical to the pooled MH value for one
+stratum), and `breslow_day_tarone` is undefined there (df = K−1 = 0).
+`freq` `inputs.labels` mirrors `expected.categories[]` positionally and
+includes `"(missing)"` last only when `include_missing` is true and the
+column has missing values; percentage and CI denominators include the
+missing category only in that case. `midp_exact.p_two_sided` is classed
+`closed_form` because it is a direct pnhyper sum, not a root-found value.
+Evidence: local `Rscript fixtures/generate.R` runs byte-identical twice;
+`fixtures.yml` workflow run linked in the PR; `oswego_vanilla`
+`odds_ratio.ci_95_fisher_exact.upper` moved from 138.86503356049562
+(v1 default tolerance) to 138.39347928707681 (tight) — both expected
+values named in the plan.
+Files outside the Files block: none.
+Supersedes: —
