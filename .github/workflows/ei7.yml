@@ -65,7 +65,16 @@ jobs:
         shell: pwsh
         run: |
           Copy-Item ei7-out/oswego.html fixtures/ei7/oswego.html -Force
-          node fixtures/ei7/parse.mjs --html ei7-out/oswego.html --labels fixtures/ei7/labels.json --out fixtures/ei7/oswego.json --build "7.2.7.0" --zip-sha256 "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609" --sample-mdb-sha256 "${{ steps.mdb.outputs.sample_mdb_sha256 }}" --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          # source.run_url names the run that first produced the committed
+          # reference output; preserving it keeps reruns byte-identical so the
+          # git diff drift check below can go green. A run that produces
+          # different output fails the diff and a new run_url is committed.
+          $runUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          if (Test-Path fixtures/ei7/oswego.json) {
+            $prev = Get-Content fixtures/ei7/oswego.json -Raw | ConvertFrom-Json
+            if ($prev.source.run_url) { $runUrl = $prev.source.run_url }
+          }
+          node fixtures/ei7/parse.mjs --html ei7-out/oswego.html --labels fixtures/ei7/labels.json --out fixtures/ei7/oswego.json --build "7.2.7.0" --zip-sha256 "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609" --sample-mdb-sha256 "${{ steps.mdb.outputs.sample_mdb_sha256 }}" --run-url "$runUrl"
 
       - name: Install validator tooling (npm ci, lockfile-pinned)
         working-directory: fixtures/tools
