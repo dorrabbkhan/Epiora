@@ -50,6 +50,7 @@
           "then": {
             "properties": {
               "values": {
+                "type": "array",
                 "items": { "type": ["integer", "null"] }
               }
             }
@@ -65,6 +66,7 @@
           "then": {
             "properties": {
               "values": {
+                "type": "array",
                 "items": { "type": ["number", "null"] }
               }
             }
@@ -80,6 +82,7 @@
           "then": {
             "properties": {
               "values": {
+                "type": "array",
                 "items": { "type": ["string", "null"] }
               }
             }
@@ -95,6 +98,7 @@
           "then": {
             "properties": {
               "values": {
+                "type": "array",
                 "items": { "type": ["boolean", "null"] }
               }
             }
@@ -110,6 +114,7 @@
           "then": {
             "properties": {
               "values": {
+                "type": "array",
                 "items": {
                   "anyOf": [
                     {
