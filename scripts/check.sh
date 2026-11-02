@@ -35,6 +35,21 @@ if [ -x scripts/check-spikes.sh ]; then scripts/check-spikes.sh; else echo "skip
 step "shell tests"
 if [ -d scripts/tests ] && command -v bats >/dev/null; then bats scripts/tests; else echo "skipped"; fi
 
+# Engine gate (v0.2): runs whenever crates/ exists — in quick mode only
+# when the engine inputs changed.
+step "engine (crates/)"
+if [ -d crates ]; then
+  if [ "$mode" = quick ] && ! grep -qE '^(crates/|Cargo\.toml|deny\.toml)' <<<"$changed"; then
+    echo "skipped (no crates/, Cargo.toml or deny.toml changes)"
+  elif [ "$mode" = quick ]; then
+    scripts/check-engine.sh quick
+  else
+    scripts/check-engine.sh full
+  fi
+else
+  echo "skipped (no crates/ yet)"
+fi
+
 for dir in spikes/*/; do
   [ -d "$dir" ] || continue
   name="${dir%/}"

@@ -203,3 +203,31 @@ Files outside the Files block:
 - scripts/tests/check-spikes.bats — "ignores README.md" case covering the
   README.md exemption.
 Supersedes: —
+
+### v0.2 Task 1 — engine workspace (2026-11-02)
+
+Decision: The v0.2 engine workspace is scaffolded as planned: `epiora-core`
+(error type, tolerance classes, E7 comparison, corpus comparator) and the
+empty `epiora-wasm` cdylib, with the float ban enforced by
+`crates/epiora-core/clippy.toml` and the licence/advisory gate by
+`deny.toml`. Pinned tooling: Rust 1.99.0 (`rust-toolchain.toml`, clippy +
+rustfmt components), cargo-deny 0.20.2 (CI downloads the musl tarball and
+verifies SHA-256 `9f12ed4c49936e09b48bf862b595cde2fe64fcbd9d74dfacac6131ca824c8d5f`),
+bats-core 1.14.0 (CI downloads the source archive and verifies SHA-256
+`bb537b70b15b732f6d8827dd6578e3d8ce166636ce1f18ea9a074184fcce9177`).
+E8 is applied: `spikes/webr-mobile/measure.mjs` reads the Fisher p-value
+and tolerance from both fixture format v1 (`fisher_exact_test.p_value` +
+top-level `tolerance`) and v2 (`fisher_exact.p_two_sided` leaf +
+`tolerance_classes[class]`); its threshold and decision rule are
+untouched.
+Evidence: `cargo test --workspace --all-features` (8 compare + 2 error
+tests) and `bats scripts/tests/float-ban.bats` locally; the `engine` and
+`spike-webr-mobile` workflow runs linked in the PR.
+Files outside the Files block:
+- spikes/webr-mobile/measure.mjs — in the task's Files block but outside
+  v0.2's usual scope: the only `spikes/` edit in v0.2 (E8), so the frozen
+  WebR spike reads fixture format v2 before Task 2 changes it.
+- Cargo.lock — cargo-generated lockfile; committed so cargo-deny and CI
+  resolve the same pinned dependency graph.
+- docs/decisions.md — this entry.
+Supersedes: —

@@ -52,7 +52,7 @@ The matching spec is read from the plan's `**Spec:**` line, not hard-coded.
 
 - Plan and spec values are authoritative. If a reference or fixture test fails, the implementation is wrong.
   Never change expected values, thresholds or decision rules.
-- Never edit anything under `fixtures/` except by running `Rscript fixtures/generate.R` in v0.1 Task 5.
+- Never edit anything under `fixtures/` except by running `Rscript fixtures/generate.R` in v0.2 Task 2, or by committing the `ei7.yml` workflow output in v0.2 Task 3.
 - Never skip, delete or loosen a test, and never relax a lint rule.
 - Never simulate a "(human step)": stop with a `STOP:` line naming it.
 - Do not start work that belongs to any other task. List it under "Follow-ups noticed" instead.

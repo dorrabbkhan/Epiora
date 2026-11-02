@@ -1,0 +1,17 @@
+[workspace]
+resolver = "2"
+members = ["crates/epiora-core", "crates/epiora-wasm"]
+# crates/epiora-core/fuzz (v0.2 Task 12) uses cargo-fuzz on nightly and is
+# never part of the stable workspace.
+exclude = ["crates/epiora-core/fuzz", "spikes"]
+
+[workspace.package]
+version = "0.2.0"
+edition = "2021"
+license = "AGPL-3.0-only"
+
+[profile.release]
+panic = "abort"
+lto = true
+codegen-units = 1
+opt-level = "z"

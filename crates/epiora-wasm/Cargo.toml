@@ -1,0 +1,12 @@
+[package]
+name = "epiora-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Epiora engine browser binding: type conversion only (spec §5.1)"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+epiora-core = { path = "../epiora-core" }
