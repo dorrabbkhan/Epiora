@@ -53,7 +53,7 @@ stop_if <- function(cond, msg) {
 
 # --- mantelhaen.test port ------------------------------------------------
 #
-# Verbatim port of the non-exact 2x2xK branch of R 4.5.2's
+# Verbatim port of the non-exact 2x2xK branch of R 4.6.2's
 # stats::mantelhaen.test (src/library/stats/R/mantelhaen.test.R), with
 # two deliberate changes:
 #   - the input guards are dropped so a single stratum (K = 1) works:

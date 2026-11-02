@@ -1,7 +1,7 @@
 # Tight noncentral-hypergeometric machinery (E5, spec §6.2).
 #
 # dnhyper/mnhyper/pnhyper are ported verbatim from the 2x2 branch of
-# R 4.5.2's stats::fisher.test (src/library/stats/R/fisher.test.R). The
+# R 4.6.2's stats::fisher.test (src/library/stats/R/fisher.test.R). The
 # CMLE (mle) and the Fisher exact CI limits (ncp.L / ncp.U) are the same
 # code with every uniroot() call tightened to tol = 1e-14. The mid-p
 # estimate/CI and the mid-p two-sided p port epitools 0.5-10.1's
