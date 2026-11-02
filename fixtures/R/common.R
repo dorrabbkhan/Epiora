@@ -90,6 +90,33 @@ mh_2x2xk <- function(x, correct = FALSE, conf.level = 0.95) {
        estimate = ESTIMATE, conf.int = CINT)
 }
 
+# Generation-time check (fix round 2, owner instruction): wherever the
+# port computes a single-table (K = 1) uncorrected Mantel-Haenszel
+# chi-square — every two_by_two fixture, the crude table of every
+# stratified fixture and the one_stratum stratified fixture — the
+# statistic must equal (N - 1)/N times the uncorrected Pearson
+# chi-square (the textbook single-table identity for the MH variance's
+# N - 1 denominator) within 1e-12 relative. Skipped only where the
+# port's statistic is non-finite, i.e. the reference calls it
+# undefined: the all_zero fixture never reaches this check with a null
+# statistic because it computes the reference on the VANILLA table and
+# then nullifies the leaves. The corrected (Yates) statistic has no
+# such identity and is not checked here.
+check_mh_single_table <- function(tab, mh_statistic, what) {
+  if (!is.finite(mh_statistic)) return(invisible(TRUE))
+  n <- sum(tab)
+  expected <- unname((n - 1) / n *
+    suppressWarnings(chisq.test(tab, correct = FALSE)$statistic))
+  stop_if(
+    !is.finite(expected) ||
+      abs(mh_statistic - expected) > 1e-12 * abs(expected),
+    sprintf(paste0("single-table MH chi-square check failed for %s: ",
+                   "port=%s expected=%s"),
+            what, format(mh_statistic, digits = 17),
+            format(expected, digits = 17)))
+  invisible(TRUE)
+}
+
 # Generation-time check: on a case where stock mantelhaen.test runs
 # (>= 2 strata, each n >= 2), the port must reproduce it bit for bit.
 check_mh_port <- function(x, what) {

@@ -4,6 +4,47 @@
 # and their 0-based positions are recorded in expected.excluded_strata
 # (review focus 1: listed, never silently dropped).
 
+# Direct Mantel-Haenszel risk ratio with Greenland-Robins CI for a
+# 2x2xK array (strata [[a,b],[c,d]], rows exposed/unexposed, columns
+# ill/well):
+#   RR_MH          = sum(a N0 / n) / sum(c N1 / n)
+#   var(log RR_MH) = sum(M1 N1 N0 / n^2 - a c / n) /
+#                    (sum(a N0 / n) * sum(c N1 / n))
+#   CI             = exp(log RR_MH +/- qnorm(0.975) sqrt(var))
+# with M1 = a + c, N1 = a + b, N0 = c + d, n = a + b + c + d per
+# stratum. Greenland S, Robins JM (1985) "Estimation of a common
+# effect parameter from sparse follow-up data", Biometrics 41:55-68;
+# the same equation epiR::epi.2by2 implements for RR.mh.wald, which it
+# cites from Rothman KJ (2002) Epidemiology: An Introduction, p.148
+# eq. 8-2.
+mh_rr_gr <- function(arr) {
+  a <- arr[1, 1, ]; b <- arr[1, 2, ]; cc <- arr[2, 1, ]; d <- arr[2, 2, ]
+  M1 <- a + cc; N1 <- a + b; N0 <- cc + d; n <- a + b + cc + d
+  s_an0 <- sum(a * N0 / n); s_cn1 <- sum(cc * N1 / n)
+  rr <- s_an0 / s_cn1
+  var_log <- sum(M1 * N1 * N0 / n^2 - a * cc / n) / (s_an0 * s_cn1)
+  half <- qnorm(0.975) * sqrt(var_log)
+  c(est = rr, lower = exp(log(rr) - half), upper = exp(log(rr) + half))
+}
+
+# Generation-time check (fix round 2, owner instruction): for a
+# stratified fixture with >= 2 kept strata, epiR's RR.mh.wald estimate
+# and 95% CI must match the direct Greenland-Robins computation above
+# within 1e-12 relative. Check only — the fixture values still come
+# from epiR.
+check_rr_mh <- function(arr, epir, id) {
+  direct <- mh_rr_gr(arr)
+  for (nm in c("est", "lower", "upper")) {
+    e <- unname(epir[[nm]]); dv <- unname(direct[[nm]])
+    stop_if(
+      !is.finite(e) || !is.finite(dv) || abs(e - dv) > 1e-12 * abs(dv),
+      sprintf(paste0("MH risk-ratio check failed for %s %s: ",
+                     "epiR=%s direct=%s"),
+              id, nm, format(e, digits = 17), format(dv, digits = 17)))
+  }
+  invisible(TRUE)
+}
+
 # Full expected object for a stratified 2x2 case.
 stratified_expected <- function(strata, labels, id) {
   stop_if(length(strata) != length(labels),
@@ -29,6 +70,11 @@ stratified_expected <- function(strata, labels, id) {
   } else {
     mh_u <- mh_2x2xk(arr, correct = FALSE)
     mh_c <- mh_2x2xk(arr, correct = TRUE)
+    # Single-table identity check on the port's uncorrected MH
+    # chi-square (fix round 2; the corrected statistic has no such
+    # identity).
+    check_mh_single_table(kept[[1]], mh_u$statistic,
+                          paste0(id, " mantel_haenszel.chi_square"))
   }
 
   # MH risk ratio with Greenland-Robins CI: epiR cohort.count. For a
@@ -38,8 +84,12 @@ stratified_expected <- function(strata, labels, id) {
     epiR::epi.2by2(kept[[1]], method = "cohort.count",
                    outcome = "as.columns")$massoc.detail$RR.strata.wald
   } else {
-    epiR::epi.2by2(arr, method = "cohort.count",
-                   outcome = "as.columns")$massoc.detail$RR.mh.wald
+    rr_mh <- epiR::epi.2by2(arr, method = "cohort.count",
+                            outcome = "as.columns")$massoc.detail$RR.mh.wald
+    # epiR's RR.mh.wald must reproduce the direct Greenland-Robins
+    # computation (fix round 2; check only, fixture keeps epiR's values).
+    check_rr_mh(arr, rr_mh, id)
+    rr_mh
   }
 
   # Breslow-Day-Tarone: undefined with fewer than 2 kept strata

@@ -78,6 +78,10 @@ twobytwo_expected <- function(tab, id) {
   # MH (N-1): stock mantelhaen.test refuses one stratum, so the
   # verbatim port in common.R supplies the same computation.
   mh <- mh_2x2xk(array(tab, dim = c(2, 2, 1)), correct = FALSE)
+  # Single-table identity check on the port's MH chi-square (fix
+  # round 2; skipped when the statistic is undefined).
+  check_mh_single_table(tab, mh$statistic,
+                        paste0(id, " chi_square.mantel_haenszel"))
   it <- twobytwo_iterative(tab, id)
 
   list(
