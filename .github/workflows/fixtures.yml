@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  R_VERSION: '4.5.2'
+  R_VERSION: '4.6.2'
   NODE_VERSION: '22.23.4'
 
 jobs:
@@ -20,6 +20,18 @@ jobs:
       - uses: r-lib/actions/setup-r@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
         with:
           r-version: ${{ env.R_VERSION }}
+
+      - name: Install system libraries for R packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libgdal-dev libgeos-dev libproj-dev libsqlite3-dev \
+            libudunits2-dev libuv1-dev cmake libabsl-dev \
+            libcairo2-dev libfreetype-dev libfontconfig-dev \
+            libharfbuzz-dev libfribidi-dev libpng-dev libtiff-dev \
+            libjpeg-dev libwebp-dev libicu-dev \
+            libcurl4-openssl-dev libssl-dev libxml2-dev zlib1g-dev \
+            gfortran
 
       - name: Restore pinned R packages (renv)
         working-directory: fixtures
