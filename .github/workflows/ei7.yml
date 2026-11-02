@@ -10,6 +10,8 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 6 * * 1' # weekly, Monday 06:00 UTC
+  push:
+    branches: [v0.2/task-3-ei7-reference] # temporary: new workflows cannot be dispatched until on main; removed before merge
 
 env:
   NODE_VERSION: '22.23.4'
