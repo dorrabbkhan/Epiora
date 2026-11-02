@@ -1,0 +1,17 @@
+*** oswego.pgm — Epi Info 7 Classic Analysis program (Epiora v0.2 Task 3)
+*** READ the Oswego data table (Oswego12, 75 rows) in the Sample.mdb bundled
+*** with the official Epi Info 7.2.7.0 release ZIP — .prj view READs are not
+*** possible from CI binaries because the shipped .prj connection strings
+*** fail to decrypt (docs/spikes/ei7-windows.md) — then FREQ SEX,
+*** TABLES VANILLA ILL and TABLES VANILLA ILL STRATAVAR=SEX (spec §6.4),
+*** routed to a single HTML file, then QUIT so Analysis.exe exits on its own
+*** (required for headless CI use). run.ps1 substitutes @SAMPLE_MDB@ and
+*** @OUTPUT_HTML@ with absolute forward-slash paths and saves the result as
+*** *.pgm7 — Analysis.exe only honours arguments containing ".pgm7".
+READ '@SAMPLE_MDB@':Oswego12
+ROUTEOUT "@OUTPUT_HTML@" REPLACE
+FREQ SEX
+TABLES VANILLA ILL
+TABLES VANILLA ILL STRATAVAR=SEX
+CLOSEOUT
+QUIT
