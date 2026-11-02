@@ -1,0 +1,1285 @@
+{
+  "source": {
+    "build": "7.2.7.0",
+    "zip_sha256": "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609",
+    "sample_mdb_sha256": "c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e",
+    "run_url": "https://github.com/dorrabbkhan/Epiora/actions/runs/41507625047"
+  },
+  "outputs": [
+    {
+      "command": "FREQ SEX",
+      "values": [
+        {
+          "label": "Female Frequency",
+          "text": "44",
+          "value": 44,
+          "decimals": 0,
+          "key": "freq.categories[0].count"
+        },
+        {
+          "label": "Female Percent",
+          "text": "58.67%",
+          "value": 58.67,
+          "decimals": 2,
+          "key": "freq.categories[0].percent"
+        },
+        {
+          "label": "Female Cum. Percent",
+          "text": "58.67%",
+          "value": 58.67,
+          "decimals": 2,
+          "key": "freq.categories[0].cumulative_percent"
+        },
+        {
+          "label": "Male Frequency",
+          "text": "31",
+          "value": 31,
+          "decimals": 0,
+          "key": "freq.categories[1].count"
+        },
+        {
+          "label": "Male Percent",
+          "text": "41.33%",
+          "value": 41.33,
+          "decimals": 2,
+          "key": "freq.categories[1].percent"
+        },
+        {
+          "label": "Male Cum. Percent",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": "freq.categories[1].cumulative_percent"
+        },
+        {
+          "label": "Total Frequency",
+          "text": "75",
+          "value": 75,
+          "decimals": 0,
+          "key": "freq.total"
+        },
+        {
+          "label": "Total Percent",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "Total Cum. Percent",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "Exact 95% Conf Limits: Female col1",
+          "text": "46.70%",
+          "value": 46.7,
+          "decimals": 2,
+          "key": "freq.categories[0].ci_95_clopper_pearson.lower"
+        },
+        {
+          "label": "Exact 95% Conf Limits: Female col2",
+          "text": "69.92%",
+          "value": 69.92,
+          "decimals": 2,
+          "key": "freq.categories[0].ci_95_clopper_pearson.upper"
+        },
+        {
+          "label": "Exact 95% Conf Limits: Male col1",
+          "text": "30.08%",
+          "value": 30.08,
+          "decimals": 2,
+          "key": "freq.categories[1].ci_95_clopper_pearson.lower"
+        },
+        {
+          "label": "Exact 95% Conf Limits: Male col2",
+          "text": "53.30%",
+          "value": 53.3,
+          "decimals": 2,
+          "key": "freq.categories[1].ci_95_clopper_pearson.upper"
+        }
+      ]
+    },
+    {
+      "command": "TABLES VANILLA ILL",
+      "values": [
+        {
+          "label": "VANILLA=1 ILL=1",
+          "text": "43",
+          "value": 43,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "VANILLA=1 ILL=0",
+          "text": "11",
+          "value": 11,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "VANILLA=1 ILL=Total",
+          "text": "54",
+          "value": 54,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "VANILLA=1 ILL=1 Row%",
+          "text": "79.63%",
+          "value": 79.63,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=1 ILL=0 Row%",
+          "text": "20.37%",
+          "value": 20.37,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=1 ILL=Total Row%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=1 ILL=1 Col%",
+          "text": "93.48%",
+          "value": 93.48,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=1 ILL=0 Col%",
+          "text": "37.93%",
+          "value": 37.93,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=1 ILL=Total Col%",
+          "text": "72.00%",
+          "value": 72,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=0 ILL=1",
+          "text": "3",
+          "value": 3,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "VANILLA=0 ILL=0",
+          "text": "18",
+          "value": 18,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "VANILLA=0 ILL=Total",
+          "text": "21",
+          "value": 21,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "VANILLA=0 ILL=1 Row%",
+          "text": "14.29%",
+          "value": 14.29,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=0 ILL=0 Row%",
+          "text": "85.71%",
+          "value": 85.71,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=0 ILL=Total Row%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=0 ILL=1 Col%",
+          "text": "6.52%",
+          "value": 6.52,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=0 ILL=0 Col%",
+          "text": "62.07%",
+          "value": 62.07,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=0 ILL=Total Col%",
+          "text": "28.00%",
+          "value": 28,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=Total ILL=1",
+          "text": "46",
+          "value": 46,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "VANILLA=Total ILL=0",
+          "text": "29",
+          "value": 29,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "VANILLA=Total ILL=Total",
+          "text": "75",
+          "value": 75,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "VANILLA=Total ILL=1 Row%",
+          "text": "61.33%",
+          "value": 61.33,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=Total ILL=0 Row%",
+          "text": "38.67%",
+          "value": 38.67,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=Total ILL=Total Row%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=Total ILL=1 Col%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=Total ILL=0 Col%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "VANILLA=Total ILL=Total Col%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "Single Table Analysis: Odds Ratio (cross product) Estimate (T)",
+          "text": "23.4545",
+          "value": 23.4545,
+          "decimals": 4,
+          "key": "two_by_two.odds_ratio.estimate"
+        },
+        {
+          "label": "Single Table Analysis: Odds Ratio (cross product) Lower (T)",
+          "text": "5.8410",
+          "value": 5.841,
+          "decimals": 4,
+          "key": "two_by_two.odds_ratio.ci_95_wald.lower"
+        },
+        {
+          "label": "Single Table Analysis: Odds Ratio (cross product) Upper (T)",
+          "text": "94.1811 (T)",
+          "value": 94.1811,
+          "decimals": 4,
+          "key": "two_by_two.odds_ratio.ci_95_wald.upper"
+        },
+        {
+          "label": "Single Table Analysis: Odds Ratio (MLE) Estimate (M)",
+          "text": "22.1490",
+          "value": 22.149,
+          "decimals": 4,
+          "key": "two_by_two.odds_ratio.cmle"
+        },
+        {
+          "label": "Single Table Analysis: Odds Ratio (MLE) Lower (M)",
+          "text": "5.9280",
+          "value": 5.928,
+          "decimals": 4,
+          "key": "two_by_two.odds_ratio.ci_95_midp_exact.lower"
+        },
+        {
+          "label": "Single Table Analysis: Odds Ratio (MLE) Upper (M)",
+          "text": "109.1473 (M)",
+          "value": 109.1473,
+          "decimals": 4,
+          "key": "two_by_two.odds_ratio.ci_95_midp_exact.upper"
+        },
+        {
+          "label": "Single Table Analysis: Odds Ratio (MLE) Lower (F)",
+          "text": "5.2153",
+          "value": 5.2153,
+          "decimals": 4,
+          "key": "two_by_two.odds_ratio.ci_95_fisher_exact.lower"
+        },
+        {
+          "label": "Single Table Analysis: Odds Ratio (MLE) Upper (F)",
+          "text": "138.3935 (F)",
+          "value": 138.3935,
+          "decimals": 4,
+          "key": "two_by_two.odds_ratio.ci_95_fisher_exact.upper"
+        },
+        {
+          "label": "Single Table Analysis: Risk Ratio (RR) Estimate (T)",
+          "text": "5.5741",
+          "value": 5.5741,
+          "decimals": 4,
+          "key": "two_by_two.risk_ratio.estimate"
+        },
+        {
+          "label": "Single Table Analysis: Risk Ratio (RR) Lower (T)",
+          "text": "1.9383",
+          "value": 1.9383,
+          "decimals": 4,
+          "key": "two_by_two.risk_ratio.ci_95_wald.lower"
+        },
+        {
+          "label": "Single Table Analysis: Risk Ratio (RR) Upper (T)",
+          "text": "16.0296 (T)",
+          "value": 16.0296,
+          "decimals": 4,
+          "key": "two_by_two.risk_ratio.ci_95_wald.upper"
+        },
+        {
+          "label": "Single Table Analysis: Risk Difference (RD%) Estimate (T)",
+          "text": "65.3439",
+          "value": 65.3439,
+          "decimals": 4,
+          "key": "two_by_two.risk.difference"
+        },
+        {
+          "label": "Single Table Analysis: Risk Difference (RD%) Lower (T)",
+          "text": "46.9212",
+          "value": 46.9212,
+          "decimals": 4,
+          "key": "two_by_two.risk.difference_ci_95_wald.lower"
+        },
+        {
+          "label": "Single Table Analysis: Risk Difference (RD%) Upper (T)",
+          "text": "83.7666 (T)",
+          "value": 83.7666,
+          "decimals": 4,
+          "key": "two_by_two.risk.difference_ci_95_wald.upper"
+        },
+        {
+          "label": "Single Table Analysis: Chi-square - uncorrected Chi-square",
+          "text": "27.2225",
+          "value": 27.2225,
+          "decimals": 4,
+          "key": "two_by_two.chi_square.uncorrected.statistic"
+        },
+        {
+          "label": "Single Table Analysis: Chi-square - uncorrected 2-tailed p",
+          "text": "0.0000001813",
+          "value": 1.813e-7,
+          "decimals": 10,
+          "key": "two_by_two.chi_square.uncorrected.p_value"
+        },
+        {
+          "label": "Single Table Analysis: Chi-square - Mantel-Haenszel Chi-square",
+          "text": "26.8596",
+          "value": 26.8596,
+          "decimals": 4,
+          "key": "two_by_two.chi_square.mantel_haenszel.statistic"
+        },
+        {
+          "label": "Single Table Analysis: Chi-square - Mantel-Haenszel 2-tailed p",
+          "text": "0.0000002188",
+          "value": 2.188e-7,
+          "decimals": 10,
+          "key": "two_by_two.chi_square.mantel_haenszel.p_value"
+        },
+        {
+          "label": "Single Table Analysis: Chi-square - corrected (Yates) Chi-square",
+          "text": "24.5370",
+          "value": 24.537,
+          "decimals": 4,
+          "key": "two_by_two.chi_square.yates.statistic"
+        },
+        {
+          "label": "Single Table Analysis: Chi-square - corrected (Yates) 2-tailed p",
+          "text": "0.0000007290",
+          "value": 7.29e-7,
+          "decimals": 10,
+          "key": "two_by_two.chi_square.yates.p_value"
+        },
+        {
+          "label": "Single Table Analysis: Mid-p exact 1-tailed p",
+          "text": "0.0000001349",
+          "value": 1.349e-7,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "Single Table Analysis: Fisher exact 1-tailed p",
+          "text": "0.0000002597",
+          "value": 2.597e-7,
+          "decimals": 10,
+          "key": "two_by_two.fisher_exact.p_upper"
+        },
+        {
+          "label": "Single Table Analysis: Fisher exact 2-tailed p",
+          "text": "0.0000002597",
+          "value": 2.597e-7,
+          "decimals": 10,
+          "key": "two_by_two.fisher_exact.p_two_sided"
+        }
+      ]
+    },
+    {
+      "command": "TABLES VANILLA ILL STRATAVAR = SEX",
+      "values": [
+        {
+          "label": "SEX=Female: VANILLA=1 ILL=1",
+          "text": "27",
+          "value": 27,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=1 ILL=0",
+          "text": "4",
+          "value": 4,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=1 ILL=Total",
+          "text": "31",
+          "value": 31,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=1 ILL=1 Row%",
+          "text": "87.10%",
+          "value": 87.1,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=1 ILL=0 Row%",
+          "text": "12.90%",
+          "value": 12.9,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=1 ILL=Total Row%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=1 ILL=1 Col%",
+          "text": "90.00%",
+          "value": 90,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=1 ILL=0 Col%",
+          "text": "28.57%",
+          "value": 28.57,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=1 ILL=Total Col%",
+          "text": "70.45%",
+          "value": 70.45,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=0 ILL=1",
+          "text": "3",
+          "value": 3,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=0 ILL=0",
+          "text": "10",
+          "value": 10,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=0 ILL=Total",
+          "text": "13",
+          "value": 13,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=0 ILL=1 Row%",
+          "text": "23.08%",
+          "value": 23.08,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=0 ILL=0 Row%",
+          "text": "76.92%",
+          "value": 76.92,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=0 ILL=Total Row%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=0 ILL=1 Col%",
+          "text": "10.00%",
+          "value": 10,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=0 ILL=0 Col%",
+          "text": "71.43%",
+          "value": 71.43,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=0 ILL=Total Col%",
+          "text": "29.55%",
+          "value": 29.55,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=Total ILL=1",
+          "text": "30",
+          "value": 30,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=Total ILL=0",
+          "text": "14",
+          "value": 14,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=Total ILL=Total",
+          "text": "44",
+          "value": 44,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=Total ILL=1 Row%",
+          "text": "68.18%",
+          "value": 68.18,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=Total ILL=0 Row%",
+          "text": "31.82%",
+          "value": 31.82,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=Total ILL=Total Row%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=Total ILL=1 Col%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=Total ILL=0 Col%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female: VANILLA=Total ILL=Total Col%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Odds Ratio (cross product) Estimate (T)",
+          "text": "22.5000",
+          "value": 22.5,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Odds Ratio (cross product) Lower (T)",
+          "text": "4.2630",
+          "value": 4.263,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Odds Ratio (cross product) Upper (T)",
+          "text": "118.7545 (T)",
+          "value": 118.7545,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Odds Ratio (MLE) Estimate (M)",
+          "text": "20.1438",
+          "value": 20.1438,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Odds Ratio (MLE) Lower (M)",
+          "text": "4.0932",
+          "value": 4.0932,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Odds Ratio (MLE) Upper (M)",
+          "text": "128.3747 (M)",
+          "value": 128.3747,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Odds Ratio (MLE) Lower (F)",
+          "text": "3.4398",
+          "value": 3.4398,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Odds Ratio (MLE) Upper (F)",
+          "text": "168.7688 (F)",
+          "value": 168.7688,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Risk Ratio (RR) Estimate (T)",
+          "text": "3.7742",
+          "value": 3.7742,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Risk Ratio (RR) Lower (T)",
+          "text": "1.3861",
+          "value": 1.3861,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Risk Ratio (RR) Upper (T)",
+          "text": "10.2767 (T)",
+          "value": 10.2767,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Risk Difference (RD%) Estimate (T)",
+          "text": "64.0199",
+          "value": 64.0199,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Risk Difference (RD%) Lower (T)",
+          "text": "38.2548",
+          "value": 38.2548,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Risk Difference (RD%) Upper (T)",
+          "text": "89.7849 (T)",
+          "value": 89.7849,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Chi-square - uncorrected Chi-square",
+          "text": "17.3037",
+          "value": 17.3037,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Chi-square - uncorrected 2-tailed p",
+          "text": "0.0000318574",
+          "value": 0.0000318574,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Chi-square - Mantel-Haenszel Chi-square",
+          "text": "16.9104",
+          "value": 16.9104,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Chi-square - Mantel-Haenszel 2-tailed p",
+          "text": "0.0000391866",
+          "value": 0.0000391866,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Chi-square - corrected (Yates) Chi-square",
+          "text": "14.4785",
+          "value": 14.4785,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Chi-square - corrected (Yates) 2-tailed p",
+          "text": "0.0001417715",
+          "value": 0.0001417715,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Mid-p exact 1-tailed p",
+          "text": "0.0000422439",
+          "value": 0.0000422439,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Fisher exact 1-tailed p",
+          "text": "0.0000813850",
+          "value": 0.000081385,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "SEX=Female Single Table Analysis: Fisher exact 2-tailed p",
+          "text": "0.0000813850",
+          "value": 0.000081385,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=1 ILL=1",
+          "text": "16",
+          "value": 16,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=1 ILL=0",
+          "text": "7",
+          "value": 7,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=1 ILL=Total",
+          "text": "23",
+          "value": 23,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=1 ILL=1 Row%",
+          "text": "69.57%",
+          "value": 69.57,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=1 ILL=0 Row%",
+          "text": "30.43%",
+          "value": 30.43,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=1 ILL=Total Row%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=1 ILL=1 Col%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=1 ILL=0 Col%",
+          "text": "46.67%",
+          "value": 46.67,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=1 ILL=Total Col%",
+          "text": "74.19%",
+          "value": 74.19,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=0 ILL=1",
+          "text": "0",
+          "value": 0,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=0 ILL=0",
+          "text": "8",
+          "value": 8,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=0 ILL=Total",
+          "text": "8",
+          "value": 8,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=0 ILL=1 Row%",
+          "text": "0.00%",
+          "value": 0,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=0 ILL=0 Row%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=0 ILL=Total Row%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=0 ILL=1 Col%",
+          "text": "0.00%",
+          "value": 0,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=0 ILL=0 Col%",
+          "text": "53.33%",
+          "value": 53.33,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=0 ILL=Total Col%",
+          "text": "25.81%",
+          "value": 25.81,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=Total ILL=1",
+          "text": "16",
+          "value": 16,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=Total ILL=0",
+          "text": "15",
+          "value": 15,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=Total ILL=Total",
+          "text": "31",
+          "value": 31,
+          "decimals": 0,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=Total ILL=1 Row%",
+          "text": "51.61%",
+          "value": 51.61,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=Total ILL=0 Row%",
+          "text": "48.39%",
+          "value": 48.39,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=Total ILL=Total Row%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=Total ILL=1 Col%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=Total ILL=0 Col%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male: VANILLA=Total ILL=Total Col%",
+          "text": "100.00%",
+          "value": 100,
+          "decimals": 2,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Odds Ratio (MLE) Lower (M)",
+          "text": "3.6884",
+          "value": 3.6884,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Odds Ratio (MLE) Lower (F)",
+          "text": "2.7700",
+          "value": 2.77,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Risk Difference (RD%) Estimate (T)",
+          "text": "69.5652",
+          "value": 69.5652,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Risk Difference (RD%) Lower (T)",
+          "text": "50.7602",
+          "value": 50.7602,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Risk Difference (RD%) Upper (T)",
+          "text": "88.3702 (T)",
+          "value": 88.3702,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Chi-square - uncorrected Chi-square",
+          "text": "11.5014",
+          "value": 11.5014,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Chi-square - uncorrected 2-tailed p",
+          "text": "0.0006954195",
+          "value": 0.0006954195,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Chi-square - Mantel-Haenszel Chi-square",
+          "text": "11.1304",
+          "value": 11.1304,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Chi-square - Mantel-Haenszel 2-tailed p",
+          "text": "0.0008492268",
+          "value": 0.0008492268,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Chi-square - corrected (Yates) Chi-square",
+          "text": "8.8846",
+          "value": 8.8846,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Chi-square - corrected (Yates) 2-tailed p",
+          "text": "0.0028758671",
+          "value": 0.0028758671,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Mid-p exact 1-tailed p",
+          "text": "0.0004078606",
+          "value": 0.0004078606,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Fisher exact 1-tailed p",
+          "text": "0.0008157212",
+          "value": 0.0008157212,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "SEX=Male Single Table Analysis: Fisher exact 2-tailed p",
+          "text": "0.0008157212",
+          "value": 0.0008157212,
+          "decimals": 10,
+          "key": null
+        },
+        {
+          "label": "SUMMARY INFORMATION: Crude OR (cross product) Estimate (T)",
+          "text": "23.4545",
+          "value": 23.4545,
+          "decimals": 4,
+          "key": "stratified_two_by_two.crude.odds_ratio.estimate"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Crude OR (cross product) Lower (T)",
+          "text": "5.8410,",
+          "value": 5.841,
+          "decimals": 4,
+          "key": "stratified_two_by_two.crude.odds_ratio.ci_95_wald.lower"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Crude OR (cross product) Upper (T)",
+          "text": "94.1811 (T)",
+          "value": 94.1811,
+          "decimals": 4,
+          "key": "stratified_two_by_two.crude.odds_ratio.ci_95_wald.upper"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Crude OR (MLE) Estimate (M)",
+          "text": "22.1490",
+          "value": 22.149,
+          "decimals": 4,
+          "key": "stratified_two_by_two.crude.odds_ratio.cmle"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Crude OR (MLE) Lower (M)",
+          "text": "5.9280,",
+          "value": 5.928,
+          "decimals": 4,
+          "key": "stratified_two_by_two.crude.odds_ratio.ci_95_midp_exact.lower"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Crude OR (MLE) Upper (M)",
+          "text": "109.1473 (M)",
+          "value": 109.1473,
+          "decimals": 4,
+          "key": "stratified_two_by_two.crude.odds_ratio.ci_95_midp_exact.upper"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Crude OR (MLE) Lower (F)",
+          "text": "5.2153,",
+          "value": 5.2153,
+          "decimals": 4,
+          "key": "stratified_two_by_two.crude.odds_ratio.ci_95_fisher_exact.lower"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Crude OR (MLE) Upper (F)",
+          "text": "138.3935 (F)",
+          "value": 138.3935,
+          "decimals": 4,
+          "key": "stratified_two_by_two.crude.odds_ratio.ci_95_fisher_exact.upper"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Adjusted OR (MH) Estimate (R)",
+          "text": "37.6398",
+          "value": 37.6398,
+          "decimals": 4,
+          "key": "stratified_two_by_two.mantel_haenszel.odds_ratio.estimate"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Adjusted OR (MH) Lower (R)",
+          "text": "7.1914,",
+          "value": 7.1914,
+          "decimals": 4,
+          "key": "stratified_two_by_two.mantel_haenszel.odds_ratio.ci_95.lower"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Adjusted OR (MH) Upper (R)",
+          "text": "197.0062 (R)",
+          "value": 197.0062,
+          "decimals": 4,
+          "key": "stratified_two_by_two.mantel_haenszel.odds_ratio.ci_95.upper"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Adjusted OR (MLE) Estimate (F)",
+          "text": "28.5753",
+          "value": 28.5753,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SUMMARY INFORMATION: Adjusted OR (MLE) Lower (F)",
+          "text": "6.0084,",
+          "value": 6.0084,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SUMMARY INFORMATION: Adjusted OR (MLE) Upper (F)",
+          "text": "207.5014 (F)",
+          "value": 207.5014,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "SUMMARY INFORMATION: Crude Risk Ratio (RR) Estimate (T)",
+          "text": "5.5741",
+          "value": 5.5741,
+          "decimals": 4,
+          "key": "stratified_two_by_two.crude.risk_ratio.estimate"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Crude Risk Ratio (RR) Lower (T)",
+          "text": "1.9383,",
+          "value": 1.9383,
+          "decimals": 4,
+          "key": "stratified_two_by_two.crude.risk_ratio.ci_95_wald.lower"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Crude Risk Ratio (RR) Upper (T)",
+          "text": "16.0296 (T)",
+          "value": 16.0296,
+          "decimals": 4,
+          "key": "stratified_two_by_two.crude.risk_ratio.ci_95_wald.upper"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Adjusted RR (MH) Estimate (T)",
+          "text": "5.7277",
+          "value": 5.7277,
+          "decimals": 4,
+          "key": "stratified_two_by_two.mantel_haenszel.risk_ratio.estimate"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Adjusted RR (MH) Lower (T)",
+          "text": "1.9868,",
+          "value": 1.9868,
+          "decimals": 4,
+          "key": "stratified_two_by_two.mantel_haenszel.risk_ratio.ci_95.lower"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Adjusted RR (MH) Upper (T)",
+          "text": "16.5127 (T)",
+          "value": 16.5127,
+          "decimals": 4,
+          "key": "stratified_two_by_two.mantel_haenszel.risk_ratio.ci_95.upper"
+        },
+        {
+          "label": "SUMMARY INFORMATION: MH Chi-square - uncorrected Chi-square",
+          "text": "28.0098",
+          "value": 28.0098,
+          "decimals": 4,
+          "key": "stratified_two_by_two.mantel_haenszel.chi_square.uncorrected.statistic"
+        },
+        {
+          "label": "SUMMARY INFORMATION: MH Chi-square - uncorrected 2-tailed p",
+          "text": "0.0000",
+          "value": 0,
+          "decimals": 4,
+          "key": "stratified_two_by_two.mantel_haenszel.chi_square.uncorrected.p_value"
+        },
+        {
+          "label": "SUMMARY INFORMATION: MH Chi-square - corrected Chi-square",
+          "text": "25.2769",
+          "value": 25.2769,
+          "decimals": 4,
+          "key": "stratified_two_by_two.mantel_haenszel.chi_square.corrected.statistic"
+        },
+        {
+          "label": "SUMMARY INFORMATION: MH Chi-square - corrected 2-tailed p",
+          "text": "0.0000",
+          "value": 0,
+          "decimals": 4,
+          "key": "stratified_two_by_two.mantel_haenszel.chi_square.corrected.p_value"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Breslow-Day-Tarone test for Odds Ratio Chi-square",
+          "text": "0.8156",
+          "value": 0.8156,
+          "decimals": 4,
+          "key": "stratified_two_by_two.breslow_day_tarone.statistic"
+        },
+        {
+          "label": "SUMMARY INFORMATION: Breslow-Day-Tarone test for Odds Ratio 2-tailed p",
+          "text": "0.3665",
+          "value": 0.3665,
+          "decimals": 4,
+          "key": "stratified_two_by_two.breslow_day_tarone.p_value"
+        }
+      ]
+    }
+  ]
+}

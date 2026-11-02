@@ -344,3 +344,58 @@ wording and from the earlier pins were made:
   Command used for the value diff: recursive JSON leaf walk of
   `git show HEAD:<file>` vs each regenerated file (script in the PR
   body).
+
+### v0.2 Task 3 — Epi Info 7 reference output for Oswego (2026-11-02)
+
+Decision: `fixtures/ei7/` now holds the Epi Info 7.2.7.0 reference output
+for the Oswego program (`FREQ SEX`, `TABLES VANILLA ILL`, `TABLES VANILLA
+ILL STRATAVAR=SEX`): `oswego.html` byte-for-byte from the ei7.yml artifact
+and `oswego.json` parsed from it, with `labels.json` mapping all 180
+emitted labels — 56 to corpus key paths (`freq.`, `two_by_two.`,
+`stratified_two_by_two.`), 124 explicitly `null`.
+
+- Release ZIP SHA-256: `8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609`
+  (verified in the producing run's log).
+- Sample.mdb SHA-256: `c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e`
+  — matches the fixture's expected hash, so the data Epi Info read is the
+  same `Oswego12` table behind `fixtures/data/oswego.csv`.
+- Producing run: `https://github.com/dorrabbkhan/Epiora/actions/runs/41507625047`
+  (recorded as `source.run_url`; ei7.yml preserves the committed value on
+  reruns so the `git diff --exit-code fixtures/ei7` drift check can go
+  green, and a run that produces different output fails the diff).
+- Output licence: the output is produced by the official Epi Info 7
+  build; the source it is built from is Apache-2.0 at `4cd353c` (D2).
+  The signed release ZIP itself states no licence, EULA or notice in the
+  archive (verified on the checksum-pinned file, docs/spikes/ei7-windows.md)
+  and is used only as a downloaded CI oracle, never redistributed.
+- Unmapped labels (`key: null`) are enumerated in `labels.json`: every
+  crosstab cell and Row%/Col% (table cells are procedure inputs, not
+  estimates), `Total Percent`/`Total Cum. Percent`, `Mid-p exact 1-tailed
+  p` (the corpus stores only the two-sided mid-p), all per-stratum
+  statistics under `SEX=Female`/`SEX=Male`, and `Adjusted OR (MLE)` and
+  its CI (Epi Info reports an adjusted MLE odds ratio the corpus does not
+  cover). Cells printed as `Undefined` (Male stratum OR/RR — a zero cell)
+  or `NaN` (Breslow-Day for Odds/Risk Ratio variants) emit no value —
+  they carry no number.
+- Mapping notes for Task 9: Epi Info's `(T)` confidence limits are Taylor
+  series — mapped to the corpus `ci_95_wald` paths, but for the odds
+  ratio Epi Info prints 5.8410–94.1811 where the corpus leaf is
+  5.8412–94.1787, a difference beyond display precision to be reconciled
+  at Task 9, not a relabel. `(R)` is the RGB interval (adjusted OR:
+  7.1914–197.0062 vs corpus 7.1916–197.0002). `Risk Difference (RD%)` and
+  FREQ/table percentages are on the percent scale (risk leaves are 0–1).
+  `Fisher exact 1-tailed p` maps to `fisher_exact.p_upper` — Epi Info
+  prints the tail in the direction of the association (upper for Oswego).
+
+Files outside the Files block:
+- .github/workflows/fixtures.yml — its parser-test step said
+  `node --test fixtures/ei7`; a bare directory argument fails with
+  MODULE_NOT_FOUND on Node ≥21 including the pinned 22.23.4, so the step
+  now uses the `fixtures/ei7/*.test.mjs` glob (same test file).
+- docs/decisions.md — this entry.
+
+Notes: `.github/workflows/ei7.yml` carried a temporary `push` trigger on
+this branch during development because a workflow file that does not yet
+exist on the default branch cannot be `workflow_dispatch`ed; it was
+removed before the PR, leaving the plan's dispatch + weekly triggers.
+Supersedes: —
