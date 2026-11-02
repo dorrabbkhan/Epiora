@@ -229,5 +229,10 @@ Files outside the Files block:
   WebR spike reads fixture format v2 before Task 2 changes it.
 - Cargo.lock — cargo-generated lockfile; committed so cargo-deny and CI
   resolve the same pinned dependency graph.
+- .github/workflows/spike-tauri.yml — the new root rust-toolchain.toml
+  overrides the `stable` toolchain this workflow installed, so it now
+  installs the pinned 1.99.0 itself, keeping the Android/iOS/wasm targets
+  its builds need (CI failure seen in run 41436582500). Not a spikes/
+  edit; the spike code is untouched.
 - docs/decisions.md — this entry.
 Supersedes: —

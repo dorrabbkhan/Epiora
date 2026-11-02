@@ -23,9 +23,12 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      # 1.99.0, the repo's pinned toolchain (rust-toolchain.toml would
+      # override a `stable` install and arrive without these targets).
       - name: Rust toolchain + Android/wasm targets
         uses: dtolnay/rust-toolchain@stable
         with:
+          toolchain: '1.99.0'
           targets: x86_64-linux-android, aarch64-linux-android, wasm32-unknown-unknown
 
       - name: Install spike dependencies (npm ci)
@@ -135,9 +138,11 @@ jobs:
         with:
           node-version: '22'
 
+      # Same pinned toolchain as the android job (rust-toolchain.toml).
       - name: Rust toolchain + iOS-sim/wasm targets
         uses: dtolnay/rust-toolchain@stable
         with:
+          toolchain: '1.99.0'
           targets: aarch64-apple-ios-sim, wasm32-unknown-unknown
 
       - name: Install spike dependencies (npm ci)

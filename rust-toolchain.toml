@@ -1,13 +1,3 @@
 [toolchain]
 channel = "1.99.0"
 components = ["clippy", "rustfmt"]
-# This file applies to every cargo invocation in the repo. The frozen
-# v0.1 spike-tauri workflow builds Android/iOS/wasm targets with whatever
-# toolchain the file resolves to, so the targets it needs are listed here:
-# rustup installs them when it auto-installs 1.99.0 for the file.
-targets = [
-    "wasm32-unknown-unknown",
-    "x86_64-linux-android",
-    "aarch64-linux-android",
-    "aarch64-apple-ios-sim",
-]
