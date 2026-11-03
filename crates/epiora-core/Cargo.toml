@@ -6,12 +6,13 @@ license.workspace = true
 description = "Epiora statistics engine: deterministic, fixture-validated, never panics"
 
 [features]
-# The corpus module loads and compares R-generated fixtures; it is used by
-# tests and corpus-runner only, never shipped in the wasm binding.
-corpus = ["dep:serde_json"]
+# The corpus module loads, runs and compares R-generated fixtures; it is
+# used by tests and corpus-runner only, never shipped in the wasm binding.
+corpus = []
 
 [dependencies]
 libm = "0.2"
+ryu = "1"
 serde = { version = "1", features = ["derive"] }
 # float_roundtrip: serde_json's default float parser is not correctly
 # rounded (it reads "1.0000000000000001e-09", jsonlite's 17-digit form of
@@ -19,9 +20,14 @@ serde = { version = "1", features = ["derive"] }
 # tolerance_classes check and shift every leaf by up to 1 ulp;
 # float_roundtrip gives correctly rounded parsing without changing
 # serde_json::Number's representation.
-serde_json = { version = "1", features = ["float_roundtrip"], optional = true }
+serde_json = { version = "1", features = ["float_roundtrip"] }
 sha2 = "0.10"
 thiserror = "2"
+
+[[bin]]
+name = "corpus-runner"
+path = "src/bin/corpus-runner.rs"
+required-features = ["corpus"]
 
 [dev-dependencies]
 proptest = "1"

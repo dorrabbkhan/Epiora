@@ -527,3 +527,54 @@ Files outside the Files block:
   Poisson-tail identity).
 - docs/decisions.md — this entry.
 Supersedes: —
+
+### v0.2 Task 8 — `tabulate`, `procedures`, receipts, registry (2026-11-03)
+
+Decision: `tabulate`, `procedures`, receipt v1, the validation registry
+and `corpus-runner` are implemented as planned. Points resolved beyond
+the plan's prose:
+
+- `VarSpec.levels` is an orientation aid, not a filter: it must equal
+  the variable's non-missing category set, else `InvalidOptions` —
+  categories are never silently dropped.
+- `AmbiguousLevels` fires only when the result would be a 2×2;
+  orientation is a 2×2 concern (spec §3.3). A 2-level Text variable
+  inside an R×C table keeps its category order, no error.
+- `stratify_by` on a non-2×2 `tables` call is `InvalidOptions`
+  ("stratify_by requires a two-by-two table") rather than a silently
+  pooled R×C; the result type has no place for stratified R×C.
+- `FreqTable.missing` still reports the missing count when
+  `include_missing` adds the `"(missing)"` category (confirmed by
+  `freq/missing_group_incl_missing`); `total` is the in-scope record
+  count. `"(missing)"` is appended only when missing values exist.
+- `FreqResult.exclusions` counts records excluded for a missing
+  stratify variable; a record missing the analysed variable is reported
+  in `missing`, not excluded. Excluded records are counted under every
+  variable they miss.
+- Combined stratum labels join per-variable labels with `,`;
+  `FreqTable.stratum` is the stratum label. `Labels2x2` is
+  `{exposure, outcome}` and `StratifiedResult` is
+  `{strata_labels, stats}` (the plan left both unexpanded).
+- Receipt `validation` entries carry the family-prefixed registry
+  statistic id (the spec example shows the leaf path only); options
+  serialize with explicit `null` for unset `Option` fields ("every
+  default filled in").
+- `serde_json` is now a required dependency (receipts are product
+  code); the `corpus` feature only gates the corpus module. `ryu`
+  added per Tech Stack (Apache-2.0/BSL-1.0, both on the allow list).
+- `#[allow(clippy::large_enum_variant)]` on `TablesResult`: the
+  plan's interface embeds two full stats structs in `TwoByTwo`, so
+  boxing is declined to keep the produced signature exact.
+- `corpus-runner` iterates the five family dirs in sorted path order;
+  a fixture's declared `inputs.table`/`inputs.strata` is verified
+  against tabulation (`CorpusFormat` on disagreement).
+- `check-engine.sh` full mode gained the `corpus-runner` smoke run
+  writing `target/corpus-native.jsonl` (gitignored).
+
+Files outside the Files block:
+- `crates/epiora-core/src/tabulate/categories.rs` — the category
+  machinery (`Key`, `Cats`, `collect`, `resolved`, `orient`) split
+  out of `tabulate.rs` to keep both files under ~400 lines (rule 8).
+- `Cargo.lock` — cargo-generated lockfile for the `ryu` addition.
+- `docs/decisions.md` — this entry.
+Supersedes: —
