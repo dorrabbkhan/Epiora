@@ -492,3 +492,38 @@ Files outside the Files block:
 - `Cargo.lock` — cargo-generated lockfile for the same addition.
 - docs/decisions.md — this entry.
 Supersedes: —
+
+### v0.2 Task 7 — `stats`: stratified 2×2 (2026-11-03)
+
+Decision: `stratified` is implemented as planned — MH OR with the
+Robins–Breslow–Greenland CI, MH RR with the Greenland–Robins CI, the
+uncorrected and Yates-corrected MH chi-squares, and Breslow–Day–Tarone
+with df = kept strata − 1. Points resolved beyond the plan's prose:
+
+- Breslow–Day's p-value is `1 − pchisq(X², df)` exactly as
+  `DescTools::BreslowDayTest` computes it — the complement of the
+  *lower-tail* CDF, not the upper tail `pchisq(..., lower.tail =
+  FALSE)`. `special` therefore gained a port of R's lower-tail
+  `pgamma_raw` (`inc_gamma_lower`, exposed as `chisq_cdf`): the
+  "x large" region is verbatim so `1 − chisq_cdf` reproduces
+  `1 − pchisq` including its underflow-to-0; `pgamma_smallx` maps to
+  the equivalent A&S 6.5.29 convergent series and the `ppois_asymp`
+  middle region (x within ~20% of a, reachable only for a ≳ 200 —
+  outside the reference grid) falls back to `1 − inc_gamma_upper`.
+  Checked against a 231-row R 4.6.2 `pchisq` grid written by the
+  conductor (`target/conductor/chisq_cdf_ref.csv`, gitignored): max
+  relative error 6.2e-14 on `pchisq`, 1.4e-15 on `1 − pchisq`.
+Files outside the Files block:
+- crates/epiora-core/src/special/gamma.rs — `inc_gamma_lower` plus the
+  `dpois_raw`/`dpois_wrap`/`pd_upper_series`/`pd_lower_cf`/
+  `pd_lower_series` helpers it needs; `breslow_day` must reproduce
+  `1 − pchisq`, which `chisq_sf` cannot (it computes the upper tail
+  directly).
+- crates/epiora-core/src/special/chisq.rs — `chisq_cdf` wrapper.
+- crates/epiora-core/src/special/mod.rs — re-export of `chisq_cdf`.
+- crates/epiora-core/tests/special.rs — committed `chisq_cdf` unit
+  tests (literals copied from the conductor's R grid, one per ported
+  branch; the near-diagonal else point via the exact integer-shape
+  Poisson-tail identity).
+- docs/decisions.md — this entry.
+Supersedes: —

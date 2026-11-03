@@ -2,8 +2,8 @@
 
 use epiora_core::corpus::compare::compare;
 use epiora_core::special::{
-    beta_quantile, binomial_tail, brent_root, chisq_sf, hypergeom_pmf, ln_gamma, normal_cdf,
-    normal_quantile, normal_sf, NcHypergeom, RootError,
+    beta_quantile, binomial_tail, brent_root, chisq_cdf, chisq_sf, hypergeom_pmf, ln_gamma,
+    normal_cdf, normal_quantile, normal_sf, NcHypergeom, RootError,
 };
 use serde_json::{json, Value};
 use std::path::{Path, PathBuf};
@@ -129,6 +129,58 @@ fn special_nc_hypergeom_matches_fixture() {
         }));
     }
     assert_matches(&fixture, &json!({ "values": values }));
+}
+
+/// `chisq_cdf` against R 4.6.2 `pchisq` — literals copied from the
+/// conductor's reference grid `target/conductor/chisq_cdf_ref.csv`
+/// (gitignored), produced by
+/// `Rscript -e 'g <- expand.grid(x=..., df=...); ... pchisq(g$x, g$df) ...'`.
+/// The last case has no grid row (the "x near a" region needs df > 100):
+/// `pchisq(500, 490)` is the exact integer-shape Poisson-tail identity
+/// `P(245, 250) = 1 − e^−250·Σ_{k≤244} 250^k/k!` evaluated in Decimal.
+/// Tolerance is the `closed_form` class (E7): |a−e| ≤ 1e-9·|e|.
+#[test]
+fn special_chisq_cdf_branches() {
+    for (x, df, expected) in [
+        // gamma-x < 1: convergent P series.
+        (1.0, 4.0, 0.09020401043104988),
+        // x <= a−1, x < 0.8(a+50): pd_upper_series × dpois_wrap.
+        (30.0, 50.0, 0.011164780271550285),
+        // a < 1 branch: pd_lower_cf for the scaled upper tail.
+        (10.0, 1.0, 0.9984345977419975),
+        // a ≥ 1 branch: pd_lower_series; fractional y = 2.5 also
+        // reaches pd_lower_cf.
+        (20.0, 7.0, 0.9944303169270544),
+        // else region (x ≥ 1 near a): complement of the validated
+        // upper tail, R's ppois_asymp region.
+        (500.0, 490.0, 0.632526655552547),
+    ] {
+        let actual = chisq_cdf(x, df);
+        assert!(
+            (actual - expected).abs() <= 1e-9 * expected.abs(),
+            "chisq_cdf({x}, {df}) = {actual:e}, expected {expected:e}"
+        );
+    }
+    // `1 - pchisq` — the quantity DescTools' Breslow-Day uses — is
+    // reproduced, not computed from the upper tail.
+    let (x, df, expected) = (10.0, 1.0, 1.5654022580025018e-3);
+    let actual = 1.0 - chisq_cdf(x, df);
+    assert!(
+        (actual - expected).abs() <= 1e-9 * expected.abs(),
+        "1 - chisq_cdf({x}, {df}) = {actual:e}, expected {expected:e}"
+    );
+}
+
+#[test]
+fn special_chisq_cdf_edges() {
+    // R: pchisq(x, df=0) is the point mass at 0; x <= 0 is 0.
+    assert_eq!(chisq_cdf(0.0, 1.0), 0.0);
+    assert_eq!(chisq_cdf(-1.0, 1.0), 0.0);
+    assert_eq!(chisq_cdf(0.0, 0.0), 0.0);
+    assert_eq!(chisq_cdf(5.0, 0.0), 1.0);
+    assert!(chisq_cdf(f64::NAN, 1.0).is_nan());
+    assert!(chisq_cdf(1.0, f64::NAN).is_nan());
+    assert!(chisq_cdf(1.0, -1.0).is_nan());
 }
 
 #[test]

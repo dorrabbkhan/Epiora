@@ -12,7 +12,7 @@ mod normal;
 mod root;
 
 pub use beta::{beta_quantile, reg_inc_beta};
-pub use chisq::chisq_sf;
+pub use chisq::{chisq_cdf, chisq_sf};
 pub use gamma::ln_gamma;
 pub use hypergeom::{binomial_tail, hypergeom_pmf, NcHypergeom};
 pub use normal::{normal_cdf, normal_quantile, normal_sf};
