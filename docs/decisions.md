@@ -480,8 +480,9 @@ the interface list fixed beyond the plan's prose:
   serialized result never contains `null`: `Value(x) → x`,
   `Undefined → {"undefined": "<code>"}`.
 Files outside the Files block:
-- `crates/epiora-core/Cargo.toml` — `proptest` dev-dependency (in the
-  plan's Tech Stack; needed by `tests/stats_props.rs`).
+- `crates/epiora-core/Cargo.toml` — `proptest` 1.12 dev-dependency (in
+  the plan's Tech Stack; needed by `tests/stats_props.rs`). Licence:
+  MIT OR Apache-2.0, both on the `deny.toml` allow list.
 - `Cargo.lock` — cargo-generated lockfile for the same addition.
 - docs/decisions.md — this entry.
 Supersedes: —
