@@ -456,3 +456,39 @@ all fixture points in tolerance) and `./scripts/check.sh` locally; the
 Files outside the Files block:
 - docs/decisions.md — this entry.
 Supersedes: —
+
+### v0.2 Task 6 — `stats`: 2×2, R×C, proportions (2026-11-03)
+
+Decision: `stats` is implemented as planned. Points the fixtures or
+the interface list fixed beyond the plan's prose:
+
+- `risk_ratio.small_sample` is `epitools::riskratio.small` as generated:
+  the estimate is `(a/(a+b)) / ((c+1)/(c+d+1))` — only the reference
+  group is adjusted — while its bounds use the *unadjusted* Wald
+  standard error. Verified against all four `zero_*` fixtures, Oswego
+  and `large`.
+- `odds_ratio.ci_95_midp_exact`: when the observed cell sits at either
+  end of the conditional support (`x == lo` or `x == hi`), both bounds
+  are `Undefined { Unbounded }`. The `zero_*` fixtures carry null for
+  both bounds in exactly these cases, even where the mid-p equation
+  would still bracket a root — that is the reference behaviour
+  (`epitools::oddsratio(method = "midp")` returns NA there).
+- `freq_proportion_fixtures` is scoped to the `categories` subtree:
+  `proportions` produces only `CategoryStats`; `total`/`missing` come
+  from tabulation in Task 8.
+- `chi_square.df` (and every other output leaf) is an `Estimate`, so a
+  serialized result never contains `null`: `Value(x) → x`,
+  `Undefined → {"undefined": "<code>"}`.
+- `fisher_exact.p_two_sided` is built as
+  `min(p_lower + qualifying mass above x, p_upper + qualifying mass
+  below x)`: each candidate anchors on the identical one-sided-tail
+  `f64`, so `p_two_sided ≥ min(one-sided)` holds in floating point by
+  construction, and by pmf unimodality the smaller candidate is
+  `fisher.test`'s `relErr` sum (fix-round change in `exact.rs`).
+Files outside the Files block:
+- `crates/epiora-core/Cargo.toml` — `proptest` 1.12 dev-dependency (in
+  the plan's Tech Stack; needed by `tests/stats_props.rs`). Licence:
+  MIT OR Apache-2.0, both on the `deny.toml` allow list.
+- `Cargo.lock` — cargo-generated lockfile for the same addition.
+- docs/decisions.md — this entry.
+Supersedes: —
