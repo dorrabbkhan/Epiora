@@ -575,6 +575,26 @@ Files outside the Files block:
 - `crates/epiora-core/src/tabulate/categories.rs` — the category
   machinery (`Key`, `Cats`, `collect`, `resolved`, `orient`) split
   out of `tabulate.rs` to keep both files under ~400 lines (rule 8).
+- `crates/epiora-core/src/corpus/mod.rs` — registers `run_case`
+  (`pub mod run_case; pub use run_case::{run_case, CaseOutput};`) so
+  `corpus-runner` and the corpus tests can drive fixtures.
+- `crates/epiora-core/src/validation/registry/{mod,freq,rxc,
+  stratified_two_by_two,two_by_two}.rs` — the registry entries moved
+  into per-family submodules (each family's repeated fixture list is
+  one shared `const`); required by the ~400-line constraint now that
+  `validation.rs` held 1142 lines. `REGISTRY` is unchanged: same 86
+  entries, ids, fixture lists, classes and order (verified by dumping
+  every `statistic|fixtures|class` row before and after — the diff is
+  empty — and by the unchanged golden receipt).
 - `Cargo.lock` — cargo-generated lockfile for the `ryu` addition.
 - `docs/decisions.md` — this entry.
+Public items not in the plan's Interfaces block:
+- `tabulate::frequency_stratified` — the shared per-stratum counting
+  machinery behind `procedures::freq`'s `stratify_by`.
+- `tabulate::StratifiedFreq` — `frequency_stratified`'s return type
+  (strata labels + one `FreqCounts` per stratum + exclusions).
+- `validation::statistic_ids` — enumerates the statistic leaf ids a
+  serialized stats object emits; `tests/registry.rs` and the receipt
+  `validation` block need it to assert every emitted statistic is
+  registered.
 Supersedes: —
