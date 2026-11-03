@@ -9,7 +9,9 @@
     deny(clippy::unwrap_used, clippy::expect_used, clippy::panic)
 )]
 
+pub mod dataset;
 pub mod error;
+pub mod project;
 pub mod validation;
 
 #[cfg(feature = "corpus")]

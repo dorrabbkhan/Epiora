@@ -3,3 +3,6 @@
 //! only, never a product importer.
 
 pub mod compare;
+pub mod dataset_json;
+
+pub use dataset_json::{load_dataset, load_dataset_dir};
