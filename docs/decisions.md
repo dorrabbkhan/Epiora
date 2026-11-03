@@ -399,3 +399,26 @@ this branch during development because a workflow file that does not yet
 exist on the default branch cannot be `workflow_dispatch`ed; it was
 removed before the PR, leaving the plan's dispatch + weekly triggers.
 Supersedes: —
+
+### v0.2 Task 4 — `dataset`, `project` and the corpus dataset loader (2026-11-03)
+
+Decision: The spec §3.3 dataset model is implemented as planned:
+`Dataset`/`Column`/`ColumnData`/`Value`/`ValueType` with `Dataset::new`
+validation (`EmptyDataset` on zero columns; `InvalidColumn` on unequal
+lengths, duplicate or empty names, non-finite reals), canonical bytes
+and a `-0.0`-normalised SHA-256 content hash, the `Project`/`DatasetRef`
+types (type only, spec §3.2), and `corpus::load_dataset` /
+`load_dataset_dir` for `fixtures/data/*.dataset.json` (malformed JSON or
+schema violations → `CorpusFormat`; dataset rules keep their own
+errors). Dates parse strict `YYYY-MM-DD` via a proleptic-Gregorian
+`days_from_civil`; anything else is `CorpusFormat`. The `golden_hash`
+constant was computed with the `xxd -r -p | sha256sum` command recorded
+in the PR body.
+Evidence: `cargo test -p epiora-core --all-features` (11 dataset + 4
+corpus_datasets tests) and `./scripts/check.sh` locally; the `engine`
+workflow run linked in the PR.
+Files outside the Files block:
+- Cargo.lock — cargo-generated lockfile updated by the new `sha2`
+  dependency so cargo-deny and CI resolve the same pinned graph.
+- docs/decisions.md — this entry.
+Supersedes: —
