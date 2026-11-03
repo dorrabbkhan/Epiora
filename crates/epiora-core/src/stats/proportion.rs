@@ -44,15 +44,16 @@ fn qb(p: f64, a: f64, b: f64) -> Estimate {
 /// unless the caller appended a "(missing)" category. A zero
 /// denominator makes the derived values `Undefined { EmptyTable }`.
 pub fn proportions(counts: &[u64]) -> Vec<CategoryStats> {
-    let n: u64 = counts.iter().sum();
-    let nf = n as f64;
+    // Summed in f64 so a caller's counts can never overflow-panic.
+    let nf: f64 = counts.iter().map(|&c| c as f64).sum();
+    let n = nf as u64;
     let z = z_975();
     let et = UndefinedReason::EmptyTable;
-    let mut cumulative = 0u64;
+    let mut cumulative = 0.0;
     counts
         .iter()
         .map(|&count| {
-            cumulative += count;
+            cumulative += count as f64;
             let k = count as f64;
             let percent = if n == 0 {
                 Estimate::Undefined { reason: et }
@@ -62,7 +63,7 @@ pub fn proportions(counts: &[u64]) -> Vec<CategoryStats> {
             let cumulative_percent = if n == 0 {
                 Estimate::Undefined { reason: et }
             } else {
-                Estimate::Value(cumulative as f64 / nf * 100.0)
+                Estimate::Value(cumulative / nf * 100.0)
             };
             CategoryStats {
                 count,

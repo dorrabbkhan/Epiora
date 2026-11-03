@@ -266,7 +266,14 @@ pub fn two_by_two(t: &Table2x2) -> TwoByTwoStats {
     let or = a * d / (b * c);
     let se_or = libm::sqrt(1.0 / a + 1.0 / b + 1.0 / c + 1.0 / d);
     let log_or = libm::log(or);
-    let h = NcHypergeom::new(t.a + t.c, t.b + t.d, t.a + t.b);
+    // Margins in u64 for the conditional support; saturating so an
+    // absurd input can never panic (rule: no input panics the engine).
+    let (m1u, m0u, ku) = (
+        t.a.saturating_add(t.c),
+        t.b.saturating_add(t.d),
+        t.a.saturating_add(t.b),
+    );
+    let h = NcHypergeom::new(m1u, m0u, ku);
     let odds_ratio = OddsRatioStats {
         estimate: Estimate::from_f64(or, zc),
         cmle: exact::cmle(&h, t.a),
@@ -315,10 +322,7 @@ pub fn two_by_two(t: &Table2x2) -> TwoByTwoStats {
     let fisher_exact = FisherExactStats {
         p_lower: Estimate::from_f64(p_lower, zm),
         p_upper: Estimate::from_f64(p_upper, zm),
-        p_two_sided: Estimate::from_f64(
-            exact::fisher_p_two_sided(t.a + t.c, t.b + t.d, t.a + t.b, t.a),
-            zm,
-        ),
+        p_two_sided: Estimate::from_f64(exact::fisher_p_two_sided(m1u, m0u, ku, t.a), zm),
     };
 
     let midp_exact = MidpExactStats {
