@@ -70,6 +70,167 @@ fn upper_cf(a: f64, x: f64, gln: f64) -> f64 {
 
 const M_LN_SQRT_2PI: f64 = -0.9189385332046728; // -log(sqrt(2*pi))
 pub(crate) const M_LN_2PI: f64 = 1.8378770664093456; // log(2*pi)
+const M_2PI: f64 = std::f64::consts::TAU; // 2*pi
+/// `M_cutoff` of R's `pgamma.c` — `ln(2)·DBL_MAX_EXP/DBL_EPSILON`.
+const M_CUTOFF: f64 = 3.196577180618028e18;
+/// `scalefactor` of R's `pgamma.c` — `(2^32)^8 = 2^256`.
+const SCALE_FACTOR: f64 = 1.157920892373162e77;
+
+/// `dpois_raw(x, lambda, give_log = FALSE)` — Poisson probability
+/// `lambda^x·e^-lambda / x!` for fractional `x` (R `dpois.c`). R ≥ 4.5
+/// splits the deviance via `ebd0` (double-double arithmetic); the plain
+/// `bd0 + stirlerr` form agrees to ~1e-13 relative in the worst case —
+/// inside the `closed_form` class.
+fn dpois_raw(x: f64, lambda: f64) -> f64 {
+    if lambda == 0.0 {
+        return if x == 0.0 { 1.0 } else { 0.0 };
+    }
+    if !lambda.is_finite() || x < 0.0 {
+        return 0.0;
+    }
+    if x <= lambda * f64::MIN_POSITIVE {
+        return libm::exp(-lambda);
+    }
+    if lambda < x * f64::MIN_POSITIVE {
+        if !x.is_finite() {
+            return 0.0;
+        }
+        return libm::exp(-lambda + x * libm::log(lambda) - ln_gamma(x + 1.0));
+    }
+    libm::exp(-bd0(x, lambda) - stirlerr(x)) / libm::sqrt(M_2PI * x)
+}
+
+/// `dpois_wrap(x_plus_1, lambda)` = `dpois(x_plus_1 − 1, lambda)`, the
+/// form `pgamma` needs for fractional `x` (R `pgamma.c`, non-log only).
+fn dpois_wrap(x_plus_1: f64, lambda: f64) -> f64 {
+    if !lambda.is_finite() {
+        return 0.0;
+    }
+    if x_plus_1 > 1.0 {
+        return dpois_raw(x_plus_1 - 1.0, lambda);
+    }
+    if lambda > (x_plus_1 - 1.0).abs() * M_CUTOFF {
+        libm::exp(-lambda - ln_gamma(x_plus_1))
+    } else {
+        dpois_raw(x_plus_1, lambda) * (x_plus_1 / lambda)
+    }
+}
+
+/// `pd_upper_series(x, y)` of R's `pgamma.c`:
+/// `sum_{n>=0} x^(n+1) / (y·(y+1)·…·(y+n))`, non-log only.
+fn pd_upper_series(x: f64, mut y: f64) -> f64 {
+    let mut term = x / y;
+    let mut sum = term;
+    // R's do/while: the first check `x/y > (x/y)·eps` always passes
+    // for positive term, so the while form is identical.
+    while term > sum * f64::EPSILON {
+        y += 1.0;
+        term *= x / y;
+        sum += term;
+    }
+    sum
+}
+
+/// `pd_lower_cf(y, d)` of R's `pgamma.c` — the continued fraction for
+/// the scaled upper tail.
+fn pd_lower_cf(y: f64, d: f64) -> f64 {
+    if y == 0.0 {
+        return 0.0;
+    }
+    let mut f0 = y / d;
+    if (y - 1.0).abs() < d.abs() * f64::EPSILON {
+        return f0;
+    }
+    if f0 > 1.0 {
+        f0 = 1.0;
+    }
+    let mut c2 = y;
+    let mut c4 = d;
+    let (mut a1, mut b1, mut a2, mut b2) = (0.0, 1.0, y, d);
+    while b2 > SCALE_FACTOR {
+        a1 /= SCALE_FACTOR;
+        b1 /= SCALE_FACTOR;
+        a2 /= SCALE_FACTOR;
+        b2 /= SCALE_FACTOR;
+    }
+    let mut f = 0.0;
+    let mut of = -1.0;
+    let mut i = 0.0;
+    while i < 200_000.0 {
+        i += 1.0;
+        c2 -= 1.0;
+        let c3 = i * c2;
+        c4 += 2.0;
+        a1 = c4 * a2 + c3 * a1;
+        b1 = c4 * b2 + c3 * b1;
+        i += 1.0;
+        c2 -= 1.0;
+        let c3 = i * c2;
+        c4 += 2.0;
+        a2 = c4 * a1 + c3 * a2;
+        b2 = c4 * b1 + c3 * b2;
+        if b2 > SCALE_FACTOR {
+            a1 /= SCALE_FACTOR;
+            b1 /= SCALE_FACTOR;
+            a2 /= SCALE_FACTOR;
+            b2 /= SCALE_FACTOR;
+        }
+        if b2 != 0.0 {
+            f = a2 / b2;
+            if (f - of).abs() <= f64::EPSILON * f0.max(f.abs()) {
+                return f;
+            }
+            of = f;
+        }
+    }
+    f
+}
+
+/// `pd_lower_series(lambda, y)` of R's `pgamma.c`.
+fn pd_lower_series(lambda: f64, mut y: f64) -> f64 {
+    let mut term = 1.0;
+    let mut sum = 0.0;
+    while y >= 1.0 && term > sum * f64::EPSILON {
+        term *= y / lambda;
+        sum += term;
+        y -= 1.0;
+    }
+    if y != libm::floor(y) {
+        let f = pd_lower_cf(y, lambda + 1.0 - y);
+        sum += term * f;
+    }
+    sum
+}
+
+/// `pgamma_raw(x, a, lower_tail = TRUE, log_p = FALSE)` — the lower
+/// tail as R's `pgamma` computes it (nmath `pgamma.c` branch for
+/// branch). The "x large" region is a verbatim port: it returns
+/// `1 − d·sum` directly, so `1 − chisq_cdf` reproduces `1 − pchisq`
+/// even in the deep upper tail where it differs from `chisq_sf`. The
+/// `x < 1` series is the same A&S 6.5.29 form R uses; the
+/// `ppois_asymp` middle region produces a moderate lower-tail value
+/// where the complement of the upper tail agrees within tolerance.
+pub(crate) fn inc_gamma_lower(a: f64, x: f64) -> f64 {
+    if x < 1.0 {
+        lower_series(a, x, ln_gamma(a))
+    } else if x <= a - 1.0 && x < 0.8 * (a + 50.0) {
+        pd_upper_series(x, a) * dpois_wrap(a, x)
+    } else if a - 1.0 < x && a < 0.8 * (x + 50.0) {
+        let d = dpois_wrap(a, x);
+        let sum = if a < 1.0 {
+            if x * f64::EPSILON > 1.0 - a {
+                1.0
+            } else {
+                pd_lower_cf(a, x - (a - 1.0)) * x / a
+            }
+        } else {
+            1.0 + pd_lower_series(x, a - 1.0)
+        };
+        1.0 - d * sum
+    } else {
+        1.0 - inc_gamma_upper(a, x)
+    }
+}
 
 /// `(S0 − (S1 − (S2 − … − Sk/nn)/nn …)/nn)/n` — the nested form every
 /// non-tabulated branch of R's `stirlerr` uses (`c` is `S0..=Sk`).
