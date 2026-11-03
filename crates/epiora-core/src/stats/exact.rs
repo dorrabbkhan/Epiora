@@ -157,14 +157,39 @@ pub fn midp_p_two_sided(h: &NcHypergeom, x: u64) -> f64 {
 /// `fisher.test`'s two-sided p: the sum of table probabilities at most
 /// `relErr = 1 + 1e-7` times the observed table's probability, over the
 /// full support `max(0, k−n) ..= min(k, m)`.
-pub fn fisher_p_two_sided(m: u64, n: u64, k: u64, x: u64) -> f64 {
-    let lo = k.saturating_sub(n);
-    let hi = k.min(m);
+///
+/// Construction: the hypergeometric pmf is unimodal, so the qualifying
+/// set always contains the whole tail from `x` outward to the support
+/// edge away from the mode — every `i <= x` when `x` is below the
+/// mode, every `i >= x` when above. Each candidate below anchors on
+/// the identical `f64` `lower_tail`/`upper_tail` returns for `x`
+/// (same terms, same order, so it equals the reported one-sided p)
+/// and adds only the qualifying mass on the other side. At least one
+/// of the two therefore reproduces `fisher.test`'s sum exactly while
+/// the other merely adds non-qualifying tail mass, so their `min` is
+/// the two-sided value; and because each rest is a sum of
+/// nonnegatives, the result is `>= min(p_lower, p_upper)` in floating
+/// point by construction — no tolerance involved.
+pub fn fisher_p_two_sided(h: &NcHypergeom, m: u64, n: u64, k: u64, x: u64) -> f64 {
+    let (lo, hi) = h.support();
     let observed = hypergeom_pmf(x, m, n, k);
     let threshold = observed * (1.0 + 1e-7);
-    let p: f64 = (lo..=hi)
-        .map(|i| hypergeom_pmf(i, m, n, k))
-        .filter(|d| *d <= threshold)
-        .sum();
-    p.clamp(0.0, 1.0)
+    let mut below = 0.0;
+    let mut above = 0.0;
+    for i in lo..=hi {
+        if i == x {
+            continue;
+        }
+        let d = hypergeom_pmf(i, m, n, k);
+        if d <= threshold {
+            if i < x {
+                below += d;
+            } else {
+                above += d;
+            }
+        }
+    }
+    (h.lower_tail(x, 1.0) + above)
+        .min(h.upper_tail(x, 1.0) + below)
+        .clamp(0.0, 1.0)
 }

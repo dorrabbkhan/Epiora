@@ -37,14 +37,10 @@ fn clean_leaves(v: &Value) -> bool {
     }
 }
 
-/// `est` lies inside `ci` when all three are defined (1e-12 slack for
-/// floating-point end effects).
+/// `est` lies inside `ci` when all three are defined.
 fn ci_contains(ci: &Ci, est: &Estimate) -> bool {
     match (val(&ci.lower), val(est), val(&ci.upper)) {
-        (Some(lo), Some(e), Some(hi)) => {
-            let slack = 1e-12 * e.abs().max(1.0);
-            lo - slack <= e && e <= hi + slack
-        }
+        (Some(lo), Some(e), Some(hi)) => lo <= e && e <= hi,
         _ => true,
     }
 }
@@ -119,7 +115,7 @@ proptest! {
             val(&s.fisher_exact.p_two_sided),
         ) {
             prop_assert!(
-                two + 1e-12 >= lo.min(hi),
+                two >= lo.min(hi),
                 "two-sided {two} < min({lo}, {hi})"
             );
         }
@@ -130,6 +126,30 @@ proptest! {
         let s = two_by_two(&t);
         let v = serde_json::to_value(&s).expect("serialize TwoByTwoStats");
         prop_assert!(clean_leaves(&v), "non-finite or non-leaf value in {v}");
+    }
+}
+
+/// Regression for `fisher_two_sided_ge_min_one_sided`: at
+/// `{12, 254, 112, 0}` the observed cell is the support minimum, so
+/// `p_lower` is the single observed-table probability — summing the
+/// qualifying tables left-to-right landed ~3e-15 below it. The
+/// tail-anchored construction makes the ordering exact.
+#[test]
+fn fisher_two_sided_ge_one_sided_regression() {
+    let s = two_by_two(&Table2x2 {
+        a: 12,
+        b: 254,
+        c: 112,
+        d: 0,
+    });
+    if let (Some(lo), Some(hi), Some(two)) = (
+        val(&s.fisher_exact.p_lower),
+        val(&s.fisher_exact.p_upper),
+        val(&s.fisher_exact.p_two_sided),
+    ) {
+        assert!(two >= lo.min(hi), "two-sided {two} < min({lo}, {hi})");
+    } else {
+        panic!("expected defined Fisher p-values");
     }
 }
 

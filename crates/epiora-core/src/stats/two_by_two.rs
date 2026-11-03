@@ -322,7 +322,7 @@ pub fn two_by_two(t: &Table2x2) -> TwoByTwoStats {
     let fisher_exact = FisherExactStats {
         p_lower: Estimate::from_f64(p_lower, zm),
         p_upper: Estimate::from_f64(p_upper, zm),
-        p_two_sided: Estimate::from_f64(exact::fisher_p_two_sided(m1u, m0u, ku, t.a), zm),
+        p_two_sided: Estimate::from_f64(exact::fisher_p_two_sided(&h, m1u, m0u, ku, t.a), zm),
     };
 
     let midp_exact = MidpExactStats {

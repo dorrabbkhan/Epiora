@@ -479,6 +479,12 @@ the interface list fixed beyond the plan's prose:
 - `chi_square.df` (and every other output leaf) is an `Estimate`, so a
   serialized result never contains `null`: `Value(x) → x`,
   `Undefined → {"undefined": "<code>"}`.
+- `fisher_exact.p_two_sided` is built as
+  `min(p_lower + qualifying mass above x, p_upper + qualifying mass
+  below x)`: each candidate anchors on the identical one-sided-tail
+  `f64`, so `p_two_sided ≥ min(one-sided)` holds in floating point by
+  construction, and by pmf unimodality the smaller candidate is
+  `fisher.test`'s `relErr` sum (fix-round change in `exact.rs`).
 Files outside the Files block:
 - `crates/epiora-core/Cargo.toml` — `proptest` 1.12 dev-dependency (in
   the plan's Tech Stack; needed by `tests/stats_props.rs`). Licence:
