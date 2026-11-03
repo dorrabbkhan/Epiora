@@ -145,11 +145,17 @@ proptest! {
                 "RR",
             ),
         ] {
-            if let (Some(m), Some(e)) = (val(mh), val(crude)) {
-                prop_assert!(
+            match (val(mh), val(crude)) {
+                (Some(m), Some(e)) => prop_assert!(
                     (m - e).abs() <= 1e-9 * e.abs(),
-                    "one-stratum MH {name} {m} != crude {e} within 1e-9"
-                );
+                    "one-stratum MH {name} {m} != crude {e} within 1e-9 for table {t:?}"
+                ),
+                (None, None) => {}
+                (m, e) => prop_assert!(
+                    false,
+                    "one-stratum {name} definedness mismatch for table {t:?}: \
+                     MH is {m:?}, crude is {e:?}"
+                ),
             }
         }
     }
