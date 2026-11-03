@@ -442,12 +442,14 @@ manifest change:
   density; `NcHypergeom` is the `fisher.test` construction as specified.
 - `crates/epiora-core/Cargo.toml` (in the Files block, though the named
   change was `libm`): `serde_json` gained `features =
-  ["arbitrary_precision"]`. serde_json's default float parser is not
+  ["float_roundtrip"]`. serde_json's default float parser is not
   correctly rounded — it reads jsonlite's 17-digit `1.0000000000000001e-09`
   (the v2 `tolerance_classes.closed_form`) as `9.999999999999999e-10`, so
   `compare`'s exact-class check rejected every real fixture and each leaf
-  could carry a 1-ulp parse error. With `arbitrary_precision` the literal
-  is stored and `as_f64` uses `f64::from_str` (correctly rounded).
+  could carry a 1-ulp parse error. `float_roundtrip` is serde_json's
+  correctly rounded parser; unlike `arbitrary_precision` it does not
+  change `serde_json::Number`'s representation for other crates in the
+  workspace via feature unification.
 Evidence: `cargo test -p epiora-core --all-features` (12 special tests,
 all fixture points in tolerance) and `./scripts/check.sh` locally; the
 `engine` workflow run linked in the PR.

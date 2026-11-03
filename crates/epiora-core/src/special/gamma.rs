@@ -142,7 +142,7 @@ pub(crate) fn stirlerr(n: f64) -> f64 {
 
     if n <= 23.5 {
         let nn = n + n;
-        if n <= 15.0 && nn == nn.trunc() {
+        if n <= 15.0 && nn == libm::trunc(nn) {
             return SFERR_HALVES[nn as usize];
         }
         if n <= 5.25 {
