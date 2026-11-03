@@ -12,6 +12,7 @@
 pub mod dataset;
 pub mod error;
 pub mod project;
+pub mod special;
 pub mod validation;
 
 #[cfg(feature = "corpus")]

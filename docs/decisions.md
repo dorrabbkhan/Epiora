@@ -422,3 +422,37 @@ Files outside the Files block:
   dependency so cargo-deny and CI resolve the same pinned graph.
 - docs/decisions.md — this entry.
 Supersedes: —
+
+### v0.2 Task 5 — `special` maths on `libm` (2026-11-03)
+
+Decision: `special` is implemented as planned, with two method choices
+the fixtures forced beyond the §3.4 "Method" column's shorthand, and one
+manifest change:
+
+- `normal_cdf`/`normal_sf` port R's `pnorm_both` (Cody rational
+  approximations, `src/nmath/pnorm.c`) instead of composing `erfc`: the
+  `normal_cdf` fixture's `x = −38` leaf is the denormal
+  `2.88542835e-316`, whose `closed_form` band is narrower than one
+  denormal ulp — only R's own `exp(-xsq²/2)·exp(-del/2)·temp` path is
+  bit-identical. `normal_quantile` ports `qnorm`'s AS 241.
+- `hypergeom_pmf` ports R's `dhyper`/`dbinom_raw` (`stirlerr` + `bd0`):
+  a plain `ln_gamma` difference fails `closed_form` at the fixture's
+  `m = n = 2e6` point by 6.9e-9 > 1e-9 (measured during development).
+  `binomial_tail` stays "summed in log space" via `dbinom_raw`'s log
+  density; `NcHypergeom` is the `fisher.test` construction as specified.
+- `crates/epiora-core/Cargo.toml` (in the Files block, though the named
+  change was `libm`): `serde_json` gained `features =
+  ["float_roundtrip"]`. serde_json's default float parser is not
+  correctly rounded — it reads jsonlite's 17-digit `1.0000000000000001e-09`
+  (the v2 `tolerance_classes.closed_form`) as `9.999999999999999e-10`, so
+  `compare`'s exact-class check rejected every real fixture and each leaf
+  could carry a 1-ulp parse error. `float_roundtrip` is serde_json's
+  correctly rounded parser; unlike `arbitrary_precision` it does not
+  change `serde_json::Number`'s representation for other crates in the
+  workspace via feature unification.
+Evidence: `cargo test -p epiora-core --all-features` (12 special tests,
+all fixture points in tolerance) and `./scripts/check.sh` locally; the
+`engine` workflow run linked in the PR.
+Files outside the Files block:
+- docs/decisions.md — this entry.
+Supersedes: —

@@ -13,6 +13,12 @@ corpus = ["dep:serde_json"]
 [dependencies]
 libm = "0.2"
 serde = { version = "1", features = ["derive"] }
-serde_json = { version = "1", optional = true }
+# float_roundtrip: serde_json's default float parser is not correctly
+# rounded (it reads "1.0000000000000001e-09", jsonlite's 17-digit form of
+# 1e-9, as 9.999999999999999e-10), which would break the exact
+# tolerance_classes check and shift every leaf by up to 1 ulp;
+# float_roundtrip gives correctly rounded parsing without changing
+# serde_json::Number's representation.
+serde_json = { version = "1", features = ["float_roundtrip"], optional = true }
 sha2 = "0.10"
 thiserror = "2"
