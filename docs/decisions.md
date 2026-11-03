@@ -456,3 +456,32 @@ all fixture points in tolerance) and `./scripts/check.sh` locally; the
 Files outside the Files block:
 - docs/decisions.md — this entry.
 Supersedes: —
+
+### v0.2 Task 6 — `stats`: 2×2, R×C, proportions (2026-11-03)
+
+Decision: `stats` is implemented as planned. Points the fixtures or
+the interface list fixed beyond the plan's prose:
+
+- `risk_ratio.small_sample` is `epitools::riskratio.small` as generated:
+  the estimate is `(a/(a+b)) / ((c+1)/(c+d+1))` — only the reference
+  group is adjusted — while its bounds use the *unadjusted* Wald
+  standard error. Verified against all four `zero_*` fixtures, Oswego
+  and `large`.
+- `odds_ratio.ci_95_midp_exact`: when the observed cell sits at either
+  end of the conditional support (`x == lo` or `x == hi`), both bounds
+  are `Undefined { Unbounded }`. The `zero_*` fixtures carry null for
+  both bounds in exactly these cases, even where the mid-p equation
+  would still bracket a root — that is the reference behaviour
+  (`epitools::oddsratio(method = "midp")` returns NA there).
+- `freq_proportion_fixtures` is scoped to the `categories` subtree:
+  `proportions` produces only `CategoryStats`; `total`/`missing` come
+  from tabulation in Task 8.
+- `chi_square.df` (and every other output leaf) is an `Estimate`, so a
+  serialized result never contains `null`: `Value(x) → x`,
+  `Undefined → {"undefined": "<code>"}`.
+Files outside the Files block:
+- `crates/epiora-core/Cargo.toml` — `proptest` dev-dependency (in the
+  plan's Tech Stack; needed by `tests/stats_props.rs`).
+- `Cargo.lock` — cargo-generated lockfile for the same addition.
+- docs/decisions.md — this entry.
+Supersedes: —
