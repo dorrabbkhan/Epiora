@@ -773,3 +773,28 @@ Files outside the Files block:
   dependency.
 - docs/decisions.md — this entry.
 Supersedes: —
+
+### v0.2 Task 11b — window every exact-method pass (2026-11-04)
+
+Decision: `NcHypergeom::weights` now stores only the mass window —
+`max` is found over the full support without storing, the window is
+the `[first, last]` support-index range whose `v − max ≥ UNDERFLOW`
+(scanned from both ends, not assumed contiguous), and only
+`first..end` is stored, summed (left to right from `0.0`) and
+divided, Task 11a's per-term rule unchanged. `pmf`, `mean` and
+`tail_sum` read the window and treat out-of-window terms as `+0.0`;
+an empty selected range keeps the `f64::sum` seed `-0.0`. `midp` and
+`fisher_p_two_sided` compute both tails from one window through the
+private `pub(crate)` helper `tails` — each tail the identical `f64`
+`lower_tail`/`upper_tail` returns. `weights_probe` is now a 3-tuple
+(pre-change full-support reference, `libm::exp` evals, stored
+count); no public signature changed. Bit-identity verified:
+`crates/epiora-wasm/parity/diff.sh target/baseline.jsonl
+target/after.jsonl` — no difference (29 lines).
+Files outside the Files block:
+- crates/epiora-core/src/special/hypergeom/probe.rs — new private
+  submodule holding `weights_full` (the bit-identity reference) and
+  `weights_probe`, moved out of `hypergeom.rs` to keep it under the
+  ~400-line rule, per the task's explicit escape hatch.
+- docs/decisions.md — this entry.
+Supersedes: —

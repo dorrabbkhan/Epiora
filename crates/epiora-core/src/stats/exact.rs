@@ -116,8 +116,11 @@ pub fn fisher_ci(h: &NcHypergeom, x: u64) -> Ci {
 }
 
 /// epitools' mid-p tail: `0.5 * (P(X ≤ x | psi) − P(X ≥ x | psi) + 1)`.
+/// `tails` computes both tails from one weights window; each is the
+/// identical `f64` `lower_tail`/`upper_tail` returns (Task 11b).
 fn midp(h: &NcHypergeom, x: u64, psi: f64) -> f64 {
-    0.5 * (h.lower_tail(x, psi) - h.upper_tail(x, psi) + 1.0)
+    let (lower, upper) = h.tails(x, psi);
+    0.5 * (lower - upper + 1.0)
 }
 
 /// The mid-p exact 95% CI — epitools `or.midp`'s LCL/UCL roots on
@@ -189,7 +192,8 @@ pub fn fisher_p_two_sided(h: &NcHypergeom, m: u64, n: u64, k: u64, x: u64) -> f6
             }
         }
     }
-    (h.lower_tail(x, 1.0) + above)
-        .min(h.upper_tail(x, 1.0) + below)
-        .clamp(0.0, 1.0)
+    // `tails` evaluates one weights window for both tails; each is
+    // the identical `f64` `lower_tail`/`upper_tail` returns (Task 11b).
+    let (lower, upper) = h.tails(x, 1.0);
+    (lower + above).min(upper + below).clamp(0.0, 1.0)
 }
