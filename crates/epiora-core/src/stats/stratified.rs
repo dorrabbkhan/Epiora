@@ -17,6 +17,7 @@ use serde::Serialize;
 /// Serialized stratified 2×2 statistics — the `expected` key layout of
 /// the `stratified` fixtures.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct StratifiedStats {
     /// `TwoByTwoStats` of the summed kept table.
     pub crude: TwoByTwoStats,
@@ -31,6 +32,7 @@ pub struct StratifiedStats {
 /// `mantel_haenszel.*` — the pooled common-effect estimates and the
 /// two chi-squares of `mantelhaen.test`.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct MantelHaenszel {
     /// Common odds ratio `sum(ad/n) / sum(bc/n)` with its
     /// Robins–Breslow–Greenland 95% CI.
@@ -44,6 +46,7 @@ pub struct MantelHaenszel {
 
 /// One MH point estimate and its 95% CI.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct MhEstimate {
     /// The pooled estimate.
     pub estimate: Estimate,
@@ -53,6 +56,7 @@ pub struct MhEstimate {
 
 /// `chi_square.*` of the stratified result.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct MhChiSquare {
     /// `DELTA² / sum(N1·N0·M1·M0 / n²(n−1))`.
     pub uncorrected: ChiSquare,

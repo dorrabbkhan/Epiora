@@ -1,0 +1,8 @@
+[env]
+# ts-rs export tests (cargo test --features ts … export_bindings) write
+# the binding's TypeScript types. They belong in the wasm crate (spec
+# §5.1); without this ts-rs would default to crates/epiora-core/bindings.
+TS_RS_EXPORT_DIR = { value = "crates/epiora-wasm/bindings", relative = true }
+# u64/i64 fields serialize as JSON numbers in results and receipts, so
+# the generated TypeScript must say `number`, not ts-rs's `bigint`.
+TS_RS_LARGE_INT = "number"

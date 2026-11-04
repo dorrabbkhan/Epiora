@@ -27,8 +27,14 @@ jobs:
         run: |
           rustup toolchain install 1.99.0 --profile minimal --component clippy --component rustfmt
           rustup default 1.99.0
+          rustup target add wasm32-unknown-unknown
           rustc --version
           cargo --version
+
+      - name: Install Node 22
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
 
       - name: Install cargo-deny 0.20.2 (pinned, SHA-256 verified)
         run: |
@@ -51,8 +57,67 @@ jobs:
           sudo /tmp/bats-core-1.14.0/install.sh /usr/local
           bats --version
 
+      # wasm-pack requires the wasm-bindgen CLI to equal the locked
+      # crate version (0.2.129); it finds this PATH install via `which`
+      # under `--mode no-install` instead of downloading a binary.
+      - name: Install wasm-bindgen 0.2.129 (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/wasm-bindgen.tar.gz \
+            https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.129/wasm-bindgen-0.2.129-x86_64-unknown-linux-musl.tar.gz
+          echo '82d12bb940e2d4e72e0d5605387fc1b8ca179044e012b620f0ce4e7440e8320e  /tmp/wasm-bindgen.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/wasm-bindgen.tar.gz -C /tmp
+          sudo install -m 0755 \
+            /tmp/wasm-bindgen-0.2.129-x86_64-unknown-linux-musl/wasm-bindgen \
+            /usr/local/bin/wasm-bindgen
+          wasm-bindgen --version
+
+      - name: Install wasm-pack 0.15.1 (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/wasm-pack.tar.gz \
+            https://github.com/rustwasm/wasm-pack/releases/download/v0.15.1/wasm-pack-v0.15.1-x86_64-unknown-linux-musl.tar.gz
+          echo '410101009739b9d01c7d5affaaad6e9c9a24b4cba6791a4805db8e89b9bf7af2  /tmp/wasm-pack.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/wasm-pack.tar.gz -C /tmp
+          sudo install -m 0755 \
+            /tmp/wasm-pack-v0.15.1-x86_64-unknown-linux-musl/wasm-pack \
+            /usr/local/bin/wasm-pack
+          wasm-pack --version
+
+      - name: Install binaryen version_133 wasm-opt (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/binaryen.tar.gz \
+            https://github.com/WebAssembly/binaryen/releases/download/version_133/binaryen-version_133-x86_64-linux.tar.gz
+          echo '2dc9c7813f5375db93d96ead4b78222fcc3e2677bbb832297af4797782a37489  /tmp/binaryen.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/binaryen.tar.gz -C /tmp
+          sudo install -m 0755 /tmp/binaryen-version_133/bin/wasm-opt /usr/local/bin/wasm-opt
+          wasm-opt --version
+
       - name: Engine gate
         run: ./scripts/check-engine.sh full
 
       - name: Float ban (std f64 methods rejected, libm accepted)
         run: bats scripts/tests/float-ban.bats
+
+      - name: Wasm script tests (size gate, parity diff)
+        run: bats scripts/tests/wasm-size.bats scripts/tests/parity-diff.bats
+
+      - name: Wasm size in job summary
+        if: always()
+        run: |
+          if [ -f crates/epiora-wasm/pkg/epiora_wasm_bg.wasm ]; then
+            size="$(gzip -9 -c crates/epiora-wasm/pkg/epiora_wasm_bg.wasm | wc -c | tr -d ' ')"
+            echo "engine .wasm gzip -9 size: **${size} bytes** (budget 409,600)" \
+              >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload parity lines
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: corpus-parity-lines
+          path: |
+            target/corpus-native.jsonl
+            target/corpus-wasm.jsonl
+          if-no-files-found: ignore

@@ -657,3 +657,73 @@ VANILLA × ILL and TABLES VANILLA × ILL STRATAVAR=SEX output at the
   and `Adjusted OR (MLE)` with its CI. Values Epi Info printed as
   `Undefined` or `NaN` emit no number and are never compared.
 Supersedes: —
+
+### v0.2 Task 10 — epiora-wasm binding, size gate, parity (2026-11-04)
+
+Decision: The spec §5.1 binding is implemented in `epiora-wasm` as type
+conversion only: `datasetFromColumns` decodes the §5.1 typed-array
+encoding (Integer `BigInt64Array` + `Uint8Array` presence, Real
+`Float64Array` + mask, Date `Int32Array` + mask, Text dictionary +
+`Uint32Array` codes with `0xFFFFFFFF` = missing, Boolean `Uint8Array`
+0/1/255) into `Column`s and `Dataset::new` does the validation;
+`datasetHash`, `freq`, `tables`, `engineVersion` and the `parity`
+feature's `runCorpusCase` wrap the core calls. `EngineError` crosses
+as a JS `Error` carrying `code` and `message`; results serialize via
+`serde_wasm_bindgen::Serializer::json_compatible` (u64 → number).
+Native/wasm parity (spec §5.2) is bit-identical: 29 `parity_line`s,
+`parity/diff.sh` clean (measured: `diff` of
+`target/corpus-native.jsonl` vs `target/corpus-wasm.jsonl`, no
+differences). The size gate passes at **130,445 bytes** after
+`gzip -9` (`scripts/wasm-size.sh crates/epiora-wasm/pkg/
+epiora_wasm_bg.wasm`, `wasm-opt -Oz`; budget 409,600).
+Tooling pins (each download SHA-256-verified in `engine.yml`; licences
+as the downloads state): wasm-pack 0.15.1 (MIT/Apache-2.0 —
+`LICENSE-MIT` + `LICENSE-APACHE` in the tarball; 0.15.1 is the latest
+release, sha
+`410101009739b9d01c7d5affaaad6e9c9a24b4cba6791a4805db8e89b9bf7af2`),
+binaryen `version_133` wasm-opt (Apache-2.0 per the upstream project —
+the release tarball ships no licence file; version_133 is the latest
+release, sha
+`2dc9c7813f5375db93d96ead4b78222fcc3e2677bbb832297af4797782a37489`,
+matching upstream's published `.sha256`), wasm-bindgen CLI 0.2.129
+(MIT/Apache-2.0 in the tarball, sha
+`82d12bb940e2d4e72e0d5605387fc1b8ca179044e012b620f0ce4e7440e8320e`;
+0.2.130 was only 5 days old, so the crate and CLI pin to the older
+`0.2.129`, found by wasm-pack's `which` check under `--mode
+no-install`). `rustup target add wasm32-unknown-unknown` supplies the
+target in CI (no `rust-toolchain.toml` change). `actions/setup-node`
+v7.1.0 and `actions/upload-artifact` v7.0.2 are pinned by commit SHA;
+Node 22 per the Tech Stack.
+Interface notes: `Deserialize` and `#[serde(default)]` were added to
+the option types (`FreqOptions.include_missing`/`ci_method`,
+`TablesOptions.stratify_by`/`include_missing`, and `#[serde(default)]`
+on the two `skip_serializing_if` `Option` fields so ts-rs emits `?`),
+since the binding takes options as JS objects — wire defaults are
+type conversion, not branching on data. `datasetFromColumns`'s
+`version: number` is validated as a non-negative integer
+(`InvalidOptions`). `runCorpusCase(fixtureJson, datasetsJson)` takes
+the datasets as one JSON object keyed by id holding the
+`*.dataset.json` documents. `Estimate`'s exported TS type is the
+literal union its custom serializer emits (`number | { "undefined":
+<reason codes> }`), not the derive's enum shape.
+Evidence: `./scripts/check-engine.sh full` locally — all Rust tests
+(37 export_bindings included), 7/7 node binding tests, 29-line parity
+diff clean, size 130,445; `bats scripts/tests` (incl. wasm-size and
+parity-diff, 4/4).
+Files outside the Files block:
+- .cargo/config.toml — `[env]` pins `TS_RS_EXPORT_DIR` to
+  crates/epiora-wasm/bindings and `TS_RS_LARGE_INT=number`, so every
+  `cargo test` run regenerates into the committed directory instead of
+  ts-rs's default `crates/epiora-core/bindings`, and u64 fields map to
+  `number` as the JSON emits.
+- Cargo.lock — cargo-generated lockfile for the new dependencies.
+- crates/epiora-core/src/{dataset/mod.rs, procedures/mod.rs,
+  receipt/mod.rs, validation.rs, stats/{breslow_day, estimate,
+  proportion, rxc, stratified, two_by_two}.rs} — the Files block names
+  only Cargo.toml, but its "(feature `ts` → `ts-rs` derives on the
+  option, result and receipt types)" change lands the `#[cfg_attr(
+  feature = "ts", derive(ts_rs::TS), ts(export))]` on those
+  type-definition files, plus `Deserialize`/`#[serde(default)]` on the
+  option types named above.
+- docs/decisions.md — this entry.
+Supersedes: —

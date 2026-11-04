@@ -42,6 +42,7 @@ pub enum ValueType {
 /// (`{"type": "integer", "value": 5}`).
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "type", content = "value", rename_all = "snake_case")]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub enum Value {
     /// Whole number.
     Integer(i64),

@@ -16,6 +16,7 @@ use std::collections::BTreeSet;
 /// Task 9.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub enum ToleranceClass {
     /// Directly computed values: 1e-9 relative.
     ClosedForm,

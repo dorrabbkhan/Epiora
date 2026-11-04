@@ -10,6 +10,7 @@ use serde::Serialize;
 
 /// One category of a frequency table.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct CategoryStats {
     /// Number of records in the category.
     pub count: u64,

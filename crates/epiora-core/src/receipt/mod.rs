@@ -19,6 +19,7 @@ pub const RECEIPT_VERSION: u64 = 1;
 
 /// `dataset` — which input produced the result.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct DatasetStamp {
     /// Dataset id.
     pub id: String,
@@ -31,6 +32,7 @@ pub struct DatasetStamp {
 /// `engine` — fixed at build time; the engine reads no environment at
 /// run time (spec §4.1).
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct EngineStamp {
     /// `"epiora-core"`.
     pub name: String,
@@ -54,6 +56,7 @@ impl EngineStamp {
 /// One `validation` entry: the registry coverage of an emitted
 /// statistic.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct ValidationEntry {
     /// Family-prefixed statistic id, e.g.
     /// `two_by_two.odds_ratio.ci_95_fisher_exact.lower`.
@@ -68,6 +71,7 @@ pub struct ValidationEntry {
 
 /// Receipt v1 (spec §4.3).
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Receipt {
     /// Always 1.
     pub receipt_version: u64,

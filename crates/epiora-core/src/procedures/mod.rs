@@ -13,13 +13,14 @@ use crate::receipt::{Receipt, ValidationEntry};
 use crate::stats::{CategoryStats, RxcStats, StratifiedStats, TwoByTwoStats};
 use crate::validation::{statistic_ids, REGISTRY};
 use crate::EngineError;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::Value as Json;
 use std::collections::BTreeMap;
 
 /// Caller-supplied context (spec §4.1). The engine reads no clock, so
 /// the timestamp arrives from outside; an empty one is `InvalidOptions`.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct RunContext {
     /// RFC 3339 timestamp, supplied by the caller; must be non-empty.
     pub timestamp: String,
@@ -27,6 +28,7 @@ pub struct RunContext {
 
 /// A procedure's result plus its receipt.
 #[derive(Debug, Clone, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct ProcOutput<T> {
     /// The computed result.
     pub result: T,
@@ -36,8 +38,9 @@ pub struct ProcOutput<T> {
 
 /// Which proportion CI is labelled as Epi Info's (spec §3.5). The
 /// default is Clopper–Pearson until Task 9 records Epi Info 7's method.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "snake_case")]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub enum ProportionCi {
     /// `binom.test`'s exact beta interval.
     #[default]
@@ -47,21 +50,25 @@ pub enum ProportionCi {
 }
 
 /// Options of `freq` (spec §4.1).
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct FreqOptions {
     /// Variables to tabulate.
     pub variables: Vec<String>,
     /// Optional stratify variable.
     pub stratify_by: Option<String>,
     /// Adds a `"(missing)"` category instead of excluding.
+    #[serde(default)]
     pub include_missing: bool,
     /// Which CI is reported as the procedure's method.
+    #[serde(default)]
     pub ci_method: ProportionCi,
 }
 
 /// One variable of a `tables` call, with optional explicit levels —
 /// `[first, second]` is the orientation (exposed/ill first, spec §3.3).
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct VarSpec {
     /// Column name.
     pub name: String,
@@ -70,20 +77,24 @@ pub struct VarSpec {
 }
 
 /// Options of `tables` (spec §4.1).
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct TablesOptions {
     /// Row variable (exposure in a 2×2).
     pub exposure: VarSpec,
     /// Column variable (outcome in a 2×2).
     pub outcome: VarSpec,
     /// Stratify variables; combined strata in category order.
+    #[serde(default)]
     pub stratify_by: Vec<String>,
     /// Adds `"(missing)"` categories instead of excluding.
+    #[serde(default)]
     pub include_missing: bool,
 }
 
 /// `freq` result (spec §4.1).
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct FreqResult {
     /// One table per variable (per stratum when stratified).
     pub tables: Vec<FreqTable>,
@@ -93,11 +104,12 @@ pub struct FreqResult {
 
 /// One frequency table.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct FreqTable {
     /// The tabulated variable.
     pub variable: String,
     /// The stratum this table belongs to, when stratified.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub stratum: Option<String>,
     /// Category labels, `"(missing)"` last when present.
     pub labels: Vec<String>,
@@ -113,6 +125,7 @@ pub struct FreqTable {
 
 /// Row/column labels of a 2×2 result.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Labels2x2 {
     /// `[exposed, unexposed]`.
     pub exposure: Vec<String>,
@@ -122,6 +135,7 @@ pub struct Labels2x2 {
 
 /// The stratified part of a `TwoByTwo` result.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct StratifiedResult {
     /// Combined stratum labels in category order.
     pub strata_labels: Vec<String>,
@@ -136,6 +150,7 @@ pub struct StratifiedResult {
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, Clone, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub enum TablesResult {
     /// Both variables have exactly two levels.
     TwoByTwo {
@@ -144,7 +159,7 @@ pub enum TablesResult {
         /// Statistics of the pooled (unstratified) table.
         crude: TwoByTwoStats,
         /// Per-stratum pooled statistics when `stratify_by` is set.
-        #[serde(skip_serializing_if = "Option::is_none")]
+        #[serde(default, skip_serializing_if = "Option::is_none")]
         stratified: Option<StratifiedResult>,
     },
     /// Any other shape — a Pearson chi-square table.
