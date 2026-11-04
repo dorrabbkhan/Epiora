@@ -56,20 +56,50 @@ if [ -f crates/epiora-core/src/bin/corpus-runner.rs ]; then
   wc -l target/corpus-native.jsonl
 else echo "skipped (arrives in v0.2 Task 8)"; fi
 
-step "wasm build"
-if [ -x scripts/wasm-build.sh ]; then scripts/wasm-build.sh
+step "wasm build (release + parity, same GIT_SHA)"
+if [ -x scripts/wasm-build.sh ]; then
+  scripts/wasm-build.sh release
+  scripts/wasm-build.sh parity
 else echo "skipped (arrives in v0.2 Task 10)"; fi
 
-step "wasm size gate"
-if [ -x scripts/wasm-size.sh ]; then scripts/wasm-size.sh
+step "wasm size gate (409,600 bytes after gzip -9)"
+if [ -x scripts/wasm-size.sh ]; then scripts/wasm-size.sh crates/epiora-wasm/pkg/epiora_wasm_bg.wasm
 else echo "skipped (arrives in v0.2 Task 10)"; fi
 
-step "native/wasm parity"
-if [ -x scripts/parity.sh ]; then scripts/parity.sh
+step "native/wasm parity diff"
+if [ -x crates/epiora-wasm/parity/diff.sh ]; then
+  node crates/epiora-wasm/parity/run.mjs fixtures > target/corpus-wasm.jsonl
+  wc -l target/corpus-wasm.jsonl
+  crates/epiora-wasm/parity/diff.sh target/corpus-native.jsonl target/corpus-wasm.jsonl
 else echo "skipped (arrives in v0.2 Task 10)"; fi
 
 step "TypeScript bindings diff"
-if [ -x scripts/bindings-check.sh ]; then scripts/bindings-check.sh
+if [ -d crates/epiora-wasm/bindings ]; then
+  # Regenerate then diff: the export dir and number mapping are pinned
+  # in .cargo/config.toml (crates/epiora-wasm/bindings, u64 → number).
+  cargo test -p epiora-core --features ts --lib export_bindings
+  git diff --exit-code -- crates/epiora-wasm/bindings
+  if [ -n "$(git ls-files --others --exclude-standard -- crates/epiora-wasm/bindings)" ]; then
+    echo "untracked files in crates/epiora-wasm/bindings" >&2
+    exit 1
+  fi
+else echo "skipped (arrives in v0.2 Task 10)"; fi
+
+step "node binding tests"
+if [ -d crates/epiora-wasm/tests/node ]; then
+  # The native Oswego content hash comes out of the corpus-runner
+  # receipts produced above (receipt.dataset.sha256).
+  NATIVE_OSWEGO_HASH="$(node -e '
+    const fs = require("fs");
+    for (const line of fs.readFileSync("target/corpus-native.jsonl", "utf8").split("\n")) {
+      if (!line.trim()) continue;
+      const row = JSON.parse(line);
+      if (row.receipt) {
+        const receipt = JSON.parse(row.receipt);
+        if (receipt.dataset.id === "oswego") { console.log(receipt.dataset.sha256); break; }
+      }
+    }')" \
+    node --test "crates/epiora-wasm/tests/node/"*.test.mjs
 else echo "skipped (arrives in v0.2 Task 10)"; fi
 
 if [ "${E2E:-0}" = 1 ]; then

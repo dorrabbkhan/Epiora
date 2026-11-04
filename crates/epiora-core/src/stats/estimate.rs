@@ -38,6 +38,14 @@ impl UndefinedReason {
 
 /// A statistic: a finite number, or `Undefined` with a reason.
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(
+    feature = "ts",
+    derive(ts_rs::TS),
+    ts(
+        export,
+        type = "number | { \"undefined\": \"zero_cell\" | \"zero_margin\" | \"empty_table\" | \"not_bracketed\" | \"no_convergence\" | \"unbounded\" }"
+    )
+)]
 pub enum Estimate {
     /// A finite computed value.
     Value(f64),
@@ -81,6 +89,7 @@ impl Serialize for Estimate {
 
 /// A two-sided confidence interval.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Ci {
     /// Lower bound.
     pub lower: Estimate,

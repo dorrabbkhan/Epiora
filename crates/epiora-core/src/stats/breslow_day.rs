@@ -12,6 +12,7 @@ use serde::Serialize;
 
 /// `breslow_day_tarone.*` of the stratified fixtures.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct BreslowDayTarone {
     /// Tarone-corrected `X²`.
     pub statistic: Estimate,

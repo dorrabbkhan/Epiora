@@ -10,6 +10,7 @@ use serde::Serialize;
 /// Serialized R×C statistics — the `expected` key layout of the `rxc`
 /// fixtures plus the `low_expected` flag.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct RxcStats {
     /// `chi_square.*`.
     pub chi_square: RxcChiSquare,
@@ -19,6 +20,7 @@ pub struct RxcStats {
 
 /// The Pearson chi-square triple of an R×C table.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct RxcChiSquare {
     /// `sum((o − e)² / e)`.
     pub statistic: Estimate,

@@ -14,6 +14,7 @@ use serde::Serialize;
 
 /// One 2×2 table: rows exposed/unexposed, columns ill/well.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Table2x2 {
     /// Exposed and ill.
     pub a: u64,
@@ -28,6 +29,7 @@ pub struct Table2x2 {
 /// Serialized 2×2 statistics — the `expected` key layout of the
 /// `two_by_two` fixtures.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct TwoByTwoStats {
     /// Attack rates and the risk difference with its Wald CI.
     pub risk: RiskStats,
@@ -46,6 +48,7 @@ pub struct TwoByTwoStats {
 
 /// `risk.*` — risks in each row and their difference.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct RiskStats {
     /// `a / (a+b)`.
     pub exposed: Estimate,
@@ -59,6 +62,7 @@ pub struct RiskStats {
 
 /// `risk_ratio.*`.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct RiskRatioStats {
     /// `exposed / unexposed`.
     pub estimate: Estimate,
@@ -72,6 +76,7 @@ pub struct RiskRatioStats {
 /// `risk_ratio.small_sample` — flat `estimate`/`lower`/`upper` as the
 /// fixture spells it.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct SmallSample {
     /// `(a/(a+b)) / ((c+1)/(c+d+1))`.
     pub estimate: Estimate,
@@ -83,6 +88,7 @@ pub struct SmallSample {
 
 /// `odds_ratio.*`.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct OddsRatioStats {
     /// Cross-product `ad / bc`.
     pub estimate: Estimate,
@@ -98,6 +104,7 @@ pub struct OddsRatioStats {
 
 /// `chi_square.*`.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct ChiSquareStats {
     /// Degrees of freedom — a plain number when defined.
     pub df: Estimate,
@@ -111,6 +118,7 @@ pub struct ChiSquareStats {
 
 /// One chi-square statistic and its upper-tail p-value.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct ChiSquare {
     /// The statistic.
     pub statistic: Estimate,
@@ -120,6 +128,7 @@ pub struct ChiSquare {
 
 /// `fisher_exact.*`.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct FisherExactStats {
     /// `P(X ≤ a | margins, psi = 1)`.
     pub p_lower: Estimate,
@@ -131,6 +140,7 @@ pub struct FisherExactStats {
 
 /// `midp_exact.*`.
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct MidpExactStats {
     /// `2 * min(p, 1 − p)` on the mid-p tail.
     pub p_two_sided: Estimate,
