@@ -13,8 +13,13 @@ corpus = []
 # §5.1) so crates/epiora-wasm/bindings can be regenerated with
 # `cargo test -p epiora-core --features ts export_bindings`.
 ts = ["dep:ts-rs"]
+# `fuzzing` compiles `fuzz_harness` (spec §6.5): the arbitrary-driven
+# entry points the cargo-fuzz targets and the regression replay test
+# share. It needs `corpus` for the dataset_json loader.
+fuzzing = ["corpus", "dep:arbitrary"]
 
 [dependencies]
+arbitrary = { version = "1", optional = true }
 libm = "0.2"
 ryu = "1"
 serde = { version = "1", features = ["derive"] }

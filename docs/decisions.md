@@ -798,3 +798,37 @@ Files outside the Files block:
   ~400-line rule, per the task's explicit escape hatch.
 - docs/decisions.md — this entry.
 Supersedes: —
+
+### v0.2 Task 12 — fuzzing (2026-11-04)
+
+Decision: `fuzz_harness` (feature `fuzzing` = `corpus` + optional
+`arbitrary`, MIT OR Apache-2.0) holds the four `pub fn(&[u8])` entry
+points — `dataset_json` (corpus `load_dataset`), `dataset_columns`
+(arbitrary typed columns into `Dataset::new`), `freq_any` and
+`tables_any` (arbitrary dataset + options). Inputs decode with
+`arbitrary` 1.5.0 through hand-written `Arbitrary` impls (the
+`derive` feature's `derive_arbitrary` was not required); decode
+failures return early. Variable names are picked by index from the
+generated columns; every selector divisible by 10 names
+`__fuzz_unknown_<sel>` instead (≈10 %, from the input bytes — no RNG,
+no clock). The only permitted panic is `assert_no_null`'s scoped
+`#[allow(clippy::panic)]` — the crate's panic deny stays in force
+everywhere else. A serialized `null` would mean a non-finite output
+(serde_json writes non-finite `f64` as `null`) or a broken Task 8
+no-`null` contract; the check walks `out.result` only — the receipt
+legitimately serialises `levels: null`. Dataset targets instead check
+that no `Real` column cell serialises as `null` (a leaked non-finite
+`f64` past `Dataset::new`).
+Files outside the Files block:
+- crates/epiora-core/fuzz/rust-toolchain.toml — Step 3 requires the
+  dated-nightly pin (`nightly-2026-10-15`); both fuzz workflows install
+  exactly this channel.
+- crates/epiora-core/fuzz/.gitignore — keeps cargo-fuzz's `target/`,
+  `corpus/` and `artifacts/` output out of git; `regressions/` stays
+  tracked.
+- crates/epiora-core/fuzz/Cargo.lock — locks libfuzzer-sys 0.4.13, cc
+  and arbitrary for reproducible CI fuzz builds.
+- Cargo.lock — cargo-generated lockfile for the new optional
+  `arbitrary` dependency.
+- docs/decisions.md — this entry.
+Supersedes: —
