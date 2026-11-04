@@ -598,3 +598,62 @@ Public items not in the plan's Interfaces block:
   `validation` block need it to assert every emitted statistic is
   registered.
 Supersedes: —
+### v0.2 Task 9 — Epi Info 7 method choices (2026-11-04)
+
+Decision: `corpus::ei7::compare_ei7` compares all 56 mapped values of
+`fixtures/ei7/oswego.json` against the engine's FREQ SEX, TABLES
+VANILLA × ILL and TABLES VANILLA × ILL STRATAVAR=SEX output at the
+`ei7_display` rule (`|engine − ei7| ≤ 0.5 × 10^−d`); every one passes
+(`tests/ei7.rs::oswego_matches_epi_info_7`, `checked = 56`).
+
+- **FREQ proportion CI is Clopper–Pearson.** Epi Info 7 prints "Exact
+  95% Conf Limits" for FREQ; the mapped `ci_95_clopper_pearson` bounds
+  (46.70–69.92 / 30.08–53.30) match the engine at display precision,
+  while the Wilson bounds (47.37–69.12 / 30.88–52.63) would not.
+  `ProportionCi`'s default stays `ClopperPearson`; `freq.rs` is
+  unchanged.
+- **z-based 95% intervals: engine keeps qnorm(0.975); the comparison
+  rescales to z = 1.96** (owner decision, PR #18). Epi Info builds its
+  z-based intervals with z = 1.96 exactly; rescaling the engine bounds
+  reproduces every printed digit:
+
+  | Interval | Corpus (qnorm) | Rescaled to 1.96 | Epi Info 7 |
+  |---|---|---|---|
+  | OR Taylor (`two_by_two.odds_ratio.ci_95_wald`) | 5.841191–94.178692 | 5.8410–94.1811 | 5.8410–94.1811 |
+  | RR Taylor (`two_by_two.risk_ratio.ci_95_wald`) | 1.938340–16.029337 | 1.9383–16.0296 | 1.9383–16.0296 |
+  | MH RR (`stratified_two_by_two.mantel_haenszel.risk_ratio.ci_95`) | 1.986792–16.512399 | 1.9868–16.5127 | 1.9868–16.5127 |
+  | MH OR RGB (`stratified_two_by_two.mantel_haenszel.odds_ratio.ci_95`) | 7.191633–197.000244 | 7.1914–197.0062 | 7.1914–197.0062 |
+
+  The conversion lives only in `corpus/ei7.rs` (`rescale_z`), never in
+  `stats` or `procedures`; the engine has no z/confidence-level option.
+  Ratio intervals rescale on the log scale (`c = √(lo·hi)`,
+  `se = (ln hi − ln lo)/(2·qnorm(0.975))`, `c·e^∓1.96·se`); the risk
+  difference interval rescales additively (`m ∓ 1.96·se`). It applies
+  to the bounds of: `two_by_two.odds_ratio.ci_95_wald`,
+  `two_by_two.risk_ratio.ci_95_wald`,
+  `two_by_two.risk.difference_ci_95_wald`,
+  `stratified_two_by_two.crude.odds_ratio.ci_95_wald`,
+  `stratified_two_by_two.crude.risk_ratio.ci_95_wald`,
+  `stratified_two_by_two.mantel_haenszel.odds_ratio.ci_95` and
+  `stratified_two_by_two.mantel_haenszel.risk_ratio.ci_95` — i.e. keys
+  ending `ci_95_wald.lower|upper` plus `mantel_haenszel.*.ci_95.*`. No
+  Wilson proportion CI is mapped (FREQ prints exact limits), so none is
+  converted. Point estimates, p-values, chi-squares and Fisher/mid-p
+  exact limits are compared unconverted; the display rule itself is
+  unchanged.
+- **Percent scale:** Epi Info prints `Risk Difference (RD%)` and its
+  limits as percents while the corpus `risk.difference` leaves are
+  0–1, so `two_by_two.risk.difference` and
+  `two_by_two.risk.difference_ci_95_wald.{lower,upper}` are compared as
+  `engine × 100`. FREQ percents and the Clopper–Pearson limits are
+  already 0–100 in the engine; no other label needed scaling.
+- **`Fisher exact 1-tailed p` → `fisher_exact.p_upper`:** Epi Info
+  prints the tail in the direction of the association (upper for
+  Oswego, OR > 1). Unverified for a negative association.
+- **Unmapped statistics are "not in v0.2"** (from Task 3's
+  `labels.json`): every crosstab cell count and Row%/Col%, `Total
+  Percent`/`Total Cum. Percent`, `Mid-p exact 1-tailed p`, all
+  per-stratum single-table statistics under `SEX=Female`/`SEX=Male`,
+  and `Adjusted OR (MLE)` with its CI. Values Epi Info printed as
+  `Undefined` or `NaN` emit no number and are never compared.
+Supersedes: —

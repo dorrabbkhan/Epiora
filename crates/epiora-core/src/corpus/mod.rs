@@ -4,6 +4,7 @@
 
 pub mod compare;
 pub mod dataset_json;
+pub mod ei7;
 pub mod run_case;
 
 pub use dataset_json::{load_dataset, load_dataset_dir};
