@@ -11,9 +11,12 @@
 
 pub mod dataset;
 pub mod error;
+pub mod procedures;
 pub mod project;
+pub mod receipt;
 pub mod special;
 pub mod stats;
+pub mod tabulate;
 pub mod validation;
 
 #[cfg(feature = "corpus")]

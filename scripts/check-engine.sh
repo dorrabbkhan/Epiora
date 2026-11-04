@@ -50,6 +50,12 @@ cargo deny "${deny_args[@]}" check
 
 [ "$mode" = quick ] && exit 0
 
+step "corpus-runner smoke run"
+if [ -f crates/epiora-core/src/bin/corpus-runner.rs ]; then
+  cargo run -p epiora-core --features corpus --bin corpus-runner -- fixtures > target/corpus-native.jsonl
+  wc -l target/corpus-native.jsonl
+else echo "skipped (arrives in v0.2 Task 8)"; fi
+
 step "wasm build"
 if [ -x scripts/wasm-build.sh ]; then scripts/wasm-build.sh
 else echo "skipped (arrives in v0.2 Task 10)"; fi
