@@ -234,12 +234,14 @@ impl NcHypergeom {
             }
         }
         // The window: the first index scanning forward, and the first
-        // scanning backward, whose `v − max ≥ UNDERFLOW`, computed
-        // with the same expression as the max pass (not contiguous).
+        // scanning backward, whose `v − max ≥ UNDERFLOW`. The NaN arm
+        // keeps a NaN `v` (NaN `psi`) in the window, exactly as the
+        // full-support exp pass evaluated it.
+        let in_window = |v: f64| v - max >= UNDERFLOW || (v - max).is_nan();
         let mut first = 0;
         while first < n {
             let v = self.logdc[first] + lpsi * (self.lo + first as u64) as f64;
-            if v - max >= UNDERFLOW {
+            if in_window(v) {
                 break;
             }
             first += 1;
@@ -247,7 +249,7 @@ impl NcHypergeom {
         let mut end = n;
         while end > first {
             let v = self.logdc[end - 1] + lpsi * (self.lo + (end - 1) as u64) as f64;
-            if v - max >= UNDERFLOW {
+            if in_window(v) {
                 break;
             }
             end -= 1;
