@@ -35,4 +35,11 @@ path = "src/bin/corpus-runner.rs"
 required-features = ["corpus"]
 
 [dev-dependencies]
+criterion = "0.8.2"
 proptest = "1"
+
+# Native report of the spec §5.3 workload; the gate is the Chromium
+# bench in crates/epiora-wasm/bench.
+[[bench]]
+name = "tables_1m"
+harness = false

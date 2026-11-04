@@ -732,3 +732,44 @@ Files outside the Files block:
   option types named above.
 - docs/decisions.md — this entry.
 Supersedes: —
+### v0.2 Task 11 — Chromium performance gate (2026-11-04)
+
+Decision: — (gate task; no plan decision rule). Adds the spec §5.3
+Chromium benchmark under `crates/epiora-wasm/bench/` (Playwright
+1.64.1 exact, committed `package-lock.json`; Chromium pinned by the
+Playwright version), the native `criterion` report
+`crates/epiora-core/benches/tables_1m.rs` (same SplitMix32, seed
+20261031 and draw order as `gen.mjs`; first-3 EXPOSED pin [1, 1, 1]
+re-derived by running `node -e 'import("./gen.mjs").then(({generate})
+=> console.log([...generate(1000, 20261031)[0].values.slice(0,3)]))'`
+→ [ 1, 1, 1 ]), and the `bench` job in `engine.yml` (ubuntu-latest;
+median of 5 runs must be < 1000 ms; `bench-results.json` uploaded as
+an artifact and the median written to the job summary; the native
+criterion run is reported, not gated).
+Interface notes: `scripts/check-engine.sh` already had the `E2E=1`
+hook, so it is unchanged. The timed region is exactly
+`datasetFromColumns` + `tables(EXPOSED × ILL by REGION)`; 1M-row page
+generation is untimed. `.gitignore` already covered
+`bench/node_modules` via `node_modules/`; the edit adds only the
+generated `bench-results.json`.
+Dependency licences: `@playwright/test` 1.64.1 (Apache-2.0, from
+package-lock.json `license` fields), criterion 0.8.2 (MIT OR
+Apache-2.0, `cargo info`).
+Evidence: `E2E=1 ./scripts/check-engine.sh full` locally — see the
+task's PR for the CI bench run and its `bench-results.json` artifact;
+native `cargo bench -p epiora-core --bench tables_1m` reported in the
+PR body.
+Files outside the Files block:
+- scripts/bench.sh — check-engine.sh's E2E hook invokes
+  `scripts/bench.sh`; the Files block names the bench/ contents but no
+  runner script, so the E2E entry point lives here (builds the release
+  pkg, `npm ci`, `playwright install --with-deps chromium` under CI,
+  `npx playwright test`).
+- crates/epiora-wasm/bench/serve.mjs — the static file server
+  Playwright's `webServer` runs; Node has no built-in static-server
+  CLI and no extra dependency was wanted, so the bench serves
+  crates/epiora-wasm itself (/pkg + /bench) with fixed MIME types.
+- Cargo.lock — cargo-generated lockfile for the new criterion dev
+  dependency.
+- docs/decisions.md — this entry.
+Supersedes: —

@@ -121,3 +121,92 @@ jobs:
             target/corpus-native.jsonl
             target/corpus-wasm.jsonl
           if-no-files-found: ignore
+
+  # Chromium performance gate (spec §5.3): 1,000,000 rows, seed
+  # 20261031, median of 5 runs of datasetFromColumns + stratified
+  # tables must be < 1000 ms. A native criterion bench of the same
+  # workload runs for reporting only.
+  bench:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Rust 1.99.0 (pinned)
+        run: |
+          rustup toolchain install 1.99.0 --profile minimal
+          rustup default 1.99.0
+          rustup target add wasm32-unknown-unknown
+          rustc --version
+          cargo --version
+
+      - name: Install Node 22
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: Install wasm-bindgen 0.2.129 (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/wasm-bindgen.tar.gz \
+            https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.129/wasm-bindgen-0.2.129-x86_64-unknown-linux-musl.tar.gz
+          echo '82d12bb940e2d4e72e0d5605387fc1b8ca179044e012b620f0ce4e7440e8320e  /tmp/wasm-bindgen.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/wasm-bindgen.tar.gz -C /tmp
+          sudo install -m 0755 \
+            /tmp/wasm-bindgen-0.2.129-x86_64-unknown-linux-musl/wasm-bindgen \
+            /usr/local/bin/wasm-bindgen
+          wasm-bindgen --version
+
+      - name: Install wasm-pack 0.15.1 (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/wasm-pack.tar.gz \
+            https://github.com/rustwasm/wasm-pack/releases/download/v0.15.1/wasm-pack-v0.15.1-x86_64-unknown-linux-musl.tar.gz
+          echo '410101009739b9d01c7d5affaaad6e9c9a24b4cba6791a4805db8e89b9bf7af2  /tmp/wasm-pack.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/wasm-pack.tar.gz -C /tmp
+          sudo install -m 0755 \
+            /tmp/wasm-pack-v0.15.1-x86_64-unknown-linux-musl/wasm-pack \
+            /usr/local/bin/wasm-pack
+          wasm-pack --version
+
+      - name: Install binaryen version_133 wasm-opt (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/binaryen.tar.gz \
+            https://github.com/WebAssembly/binaryen/releases/download/version_133/binaryen-version_133-x86_64-linux.tar.gz
+          echo '2dc9c7813f5375db93d96ead4b78222fcc3e2677bbb832297af4797782a37489  /tmp/binaryen.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/binaryen.tar.gz -C /tmp
+          sudo install -m 0755 /tmp/binaryen-version_133/bin/wasm-opt /usr/local/bin/wasm-opt
+          wasm-opt --version
+
+      - name: Chromium performance gate
+        run: scripts/bench.sh
+
+      - name: Native criterion bench (report only)
+        if: always()
+        run: cargo bench -p epiora-core --bench tables_1m 2>&1 | tee target/criterion-tables_1m.txt
+
+      - name: Bench results in job summary
+        if: always()
+        run: |
+          if [ -f crates/epiora-wasm/bench/bench-results.json ]; then
+            node -e 'const r = require("./crates/epiora-wasm/bench/bench-results.json");
+              console.log(`Chromium median: **${r.median_ms.toFixed(1)} ms** (budget < 1000 ms)`);
+              console.log(`runs: ${r.runs_ms.map((m) => m.toFixed(1)).join(", ")} ms`);
+              console.log(`chromium ${r.chromium_version}, runner ${r.runner}, seed ${r.seed}, rows ${r.rows}`);' \
+              >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f target/criterion-tables_1m.txt ]; then
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            grep -E 'time:|dataset_new_plus' target/criterion-tables_1m.txt | head -5 >> "$GITHUB_STEP_SUMMARY" || true
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload bench results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: bench-results
+          path: |
+            crates/epiora-wasm/bench/bench-results.json
+            target/criterion-tables_1m.txt
+          if-no-files-found: warn

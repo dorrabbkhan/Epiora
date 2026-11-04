@@ -1,0 +1,38 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>epiora-wasm bench</title>
+<script type="module">
+  // Chromium performance gate page (spec §5.3): initialises the release
+  // wasm build from /pkg and exposes `__bench` for bench.spec.mjs.
+  // `timedRun` measures datasetFromColumns + stratified tables only;
+  // row generation stays outside the timer.
+  import init, * as wasm from "../pkg/epiora_wasm.js";
+  import { generate } from "./gen.mjs";
+
+  const CTX = { timestamp: "2026-10-31T00:00:00Z" };
+  const OPTS = {
+    exposure: { name: "EXPOSED", levels: null },
+    outcome: { name: "ILL", levels: null },
+    stratify_by: ["REGION"],
+    include_missing: false,
+  };
+
+  await init();
+
+  globalThis.__bench = {
+    ready: true,
+    generate,
+    timedRun(columns) {
+      const t0 = performance.now();
+      const handle = wasm.datasetFromColumns("bench-1m", 1, columns);
+      const out = wasm.tables(handle, OPTS, CTX);
+      const ms = performance.now() - t0;
+      const twoByTwo = out.result.two_by_two;
+      return {
+        ms,
+        kind: twoByTwo ? "two_by_two" : "other",
+        strata: twoByTwo?.stratified?.strata_labels ?? [],
+      };
+    },
+  };
+</script>
