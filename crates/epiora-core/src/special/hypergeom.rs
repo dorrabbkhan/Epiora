@@ -23,6 +23,15 @@ fn rd(ok: bool, give_log: bool) -> f64 {
     }
 }
 
+/// `v − max < UNDERFLOW` ⇒ `libm::exp(v − max)` is exactly `+0.0`, so
+/// the term contributes `0.0` and the `exp` call can be skipped — every
+/// sum stays bit-identical, nothing is approximated or truncated.
+/// libm 0.2.16 `src/math/exp.rs` returns `0.` for every
+/// `x < -745.13321910194110842` (the `if x < -745.13321910194110842`
+/// early return in `exp`, fdlibm's `u_threshold`; the constant below
+/// is the same `f64`, spelled without digits `f64` cannot represent).
+const UNDERFLOW: f64 = -745.133_219_101_941_1;
+
 /// `(1+x)^y` accurately for `|x| << 1` — R `src/nmath/dbinom.c`'s
 /// `pow1p`, ported verbatim.
 fn pow1p(x: f64, y: f64) -> f64 {
@@ -207,6 +216,45 @@ impl NcHypergeom {
 
     /// `dnhyper(ncp)`: `exp(logdc + log(psi)·support − max) / sum`.
     fn weights(&self, psi: f64) -> Vec<f64> {
+        self.weights_counted(psi).0
+    }
+
+    /// `weights` plus the number of `libm::exp` evaluations it makes,
+    /// read by `tests/exact_window.rs` through `weights_probe`.
+    fn weights_counted(&self, psi: f64) -> (Vec<f64>, usize) {
+        let lpsi = libm::log(psi);
+        let mut max = f64::NEG_INFINITY;
+        let mut d = Vec::with_capacity(self.logdc.len());
+        for (i, &lc) in self.logdc.iter().enumerate() {
+            let v = lc + lpsi * (self.lo + i as u64) as f64;
+            if v > max {
+                max = v;
+            }
+            d.push(v);
+        }
+        let mut evals = 0_usize;
+        let mut sum = 0.0;
+        for v in &mut d {
+            // `exp` returns exactly `0.0` below UNDERFLOW (above); the
+            // left-to-right sum order of the evaluated terms is
+            // unchanged, so the result is bit-identical.
+            *v = if *v - max < UNDERFLOW {
+                0.0
+            } else {
+                evals += 1;
+                libm::exp(*v - max)
+            };
+            sum += *v;
+        }
+        for v in &mut d {
+            *v /= sum;
+        }
+        (d, evals)
+    }
+
+    /// The full-support `weights` of the pre-Task-11a algorithm,
+    /// verbatim — the bit-identity reference `weights_probe` returns.
+    fn weights_full(&self, psi: f64) -> Vec<f64> {
         let lpsi = libm::log(psi);
         let mut max = f64::NEG_INFINITY;
         let mut d = Vec::with_capacity(self.logdc.len());
@@ -226,6 +274,15 @@ impl NcHypergeom {
             *v /= sum;
         }
         d
+    }
+
+    /// Test-only probe (`tests/exact_window.rs`, Task 11a): the
+    /// pre-change full-support `weights` — the bit-identity reference —
+    /// and the number of `libm::exp` evaluations `weights` makes at
+    /// `psi`. `#[doc(hidden)]`, not public API.
+    #[doc(hidden)]
+    pub fn weights_probe(&self, psi: f64) -> (Vec<f64>, usize) {
+        (self.weights_full(psi), self.weights_counted(psi).1)
     }
 
     /// `P(X = x | psi)` — `dnhyper` at `x`.

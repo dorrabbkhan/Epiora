@@ -61,7 +61,6 @@ pub fn tables(
                 d: s.d.saturating_add(t.d),
             },
         );
-        let crude = two_by_two(&sum);
         let stratified = if opts.stratify_by.is_empty() {
             None
         } else {
@@ -69,6 +68,14 @@ pub fn tables(
                 strata_labels: xt.strata_labels.clone(),
                 stats: stratified(&tables2x2),
             })
+        };
+        // `stratified` sums only non-empty strata, but an empty stratum
+        // adds only zeros, so its `crude` is `two_by_two` on the same
+        // pooled table — reuse it instead of computing the 2×2
+        // statistics (exact-method roots included) a second time.
+        let crude = match &stratified {
+            Some(s) => s.stats.crude.clone(),
+            None => two_by_two(&sum),
         };
         let mut stats = vec![("two_by_two", serde_json::to_value(&crude).map_err(ser_err)?)];
         if let Some(s) = &stratified {
