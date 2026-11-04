@@ -681,9 +681,10 @@ as the downloads state): wasm-pack 0.15.1 (MIT/Apache-2.0 —
 `LICENSE-MIT` + `LICENSE-APACHE` in the tarball; 0.15.1 is the latest
 release, sha
 `410101009739b9d01c7d5affaaad6e9c9a24b4cba6791a4805db8e89b9bf7af2`),
-binaryen `version_133` wasm-opt (Apache-2.0 per the upstream project —
-the release tarball ships no licence file; version_133 is the latest
-release, sha
+binaryen `version_133` wasm-opt (Apache-2.0 —
+`binaryen-version_133/include/binaryen-c.h` line 4 of the downloaded
+tarball states "Licensed under the Apache License, Version 2.0";
+version_133 is the latest release, sha
 `2dc9c7813f5375db93d96ead4b78222fcc3e2677bbb832297af4797782a37489`,
 matching upstream's published `.sha256`), wasm-bindgen CLI 0.2.129
 (MIT/Apache-2.0 in the tarball, sha
@@ -693,7 +694,11 @@ matching upstream's published `.sha256`), wasm-bindgen CLI 0.2.129
 no-install`). `rustup target add wasm32-unknown-unknown` supplies the
 target in CI (no `rust-toolchain.toml` change). `actions/setup-node`
 v7.1.0 and `actions/upload-artifact` v7.0.2 are pinned by commit SHA;
-Node 22 per the Tech Stack.
+Node 22 per the Tech Stack. Direct crate dependencies this task adds
+(`license` field from `cargo metadata --format-version 1 --locked
+--all-features`): ts-rs 12.0.1 (MIT), wasm-bindgen 0.2.129 (MIT OR
+Apache-2.0), js-sys 0.3.106 (MIT OR Apache-2.0), serde-wasm-bindgen
+0.6.5 (MIT).
 Interface notes: `Deserialize` and `#[serde(default)]` were added to
 the option types (`FreqOptions.include_missing`/`ci_method`,
 `TablesOptions.stratify_by`/`include_missing`, and `#[serde(default)]`
