@@ -1,9 +1,10 @@
 //! Task 11a: `NcHypergeom::weights` skips `libm::exp` for terms whose
 //! `v − max` is below the underflow-to-zero point, where `exp` returns
-//! exactly `0.0`. Every `pmf`, `mean`, `lower_tail` and `upper_tail`
-//! output must stay bit-identical to the pre-change full-support
-//! algorithm (`weights_probe`'s reference), and the `libm::exp`
-//! evaluation count must drop to the mass window.
+//! exactly `0.0`. Task 11b: the whole pass is windowed — only the mass
+//! window is stored, summed and divided. Every `pmf`, `mean`,
+//! `lower_tail` and `upper_tail` output must stay bit-identical to the
+//! pre-change full-support algorithm (`weights_probe`'s reference),
+//! and the stored count must drop to the mass window.
 
 use epiora_core::special::NcHypergeom;
 
@@ -22,7 +23,7 @@ struct Reference {
 
 impl Reference {
     fn at(h: &NcHypergeom, psi: f64) -> Reference {
-        let (w, _) = h.weights_probe(psi);
+        let (w, ..) = h.weights_probe(psi);
         let (lo, hi) = h.support();
         Reference { w, lo, hi }
     }
@@ -115,4 +116,74 @@ fn exp_terms_are_window_sized() {
     let small = NcHypergeom::new(10, 10, 9);
     let (lo, hi) = small.support();
     assert_eq!(small.weights_probe(1.0).1, (hi - lo + 1) as usize);
+}
+
+#[test]
+fn window_is_window_sized() {
+    // Task 11b: `weights` stores only the mass window. On the
+    // 490,001-value support of the 1M-row workload at psi = 1 the
+    // stored count must be well under the support size; on the
+    // 10-value support the window is the whole support.
+    let big = NcHypergeom::new(490_000, 490_000, 490_000);
+    let stored = big.weights_probe(1.0).2;
+    assert!(
+        stored < 20_000,
+        "stored weights {stored} must stay below 20,000"
+    );
+    let small = NcHypergeom::new(10, 10, 9);
+    let (lo, hi) = small.support();
+    assert_eq!(small.weights_probe(1.0).2, (hi - lo + 1) as usize);
+}
+
+#[test]
+fn tails_outside_the_window_keep_their_bits() {
+    // The 490,001-value support: probe `pmf` and both tails at every
+    // interesting x — outside the support, inside it but outside the
+    // mass window (non-empty all-zero ranges give +0.0; an empty
+    // range gives −0.0), and on the window edges. The full-support
+    // reference is the oracle.
+    let h = NcHypergeom::new(490_000, 490_000, 490_000);
+    let (lo, hi) = h.support();
+    for psi in PSIS {
+        let r = Reference::at(&h, psi);
+        let first =
+            r.w.iter()
+                .position(|&w| w != 0.0)
+                .expect("a window always exists");
+        let last =
+            r.w.iter()
+                .rposition(|&w| w != 0.0)
+                .expect("a window always exists");
+        let (wlo, whi) = (lo + first as u64, lo + last as u64);
+        let mut xs = vec![lo, wlo, wlo + 1, whi, whi + 1, hi, hi + 1];
+        if lo > 0 {
+            xs.push(lo - 1);
+        }
+        if wlo > 0 {
+            xs.push(wlo - 1);
+        }
+        if whi > 0 {
+            xs.push(whi - 1);
+        }
+        xs.sort_unstable();
+        xs.dedup();
+        let ctx = format!("lo={lo} hi={hi} window=[{wlo},{whi}] psi={psi:e}");
+        for &x in &xs {
+            assert_eq!(
+                h.pmf(x, psi).to_bits(),
+                r.pmf(x).to_bits(),
+                "pmf x={x} {ctx}"
+            );
+            assert_eq!(
+                h.lower_tail(x, psi).to_bits(),
+                r.lower_tail(x).to_bits(),
+                "lower_tail x={x} {ctx}"
+            );
+            assert_eq!(
+                h.upper_tail(x, psi).to_bits(),
+                r.upper_tail(x).to_bits(),
+                "upper_tail x={x} {ctx}"
+            );
+        }
+    }
 }
