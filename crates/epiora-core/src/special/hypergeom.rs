@@ -8,6 +8,10 @@
 
 use super::gamma::{bd0, stirlerr, M_LN_2PI};
 
+// The bit-identity test reference and `weights_probe` live in a
+// private submodule to keep this file under the ~400-line rule.
+mod probe;
+
 /// `give_log` flavour of R's `R_D__0`/`R_D__1` boundary returns.
 fn rd(ok: bool, give_log: bool) -> f64 {
     if give_log {
@@ -214,78 +218,66 @@ impl NcHypergeom {
         (self.lo, self.hi)
     }
 
-    /// `dnhyper(ncp)`: `exp(logdc + log(psi)·support − max) / sum`.
-    fn weights(&self, psi: f64) -> Vec<f64> {
-        self.weights_counted(psi).0
-    }
-
-    /// `weights` plus the number of `libm::exp` evaluations it makes,
-    /// read by `tests/exact_window.rs` through `weights_probe`.
-    fn weights_counted(&self, psi: f64) -> (Vec<f64>, usize) {
+    /// `dnhyper(ncp)`: `exp(logdc + log(psi)·support − max) / sum`,
+    /// stored only over the mass window — every term outside it is
+    /// exactly `+0.0`, so every sum is bit-identical to the
+    /// full-support pass (Task 11b).
+    fn weights(&self, psi: f64) -> Windowed {
         let lpsi = libm::log(psi);
+        let n = self.logdc.len();
+        // `max` over the full support, without storing the terms.
         let mut max = f64::NEG_INFINITY;
-        let mut d = Vec::with_capacity(self.logdc.len());
         for (i, &lc) in self.logdc.iter().enumerate() {
             let v = lc + lpsi * (self.lo + i as u64) as f64;
             if v > max {
                 max = v;
             }
-            d.push(v);
         }
+        // The window: the first index scanning forward, and the first
+        // scanning backward, whose `v − max ≥ UNDERFLOW`. The NaN arm
+        // keeps a NaN `v` (NaN `psi`) in the window, exactly as the
+        // full-support exp pass evaluated it.
+        let in_window = |v: f64| v - max >= UNDERFLOW || (v - max).is_nan();
+        let mut first = 0;
+        while first < n {
+            let v = self.logdc[first] + lpsi * (self.lo + first as u64) as f64;
+            if in_window(v) {
+                break;
+            }
+            first += 1;
+        }
+        let mut end = n;
+        while end > first {
+            let v = self.logdc[end - 1] + lpsi * (self.lo + (end - 1) as u64) as f64;
+            if in_window(v) {
+                break;
+            }
+            end -= 1;
+        }
+        // Store, sum (left to right, starting from `0.0`) and divide
+        // only `first..end`; Task 11a's per-term rule is unchanged.
+        let mut d = Vec::with_capacity(end - first);
         let mut evals = 0_usize;
         let mut sum = 0.0;
-        for v in &mut d {
-            // `exp` returns exactly `0.0` below UNDERFLOW (above); the
-            // left-to-right sum order of the evaluated terms is
-            // unchanged, so the result is bit-identical.
-            *v = if *v - max < UNDERFLOW {
+        for i in first..end {
+            let v = self.logdc[i] + lpsi * (self.lo + i as u64) as f64;
+            let t = if v - max < UNDERFLOW {
                 0.0
             } else {
                 evals += 1;
-                libm::exp(*v - max)
+                libm::exp(v - max)
             };
-            sum += *v;
+            d.push(t);
+            sum += t;
         }
-        for v in &mut d {
-            *v /= sum;
+        for t in &mut d {
+            *t /= sum;
         }
-        (d, evals)
+        Windowed { first, d, evals }
     }
 
-    /// The full-support `weights` of the pre-Task-11a algorithm,
-    /// verbatim — the bit-identity reference `weights_probe` returns.
-    fn weights_full(&self, psi: f64) -> Vec<f64> {
-        let lpsi = libm::log(psi);
-        let mut max = f64::NEG_INFINITY;
-        let mut d = Vec::with_capacity(self.logdc.len());
-        for (i, &lc) in self.logdc.iter().enumerate() {
-            let v = lc + lpsi * (self.lo + i as u64) as f64;
-            if v > max {
-                max = v;
-            }
-            d.push(v);
-        }
-        let mut sum = 0.0;
-        for v in &mut d {
-            *v = libm::exp(*v - max);
-            sum += *v;
-        }
-        for v in &mut d {
-            *v /= sum;
-        }
-        d
-    }
-
-    /// Test-only probe (`tests/exact_window.rs`, Task 11a): the
-    /// pre-change full-support `weights` — the bit-identity reference —
-    /// and the number of `libm::exp` evaluations `weights` makes at
-    /// `psi`. `#[doc(hidden)]`, not public API.
-    #[doc(hidden)]
-    pub fn weights_probe(&self, psi: f64) -> (Vec<f64>, usize) {
-        (self.weights_full(psi), self.weights_counted(psi).1)
-    }
-
-    /// `P(X = x | psi)` — `dnhyper` at `x`.
+    /// `P(X = x | psi)` — `dnhyper` at `x`. Outside the window the
+    /// stored weight was `+0.0`.
     pub fn pmf(&self, x: u64, psi: f64) -> f64 {
         if x < self.lo || x > self.hi {
             return 0.0;
@@ -296,10 +288,18 @@ impl NcHypergeom {
         if psi == f64::INFINITY {
             return f64::from(x == self.hi);
         }
-        self.weights(psi)[(x - self.lo) as usize]
+        let w = self.weights(psi);
+        let i = (x - self.lo) as usize;
+        if i < w.first || i >= w.first + w.d.len() {
+            0.0
+        } else {
+            w.d[i - w.first]
+        }
     }
 
     /// `mnhyper(psi)`: `E[X]` — `lo` for psi = 0, `hi` for psi = ∞.
+    /// Terms outside the window contribute `x·(+0.0) = +0.0`, so the
+    /// windowed sum has the same bits.
     pub fn mean(&self, psi: f64) -> f64 {
         if psi == 0.0 {
             return self.lo as f64;
@@ -307,10 +307,10 @@ impl NcHypergeom {
         if psi == f64::INFINITY {
             return self.hi as f64;
         }
-        self.weights(psi)
-            .iter()
+        let w = self.weights(psi);
+        w.d.iter()
             .enumerate()
-            .map(|(i, &w)| (self.lo + i as u64) as f64 * w)
+            .map(|(j, &t)| (self.lo + (w.first + j) as u64) as f64 * t)
             .sum()
     }
 
@@ -336,19 +336,65 @@ impl NcHypergeom {
         self.tail_sum(x, psi, true)
     }
 
-    fn tail_sum(&self, x: u64, psi: f64, upper: bool) -> f64 {
-        self.weights(psi)
-            .iter()
-            .enumerate()
-            .filter(|(i, _)| {
-                let xi = self.lo + *i as u64;
-                if upper {
-                    xi >= x
-                } else {
-                    xi <= x
-                }
-            })
-            .map(|(_, &w)| w)
-            .sum()
+    /// Both one-sided `pnhyper` tails from a single `weights` pass —
+    /// each is the identical `f64` `lower_tail`/`upper_tail` returns.
+    /// `stats::exact`'s `midp` and `fisher_p_two_sided` go through
+    /// this so a root step evaluates the window once, not twice.
+    pub(crate) fn tails(&self, x: u64, psi: f64) -> (f64, f64) {
+        if psi == 0.0 {
+            return (f64::from(x >= self.lo), f64::from(x <= self.lo));
+        }
+        if psi == f64::INFINITY {
+            return (f64::from(x >= self.hi), f64::from(x <= self.hi));
+        }
+        let w = self.weights(psi);
+        (
+            self.tail_sum_windowed(&w, x, false),
+            self.tail_sum_windowed(&w, x, true),
+        )
     }
+
+    fn tail_sum(&self, x: u64, psi: f64, upper: bool) -> f64 {
+        self.tail_sum_windowed(&self.weights(psi), x, upper)
+    }
+
+    /// The filtered iterator sum over a `Windowed` — the same bits as
+    /// the full-support sum: every term outside `w` is `+0.0`, an
+    /// empty selected range keeps the `f64::sum` seed `-0.0`, a
+    /// non-empty all-zero range is `+0.0`.
+    fn tail_sum_windowed(&self, w: &Windowed, x: u64, upper: bool) -> f64 {
+        let n = self.logdc.len();
+        // The support-index range `a..b` the predicate selects.
+        let (a, b) = if upper {
+            (x.saturating_sub(self.lo) as usize, n)
+        } else {
+            let b = if x < self.lo {
+                0
+            } else {
+                (x - self.lo).saturating_add(1).min(n as u64) as usize
+            };
+            (0, b)
+        };
+        if a >= b {
+            return -0.0;
+        }
+        let s = a.max(w.first);
+        let e = b.min(w.first + w.d.len());
+        if s >= e {
+            return 0.0;
+        }
+        w.d[s - w.first..e - w.first].iter().sum()
+    }
+}
+
+/// The `dnhyper` weights over the mass window — the normalised terms
+/// of support indices `first .. first + d.len()`; every term outside
+/// it is exactly `+0.0`.
+struct Windowed {
+    /// Support index of `d[0]` (whose `x` is `lo + first`).
+    first: usize,
+    /// The window's normalised weights.
+    d: Vec<f64>,
+    /// `libm::exp` evaluations the fill made — read by `weights_probe`.
+    evals: usize,
 }
