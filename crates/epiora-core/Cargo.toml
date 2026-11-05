@@ -39,6 +39,11 @@ name = "corpus-runner"
 path = "src/bin/corpus-runner.rs"
 required-features = ["corpus"]
 
+[[bin]]
+name = "validation-report"
+path = "src/bin/validation-report.rs"
+required-features = ["corpus"]
+
 [dev-dependencies]
 criterion = "0.8.2"
 proptest = "1"
