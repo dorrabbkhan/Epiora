@@ -832,3 +832,50 @@ Files outside the Files block:
   `arbitrary` dependency.
 - docs/decisions.md — this entry.
 Supersedes: —
+
+### v0.2 Task 13 — v0.2 closed (2026-11-05)
+
+Decision: v0.2 is closed. `docs/validation/v0.2.md` is the byte-identical
+`v0.2-validation-md` artifact of `engine.yml` run
+https://github.com/dorrabbkhan/Epiora/actions/runs/42013745091
+(head `56c430d`, sha256 `2cce885175dda1267612622379faeadbf4417aebb9a4d50606ffc29b37b21a97`):
+86 rows, one per `validation::REGISTRY` statistic, every worst observed
+relative error within its class tolerance, measured by running the corpus
+through `run_case`; plus the Epi Info 7 check — 56 mapped values, 0
+mismatches at `ei7_display`. Its header names that commit and run URL and
+carries the measured optimised `.wasm` size **132,158 bytes** after
+`gzip -9` (E3 budget 409,600) and the Chromium bench median **551.6 ms**
+on 1,000,000 rows (E4 budget < 1000 ms), produced by the `engine`/`bench`
+jobs of the same run and handed to the bin as job outputs via
+`EPIORA_WASM_GZIP_BYTES` / `EPIORA_BENCH_MEDIAN_MS`.
+
+The owner decisions E1–E8 (v0.2 spec §2) are realised: E1 by `special`
+hand-written on `libm` (and the platform A8/§7.4 edits applied here), E2 by
+`corpus::ei7::compare_ei7` over `fixtures/ei7/oswego.json`, E3 by
+`scripts/wasm-size.sh` and the size gate, E4 by `crates/epiora-wasm/bench`
+and the `bench` job, E5 by the tight `uniroot(tol = 1e-14)` roots in
+`fixtures/R/nchyper.R` with `r_default` cross-checks, E6 by the
+`tabulate`/`stats`/`procedures` split, E7 by `corpus::compare` +
+`ToleranceClass::passes`, E8 by `spikes/webr-mobile/measure.mjs` reading
+v1 and v2 fixture shapes.
+
+The four platform-spec edits of v0.2 spec §11 are applied verbatim in this
+PR (OWNER GATE — the owner approves the spec edits): §6 row A8, §7.4,
+§12 item 1 and §12 item 3; every changed sentence is listed in the
+`docs: close v0.2 engine core` commit message. The `E1`/`E5` tags are the
+v0.2 spec's decision citations, not platform-spec prose, so the added
+sentences carry them only where §11's quoted wording does.
+
+Files outside the Files block:
+- crates/epiora-core/Cargo.toml — registers the `validation-report` bin
+  (`required-features = ["corpus"]`, same pattern as `corpus-runner`).
+- crates/epiora-core/src/corpus/mod.rs — `pub mod report;` registration.
+- crates/epiora-core/src/corpus/report/mod.rs and report/ei7.rs — the
+  report machinery the bin and the test share (`build_rows` must be
+  library-visible so `validation_report_has_every_registry_row` can assert
+  on rows measured by actually running the corpus); split in two for the
+  ~400-line rule. The Files block names only the bin.
+- crates/epiora-core/tests/validation_report.rs — the Step-1 test's home;
+  the Files block names no test file.
+- docs/decisions.md — this entry.
+Supersedes: —
