@@ -12,6 +12,7 @@ task's PR first (`gh pr list --head <plan>/task-<N>-*`); if no open PR exists fo
 
 - `v0.1` → `docs/superpowers/plans/2026-10-28-epiora-v0.1-spikes.md`
 - `v0.2` → `docs/superpowers/plans/2026-10-31-epiora-v0.2-engine-core.md`
+- `v0.3` → `docs/superpowers/plans/2026-11-05-epiora-v0.3-app-shell.md`
 - A missing `<plan>` means the newest file in `docs/superpowers/plans/` (by date in the filename).
 
 The matching spec is read from the plan's `**Spec:**` line, not hard-coded.
