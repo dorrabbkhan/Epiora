@@ -25,10 +25,19 @@ fn run() -> Result<(), String> {
     let usage = "usage: validation-report <fixtures-dir> <run-url>";
     let root = PathBuf::from(args.next().ok_or(usage)?);
     let run_url = args.next().ok_or(usage)?;
-    let size =
-        std::env::var("EPIORA_WASM_GZIP_BYTES").unwrap_or_else(|_| "not measured".to_string());
-    let median =
-        std::env::var("EPIORA_BENCH_MEDIAN_MS").unwrap_or_else(|_| "not measured".to_string());
+    let or_unmeasured = |v: String| {
+        if v.is_empty() {
+            "not measured".to_string()
+        } else {
+            v
+        }
+    };
+    let size = or_unmeasured(
+        std::env::var("EPIORA_WASM_GZIP_BYTES").unwrap_or_else(|_| "not measured".to_string()),
+    );
+    let median = or_unmeasured(
+        std::env::var("EPIORA_BENCH_MEDIAN_MS").unwrap_or_else(|_| "not measured".to_string()),
+    );
     let report = build_report(&root, &run_url, &size, &median).map_err(|e| e.to_string())?;
     print!("{report}");
     Ok(())
