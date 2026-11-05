@@ -276,9 +276,13 @@ jobs:
 
       - name: Generate validation report
         env:
+          # The report names the PR head commit it describes, not the
+          # ephemeral merge commit github.sha carries on pull_request.
+          GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           EPIORA_WASM_GZIP_BYTES: ${{ needs.engine.outputs.wasm_gzip_bytes }}
           EPIORA_BENCH_MEDIAN_MS: ${{ needs.bench.outputs.median_ms }}
         run: |
+          mkdir -p target
           cargo run -p epiora-core --features corpus --bin validation-report -- \
             fixtures "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             > target/v0.2.md
