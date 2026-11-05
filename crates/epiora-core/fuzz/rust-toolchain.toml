@@ -1,0 +1,5 @@
+[toolchain]
+# The fuzz crate is excluded from the stable workspace and builds on
+# this dated nightly (v0.2 plan Task 12); both fuzz CI workflows install
+# exactly this channel.
+channel = "nightly-2026-10-15"

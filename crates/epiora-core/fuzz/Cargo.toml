@@ -1,0 +1,48 @@
+[package]
+name = "epiora-core-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+license = "AGPL-3.0-only"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+
+[dependencies.epiora-core]
+path = ".."
+features = ["fuzzing"]
+
+# Use independent workspace for fuzzers
+[workspace]
+members = ["."]
+
+[[bin]]
+name = "dataset_json"
+path = "fuzz_targets/dataset_json.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "dataset_columns"
+path = "fuzz_targets/dataset_columns.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "freq_any"
+path = "fuzz_targets/freq_any.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "tables_any"
+path = "fuzz_targets/tables_any.rs"
+test = false
+doc = false
+bench = false

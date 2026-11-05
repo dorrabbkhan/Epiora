@@ -10,6 +10,7 @@ on:
       - 'fixtures/**'
       - 'scripts/check*.sh'
       - '.github/workflows/engine.yml'
+      - '.github/workflows/fuzz-nightly.yml'
   workflow_dispatch:
 
 env:
@@ -210,3 +211,37 @@ jobs:
             crates/epiora-wasm/bench/bench-results.json
             target/criterion-tables_1m.txt
           if-no-files-found: warn
+
+  # PR fuzzing (spec §6.5): 60 s per target on the dated nightly pinned
+  # by crates/epiora-core/fuzz/rust-toolchain.toml. A crash fails the
+  # job and its input is committed under fuzz/regressions/ by the fix.
+  fuzz:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Rust nightly-2026-10-15 (pinned)
+        run: |
+          rustup toolchain install nightly-2026-10-15 --profile minimal
+          rustup default nightly-2026-10-15
+          rustc --version
+          cargo --version
+
+      - name: Install cargo-fuzz 0.13.2 (pinned)
+        run: cargo install cargo-fuzz --version 0.13.2 --locked
+
+      - name: Fuzz each target for 60 s
+        run: |
+          cd crates/epiora-core/fuzz
+          for target in dataset_json dataset_columns freq_any tables_any; do
+            echo "== fuzz $target"
+            cargo fuzz run "$target" -- -max_total_time=60
+          done
+
+      - name: Upload crash artifacts
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: fuzz-artifacts
+          path: crates/epiora-core/fuzz/artifacts/
+          if-no-files-found: ignore

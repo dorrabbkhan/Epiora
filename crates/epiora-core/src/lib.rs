@@ -22,4 +22,7 @@ pub mod validation;
 #[cfg(feature = "corpus")]
 pub mod corpus;
 
+#[cfg(feature = "fuzzing")]
+pub mod fuzz_harness;
+
 pub use error::EngineError;
