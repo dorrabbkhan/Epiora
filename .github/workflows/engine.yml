@@ -242,7 +242,7 @@ jobs:
       - name: Fuzz each target for 60 s
         run: |
           cd crates/epiora-core/fuzz
-          for target in dataset_json dataset_columns freq_any tables_any; do
+          for target in dataset_json dataset_columns freq_any tables_any snapshot_decode; do
             echo "== fuzz $target"
             cargo fuzz run "$target" -- -max_total_time=60
           done

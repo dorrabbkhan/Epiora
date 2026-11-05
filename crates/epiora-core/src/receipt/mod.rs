@@ -9,13 +9,26 @@ mod canonical;
 pub use canonical::canonical_json;
 
 use crate::validation::ToleranceClass;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use sha2::Digest;
 use std::collections::BTreeMap;
 
 /// Receipt schema version.
 pub const RECEIPT_VERSION: u64 = 1;
+/// Receipt schema version when a project stamp is present (v0.3 spec
+/// §8.2).
+pub const RECEIPT_VERSION_WITH_PROJECT: u64 = 2;
+
+/// `project` — which project the run belongs to (v0.3 spec §8.2).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
+pub struct ProjectStamp {
+    /// Stable project id.
+    pub id: String,
+    /// Display name.
+    pub name: String,
+}
 
 /// `dataset` — which input produced the result.
 #[derive(Debug, Clone, PartialEq, Serialize)]
@@ -69,12 +82,16 @@ pub struct ValidationEntry {
     pub tolerance: f64,
 }
 
-/// Receipt v1 (spec §4.3).
+/// Receipt v1/v2 (spec §4.3, v0.3 spec §8.2).
 #[derive(Debug, Clone, PartialEq, Serialize)]
 #[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Receipt {
-    /// Always 1.
+    /// 1, or 2 when `project` is `Some`.
     pub receipt_version: u64,
+    /// The project the run belongs to; omitted for project-less runs
+    /// (corpus, parity, goldens), which stay exact receipt v1.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub project: Option<ProjectStamp>,
     /// The input dataset stamp.
     pub dataset: DatasetStamp,
     /// `"freq"` or `"tables"`.
@@ -94,7 +111,10 @@ pub struct Receipt {
 }
 
 impl Receipt {
-    /// Assembles a receipt and seals it with `receipt_sha256`.
+    /// Assembles a receipt and seals it with `receipt_sha256`. The
+    /// parameter list is the receipt's field list; grouping it further
+    /// is declined here.
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         dataset: DatasetStamp,
         procedure: String,
@@ -103,9 +123,15 @@ impl Receipt {
         exclusions: BTreeMap<String, u64>,
         timestamp: String,
         engine: EngineStamp,
+        project: Option<ProjectStamp>,
     ) -> Receipt {
         let mut receipt = Receipt {
-            receipt_version: RECEIPT_VERSION,
+            receipt_version: if project.is_some() {
+                RECEIPT_VERSION_WITH_PROJECT
+            } else {
+                RECEIPT_VERSION
+            },
+            project,
             dataset,
             procedure,
             options,

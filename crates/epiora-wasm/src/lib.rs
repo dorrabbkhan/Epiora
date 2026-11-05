@@ -51,6 +51,15 @@ fn output<T: Serialize>(out: &ProcOutput<T>) -> Result<JsValue, JsValue> {
         .map_err(|e| invalid_options(e.to_string()))
 }
 
+fn check_version(version: f64) -> Result<u64, JsValue> {
+    if version.is_finite() && version.fract() == 0.0 && version >= 0.0 && version <= u64::MAX as f64
+    {
+        Ok(version as u64)
+    } else {
+        Err(invalid_options("version must be a non-negative integer"))
+    }
+}
+
 /// Builds a dataset from typed-array columns (spec §5.1 encoding,
 /// decoded in `columns.rs`).
 #[wasm_bindgen(js_name = datasetFromColumns)]
@@ -59,17 +68,31 @@ pub fn dataset_from_columns(
     version: f64,
     columns: &js_sys::Array,
 ) -> Result<DatasetHandle, JsValue> {
-    if !(version.is_finite()
-        && version.fract() == 0.0
-        && version >= 0.0
-        && version <= u64::MAX as f64)
-    {
-        return Err(invalid_options("version must be a non-negative integer"));
-    }
+    let version = check_version(version)?;
     let columns = columns::convert(columns).map_err(|e| js_error(&e))?;
-    Dataset::new(id, version as u64, columns)
+    Dataset::new(id, version, columns)
         .map(|dataset| DatasetHandle { dataset })
         .map_err(|e| js_error(&e))
+}
+
+/// Decodes columnar snapshot bytes into a dataset handle (v0.3 spec
+/// §5.1).
+#[wasm_bindgen(js_name = datasetFromSnapshot)]
+pub fn dataset_from_snapshot(
+    id: &str,
+    version: f64,
+    bytes: &[u8],
+) -> Result<DatasetHandle, JsValue> {
+    let version = check_version(version)?;
+    epiora_core::snapshot::decode_snapshot(id, version, bytes)
+        .map(|dataset| DatasetHandle { dataset })
+        .map_err(|e| js_error(&e))
+}
+
+/// Encodes the dataset into columnar snapshot bytes (v0.3 spec §5.1).
+#[wasm_bindgen(js_name = datasetToSnapshot)]
+pub fn dataset_to_snapshot(handle: &DatasetHandle) -> Vec<u8> {
+    epiora_core::snapshot::encode_snapshot(&handle.dataset)
 }
 
 /// The dataset's SHA-256 content hash (`Dataset::content_hash_hex`).

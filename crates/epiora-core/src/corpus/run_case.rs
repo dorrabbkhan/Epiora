@@ -75,6 +75,7 @@ fn corpus(reason: impl Into<String>) -> EngineError {
 fn ctx() -> RunContext {
     RunContext {
         timestamp: CASE_TIMESTAMP.to_string(),
+        project: None,
     }
 }
 

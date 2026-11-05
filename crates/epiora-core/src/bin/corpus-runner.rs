@@ -20,11 +20,29 @@ fn main() -> ExitCode {
 }
 
 fn run() -> Result<(), String> {
-    let root = PathBuf::from(
-        std::env::args()
-            .nth(1)
-            .ok_or("usage: corpus-runner <fixtures-dir>")?,
-    );
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    // `corpus-runner --snapshot-hex <dataset-id> [fixtures-dir]` prints
+    // the lowercase hex of the dataset's `encode_snapshot` bytes (v0.3
+    // Task 1); the Node binding test compares them against the wasm
+    // encoder byte for byte.
+    if args.first().is_some_and(|a| a == "--snapshot-hex") {
+        let id = args
+            .get(1)
+            .ok_or("usage: corpus-runner --snapshot-hex <dataset-id> [fixtures-dir]")?;
+        let root = PathBuf::from(args.get(2).map(String::as_str).unwrap_or("fixtures"));
+        let datasets =
+            load_dataset_dir(&root.join("data")).map_err(|e| format!("load datasets: {e}"))?;
+        let dataset = datasets
+            .get(id)
+            .ok_or_else(|| format!("dataset {id:?} not found"))?;
+        let mut hex = String::new();
+        for byte in epiora_core::snapshot::encode_snapshot(dataset) {
+            hex.push_str(&format!("{byte:02x}"));
+        }
+        println!("{hex}");
+        return Ok(());
+    }
+    let root = PathBuf::from(args.first().ok_or("usage: corpus-runner <fixtures-dir>")?);
     let datasets =
         load_dataset_dir(&root.join("data")).map_err(|e| format!("load datasets: {e}"))?;
     let mut lines = Vec::new();

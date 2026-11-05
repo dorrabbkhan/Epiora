@@ -879,3 +879,29 @@ Files outside the Files block:
   the Files block names no test file.
 - docs/decisions.md — this entry.
 Supersedes: —
+### v0.3 Task 1 — Snapshot codec and receipt project stamp (2026-11-05)
+
+Decision: `epiora-core` gains `snapshot.rs` — the columnar snapshot codec
+of v0.3 spec §5.1 (`EPSN` magic, format 1, strict canonical decoding so
+every accepted input re-encodes byte-for-byte) — plus
+`EngineError::SnapshotDecode` (`snapshot_decode`). `RunContext` gains
+`project: Option<ProjectStamp>`; a run naming a project emits
+`receipt_version` 2 (`RECEIPT_VERSION_WITH_PROJECT`) with the
+`"project": {"id", "name"}` key inside `receipt_sha256`, while
+project-less runs keep byte-identical receipt v1 (v0.3 spec §8.2, F12).
+`epiora-wasm` gains `datasetFromSnapshot`/`datasetToSnapshot`.
+Evidence: crates/epiora-core/tests/snapshot.rs, tests/receipt_project.rs,
+crates/epiora-wasm/tests/node/binding.test.mjs
+Files outside the Files block:
+- crates/epiora-core/benches/tables_1m.rs, src/corpus/report/ei7.rs,
+  src/corpus/run_case.rs, src/fuzz_harness.rs — `project: None` added to
+  `RunContext` struct literals so they still compile.
+- crates/epiora-core/tests/{ei7,procedures,receipt,registry,tables_reuse,tabulate}.rs
+  — same `project: None` literal fix in test helpers.
+- crates/epiora-core/src/bin/corpus-runner.rs — Step 5's
+  `--snapshot-hex <dataset-id>` flag printing the native
+  `encode_snapshot` hex the Node binding test compares against.
+- scripts/check-engine.sh — exports `NATIVE_OSWEGO_SNAPSHOT_HEX` from
+  that flag into the node binding test step.
+- docs/decisions.md — this entry.
+Supersedes: —

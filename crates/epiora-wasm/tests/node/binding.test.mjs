@@ -222,3 +222,16 @@ test("unknown variable throws with code unknown_variable", () => {
 test("engineVersion reports the engine version", () => {
   assert.equal(typeof wasm.engineVersion(), "string");
 });
+
+test("snapshot round-trips oswego and hash matches native", () => {
+  const handle = datasetHandle(join(fixturesDir, "data", "oswego.dataset.json"));
+  const bytes = wasm.datasetToSnapshot(handle);
+  const restored = wasm.datasetFromSnapshot(oswegoDoc.id, oswegoDoc.version, bytes);
+  assert.equal(wasm.datasetHash(restored), process.env.NATIVE_OSWEGO_HASH);
+});
+
+test("snapshot bytes equal native", () => {
+  const handle = datasetHandle(join(fixturesDir, "data", "oswego.dataset.json"));
+  const hex = Buffer.from(wasm.datasetToSnapshot(handle)).toString("hex");
+  assert.equal(hex, process.env.NATIVE_OSWEGO_SNAPSHOT_HEX.trim());
+});

@@ -98,6 +98,7 @@ fn tables_1m(c: &mut Criterion) {
     let opts = options();
     let ctx = RunContext {
         timestamp: "2026-10-31T00:00:00Z".to_string(),
+        project: None,
     };
 
     // Same pin as bench.spec.mjs: the first 3 EXPOSED values of
