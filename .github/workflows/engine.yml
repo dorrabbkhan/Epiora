@@ -19,6 +19,8 @@ env:
 jobs:
   engine:
     runs-on: ubuntu-latest
+    outputs:
+      wasm_gzip_bytes: ${{ steps.wasm_size.outputs.bytes }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -105,12 +107,14 @@ jobs:
         run: bats scripts/tests/wasm-size.bats scripts/tests/parity-diff.bats
 
       - name: Wasm size in job summary
+        id: wasm_size
         if: always()
         run: |
           if [ -f crates/epiora-wasm/pkg/epiora_wasm_bg.wasm ]; then
             size="$(gzip -9 -c crates/epiora-wasm/pkg/epiora_wasm_bg.wasm | wc -c | tr -d ' ')"
             echo "engine .wasm gzip -9 size: **${size} bytes** (budget 409,600)" \
               >> "$GITHUB_STEP_SUMMARY"
+            echo "bytes=${size}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upload parity lines
@@ -129,6 +133,8 @@ jobs:
   # workload runs for reporting only.
   bench:
     runs-on: ubuntu-latest
+    outputs:
+      median_ms: ${{ steps.bench_summary.outputs.median_ms }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -187,13 +193,16 @@ jobs:
         run: cargo bench -p epiora-core --bench tables_1m 2>&1 | tee target/criterion-tables_1m.txt
 
       - name: Bench results in job summary
+        id: bench_summary
         if: always()
         run: |
           if [ -f crates/epiora-wasm/bench/bench-results.json ]; then
-            node -e 'const r = require("./crates/epiora-wasm/bench/bench-results.json");
+            node -e 'const fs = require("fs");
+              const r = require("./crates/epiora-wasm/bench/bench-results.json");
               console.log(`Chromium median: **${r.median_ms.toFixed(1)} ms** (budget < 1000 ms)`);
               console.log(`runs: ${r.runs_ms.map((m) => m.toFixed(1)).join(", ")} ms`);
-              console.log(`chromium ${r.chromium_version}, runner ${r.runner}, seed ${r.seed}, rows ${r.rows}`);' \
+              console.log(`chromium ${r.chromium_version}, runner ${r.runner}, seed ${r.seed}, rows ${r.rows}`);
+              fs.appendFileSync(process.env.GITHUB_OUTPUT, `median_ms=${r.median_ms}\n`);' \
               >> "$GITHUB_STEP_SUMMARY"
           fi
           if [ -f target/criterion-tables_1m.txt ]; then
@@ -245,3 +254,43 @@ jobs:
           name: fuzz-artifacts
           path: crates/epiora-core/fuzz/artifacts/
           if-no-files-found: ignore
+
+  # Validation report (platform §12.10, v0.2 Task 13): runs the whole
+  # corpus through `validation-report` and uploads the Markdown. The
+  # artifact of this PR's green run is committed unchanged as
+  # docs/validation/v0.2.md. The header's wasm size and bench median
+  # come from the engine/bench job outputs, passed to the bin as
+  # EPIORA_WASM_GZIP_BYTES / EPIORA_BENCH_MEDIAN_MS.
+  validation-report:
+    needs: [engine, bench, fuzz]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Rust 1.99.0 (pinned)
+        run: |
+          rustup toolchain install 1.99.0 --profile minimal
+          rustup default 1.99.0
+          rustc --version
+          cargo --version
+
+      - name: Generate validation report
+        env:
+          # The report names the PR head commit it describes, not the
+          # ephemeral merge commit github.sha carries on pull_request.
+          GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          EPIORA_WASM_GZIP_BYTES: ${{ needs.engine.outputs.wasm_gzip_bytes }}
+          EPIORA_BENCH_MEDIAN_MS: ${{ needs.bench.outputs.median_ms }}
+        run: |
+          mkdir -p target
+          cargo run -p epiora-core --features corpus --bin validation-report -- \
+            fixtures "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            > target/v0.2.md
+          head -15 target/v0.2.md
+
+      - name: Upload validation report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: v0.2-validation-md
+          path: target/v0.2.md
+          if-no-files-found: error
