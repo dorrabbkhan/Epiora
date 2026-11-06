@@ -905,3 +905,45 @@ Files outside the Files block:
   that flag into the node binding test step.
 - docs/decisions.md — this entry.
 Supersedes: —
+### v0.3 Task 2 — import fixture corpus (2026-11-06)
+
+Decision: `fixtures/R/import.R` generates the 35-case import corpus of
+v0.3 spec §6.5 under `fixtures/import/<case>/` (input file plus
+`expected.json` per `fixtures/schema/import.schema.json`); `generate.R`
+sources it last. Case semantics follow spec §6.1–6.2 literally:
+
+- `missing_codes` replaces the whole default list: with `["-99"]`, "NA"
+  and "." stay literal values (only "" and "-99" are missing).
+- A column with zero non-missing values (header_only, ALLMISS in
+  missing_codes_default) fits every candidate, so the first candidate
+  wins: `boolean`.
+- Duplicate/empty header renames are positional-occurrence:
+  `x,x,,x` -> `x`, `x_2`, `column_3`, `x_3`.
+- In xlsx fixtures a missing cell is a genuinely empty cell
+  (openxlsx2's NA -> t="e" #N/A is patched out); the real error cell is
+  reserved for xlsx_cell_error, which counts it in coercions.
+- `coercions` names every column, including zeros.
+
+Byte-stability (plan Step 2): openxlsx2 is called with
+`datetime_created = 2026-01-01 UTC`; every zip container (xlsx/ods)
+gets all entry DOS timestamps rewritten to 2026-01-01 00:00 by
+`normalize_zip` (central-directory walk); LibreOffice conversions
+(xlsx_basic -> xls_basic input.xls, and ods_dates' xlsx -> ods) run
+under `SOURCE_DATE_EPOCH=0`, a private UserInstallation profile, and
+`env -u LD_LIBRARY_PATH` (the LD_LIBRARY_PATH R exports for its own
+libs makes soffice.bin fail to find libreglo.so). `xlsx_1904_dates`
+writes serials via openxlsx2's 1904-epoch converter and patches
+`workbookPr date1904="1"` into workbook.xml. `xlsx_formula_cached` and
+`xlsx_cell_error` patch cached `<v>` results / a t="e" #N/A cell into
+the sheet XML (openxlsx2 writes neither). `ods_dates` goes through
+LibreOffice because `write_ods` stores dates and booleans as strings;
+`ods_basic` uses `write_ods` directly.
+
+Versions: R 4.6.2; openxlsx2 1.30, readODS 2.3.6, minty 0.0.6 (readODS
+dependency) — all CRAN, pinned in fixtures/renv.lock; LibreOffice
+26.2.6.3 locally, `libreoffice-calc-nogui` in CI.
+Evidence: fixtures/import/ (35 cases), `Rscript fixtures/generate.R`
+run twice — `git status --porcelain fixtures/` empty after the second
+run.
+Files outside the Files block: none.
+Supersedes: —
