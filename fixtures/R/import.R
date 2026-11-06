@@ -130,8 +130,9 @@ text_case <- function(case, columns, records, delimiter = ",",
   invisible(dir)
 }
 
-# Spreadsheet case: emits expected.json, saves wb byte-stably, then
-# runs `patch` (a function of the extracted xlsx directory) when given.
+# Spreadsheet case: emits expected.json, saves wb, unzips, runs `patch`
+# (a function of the extracted directory) when given, then rebuilds the
+# container byte-stably.
 xlsx_case <- function(case, wb, columns, settings = NO_SETTINGS,
                       sheets = "Data", coercions = NULL, patch = NULL,
                       container = "xlsx") {
@@ -144,21 +145,45 @@ xlsx_case <- function(case, wb, columns, settings = NO_SETTINGS,
                   else coercions))
   path <- file.path(dir, paste0("input.", container))
   wb$save(path)
-  if (!is.null(patch)) patch_xlsx(path, patch) else normalize_zip(path)
+  repack_xlsx(path, patch)
   invisible(path)
 }
 
-# Patch files inside a saved xlsx: unzip, run fn(exdir), rezip in the
-# original member order, re-normalize timestamps.
-patch_xlsx <- function(path, fn) {
+# Rebuild an xlsx (or any OOXML zip) byte-stably: unzip, run fn(exdir)
+# for content patches, then rezip through the `zip` package's bundled
+# miniz — the same code on every platform, so the compressed bytes are
+# environment-invariant — with [Content_Types].xml first, then fix
+# entry timestamps.
+repack_xlsx <- function(path, fn = NULL) {
   members <- utils::unzip(path, list = TRUE)$Name
   members <- members[!grepl("/$", members)]
   ex <- tempfile("xlsxpatch")
   dir.create(ex)
   utils::unzip(path, exdir = ex)
-  fn(ex)
-  zip::zipr(path, files = members, recurse = FALSE,
+  if (!is.null(fn)) fn(ex)
+  ordered <- c("[Content_Types].xml",
+               setdiff(members, "[Content_Types].xml"))
+  zip::zipr(path, files = ordered, recurse = FALSE,
             include_directories = FALSE, root = ex, mode = "mirror")
+  normalize_zip(path)
+  invisible(path)
+}
+
+# Rebuild an ODS byte-stably: the ODF spec requires `mimetype` first
+# and stored (uncompressed); the rest deflate via miniz like xlsx.
+repack_ods <- function(path) {
+  members <- utils::unzip(path, list = TRUE)$Name
+  members <- members[!grepl("/$", members)]
+  stop_if(!"mimetype" %in% members,
+          sprintf("repack_ods: no mimetype in %s", path))
+  ex <- tempfile("odsex")
+  dir.create(ex)
+  utils::unzip(path, exdir = ex)
+  tmp <- tempfile(fileext = ".ods")
+  zip::zipr(tmp, files = "mimetype", root = ex, compression_level = 0)
+  zip::zip_append(tmp, files = setdiff(members, "mimetype"), root = ex,
+                  compression_level = 9)
+  file.copy(tmp, path, overwrite = TRUE)
   normalize_zip(path)
   invisible(path)
 }
@@ -339,7 +364,8 @@ xb_cols <- list(
   imp_col("D", "date", c("2020-01-02", "2021-03-04", "2022-05-06")))
 
 new_wb <- function() {
-  wb <- openxlsx2::wb_workbook(datetime_created = XLSX_EPOCH_POSIX)
+  wb <- openxlsx2::wb_workbook(creator = "epiora",
+                               datetime_created = XLSX_EPOCH_POSIX)
   wb$add_worksheet("Data")
   wb
 }
@@ -379,7 +405,8 @@ xlsx_case("xlsx_1904_dates", wb,
                            x, fixed = TRUE), f)
           })
 
-wb <- openxlsx2::wb_workbook(datetime_created = XLSX_EPOCH_POSIX)
+wb <- openxlsx2::wb_workbook(creator = "epiora",
+                             datetime_created = XLSX_EPOCH_POSIX)
 wb$add_worksheet("First")
 wb$add_data(x = data.frame(X = 9L))
 wb$add_worksheet("Second")
@@ -475,7 +502,7 @@ readODS::write_ods(
   data.frame(N = c(1.5, 2.5), I = c(3L, 4L), T = c("u", "v"),
              check.names = FALSE, stringsAsFactors = FALSE),
   file.path(ob_dir, "input.ods"))
-normalize_zip(file.path(ob_dir, "input.ods"))
+repack_ods(file.path(ob_dir, "input.ods"))
 ob_cols <- list(
   imp_col("N", "real", c(1.5, 2.5)),
   imp_col("I", "integer", c(3L, 4L)),
@@ -497,7 +524,7 @@ wb$add_data(x = data.frame(D = as.Date(c("2020-01-02", "2021-03-04")),
                            N = c(1L, 2L), check.names = FALSE))
 wb$save(src)
 ods_out <- lo_convert(src, "ods", tempfile("odsout"))
-normalize_zip(ods_out)
+repack_ods(ods_out)
 file.copy(ods_out, file.path(od_dir, "input.ods"))
 od_cols <- list(
   imp_col("D", "date", c("2020-01-02", "2021-03-04")),

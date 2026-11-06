@@ -925,9 +925,15 @@ sources it last. Case semantics follow spec §6.1–6.2 literally:
 - `coercions` names every column, including zeros.
 
 Byte-stability (plan Step 2): openxlsx2 is called with
-`datetime_created = 2026-01-01 UTC`; every zip container (xlsx/ods)
-gets all entry DOS timestamps rewritten to 2026-01-01 00:00 by
-`normalize_zip` (central-directory walk); LibreOffice conversions
+`creator = "epiora"` (otherwise the local username leaks into
+`dc:creator`/`lastModifiedBy` and the corpus differs between
+machines) and `datetime_created = 2026-01-01 UTC`; every xlsx/ods
+container is rebuilt by `repack_xlsx`/`repack_ods` — unzip, patch if
+needed, rezip through the `zip` package's bundled miniz (same code on
+every platform, so compressed bytes are environment-invariant;
+`mimetype` kept first and stored for ODS) — then all entry DOS
+timestamps are rewritten to 2026-01-01 00:00 by `normalize_zip`
+(central-directory walk); LibreOffice conversions
 (xlsx_basic -> xls_basic input.xls, and ods_dates' xlsx -> ods) run
 under `SOURCE_DATE_EPOCH=0`, a private UserInstallation profile, and
 `env -u LD_LIBRARY_PATH` (the LD_LIBRARY_PATH R exports for its own
