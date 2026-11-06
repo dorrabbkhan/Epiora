@@ -16,44 +16,6 @@ XLSX_EPOCH_POSIX <- as.POSIXct("2026-01-01 00:00:00", tz = "UTC")
 ZIP_DOS_DATE <- 23585L  # 2026-01-01 in DOS date format
 ZIP_DOS_TIME <- 0L
 
-# Rewrite every zip entry's modification time/date to a fixed DOS
-# timestamp so generated containers are byte-identical across runs.
-# Walks the central directory (entry data is never scanned).
-normalize_zip <- function(path) {
-  b <- readBin(path, "raw", file.info(path)$size)
-  n <- length(b)
-  at <- function(i) as.integer(b[i])
-  u16 <- function(i) at(i) + at(i + 1L) * 256L
-  u32 <- function(i) u16(i) + (at(i + 2L) + at(i + 3L) * 256L) * 65536L
-  put16 <- function(i, v) {
-    b[i] <<- as.raw(v %% 256L)
-    b[i + 1L] <<- as.raw(v %/% 256L)
-  }
-  is_sig <- function(i, sig) i + 3L <= n && all(b[i:(i + 3L)] == sig)
-  sig_cd <- charToRaw("PK\x01\x02")
-  sig_loc <- charToRaw("PK\x03\x04")
-  sig_eocd <- charToRaw("PK\x05\x06")
-  eocd <- NA_integer_
-  for (i in seq(n - 21L, 1L)) {
-    if (is_sig(i, sig_eocd)) { eocd <- i; break }
-  }
-  stop_if(is.na(eocd), sprintf("normalize_zip: no EOCD in %s", path))
-  pos <- u32(eocd + 16L) + 1L
-  for (k in seq_len(u16(eocd + 10L))) {
-    stop_if(!is_sig(pos, sig_cd),
-            sprintf("normalize_zip: bad CD in %s", path))
-    put16(pos + 12L, ZIP_DOS_TIME); put16(pos + 14L, ZIP_DOS_DATE)
-    fn <- u16(pos + 28L); ex <- u16(pos + 30L); cm <- u16(pos + 32L)
-    loc <- u32(pos + 42L) + 1L
-    stop_if(!is_sig(loc, sig_loc),
-            sprintf("normalize_zip: bad local header in %s", path))
-    put16(loc + 10L, ZIP_DOS_TIME); put16(loc + 12L, ZIP_DOS_DATE)
-    pos <- pos + 46L + fn + ex + cm
-  }
-  writeBin(b, path)
-  invisible(path)
-}
-
 # An empty settings object ({} in JSON, not []).
 NO_SETTINGS <- setNames(list(), character(0))
 
@@ -145,46 +107,76 @@ xlsx_case <- function(case, wb, columns, settings = NO_SETTINGS,
                   else coercions))
   path <- file.path(dir, paste0("input.", container))
   wb$save(path)
-  repack_xlsx(path, patch)
+  repack_zip(path, "[Content_Types].xml", patch)
   invisible(path)
 }
 
-# Rebuild an xlsx (or any OOXML zip) byte-stably: unzip, run fn(exdir)
-# for content patches, then rezip through the `zip` package's bundled
-# miniz — the same code on every platform, so the compressed bytes are
-# environment-invariant — with [Content_Types].xml first, then fix
-# entry timestamps.
-repack_xlsx <- function(path, fn = NULL) {
+# Write `members` (files under exdir) as a zip in which every entry is
+# stored uncompressed with fixed metadata: no compression (so deflate
+# implementations cannot differ between machines), no extra fields,
+# fixed DOS time/date, UTF-8-name flag, mode-0644 external attributes.
+# The only bytes that can ever differ between environments are the
+# member contents themselves.
+write_stored_zip <- function(path, exdir, members) {
+  u32raw <- function(v) {
+    v <- as.double(v)
+    as.raw(c(v %% 256, (v %/% 256) %% 256, (v %/% 65536) %% 256,
+             (v %/% 16777216) %% 256))
+  }
+  hex_to_raw <- function(h) {
+    as.raw(strtoi(substring(h, seq(1L, 7L, 2L), seq(2L, 8L, 2L)), 16L))
+  }
+  con <- file(path, "wb")
+  on.exit(close(con))
+  w <- function(...) for (x in list(...)) writeBin(x, con)
+  cds <- list()
+  for (m in members) {
+    f <- file.path(exdir, m)
+    d <- readBin(f, "raw", file.info(f)$size)
+    crc <- rev(hex_to_raw(digest::digest(d, algo = "crc32",
+                                         serialize = FALSE)))
+    name <- charToRaw(m)
+    offset <- as.double(seek(con, where = NA))
+    w(charToRaw("PK\x03\x04"), u32raw(20)[1:2],
+      u32raw(0x0800)[1:2], u32raw(0)[1:2],
+      u32raw(ZIP_DOS_TIME)[1:2], u32raw(ZIP_DOS_DATE)[1:2],
+      crc, u32raw(length(d)), u32raw(length(d)),
+      u32raw(length(name))[1:2], u32raw(0)[1:2],
+      name, d)
+    cds[[length(cds) + 1L]] <- list(name = name, crc = crc,
+                                   size = length(d), offset = offset)
+  }
+  cd_start <- as.double(seek(con, where = NA))
+  attr644 <- u32raw(0x81a40000)
+  for (e in cds) {
+    w(charToRaw("PK\x01\x02"), u32raw(20)[1:2], u32raw(20)[1:2],
+      u32raw(0x0800)[1:2], u32raw(0)[1:2],
+      u32raw(ZIP_DOS_TIME)[1:2], u32raw(ZIP_DOS_DATE)[1:2],
+      e$crc, u32raw(e$size), u32raw(e$size),
+      u32raw(length(e$name))[1:2], u32raw(0)[1:2], u32raw(0)[1:2],
+      u32raw(0)[1:2], u32raw(0)[1:2], attr644,
+      u32raw(e$offset), e$name)
+  }
+  cd_size <- as.double(seek(con, where = NA)) - cd_start
+  w(charToRaw("PK\x05\x06"), u32raw(0)[1:2], u32raw(0)[1:2],
+    u32raw(length(cds))[1:2], u32raw(length(cds))[1:2],
+    u32raw(cd_size), u32raw(cd_start), u32raw(0)[1:2])
+  invisible(path)
+}
+
+# Rebuild a zip fixture byte-stably: unzip, run fn(exdir) for content
+# patches, then rewrite the container stored+ordered with `first` at
+# the head ([Content_Types].xml for OOXML, mimetype for ODF).
+repack_zip <- function(path, first, fn = NULL) {
   members <- utils::unzip(path, list = TRUE)$Name
   members <- members[!grepl("/$", members)]
-  ex <- tempfile("xlsxpatch")
+  stop_if(!first %in% members,
+          sprintf("repack_zip: %s missing in %s", first, path))
+  ex <- tempfile("zipex")
   dir.create(ex)
   utils::unzip(path, exdir = ex)
   if (!is.null(fn)) fn(ex)
-  ordered <- c("[Content_Types].xml",
-               setdiff(members, "[Content_Types].xml"))
-  zip::zipr(path, files = ordered, recurse = FALSE,
-            include_directories = FALSE, root = ex, mode = "mirror")
-  normalize_zip(path)
-  invisible(path)
-}
-
-# Rebuild an ODS byte-stably: the ODF spec requires `mimetype` first
-# and stored (uncompressed); the rest deflate via miniz like xlsx.
-repack_ods <- function(path) {
-  members <- utils::unzip(path, list = TRUE)$Name
-  members <- members[!grepl("/$", members)]
-  stop_if(!"mimetype" %in% members,
-          sprintf("repack_ods: no mimetype in %s", path))
-  ex <- tempfile("odsex")
-  dir.create(ex)
-  utils::unzip(path, exdir = ex)
-  tmp <- tempfile(fileext = ".ods")
-  zip::zipr(tmp, files = "mimetype", root = ex, compression_level = 0)
-  zip::zip_append(tmp, files = setdiff(members, "mimetype"), root = ex,
-                  compression_level = 9)
-  file.copy(tmp, path, overwrite = TRUE)
-  normalize_zip(path)
+  write_stored_zip(path, ex, c(first, setdiff(members, first)))
   invisible(path)
 }
 
@@ -502,7 +494,7 @@ readODS::write_ods(
   data.frame(N = c(1.5, 2.5), I = c(3L, 4L), T = c("u", "v"),
              check.names = FALSE, stringsAsFactors = FALSE),
   file.path(ob_dir, "input.ods"))
-repack_ods(file.path(ob_dir, "input.ods"))
+repack_zip(file.path(ob_dir, "input.ods"), "mimetype")
 ob_cols <- list(
   imp_col("N", "real", c(1.5, 2.5)),
   imp_col("I", "integer", c(3L, 4L)),
@@ -524,7 +516,7 @@ wb$add_data(x = data.frame(D = as.Date(c("2020-01-02", "2021-03-04")),
                            N = c(1L, 2L), check.names = FALSE))
 wb$save(src)
 ods_out <- lo_convert(src, "ods", tempfile("odsout"))
-repack_ods(ods_out)
+repack_zip(ods_out, "mimetype")
 file.copy(ods_out, file.path(od_dir, "input.ods"))
 od_cols <- list(
   imp_col("D", "date", c("2020-01-02", "2021-03-04")),
