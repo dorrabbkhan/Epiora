@@ -1040,10 +1040,10 @@ MIT), csv-core 0.1.13 (MIT OR Apache-2.0), encoding_rs 0.8.44
 OR Apache-2.0), serde 1.0.229 + serde_json 1.0.154 (dev; MIT OR
 Apache-2.0), thiserror 2.0.21 (MIT OR Apache-2.0), ts-rs 12.0.1 (MIT),
 arbitrary 1.5.0 + derive_arbitrary 1.5.0 (MIT OR Apache-2.0),
-libfuzzer-sys 0.4.13 (MIT OR Apache-2.0; fuzz crate only, outside the
-deny-checked workspace).
+libfuzzer-sys 0.4.13 ((MIT OR Apache-2.0) AND NCSA; fuzz crate only,
+outside the deny-checked workspace).
 Evidence: `cargo test -p epiora-import` — 19 tests green including
-`every_text_fixture_matches` over all 25 non-spreadsheet fixtures;
+`every_text_fixture_matches` over all 26 non-spreadsheet fixtures;
 `./scripts/check.sh` full PASS; 60 s local fuzz: `cd
 crates/epiora-import/fuzz && cargo +nightly-2026-10-15 fuzz run
 text_import -- -max_total_time=60` → "Done 685581 runs in 61
