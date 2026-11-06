@@ -7,14 +7,12 @@
 # fixtures/schema/import.schema.json), so the R definitions are the
 # oracle (plan Interfaces).
 #
-# Byte-stability (plan Step 2): openxlsx2 is called with a pinned
-# datetime_created; every zip container (xlsx/ods) has its entry DOS
-# timestamps rewritten to a fixed date by normalize_zip(); LibreOffice
-# conversions run under SOURCE_DATE_EPOCH=0.
+# Binary container writers and the LibreOffice bridge live in
+# fixtures/R/import_zip.R (byte-stability notes there). Every case's
+# directory is cleared before it is written, so a stale artifact can
+# never survive regeneration.
 
-XLSX_EPOCH_POSIX <- as.POSIXct("2026-01-01 00:00:00", tz = "UTC")
-ZIP_DOS_DATE <- 23585L  # 2026-01-01 in DOS date format
-ZIP_DOS_TIME <- 0L
+source(file.path(FIXTURES_DIR, "R", "import_zip.R"))
 
 # An empty settings object ({} in JSON, not []).
 NO_SETTINGS <- setNames(list(), character(0))
@@ -42,10 +40,14 @@ no_coercions <- function(columns) {
            vapply(columns, function(c) c$name, character(1)))
 }
 
-# Emit expected.json under fixtures/import/<case>/ and return the dir.
+# Emit expected.json under fixtures/import/<case>/ and return the
+# dir. The case directory is removed first: a file that is produced
+# only on some generations (or not at all) can never go stale —
+# anything not rewritten this run disappears.
 write_import_case <- function(case, file, settings, expect = NULL,
                               expect_error = NULL) {
   dir <- file.path(FIXTURES_DIR, "import", case)
+  if (dir.exists(dir)) unlink(dir, recursive = TRUE)
   dir.create(dir, showWarnings = FALSE, recursive = TRUE)
   obj <- list(case = case, file = file, settings = settings)
   obj$expect <- expect
@@ -56,155 +58,6 @@ write_import_case <- function(case, file, settings, expect = NULL,
                      digits = I(17), na = "null"),
     file.path(dir, "expected.json"))
   invisible(dir)
-}
-
-# Text case: emits expected.json and writes records (physical lines,
-# delimiters and quotes included) joined with `eol`, in `file_encoding`
-# (an iconv target), with a BOM when `bom`.
-text_case <- function(case, columns, records, delimiter = ",",
-                      encoding = "utf8", decimal = "dot",
-                      settings = NO_SETTINGS, header_renames = list(),
-                      coercions = NULL, file = "input.csv",
-                      file_encoding = "UTF-8", bom = FALSE, eol = "\n",
-                      trailing = TRUE) {
-  dir <- write_import_case(
-    case, file, settings,
-    expect = list(
-      detection = imp_detection("text", encoding, delimiter, decimal,
-                                header_renames),
-      columns = columns,
-      coercions = if (is.null(coercions)) no_coercions(columns)
-                  else coercions))
-  text <- paste0(paste(records, collapse = eol),
-                 if (trailing) eol else "")
-  raw <- iconv(text, from = "UTF-8", to = file_encoding,
-               toRaw = TRUE)[[1]]
-  stop_if(is.null(raw), sprintf("iconv to %s failed", file_encoding))
-  marks <- list("UTF-16LE" = as.raw(c(0xff, 0xfe)),
-                "UTF-16BE" = as.raw(c(0xfe, 0xff)),
-                "UTF-8" = as.raw(c(0xef, 0xbb, 0xbf)))
-  if (bom) {
-    stop_if(!file_encoding %in% names(marks),
-            sprintf("no BOM defined for %s", file_encoding))
-    raw <- c(marks[[file_encoding]], raw)
-  }
-  writeBin(raw, file.path(dir, file))
-  invisible(dir)
-}
-
-# Spreadsheet case: emits expected.json, saves wb, unzips, runs `patch`
-# (a function of the extracted directory) when given, then rebuilds the
-# container byte-stably.
-xlsx_case <- function(case, wb, columns, settings = NO_SETTINGS,
-                      sheets = "Data", coercions = NULL, patch = NULL,
-                      container = "xlsx") {
-  dir <- write_import_case(
-    case, paste0("input.", container), settings,
-    expect = list(
-      detection = imp_detection(container, sheets = sheets),
-      columns = columns,
-      coercions = if (is.null(coercions)) no_coercions(columns)
-                  else coercions))
-  path <- file.path(dir, paste0("input.", container))
-  wb$save(path)
-  repack_zip(path, "[Content_Types].xml", patch)
-  invisible(path)
-}
-
-# Write `members` (files under exdir) as a zip in which every entry is
-# stored uncompressed with fixed metadata: no compression (so deflate
-# implementations cannot differ between machines), no extra fields,
-# fixed DOS time/date, UTF-8-name flag, mode-0644 external attributes.
-# The only bytes that can ever differ between environments are the
-# member contents themselves.
-write_stored_zip <- function(path, exdir, members) {
-  u32raw <- function(v) {
-    v <- as.double(v)
-    as.raw(c(v %% 256, (v %/% 256) %% 256, (v %/% 65536) %% 256,
-             (v %/% 16777216) %% 256))
-  }
-  hex_to_raw <- function(h) {
-    as.raw(strtoi(substring(h, seq(1L, 7L, 2L), seq(2L, 8L, 2L)), 16L))
-  }
-  con <- file(path, "wb")
-  on.exit(close(con))
-  w <- function(...) for (x in list(...)) writeBin(x, con)
-  cds <- list()
-  for (m in members) {
-    f <- file.path(exdir, m)
-    d <- readBin(f, "raw", file.info(f)$size)
-    crc <- rev(hex_to_raw(digest::digest(d, algo = "crc32",
-                                         serialize = FALSE)))
-    name <- charToRaw(m)
-    offset <- as.double(seek(con, where = NA))
-    w(charToRaw("PK\x03\x04"), u32raw(20)[1:2],
-      u32raw(0x0800)[1:2], u32raw(0)[1:2],
-      u32raw(ZIP_DOS_TIME)[1:2], u32raw(ZIP_DOS_DATE)[1:2],
-      crc, u32raw(length(d)), u32raw(length(d)),
-      u32raw(length(name))[1:2], u32raw(0)[1:2],
-      name, d)
-    cds[[length(cds) + 1L]] <- list(name = name, crc = crc,
-                                   size = length(d), offset = offset)
-  }
-  cd_start <- as.double(seek(con, where = NA))
-  attr644 <- u32raw(0x81a40000)
-  for (e in cds) {
-    w(charToRaw("PK\x01\x02"), u32raw(20)[1:2], u32raw(20)[1:2],
-      u32raw(0x0800)[1:2], u32raw(0)[1:2],
-      u32raw(ZIP_DOS_TIME)[1:2], u32raw(ZIP_DOS_DATE)[1:2],
-      e$crc, u32raw(e$size), u32raw(e$size),
-      u32raw(length(e$name))[1:2], u32raw(0)[1:2], u32raw(0)[1:2],
-      u32raw(0)[1:2], u32raw(0)[1:2], attr644,
-      u32raw(e$offset), e$name)
-  }
-  cd_size <- as.double(seek(con, where = NA)) - cd_start
-  w(charToRaw("PK\x05\x06"), u32raw(0)[1:2], u32raw(0)[1:2],
-    u32raw(length(cds))[1:2], u32raw(length(cds))[1:2],
-    u32raw(cd_size), u32raw(cd_start), u32raw(0)[1:2])
-  invisible(path)
-}
-
-# Rebuild a zip fixture byte-stably: unzip, run fn(exdir) for content
-# patches, then rewrite the container stored+ordered with `first` at
-# the head ([Content_Types].xml for OOXML, mimetype for ODF).
-repack_zip <- function(path, first, fn = NULL) {
-  members <- utils::unzip(path, list = TRUE)$Name
-  members <- members[!grepl("/$", members)]
-  stop_if(!first %in% members,
-          sprintf("repack_zip: %s missing in %s", first, path))
-  ex <- tempfile("zipex")
-  dir.create(ex)
-  utils::unzip(path, exdir = ex)
-  if (!is.null(fn)) fn(ex)
-  # sort: member order must not depend on the producer's filesystem
-  # enumeration order (differs between environments).
-  write_stored_zip(path, ex, c(first, sort(setdiff(members, first))))
-  invisible(path)
-}
-
-# LibreOffice conversion for .xls and the .ods date case.
-# SOURCE_DATE_EPOCH=0 pins LO's embedded timestamps; a private profile
-# dir keeps runs hermetic. Returns the output path.
-lo_convert <- function(src, to, outdir) {
-  dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
-  # env -u LD_LIBRARY_PATH: the LD_LIBRARY_PATH R exports for its own
-  # libs (/opt/R/.../lib) makes soffice.bin fail to find libreglo.so;
-  # LO's own RUNPATH resolves its libs once the variable is unset.
-  # Output goes to a log file (these paths never contain spaces).
-  log <- tempfile("lo-log-")
-  st <- system(paste(
-    "SOURCE_DATE_EPOCH=0", "env", "-u", "LD_LIBRARY_PATH", "soffice",
-    "--headless",
-    paste0("-env:UserInstallation=file://",
-           file.path(tempdir(), "epiora-lo-profile")),
-    "--convert-to", to, "--outdir", outdir, src,
-    ">", log, "2>&1"))
-  dst <- file.path(outdir, paste0(tools::file_path_sans_ext(basename(src)),
-                                  ".", to))
-  stop_if(!file.exists(dst), sprintf(
-    "soffice --convert-to %s failed for %s (status %d): %s", to, src,
-    st, paste(readLines(log, warn = FALSE), collapse = "\n")))
-  dst
 }
 
 # --- text cases ----------------------------------------------------------
@@ -357,13 +210,6 @@ xb_cols <- list(
   imp_col("B", "boolean", c(TRUE, FALSE, TRUE)),
   imp_col("D", "date", c("2020-01-02", "2021-03-04", "2022-05-06")))
 
-new_wb <- function() {
-  wb <- openxlsx2::wb_workbook(creator = "epiora",
-                               datetime_created = XLSX_EPOCH_POSIX)
-  wb$add_worksheet("Data")
-  wb
-}
-
 # The NA in T is an empty cell, not an error cell: openxlsx2 writes R
 # NA as t="e" #N/A; the patch removes the element so this case keeps a
 # plain missing (error cells have their own case, xlsx_cell_error).
@@ -476,55 +322,55 @@ xlsx_case("xlsx_cell_error", wb,
           })
 
 # xlsx_basic's workbook converted to .xls by LibreOffice (plan Task 2).
-xls_dir <- file.path(FIXTURES_DIR, "import", "xls_basic")
-dir.create(xls_dir, showWarnings = FALSE, recursive = TRUE)
-file.copy(lo_convert(file.path(FIXTURES_DIR, "import", "xlsx_basic",
-                               "input.xlsx"),
-                     "xls", tempfile("xlsout")),
-          file.path(xls_dir, "input.xls"))
-write_import_case("xls_basic", "input.xls", NO_SETTINGS,
-                  expect = list(
-                    detection = imp_detection("xls", sheets = "Data"),
-                    columns = xb_cols,
-                    coercions = no_coercions(xb_cols)))
+xls_dir <- write_import_case(
+  "xls_basic", "input.xls", NO_SETTINGS,
+  expect = list(
+    detection = imp_detection("xls", sheets = "Data"),
+    columns = xb_cols,
+    coercions = no_coercions(xb_cols)))
+stop_if(!file.copy(lo_convert(file.path(FIXTURES_DIR, "import",
+                                        "xlsx_basic", "input.xlsx"),
+                              "xls", tempfile("xlsout")),
+                   file.path(xls_dir, "input.xls"), overwrite = TRUE),
+        "xls_basic: copying converted input.xls failed")
 
 # ods_basic via readODS (write_ods stores dates and booleans as
 # strings, so this case sticks to numeric/text cells).
-ob_dir <- file.path(FIXTURES_DIR, "import", "ods_basic")
-dir.create(ob_dir, showWarnings = FALSE, recursive = TRUE)
+ob_cols <- list(
+  imp_col("N", "real", c(1.5, 2.5)),
+  imp_col("I", "integer", c(3L, 4L)),
+  imp_col("T", "text", c("u", "v")))
+ob_dir <- write_import_case(
+  "ods_basic", "input.ods", NO_SETTINGS,
+  expect = list(
+    detection = imp_detection("ods", sheets = "Sheet1"),
+    columns = ob_cols,
+    coercions = no_coercions(ob_cols)))
 readODS::write_ods(
   data.frame(N = c(1.5, 2.5), I = c(3L, 4L), T = c("u", "v"),
              check.names = FALSE, stringsAsFactors = FALSE),
   file.path(ob_dir, "input.ods"))
 repack_zip(file.path(ob_dir, "input.ods"), "mimetype")
-ob_cols <- list(
-  imp_col("N", "real", c(1.5, 2.5)),
-  imp_col("I", "integer", c(3L, 4L)),
-  imp_col("T", "text", c("u", "v")))
-write_import_case("ods_basic", "input.ods", NO_SETTINGS,
-                  expect = list(
-                    detection = imp_detection("ods", sheets = "Sheet1"),
-                    columns = ob_cols,
-                    coercions = no_coercions(ob_cols)))
 
 # ods_dates needs genuine ODS date cells (office:date-value); write_ods
 # writes strings, so the file is produced by LibreOffice from an xlsx
 # with real date cells.
-od_dir <- file.path(FIXTURES_DIR, "import", "ods_dates")
-dir.create(od_dir, showWarnings = FALSE, recursive = TRUE)
+od_cols <- list(
+  imp_col("D", "date", c("2020-01-02", "2021-03-04")),
+  imp_col("N", "integer", c(1L, 2L)))
+od_dir <- write_import_case(
+  "ods_dates", "input.ods", NO_SETTINGS,
+  expect = list(
+    detection = imp_detection("ods", sheets = "Data"),
+    columns = od_cols,
+    coercions = no_coercions(od_cols)))
 src <- tempfile(fileext = ".xlsx")
 wb <- new_wb()
 wb$add_data(x = data.frame(D = as.Date(c("2020-01-02", "2021-03-04")),
                            N = c(1L, 2L), check.names = FALSE))
 wb$save(src)
 ods_out <- lo_convert(src, "ods", tempfile("odsout"))
-repack_zip(ods_out, "mimetype")
-file.copy(ods_out, file.path(od_dir, "input.ods"))
-od_cols <- list(
-  imp_col("D", "date", c("2020-01-02", "2021-03-04")),
-  imp_col("N", "integer", c(1L, 2L)))
-write_import_case("ods_dates", "input.ods", NO_SETTINGS,
-                  expect = list(
-                    detection = imp_detection("ods", sheets = "Data"),
-                    columns = od_cols,
-                    coercions = no_coercions(od_cols)))
+repack_zip(ods_out, "mimetype", normalize_ods_meta)
+stop_if(!file.copy(ods_out, file.path(od_dir, "input.ods"),
+                   overwrite = TRUE),
+        "ods_dates: copying converted input.ods failed")
