@@ -14,8 +14,14 @@ ts = ["dep:ts-rs", "epiora-core/ts"]
 fuzzing = ["dep:arbitrary", "epiora-core/fuzzing"]
 
 [dependencies]
+calamine = "0.38"
 csv = "1.4"
 encoding_rs = "0.8"
+# ODS pre-normalisation (sheet.rs `ods_bytes`): calamine's ODS row
+# reader rejects whitespace-only text between cells, so content.xml is
+# repacked without it; same pinned versions calamine itself uses.
+quick-xml = "0.42"
+zip = { version = "9", default-features = false, features = ["deflate"] }
 epiora-core = { path = "../epiora-core" }
 arbitrary = { version = "1", optional = true, features = ["derive"] }
 serde = { version = "1", features = ["derive"] }

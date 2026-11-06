@@ -17,17 +17,45 @@ const DELIMITERS: [char; 4] = [',', ';', '\t', '|'];
 
 const ZIP_MAGIC: &[u8] = b"PK\x03\x04";
 const OLE_MAGIC: &[u8] = &[0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1];
+const ODS_MIMETYPE: &[u8] = b"application/vnd.oasis.opendocument.spreadsheet";
 
-/// Container by file magic (spec §6.1.1). Zip containers are reported
-/// `Xlsx` until Task 4 distinguishes `ods` by their `mimetype` member.
+/// Container by file magic (spec §6.1.1): an ODF zip is told apart by
+/// its first member — an uncompressed `mimetype` entry whose content
+/// is the document-type string; any other zip is `Xlsx` (a zip that
+/// is neither fails later inside calamine as `spreadsheet`).
 pub(crate) fn container(bytes: &[u8]) -> Container {
     if bytes.starts_with(OLE_MAGIC) {
         Container::Xls
     } else if bytes.starts_with(ZIP_MAGIC) {
-        Container::Xlsx
+        if is_ods(bytes) {
+            Container::Ods
+        } else {
+            Container::Xlsx
+        }
     } else {
         Container::Text
     }
+}
+
+/// Whether `bytes` (already known to start with the zip local-header
+/// magic) is an ODF container: the first member's name is `mimetype`
+/// and its stored content is the ODS spreadsheet type string. Reads
+/// only the first local file header — `PK\x03\x04` sig(4) …
+/// compressed-size u32 at 18, name-len u16 at 26, extra-len u16 at 28,
+/// name at 30, then the member's stored bytes.
+fn is_ods(bytes: &[u8]) -> bool {
+    if bytes.len() < 30 {
+        return false;
+    }
+    let name_len = u16::from_le_bytes([bytes[26], bytes[27]]) as usize;
+    let extra_len = u16::from_le_bytes([bytes[28], bytes[29]]) as usize;
+    let comp_size = u32::from_le_bytes([bytes[18], bytes[19], bytes[20], bytes[21]]) as usize;
+    let name_end = 30 + name_len;
+    if bytes.get(30..name_end) != Some(b"mimetype".as_slice()) {
+        return false;
+    }
+    let data_start = name_end + extra_len;
+    bytes.get(data_start..data_start + comp_size) == Some(ODS_MIMETYPE)
 }
 
 /// Encoding by BOM, then UTF-8 validity, then Windows-1252 (spec §6.1.2).
