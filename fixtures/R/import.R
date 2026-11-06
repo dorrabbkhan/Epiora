@@ -176,7 +176,9 @@ repack_zip <- function(path, first, fn = NULL) {
   dir.create(ex)
   utils::unzip(path, exdir = ex)
   if (!is.null(fn)) fn(ex)
-  write_stored_zip(path, ex, c(first, setdiff(members, first)))
+  # sort: member order must not depend on the producer's filesystem
+  # enumeration order (differs between environments).
+  write_stored_zip(path, ex, c(first, sort(setdiff(members, first))))
   invisible(path)
 }
 
