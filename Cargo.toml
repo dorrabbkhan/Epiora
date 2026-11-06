@@ -1,9 +1,10 @@
 [workspace]
 resolver = "2"
-members = ["crates/epiora-core", "crates/epiora-wasm"]
-# crates/epiora-core/fuzz (v0.2 Task 12) uses cargo-fuzz on nightly and is
-# never part of the stable workspace.
-exclude = ["crates/epiora-core/fuzz", "spikes"]
+members = ["crates/epiora-core", "crates/epiora-import", "crates/epiora-wasm"]
+# crates/epiora-core/fuzz (v0.2 Task 12) and crates/epiora-import/fuzz
+# (v0.3 Task 3) use cargo-fuzz on nightly and are never part of the
+# stable workspace.
+exclude = ["crates/epiora-core/fuzz", "crates/epiora-import/fuzz", "spikes"]
 
 [workspace.package]
 version = "0.2.0"

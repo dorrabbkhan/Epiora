@@ -24,7 +24,11 @@ pub enum ColumnData {
 }
 
 /// The value type of a column; also the hash tag (spec §3.3).
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+/// Serialized as the corpus spellings `integer|real|text|boolean|date`
+/// (v0.3 import settings `column_types`, spec §6.2).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS))]
 pub enum ValueType {
     /// Tag 1.
     Integer,
@@ -99,6 +103,20 @@ impl ColumnData {
             Self::Boolean(_) => ValueType::Boolean,
             Self::Date(_) => ValueType::Date,
         }
+    }
+}
+
+#[cfg(feature = "fuzzing")]
+impl<'a> arbitrary::Arbitrary<'a> for ValueType {
+    fn arbitrary(u: &mut arbitrary::Unstructured<'a>) -> arbitrary::Result<Self> {
+        u.choose(&[
+            Self::Integer,
+            Self::Real,
+            Self::Text,
+            Self::Boolean,
+            Self::Date,
+        ])
+        .copied()
     }
 }
 

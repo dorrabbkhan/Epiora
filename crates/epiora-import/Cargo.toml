@@ -1,0 +1,28 @@
+[package]
+name = "epiora-import"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Epiora dataset import: text container detection, decoding, type inference and coercion"
+
+[features]
+# `ts` derives ts_rs::TS on the settings and detection types for the
+# import-wasm bindings (v0.3 spec §5.3).
+ts = ["dep:ts-rs", "epiora-core/ts"]
+# `fuzzing` derives arbitrary::Arbitrary on ImportSettings for the
+# cargo-fuzz targets under fuzz/.
+fuzzing = ["dep:arbitrary", "epiora-core/fuzzing"]
+
+[dependencies]
+csv = "1.4"
+encoding_rs = "0.8"
+epiora-core = { path = "../epiora-core" }
+arbitrary = { version = "1", optional = true, features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+sha2 = "0.11"
+thiserror = "2"
+ts-rs = { version = "12.0.1", optional = true, features = ["serde-json-impl"] }
+
+[dev-dependencies]
+epiora-core = { path = "../epiora-core", features = ["corpus"] }
+serde_json = { version = "1", features = ["float_roundtrip"] }

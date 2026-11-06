@@ -23,6 +23,9 @@ allow = [
     "Unicode-3.0",
     "Apache-2.0 WITH LLVM-exception",
     "AGPL-3.0-only",
+    # BSD-3-Clause: required by encoding_rs's "(Apache-2.0 OR MIT) AND
+    # BSD-3-Clause" (v0.3 Task 3, epiora-import).
+    "BSD-3-Clause",
 ]
 
 [sources]

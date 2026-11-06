@@ -989,3 +989,81 @@ container writers and the LibreOffice bridge, split out of
 fixtures/R/import.R to keep both files under the ~400-line global
 constraint; generated output is unchanged by the split.
 Supersedes: —
+### v0.3 Task 3 — epiora-import: text formats, detection, inference, coercion (2026-11-06)
+
+Decision: `crates/epiora-import` implements spec §6.1–§6.3 for text
+containers: container detection by file magic, encoding by BOM/UTF-8
+validity (Windows-1252 fallback), delimiter by quote-aware modal field
+consistency over the first 64 KiB of decoded text (ties `,` `;` tab
+`|`, no qualifier → `,`), decimal `comma` iff delimiter `;` plus the
+spec's two fixed-decimal patterns, `encoding_rs` decoding (UTF-8
+borrowed, one leading U+FEFF stripped, strict under an explicit
+`settings.encoding` → `encoding_invalid`), `csv` `flexible(false)`
+reading (`RaggedRow` at the record's 1-based physical line, blank
+lines skipped, `MAX_COLUMNS`/`MAX_ROWS` enforced), §6.2 inference
+(Boolean → Integer → Real → Date → Text, first fit wins) shared with
+the coercion predicates, `column_types` overrides counted in
+`coercions`, and `source_sha256`. Interpretations where the spec/plan
+leave room:
+
+- `Detection` and the returned `settings` report the *effective*
+  reading: user overrides fill `encoding`/`delimiter`/`decimal`, so a
+  saved `Imported.settings` re-imports deterministically.
+- The `.tsv` extension changes nothing observable: the plan's fallback
+  rule ("no candidate qualifies → `,`") is absolute, so `file_name` is
+  currently unused beyond the API signature.
+- An all-missing column infers `boolean` (spec §6.2's first-fit rule;
+  the owner-reviewed fixtures `missing_codes_default`/`header_only`
+  agree). The plan's test list named `all_missing_is_text` — written
+  before Task 2 settled the corpus semantics — so the test ships as
+  `all_missing_is_boolean`.
+- `""` (after ASCII trim) is always missing in addition to
+  `missing_codes`; a custom `missing_codes` list replaces the default
+  (Task 2's recorded semantics).
+- `dmy`/`mdy` require one consistent `/`, `-` or `.` separator and do
+  not also accept ISO dates; `iso` accepts only `YYYY-MM-DD`.
+- A real literal whose `f64` parse is non-finite (`1e999`) does not fit
+  Real → Text (or missing under an override), matching §6.2's
+  "inf/nan are not reals" intent and `Dataset::new`'s finite rule.
+- `settings.sheet` on a text file is `sheet_not_found`; `key:
+  {column: …}` and `column_types` keys naming an absent column are
+  `unknown_column`.
+- Zip containers are reported `xlsx` provisionally; any non-text
+  container is a `spreadsheet` error until Task 4.
+- `sha2` is `0.11` (latest at task time; `epiora-core` remains 0.10 —
+  a duplicate-version warning only, `bans ok`).
+
+Dependencies and licences (AGENTS.md rule 6): csv 1.4.0 (Unlicense OR
+MIT), csv-core 0.1.13 (MIT OR Apache-2.0), encoding_rs 0.8.44
+((Apache-2.0 OR MIT) AND BSD-3-Clause — BSD-3-Clause added to
+`deny.toml`, the only licence `cargo deny` reported), sha2 0.11.1 (MIT
+OR Apache-2.0), serde 1.0.229 + serde_json 1.0.154 (dev; MIT OR
+Apache-2.0), thiserror 2.0.21 (MIT OR Apache-2.0), ts-rs 12.0.1 (MIT),
+arbitrary 1.5.0 + derive_arbitrary 1.5.0 (MIT OR Apache-2.0),
+libfuzzer-sys 0.4.13 (MIT OR Apache-2.0; fuzz crate only, outside the
+deny-checked workspace).
+Evidence: `cargo test -p epiora-import` — 19 tests green including
+`every_text_fixture_matches` over all 25 non-spreadsheet fixtures;
+`./scripts/check.sh` full PASS; 60 s local fuzz: `cd
+crates/epiora-import/fuzz && cargo +nightly-2026-10-15 fuzz run
+text_import -- -max_total_time=60` → "Done 685581 runs in 61
+second(s)", no crash.
+Files outside the Files block:
+- crates/epiora-core/src/dataset/mod.rs — `ValueType` gained
+  `Serialize`/`Deserialize` (`snake_case`, the corpus spellings), a
+  `ts_rs::TS` derive (feature `ts`, not `ts(export)` so the wasm
+  bindings are unchanged) and an `arbitrary::Arbitrary` impl (feature
+  `fuzzing`): `ImportSettings.column_types` is
+  `BTreeMap<String, ValueType>` and must be serde+ts+fuzz-able. No
+  behaviour change.
+- Cargo.lock — workspace lock for the new member.
+- .github/workflows/engine.yml — the PR fuzz job also runs
+  `text_import` from `crates/epiora-import/fuzz` (60 s) and uploads its
+  artifacts path (conductor note for Task 3).
+- .github/workflows/fuzz-nightly.yml — new `fuzz-import` matrix job on
+  the same pinned nightly (1800 s), mirroring the existing job.
+- crates/epiora-import/fuzz/{.gitignore,rust-toolchain.toml,
+  regressions/text_import/.gitkeep,Cargo.lock} — the fuzz crate's
+  housekeeping files, mirroring `crates/epiora-core/fuzz`.
+- docs/decisions.md — this entry.
+Supersedes: —

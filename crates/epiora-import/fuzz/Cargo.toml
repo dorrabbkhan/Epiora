@@ -1,0 +1,27 @@
+[package]
+name = "epiora-import-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+license = "AGPL-3.0-only"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+
+[dependencies.epiora-import]
+path = ".."
+features = ["fuzzing"]
+
+# Use independent workspace for fuzzers
+[workspace]
+members = ["."]
+
+[[bin]]
+name = "text_import"
+path = "fuzz_targets/text_import.rs"
+test = false
+doc = false
+bench = false
