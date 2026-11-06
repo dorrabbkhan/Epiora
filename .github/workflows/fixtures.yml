@@ -45,7 +45,7 @@ jobs:
       - name: Install pinned LibreOffice (TDF 26.2.6.3, SHA-256 verified)
         run: |
           curl -fL --retry 3 -o /tmp/lo-deb.tar.gz \
-            https://download.documentfoundation.org/libreoffice/stable/26.2.6/deb/x86_64/LibreOffice_26.2.6_Linux_x86-64_deb.tar.gz
+            https://downloadarchive.documentfoundation.org/libreoffice/old/26.2.6.3/deb/x86_64/LibreOffice_26.2.6.3_Linux_x86-64_deb.tar.gz
           echo 'fd0e8f8f2408dd2e5b90286e60f3f97cf566ba441cd48cfc5bcc68067303e0bc  /tmp/lo-deb.tar.gz' \
             | sha256sum -c -
           mkdir -p "$HOME/lo/x"

@@ -938,8 +938,9 @@ sorted). After that only member contents can differ.
 LibreOffice output differs between releases and builds, so the two
 LO-produced files (xls_basic's input.xls; ods_dates' input.ods) are
 made by the pinned TDF build both locally and in CI:
-`LibreOffice_26.2.6_Linux_x86-64_deb.tar.gz`, SHA-256
-`fd0e8f8f2408dd2e5b90286e60f3f97cf566ba441cd48cfc5bcc68067303e0bc`,
+`LibreOffice_26.2.6.3_Linux_x86-64_deb.tar.gz` from the permanent
+TDF archive (`downloadarchive.documentfoundation.org/libreoffice/old/`),
+SHA-256 `fd0e8f8f2408dd2e5b90286e60f3f97cf566ba441cd48cfc5bcc68067303e0bc`,
 downloaded and hash-verified by fixtures.yml (the distro
 `libreoffice-calc-nogui` install was dropped) and extracted with
 `dpkg -x` — `soffice --version` fingerprint `LibreOffice 26.2.6.3
