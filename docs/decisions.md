@@ -1197,7 +1197,17 @@ Decision: `epiora-import` gains `keys.rs` (`record_ids`,
   change.
 - `diff` relies on `Imported`'s unique-column-name invariant (the
   header-renaming step guarantees it); the `diff_any` harness enforces
-  it when it builds arbitrary `Imported`s.
+  it when it builds arbitrary `Imported`s. The harness lives in the
+  private submodule `src/diff/fuzz.rs` so `diff.rs` stays under the
+  ~400-line file rule.
+- The apply-property checkers (the proptest's `apply_diff` and the
+  fuzzer's `check_apply`) rebuild `next`'s records map from
+  `previous`'s `record_id → record JSON` map via the diff alone:
+  `removed` ids must exist before deletion, `removed_columns` and
+  `changed` apply to the survivors (a `FieldChange` naming a
+  non-survivor fails), each `added` index's id — read from `next` —
+  must be new before its record is inserted, columns `next` still
+  lacks get nulls, and the whole map then equals `next`'s records map.
 - `Diff`/`FieldChange`/`SchemaChanges`/`TypeChange`/`DiffSummary`/
   `KeyCandidate` derive `Serialize`/`Deserialize` and `ts_rs::TS`
   (feature `ts`) for the Task 6 wasm surface; no `ts(export)` yet.
@@ -1217,7 +1227,11 @@ and the apply-property proptest; `./scripts/check.sh quick` PASS;
 true cargo +nightly-2026-10-15 fuzz run diff_any -- -max_total_time=60`
 → "Done 569856 runs in 61 second(s)", no crash. One 120 k-exec fuzz
 crash during development was the harness decoder producing duplicate
-column names, not product code — fixed in `fuzz_decode`.
+column names, not product code — fixed in `fuzz_decode`. Fix round 1
+(the split above, `record_json`'s `{}` contract, the stricter apply
+checkers): `cargo test -p epiora-import --all-features` — 45 tests
+green; `./scripts/check.sh quick` PASS; same 60 s fuzz command →
+"Done 230244 runs in 61 second(s)", no crash.
 Files outside the Files block:
 - crates/epiora-import/Cargo.toml — serde_json moved to
   `[dependencies]`, proptest added to `[dev-dependencies]` (above).
@@ -1225,6 +1239,15 @@ Files outside the Files block:
 - crates/epiora-import/fuzz/Cargo.toml — `[[bin]]` registration of the
   new `diff_any` target.
 - crates/epiora-import/fuzz/Cargo.lock — fuzz crate lock, same reason.
+- crates/epiora-import/src/diff/fuzz.rs — the `diff_any` decode/apply
+  harness, moved out of `diff.rs` to keep every file under the
+  ~400-line rule (fix round 1).
+- crates/epiora-import/tests/common/mod.rs — shared `col`/`dataset`/
+  `imported`/`key` test builders, split out of `tests/diff.rs` for the
+  same rule (fix round 1).
+- crates/epiora-import/tests/diff_property.rs — the
+  `proptest_diff_applied_to_previous_gives_next` property and its
+  strategies/apply helper, split out of `tests/diff.rs` (fix round 1).
 - .github/workflows/engine.yml — the PR fuzz job also runs `diff_any`
   (60 s), mirroring the existing target loop.
 - .github/workflows/fuzz-nightly.yml — `diff_any` added to the
