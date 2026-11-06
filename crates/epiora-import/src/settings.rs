@@ -110,7 +110,8 @@ pub struct ImportSettings {
     pub missing_codes: Vec<String>,
     /// Accepted date grammar (default `iso`; no guessing).
     pub date_format: DateFormat,
-    /// Worksheet name for spreadsheets; ignored for text.
+    /// Worksheet name for spreadsheets; on a text file any value is
+    /// `sheet_not_found`.
     pub sheet: Option<String>,
     /// Per-column type overrides; non-conforming values become missing.
     pub column_types: BTreeMap<String, ValueType>,

@@ -80,12 +80,14 @@ fn expected_dataset(case: &str, columns: &Json) -> epiora_core::dataset::Dataset
 fn every_text_fixture_matches() {
     let mut failures: Vec<String> = Vec::new();
     let mut ran = 0usize;
+    let mut skipped = 0usize;
     for dir in case_dirs() {
         let json_text = std::fs::read_to_string(dir.join("expected.json")).expect("expected.json");
         let expected: Json = serde_json::from_str(&json_text).expect("parse expected.json");
         let case = expected["case"].as_str().expect("case").to_string();
         let file = expected["file"].as_str().expect("file").to_string();
         if is_spreadsheet(&file, &expected["expect"]) {
+            skipped += 1;
             continue;
         }
         ran += 1;
@@ -166,6 +168,7 @@ fn every_text_fixture_matches() {
             }
         }
     }
+    eprintln!("text fixtures: {ran} ran, {skipped} skipped as spreadsheet");
     assert!(ran > 0, "no text fixtures found");
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
