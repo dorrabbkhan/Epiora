@@ -1,0 +1,241 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Epiora import fixture",
+  "description": "Expected import result for one fixtures/import/<case> input file, written by fixtures/R/import.R and consumed by epiora-import tests (v0.3 spec §6). Columns use the corpus dataset JSON value format (v0.2 spec §3.3).",
+  "type": "object",
+  "required": ["case", "file", "settings"],
+  "additionalProperties": false,
+  "properties": {
+    "case": {
+      "type": "string",
+      "minLength": 1
+    },
+    "file": {
+      "type": "string",
+      "minLength": 1
+    },
+    "settings": {
+      "type": "object",
+      "description": "Only the ImportSettings keys that override the defaults (v0.3 plan Task 3).",
+      "additionalProperties": false,
+      "properties": {
+        "encoding": {
+          "enum": ["utf8", "utf16le", "utf16be", "windows1252"]
+        },
+        "delimiter": {
+          "enum": [",", ";", "\t", "|"]
+        },
+        "header": {
+          "type": "boolean"
+        },
+        "decimal": {
+          "enum": ["dot", "comma"]
+        },
+        "missing_codes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "date_format": {
+          "enum": ["iso", "dmy", "mdy"]
+        },
+        "sheet": {
+          "type": "string",
+          "minLength": 1
+        },
+        "column_types": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/column_type"
+          }
+        },
+        "key": {
+          "type": ["object", "string"]
+        }
+      }
+    },
+    "expect": {
+      "type": "object",
+      "required": ["detection", "columns", "coercions"],
+      "additionalProperties": false,
+      "properties": {
+        "detection": {
+          "type": "object",
+          "required": ["container", "encoding", "delimiter", "decimal",
+                       "header_renames", "sheets"],
+          "additionalProperties": false,
+          "properties": {
+            "container": {
+              "enum": ["text", "xlsx", "xls", "ods"]
+            },
+            "encoding": {
+              "enum": ["utf8", "utf16le", "utf16be", "windows1252", null]
+            },
+            "delimiter": {
+              "enum": [",", ";", "\t", "|", null]
+            },
+            "decimal": {
+              "enum": ["dot", "comma"]
+            },
+            "header_renames": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": { "type": "string" },
+                "minItems": 2,
+                "maxItems": 2
+              }
+            },
+            "sheets": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/column"
+          }
+        },
+        "coercions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "expect_error": {
+      "type": "object",
+      "required": ["code"],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "line": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  },
+  "oneOf": [
+    { "required": ["expect"] },
+    { "required": ["expect_error"] }
+  ],
+  "definitions": {
+    "column_type": {
+      "enum": ["integer", "real", "text", "boolean", "date"]
+    },
+    "column": {
+      "type": "object",
+      "required": ["name", "type", "values"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "$ref": "#/definitions/column_type"
+        },
+        "values": {
+          "type": "array"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "integer" }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "type": "array",
+                "items": { "type": ["integer", "null"] }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "real" }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "type": "array",
+                "items": { "type": ["number", "null"] }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "text" }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "type": "array",
+                "items": { "type": ["string", "null"] }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "boolean" }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "type": "array",
+                "items": { "type": ["boolean", "null"] }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "date" }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                    },
+                    { "type": "null" }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

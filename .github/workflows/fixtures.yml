@@ -31,7 +31,7 @@ jobs:
             libharfbuzz-dev libfribidi-dev libpng-dev libtiff-dev \
             libjpeg-dev libwebp-dev libicu-dev \
             libcurl4-openssl-dev libssl-dev libxml2-dev zlib1g-dev \
-            gfortran
+            gfortran libreoffice-calc-nogui
 
       - name: Restore pinned R packages (renv)
         working-directory: fixtures
@@ -69,6 +69,16 @@ jobs:
             [ -n "$f" ] || continue
             fixtures/tools/node_modules/.bin/ajv validate \
               -s fixtures/schema/dataset.schema.json -d "$f" || fail=1
+          done
+          mapfile -d '' imports < <(find fixtures/import -mindepth 2 -maxdepth 2 -name 'expected.json' -print0 2>/dev/null)
+          if [ "${#imports[@]}" -eq 0 ]; then
+            echo "ERROR: fixtures/import has no expected.json files" >&2
+            fail=1
+          fi
+          for f in "${imports[@]:-}"; do
+            [ -n "$f" ] || continue
+            fixtures/tools/node_modules/.bin/ajv validate \
+              -s fixtures/schema/import.schema.json -d "$f" || fail=1
           done
           if [ "$fail" -ne 0 ]; then
             echo "ERROR: fixture validation failed" >&2
