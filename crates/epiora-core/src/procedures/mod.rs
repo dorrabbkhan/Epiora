@@ -9,7 +9,7 @@ pub use freq::freq;
 pub use tables::tables;
 
 use crate::dataset::{Dataset, Value};
-use crate::receipt::{Receipt, ValidationEntry};
+use crate::receipt::{ProjectStamp, Receipt, ValidationEntry};
 use crate::stats::{CategoryStats, RxcStats, StratifiedStats, TwoByTwoStats};
 use crate::validation::{statistic_ids, REGISTRY};
 use crate::EngineError;
@@ -24,6 +24,10 @@ use std::collections::BTreeMap;
 pub struct RunContext {
     /// RFC 3339 timestamp, supplied by the caller; must be non-empty.
     pub timestamp: String,
+    /// The project the run belongs to; `None` keeps receipt v1 (v0.3
+    /// spec §8.2).
+    #[serde(default)]
+    pub project: Option<ProjectStamp>,
 }
 
 /// A procedure's result plus its receipt.
@@ -225,6 +229,7 @@ fn build_receipt(
         exclusions,
         ctx.timestamp.clone(),
         crate::receipt::EngineStamp::current(),
+        ctx.project.clone(),
     )
 }
 

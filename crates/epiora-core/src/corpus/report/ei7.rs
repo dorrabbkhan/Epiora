@@ -109,6 +109,7 @@ pub(super) fn section(fixtures_dir: &Path) -> Result<String, EngineError> {
 fn actual_by_family(ds: &crate::dataset::Dataset) -> Result<BTreeMap<String, Value>, EngineError> {
     let ctx = || RunContext {
         timestamp: "2026-10-30T12:00:00Z".to_string(),
+        project: None,
     };
     let var = |name: &str| VarSpec {
         name: name.to_string(),

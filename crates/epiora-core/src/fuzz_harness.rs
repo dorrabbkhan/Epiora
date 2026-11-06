@@ -33,6 +33,7 @@ const UNKNOWN_EVERY: u8 = 10;
 fn ctx() -> RunContext {
     RunContext {
         timestamp: "fuzz".into(),
+        project: None,
     }
 }
 

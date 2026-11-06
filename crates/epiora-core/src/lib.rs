@@ -14,6 +14,7 @@ pub mod error;
 pub mod procedures;
 pub mod project;
 pub mod receipt;
+pub mod snapshot;
 pub mod special;
 pub mod stats;
 pub mod tabulate;

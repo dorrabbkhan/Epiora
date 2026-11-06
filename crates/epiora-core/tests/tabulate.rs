@@ -24,6 +24,7 @@ fn spec(name: &str) -> VarSpec {
 fn ctx() -> RunContext {
     RunContext {
         timestamp: "2026-10-30T12:00:00Z".into(),
+        project: None,
     }
 }
 

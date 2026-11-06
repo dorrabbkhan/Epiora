@@ -99,6 +99,7 @@ if [ -d crates/epiora-wasm/tests/node ]; then
         if (receipt.dataset.id === "oswego") { console.log(receipt.dataset.sha256); break; }
       }
     }')" \
+  NATIVE_OSWEGO_SNAPSHOT_HEX="$(cargo run -p epiora-core --features corpus --bin corpus-runner -- --snapshot-hex oswego fixtures)" \
     node --test "crates/epiora-wasm/tests/node/"*.test.mjs
 else echo "skipped (arrives in v0.2 Task 10)"; fi
 

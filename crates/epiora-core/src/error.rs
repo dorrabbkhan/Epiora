@@ -30,6 +30,9 @@ pub enum EngineError {
     /// A fixture does not follow the corpus format (spec §6.2).
     #[error("corpus format: {reason}")]
     CorpusFormat { reason: String },
+    /// Snapshot bytes are malformed or non-canonical (v0.3 spec §5.1).
+    #[error("snapshot decode: {reason}")]
+    SnapshotDecode { reason: String },
 }
 
 impl EngineError {
@@ -43,6 +46,7 @@ impl EngineError {
             Self::TypeMismatch { .. } => "type_mismatch",
             Self::InvalidOptions { .. } => "invalid_options",
             Self::CorpusFormat { .. } => "corpus_format",
+            Self::SnapshotDecode { .. } => "snapshot_decode",
         }
     }
 }
