@@ -939,9 +939,12 @@ the sheet XML (openxlsx2 writes neither). `ods_dates` goes through
 LibreOffice because `write_ods` stores dates and booleans as strings;
 `ods_basic` uses `write_ods` directly.
 
-Versions: R 4.6.2; openxlsx2 1.30, readODS 2.3.6, minty 0.0.6 (readODS
-dependency) — all CRAN, pinned in fixtures/renv.lock; LibreOffice
-26.2.6.3 locally, `libreoffice-calc-nogui` in CI.
+Versions and licences (AGENTS.md rule 6): R 4.6.2; openxlsx2 1.30
+(MIT), readODS 2.3.6 (GPL-3, fixture-generation only — never linked
+into product code), minty 0.0.6 (MIT, readODS dependency) — all CRAN,
+pinned in fixtures/renv.lock; zip 3.0.2 (MIT, already pinned) rezips
+patched xlsx files; LibreOffice 26.2.6.3 locally,
+`libreoffice-calc-nogui` (MPL-2.0) in CI.
 Evidence: fixtures/import/ (35 cases), `Rscript fixtures/generate.R`
 run twice — `git status --porcelain fixtures/` empty after the second
 run.
