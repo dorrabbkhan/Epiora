@@ -28,6 +28,10 @@ pub(crate) fn cell_value(data: &ColumnData, row: usize) -> Option<Value> {
 /// `Value` encoding or `null`, keys sorted by UTF-8 bytes. A row index
 /// past the end serialises as `{}`.
 pub fn record_json(columns: &[Column], row: usize) -> String {
+    let rows = columns.first().map(|c| c.data.len()).unwrap_or(0);
+    if row >= rows {
+        return "{}".to_string();
+    }
     let mut map = serde_json::Map::with_capacity(columns.len());
     for c in columns {
         let cell = match cell_value(&c.data, row) {

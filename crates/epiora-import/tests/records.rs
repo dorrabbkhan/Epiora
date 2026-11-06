@@ -56,6 +56,13 @@ fn record_json_is_canonical() {
 }
 
 #[test]
+fn record_json_out_of_range_is_empty_object() {
+    let columns = golden_columns();
+    assert_eq!(record_json(&columns, 3), "{}");
+    assert_eq!(record_json(&columns, usize::MAX), "{}");
+}
+
+#[test]
 fn dataset_from_records_roundtrips_hash() {
     let columns = golden_columns();
     let original = Dataset::new("golden", 7, columns.clone()).expect("golden dataset");
