@@ -1,0 +1,31 @@
+{
+  "case": "tab_delimited",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": "\t",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "A",
+        "type": "integer",
+        "values": [1, 2]
+      },
+      {
+        "name": "B",
+        "type": "text",
+        "values": ["x", "y"]
+      }
+    ],
+    "coercions": {
+      "A": 0,
+      "B": 0
+    }
+  }
+}

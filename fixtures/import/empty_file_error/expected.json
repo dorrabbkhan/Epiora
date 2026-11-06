@@ -1,0 +1,8 @@
+{
+  "case": "empty_file_error",
+  "file": "input.csv",
+  "settings": {},
+  "expect_error": {
+    "code": "empty_file"
+  }
+}

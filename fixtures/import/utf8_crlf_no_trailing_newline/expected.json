@@ -1,0 +1,31 @@
+{
+  "case": "utf8_crlf_no_trailing_newline",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "AGE",
+        "type": "integer",
+        "values": [20, null]
+      },
+      {
+        "name": "NAME",
+        "type": "text",
+        "values": ["alice", "bob"]
+      }
+    ],
+    "coercions": {
+      "AGE": 0,
+      "NAME": 0
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "case": "xlsx_basic",
+  "file": "input.xlsx",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "xlsx",
+      "encoding": null,
+      "delimiter": null,
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": ["Data"]
+    },
+    "columns": [
+      {
+        "name": "R",
+        "type": "real",
+        "values": [1.5, 2.25, 0.5]
+      },
+      {
+        "name": "I",
+        "type": "integer",
+        "values": [1, 2, 3]
+      },
+      {
+        "name": "T",
+        "type": "text",
+        "values": ["a", "b", null]
+      },
+      {
+        "name": "B",
+        "type": "boolean",
+        "values": [true, false, true]
+      },
+      {
+        "name": "D",
+        "type": "date",
+        "values": ["2020-01-02", "2021-03-04", "2022-05-06"]
+      }
+    ],
+    "coercions": {
+      "R": 0,
+      "I": 0,
+      "T": 0,
+      "B": 0,
+      "D": 0
+    }
+  }
+}

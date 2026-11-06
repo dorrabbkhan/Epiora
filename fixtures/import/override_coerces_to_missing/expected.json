@@ -1,0 +1,29 @@
+{
+  "case": "override_coerces_to_missing",
+  "file": "input.csv",
+  "settings": {
+    "column_types": {
+      "AGE": "integer"
+    }
+  },
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "AGE",
+        "type": "integer",
+        "values": [20, null, 31]
+      }
+    ],
+    "coercions": {
+      "AGE": 1
+    }
+  }
+}

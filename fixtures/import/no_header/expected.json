@@ -1,0 +1,33 @@
+{
+  "case": "no_header",
+  "file": "input.csv",
+  "settings": {
+    "header": false
+  },
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "column_1",
+        "type": "integer",
+        "values": [1, 2]
+      },
+      {
+        "name": "column_2",
+        "type": "text",
+        "values": ["a", "b"]
+      }
+    ],
+    "coercions": {
+      "column_1": 0,
+      "column_2": 0
+    }
+  }
+}

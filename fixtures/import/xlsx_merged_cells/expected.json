@@ -1,0 +1,31 @@
+{
+  "case": "xlsx_merged_cells",
+  "file": "input.xlsx",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "xlsx",
+      "encoding": null,
+      "delimiter": null,
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": ["Data"]
+    },
+    "columns": [
+      {
+        "name": "NAME",
+        "type": "text",
+        "values": ["a", "b"]
+      },
+      {
+        "name": "NOTE",
+        "type": "text",
+        "values": ["shared", null]
+      }
+    ],
+    "coercions": {
+      "NAME": 0,
+      "NOTE": 0
+    }
+  }
+}

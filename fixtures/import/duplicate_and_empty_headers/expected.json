@@ -1,0 +1,47 @@
+{
+  "case": "duplicate_and_empty_headers",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [
+        ["x", "x_2"],
+        ["", "column_3"],
+        ["x", "x_3"]
+      ],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "x",
+        "type": "integer",
+        "values": [1]
+      },
+      {
+        "name": "x_2",
+        "type": "integer",
+        "values": [2]
+      },
+      {
+        "name": "column_3",
+        "type": "integer",
+        "values": [3]
+      },
+      {
+        "name": "x_3",
+        "type": "integer",
+        "values": [4]
+      }
+    ],
+    "coercions": {
+      "x": 0,
+      "x_2": 0,
+      "column_3": 0,
+      "x_3": 0
+    }
+  }
+}

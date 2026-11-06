@@ -1,0 +1,37 @@
+{
+  "case": "missing_codes_default",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "VAL",
+        "type": "integer",
+        "values": [5, null, null, null, 7]
+      },
+      {
+        "name": "TAG",
+        "type": "text",
+        "values": ["a", "b", "c", "d", "e"]
+      },
+      {
+        "name": "ALLMISS",
+        "type": "boolean",
+        "values": [null, null, null, null, null]
+      }
+    ],
+    "coercions": {
+      "VAL": 0,
+      "TAG": 0,
+      "ALLMISS": 0
+    }
+  }
+}

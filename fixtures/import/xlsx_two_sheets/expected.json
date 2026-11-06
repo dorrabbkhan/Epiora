@@ -1,0 +1,33 @@
+{
+  "case": "xlsx_two_sheets",
+  "file": "input.xlsx",
+  "settings": {
+    "sheet": "Second"
+  },
+  "expect": {
+    "detection": {
+      "container": "xlsx",
+      "encoding": null,
+      "delimiter": null,
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": ["First", "Second"]
+    },
+    "columns": [
+      {
+        "name": "A",
+        "type": "integer",
+        "values": [1, 2]
+      },
+      {
+        "name": "B",
+        "type": "text",
+        "values": ["p", "q"]
+      }
+    ],
+    "coercions": {
+      "A": 0,
+      "B": 0
+    }
+  }
+}

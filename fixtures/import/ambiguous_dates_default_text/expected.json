@@ -1,0 +1,25 @@
+{
+  "case": "ambiguous_dates_default_text",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "D",
+        "type": "text",
+        "values": ["03/04/2026", "15/06/2020"]
+      }
+    ],
+    "coercions": {
+      "D": 0
+    }
+  }
+}

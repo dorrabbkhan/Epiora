@@ -1,0 +1,37 @@
+{
+  "case": "booleans",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "TF",
+        "type": "boolean",
+        "values": [true, false]
+      },
+      {
+        "name": "TFU",
+        "type": "boolean",
+        "values": [true, false]
+      },
+      {
+        "name": "YN",
+        "type": "boolean",
+        "values": [true, false]
+      }
+    ],
+    "coercions": {
+      "TF": 0,
+      "TFU": 0,
+      "YN": 0
+    }
+  }
+}

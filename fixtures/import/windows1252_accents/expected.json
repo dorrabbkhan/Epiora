@@ -1,0 +1,25 @@
+{
+  "case": "windows1252_accents",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "windows1252",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "NAME",
+        "type": "text",
+        "values": ["café", "grün", "€5", "it’s"]
+      }
+    ],
+    "coercions": {
+      "NAME": 0
+    }
+  }
+}

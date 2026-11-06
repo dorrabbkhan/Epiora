@@ -1,0 +1,37 @@
+{
+  "case": "xlsx_formula_cached",
+  "file": "input.xlsx",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "xlsx",
+      "encoding": null,
+      "delimiter": null,
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": ["Data"]
+    },
+    "columns": [
+      {
+        "name": "A",
+        "type": "integer",
+        "values": [1, 2]
+      },
+      {
+        "name": "B",
+        "type": "integer",
+        "values": [3, 4]
+      },
+      {
+        "name": "C",
+        "type": "integer",
+        "values": [4, 6]
+      }
+    ],
+    "coercions": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "case": "ragged_row_error",
+  "file": "input.csv",
+  "settings": {},
+  "expect_error": {
+    "code": "ragged_row",
+    "line": 4
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "case": "i64_overflow_is_real",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "BIG",
+        "type": "real",
+        "values": [5, 9.2233720368547758e+18]
+      }
+    ],
+    "coercions": {
+      "BIG": 0
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "case": "semicolon_decimal_comma",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ";",
+      "decimal": "comma",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "N",
+        "type": "integer",
+        "values": [7, 8]
+      },
+      {
+        "name": "X",
+        "type": "real",
+        "values": [1.5, 3.75]
+      },
+      {
+        "name": "Y",
+        "type": "real",
+        "values": [2.25, 0.5]
+      }
+    ],
+    "coercions": {
+      "N": 0,
+      "X": 0,
+      "Y": 0
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "case": "zero_one_is_integer",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "Z",
+        "type": "integer",
+        "values": [0, 1, 1, 0]
+      }
+    ],
+    "coercions": {
+      "Z": 0
+    }
+  }
+}
