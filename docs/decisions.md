@@ -1102,7 +1102,14 @@ leave room:
   text between cells, which readODS's pretty-printed `content.xml`
   carries, so ODS input is repacked (`ods_bytes`) with whitespace-only
   text dropped at row/cell depth before calamine sees it. The repack
-  feeds calamine only; `source_sha256` covers the raw input bytes.
+  streams: members other than `content.xml` are copied compressed via
+  `ZipWriter::raw_copy_file` (bytes and method preserved, so `mimetype`
+  stays first and stored), and `content.xml` is read with
+  `quick_xml::Reader::from_reader` + `read_event_into` and written
+  event by event into a Deflated entry — no member is decompressed
+  into a whole-file buffer, so a highly compressible archive cannot
+  OOM the process (review fix, PR #39). The repack feeds calamine
+  only; `source_sha256` covers the raw input bytes.
 - `Detection` for sheets reports `encoding`/`delimiter` `None`,
   `decimal` `dot` (or an override, which still applies to string
   cells), `sheets` in workbook order; the effective `settings` record

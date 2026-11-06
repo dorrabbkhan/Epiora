@@ -166,3 +166,77 @@ fn every_spreadsheet_fixture_matches() {
     assert!(ran > 0, "no spreadsheet fixtures found");
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
+
+/// The ODS mimetype string, stored first and uncompressed per ODF.
+const ODS_MIMETYPE: &[u8] = b"application/vnd.oasis.opendocument.spreadsheet";
+
+/// A minimal manifest calamine accepts (no `manifest:encryption-data`).
+const ODS_MANIFEST: &[u8] = b"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+<manifest:manifest xmlns:manifest=\"urn:oasis:names:tc:opendocument:xmlns:manifest:1.0\">\
+<manifest:file-entry manifest:full-path=\"/\" manifest:media-type=\"application/vnd.oasis.opendocument.spreadsheet\"/>\
+<manifest:file-entry manifest:full-path=\"content.xml\" manifest:media-type=\"text/xml\"/>\
+</manifest:manifest>";
+
+/// Wraps `content` (a `content.xml`) in a minimal ODS zip.
+fn ods_zip(content: &[u8]) -> Vec<u8> {
+    use std::io::{Cursor, Write};
+    let mut ods = Vec::new();
+    {
+        let mut zw = zip::ZipWriter::new(Cursor::new(&mut ods));
+        let stored = zip::write::SimpleFileOptions::default()
+            .compression_method(zip::CompressionMethod::Stored);
+        zw.start_file("mimetype", stored).unwrap();
+        zw.write_all(ODS_MIMETYPE).unwrap();
+        let deflated = zip::write::SimpleFileOptions::default()
+            .compression_method(zip::CompressionMethod::Deflated);
+        zw.start_file("META-INF/manifest.xml", deflated).unwrap();
+        zw.write_all(ODS_MANIFEST).unwrap();
+        zw.start_file("content.xml", deflated).unwrap();
+        zw.write_all(content).unwrap();
+        zw.finish().unwrap();
+    }
+    ods
+}
+
+/// A 2×2 sheet (header `A`,`B`; one data row `1`,`2`) whose
+/// `content.xml` carries `whitespace` bytes of whitespace between the
+/// header-row cells — a direct child of `table:table-row`, so the ODS
+/// repack drops it before calamine parses.
+fn ods_content(whitespace: usize) -> Vec<u8> {
+    let mut content = Vec::with_capacity(whitespace + 2048);
+    content.extend_from_slice(
+        b"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" \
+xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\" \
+xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" office:version=\"1.2\">\
+<office:body><office:spreadsheet><table:table table:name=\"Sheet1\">\
+<table:table-row>\
+<table:table-cell office:value-type=\"string\"><text:p>A</text:p></table:table-cell>",
+    );
+    content.resize(content.len() + whitespace, b' ');
+    content.extend_from_slice(
+        b"<table:table-cell office:value-type=\"string\"><text:p>B</text:p></table:table-cell>\
+</table:table-row>\
+<table:table-row>\
+<table:table-cell office:value-type=\"float\" office:value=\"1\"><text:p>1</text:p></table:table-cell>\
+<table:table-cell office:value-type=\"float\" office:value=\"2\"><text:p>2</text:p></table:table-cell>\
+</table:table-row>\
+</table:table></office:spreadsheet></office:body></office:document-content>",
+    );
+    content
+}
+
+/// The ODS repack streams `content.xml` instead of buffering members: a
+/// `content.xml` holding ≥ 64 MiB of whitespace between the cells of a
+/// 2×2 sheet still imports to the expected columns and values.
+#[test]
+fn ods_large_whitespace_is_streamed() {
+    let ods = ods_zip(&ods_content(65 * 1024 * 1024));
+    let imported = import(&ods, "large.ods", &ImportSettings::default())
+        .expect("large-whitespace ODS imports");
+    assert_eq!(imported.columns.len(), 2);
+    assert_eq!(imported.columns[0].name, "A");
+    assert_eq!(imported.columns[0].data, ColumnData::Integer(vec![Some(1)]));
+    assert_eq!(imported.columns[1].name, "B");
+    assert_eq!(imported.columns[1].data, ColumnData::Integer(vec![Some(2)]));
+}

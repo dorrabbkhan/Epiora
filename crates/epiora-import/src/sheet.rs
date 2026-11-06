@@ -12,7 +12,7 @@ use crate::settings::{Container, ImportSettings};
 use crate::table::{self, Table};
 use crate::{MAX_COLUMNS, MAX_ROWS};
 use calamine::{Data, Ods, Range, Reader, Xls, Xlsx};
-use std::io::{Cursor, Read, Seek, Write};
+use std::io::{BufReader, Cursor, Read, Seek, Write};
 
 /// A sheet's raw table plus the workbook audit trail.
 pub(crate) struct SheetTable {
@@ -188,41 +188,48 @@ fn float_text(f: f64) -> Cell {
 /// [`strip_row_cell_whitespace`]. calamine's ODS `read_row` rejects
 /// anything but cell elements inside a `table:table-row`, so the
 /// pretty-printed XML that readODS (and hand-edited files) write
-/// between cells must be normalized before it is parsed. The repack
-/// feeds calamine only; `source_sha256` still covers the raw input.
+/// between cells must be normalized before it is parsed. Members other
+/// than `content.xml` are copied compressed (their bytes and method are
+/// preserved, so `mimetype` stays first and stored); `content.xml` is
+/// streamed event by event into its new entry, so peak memory scales
+/// with the compressed archive rather than the decompressed document.
+/// The repack feeds calamine only; `source_sha256` still covers the raw
+/// input.
 fn ods_bytes(bytes: &[u8]) -> Result<Vec<u8>, ImportError> {
     let mut archive = zip::ZipArchive::new(Cursor::new(bytes)).map_err(spreadsheet)?;
     let mut out = Vec::with_capacity(bytes.len());
     let mut writer = zip::ZipWriter::new(Cursor::new(&mut out));
     for i in 0..archive.len() {
-        let mut file = archive.by_index(i).map_err(spreadsheet)?;
+        let file = archive.by_index(i).map_err(spreadsheet)?;
         let name = file.name().map_err(spreadsheet)?.into_owned();
-        let options =
-            zip::write::SimpleFileOptions::default().compression_method(file.compression());
-        let mut data = Vec::new();
-        file.read_to_end(&mut data).map_err(spreadsheet)?;
         if name == "content.xml" {
-            data = strip_row_cell_whitespace(&data)?;
+            let options = zip::write::SimpleFileOptions::default()
+                .compression_method(zip::CompressionMethod::Deflated);
+            writer.start_file(name, options).map_err(spreadsheet)?;
+            strip_row_cell_whitespace(file, &mut writer)?;
+        } else {
+            writer.raw_copy_file(file).map_err(spreadsheet)?;
         }
-        writer.start_file(name, options).map_err(spreadsheet)?;
-        writer.write_all(&data).map_err(spreadsheet)?;
     }
     writer.finish().map_err(spreadsheet)?;
     Ok(out)
 }
 
-/// Copies `xml`, dropping text that is all ASCII whitespace while it is
-/// a direct child of `table:table-row`, `table:table-cell` or
-/// `table:covered-table-cell`. Whitespace inside `text:p` (and every
-/// deeper element) is cell content and is preserved.
-fn strip_row_cell_whitespace(xml: &[u8]) -> Result<Vec<u8>, ImportError> {
+/// Streams `input` (the decompressed `content.xml` member) to `output`
+/// (its replacement zip entry), dropping text that is all ASCII
+/// whitespace while it is a direct child of `table:table-row`,
+/// `table:table-cell` or `table:covered-table-cell`. Whitespace inside
+/// `text:p` (and every deeper element) is cell content and is
+/// preserved.
+fn strip_row_cell_whitespace<R: Read, W: Write>(input: R, output: W) -> Result<(), ImportError> {
     use quick_xml::events::Event;
-    let mut reader = quick_xml::Reader::from_reader(xml);
-    let mut writer = quick_xml::Writer::new(Vec::with_capacity(xml.len()));
+    let mut reader = quick_xml::Reader::from_reader(BufReader::new(input));
+    let mut writer = quick_xml::Writer::new(output);
     // `true` where the open element is a row or cell element.
     let mut stack: Vec<bool> = Vec::new();
+    let mut buf = Vec::new();
     loop {
-        match reader.read_event().map_err(spreadsheet)? {
+        match reader.read_event_into(&mut buf).map_err(spreadsheet)? {
             Event::Start(e) => {
                 stack.push(matches!(
                     e.name().as_ref(),
@@ -239,8 +246,9 @@ fn strip_row_cell_whitespace(xml: &[u8]) -> Result<Vec<u8>, ImportError> {
             Event::Eof => break,
             e => writer.write_event(e).map_err(spreadsheet)?,
         }
+        buf.clear();
     }
-    Ok(writer.into_inner())
+    Ok(())
 }
 
 /// Any calamine reader failure is a `spreadsheet` error.
