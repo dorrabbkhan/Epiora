@@ -25,10 +25,11 @@ zip = { version = "9", default-features = false, features = ["deflate"] }
 epiora-core = { path = "../epiora-core" }
 arbitrary = { version = "1", optional = true, features = ["derive"] }
 serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["float_roundtrip"] }
 sha2 = "0.11"
 thiserror = "2"
 ts-rs = { version = "12.0.1", optional = true, features = ["serde-json-impl"] }
 
 [dev-dependencies]
 epiora-core = { path = "../epiora-core", features = ["corpus"] }
-serde_json = { version = "1", features = ["float_roundtrip"] }
+proptest = "1"

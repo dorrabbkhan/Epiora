@@ -1160,3 +1160,74 @@ Files outside the Files block:
   `fuzz-import` matrix (1800 s), per the conductor's Task 4 note.
 - docs/decisions.md — this entry.
 Supersedes: —
+### v0.3 Task 5 — record keys, record JSON and re-import diff (2026-11-07)
+
+Decision: `epiora-import` gains `keys.rs` (`record_ids`,
+`key_candidates`, `KeyCandidate`), `records.rs` (`record_json`,
+`dataset_from_records`) and `diff.rs` (`diff`, `summarize`, `Diff`,
+`FieldChange`, `SchemaChanges`, `TypeChange`, `DiffSummary`) per spec
+§4.2/§4.4/§6.4. Interpretations where the spec/plan leave room:
+
+- `record_json` emits `serde_json::Map` output — key order is UTF-8
+  byte order — and `-0.0` is normalised to `0.0` (same rule as the
+  snapshot codec), so stored JSON and rebuilt datasets hash alike.
+  A row index past the end serialises as `{}` (no input may panic).
+- `record_ids` on `RecordKey::Column` names an absent column →
+  `unknown_column`; a missing cell → `missing_key` and a repeated id →
+  `duplicate_key`, both with 1-based data lines as the plan's
+  `first_line`/`line`. `RowPosition` renders `row:<1-based>`.
+- `key_candidates` still counts `duplicates`/`missing` over rendered
+  ids for `Real`/`Boolean` columns; `usable` additionally requires a
+  keyable type and zero counts.
+- `dataset_from_records` treats a field absent from a row's JSON as
+  missing (schema additions rebuild over old rows); a value whose
+  variant does not match the schema type — or any malformed row — is
+  `invalid_settings` (the closest existing code; no dedicated variant
+  exists) naming the 1-based record. Matching is strict: no
+  integer→real widening.
+- `diff` emits `FieldChange`s for shared columns whose `Value`s differ
+  (variant-aware, so a type-changed column reports its populated rows
+  even when the rendered value looks the same — the stored JSON must be
+  rewritten, spec §4.2 `update` entries) and for added columns' non-
+  missing cells (`old: None`); removed columns are reported once in
+  `schema.removed_columns` instead of per row. `FieldChange.row` is the
+  row index in `next`; `added` indices and `changed` order follow
+  `next`'s row order, `removed` ids `previous`'s. `unchanged` is the
+  records-model notion — re-ordered rows under a key column are not a
+  change.
+- `diff` relies on `Imported`'s unique-column-name invariant (the
+  header-renaming step guarantees it); the `diff_any` harness enforces
+  it when it builds arbitrary `Imported`s.
+- `Diff`/`FieldChange`/`SchemaChanges`/`TypeChange`/`DiffSummary`/
+  `KeyCandidate` derive `Serialize`/`Deserialize` and `ts_rs::TS`
+  (feature `ts`) for the Task 6 wasm surface; no `ts(export)` yet.
+
+Dependencies and licences (AGENTS.md rule 6): serde_json 1.0.154 moved
+from dev-dependency to dependency (MIT OR Apache-2.0; already in the
+tree via epiora-core — needed by `record_json`/`dataset_from_records`
+in `src/`; `float_roundtrip` keeps f64 reads correctly rounded);
+proptest 1.12.0 added as dev-dependency for
+`proptest_diff_applied_to_previous_gives_next` (MIT OR Apache-2.0;
+already in the tree via epiora-core's tests; plan Tech Stack lists
+`proptest`). No new transitive crates.
+Evidence: `cargo test -p epiora-import --all-features` — 44 tests green
+including `reimport_with_new_duplicate_key_is_refused` (Review Focus 1)
+and the apply-property proptest; `./scripts/check.sh quick` PASS;
+60 s local fuzz: `cd crates/epiora-import/fuzz && CARGO_NET_OFFLINE=
+true cargo +nightly-2026-10-15 fuzz run diff_any -- -max_total_time=60`
+→ "Done 569856 runs in 61 second(s)", no crash. One 120 k-exec fuzz
+crash during development was the harness decoder producing duplicate
+column names, not product code — fixed in `fuzz_decode`.
+Files outside the Files block:
+- crates/epiora-import/Cargo.toml — serde_json moved to
+  `[dependencies]`, proptest added to `[dev-dependencies]` (above).
+- Cargo.lock — workspace lock for the two dependency changes.
+- crates/epiora-import/fuzz/Cargo.toml — `[[bin]]` registration of the
+  new `diff_any` target.
+- crates/epiora-import/fuzz/Cargo.lock — fuzz crate lock, same reason.
+- .github/workflows/engine.yml — the PR fuzz job also runs `diff_any`
+  (60 s), mirroring the existing target loop.
+- .github/workflows/fuzz-nightly.yml — `diff_any` added to the
+  `fuzz-import` matrix (1800 s).
+- docs/decisions.md — this entry.
+Supersedes: —
