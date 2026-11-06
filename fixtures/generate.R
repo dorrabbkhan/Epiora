@@ -25,6 +25,6 @@ FIXTURES_DIR <- script_dir
 library(epitools)
 
 for (f in c("common.R", "nchyper.R", "data.R", "special.R",
-            "twobytwo.R", "stratified.R", "rxc.R", "freq.R")) {
+            "twobytwo.R", "stratified.R", "rxc.R", "freq.R", "import.R")) {
   source(file.path(FIXTURES_DIR, "R", f))
 }

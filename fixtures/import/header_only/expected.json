@@ -1,0 +1,31 @@
+{
+  "case": "header_only",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "A",
+        "type": "boolean",
+        "values": []
+      },
+      {
+        "name": "B",
+        "type": "boolean",
+        "values": []
+      }
+    ],
+    "coercions": {
+      "A": 0,
+      "B": 0
+    }
+  }
+}

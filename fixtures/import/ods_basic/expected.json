@@ -1,0 +1,37 @@
+{
+  "case": "ods_basic",
+  "file": "input.ods",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "ods",
+      "encoding": null,
+      "delimiter": null,
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": ["Sheet1"]
+    },
+    "columns": [
+      {
+        "name": "N",
+        "type": "real",
+        "values": [1.5, 2.5]
+      },
+      {
+        "name": "I",
+        "type": "integer",
+        "values": [3, 4]
+      },
+      {
+        "name": "T",
+        "type": "text",
+        "values": ["u", "v"]
+      }
+    ],
+    "coercions": {
+      "N": 0,
+      "I": 0,
+      "T": 0
+    }
+  }
+}

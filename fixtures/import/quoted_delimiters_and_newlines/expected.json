@@ -1,0 +1,31 @@
+{
+  "case": "quoted_delimiters_and_newlines",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "NAME",
+        "type": "text",
+        "values": ["a,b", "c"]
+      },
+      {
+        "name": "NOTE",
+        "type": "text",
+        "values": ["line1\nline2", "plain"]
+      }
+    ],
+    "coercions": {
+      "NAME": 0,
+      "NOTE": 0
+    }
+  }
+}

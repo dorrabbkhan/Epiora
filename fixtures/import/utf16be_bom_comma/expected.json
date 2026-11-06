@@ -1,0 +1,31 @@
+{
+  "case": "utf16be_bom_comma",
+  "file": "input.csv",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf16be",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "A",
+        "type": "integer",
+        "values": [1, 2]
+      },
+      {
+        "name": "B",
+        "type": "text",
+        "values": ["x", "y"]
+      }
+    ],
+    "coercions": {
+      "A": 0,
+      "B": 0
+    }
+  }
+}

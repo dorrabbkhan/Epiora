@@ -905,3 +905,87 @@ Files outside the Files block:
   that flag into the node binding test step.
 - docs/decisions.md — this entry.
 Supersedes: —
+### v0.3 Task 2 — import fixture corpus (2026-11-06)
+
+Decision: `fixtures/R/import.R` generates the 35-case import corpus of
+v0.3 spec §6.5 under `fixtures/import/<case>/` (input file plus
+`expected.json` per `fixtures/schema/import.schema.json`); `generate.R`
+sources it last. Case semantics follow spec §6.1–6.2 literally:
+
+- `missing_codes` replaces the whole default list: with `["-99"]`, "NA"
+  and "." stay literal values (only "" and "-99" are missing).
+- A column with zero non-missing values (header_only, ALLMISS in
+  missing_codes_default) fits every candidate, so the first candidate
+  wins: `boolean`.
+- Duplicate/empty header renames are positional-occurrence:
+  `x,x,,x` -> `x`, `x_2`, `column_3`, `x_3`.
+- In xlsx fixtures a missing cell is a genuinely empty cell
+  (openxlsx2's NA -> t="e" #N/A is patched out); the real error cell is
+  reserved for xlsx_cell_error, which counts it in coercions.
+- `coercions` names every column, including zeros.
+
+Byte-stability (plan Step 2): openxlsx2 is called with
+`creator = "epiora"` (otherwise the local username leaks into
+`dc:creator`/`lastModifiedBy`) and `datetime_created = 2026-01-01
+UTC`. Every xlsx/ods container is rebuilt by `repack_zip()` —
+unzip, patch if needed, rewrite through `write_stored_zip()`:
+every member stored uncompressed (deflate implementations could
+differ between machines), no extra fields, DOS time/date fixed at
+2026-01-01 00:00, UTF-8-name flag, mode-0644 attributes, canonical
+member order (`[Content_Types].xml`/`mimetype` first, the rest
+sorted). After that only member contents can differ.
+
+LibreOffice output differs between releases and builds, so the two
+LO-produced files (xls_basic's input.xls; ods_dates' input.ods) are
+made by the pinned TDF build both locally and in CI:
+`LibreOffice_26.2.6.3_Linux_x86-64_deb.tar.gz` from the permanent
+TDF archive (`downloadarchive.documentfoundation.org/libreoffice/old/`),
+SHA-256 `fd0e8f8f2408dd2e5b90286e60f3f97cf566ba441cd48cfc5bcc68067303e0bc`,
+downloaded and hash-verified by fixtures.yml (the distro
+`libreoffice-calc-nogui` install was dropped) and extracted with
+`dpkg -x` — `soffice --version` fingerprint `LibreOffice 26.2.6.3
+8221e31b3ac356a1623c672912a3d2b492f7e3d1`, checked by `lo_soffice()`
+against `EPIORA_SOFFICE` so no other build can generate. Conversions
+run under `SOURCE_DATE_EPOCH=0` and `TZ=UTC` (doc metadata and OLE
+timestamps otherwise follow wall clock and local timezone), a
+private UserInstallation profile seeded with `givenname = "epiora"`
+(the OS username otherwise lands in dc:creator /
+meta:initial-creator and in the .xls Author and WriteAccess
+records), `env -u LD_LIBRARY_PATH` (the LD_LIBRARY_PATH R exports
+for its own libs makes soffice.bin fail to find libreglo.so), and a
+`FONTCONFIG_FILE` confined to the build's bundled fonts (document
+font tables, default column widths and the rendered thumbnail
+otherwise follow the host's installed fonts — verified to change
+content.xml/styles.xml between hosts). For the LO-produced ods,
+`normalize_ods_meta()` rewrites meta.xml generator/creators/dates to
+fixed values so the file carries no build or user identity.
+`xlsx_1904_dates` writes serials via openxlsx2's 1904-epoch
+converter and patches `workbookPr date1904="1"` into workbook.xml.
+`xlsx_formula_cached` and `xlsx_cell_error` patch cached `<v>`
+results / a t="e" #N/A cell into the sheet XML (openxlsx2 writes
+neither). `ods_dates` goes through LibreOffice because `write_ods`
+stores dates and booleans as strings; `ods_basic` uses `write_ods`
+directly. Every case directory is unlinked before the case is
+written and each `file.copy` is asserted with `overwrite = TRUE`, so
+a stale artifact can never survive regeneration (the previous
+version copied without `overwrite`, leaving pre-repack LO output
+committed).
+
+Versions and licences (AGENTS.md rule 6): R 4.6.2; openxlsx2 1.30
+(MIT), readODS 2.3.6 (GPL-3, fixture-generation only — never linked
+into product code), minty 0.0.6 (MIT, readODS dependency) — all CRAN,
+pinned in fixtures/renv.lock; LibreOffice 26.2.6.3 TDF build locally
+and in CI (MPL-2.0, per the `LICENSE` file in the downloaded
+tarball).
+Evidence: fixtures/import/ (35 cases) regenerated from
+`rm -rf fixtures/import`; `Rscript fixtures/generate.R` run twice —
+`git status --porcelain fixtures/` showed no regeneration drift
+after the second run; the committed input.xls and every
+ods_dates/input.ods member verified byte-identical against a
+conversion of the same inputs inside a minimal ubuntu:24.04
+container (different user, timezone and font environment).
+Files outside the Files block: fixtures/R/import_zip.R — the zip
+container writers and the LibreOffice bridge, split out of
+fixtures/R/import.R to keep both files under the ~400-line global
+constraint; generated output is unchanged by the split.
+Supersedes: —

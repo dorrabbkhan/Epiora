@@ -1,0 +1,27 @@
+{
+  "case": "dmy_dates",
+  "file": "input.csv",
+  "settings": {
+    "date_format": "dmy"
+  },
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "D",
+        "type": "date",
+        "values": ["2026-04-03", "2020-06-15"]
+      }
+    ],
+    "coercions": {
+      "D": 0
+    }
+  }
+}

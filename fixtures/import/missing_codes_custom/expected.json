@@ -1,0 +1,35 @@
+{
+  "case": "missing_codes_custom",
+  "file": "input.csv",
+  "settings": {
+    "missing_codes": [
+      "-99"
+    ]
+  },
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "CODE",
+        "type": "integer",
+        "values": [1, null, 3]
+      },
+      {
+        "name": "NOTES",
+        "type": "text",
+        "values": ["ok", "NA", "."]
+      }
+    ],
+    "coercions": {
+      "CODE": 0,
+      "NOTES": 0
+    }
+  }
+}

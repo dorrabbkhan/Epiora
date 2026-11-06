@@ -1,0 +1,25 @@
+{
+  "case": "xlsx_cell_error",
+  "file": "input.xlsx",
+  "settings": {},
+  "expect": {
+    "detection": {
+      "container": "xlsx",
+      "encoding": null,
+      "delimiter": null,
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": ["Data"]
+    },
+    "columns": [
+      {
+        "name": "SCORE",
+        "type": "integer",
+        "values": [10, null, 30]
+      }
+    ],
+    "coercions": {
+      "SCORE": 1
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "case": "mdy_dates",
+  "file": "input.csv",
+  "settings": {
+    "date_format": "mdy"
+  },
+  "expect": {
+    "detection": {
+      "container": "text",
+      "encoding": "utf8",
+      "delimiter": ",",
+      "decimal": "dot",
+      "header_renames": [],
+      "sheets": []
+    },
+    "columns": [
+      {
+        "name": "D",
+        "type": "date",
+        "values": ["2026-03-04", "2020-12-25"]
+      }
+    ],
+    "coercions": {
+      "D": 0
+    }
+  }
+}
