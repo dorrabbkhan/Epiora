@@ -247,7 +247,7 @@ jobs:
             cargo fuzz run "$target" -- -max_total_time=60
           done
           cd ../../epiora-import/fuzz
-          for target in text_import sheet_import; do
+          for target in text_import sheet_import diff_any; do
             echo "== fuzz $target"
             cargo fuzz run "$target" -- -max_total_time=60
           done

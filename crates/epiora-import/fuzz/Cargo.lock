@@ -262,6 +262,7 @@ dependencies = [
  "epiora-core",
  "quick-xml",
  "serde",
+ "serde_json",
  "sha2 0.11.1",
  "thiserror",
  "zip",

@@ -17,19 +17,28 @@
 mod coerce;
 mod decode;
 mod detect;
+mod diff;
 mod error;
 mod excel_date;
 mod infer;
+mod keys;
+mod records;
 mod settings;
 mod sheet;
 mod table;
 mod text;
 
+pub use diff::{diff, summarize, Diff, DiffSummary, FieldChange, SchemaChanges, TypeChange};
 pub use error::ImportError;
 pub use excel_date::serial_to_days;
+pub use keys::{key_candidates, record_ids, KeyCandidate};
+pub use records::{dataset_from_records, record_json};
 pub use settings::{
     Container, DateFormat, DecimalSep, Detection, Encoding, ImportSettings, RecordKey,
 };
+
+#[cfg(feature = "fuzzing")]
+pub use diff::diff_any;
 
 use epiora_core::dataset::{Column, ValueType};
 use sha2::Digest;
