@@ -246,13 +246,20 @@ jobs:
             echo "== fuzz $target"
             cargo fuzz run "$target" -- -max_total_time=60
           done
+          cd ../../epiora-import/fuzz
+          for target in text_import; do
+            echo "== fuzz $target"
+            cargo fuzz run "$target" -- -max_total_time=60
+          done
 
       - name: Upload crash artifacts
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: fuzz-artifacts
-          path: crates/epiora-core/fuzz/artifacts/
+          path: |
+            crates/epiora-core/fuzz/artifacts/
+            crates/epiora-import/fuzz/artifacts/
           if-no-files-found: ignore
 
   # Validation report (platform §12.10, v0.2 Task 13): runs the whole
