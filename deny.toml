@@ -26,6 +26,9 @@ allow = [
     # BSD-3-Clause: required by encoding_rs's "(Apache-2.0 OR MIT) AND
     # BSD-3-Clause" (v0.3 Task 3, epiora-import).
     "BSD-3-Clause",
+    # Zlib: required by zlib-rs (deflate backend for zip, pulled by
+    # calamine) — v0.3 Task 4, epiora-import.
+    "Zlib",
 ]
 
 [sources]

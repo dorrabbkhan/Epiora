@@ -1067,3 +1067,89 @@ Files outside the Files block:
   housekeeping files, mirroring `crates/epiora-core/fuzz`.
 - docs/decisions.md — this entry.
 Supersedes: —
+### v0.3 Task 4 — epiora-import: spreadsheets via calamine (2026-11-06)
+
+Decision: `epiora-import` reads xlsx, xls and ods through `calamine`
+(spec §6.1.5, §6.2, F13). `inspect`/`import` route non-text containers
+to `sheet.rs`, which turns the chosen sheet's used range into the same
+`Table` of candidate strings that text files produce, plus a
+`forced_coerced` cell set; §6.2 inference and coercion then run
+unchanged. `excel_date.rs` carries `serial_to_days` and the inverse
+days → `YYYY-MM-DD` formatter. Interpretations where the spec/plan
+leave room:
+
+- Container detection: an ODF zip is recognised by its first member —
+  `mimetype` stored with content
+  `application/vnd.oasis.opendocument.spreadsheet` (the ODF-required
+  form); every other zip is `xlsx`, and a zip that is neither fails
+  inside calamine as `spreadsheet` (`[Content_Types].xml` is not
+  separately verified — calamine is the arbiter).
+- Cell mapping: integral numerics within `]-2^63, 2^63[` emit integer
+  candidate text, other finite numerics the shortest round-trip
+  `f64` text; `Data::Bool` emits `true`/`false`; `Data::DateTime`
+  (`is_datetime`) goes through `serial_to_days` and emits ISO text —
+  a `None` (serial 60, non-zero time part) is `Forced`; non-`datetime`
+  `ExcelDateTime` (durations) and `DateTimeIso`/`DurationIso` emit
+  their value as text; `Data::Error` and non-finite floats are
+  `Forced`. `Forced` cells skip inference, coerce to missing under any
+  chosen type and count in `coercions`, never in `missing`.
+- Spreadsheet headers: an empty or absent header cell takes the Excel
+  column letter (`A`, `B`, …, `AA`) — the column's own name — and is
+  not recorded in `header_renames`; `xlsx_formula_cached` (no `C1`
+  cell) fixes this reading. Non-empty duplicates uniquify and report
+  exactly like text. With `header: false` the columns are the letters.
+- ODS normalisation: calamine's ODS `read_row` rejects whitespace-only
+  text between cells, which readODS's pretty-printed `content.xml`
+  carries, so ODS input is repacked (`ods_bytes`) with whitespace-only
+  text dropped at row/cell depth before calamine sees it. The repack
+  feeds calamine only; `source_sha256` covers the raw input bytes.
+- `Detection` for sheets reports `encoding`/`delimiter` `None`,
+  `decimal` `dot` (or an override, which still applies to string
+  cells), `sheets` in workbook order; the effective `settings` record
+  `decimal` and `sheet: Some(<used>)`, so a saved re-import is
+  deterministic.
+- calamine's `dates`/`chrono` features are NOT enabled — serials are
+  converted by `serial_to_days`, so no clock/locale reads enter the
+  crate (spec §6.3, conductor note).
+- `worksheet_range` materialises calamine's `Range` before
+  `MAX_COLUMNS`/`MAX_ROWS` are checked; a hostile declared span could
+  over-allocate inside calamine — noted as a follow-up, not solvable
+  at our layer today.
+
+Dependencies and licences (AGENTS.md rule 6): calamine 0.38.0 (MIT);
+new transitives atoi_simd 0.18.1 (MIT OR Apache-2.0), byteorder 1.5.0
+(Unlicense OR MIT), codepage 0.1.3 (Apache-2.0 OR MIT), crc32fast
+1.5.4 (MIT OR Apache-2.0), debug_unsafe 0.1.4 (MIT OR Apache-2.0),
+fast-float2 0.2.4 (MIT OR Apache-2.0), flate2 1.1.11 (MIT OR
+Apache-2.0), log 0.4.35 (MIT OR Apache-2.0), nix 0.31.3 (MIT), nix's
+cfg_aliases/bitflags already allowed, simd-adler32 0.3.10 (MIT),
+typed-path 0.13.0 (MIT OR Apache-2.0), zlib-rs 0.6.8 (**Zlib** — added
+to `deny.toml`, the only licence `cargo deny` reported), zopfli 0.8.4
+(Apache-2.0); direct deps quick-xml 0.42.0 (MIT) and zip 9.4.1 (MIT)
+for `ods_bytes` — both already in the tree via calamine at the same
+versions.
+Evidence: `cargo test -p epiora-import` — 27 tests green including
+`every_spreadsheet_fixture_matches` over all 9 `xlsx_*`/`xls_*`/`ods_*`
+fixtures; `./scripts/check.sh quick` PASS (`cargo deny` run as
+`target/bin/cargo-deny --offline check` → "advisories ok, bans ok,
+licenses ok, sources ok"); 60 s local fuzz:
+`cd crates/epiora-import/fuzz && CARGO_NET_OFFLINE=true
+cargo +nightly-2026-10-15 fuzz run sheet_import --
+-max_total_time=60` → "Done 589446 runs in 61 second(s)", no crash.
+Files outside the Files block:
+- crates/epiora-import/src/{table,coerce,text}.rs — the `forced_coerced`
+  cell set lives on `Table` (spreadsheet error cells and unconvertible
+  date serials must count as coercions, which the string pipeline
+  cannot express), `coerce_column` takes the `Table` to honour it, and
+  `text::parse` initialises it empty; `table.rs` also gains
+  `sheet_names`/`column_letter` for the spreadsheet header rule.
+- crates/epiora-import/fuzz/Cargo.toml — `[[bin]]` registration of the
+  new `sheet_import` target.
+- Cargo.lock — workspace lock for the new dependencies.
+- crates/epiora-import/fuzz/Cargo.lock — fuzz crate lock, same reason.
+- .github/workflows/engine.yml — the PR fuzz job also runs
+  `sheet_import` (60 s), per the conductor's Task 4 note.
+- .github/workflows/fuzz-nightly.yml — `sheet_import` added to the
+  `fuzz-import` matrix (1800 s), per the conductor's Task 4 note.
+- docs/decisions.md — this entry.
+Supersedes: —

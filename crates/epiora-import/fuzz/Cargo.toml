@@ -25,3 +25,10 @@ path = "fuzz_targets/text_import.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "sheet_import"
+path = "fuzz_targets/sheet_import.rs"
+test = false
+doc = false
+bench = false

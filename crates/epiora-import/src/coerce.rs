@@ -1,10 +1,12 @@
 //! Coercion of raw string cells into typed column data (spec §6.2):
 //! missing codes become `None`; a non-missing value that fails the
-//! chosen type becomes `None` and is counted in `coerced_to_missing`.
-//! Values keep their original whitespace — trimming applies only to
-//! the missing-code match.
+//! chosen type becomes `None` and is counted in `coerced_to_missing`;
+//! cells in `forced_coerced` (spreadsheet error cells, unconvertible
+//! date serials) are always a coercion. Values keep their original
+//! whitespace — trimming applies only to the missing-code match.
 
 use crate::infer::{self, InferCtx};
+use crate::table::Table;
 use epiora_core::dataset::{ColumnData, ValueType};
 
 /// A coerced column plus its missing/coercion counts.
@@ -13,13 +15,14 @@ pub(crate) struct Coerced {
     pub data: ColumnData,
     /// Cells that were missing codes.
     pub missing: u64,
-    /// Non-missing cells that failed the chosen type (→ `None`).
+    /// Non-missing cells that failed the chosen type (→ `None`), plus
+    /// forced cells.
     pub coerced: u64,
 }
 
-/// Coerces column `col` of `rows` to `chosen`.
+/// Coerces column `col` of `table` to `chosen`.
 pub(crate) fn coerce_column(
-    rows: &[Vec<String>],
+    table: &Table,
     col: usize,
     chosen: ValueType,
     missing_codes: &[String],
@@ -29,10 +32,13 @@ pub(crate) fn coerce_column(
     let mut coerced = 0u64;
     macro_rules! coerce {
         ($variant:ident, $f:expr) => {{
-            let mut values: Vec<Option<_>> = Vec::with_capacity(rows.len());
-            for row in rows {
+            let mut values: Vec<Option<_>> = Vec::with_capacity(table.rows.len());
+            for (r, row) in table.rows.iter().enumerate() {
                 let cell = row.get(col).map(String::as_str).unwrap_or("");
-                if infer::is_missing(cell, missing_codes) {
+                if table.forced_coerced.contains(&(r, col)) {
+                    coerced += 1;
+                    values.push(None);
+                } else if infer::is_missing(cell, missing_codes) {
                     missing += 1;
                     values.push(None);
                 } else {

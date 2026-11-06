@@ -6,6 +6,7 @@
 use crate::error::ImportError;
 use crate::table::{self, Table};
 use crate::{MAX_COLUMNS, MAX_ROWS};
+use std::collections::HashSet;
 
 /// Parses `text` into a [`Table`]. `header` consumes the first record
 /// as column names (uniquified); without it every record is data and
@@ -59,6 +60,7 @@ pub(crate) fn parse(text: &str, delimiter: u8, header: bool) -> Result<Table, Im
         names,
         renames,
         rows: rows.to_vec(),
+        forced_coerced: HashSet::new(),
     })
 }
 
