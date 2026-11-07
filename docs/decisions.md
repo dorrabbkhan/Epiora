@@ -1311,6 +1311,12 @@ the plan leaves room:
   (`epiora-wasm` default, behaviour unchanged); `epiora-import-wasm`
   builds into `pkg/` (release, `-Oz` wasm-opt) and `pkg-parity/`
   (nodejs, `parity` feature).
+- `import.yml`'s `on.pull_request.paths` are a superset of the plan's
+  Step 4 list — the plan's list plus `rust-toolchain.toml`,
+  `scripts/check*.sh`, `scripts/wasm-build.sh` and
+  `crates/epiora-core/**` (`epiora-import` and `epiora-import-wasm`
+  depend on `epiora-core` for the snapshot codec and content hash, so a
+  core-only change can break import parity; owner-requested on PR #42).
 
 Dependencies and licences (AGENTS.md rule 6): no new crates —
 `wasm-bindgen`/`js-sys` (MIT) and `serde-wasm-bindgen` (MIT) were
