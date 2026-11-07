@@ -4,7 +4,7 @@
 // eslint.restrictions.json so lint-rules.test.ts checks the same rules.
 import { readFileSync } from 'node:fs';
 import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import tseslint from 'eslint-ts6';
 
 const restrictions = JSON.parse(
   readFileSync(new URL('./eslint.restrictions.json', import.meta.url), 'utf8'),

@@ -1361,9 +1361,20 @@ Supersedes: —
 - Token colours: nine roles (`bg`, `surface`, `text`, `textMuted`, `accent`, `accentText`, `border`,
   `focus`, `danger`) × four themes; every declared `pairs` entry passes its WCAG ratio in all four
   themes (4.5 text / 3 large-text,ui / 7 hc) — enforced by `contrast.test.ts`, not picked ad hoc.
-- `typescript` is `~6.0.3`, not the latest 7.x: `typescript-eslint@8.72.1` declares
-  `peer typescript <6.1.0`, so 7.x cannot be installed without `--force`. Latest that satisfies the
-  linter's bound; revisit when typescript-eslint supports TS 7.
+- TypeScript is split (owner decision option 1 on PR #43): `typescript` is `^7.0.2` at the app
+  root and runs `tsc --noEmit` (typecheck); `typescript-eslint@8.72.1` keeps `typescript ~6.0.3`
+  for linting only. Mechanism: the lint stack lives inside a local `file:` provider package,
+  `app/eslint-ts6/` (`dependencies`: `typescript ~6.0.3`, `typescript-eslint`), so npm nests it
+  under `eslint-ts6/node_modules/` where its `typescript` peer resolves to 6.0.3 natively — no
+  `--force`, no peer warnings; `eslint.config.js` and `lint-rules.test.ts` import `eslint-ts6`,
+  which re-exports `typescript-eslint`. `app/.npmrc` sets `install-strategy=nested` so
+  `ts-api-utils` (unbounded `typescript` peer, would otherwise hoist to the TS 7 root and crash
+  on its missing API) stays inside the provider subtree. Plain `overrides` cannot do this: npm
+  resolves a root-level package's `typescript` peer only at `node_modules/typescript`, which the
+  root `typescript` dep already occupies → ERESOLVE without `--force`/`--legacy-peer-deps`.
+  Reason: typescript-eslint 8.72.1 peers `typescript >=4.8.4 <6.1.0` and TS 7 exports only
+  `./unstable/*` APIs (its entry points throw on import under TS 7). Remove the provider once
+  typescript-eslint supports TS 7.
 - `Table` mounts its `caption` through a portal (RAC's collection drops non-collection children) and
   points `aria-labelledby` at it, so the caption is a real first child of `<table>` and provides the
   accessible name.
@@ -1399,4 +1410,9 @@ Files outside the Files block:
 - `app/eslint.restrictions.json`, `app/stylelint.rules.json`, `app/lint-rules.test.ts`,
   `app/lint-fixtures/component-violations.tsx`, `app/lint-fixtures/style-violations.module.css` —
   Step 5's shared rule sources, the `lint_rules_catch_violations` test and its fixtures.
+- `app/eslint-ts6/` (fix round 2, PR #43) — the `file:` provider package holding the lint
+  toolchain's own `typescript ~6.0.3` + `typescript-eslint` (see the TypeScript bullet);
+  `index.mjs`/`index.d.ts` re-export `typescript-eslint`.
+- `app/.npmrc` (fix round 2) — `install-strategy=nested`, keeps `ts-api-utils` nested inside
+  `eslint-ts6` so it cannot resolve the root `typescript` 7.
 Supersedes: —

@@ -3,7 +3,7 @@
 // (which the normal lint gates ignore) using the shared rule sources.
 import { ESLint } from 'eslint';
 import stylelint from 'stylelint';
-import tseslint from 'typescript-eslint';
+import tseslint from 'eslint-ts6';
 import { describe, expect, it } from 'vitest';
 import restrictionsJson from './eslint.restrictions.json';
 import stylelintRules from './stylelint.rules.json';

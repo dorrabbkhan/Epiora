@@ -1,0 +1,12 @@
+{
+  "name": "eslint-ts6",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./index.mjs",
+  "types": "./index.d.ts",
+  "dependencies": {
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.1"
+  }
+}
