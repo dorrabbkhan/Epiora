@@ -50,6 +50,21 @@ else
   echo "skipped (no crates/ yet)"
 fi
 
+# App gate (v0.3): runs whenever app/ exists — in quick mode only when
+# the app inputs changed.
+step "app (app/)"
+if [ -d app ]; then
+  if [ "$mode" = quick ] && ! grep -qE '^(app/|scripts/check-app\.sh)' <<<"$changed"; then
+    echo "skipped (no app/ or check-app.sh changes)"
+  elif [ "$mode" = quick ]; then
+    scripts/check-app.sh quick
+  else
+    scripts/check-app.sh full
+  fi
+else
+  echo "skipped (no app/ yet)"
+fi
+
 for dir in spikes/*/; do
   [ -d "$dir" ] || continue
   name="${dir%/}"

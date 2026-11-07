@@ -1355,3 +1355,46 @@ Files outside the Files block:
 - Cargo.lock — new workspace member.
 - docs/decisions.md — this entry.
 Supersedes: —
+
+### v0.3 Task 7 — app scaffold, design tokens, component set, a11y harness, `app.yml`
+
+- Token colours: nine roles (`bg`, `surface`, `text`, `textMuted`, `accent`, `accentText`, `border`,
+  `focus`, `danger`) × four themes; every declared `pairs` entry passes its WCAG ratio in all four
+  themes (4.5 text / 3 large-text,ui / 7 hc) — enforced by `contrast.test.ts`, not picked ad hoc.
+- `typescript` is `~6.0.3`, not the latest 7.x: `typescript-eslint@8.72.1` declares
+  `peer typescript <6.1.0`, so 7.x cannot be installed without `--force`. Latest that satisfies the
+  linter's bound; revisit when typescript-eslint supports TS 7.
+- `Table` mounts its `caption` through a portal (RAC's collection drops non-collection children) and
+  points `aria-labelledby` at it, so the caption is a real first child of `<table>` and provides the
+  accessible name.
+- `ToastRegion` passes `aria-live="polite"` explicitly — RAC's `UNSTABLE_ToastRegion` is a landmark
+  region without a live-region attribute.
+- Lint rules and the lint-fixture test share sources: `eslint.restrictions.json` and
+  `stylelint.rules.json` are read by `eslint.config.js`/`stylelint.config.js` and imported by
+  `lint-rules.test.ts`, so the test checks the exact rules the gate runs. `lint-fixtures/` is in both
+  linters' ignore lists (its violations are intentional) and linted only inside the test.
+- `licence check` in `check-app.sh` passes `--excludePackages 'epiora-app@0.3.0'` —
+  license-checker-rseidelsohn reports the private root package itself as UNLICENSED; the gate is the
+  production dependency tree (all MIT/Apache-2.0/Unlicense/0BSD at task time).
+- Dependencies and licences (AGENTS.md rule 6): react + react-dom (MIT), react-aria-components
+  (Apache-2.0), @tanstack/react-router (MIT). Dev: vite, @vitejs/plugin-react, vitest (MIT),
+  typescript (Apache-2.0), eslint + typescript-eslint (MIT), stylelint (MIT), jsdom (MIT),
+  @testing-library/* (MIT), @playwright/test (Apache-2.0), @axe-core/playwright (MPL-2.0, dev only),
+  license-checker-rseidelsohn (MIT), globals (MIT), @types/* (MIT). Licence gate passes with
+  `--production --onlyAllow`.
+Evidence: `./scripts/check.sh` PASS locally (`PLAYWRIGHT_BROWSERS_PATH=target/ms-playwright`) —
+  tsc --noEmit clean, ESLint clean, Stylelint clean, tokens regen diff clean, Vitest 8/8,
+  `vite build` ok, Playwright 72/72 across chromium/firefox/webkit (12 axe runs per engine, light
+  and dark; 6 viewport + 6 zoom checks per engine).
+Files outside the Files block:
+- `app/src/ui/components/classes.ts` — shared `cx`/`renderClass`/`RenderChildren` helpers matching
+  RAC's `ClassNameOrFunction`/`ChildrenOrFunction` contracts; avoids duplicating the merge in 14
+  components.
+- `app/src/ui/routes/routes.module.css` and `app/src/ui/shell.module.css` — styles for the route
+  placeholders and the nav shell (the Files block lists only `routes/*.tsx` and `router.tsx`).
+- `app/e2e/routes.ts` — the §8.1 route list shared by `a11y.spec.ts` and `viewport.spec.ts`;
+  Playwright forbids one spec importing another spec.
+- `app/eslint.restrictions.json`, `app/stylelint.rules.json`, `app/lint-rules.test.ts`,
+  `app/lint-fixtures/component-violations.tsx`, `app/lint-fixtures/style-violations.module.css` —
+  Step 5's shared rule sources, the `lint_rules_catch_violations` test and its fixtures.
+Supersedes: —

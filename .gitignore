@@ -4,6 +4,7 @@ node_modules/
 target/
 test-results/
 playwright-report/
+app/dist/
 # Chromium bench output (spec §5.3); node_modules/ already covers
 # crates/epiora-wasm/bench/node_modules.
 crates/epiora-wasm/bench/bench-results.json
