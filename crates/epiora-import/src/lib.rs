@@ -25,6 +25,7 @@ mod keys;
 mod records;
 mod settings;
 mod sheet;
+mod summary;
 mod table;
 mod text;
 
@@ -36,11 +37,13 @@ pub use records::{dataset_from_records, record_json};
 pub use settings::{
     Container, DateFormat, DecimalSep, Detection, Encoding, ImportSettings, RecordKey,
 };
+pub use summary::{parity_line, summary, ImportSummary, RecordBatch};
 
 #[cfg(feature = "fuzzing")]
 pub use diff::diff_any;
 
 use epiora_core::dataset::{Column, ValueType};
+use serde::{Deserialize, Serialize};
 use sha2::Digest;
 use std::collections::BTreeMap;
 
@@ -52,7 +55,8 @@ pub const MAX_COLUMNS: usize = 16_384;
 pub const MAX_ROWS: u64 = (1 << 31) - 1;
 
 /// One column in an [`Inspection`] preview.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS))]
 pub struct PreviewColumn {
     /// Final (uniquified) name.
     pub name: String,
@@ -68,7 +72,8 @@ pub struct PreviewColumn {
 
 /// `inspect`/`inspect_with` result: effective detection and settings,
 /// per-column preview and the first [`PREVIEW_ROWS`] rows.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS))]
 pub struct Inspection {
     /// The effective reading of the file's format.
     pub detection: Detection,
@@ -320,7 +325,7 @@ fn non_missing<'a>(table: &'a table::Table, col: usize, missing_codes: &[String]
 }
 
 /// Lowercase hex SHA-256 of the raw input bytes.
-fn sha256_hex(bytes: &[u8]) -> String {
+pub(crate) fn sha256_hex(bytes: &[u8]) -> String {
     let digest = sha2::Sha256::digest(bytes);
     let mut hex = String::with_capacity(digest.len() * 2);
     for byte in digest {

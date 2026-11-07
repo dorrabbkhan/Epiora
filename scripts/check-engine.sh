@@ -103,6 +103,49 @@ if [ -d crates/epiora-wasm/tests/node ]; then
     node --test "crates/epiora-wasm/tests/node/"*.test.mjs
 else echo "skipped (arrives in v0.2 Task 10)"; fi
 
+step "import-runner run"
+if [ -f crates/epiora-import/src/bin/import-runner.rs ]; then
+  cargo run -p epiora-import --bin import-runner -- fixtures/import > target/import-native.jsonl
+  wc -l target/import-native.jsonl
+else echo "skipped (arrives in v0.3 Task 6)"; fi
+
+step "import wasm build (release + parity)"
+if [ -d crates/epiora-import-wasm ]; then
+  scripts/wasm-build.sh release epiora-import-wasm
+  scripts/wasm-build.sh parity epiora-import-wasm
+else echo "skipped (arrives in v0.3 Task 6)"; fi
+
+step "import wasm size (report only; the gate is Task 17)"
+if [ -f crates/epiora-import-wasm/pkg/epiora_import_wasm_bg.wasm ]; then
+  size="$(gzip -9 -c crates/epiora-import-wasm/pkg/epiora_import_wasm_bg.wasm | wc -c | tr -d ' ')"
+  echo "epiora_import_wasm_bg.wasm gzip -9: $size bytes"
+else echo "skipped (arrives in v0.3 Task 6)"; fi
+
+step "import native/wasm parity diff"
+if [ -f crates/epiora-import-wasm/parity/run.mjs ]; then
+  node crates/epiora-import-wasm/parity/run.mjs fixtures/import > target/import-wasm.jsonl
+  wc -l target/import-wasm.jsonl
+  crates/epiora-wasm/parity/diff.sh target/import-native.jsonl target/import-wasm.jsonl
+else echo "skipped (arrives in v0.3 Task 6)"; fi
+
+step "import TypeScript bindings diff"
+if [ -d crates/epiora-import-wasm/bindings ]; then
+  cargo test -p epiora-import-wasm --features ts export_bindings
+  git diff --exit-code -- crates/epiora-import-wasm/bindings
+  if [ -n "$(git ls-files --others --exclude-standard -- crates/epiora-import-wasm/bindings)" ]; then
+    echo "untracked files in crates/epiora-import-wasm/bindings" >&2
+    exit 1
+  fi
+else echo "skipped (arrives in v0.3 Task 6)"; fi
+
+step "import node binding tests"
+if [ -d crates/epiora-import-wasm/tests/node ]; then
+  # The native utf8_comma parity line (summary + snapshot hashes) comes
+  # out of the import-runner output produced above.
+  NATIVE_IMPORT_UTF8_COMMA="$(grep '"case":"utf8_comma"' target/import-native.jsonl)" \
+    node --test "crates/epiora-import-wasm/tests/node/"*.test.mjs
+else echo "skipped (arrives in v0.3 Task 6)"; fi
+
 if [ "${E2E:-0}" = 1 ]; then
   step "chromium benchmark"
   if [ -x scripts/bench.sh ]; then scripts/bench.sh

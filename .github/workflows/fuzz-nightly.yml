@@ -3,8 +3,9 @@ name: fuzz-nightly
 # Nightly fuzzing (spec §6.5): 1800 s per target at 02:00 UTC on the
 # dated nightly pinned by crates/epiora-core/fuzz/rust-toolchain.toml.
 # A crash fails the job and uploads fuzz/artifacts/; the fix commits the
-# crash input under fuzz/regressions/<target>/ so
-# tests/fuzz_regressions.rs replays it forever.
+# crash input under fuzz/regressions/<target>/ so the crate's
+# tests/fuzz_regressions.rs replays it forever — epiora-core has had
+# one since v0.2 and epiora-import gained its own in v0.3 Task 6.
 
 on:
   schedule:
