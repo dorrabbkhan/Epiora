@@ -21,6 +21,18 @@ describe('tokens.json', () => {
     }
   });
 
+  it('css_has_no_undefined_and_emits_flat_tokens', () => {
+    const out = join(tmpdir(), `epiora-tokens-${process.pid}-${Date.now()}.css`);
+    execFileSync(process.execPath, [join(here, 'build-tokens.mjs'), out]);
+    const css = readFileSync(out, 'utf8');
+    expect(css).not.toContain('undefined');
+    for (const group of ['space', 'radius', 'font', 'motion', 'focus'] as const) {
+      for (const [key, value] of Object.entries(tokensJson[group])) {
+        expect(css).toContain(`--${group}-${key}: ${value};`);
+      }
+    }
+  });
+
   it('css_is_regenerated', () => {
     const out = join(tmpdir(), `epiora-tokens-${process.pid}-${Date.now()}.css`);
     execFileSync(process.execPath, [join(here, 'build-tokens.mjs'), out]);

@@ -1369,6 +1369,8 @@ Supersedes: —
   accessible name.
 - `ToastRegion` passes `aria-live="polite"` explicitly — RAC's `UNSTABLE_ToastRegion` is a landmark
   region without a live-region attribute.
+- `FileTrigger` has no `FileTrigger.module.css` on purpose: RAC's FileTrigger renders no element of
+  its own — it wires a hidden file input to its child — so the `Button` inside it carries the styles.
 - Lint rules and the lint-fixture test share sources: `eslint.restrictions.json` and
   `stylelint.rules.json` are read by `eslint.config.js`/`stylelint.config.js` and imported by
   `lint-rules.test.ts`, so the test checks the exact rules the gate runs. `lint-fixtures/` is in both

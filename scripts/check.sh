@@ -19,12 +19,12 @@ changed="$(git diff --name-only "$base"; git diff --name-only; git ls-files --ot
 
 step() { printf '\n== %s\n' "$1"; }
 
-# Fixture guard: fixtures never change together with engine or spike code,
-# and only through fixtures/generate.R (AGENTS.md rule 1).
+# Fixture guard: fixtures never change together with engine, app or spike
+# code, and only through fixtures/generate.R (AGENTS.md rule 1).
 step "fixture guard"
 if [ "${ALLOW_FIXTURE_CHANGE:-0}" != 1 ] && grep -q '^fixtures/' <<<"$changed"; then
-  if grep -qE '^(crates|spikes)/' <<<"$changed"; then
-    echo "fixtures/ changed together with crates/ or spikes/ — not allowed" >&2; exit 1
+  if grep -qE '^(crates|spikes|app)/' <<<"$changed"; then
+    echo "fixtures/ changed together with crates/, app/ or spikes/ — not allowed" >&2; exit 1
   fi
   echo "fixtures/ changed: allowed only via fixtures/generate.R in the fixture task"
 fi
