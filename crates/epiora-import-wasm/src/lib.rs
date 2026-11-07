@@ -17,6 +17,8 @@ use epiora_import::{
 use js_sys::{Error, Reflect};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
+use std::cell::OnceCell;
+use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 
 /// An `ImportError` crossing the boundary becomes a JS `Error` whose
@@ -133,15 +135,22 @@ pub fn import_file(
 ) -> Result<ImportedHandle, JsValue> {
     let s = settings(settings_value)?;
     epiora_import::import(bytes, file_name, &s)
-        .map(|imported| ImportedHandle { imported })
+        .map(|imported| ImportedHandle {
+            imported: Rc::new(imported),
+            record_ids: OnceCell::new(),
+        })
         .map_err(|e| js_error(&e))
 }
 
 /// A completed import living inside the wasm instance; the handle the
-/// other exports take (plan Task 6).
+/// other exports take (plan Task 6). The import sits behind an `Rc` so
+/// `diffAgainst` shares it instead of copying every column, and record
+/// ids are computed once — `recordBatch` pages over them without an
+/// O(n) re-derivation per call.
 #[wasm_bindgen]
 pub struct ImportedHandle {
-    imported: Imported,
+    imported: Rc<Imported>,
+    record_ids: OnceCell<Result<Vec<String>, ImportError>>,
 }
 
 #[wasm_bindgen]
@@ -178,11 +187,18 @@ impl ImportedHandle {
     }
 
     /// `recordBatch(start, len)` — `{ ids, json }` for the page; record
-    /// ids come from the import's key setting (spec §4.4).
+    /// ids come from the import's key setting (spec §4.4) and are
+    /// derived once per handle.
     #[wasm_bindgen(js_name = recordBatch)]
     pub fn record_batch(&self, start: f64, len: f64) -> Result<JsValue, JsValue> {
         let columns = &self.imported.columns;
-        let ids = record_ids(columns, &self.imported.settings.key).map_err(|e| js_error(&e))?;
+        let ids = match self
+            .record_ids
+            .get_or_init(|| record_ids(columns, &self.imported.settings.key))
+        {
+            Ok(ids) => ids,
+            Err(e) => return Err(js_error(e)),
+        };
         let (lo, hi) = page(start, len, ids.len())?;
         output(&RecordBatch {
             ids: ids[lo..hi].to_vec(),
@@ -211,17 +227,18 @@ pub fn diff_against(
     let diff = diff_records(&previous, &imported.imported, key).map_err(|e| js_error(&e))?;
     Ok(DiffHandle {
         diff,
-        next_columns: imported.imported.columns.clone(),
+        next: Rc::clone(&imported.imported),
         next_ids,
     })
 }
 
-/// A computed re-import diff; the handle the batch exports take.
+/// A computed re-import diff; the handle the batch exports take. `next`
+/// is shared with the `ImportedHandle`, not copied.
 #[wasm_bindgen]
 pub struct DiffHandle {
     diff: Diff,
-    /// `next`'s columns (needed to render `addedBatch`'s record JSON).
-    next_columns: Vec<epiora_core::dataset::Column>,
+    /// `next` (renders `addedBatch`'s record JSON).
+    next: Rc<Imported>,
     /// `next`'s record ids in row order.
     next_ids: Vec<String>,
 }
@@ -246,7 +263,7 @@ impl DiffHandle {
                 .collect(),
             json: self.diff.added[lo..hi]
                 .iter()
-                .map(|&j| record_json(&self.next_columns, j as usize))
+                .map(|&j| record_json(&self.next.columns, j as usize))
                 .collect(),
         })
     }
