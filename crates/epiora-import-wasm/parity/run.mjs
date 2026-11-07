@@ -21,13 +21,17 @@ if (!root) {
   process.exit(2);
 }
 
+const cases = readdirSync(root, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+  .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+
 const lines = [];
-for (const caseId of readdirSync(root, { withFileTypes: true })) {
-  if (!caseId.isDirectory()) continue;
-  const dir = join(root, caseId.name);
+for (const name of cases) {
+  const dir = join(root, name);
   const expected = JSON.parse(readFileSync(join(dir, "expected.json"), "utf8"));
   const bytes = readFileSync(join(dir, expected.file));
   const settingsJson = JSON.stringify(expected.settings ?? {});
-  lines.push(wasm.runImportCase(bytes, expected.file, settingsJson, caseId.name));
+  lines.push(wasm.runImportCase(bytes, expected.file, settingsJson, name));
 }
 process.stdout.write(lines.join("\n") + "\n");
