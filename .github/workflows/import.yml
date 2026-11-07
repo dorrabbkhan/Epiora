@@ -1,0 +1,189 @@
+name: import
+
+# The epiora-import gate (v0.3 spec §10.1): fmt, clippy, unit/fixture/
+# regression tests, wasm build, bindings regeneration, native/wasm
+# parity over fixtures/import, cargo-deny, 60 s per fuzz target (long
+# runs in fuzz-nightly.yml) and the import-wasm gzip size reported in
+# the job summary (the gate is Task 17).
+
+on:
+  pull_request:
+    paths:
+      - 'crates/epiora-import*/**'
+      - 'fixtures/import/**'
+      - 'Cargo.*'
+      - 'deny.toml'
+      - 'rust-toolchain.toml'
+      - 'scripts/check*.sh'
+      - 'scripts/wasm-build.sh'
+      - '.github/workflows/import.yml'
+  workflow_dispatch:
+
+env:
+  GIT_SHA: ${{ github.sha }}
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # rust-toolchain.toml pins the same version; installed explicitly so
+      # the components are present before any cargo invocation.
+      - name: Install Rust 1.99.0 (pinned)
+        run: |
+          rustup toolchain install 1.99.0 --profile minimal --component clippy --component rustfmt
+          rustup default 1.99.0
+          rustup target add wasm32-unknown-unknown
+          rustc --version
+          cargo --version
+
+      - name: Install Node 22
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: Install cargo-deny 0.20.2 (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/cargo-deny.tar.gz \
+            https://github.com/EmbarkStudios/cargo-deny/releases/download/0.20.2/cargo-deny-0.20.2-x86_64-unknown-linux-musl.tar.gz
+          echo '9f12ed4c49936e09b48bf862b595cde2fe64fcbd9d74dfacac6131ca824c8d5f  /tmp/cargo-deny.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/cargo-deny.tar.gz -C /tmp
+          sudo install -m 0755 /tmp/cargo-deny-0.20.2-x86_64-unknown-linux-musl/cargo-deny \
+            /usr/local/bin/cargo-deny
+          cargo deny --version
+
+      # wasm-pack requires the wasm-bindgen CLI to equal the locked
+      # crate version (0.2.129); it finds this PATH install via `which`
+      # under `--mode no-install` instead of downloading a binary.
+      - name: Install wasm-bindgen 0.2.129 (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/wasm-bindgen.tar.gz \
+            https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.129/wasm-bindgen-0.2.129-x86_64-unknown-linux-musl.tar.gz
+          echo '82d12bb940e2d4e72e0d5605387fc1b8ca179044e012b620f0ce4e7440e8320e  /tmp/wasm-bindgen.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/wasm-bindgen.tar.gz -C /tmp
+          sudo install -m 0755 \
+            /tmp/wasm-bindgen-0.2.129-x86_64-unknown-linux-musl/wasm-bindgen \
+            /usr/local/bin/wasm-bindgen
+          wasm-bindgen --version
+
+      - name: Install wasm-pack 0.15.1 (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/wasm-pack.tar.gz \
+            https://github.com/rustwasm/wasm-pack/releases/download/v0.15.1/wasm-pack-v0.15.1-x86_64-unknown-linux-musl.tar.gz
+          echo '410101009739b9d01c7d5affaaad6e9c9a24b4cba6791a4805db8e89b9bf7af2  /tmp/wasm-pack.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/wasm-pack.tar.gz -C /tmp
+          sudo install -m 0755 \
+            /tmp/wasm-pack-v0.15.1-x86_64-unknown-linux-musl/wasm-pack \
+            /usr/local/bin/wasm-pack
+          wasm-pack --version
+
+      - name: Install binaryen version_133 wasm-opt (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/binaryen.tar.gz \
+            https://github.com/WebAssembly/binaryen/releases/download/version_133/binaryen-version_133-x86_64-linux.tar.gz
+          echo '2dc9c7813f5375db93d96ead4b78222fcc3e2677bbb832297af4797782a37489  /tmp/binaryen.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/binaryen.tar.gz -C /tmp
+          sudo install -m 0755 /tmp/binaryen-version_133/bin/wasm-opt /usr/local/bin/wasm-opt
+          wasm-opt --version
+
+      - name: fmt
+        run: cargo fmt --check
+
+      - name: clippy
+        run: cargo clippy -p epiora-import -p epiora-import-wasm --all-targets --all-features -- -D warnings
+
+      # --all-features turns on `fuzzing` so tests/fuzz_regressions.rs
+      # compiles and replays crates/epiora-import/fuzz/regressions/.
+      - name: cargo test epiora-import
+        run: cargo test -p epiora-import --all-features
+
+      - name: cargo test epiora-import-wasm
+        run: cargo test -p epiora-import-wasm --all-features
+
+      - name: Wasm build (release + parity)
+        run: |
+          scripts/wasm-build.sh release epiora-import-wasm
+          scripts/wasm-build.sh parity epiora-import-wasm
+
+      - name: TypeScript bindings regeneration
+        run: |
+          cargo test -p epiora-import-wasm --features ts export_bindings
+          git diff --exit-code -- crates/epiora-import-wasm/bindings
+          if [ -n "$(git ls-files --others --exclude-standard -- crates/epiora-import-wasm/bindings)" ]; then
+            echo "untracked files in crates/epiora-import-wasm/bindings" >&2
+            exit 1
+          fi
+
+      - name: Native/wasm parity over fixtures/import
+        run: |
+          cargo run -p epiora-import --bin import-runner -- fixtures/import > target/import-native.jsonl
+          node crates/epiora-import-wasm/parity/run.mjs fixtures/import > target/import-wasm.jsonl
+          wc -l target/import-native.jsonl target/import-wasm.jsonl
+          crates/epiora-wasm/parity/diff.sh target/import-native.jsonl target/import-wasm.jsonl
+
+      - name: Node binding tests
+        run: |
+          NATIVE_IMPORT_UTF8_COMMA="$(grep '"case":"utf8_comma"' target/import-native.jsonl)" \
+            node --test crates/epiora-import-wasm/tests/node/*.test.mjs
+
+      - name: cargo deny check
+        run: cargo deny check
+
+      - name: Wasm size in job summary
+        if: always()
+        run: |
+          if [ -f crates/epiora-import-wasm/pkg/epiora_import_wasm_bg.wasm ]; then
+            size="$(gzip -9 -c crates/epiora-import-wasm/pkg/epiora_import_wasm_bg.wasm | wc -c | tr -d ' ')"
+            echo "import .wasm gzip -9 size: **${size} bytes** (reported only; the gate is Task 17)" \
+              >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload parity lines
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: import-parity-lines
+          path: |
+            target/import-native.jsonl
+            target/import-wasm.jsonl
+          if-no-files-found: ignore
+
+  # PR fuzzing (v0.3 spec §6.5): 60 s per import target on the dated
+  # nightly pinned by crates/epiora-core/fuzz/rust-toolchain.toml. A
+  # crash fails the job and its input is committed under
+  # fuzz/regressions/ by the fix.
+  fuzz:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Rust nightly-2026-10-15 (pinned)
+        run: |
+          rustup toolchain install nightly-2026-10-15 --profile minimal
+          rustup default nightly-2026-10-15
+          rustc --version
+          cargo --version
+
+      - name: Install cargo-fuzz 0.13.2 (pinned)
+        run: cargo install cargo-fuzz --version 0.13.2 --locked
+
+      - name: Fuzz each import target for 60 s
+        run: |
+          cd crates/epiora-import/fuzz
+          for target in text_import sheet_import diff_any; do
+            echo "== fuzz $target"
+            cargo fuzz run "$target" -- -max_total_time=60
+          done
+
+      - name: Upload crash artifacts
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: import-fuzz-artifacts
+          path: crates/epiora-import/fuzz/artifacts/
+          if-no-files-found: ignore

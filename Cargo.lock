@@ -498,6 +498,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "epiora-import-wasm"
+version = "0.2.0"
+dependencies = [
+ "epiora-core",
+ "epiora-import",
+ "js-sys",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "ts-rs",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "epiora-wasm"
 version = "0.2.0"
 dependencies = [
