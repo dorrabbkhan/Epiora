@@ -1542,4 +1542,8 @@ Files outside the Files block:
   `imports.insert`.
 - `app/src/store/opfs.ts` — sahpool capacity growth and open retry (above).
 - `app/src/worker/contract.types.ts` — the type file Step 2 names.
+- `.github/workflows/app.yml` — check-app.sh now builds both wasm packages, so
+  the app job installs the same pinned toolchain as engine.yml (Rust 1.99.0 +
+  wasm32, wasm-bindgen 0.2.129, wasm-pack 0.15.1, binaryen wasm-opt version_133,
+  all SHA-256 verified). First CI run failed `wasm-pack: command not found`.
 Supersedes: —
