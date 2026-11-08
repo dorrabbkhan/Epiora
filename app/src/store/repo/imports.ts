@@ -33,6 +33,9 @@ function toImport(r: Row): ImportRecord {
 export async function insert(
   tx: Tx,
   i: {
+    /** Caller-chosen id; change entries written earlier in the same
+        transaction reference it as `import_id`. */
+    id?: string;
     datasetId: string;
     version: number;
     settings: string;
@@ -43,7 +46,7 @@ export async function insert(
     now: string;
   },
 ): Promise<ImportRecord> {
-  const id = crypto.randomUUID();
+  const id = i.id ?? crypto.randomUUID();
   await tx.exec(
     'INSERT INTO imports (id, dataset_id, version, settings, coercions, encoding, delimiter, sheet, created_at) ' +
       'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',

@@ -40,9 +40,14 @@ export async function appendBatch(tx: Tx, entries: ChangeEntry[]): Promise<void>
   }
 }
 
-export async function countByDataset(tx: Tx, datasetId: string): Promise<number> {
-  const rows = await tx.query('SELECT COUNT(*) AS n FROM changes WHERE dataset_id = ?', [
-    datasetId,
-  ]);
+export async function countByDataset(
+  tx: Tx,
+  datasetId: string,
+  kind?: ChangeEntry['kind'],
+): Promise<number> {
+  const rows = await tx.query(
+    `SELECT COUNT(*) AS n FROM changes WHERE dataset_id = ?${kind === undefined ? '' : ' AND kind = ?'}`,
+    kind === undefined ? [datasetId] : [datasetId, kind],
+  );
   return Number(rows[0]!.n);
 }

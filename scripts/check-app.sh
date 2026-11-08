@@ -8,7 +8,8 @@
 #   scripts/check-app.sh full    quick + vite build + Playwright
 #                                (chromium, firefox, webkit)
 set -euo pipefail
-cd "$(git rev-parse --show-toplevel)/app"
+root="$(git rev-parse --show-toplevel)"
+cd "$root/app"
 
 mode="${1:-full}"
 case "$mode" in
@@ -24,6 +25,13 @@ if [ ! -d node_modules ] || [ package-lock.json -nt node_modules/.package-lock.j
 else
   echo "node_modules up to date"
 fi
+
+step "wasm packages (epiora-wasm, epiora-import-wasm)"
+# The worker's @engine/@import aliases point at crates/*/pkg, which is a
+# git-ignored build artifact — build both before tsc, Vitest or vite
+# build needs them.
+"$root/scripts/wasm-build.sh" release epiora-wasm
+"$root/scripts/wasm-build.sh" release epiora-import-wasm
 
 step "tsc --noEmit"
 npx tsc --noEmit

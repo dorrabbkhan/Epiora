@@ -7,8 +7,20 @@ import { configDefaults, defineConfig } from 'vitest/config';
 
 // `?raw` imports of ../store/migrations/*.sql live outside the app root;
 // Vite requires the workspace root to stay in `allow` once it is set.
+// The wasm `pkg/` outputs and ts-rs `bindings/` the data worker aliases
+// below live under ../crates, and the worker's browser tests fetch
+// fixture files under ../fixtures — all three must be servable too.
 const migrationsDir = fileURLToPath(new URL('../store/migrations', import.meta.url));
-const fsAllow = [searchForWorkspaceRoot(process.cwd()), migrationsDir];
+const cratesDir = fileURLToPath(new URL('../crates', import.meta.url));
+const fixturesDir = fileURLToPath(new URL('../fixtures', import.meta.url));
+const fsAllow = [searchForWorkspaceRoot(process.cwd()), migrationsDir, cratesDir, fixturesDir];
+
+// Mirrors vite.config.ts (vitest does not read it): the worker reaches
+// the wasm packages and generated types through these aliases.
+const enginePkg = fileURLToPath(new URL('../crates/epiora-wasm/pkg', import.meta.url));
+const engineTypes = fileURLToPath(new URL('../crates/epiora-wasm/bindings', import.meta.url));
+const importPkg = fileURLToPath(new URL('../crates/epiora-import-wasm/pkg', import.meta.url));
+const importTypes = fileURLToPath(new URL('../crates/epiora-import-wasm/bindings', import.meta.url));
 
 // WebKit needs a persistent (on-disk) profile for OPFS, and a fresh one
 // per run — a reused profile can leave a stale WebKit lock and time out
@@ -25,6 +37,14 @@ const webkitProfile = `${webkitProfileParent}/${crypto.randomUUID()}`;
 
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    alias: {
+      '@engine': enginePkg,
+      '@engine-types': engineTypes,
+      '@import': importPkg,
+      '@import-types': importTypes,
+    },
+  },
   test: {
     projects: [
       {

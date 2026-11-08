@@ -17,7 +17,13 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["vite/client", "node"]
+    "types": ["vite/client", "node"],
+    "paths": {
+      "@engine/*": ["../crates/epiora-wasm/pkg/*"],
+      "@engine-types/*": ["../crates/epiora-wasm/bindings/*"],
+      "@import/*": ["../crates/epiora-import-wasm/pkg/*"],
+      "@import-types/*": ["../crates/epiora-import-wasm/bindings/*"]
+    }
   },
   "include": [
     "src/**/*.ts",
