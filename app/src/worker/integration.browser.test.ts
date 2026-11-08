@@ -7,181 +7,32 @@
 // snapshots to be corrupted/re-checked — neither crosses the typed RPC
 // surface — so once a scenario is done the data worker is terminated
 // and the conformance harness worker opens the same database for raw
-// SQL and repository calls (sahpool allows one holder at a time).
+// SQL and repository calls (sahpool allows one holder at a time). The
+// harness itself lives in integration-helpers.ts.
 
-import * as Comlink from 'comlink';
 import { afterEach, describe, expect, it } from 'vitest';
-import { wrapDataApi } from './client';
 import { isWiredRpcError, RpcError } from './errors';
+import {
+  csv,
+  FREQ_OPTIONS,
+  fixture,
+  importFile,
+  KEY_ID,
+  openHarness,
+  spawn,
+  TABLES_OPTIONS,
+  terminateSpawned,
+  untilStore,
+} from './integration-helpers';
 import * as changes from '../store/repo/changes';
 import * as records from '../store/repo/records';
 import * as versions from '../store/repo/versions';
-import type { HarnessApi } from '../store/conformance/harness.worker';
-import { StoreError, type Row, type SqlValue, type Store, type Tx } from '../store/types';
-import type { DataApi } from './api';
 import type { ImportSettings } from '@import-types/ImportSettings';
-import type { FreqOptions } from '@engine-types/FreqOptions';
-import type { TablesOptions } from '@engine-types/TablesOptions';
-import type { Remote } from 'comlink';
 
 import utf8CommaUrl from '../../../fixtures/import/utf8_comma/input.csv?url';
 import raggedUrl from '../../../fixtures/import/ragged_row_error/input.csv?url';
 
-const workers: Worker[] = [];
-afterEach(() => {
-  while (workers.length > 0) workers.pop()!.terminate();
-});
-
-function spawn(db: string): Remote<DataApi> {
-  const worker = new Worker(new URL('./data.worker.ts', import.meta.url), {
-    type: 'module',
-    name: db,
-  });
-  workers.push(worker);
-  return wrapDataApi(worker);
-}
-
-async function fixture(url: string): Promise<ArrayBuffer> {
-  return (await fetch(url)).arrayBuffer();
-}
-
-function csv(text: string): ArrayBuffer {
-  return new TextEncoder().encode(text).buffer as ArrayBuffer;
-}
-
-const KEY_ID: ImportSettings = {
-  encoding: null,
-  delimiter: null,
-  header: true,
-  decimal: null,
-  missing_codes: ['', '.', 'NA'],
-  date_format: 'iso',
-  sheet: null,
-  column_types: {},
-  key: { column: { name: 'ID' } },
-};
-
-const FREQ_OPTIONS: FreqOptions = {
-  variables: ['E'],
-  stratify_by: null,
-  include_missing: false,
-  ci_method: 'clopper_pearson',
-};
-
-const TABLES_OPTIONS: TablesOptions = {
-  // Text 2×2 variables need explicit orientation (engine's
-  // AmbiguousLevels rule — it never guesses).
-  exposure: {
-    name: 'E',
-    levels: [
-      { type: 'text', value: 'a' },
-      { type: 'text', value: 'b' },
-    ],
-  },
-  outcome: {
-    name: 'O',
-    levels: [
-      { type: 'text', value: 'x' },
-      { type: 'text', value: 'y' },
-    ],
-  },
-  stratify_by: [],
-  include_missing: false,
-};
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-interface WiredStoreError {
-  __epioraStoreError: true;
-  code: StoreError['code'];
-  message: string;
-}
-
-function isWiredStoreError(e: unknown): e is WiredStoreError {
-  return (
-    typeof e === 'object' && e !== null && (e as WiredStoreError).__epioraStoreError === true
-  );
-}
-
-async function call<T>(p: Promise<T>): Promise<T> {
-  try {
-    return await p;
-  } catch (e) {
-    throw isWiredStoreError(e) ? new StoreError(e.code, e.message) : e;
-  }
-}
-
-interface RemoteStore {
-  exec(sql: string, params?: SqlValue[]): Promise<void>;
-  query(sql: string, params?: SqlValue[]): Promise<Row[]>;
-  transaction(fn: (tx: Tx) => Promise<unknown>): Promise<unknown>;
-  close(): Promise<void>;
-}
-
-/** Opens the conformance harness worker on `db`, retrying while the
- *  terminated data worker's sahpool handles are still dying. */
-async function openHarness(db: string): Promise<Store> {
-  const worker = new Worker(new URL('../store/conformance/harness.worker.ts', import.meta.url), {
-    type: 'module',
-  });
-  workers.push(worker);
-  const api = Comlink.wrap<HarnessApi>(worker);
-  let remote: RemoteStore | null = null;
-  for (let i = 0; i < 100 && remote === null; i++) {
-    remote = (await call(api.open(db)).then(
-      (r) => r as unknown as RemoteStore,
-      () => null,
-    )) as RemoteStore | null;
-    if (remote === null) await sleep(100);
-  }
-  if (remote === null) throw new Error('harness store did not open');
-  const r = remote;
-  return {
-    exec: (sql, params) => call(r.exec(sql, params)),
-    query: (sql, params) => call(r.query(sql, params)) as Promise<Row[]>,
-    transaction: (fn) => call(r.transaction(Comlink.proxy(fn))) as Promise<never>,
-    close: async () => {
-      await call(r.close());
-      worker.terminate();
-    },
-  };
-}
-
-/** Terminates the workers the test spawned so far (sahpool holder). */
-function terminateSpawned(): void {
-  while (workers.length > 0) workers.pop()!.terminate();
-}
-
-/** Retries an RPC while a previous worker's sahpool is still closing. */
-async function untilStore<T>(fn: () => Promise<T>): Promise<T> {
-  for (let i = 0; i < 100; i++) {
-    try {
-      return await fn();
-    } catch (e) {
-      if (!(e instanceof RpcError) || e.detail !== 'locked_elsewhere') throw e;
-      await sleep(100);
-    }
-  }
-  return fn();
-}
-
-/** Imports a file end to end and returns its CommitResult. */
-async function importFile(
-  api: Remote<DataApi>,
-  projectId: string,
-  name: string,
-  bytes: ArrayBuffer,
-  settings?: ImportSettings,
-) {
-  const { sessionId } = await api.inspectFile(name, bytes);
-  return api.commitImport(
-    sessionId,
-    { projectId, datasetName: name.replace(/\..*$/, '') },
-    settings ?? ({} as ImportSettings),
-    true,
-    () => {},
-  );
-}
+afterEach(terminateSpawned);
 
 describe('data worker integration', () => {
   it('import_creates_version_1_with_matching_hash', async () => {

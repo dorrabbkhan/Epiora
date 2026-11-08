@@ -18,6 +18,7 @@ import type { KeyCandidate } from '@import-types/KeyCandidate';
 import type { RecordKey } from '@import-types/RecordKey';
 import type { ValueType } from '@import-types/ValueType';
 import * as analysis from './analysis';
+import * as commit from './commit';
 import { engine } from './engines';
 import { rpc, throwWired } from './errors';
 import * as importer from './importer';
@@ -211,7 +212,7 @@ export const api: DataApi = {
   ),
   commitImport: wire((sessionId, target, settings, accept, onProgress) =>
     withStore((s) =>
-      importer.commitImport(s, sessionId, target, settings, accept, onProgress),
+      commit.commitImport(s, sessionId, target, settings, accept, onProgress),
     ),
   ),
   cancelImport: wire((sessionId) => importer.cancelImport(sessionId)),

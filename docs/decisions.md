@@ -1531,6 +1531,13 @@ Decision:
   opens retry transient lock errors for 10 s (dying workers' handles).
 - `RunContext.project` is always passed by the worker (receipt v2 names the
   project) — matches the ts-rs required-key binding.
+- The bindings export no code lists, so `error_code_lists_match_rust`
+  (contract.test.ts, fix round 1, PR #45) reads `crates/epiora-import/src/
+  error.rs` and `crates/epiora-core/src/error.rs` and extracts the string
+  literals each enum's `fn code()` returns (`=> "…"` match arms; the
+  `ImportError::Engine` transparent wrap yields none) and asserts both sets
+  equal the hand-copied lists in errors.ts — a new Rust `code()` fails the
+  contract test instead of reaching the wire unmapped.
 Files outside the Files block:
 - `app/vitest.config.ts` — vitest does not read vite.config.ts; same alias and
   fs.allow additions mirrored (Task 8 precedent).
@@ -1542,6 +1549,10 @@ Files outside the Files block:
   `imports.insert`.
 - `app/src/store/opfs.ts` — sahpool capacity growth and open retry (above).
 - `app/src/worker/contract.types.ts` — the type file Step 2 names.
+- `app/src/worker/commit.ts`, `app/src/worker/integration-helpers.ts` (fix
+  round 1, PR #45) — the ~400-line rule split: the single-transaction commit
+  out of importer.ts, and the shared test harness (worker spawn, fixture
+  fetch, store-open retry) out of integration.browser.test.ts. Pure moves.
 - `.github/workflows/app.yml` — check-app.sh now builds both wasm packages, so
   the app job installs the same pinned toolchain as engine.yml (Rust 1.99.0 +
   wasm32, wasm-bindgen 0.2.129, wasm-pack 0.15.1, binaryen wasm-opt version_133,
