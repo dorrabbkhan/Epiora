@@ -1416,3 +1416,54 @@ Files outside the Files block:
 - `app/.npmrc` (fix round 2) — `install-strategy=nested`, keeps `ts-api-utils` nested inside
   `eslint-ts6` so it cannot resolve the root `typescript` 7.
 Supersedes: —
+
+### v0.3 Task 8 — store: migrations, `Store`, repositories, OPFS backend, conformance suite
+
+- Dependencies and licences (AGENTS.md rule 6): `@sqlite.org/sqlite-wasm` 3.54.1-build1
+  (Apache-2.0, production), `comlink` 4.4.2 (Apache-2.0, production). Dev: `@vitest/browser`
+  5.1.0 (MIT), `@vitest/browser-playwright` 5.1.0 (MIT), `playwright` 1.65.0 (Apache-2.0 —
+  pinned to the same version `@playwright/test` already resolves, so the installed browser
+  builds match). All are the latest release at task time and inside the plan's Tech Stack.
+- Schema column names are `record_key` and `record_values`, not `key`/`values`: `values`
+  unquoted is a syntax error in SQLite DDL (verified against sqlite-wasm 3.54.1), and `key`
+  is a keyword. The spec §4.1 "Holds" column describes content, not column names.
+- Conformance `open()` contract: one OPFS database per suite run (a fresh random name per
+  file load), every `open()` call returns a new connection to it. That is what makes
+  `uncommitted_transaction_is_invisible_after_reopen` a real reopen instead of a fresh
+  empty store, and it is what Task 14's `openStdioStore(tmpPath(), …)` must mirror
+  (one tmp path per suite run).
+- WebKit + OPFS (the §14 risk the plan flags): Playwright's WebKit (27.2 here) has
+  `createSyncAccessHandle` but `navigator.storage.getDirectory()` rejects with
+  `UnknownError` in ephemeral (non-persistent) contexts — even on the main thread. A
+  persistent context gives WebKit a real on-disk profile where OPFS works, so the webkit
+  instance gets `provider: playwright({ persistentContext: <fresh dir per run> })` and the
+  project sets `fileParallelism: false` (vitest ignores `persistentContext` under parallel
+  sessions). A fresh profile dir per config load avoids stale-profile launch timeouts.
+- Comlink error boundary: thrown Errors cross with only name/message/stack — `StoreError`'s
+  `code` would be lost. `harness.worker.ts` re-throws StoreErrors as a marked plain object
+  (`{ __epioraStoreError, code, message }`, which travels by structured clone) and the test
+  side revives them into real StoreError instances; the tx object handed to a proxied
+  `transaction` callback gets the same treatment because those errors cross the boundary
+  the other way. Task 14's relay store must implement the same wire shape.
+- `Store.transaction` re-throws the callback's error unchanged after ROLLBACK (the plan's
+  "re-throwing"); only COMMIT/BEGIN failures are mapped through `mapError`.
+- sqlite-wasm specifics: the bundled `index.d.mts` declares `init(): Promise<Sqlite3Static>`
+  with no parameters but the implementation accepts `{ locateFile }` — a typed cast is used
+  so the `.wasm` resolves through `?url` under Vite. `optimizeDeps.exclude` keeps the
+  package out of pre-bundling (vite.config.ts and the vitest project config; vitest does
+  not read vite.config.ts). oo1 `exec` returns `bigint` for i64 values beyond 2^53 and
+  `Uint8Array` for blobs, matching the `SqlValue` contract directly.
+- `check-app.sh` runs the two Vitest projects separately (`--project unit`,
+  `--project store-opfs`) so the browser suite is visible in the gate output; `vitest run`
+  alone runs both anyway.
+Evidence: `npx vitest run --project store-opfs` → 13 tests × chromium/firefox/webkit = 39
+  passed (`PLAYWRIGHT_BROWSERS_PATH=target/ms-playwright`); `./scripts/check.sh quick` PASS
+  (npm ci, tsc --noEmit, ESLint, Stylelint, tokens diff clean, unit 9/9, store-opfs 39/39,
+  licence check). WebKit OPFS probes: `getDirectory()` fails with UnknownError in an
+  ephemeral context, succeeds in `launchPersistentContext` (probe commands in session log).
+Files outside the Files block:
+- `app/package.json`, `app/package-lock.json` — the new dependencies above.
+- `docs/decisions.md` — this entry.
+- `.gitignore` — added `app/.vitest/` (vitest failure-attachment output, same class as the
+  already-ignored `test-results/` and `playwright-report/`).
+Supersedes: —

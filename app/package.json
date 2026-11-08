@@ -19,7 +19,9 @@
     "e2e": "playwright test"
   },
   "dependencies": {
+    "@sqlite.org/sqlite-wasm": "^3.54.1-build1",
     "@tanstack/react-router": "^1.170.46",
+    "comlink": "^4.4.2",
     "react": "^19.3.1",
     "react-aria-components": "^1.22.1",
     "react-dom": "^19.3.1"
@@ -34,11 +36,14 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.2.1",
+    "@vitest/browser": "^5.1.0",
+    "@vitest/browser-playwright": "^5.1.0",
     "eslint": "^10.14.0",
     "eslint-ts6": "file:eslint-ts6",
     "globals": "^17.14.0",
     "jsdom": "^31.0.0",
     "license-checker-rseidelsohn": "^5.0.1",
+    "playwright": "^1.65.0",
     "stylelint": "^18.0.0",
     "typescript": "^7.0.2",
     "vite": "^8.3.6",
