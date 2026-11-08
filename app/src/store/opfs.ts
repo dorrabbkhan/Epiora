@@ -9,6 +9,7 @@ import sqlite3InitModule, {
 } from '@sqlite.org/sqlite-wasm';
 import sqlite3WasmUrl from '@sqlite.org/sqlite-wasm/sqlite3.wasm?url';
 import initSql from '../../../store/migrations/0001_init.sql?raw';
+import { mapError } from './map-error';
 import { migrate } from './migrate';
 import { StoreError, type Row, type SqlValue, type Store, type Tx } from './types';
 
@@ -49,45 +50,6 @@ function getPool(): Promise<SAHPoolUtil> {
   return poolP;
 }
 
-interface SqliteErrorLike {
-  resultCode: number;
-  message?: string;
-}
-
-function isSqliteError(e: unknown): e is SqliteErrorLike {
-  return (
-    typeof e === 'object' &&
-    e !== null &&
-    'resultCode' in e &&
-    typeof (e as SqliteErrorLike).resultCode === 'number'
-  );
-}
-
-function mapError(sqlite3: Sqlite3Static, e: unknown): StoreError {
-  if (e instanceof StoreError) return e;
-  const domName = e instanceof DOMException ? e.name : null;
-  const message =
-    (domName === null ? '' : `${domName}: `) +
-    (e instanceof Error ? e.message : String(e));
-  const rc = isSqliteError(e) ? e.resultCode : null;
-  if (
-    domName === 'QuotaExceededError' ||
-    rc === sqlite3.capi.SQLITE_FULL ||
-    /quota|storage.{0,20}(full|exceed)|no.{0,10}space/i.test(message)
-  ) {
-    return new StoreError('quota_exceeded', message, { cause: e });
-  }
-  if (
-    domName === 'NoModificationAllowedError' ||
-    domName === 'InvalidStateError' ||
-    rc === sqlite3.capi.SQLITE_BUSY ||
-    /Access Handles cannot|already.{0,20}(open|use|lock)/i.test(message)
-  ) {
-    return new StoreError('locked_elsewhere', message, { cause: e });
-  }
-  return new StoreError('sql', message, { cause: e });
-}
-
 function makeStore(sqlite3: Sqlite3Static, db: OpfsSAHPoolDatabase): Store {
   let closed = false;
   let failNextWrite = false;
@@ -111,7 +73,7 @@ function makeStore(sqlite3: Sqlite3Static, db: OpfsSAHPoolDatabase): Store {
         execRaw(sql, params);
         return Promise.resolve();
       } catch (e) {
-        return Promise.reject(mapError(sqlite3, e));
+        return Promise.reject(mapError(sqlite3, e, 'run'));
       }
     },
     query: (sql, params) => {
@@ -125,7 +87,7 @@ function makeStore(sqlite3: Sqlite3Static, db: OpfsSAHPoolDatabase): Store {
         }) as Record<string, SqlValue>[];
         return Promise.resolve(rows as Row[]);
       } catch (e) {
-        return Promise.reject(mapError(sqlite3, e));
+        return Promise.reject(mapError(sqlite3, e, 'run'));
       }
     },
   };
@@ -138,7 +100,7 @@ function makeStore(sqlite3: Sqlite3Static, db: OpfsSAHPoolDatabase): Store {
       try {
         execRaw('BEGIN');
       } catch (e) {
-        throw mapError(sqlite3, e);
+        throw mapError(sqlite3, e, 'run');
       }
       let result: T;
       try {
@@ -159,7 +121,7 @@ function makeStore(sqlite3: Sqlite3Static, db: OpfsSAHPoolDatabase): Store {
         } catch {
           // The connection may already have dropped the transaction.
         }
-        throw mapError(sqlite3, e);
+        throw mapError(sqlite3, e, 'run');
       }
       return result;
     },
@@ -190,7 +152,7 @@ export async function openOpfsStore(name: string): Promise<Store> {
     const pool = await getPool();
     db = new pool.OpfsSAHPoolDb(name);
   } catch (e) {
-    throw mapError(sqlite3, e);
+    throw mapError(sqlite3, e, 'acquire');
   }
   const store = makeStore(sqlite3, db);
   try {

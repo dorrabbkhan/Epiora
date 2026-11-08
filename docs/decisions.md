@@ -1439,6 +1439,11 @@ Supersedes: —
   instance gets `provider: playwright({ persistentContext: <fresh dir per run> })` and the
   project sets `fileParallelism: false` (vitest ignores `persistentContext` under parallel
   sessions). A fresh profile dir per config load avoids stale-profile launch timeouts.
+  Profiles live under `node_modules/.cache/vitest-webkit/<uuid>`; the config rmSyncs and
+  recreates that parent at load so they cannot accumulate, and Playwright creates the
+  `<uuid>` leaf itself on launch (the config is evaluated more than once per run, so
+  mkdir'ing the leaf at load left an empty sibling dir — verified: one dir remains after
+  two consecutive `--project store-opfs` runs).
 - Comlink error boundary: thrown Errors cross with only name/message/stack — `StoreError`'s
   `code` would be lost. `harness.worker.ts` re-throws StoreErrors as a marked plain object
   (`{ __epioraStoreError, code, message }`, which travels by structured clone) and the test
@@ -1449,14 +1454,19 @@ Supersedes: —
   "re-throwing"); BEGIN and COMMIT failures are mapped through `mapError` (a nested
   `store.transaction` therefore rejects with a StoreError, code `sql`).
 - `mapError` order: DOMException `name` first (`QuotaExceededError` → `quota_exceeded`;
-  `NoModificationAllowedError` and `InvalidStateError` → `locked_elsewhere`), then the
-  sqlite result code (`SQLITE_FULL` → `quota_exceeded`, `SQLITE_BUSY` → `locked_elsewhere`),
-  then the message. A held sahpool reaches `openOpfsStore` as the raw DOMException from
+  `NoModificationAllowedError` → `locked_elsewhere`), then the sqlite result code
+  (`SQLITE_FULL` → `quota_exceeded`, `SQLITE_BUSY` → `locked_elsewhere`), then the message.
+  `InvalidStateError` → `locked_elsewhere` only in `mapError`'s `'acquire'` context — the
+  `getPool()` + `new pool.OpfsSAHPoolDb(name)` step in `openOpfsStore` (fix round 2: it is
+  lock-significant only there; `'run'` context — exec, query, transaction, migrate — maps
+  it to `sql`). A held sahpool reaches `openOpfsStore` as the raw DOMException from
   `createSyncAccessHandle` — no resultCode — so name matching is what maps it: Chromium
   `NoModificationAllowedError` ("Access Handles cannot be created …"), Firefox
   `NoModificationAllowedError` ("No modification allowed"), WebKit 27.2 `InvalidStateError`
   ("The object is in an invalid state."). The name is prefixed onto the StoreError message
-  because Comlink drops it at the wire boundary.
+  because Comlink drops it at the wire boundary. `mapError` lives in `map-error.ts` (pure)
+  so `opfs.test.ts` can run in the unit project without the wasm / `?raw` module graph —
+  `opfs.ts` cannot be imported under the unit project's `server.fs.allow`.
 - `getPool` clears its cached promise on rejection and passes
   `forceReinitIfPreviouslyFailed` (present in sqlite-wasm 3.54.1, absent from the bundled
   .d.mts — cast like `locateFile`) so a later `openOpfsStore` retries instead of re-throwing
@@ -1473,14 +1483,25 @@ Supersedes: —
 - `check-app.sh` runs the two Vitest projects separately (`--project unit`,
   `--project store-opfs`) so the browser suite is visible in the gate output; `vitest run`
   alone runs both anyway.
+- `server.fs.allow` is `[searchForWorkspaceRoot(process.cwd()), ../store/migrations]`
+  (fix round 2: was `['..']`, which let the dev server serve the whole repo root). Vite
+  requires the workspace root to stay in the list once `allow` is set; the migrations path
+  is resolved from the config file's location, not cwd. Same list in vite.config.ts and
+  the store-opfs vitest project.
 Evidence: `npx vitest run --project store-opfs` → 15 tests × chromium/firefox/webkit = 45
   passed (`PLAYWRIGHT_BROWSERS_PATH=target/ms-playwright`); `./scripts/check.sh quick` PASS
   (npm ci, tsc --noEmit, ESLint, Stylelint, tokens diff clean, unit 9/9, store-opfs 45/45,
-  licence check). WebKit OPFS probes: `getDirectory()` fails with UnknownError in an
+  licence check). Fix round 2 (PR #44): `./scripts/check.sh quick` PASS (unit 11/11,
+  store-opfs 45/45), `npm run build` ok, Playwright e2e 72/72 across the three engines;
+  `ls node_modules/.cache/vitest-webkit/` shows exactly one dir after two consecutive
+  store-opfs runs. WebKit OPFS probes: `getDirectory()` fails with UnknownError in an
   ephemeral context, succeeds in `launchPersistentContext` (probe commands in session log).
 Files outside the Files block:
 - `app/package.json`, `app/package-lock.json` — the new dependencies above.
 - `docs/decisions.md` — this entry.
 - `.gitignore` — added `app/.vitest/` (vitest failure-attachment output, same class as the
   already-ignored `test-results/` and `playwright-report/`).
+- `app/src/store/map-error.ts`, `app/src/store/opfs.test.ts` (fix round 2, PR #44) — the
+  pure error mapper extracted from `opfs.ts` and its unit test (InvalidStateError context);
+  extraction is what lets the test run in the unit project.
 Supersedes: —
