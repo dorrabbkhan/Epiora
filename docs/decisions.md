@@ -1446,7 +1446,24 @@ Supersedes: —
   `transaction` callback gets the same treatment because those errors cross the boundary
   the other way. Task 14's relay store must implement the same wire shape.
 - `Store.transaction` re-throws the callback's error unchanged after ROLLBACK (the plan's
-  "re-throwing"); only COMMIT/BEGIN failures are mapped through `mapError`.
+  "re-throwing"); BEGIN and COMMIT failures are mapped through `mapError` (a nested
+  `store.transaction` therefore rejects with a StoreError, code `sql`).
+- `mapError` order: DOMException `name` first (`QuotaExceededError` → `quota_exceeded`;
+  `NoModificationAllowedError` and `InvalidStateError` → `locked_elsewhere`), then the
+  sqlite result code (`SQLITE_FULL` → `quota_exceeded`, `SQLITE_BUSY` → `locked_elsewhere`),
+  then the message. A held sahpool reaches `openOpfsStore` as the raw DOMException from
+  `createSyncAccessHandle` — no resultCode — so name matching is what maps it: Chromium
+  `NoModificationAllowedError` ("Access Handles cannot be created …"), Firefox
+  `NoModificationAllowedError` ("No modification allowed"), WebKit 27.2 `InvalidStateError`
+  ("The object is in an invalid state."). The name is prefixed onto the StoreError message
+  because Comlink drops it at the wire boundary.
+- `getPool` clears its cached promise on rejection and passes
+  `forceReinitIfPreviouslyFailed` (present in sqlite-wasm 3.54.1, absent from the bundled
+  .d.mts — cast like `locateFile`) so a later `openOpfsStore` retries instead of re-throwing
+  sqlite-wasm's internally cached init failure. Proved by
+  `held_pool_maps_to_locked_elsewhere_and_recovers`: a second worker's open rejects
+  `locked_elsewhere` while the first holds the pool, and succeeds after the first is
+  terminated.
 - sqlite-wasm specifics: the bundled `index.d.mts` declares `init(): Promise<Sqlite3Static>`
   with no parameters but the implementation accepts `{ locateFile }` — a typed cast is used
   so the `.wasm` resolves through `?url` under Vite. `optimizeDeps.exclude` keeps the
@@ -1456,9 +1473,9 @@ Supersedes: —
 - `check-app.sh` runs the two Vitest projects separately (`--project unit`,
   `--project store-opfs`) so the browser suite is visible in the gate output; `vitest run`
   alone runs both anyway.
-Evidence: `npx vitest run --project store-opfs` → 13 tests × chromium/firefox/webkit = 39
+Evidence: `npx vitest run --project store-opfs` → 15 tests × chromium/firefox/webkit = 45
   passed (`PLAYWRIGHT_BROWSERS_PATH=target/ms-playwright`); `./scripts/check.sh quick` PASS
-  (npm ci, tsc --noEmit, ESLint, Stylelint, tokens diff clean, unit 9/9, store-opfs 39/39,
+  (npm ci, tsc --noEmit, ESLint, Stylelint, tokens diff clean, unit 9/9, store-opfs 45/45,
   licence check). WebKit OPFS probes: `getDirectory()` fails with UnknownError in an
   ephemeral context, succeeds in `launchPersistentContext` (probe commands in session log).
 Files outside the Files block:

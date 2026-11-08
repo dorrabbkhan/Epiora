@@ -177,6 +177,23 @@ export function storeConformance(name: string, open: () => Promise<Store>): void
       expect(rows).toHaveLength(0);
     });
 
+    it('nested_transaction_is_a_store_error', async () => {
+      // BEGIN while a transaction is open fails at the engine level; the
+      // contract surfaces it as a StoreError, not a raw driver error.
+      let release!: () => void;
+      const gate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const first = store.transaction(() => gate);
+      const err = await store.transaction(async () => {}).then(
+        () => null,
+        (e: unknown) => e,
+      );
+      expect(err).toBeInstanceOf(StoreError);
+      release();
+      await first;
+    });
+
     it('uncommitted_transaction_is_invisible_after_reopen', async () => {
       // Review Focus 4: a reload mid-import must leave no partial writes.
       const { dataset } = await makeDataset(store);

@@ -32,7 +32,20 @@ function getSqlite(): Promise<Sqlite3Static> {
 }
 
 function getPool(): Promise<SAHPoolUtil> {
-  poolP ??= getSqlite().then((sqlite3) => sqlite3.installOpfsSAHPoolVfs({}));
+  poolP ??= getSqlite()
+    .then((sqlite3) =>
+      sqlite3.installOpfsSAHPoolVfs(
+        // The bundled .d.mts omits this option, but without it a retry
+        // re-throws the internally cached init failure.
+        { forceReinitIfPreviouslyFailed: true } as Parameters<
+          Sqlite3Static['installOpfsSAHPoolVfs']
+        >[0],
+      ),
+    )
+    .catch((e: unknown) => {
+      poolP = null;
+      throw e;
+    });
   return poolP;
 }
 
@@ -52,24 +65,25 @@ function isSqliteError(e: unknown): e is SqliteErrorLike {
 
 function mapError(sqlite3: Sqlite3Static, e: unknown): StoreError {
   if (e instanceof StoreError) return e;
-  const message = e instanceof Error ? e.message : String(e);
-  if (isSqliteError(e)) {
-    const rc = e.resultCode;
-    if (
-      rc === sqlite3.capi.SQLITE_FULL ||
-      /quota|storage.{0,20}(full|exceed)|no.{0,10}space/i.test(message)
-    ) {
-      return new StoreError('quota_exceeded', message, { cause: e });
-    }
-    if (
-      rc === sqlite3.capi.SQLITE_BUSY ||
-      /Access Handles cannot|already.{0,20}(open|use|lock)/i.test(message)
-    ) {
-      return new StoreError('locked_elsewhere', message, { cause: e });
-    }
-  }
-  if (/quotaexceedederror|quota exceeded/i.test(message)) {
+  const domName = e instanceof DOMException ? e.name : null;
+  const message =
+    (domName === null ? '' : `${domName}: `) +
+    (e instanceof Error ? e.message : String(e));
+  const rc = isSqliteError(e) ? e.resultCode : null;
+  if (
+    domName === 'QuotaExceededError' ||
+    rc === sqlite3.capi.SQLITE_FULL ||
+    /quota|storage.{0,20}(full|exceed)|no.{0,10}space/i.test(message)
+  ) {
     return new StoreError('quota_exceeded', message, { cause: e });
+  }
+  if (
+    domName === 'NoModificationAllowedError' ||
+    domName === 'InvalidStateError' ||
+    rc === sqlite3.capi.SQLITE_BUSY ||
+    /Access Handles cannot|already.{0,20}(open|use|lock)/i.test(message)
+  ) {
+    return new StoreError('locked_elsewhere', message, { cause: e });
   }
   return new StoreError('sql', message, { cause: e });
 }
@@ -121,7 +135,11 @@ function makeStore(sqlite3: Sqlite3Static, db: OpfsSAHPoolDatabase): Store {
     query: tx.query,
     transaction: async <T>(fn: (tx: Tx) => Promise<T>): Promise<T> => {
       guard();
-      execRaw('BEGIN');
+      try {
+        execRaw('BEGIN');
+      } catch (e) {
+        throw mapError(sqlite3, e);
+      }
       let result: T;
       try {
         result = await fn(tx);

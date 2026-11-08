@@ -1,11 +1,11 @@
 // meta repository (spec §4.1): install-level keys — schema_version,
 // device_id (minted once by migrate) and the Lamport clock.
 
-import type { Tx } from '../types';
+import { StoreError, type Tx } from '../types';
 
 export async function deviceId(tx: Tx): Promise<string> {
   const rows = await tx.query("SELECT value FROM meta WHERE key = 'device_id'");
-  if (rows.length === 0) throw new Error('meta.device_id is not set');
+  if (rows.length === 0) throw new StoreError('sql', 'meta.device_id is not set');
   return String(rows[0]!.value);
 }
 
