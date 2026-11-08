@@ -1,0 +1,32 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 60rem;
+}
+
+.page h1 {
+  margin: 0;
+  font-size: var(--font-size6);
+}
+
+.page h2 {
+  margin: 0;
+  font-size: var(--font-size5);
+}
+
+.page p {
+  margin: 0;
+  color: var(--color-textMuted);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.themeForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}

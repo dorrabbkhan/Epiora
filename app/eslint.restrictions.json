@@ -1,0 +1,9 @@
+{
+  "jsx": [
+    { "selector": "JSXOpeningElement[name.name='button']", "message": "use the Epiora component set" },
+    { "selector": "JSXOpeningElement[name.name='input']", "message": "use the Epiora component set" },
+    { "selector": "JSXOpeningElement[name.name='select']", "message": "use the Epiora component set" },
+    { "selector": "JSXOpeningElement[name.name='textarea']", "message": "use the Epiora component set" },
+    { "selector": "JSXOpeningElement[name.name='a']:has(JSXAttribute[name.name='onClick'])", "message": "use the Epiora component set" }
+  ]
+}

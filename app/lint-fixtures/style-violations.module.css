@@ -1,0 +1,12 @@
+/* Intentional violations for lint_rules_catch_violations (spec §9.2).
+   Ignored by the normal stylelint run (see stylelint.config.js). */
+.bad {
+  color: #ff0000;
+  background: rgb(1, 2, 3);
+  border-color: hsla(0, 0%, 50%, 0.5);
+  margin: 8px;
+  padding-top: 4px;
+  gap: 12px;
+  border-radius: 4px;
+  font-size: 12px;
+}

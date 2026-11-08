@@ -1,0 +1,30 @@
+.disclosure {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.disclosure [slot='trigger'] {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-size: var(--font-size3);
+  font-weight: var(--font-weightBold);
+  cursor: pointer;
+}
+
+.disclosure [slot='trigger'][data-focus-visible] {
+  outline: var(--focus-ringWidth) var(--focus-ringStyle) var(--color-focus);
+  outline-offset: calc(-1 * var(--focus-ringWidth));
+}
+
+.panel {
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}

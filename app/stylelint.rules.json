@@ -1,0 +1,13 @@
+{
+  "color-no-hex": true,
+  "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla"],
+  "declaration-property-unit-disallowed-list": [
+    {
+      "/^margin/": ["px"],
+      "/^padding/": ["px"],
+      "/^(row-|column-)?gap$/": ["px"],
+      "/^border[a-z-]*-radius$/": ["px"],
+      "font-size": ["px"]
+    }
+  ]
+}

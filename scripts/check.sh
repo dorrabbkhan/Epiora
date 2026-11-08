@@ -19,12 +19,12 @@ changed="$(git diff --name-only "$base"; git diff --name-only; git ls-files --ot
 
 step() { printf '\n== %s\n' "$1"; }
 
-# Fixture guard: fixtures never change together with engine or spike code,
-# and only through fixtures/generate.R (AGENTS.md rule 1).
+# Fixture guard: fixtures never change together with engine, app or spike
+# code, and only through fixtures/generate.R (AGENTS.md rule 1).
 step "fixture guard"
 if [ "${ALLOW_FIXTURE_CHANGE:-0}" != 1 ] && grep -q '^fixtures/' <<<"$changed"; then
-  if grep -qE '^(crates|spikes)/' <<<"$changed"; then
-    echo "fixtures/ changed together with crates/ or spikes/ — not allowed" >&2; exit 1
+  if grep -qE '^(crates|spikes|app)/' <<<"$changed"; then
+    echo "fixtures/ changed together with crates/, app/ or spikes/ — not allowed" >&2; exit 1
   fi
   echo "fixtures/ changed: allowed only via fixtures/generate.R in the fixture task"
 fi
@@ -48,6 +48,21 @@ if [ -d crates ]; then
   fi
 else
   echo "skipped (no crates/ yet)"
+fi
+
+# App gate (v0.3): runs whenever app/ exists — in quick mode only when
+# the app inputs changed.
+step "app (app/)"
+if [ -d app ]; then
+  if [ "$mode" = quick ] && ! grep -qE '^(app/|scripts/check-app\.sh)' <<<"$changed"; then
+    echo "skipped (no app/ or check-app.sh changes)"
+  elif [ "$mode" = quick ]; then
+    scripts/check-app.sh quick
+  else
+    scripts/check-app.sh full
+  fi
+else
+  echo "skipped (no app/ yet)"
 fi
 
 for dir in spikes/*/; do

@@ -1355,3 +1355,64 @@ Files outside the Files block:
 - Cargo.lock — new workspace member.
 - docs/decisions.md — this entry.
 Supersedes: —
+
+### v0.3 Task 7 — app scaffold, design tokens, component set, a11y harness, `app.yml`
+
+- Token colours: nine roles (`bg`, `surface`, `text`, `textMuted`, `accent`, `accentText`, `border`,
+  `focus`, `danger`) × four themes; every declared `pairs` entry passes its WCAG ratio in all four
+  themes (4.5 text / 3 large-text,ui / 7 hc) — enforced by `contrast.test.ts`, not picked ad hoc.
+- TypeScript is split (owner decision option 1 on PR #43): `typescript` is `^7.0.2` at the app
+  root and runs `tsc --noEmit` (typecheck); `typescript-eslint@8.72.1` keeps `typescript ~6.0.3`
+  for linting only. Mechanism: the lint stack lives inside a local `file:` provider package,
+  `app/eslint-ts6/` (`dependencies`: `typescript ~6.0.3`, `typescript-eslint`), so npm nests it
+  under `eslint-ts6/node_modules/` where its `typescript` peer resolves to 6.0.3 natively — no
+  `--force`, no peer warnings; `eslint.config.js` and `lint-rules.test.ts` import `eslint-ts6`,
+  which re-exports `typescript-eslint`. `app/.npmrc` sets `install-strategy=nested` so
+  `ts-api-utils` (unbounded `typescript` peer, would otherwise hoist to the TS 7 root and crash
+  on its missing API) stays inside the provider subtree. Plain `overrides` cannot do this: npm
+  resolves a root-level package's `typescript` peer only at `node_modules/typescript`, which the
+  root `typescript` dep already occupies → ERESOLVE without `--force`/`--legacy-peer-deps`.
+  Reason: typescript-eslint 8.72.1 peers `typescript >=4.8.4 <6.1.0` and TS 7 exports only
+  `./unstable/*` APIs (its entry points throw on import under TS 7). Remove the provider once
+  typescript-eslint supports TS 7.
+- `Table` mounts its `caption` through a portal (RAC's collection drops non-collection children) and
+  points `aria-labelledby` at it, so the caption is a real first child of `<table>` and provides the
+  accessible name.
+- `ToastRegion` passes `aria-live="polite"` explicitly — RAC's `UNSTABLE_ToastRegion` is a landmark
+  region without a live-region attribute.
+- `FileTrigger` has no `FileTrigger.module.css` on purpose: RAC's FileTrigger renders no element of
+  its own — it wires a hidden file input to its child — so the `Button` inside it carries the styles.
+- Lint rules and the lint-fixture test share sources: `eslint.restrictions.json` and
+  `stylelint.rules.json` are read by `eslint.config.js`/`stylelint.config.js` and imported by
+  `lint-rules.test.ts`, so the test checks the exact rules the gate runs. `lint-fixtures/` is in both
+  linters' ignore lists (its violations are intentional) and linted only inside the test.
+- `licence check` in `check-app.sh` passes `--excludePackages 'epiora-app@0.3.0'` —
+  license-checker-rseidelsohn reports the private root package itself as UNLICENSED; the gate is the
+  production dependency tree (all MIT/Apache-2.0/Unlicense/0BSD at task time).
+- Dependencies and licences (AGENTS.md rule 6): react + react-dom (MIT), react-aria-components
+  (Apache-2.0), @tanstack/react-router (MIT). Dev: vite, @vitejs/plugin-react, vitest (MIT),
+  typescript (Apache-2.0), eslint + typescript-eslint (MIT), stylelint (MIT), jsdom (MIT),
+  @testing-library/* (MIT), @playwright/test (Apache-2.0), @axe-core/playwright (MPL-2.0, dev only),
+  license-checker-rseidelsohn (MIT), globals (MIT), @types/* (MIT). Licence gate passes with
+  `--production --onlyAllow`.
+Evidence: `./scripts/check.sh` PASS locally (`PLAYWRIGHT_BROWSERS_PATH=target/ms-playwright`) —
+  tsc --noEmit clean, ESLint clean, Stylelint clean, tokens regen diff clean, Vitest 8/8,
+  `vite build` ok, Playwright 72/72 across chromium/firefox/webkit (12 axe runs per engine, light
+  and dark; 6 viewport + 6 zoom checks per engine).
+Files outside the Files block:
+- `app/src/ui/components/classes.ts` — shared `cx`/`renderClass`/`RenderChildren` helpers matching
+  RAC's `ClassNameOrFunction`/`ChildrenOrFunction` contracts; avoids duplicating the merge in 14
+  components.
+- `app/src/ui/routes/routes.module.css` and `app/src/ui/shell.module.css` — styles for the route
+  placeholders and the nav shell (the Files block lists only `routes/*.tsx` and `router.tsx`).
+- `app/e2e/routes.ts` — the §8.1 route list shared by `a11y.spec.ts` and `viewport.spec.ts`;
+  Playwright forbids one spec importing another spec.
+- `app/eslint.restrictions.json`, `app/stylelint.rules.json`, `app/lint-rules.test.ts`,
+  `app/lint-fixtures/component-violations.tsx`, `app/lint-fixtures/style-violations.module.css` —
+  Step 5's shared rule sources, the `lint_rules_catch_violations` test and its fixtures.
+- `app/eslint-ts6/` (fix round 2, PR #43) — the `file:` provider package holding the lint
+  toolchain's own `typescript ~6.0.3` + `typescript-eslint` (see the TypeScript bullet);
+  `index.mjs`/`index.d.ts` re-export `typescript-eslint`.
+- `app/.npmrc` (fix round 2) — `install-strategy=nested`, keeps `ts-api-utils` nested inside
+  `eslint-ts6` so it cannot resolve the root `typescript` 7.
+Supersedes: —
