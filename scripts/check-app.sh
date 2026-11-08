@@ -38,8 +38,11 @@ step "tokens regenerated"
 node src/design/build-tokens.mjs
 git diff --exit-code -- src/design/tokens.css
 
-step "Vitest"
-npx vitest run
+step "Vitest (unit)"
+npx vitest run --project unit
+
+step "Vitest (store-opfs browser suite: chromium, firefox, webkit)"
+npx vitest run --project store-opfs
 
 step "licence check"
 # --excludePackages: the app package itself is not a dependency.
