@@ -27,6 +27,13 @@ jobs:
           cache: npm
           cache-dependency-path: app/package-lock.json
 
+      # npm ci must run before the browser install: with no
+      # node_modules, npx fetches the latest playwright and installs
+      # browser revisions the lockfile-pinned version cannot launch.
+      - name: Install app dependencies
+        run: npm ci
+        working-directory: app
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium firefox webkit
         working-directory: app

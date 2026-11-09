@@ -62,7 +62,11 @@ npx license-checker-rseidelsohn --production \
 [ "$mode" = quick ] && exit 0
 
 step "vite build"
-npm run build
+# VITE_TEST_HOOKS=1 exposes the Task 8 store test hook through the
+# worker RPC so the e2e suite can simulate quota exhaustion (Task 11).
+# Only this e2e build lane sets the flag; production builds run
+# `vite build` without it.
+VITE_TEST_HOOKS=1 npm run build
 
 step "Playwright (chromium, firefox, webkit)"
 npx playwright test
