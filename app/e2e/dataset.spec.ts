@@ -104,6 +104,7 @@ test('grid_is_navigable_by_arrow_keys', async ({ page }) => {
   await expect(page.getByRole('gridcell', { name: 'alice' })).toBeFocused();
   await page.keyboard.press('ArrowDown');
   await expect(page.getByRole('gridcell', { name: 'bob' })).toBeFocused();
+  await expectNoA11yViolations(page, 'grid with focused cell');
 });
 
 test('version_selector_switches_rows', async ({ page }) => {
@@ -118,6 +119,7 @@ test('version_selector_switches_rows', async ({ page }) => {
 
   // Switching to version 1 shows the original rows.
   await page.getByRole('button', { name: /Version/ }).click();
+  await expectNoA11yViolations(page, 'open version menu');
   await page.getByRole('menuitemradio', { name: /Version 1/ }).click();
   await expect(page.getByRole('gridcell', { name: 'c' })).toHaveCount(0);
   await expect(page.getByRole('gridcell', { name: '2' })).toBeVisible();

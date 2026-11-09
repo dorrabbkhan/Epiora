@@ -13,7 +13,7 @@ export { Select, SelectValue, Popover, ListBox, ListBoxItem } from './Select';
 export { ComboBox } from './ComboBox';
 export { Checkbox } from './Checkbox';
 export { RadioGroup, Radio } from './RadioGroup';
-export { Dialog, DialogTrigger, Modal, ModalOverlay } from './Dialog';
+export { Dialog, DialogTrigger, Modal, ModalOverlay, Heading } from './Dialog';
 export { Menu, MenuItem, MenuTrigger } from './Menu';
 export { Tabs, TabList, Tab, TabPanel } from './Tabs';
 export {
@@ -23,6 +23,8 @@ export {
   Column,
   Row,
   Cell,
+  TableLayout,
+  Virtualizer,
   type EpioraTableProps,
 } from './Table';
 export { ProgressBar } from './ProgressBar';

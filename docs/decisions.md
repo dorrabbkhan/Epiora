@@ -1575,9 +1575,8 @@ Decision:
 - `window.dataApi` is set in `main.tsx` so e2e specs seed datasets through the
   app's own typed RPC in `page.evaluate` (the plan's seeding mechanism); it is
   also a devtools handle.
-- `@tanstack/react-query@5.105.1` added (in the plan's Tech Stack; MIT; the
-  newest release was < 7 days old at task time, so the newest release ≥ 7 days
-  old was chosen).
+- `@tanstack/react-query@5.107.1` added (in the plan's Tech Stack; MIT; the
+  latest release at task time, per `npm view @tanstack/react-query version`).
 - Screens read dataset settings only through `dataApi` (`DatasetInfo.settings`
   is already unwrapped by the worker); the `datasets.settings` composite column
   is never parsed in the UI (carry-over from v0.3 Task 9).
@@ -1590,4 +1589,8 @@ Files outside the Files block:
   owner asked for in the PR #43 carry-over (`table_caption_stays_first_child_
   across_rerenders`: rows added/removed, caption text changed, unmounted; the
   portal approach held — no replacement needed).
+- `app/src/ui/components/Dialog.tsx`, `app/src/ui/components/Table.tsx`,
+  `app/src/ui/components/index.ts` — `Heading` is re-exported next to `Dialog`
+  and `TableLayout`/`Virtualizer` next to `Table` so screens and routes import
+  only from the component set (fix round 1).
 Supersedes: —

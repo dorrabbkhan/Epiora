@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Heading } from 'react-aria-components';
 import {
   Button,
   Cell,
   Column,
   Dialog,
   DialogTrigger,
+  Heading,
   Input,
   Label,
   Modal,

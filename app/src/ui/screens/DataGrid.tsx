@@ -4,7 +4,6 @@
 // one page of lookahead loaded. `aria-rowcount` is the version's full
 // row count. Column headers show name, type and missing count.
 import { useLayoutEffect, useMemo, useRef, useState, type UIEvent } from 'react';
-import { TableLayout, Virtualizer } from 'react-aria-components';
 import {
   Cell,
   Column,
@@ -12,14 +11,19 @@ import {
   Table,
   TableBody,
   TableHeader,
+  TableLayout,
+  Virtualizer,
 } from '../components';
 import { useVersionPages } from '../queries';
 import { t } from '../strings';
 import styles from './DataGrid.module.css';
 
 const PAGE = 100;
-// Keep these in sync with --row-height / --heading-height in
-// DataGrid.module.css — the layout computes row positions from them.
+// The rendered heights of a data row and the column header: the
+// TableLayout positions rows at these offsets and onScroll derives
+// the visible page range from them, so they must match the real
+// heights produced by the cell/column padding and font sizes in
+// Table.module.css and DataGrid.module.css.
 const ROW_HEIGHT = 48;
 const HEADING_HEIGHT = 64;
 

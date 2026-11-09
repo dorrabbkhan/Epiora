@@ -35,6 +35,7 @@ test('create_rename_delete_project', async ({ page }) => {
     .getByRole('button', { name: 'Rename' })
     .click();
   const renameDialog = page.getByRole('dialog');
+  await expectNoA11yViolations(page, 'rename project dialog');
   await renameDialog.getByRole('textbox').fill('Oswego 1940');
   await renameDialog.getByRole('button', { name: 'Save' }).click();
   await expect(
