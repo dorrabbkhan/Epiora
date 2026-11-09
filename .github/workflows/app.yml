@@ -31,6 +31,49 @@ jobs:
         run: npx playwright install --with-deps chromium firefox webkit
         working-directory: app
 
+      # check-app.sh builds both wasm packages first (Task 9), so the
+      # app job needs the same pinned toolchain as engine.yml.
+      - name: Install Rust toolchain
+        run: |
+          rustup toolchain install 1.99.0 --profile minimal --component clippy --component rustfmt
+          rustup default 1.99.0
+          rustup target add wasm32-unknown-unknown
+          rustc --version
+
+      - name: Install wasm-bindgen 0.2.129 (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/wasm-bindgen.tar.gz \
+            https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.129/wasm-bindgen-0.2.129-x86_64-unknown-linux-musl.tar.gz
+          echo '82d12bb940e2d4e72e0d5605387fc1b8ca179044e012b620f0ce4e7440e8320e  /tmp/wasm-bindgen.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/wasm-bindgen.tar.gz -C /tmp
+          sudo install -m 0755 \
+            /tmp/wasm-bindgen-0.2.129-x86_64-unknown-linux-musl/wasm-bindgen \
+            /usr/local/bin/wasm-bindgen
+          wasm-bindgen --version
+
+      - name: Install wasm-pack 0.15.1 (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/wasm-pack.tar.gz \
+            https://github.com/rustwasm/wasm-pack/releases/download/v0.15.1/wasm-pack-v0.15.1-x86_64-unknown-linux-musl.tar.gz
+          echo '410101009739b9d01c7d5affaaad6e9c9a24b4cba6791a4805db8e89b9bf7af2  /tmp/wasm-pack.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/wasm-pack.tar.gz -C /tmp
+          sudo install -m 0755 \
+            /tmp/wasm-pack-v0.15.1-x86_64-unknown-linux-musl/wasm-pack \
+            /usr/local/bin/wasm-pack
+          wasm-pack --version
+
+      - name: Install binaryen version_133 wasm-opt (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/binaryen.tar.gz \
+            https://github.com/WebAssembly/binaryen/releases/download/version_133/binaryen-version_133-x86_64-linux.tar.gz
+          echo '2dc9c7813f5375db93d96ead4b78222fcc3e2677bbb832297af4797782a37489  /tmp/binaryen.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/binaryen.tar.gz -C /tmp
+          sudo install -m 0755 /tmp/binaryen-version_133/bin/wasm-opt /usr/local/bin/wasm-opt
+          wasm-opt --version
+
       - name: check-app.sh full
         run: scripts/check-app.sh full
 

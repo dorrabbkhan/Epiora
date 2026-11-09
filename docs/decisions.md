@@ -1505,3 +1505,56 @@ Files outside the Files block:
   pure error mapper extracted from `opfs.ts` and its unit test (InvalidStateError context);
   extraction is what lets the test run in the unit project.
 Supersedes: —
+
+### v0.3 Task 9 — Data worker and typed RPC (2026-11-08)
+
+Decision:
+- `records` is fully rewritten in the new file order on every re-import (delete +
+  upsert, not diffed in place). `content_hash_hex` is row-order sensitive, so
+  `records.allJson` — the rebuild source of spec §4.3 — must reproduce the
+  version's canonical order, which minimal upserts cannot do once a key-column
+  re-import inserts rows mid-file. `changes` still receives only the minimal
+  insert/update/delete entries the diff reported, and `records.version` carries
+  forward "last changed" per record id.
+- The schema `datasetFromRecords` needs is persisted inside `datasets.settings`
+  as `{"settings": <effective ImportSettings>, "schema": [[name, type]…]}` — the
+  column is opaque text and no schema column exists anywhere; a corrupt snapshot
+  must not be the rebuild's own schema source. `DatasetInfo.settings` unwraps to
+  the `ImportSettings`.
+- `imports.insert` gains an optional caller `id` and is issued before the
+  record/change batches inside the commit transaction, so every change entry
+  carries `import_id`; plan op order otherwise preserved.
+- Cancel is only reachable because `checkCancel` yields a macrotask: oo1 `exec`
+  resolves on microtasks, so a commit would otherwise never let `cancelImport`
+  run. sahpool's fixed capacity (default 6, persistent) is grown via
+  `reserveMinimumCapacity(64)`/`addCapacity` in `openOpfsStore`, and worker store
+  opens retry transient lock errors for 10 s (dying workers' handles).
+- `RunContext.project` is always passed by the worker (receipt v2 names the
+  project) — matches the ts-rs required-key binding.
+- The bindings export no code lists, so `error_code_lists_match_rust`
+  (contract.test.ts, fix round 1, PR #45) reads `crates/epiora-import/src/
+  error.rs` and `crates/epiora-core/src/error.rs` and extracts the string
+  literals each enum's `fn code()` returns (`=> "…"` match arms; the
+  `ImportError::Engine` transparent wrap yields none) and asserts both sets
+  equal the hand-copied lists in errors.ts — a new Rust `code()` fails the
+  contract test instead of reaching the wire unmapped.
+Files outside the Files block:
+- `app/vitest.config.ts` — vitest does not read vite.config.ts; same alias and
+  fs.allow additions mirrored (Task 8 precedent).
+- `app/tsconfig.json` — `paths` so `tsc --noEmit` resolves the four aliases.
+- `app/src/ui/strings.ts` — plan fixes `userMessage` to live in strings.ts.
+- `app/src/store/repo/{runs,records,changes,versions,imports}.ts` — `runs.get`,
+  `records.clearAll`/`idVersions`, `versions.markUnavailable`, kind filter on
+  `changes.countByDataset` (the plan's "counts by kind"), optional `id` on
+  `imports.insert`.
+- `app/src/store/opfs.ts` — sahpool capacity growth and open retry (above).
+- `app/src/worker/contract.types.ts` — the type file Step 2 names.
+- `app/src/worker/commit.ts`, `app/src/worker/integration-helpers.ts` (fix
+  round 1, PR #45) — the ~400-line rule split: the single-transaction commit
+  out of importer.ts, and the shared test harness (worker spawn, fixture
+  fetch, store-open retry) out of integration.browser.test.ts. Pure moves.
+- `.github/workflows/app.yml` — check-app.sh now builds both wasm packages, so
+  the app job installs the same pinned toolchain as engine.yml (Rust 1.99.0 +
+  wasm32, wasm-bindgen 0.2.129, wasm-pack 0.15.1, binaryen wasm-opt version_133,
+  all SHA-256 verified). First CI run failed `wasm-pack: command not found`.
+Supersedes: —

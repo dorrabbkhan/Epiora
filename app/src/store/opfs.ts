@@ -150,7 +150,21 @@ export async function openOpfsStore(name: string): Promise<Store> {
   let db: OpfsSAHPoolDatabase;
   try {
     const pool = await getPool();
-    db = new pool.OpfsSAHPoolDb(name);
+    // The pool's file slots are fixed and persistent across sessions
+    // (default 6, journals included); ensure headroom before opening.
+    await pool.reserveMinimumCapacity(64);
+    try {
+      db = new pool.OpfsSAHPoolDb(name);
+    } catch (e) {
+      // The pool's fixed capacity (default 6 slots, persistent across
+      // sessions) is exhausted by earlier databases: grow it and retry.
+      // A journal file takes a slot too, so grow by several.
+      if (Number(pool.getFileCount()) < Number(pool.getCapacity())) {
+        throw mapError(sqlite3, e, 'acquire');
+      }
+      await pool.addCapacity(8);
+      db = new pool.OpfsSAHPoolDb(name);
+    }
   } catch (e) {
     throw mapError(sqlite3, e, 'acquire');
   }

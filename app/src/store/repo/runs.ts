@@ -83,6 +83,12 @@ export async function insert(
   };
 }
 
+/** One run by id, including a deleted one, or null. */
+export async function get(tx: Tx, id: string): Promise<Run | null> {
+  const rows = await tx.query(`SELECT ${COLUMNS} FROM runs WHERE id = ?`, [id]);
+  return rows.length > 0 ? toRun(rows[0]!) : null;
+}
+
 /** All runs for a project except deleted ones, newest first. */
 export async function listByProject(tx: Tx, projectId: string): Promise<Run[]> {
   const rows = await tx.query(

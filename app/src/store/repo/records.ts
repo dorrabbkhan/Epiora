@@ -22,6 +22,19 @@ export async function upsertBatch(
   }
 }
 
+/** Removes every record of the dataset (re-import rewrite, spec §4.3). */
+export async function clearAll(tx: Tx, datasetId: string): Promise<void> {
+  await tx.exec('DELETE FROM records WHERE dataset_id = ?', [datasetId]);
+}
+
+/** `record_id → version last changed` for every current record. */
+export async function idVersions(tx: Tx, datasetId: string): Promise<Map<string, number>> {
+  const rows = await tx.query('SELECT record_id, version FROM records WHERE dataset_id = ?', [
+    datasetId,
+  ]);
+  return new Map(rows.map((r) => [String(r.record_id), Number(r.version)]));
+}
+
 export async function deleteBatch(tx: Tx, datasetId: string, ids: string[]): Promise<void> {
   if (ids.length === 0) return;
   const marks = ids.map(() => '?').join(', ');

@@ -46,4 +46,48 @@ export const t = {
     engineVersion: 'Engine version',
     enginePlaceholder: 'Reported by the data worker.',
   },
+  // User-facing message per RPC error detail code (spec §11): every
+  // ImportError/EngineError/StoreError/worker code the worker can put
+  // on the wire has an entry — the contract test enumerates the lists.
+  errors: {
+    // ImportError::code()
+    empty_file: 'The file is empty.',
+    no_columns: 'The file has no columns.',
+    encoding_invalid: 'The file cannot be read with the chosen encoding.',
+    ragged_row: 'A row has the wrong number of fields.',
+    too_many_columns: 'The file has more than 16,384 columns.',
+    too_many_rows: 'The file has too many rows.',
+    unknown_column: 'A setting names a column that is not in the file.',
+    sheet_not_found: 'The workbook has no sheet with that name.',
+    spreadsheet: 'The spreadsheet cannot be read.',
+    invalid_settings: 'The import settings are not valid.',
+    duplicate_key: 'The key column has a duplicated value.',
+    missing_key: 'The key column has a missing value.',
+    invalid_key_type: 'That column type cannot be a record key.',
+    // EngineError::code()
+    unknown_variable: 'A variable name is not in the dataset.',
+    ambiguous_levels: 'The variable levels are ambiguous.',
+    empty_dataset: 'The dataset has no rows.',
+    invalid_column: 'A dataset column is invalid.',
+    type_mismatch: 'A value does not match its column type.',
+    invalid_options: 'The analysis options are not valid.',
+    corpus_format: 'The corpus file is not valid.',
+    snapshot_decode: 'The stored dataset snapshot cannot be read.',
+    // StoreError codes
+    migration_failed: 'The local database could not be upgraded.',
+    tx_aborted: 'The database transaction was aborted.',
+    locked_elsewhere: 'Epiora is already open in another tab or window.',
+    quota_exceeded: 'There is not enough storage space for this data.',
+    keychain_unavailable: 'The system keychain is not available.',
+    key_invalid: 'The stored database key is not valid.',
+    sql: 'The local database reported an error.',
+    // Worker-only codes
+    schema_change_unaccepted: 'The file changes the dataset schema; accept it to continue.',
+    session_not_found: 'The import session no longer exists.',
+    snapshot_unavailable: 'The stored snapshot for that version is not available.',
+    not_found: 'The requested item does not exist.',
+    hash_mismatch: 'The stored data failed its integrity check.',
+    cancelled: 'The import was cancelled.',
+    internal_error: 'Something went wrong.',
+  },
 } as const;

@@ -104,6 +104,19 @@ export async function replaceSnapshot(
   );
 }
 
+/** Marks one version's snapshot as untrusted (§4.3 older-version
+ *  mismatch). */
+export async function markUnavailable(
+  tx: Tx,
+  datasetId: string,
+  version: number,
+): Promise<void> {
+  await tx.exec(
+    'UPDATE dataset_versions SET snapshot_available = 0 WHERE dataset_id = ? AND version = ?',
+    [datasetId, version],
+  );
+}
+
 /** Marks every version before `version` as having no trusted snapshot (§4.3). */
 export async function markUnavailableBefore(
   tx: Tx,
