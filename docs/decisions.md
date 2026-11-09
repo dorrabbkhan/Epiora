@@ -1645,3 +1645,21 @@ Files outside the Files block:
 - `scripts/check-app.sh` — `vite build` needs `VITE_TEST_HOOKS=1` for the
   e2e run; it is the only build lane the e2e bundle goes through.
 Supersedes: —
+
+### v0.3 Task 12 — Analysis workspace and output log
+
+Decision: The FREQ/TABLES level pickers for two-level Text variables default to
+the two categories in category order (the user can still re-pick). Under the
+`VITE_TEST_HOOKS=1` e2e build they start empty so the `ambiguous_levels` engine
+error is reachable through the real dialog path — the plan's "level pickers left
+empty via the test hook".
+Files outside the Files block:
+- app/src/ui/components/Dialog.module.css — two real fixes the Task 12 dialog
+  axe/e2e tests exposed: the overlay's `opacity: 0.8` faded every colour inside
+  the modal (RAC nests Modal inside ModalOverlay; axe measured the "Select an
+  item" placeholder at 4.3:1), replaced by a translucent
+  `color-mix(var(--color-bg))` backdrop; `.dialog` gained `max-height: 90vh` +
+  `overflow-y: auto` because the 22-variable FREQ form pushed the Run button
+  outside the fixed-position viewport.
+- docs/decisions.md — this entry.
+Supersedes: —
