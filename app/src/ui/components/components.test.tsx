@@ -100,4 +100,53 @@ describe('Table', () => {
     const rowHeader = screen.getByRole('rowheader');
     expect(rowHeader).toHaveTextContent('Ada');
   });
+
+  // The caption is portaled into the <table> and moved with
+  // insertBefore; re-renders must keep it the first child without
+  // React removeChild/insertBefore errors.
+  it('table_caption_stays_first_child_across_rerenders', () => {
+    function Grid({ rows, caption }: { rows: string[]; caption: string }) {
+      return (
+        <Table caption={caption}>
+          <TableHeader>
+            <Column isRowHeader>Name</Column>
+          </TableHeader>
+          <TableBody>
+            {rows.map((r) => (
+              <Row key={r}>
+                <Cell>{r}</Cell>
+              </Row>
+            ))}
+          </TableBody>
+        </Table>
+      );
+    }
+    const { container, rerender, unmount } = render(
+      <Grid rows={['a', 'b']} caption="one" />,
+    );
+    const table = () => {
+      const el = container.querySelector('table');
+      if (el === null) throw new Error('no <table> rendered');
+      return el;
+    };
+    const firstChild = () => table().firstElementChild;
+    expect(firstChild()?.tagName).toBe('CAPTION');
+
+    // Caption text changes: same element updated in place.
+    const captionEl = firstChild();
+    rerender(<Grid rows={['a', 'b']} caption="two" />);
+    expect(firstChild()?.tagName).toBe('CAPTION');
+    expect(firstChild()).toBe(captionEl);
+    expect(firstChild()).toHaveTextContent('two');
+
+    // Rows removed then added.
+    rerender(<Grid rows={['a']} caption="two" />);
+    expect(firstChild()?.tagName).toBe('CAPTION');
+    rerender(<Grid rows={['a', 'b', 'c']} caption="two" />);
+    expect(firstChild()?.tagName).toBe('CAPTION');
+    expect(firstChild()).toHaveTextContent('two');
+
+    // Unmounting does not throw (the portal detaches cleanly).
+    expect(() => unmount()).not.toThrow();
+  });
 });

@@ -5,6 +5,7 @@ import {
   THEME_STORAGE_KEY,
   type Theme,
 } from '../../design/theme';
+import { useEngineVersion, useStorageEstimate } from '../queries';
 import { t } from '../strings';
 import styles from './routes.module.css';
 
@@ -23,8 +24,17 @@ function readStoredTheme(): Theme {
     : 'system';
 }
 
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KiB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MiB`;
+}
+
 export function SettingsScreen() {
   const [theme, setTheme] = useState<Theme>(readStoredTheme);
+  const engine = useEngineVersion();
+  const storage = useStorageEstimate();
+  const est = storage.data;
   return (
     <div className={styles.page}>
       <h1>{t.settings.title}</h1>
@@ -46,11 +56,26 @@ export function SettingsScreen() {
       </RadioGroup>
       <section>
         <h2>{t.settings.storage}</h2>
-        <p>{t.settings.storagePlaceholder}</p>
+        {est === undefined ? (
+          <p>{t.common.loading}</p>
+        ) : (
+          <>
+            <p>
+              {t.settings.storageUsed}: {formatBytes(est.usage)} ·{' '}
+              {t.settings.storageQuota}: {formatBytes(est.quota)}
+            </p>
+            <p>
+              {t.settings.persisted}:{' '}
+              {est.persisted
+                ? t.settings.persistedYes
+                : t.settings.persistedNo}
+            </p>
+          </>
+        )}
       </section>
       <section>
         <h2>{t.settings.engineVersion}</h2>
-        <p>{t.settings.enginePlaceholder}</p>
+        <p>{engine.data ?? t.common.loading}</p>
       </section>
     </div>
   );
