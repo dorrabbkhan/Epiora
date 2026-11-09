@@ -1,0 +1,22 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* The virtualised Table renders as a div and is its own scroll
+ * container — it needs a bounded height and overflow. */
+.grid {
+  display: block;
+  height: calc(var(--space-16) * 5);
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.colMeta {
+  display: block;
+  color: var(--color-textMuted);
+  font-size: var(--font-size2);
+  font-weight: var(--font-weightNormal);
+}

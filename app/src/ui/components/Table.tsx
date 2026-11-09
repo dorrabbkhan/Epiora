@@ -121,3 +121,5 @@ export function Cell({ className, ...props }: CellProps) {
     />
   );
 }
+
+export { TableLayout, Virtualizer } from 'react-aria-components';

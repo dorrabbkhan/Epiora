@@ -35,3 +35,5 @@ export function Modal({ className, ...props }: ModalOverlayProps) {
 export function Dialog({ className, ...props }: DialogProps) {
   return <RACDialog {...props} className={cx(styles.dialog, className)} />;
 }
+
+export { Heading } from 'react-aria-components';

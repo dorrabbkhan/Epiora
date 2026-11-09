@@ -1558,3 +1558,39 @@ Files outside the Files block:
   wasm32, wasm-bindgen 0.2.129, wasm-pack 0.15.1, binaryen wasm-opt version_133,
   all SHA-256 verified). First CI run failed `wasm-pack: command not found`.
 Supersedes: —
+
+### v0.3 Task 10 — Projects, datasets, versions and data grid screens (2026-11-09)
+
+Decision:
+- The dataset screen's version selector is a `Menu` with `selectionMode="single"`
+  (menuitemradio), not a RAC `Select`. On Firefox, axe's `button-name` rule crashed
+  the content process reproducibly on the post-open Select's `aria-labelledby`
+  chain — bisected rule-by-rule on the live page (the same DOM replays clean in a
+  fresh page, and removing `.react-aria-Select` stops the crash). A Menu trigger
+  carries its name from content, so there is no labelledby chain to trip on; the
+  role change keeps single-select semantics.
+- `DataGrid` re-asserts `aria-rowcount` in a `useLayoutEffect`: RAC's `useTable`
+  overwrites it with `collection.size + headerRows.length` when virtualised, but
+  the plan fixes the attribute at the data row count (`GridPage.total`).
+- `window.dataApi` is set in `main.tsx` so e2e specs seed datasets through the
+  app's own typed RPC in `page.evaluate` (the plan's seeding mechanism); it is
+  also a devtools handle.
+- `@tanstack/react-query@5.107.1` added (in the plan's Tech Stack; MIT; the
+  latest release at task time, per `npm view @tanstack/react-query version`).
+- Screens read dataset settings only through `dataApi` (`DatasetInfo.settings`
+  is already unwrapped by the worker); the `datasets.settings` composite column
+  is never parsed in the UI (carry-over from v0.3 Task 9).
+Files outside the Files block:
+- `app/src/main.tsx` — `QueryClientProvider` and the `window.dataApi` handle
+  above; the task's own files have nowhere else to wire them.
+- `app/package.json`, `app/package-lock.json` — the `@tanstack/react-query`
+  dependency.
+- `app/src/ui/components/components.test.tsx` — the caption-stability test the
+  owner asked for in the PR #43 carry-over (`table_caption_stays_first_child_
+  across_rerenders`: rows added/removed, caption text changed, unmounted; the
+  portal approach held — no replacement needed).
+- `app/src/ui/components/Dialog.tsx`, `app/src/ui/components/Table.tsx`,
+  `app/src/ui/components/index.ts` — `Heading` is re-exported next to `Dialog`
+  and `TableLayout`/`Virtualizer` next to `Table` so screens and routes import
+  only from the component set (fix round 1).
+Supersedes: —
