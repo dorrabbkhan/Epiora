@@ -66,6 +66,7 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
     engineVersion: () => call(r.engineVersion()),
     storageEstimate: () => call(r.storageEstimate()),
     requestPersistence: () => call(r.requestPersistence()),
+    __simulateQuotaOnNextWrite: () => call(r.__simulateQuotaOnNextWrite()),
   };
   return api as Remote<DataApi>;
 }

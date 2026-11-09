@@ -1594,3 +1594,28 @@ Files outside the Files block:
   and `TableLayout`/`Virtualizer` next to `Table` so screens and routes import
   only from the component set (fix round 1).
 Supersedes: —
+### v0.3 Task 11 — Import wizard (2026-11-09)
+
+Decision:
+- Opened as a draft PR pending an owner decision: on Firefox, axe's
+  `button-name` rule crashes the content process after a RAC `Select` is
+  opened (the crash bisected in Task 10). The plan fixes both "type
+  `Select` per column" on the preview and `expectNoA11yViolations` on
+  every wizard step, so no component swap, axe scoping or
+  Firefox-only conditional was made; the options are in the PR body.
+- `DataApi.__simulateQuotaOnNextWrite` exposes the Task 8 store test hook
+  through the worker RPC for the `import shows quota error` e2e (Review
+  Focus 3). It rejects `not_found` unless the bundle was built with
+  `VITE_TEST_HOOKS=1`; only the `check-app.sh full` e2e build lane sets
+  the flag — no production build does.
+- On `done | error` the wizard calls `discardSession`; a
+  `session_not_found` there is a no-op (Task 9's interface — the commit
+  destroys the session itself), never shown as an error.
+Files outside the Files block:
+- `app/src/worker/api.ts` — the `__simulateQuotaOnNextWrite` method
+  above; the quota-error test can only reach the store hook through the
+  real worker RPC.
+- `app/src/worker/client.ts` — the wrapped client method for it.
+- `scripts/check-app.sh` — `vite build` needs `VITE_TEST_HOOKS=1` for the
+  e2e run; it is the only build lane the e2e bundle goes through.
+Supersedes: —

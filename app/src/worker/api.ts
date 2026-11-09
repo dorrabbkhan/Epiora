@@ -147,6 +147,12 @@ export interface DataApi {
   engineVersion(): Promise<string>;
   storageEstimate(): Promise<StorageEstimate>;
   requestPersistence(): Promise<boolean>;
+  /**
+   * Test hook (Task 8's `Store.__simulateQuotaOnNextWrite`, Task 11
+   * e2e): the store's next mutating statement fails `quota_exceeded`.
+   * Only functional in builds made with `VITE_TEST_HOOKS=1`.
+   */
+  __simulateQuotaOnNextWrite(): Promise<void>;
 }
 
 function toDatasetInfo(d: datasets.Dataset): DatasetInfo {
@@ -233,4 +239,12 @@ export const api: DataApi = {
     return { usage: est.usage ?? 0, quota: est.quota ?? 0, persisted };
   }),
   requestPersistence: wire(async () => (await navigator.storage?.persist?.()) ?? false),
+  __simulateQuotaOnNextWrite: wire(() => {
+    if (import.meta.env.VITE_TEST_HOOKS !== '1') {
+      return Promise.reject(rpc('not_found', 'test hooks are disabled in this build'));
+    }
+    return withStore(async (s) => {
+      s.__simulateQuotaOnNextWrite?.();
+    });
+  }),
 };

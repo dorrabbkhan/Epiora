@@ -46,8 +46,88 @@ export const t = {
   },
   import: {
     title: 'Import data',
-    placeholder: 'The import wizard arrives with the data worker.',
+    choosePrompt: 'Choose a CSV, TSV, xlsx, xls or ods file to import.',
     chooseFile: 'Choose file',
+    importInto: 'Import into',
+    newDataset: 'New dataset',
+    updateDataset: (name: string, version: number) =>
+      `Update ${name} (v${version})`,
+    inspecting: 'Reading the file…',
+    previewTitle: 'Preview',
+    encoding: 'Encoding',
+    delimiter: 'Delimiter',
+    decimal: 'Decimal separator',
+    sheet: 'Sheet',
+    rowsCount: (n: number) => `Rows: ${n}`,
+    renamedHeaders: (pairs: [string, string][]) =>
+      `Renamed headers: ${pairs
+        .map(([from, to]) => `${from === '' ? '(empty)' : from} → ${to}`)
+        .join(', ')}`,
+    columnsTitle: 'Columns',
+    columnName: 'Column',
+    inferredType: 'Inferred',
+    chosenType: 'Type',
+    missingCount: 'Missing',
+    coercedCount: 'Set to missing',
+    coercedValues: (n: number) =>
+      n === 1 ? '1 value set to missing' : `${n} values set to missing`,
+    typeFor: (name: string) => `Type for ${name}`,
+    previewRowsTitle: 'First 100 rows',
+    settingsTitle: 'Settings',
+    detectAuto: 'Detect automatically',
+    headerRow: 'First row is a header',
+    missingCodes: 'Missing value codes',
+    missingCodesHelp: 'Comma-separated; empty cells are always missing.',
+    dateFormat: 'Date format',
+    dateIso: 'ISO (YYYY-MM-DD)',
+    dateDmy: 'DD/MM/YYYY',
+    dateMdy: 'MM/DD/YYYY',
+    recordKey: 'Record key',
+    keyRowPosition: 'Row position',
+    keyCandidateIssues: (duplicates: number, missing: number) =>
+      `${duplicates} duplicates, ${missing} missing`,
+    keyUnusable:
+      'That key column has duplicate or missing values; choose another key.',
+    positionalKeyWarning:
+      'Row-position keys make re-import a row-by-row comparison; moved rows will show as changed.',
+    diffTitle: 'Changes',
+    addedCount: (n: number) => `${n} added`,
+    removedCount: (n: number) => `${n} removed`,
+    changedCount: (n: number) => `${n} changed`,
+    diffUnchanged:
+      'The file matches the current data; no new version will be created.',
+    schemaChangesTitle: 'Schema changes',
+    addedColumns: (cols: string[]) => `Added columns: ${cols.join(', ')}`,
+    removedColumns: (cols: string[]) => `Removed columns: ${cols.join(', ')}`,
+    typeChanges: (changes: { column: string; from: string; to: string }[]) =>
+      `Type changes: ${changes
+        .map((c) => `${c.column} ${c.from} → ${c.to}`)
+        .join(', ')}`,
+    acceptSchema: 'I accept the schema changes',
+    sampleChangesTitle: 'Sample changes',
+    confirmTitle: 'Confirm import',
+    confirmNew: (name: string, rows: number) =>
+      `Import ${rows} rows into a new dataset “${name}”.`,
+    confirmReimport: (name: string, rows: number) =>
+      `Import ${rows} rows into ${name} as a new version.`,
+    importButton: 'Import',
+    progressTitle: 'Importing…',
+    stageParse: 'Read file',
+    stageDiff: 'Compare',
+    stageWrite: 'Write records',
+    stageSnapshot: 'Snapshot',
+    progressCount: (done: number, total: number) => `${done} of ${total}`,
+    cancelImport: 'Cancel import',
+    doneTitle: 'Import complete',
+    doneVersion: (v: number) => `Dataset version ${v} created.`,
+    doneNoVersion:
+      'The file matched the current data; no new version was created.',
+    errorTitle: 'Import failed',
+    startOver: 'Start over',
+    viewDataset: 'View dataset',
+    backToProject: 'Back to project',
+    next: 'Next',
+    back: 'Back',
   },
   dataset: {
     title: 'Dataset',

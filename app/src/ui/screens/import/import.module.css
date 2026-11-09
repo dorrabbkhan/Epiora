@@ -1,0 +1,71 @@
+/* Import wizard screens (v0.3 plan Task 11): tokens only — Stylelint
+ * bans raw colours and px outside src/design. */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.section h2 {
+  margin: 0;
+  font-size: var(--font-size5);
+}
+
+.section p {
+  margin: 0;
+  color: var(--color-textMuted);
+}
+
+.detection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  font-size: var(--font-size3);
+}
+
+.detection p {
+  margin: 0;
+  color: var(--color-text);
+}
+
+.counts {
+  display: flex;
+  gap: var(--space-4);
+  font-size: var(--font-size4);
+}
+
+.counts p {
+  margin: 0;
+  color: var(--color-text);
+}
+
+.warning {
+  color: var(--color-text);
+  font-weight: var(--font-weightBold);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 28rem;
+}
+
+.stages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 28rem;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+}
