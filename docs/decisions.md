@@ -1648,11 +1648,23 @@ Supersedes: —
 
 ### v0.3 Task 12 — Analysis workspace and output log
 
-Decision: The FREQ/TABLES level pickers for two-level Text variables default to
-the two categories in category order (the user can still re-pick). Under the
-`VITE_TEST_HOOKS=1` e2e build they start empty so the `ambiguous_levels` engine
-error is reachable through the real dialog path — the plan's "level pickers left
-empty via the test hook".
+Decision: The level pickers for two-level Text variables start empty in every
+build — a two-level Text variable without explicit levels is an engine error,
+not a guess (v0.2 spec §3). Production builds keep Run disabled, with a hint
+programmatically associated to the button (`aria-describedby`), until both
+levels are picked for every such variable; the gate is the pure `canRunTables`
+helper. Only the `VITE_TEST_HOOKS=1` e2e build leaves Run enabled so the
+`ambiguous_levels` engine error stays reachable through the real dialog path —
+the plan's "level pickers left empty via the test hook". Every e2e build
+carries the hooks, so the production gating is covered by Vitest instead
+(`tables-run.test.ts` exercises `canRunTables` with both `testHooks` values).
+FREQ renders both per-category CIs v0.2 returns (the `ci_method` interval
+first, the other method second, each under its own scoped, labelled column).
+The project screen's empty output log offers the next action: an Analysis
+workspace link (spec §8.2). Separately, the dialogs' `aria-busy` moved from
+`Dialog` onto the `.form` element — RAC's `filterDOMProps` strips every
+attribute outside its labelling whitelist, so the attribute never reached the
+DOM when set on `Dialog`.
 Files outside the Files block:
 - app/src/ui/components/Dialog.module.css — two real fixes the Task 12 dialog
   axe/e2e tests exposed: the overlay's `opacity: 0.8` faded every colour inside
@@ -1661,5 +1673,10 @@ Files outside the Files block:
   `color-mix(var(--color-bg))` backdrop; `.dialog` gained `max-height: 90vh` +
   `overflow-y: auto` because the 22-variable FREQ form pushed the Run button
   outside the fixed-position viewport.
+- app/src/ui/screens/analysis/tables-run.ts — the pure `canRunTables` gate; a
+  module of its own because unit tests cannot import TablesDialog.tsx (it
+  pulls in `worker/client`, which spawns a Worker at module load).
+- app/src/ui/screens/analysis/tables-run.test.ts — its Vitest coverage of both
+  `testHooks` values.
 - docs/decisions.md — this entry.
 Supersedes: —

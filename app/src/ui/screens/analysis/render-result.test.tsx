@@ -1,7 +1,7 @@
 // Result rendering unit tests (v0.3 plan Task 12): semantic tables
 // (caption + scoped headers), the "—" + hidden reason for undefined
 // estimates, and the fixed `formatNumber` significant-digit rule.
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { describe, expect, it } from 'vitest';
 import type { Ci } from '@engine-types/Ci';
@@ -137,6 +137,36 @@ describe('renderFreq', () => {
     expect(table.querySelectorAll('th[scope="row"]').length).toBe(2);
     expect(screen.getByRole('cell', { name: '29' })).toBeInTheDocument();
     expect(container.textContent).toContain('61.33');
+  });
+
+  it('freq_renders_both_ci_methods', () => {
+    const { container } = render(<>{renderFreq(FREQ_ILL)}</>);
+    // Both intervals v0.2 returns appear under their own labelled,
+    // scoped column headers; the `ci_method` one comes first.
+    const table = container.querySelector('table') as HTMLElement;
+    const headers = within(table).getAllByRole('columnheader');
+    const names = headers.map((h) => h.textContent);
+    expect(names).toContain('Clopper–Pearson 95% CI');
+    expect(names).toContain('Wilson 95% CI');
+    expect(names.indexOf('Clopper–Pearson 95% CI')).toBeLessThan(
+      names.indexOf('Wilson 95% CI'),
+    );
+    for (const h of headers) {
+      expect(h).toHaveAttribute('scope', 'col');
+    }
+    // Row 0 (label '0'): Clopper–Pearson 27.7–50.6, Wilson 28.4–49.9.
+    expect(
+      within(table).getByRole('cell', { name: '27.7 – 50.6' }),
+    ).toBeInTheDocument();
+    expect(
+      within(table).getByRole('cell', { name: '28.4 – 49.9' }),
+    ).toBeInTheDocument();
+    expect(
+      within(table).getByRole('cell', { name: '49.4 – 72.3' }),
+    ).toBeInTheDocument();
+    expect(
+      within(table).getByRole('cell', { name: '50.1 – 71.6' }),
+    ).toBeInTheDocument();
   });
 });
 

@@ -34,6 +34,7 @@ export const t = {
     emptyDatasets: 'No datasets yet.',
     outputLog: 'Output log',
     emptyLog: 'No results yet.',
+    emptyLogAction: 'Run an analysis',
     importData: 'Import data',
     analysis: 'Analysis workspace',
     notFound: 'Project not found.',
@@ -158,6 +159,8 @@ export const t = {
     firstLevel: (v: string) => `${v} first level`,
     secondLevel: (v: string) => `${v} second level`,
     levelsLoading: 'Reading levels…',
+    chooseLevels:
+      'Choose both levels for every two-level text variable to run TABLES.',
     outputLog: 'Output log',
     emptyLog: 'No results yet. Run a procedure to add one.',
     cardTitleFreq: (vars: string, name: string, v: number) =>

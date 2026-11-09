@@ -1,5 +1,8 @@
 // The output log (spec §8.2): the project's runs newest first as
-// result cards; results are announced through the LiveAnnouncer.
+// result cards; results are announced through the LiveAnnouncer. The
+// empty state may offer a next action (a link/button rendered as
+// `emptyAction`).
+import type { ReactNode } from 'react';
 import type { RunRecord } from '../../../worker/api';
 import { EmptyState } from '../EmptyState';
 import { t } from '../../strings';
@@ -12,11 +15,15 @@ export function OutputLog({
   datasetName,
   announce,
   onRunAdded,
+  emptyMessage,
+  emptyAction,
 }: {
   runs: RunRecord[] | undefined;
   datasetName: (id: string) => string;
   announce: string | null;
   onRunAdded?: ((run: RunRecord) => void) | undefined;
+  emptyMessage?: string | undefined;
+  emptyAction?: ReactNode | undefined;
 }) {
   return (
     <section aria-label={t.analysis.outputLog} className={styles.log}>
@@ -25,7 +32,9 @@ export function OutputLog({
       {runs === undefined ? (
         <p>{t.common.loading}</p>
       ) : runs.length === 0 ? (
-        <EmptyState message={t.analysis.emptyLog} />
+        <EmptyState message={emptyMessage ?? t.analysis.emptyLog}>
+          {emptyAction}
+        </EmptyState>
       ) : (
         <div>
           {runs.map((run) => (

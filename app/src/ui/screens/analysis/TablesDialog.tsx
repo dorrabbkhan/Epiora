@@ -4,11 +4,13 @@
 // `include_missing`. While the run RPC is in flight the controls are
 // disabled under `aria-busy`; a failure shows inline with a retry.
 //
-// The pickers default to the category-order pair; under the
-// `VITE_TEST_HOOKS=1` e2e build they start empty so the
-// `ambiguous_levels` engine error is reachable (plan Task 12 test
+// The pickers always start empty — a two-level Text variable without
+// explicit levels is an error, not a guess. Production builds keep Run
+// disabled (with a hint) until both levels are picked for every such
+// variable; only the `VITE_TEST_HOOKS=1` e2e build may run with empty
+// pickers so `ambiguous_levels` stays reachable (plan Task 12 test
 // `engine_error_shows_inline_with_retry`).
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { TablesOptions } from '@engine-types/TablesOptions';
 import type { Value } from '@engine-types/Value';
@@ -30,6 +32,7 @@ import { dataApi } from '../../../worker/client';
 import type { GridPage } from '../../../worker/api';
 import { RpcError } from '../../../worker/errors';
 import { t } from '../../strings';
+import { canRunTables, levelsMissing, type TablesDraft } from './tables-run';
 import styles from './analysis.module.css';
 
 const TEST_HOOKS = import.meta.env.VITE_TEST_HOOKS === '1';
@@ -185,17 +188,31 @@ export function TablesDialog({
     staleTime: Infinity,
   });
 
-  /** Effective [first, second] pair: the user's picks, else the
-   *  category-order default (empty under VITE_TEST_HOOKS). */
-  const effective = (
-    chosen: [string | null, string | null],
-    levels: string[] | null | undefined,
-  ): [string | null, string | null] => [
-    chosen[0] ?? (TEST_HOOKS ? null : (levels?.[0] ?? null)),
-    chosen[1] ?? (TEST_HOOKS ? null : (levels?.[1] ?? null)),
-  ];
-  const effExp = effective(expLevels, expLevelQuery.data);
-  const effOut = effective(outLevels, outLevelQuery.data);
+  /** A two-level Text variable requires both level picks. While its
+   *  levels query is still pending the requirement holds — the run
+   *  can never slip through before the pickers appear. */
+  const needsLevels = (
+    name: string | null,
+    query: typeof expLevelQuery,
+  ): boolean =>
+    name !== null &&
+    colType(name) === 'text' &&
+    (query.isPending || Array.isArray(query.data));
+  const draft: TablesDraft = {
+    exposure: {
+      name: exposure,
+      needsLevels: needsLevels(exposure, expLevelQuery),
+      levels: expLevels,
+    },
+    outcome: {
+      name: outcome,
+      needsLevels: needsLevels(outcome, outLevelQuery),
+      levels: outLevels,
+    },
+  };
+  const showLevelsHint = !TEST_HOOKS && levelsMissing(draft);
+  const levelsHintId = useId();
+
   const spec = (
     name: string | null,
     pair: [string | null, string | null],
@@ -214,8 +231,8 @@ export function TablesDialog({
         };
 
   const submit = async () => {
-    const exp = spec(exposure, effExp);
-    const out = spec(outcome, effOut);
+    const exp = spec(exposure, expLevels);
+    const out = spec(outcome, outLevels);
     if (exp === null || out === null) return;
     setBusy(true);
     setError(null);
@@ -246,9 +263,11 @@ export function TablesDialog({
   return (
     <ModalOverlay isOpen={open} onOpenChange={onOpenChange} isDismissable>
       <Modal>
-        <Dialog aria-busy={busy}>
+        <Dialog>
           <Heading slot="title">{t.analysis.tables}</Heading>
-          <div className={styles.form}>
+          {/* RAC Dialog strips `aria-busy` (filterDOMProps keeps only
+              labelling attributes) — the marker rides on the form. */}
+          <div className={styles.form} aria-busy={busy}>
             <ColumnSelect
               label={t.analysis.exposure}
               columns={cols}
@@ -264,14 +283,14 @@ export function TablesDialog({
                     <LevelPicker
                       label={t.analysis.firstLevel(exposure)}
                       levels={expLevelQuery.data}
-                      selected={effExp[0]}
+                      selected={expLevels[0]}
                       onSelect={(l) => setExpLevels([l, expLevels[1]])}
                       busy={busy}
                     />
                     <LevelPicker
                       label={t.analysis.secondLevel(exposure)}
                       levels={expLevelQuery.data}
-                      selected={effExp[1]}
+                      selected={expLevels[1]}
                       onSelect={(l) => setExpLevels([expLevels[0], l])}
                       busy={busy}
                     />
@@ -294,14 +313,14 @@ export function TablesDialog({
                     <LevelPicker
                       label={t.analysis.firstLevel(outcome)}
                       levels={outLevelQuery.data}
-                      selected={effOut[0]}
+                      selected={outLevels[0]}
                       onSelect={(l) => setOutLevels([l, outLevels[1]])}
                       busy={busy}
                     />
                     <LevelPicker
                       label={t.analysis.secondLevel(outcome)}
                       levels={outLevelQuery.data}
-                      selected={effOut[1]}
+                      selected={outLevels[1]}
                       onSelect={(l) => setOutLevels([outLevels[0], l])}
                       busy={busy}
                     />
@@ -346,10 +365,18 @@ export function TablesDialog({
                 </Button>
               </div>
             )}
+            {showLevelsHint && (
+              <p id={levelsHintId} className={styles.hint}>
+                {t.analysis.chooseLevels}
+              </p>
+            )}
             <div className={styles.actions}>
               <Button
                 onPress={() => void submit()}
-                isDisabled={busy || exposure === null || outcome === null}
+                isDisabled={busy || !canRunTables(draft, TEST_HOOKS)}
+                {...(showLevelsHint
+                  ? { 'aria-describedby': levelsHintId }
+                  : {})}
               >
                 {t.analysis.run}
               </Button>

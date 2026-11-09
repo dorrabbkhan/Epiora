@@ -68,9 +68,11 @@ export function FreqDialog({
   return (
     <ModalOverlay isOpen={open} onOpenChange={onOpenChange} isDismissable>
       <Modal>
-        <Dialog aria-busy={busy}>
+        <Dialog>
           <Heading slot="title">{t.analysis.freq}</Heading>
-          <div className={styles.form}>
+          {/* RAC Dialog strips `aria-busy`; the marker rides on the
+              form instead. */}
+          <div className={styles.form} aria-busy={busy}>
             <fieldset className={styles.variables}>
               <legend>{t.analysis.variables}</legend>
               {(columns.data ?? []).map((c) => (

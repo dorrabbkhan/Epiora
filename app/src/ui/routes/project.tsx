@@ -93,6 +93,12 @@ function ProjectView({ projectId, name }: { projectId: string; name: string }) {
         runs={runList}
         datasetName={(id) => nameOf.get(id) ?? id}
         announce={null}
+        emptyMessage={t.project.emptyLog}
+        emptyAction={
+          <Link to="/p/$project/analysis" params={{ project: projectId }}>
+            {t.project.emptyLogAction}
+          </Link>
+        }
       />
     </div>
   );

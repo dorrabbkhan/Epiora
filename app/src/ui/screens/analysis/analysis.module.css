@@ -57,6 +57,12 @@
   margin: 0;
 }
 
+.hint {
+  color: var(--color-textMuted);
+  font-size: var(--font-size2);
+  margin: 0;
+}
+
 .log {
   display: flex;
   flex-direction: column;

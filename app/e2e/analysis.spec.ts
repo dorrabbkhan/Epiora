@@ -104,17 +104,67 @@ async function check(page: Page, dialog: string, name: string): Promise<void> {
     .click();
 }
 
+/** The state `runTables` leaves behind when it is replaced by a held
+ *  promise (see `holdNextTablesRun`). */
+interface HeldRun {
+  orig: (...args: unknown[]) => Promise<unknown>;
+  args: unknown[];
+  resolve: (value: unknown) => void;
+  reject: (error: unknown) => void;
+}
+
+/** Replaces `dataApi.runTables` with a promise this test resolves:
+ *  the dialog's `aria-busy` pending state can then be held open
+ *  deterministically for an axe pass. `releaseTablesRun` restores the
+ *  real method and resolves with a real engine result. */
+async function holdNextTablesRun(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    const w = window as unknown as {
+      dataApi: { runTables: unknown };
+      __heldRun?: HeldRun;
+    };
+    const orig = w.dataApi.runTables as HeldRun['orig'];
+    w.dataApi.runTables = (...args: unknown[]) =>
+      new Promise<unknown>((resolve, reject) => {
+        w.__heldRun = { orig, args, resolve, reject };
+      });
+  });
+}
+
+async function releaseTablesRun(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    const w = window as unknown as {
+      dataApi: { runTables: unknown };
+      __heldRun: HeldRun;
+    };
+    const held = w.__heldRun;
+    w.dataApi.runTables = held.orig;
+    void held.orig(...held.args).then(held.resolve, held.reject);
+  });
+}
+
 test('tables_vanilla_ill_matches_engine', async ({ page }) => {
   await page.goto('/');
   const seed = await seedOswego(page);
   await openWorkspace(page, seed);
   await expectNoA11yViolations(page, 'analysis workspace');
-  await openDialog(page, 'TABLES');
+
+  await page.getByRole('button', { name: 'Run procedure' }).click();
+  await expectNoA11yViolations(page, 'procedure menu open');
+  await page.getByRole('menuitem', { name: 'TABLES', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'TABLES', exact: true });
+  await expect(dialog).toBeVisible();
   await expectNoA11yViolations(page, 'TABLES dialog');
 
+  await holdNextTablesRun(page);
   await pick(page, /Exposure variable/, 'VANILLA');
   await pick(page, /Outcome variable/, 'ILL');
   await page.getByRole('button', { name: 'Run', exact: true }).click();
+  // RAC Dialog strips `aria-busy`; the pending state rides on the
+  // dialog's form element (held here by the patched RPC).
+  await expect(dialog.locator('[aria-busy="true"]')).toHaveCount(1);
+  await expectNoA11yViolations(page, 'TABLES dialog pending');
+  await releaseTablesRun(page);
 
   const expected = formatNumber(
     OSWEGO_VANILLA.expected.odds_ratio.estimate.value,
@@ -123,6 +173,21 @@ test('tables_vanilla_ill_matches_engine', async ({ page }) => {
     page.getByRole('heading', { name: 'TABLES VANILLA × ILL — oswego.csv v1' }),
   ).toBeVisible();
   await expect(page.getByRole('cell', { name: expected })).toBeVisible();
+});
+
+test('project_empty_log_offers_analysis_link', async ({ page }) => {
+  await page.goto('/');
+  const project = await page.evaluate(() =>
+    window.dataApi.createProject('Empty project'),
+  );
+  await page.goto(`/p/${project.id}`);
+  const log = page.getByRole('region', { name: 'Output log' });
+  await expect(log.getByText('No results yet.')).toBeVisible();
+  await expectNoA11yViolations(page, 'project screen, empty output log');
+  await log.getByRole('link', { name: 'Run an analysis' }).click();
+  await expect(
+    page.getByRole('heading', { name: 'Analysis' }),
+  ).toBeVisible();
 });
 
 test('freq_runs_and_persists_after_reload', async ({ page }) => {

@@ -7,11 +7,13 @@
 // `.result` scope in analysis.module.css so this module stays free of
 // stylesheet imports.
 import type { CSSProperties, ReactNode } from 'react';
+import type { CategoryStats } from '@engine-types/CategoryStats';
 import type { Ci } from '@engine-types/Ci';
 import type { Estimate } from '@engine-types/Estimate';
 import type { FreqResult } from '@engine-types/FreqResult';
 import type { FreqTable } from '@engine-types/FreqTable';
 import type { MantelHaenszel } from '@engine-types/MantelHaenszel';
+import type { ProportionCi } from '@engine-types/ProportionCi';
 import type { StratifiedStats } from '@engine-types/StratifiedStats';
 import type { TablesResult } from '@engine-types/TablesResult';
 import type { TwoByTwoStats } from '@engine-types/TwoByTwoStats';
@@ -172,7 +174,17 @@ function mhRows(mh: MantelHaenszel, s: StratifiedStats): StatRow[] {
   ];
 }
 
+function categoryCi(cat: CategoryStats, method: ProportionCi): Ci {
+  return method === 'wilson' ? cat.ci_95_wilson : cat.ci_95_clopper_pearson;
+}
+
 function FreqTableView({ table }: { table: FreqTable }) {
+  // Every statistic v0.2 returns: both per-category CIs are shown;
+  // the procedure's `ci_method` interval comes first.
+  const methods: ProportionCi[] = [
+    table.ci_method,
+    table.ci_method === 'wilson' ? 'clopper_pearson' : 'wilson',
+  ];
   return (
     <>
       <table>
@@ -183,9 +195,11 @@ function FreqTableView({ table }: { table: FreqTable }) {
             <th scope="col">{t.analysis.countCol}</th>
             <th scope="col">{t.analysis.percentCol}</th>
             <th scope="col">{t.analysis.cumPercentCol}</th>
-            <th scope="col">
-              {t.analysis.ciMethodLabel[table.ci_method]} {t.analysis.ciCol}
-            </th>
+            {methods.map((m) => (
+              <th scope="col" key={m}>
+                {t.analysis.ciMethodLabel[m]} {t.analysis.ciCol}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -199,15 +213,11 @@ function FreqTableView({ table }: { table: FreqTable }) {
                 <td>
                   {cat === undefined ? '' : estimate(cat.cumulative_percent)}
                 </td>
-                <td>
-                  {cat === undefined
-                    ? ''
-                    : interval(
-                        table.ci_method === 'wilson'
-                          ? cat.ci_95_wilson
-                          : cat.ci_95_clopper_pearson,
-                      )}
-                </td>
+                {methods.map((m) => (
+                  <td key={m}>
+                    {cat === undefined ? '' : interval(categoryCi(cat, m))}
+                  </td>
+                ))}
               </tr>
             );
           })}
