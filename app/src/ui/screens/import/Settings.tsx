@@ -54,11 +54,13 @@ function WizardSelect({
   label,
   items,
   selectedKey,
+  disabled,
   onChange,
 }: {
   label: string;
   items: { id: string; label: string }[];
   selectedKey: string;
+  disabled: boolean;
   onChange: (id: string) => void;
 }) {
   return (
@@ -68,6 +70,7 @@ function WizardSelect({
         if (typeof key === 'string') onChange(key);
       }}
       aria-label={label}
+      isDisabled={disabled}
     >
       <Label>{label}</Label>
       <Button>
@@ -98,6 +101,10 @@ export function Settings({
     return null;
   }
   const isText = detection.container === 'text';
+  // While a call is in flight every control is disabled: the reducer
+  // ignores edits then, so leaving them enabled would swallow input
+  // the screen shows no sign of losing.
+  const busy = state.pending !== null;
   const edit = (over: Partial<ImportSettings>) =>
     onEdit({ ...settings, ...over });
 
@@ -121,13 +128,18 @@ export function Settings({
       : state.keyCandidates.find((c) => c.column === recordKey.column.name);
 
   return (
-    <section className={styles.section} aria-label={t.import.settingsTitle}>
+    <section
+      className={styles.section}
+      aria-label={t.import.settingsTitle}
+      aria-busy={busy}
+    >
       <h2>{t.import.settingsTitle}</h2>
       <div className={styles.form}>
         {isText && (
           <>
             <WizardSelect
               label={t.import.encoding}
+              disabled={busy}
               items={[
                 { id: 'auto', label: t.import.detectAuto },
                 ...ENCODINGS.map((e) => ({ id: e.id, label: e.label })),
@@ -139,6 +151,7 @@ export function Settings({
             />
             <WizardSelect
               label={t.import.delimiter}
+              disabled={busy}
               items={[
                 { id: 'auto', label: t.import.detectAuto },
                 ...DELIMITERS,
@@ -148,6 +161,7 @@ export function Settings({
             />
             <WizardSelect
               label={t.import.decimal}
+              disabled={busy}
               items={[
                 { id: 'auto', label: t.import.detectAuto },
                 ...DECIMALS.map((d) => ({ id: d.id, label: d.label })),
@@ -162,12 +176,14 @@ export function Settings({
         <Checkbox
           isSelected={settings.header}
           onChange={(header) => edit({ header })}
+          isDisabled={busy}
         >
           {t.import.headerRow}
         </Checkbox>
         <TextField
           value={codes}
           onChange={setCodes}
+          isDisabled={busy}
           onBlur={() =>
             edit({
               missing_codes: codes
@@ -183,6 +199,7 @@ export function Settings({
         </TextField>
         <WizardSelect
           label={t.import.dateFormat}
+          disabled={busy}
           items={DATE_FORMATS.map((d) => ({ id: d.id, label: d.label }))}
           selectedKey={settings.date_format}
           onChange={(id) => edit({ date_format: id as DateFormat })}
@@ -190,6 +207,7 @@ export function Settings({
         {detection.sheets.length > 0 && (
           <WizardSelect
             label={t.import.sheet}
+            disabled={busy}
             items={detection.sheets.map((s) => ({ id: s, label: s }))}
             selectedKey={settings.sheet ?? detection.sheets[0]!}
             onChange={(id) => edit({ sheet: id })}
@@ -197,6 +215,7 @@ export function Settings({
         )}
         <WizardSelect
           label={t.import.recordKey}
+          disabled={busy}
           items={keyItems}
           selectedKey={chosenKey}
           onChange={(id) => {
@@ -215,6 +234,7 @@ export function Settings({
         {positionalKeyWarning(state) && (
           <p className={styles.warning}>{t.import.positionalKeyWarning}</p>
         )}
+        {busy && <p>{t.import.applying}</p>}
       </div>
     </section>
   );

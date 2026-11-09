@@ -144,6 +144,10 @@ export function wizard(state: WizardState, action: WizardAction): WizardState {
   if (state.closed) return state;
   switch (action.type) {
     case 'file':
+      // While a call is in flight a new file choice is ignored: the
+      // pending inspect belongs to the file already chosen, and the
+      // route disables the controls anyway.
+      if (state.pending !== null) return state;
       return {
         ...initialWizardState,
         fileName: action.fileName,
@@ -174,7 +178,12 @@ export function wizard(state: WizardState, action: WizardAction): WizardState {
       };
     case 'settings':
       // Any settings edit re-reads the file so the preview, the
-      // coerced counts and the key candidates stay honest.
+      // coerced counts and the key candidates stay honest. While a
+      // call is in flight the edit is ignored: the pending call
+      // answers for the settings the form shows, so a later result
+      // can never overwrite a newer edit or arm a commit the user
+      // has not reviewed.
+      if (state.pending !== null) return state;
       return { ...state, settings: action.settings, pending: 'preview' };
     case 'diffed':
       return { ...state, step: 'diff', diff: action.diff, pending: null };

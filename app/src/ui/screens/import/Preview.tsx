@@ -32,9 +32,11 @@ const ENCODING_LABEL: Record<string, string> = {
 
 function TypeSelect({
   column,
+  disabled,
   onTypeChange,
 }: {
   column: PreviewColumn;
+  disabled: boolean;
   onTypeChange: (name: string, type: ValueType) => void;
 }) {
   return (
@@ -46,6 +48,7 @@ function TypeSelect({
         }
       }}
       aria-label={t.import.typeFor(column.name)}
+      isDisabled={disabled}
     >
       <Button>
         <SelectValue />
@@ -69,8 +72,16 @@ export function Preview({
   const inspection = state.inspection;
   if (inspection === null) return null;
   const { detection } = inspection;
+  // A type change re-reads the file (`pending: 'preview'`); while that
+  // call is in flight the reducer ignores further edits, so the type
+  // pickers disable rather than swallow input.
+  const busy = state.pending !== null;
   return (
-    <section className={styles.section} aria-label={t.import.previewTitle}>
+    <section
+      className={styles.section}
+      aria-label={t.import.previewTitle}
+      aria-busy={busy}
+    >
       <h2>{t.import.previewTitle}</h2>
       <div className={styles.detection}>
         {detection.encoding !== null && (
@@ -107,7 +118,11 @@ export function Preview({
               <Cell>{col.name}</Cell>
               <Cell>{col.inferred}</Cell>
               <Cell>
-                <TypeSelect column={col} onTypeChange={onTypeChange} />
+                <TypeSelect
+                  column={col}
+                  disabled={busy}
+                  onTypeChange={onTypeChange}
+                />
               </Cell>
               <Cell>{col.missing}</Cell>
               <Cell>
@@ -138,6 +153,7 @@ export function Preview({
           )}
         </TableBody>
       </Table>
+      {busy && <p>{t.import.applying}</p>}
     </section>
   );
 }

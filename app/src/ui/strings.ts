@@ -53,6 +53,7 @@ export const t = {
     updateDataset: (name: string, version: number) =>
       `Update ${name} (v${version})`,
     inspecting: 'Reading the file…',
+    applying: 'Applying the settings…',
     previewTitle: 'Preview',
     encoding: 'Encoding',
     delimiter: 'Delimiter',

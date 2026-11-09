@@ -158,6 +158,64 @@ describe('wizard', () => {
     expect(s.result?.version).toBeNull();
   });
 
+  it('edit_during_pending_preview_does_not_desync', () => {
+    // An edit fires `pending: 'preview'`; a second edit while that
+    // call is in flight is ignored, so the in-flight preview still
+    // answers for the settings the form shows (no silent overwrite).
+    const first = baseSettings({ header: false });
+    let s = settingsState(baseSettings(), [usable('ID')]);
+    s = wizard(s, { type: 'settings', settings: first });
+    expect(s.pending).toBe('preview');
+
+    const again = wizard(s, {
+      type: 'settings',
+      settings: baseSettings({ header: false, delimiter: ';' }),
+    });
+    expect(again).toBe(s);
+
+    s = wizard(s, {
+      type: 'previewed',
+      inspection: inspection(first),
+      keyCandidates: [usable('ID')],
+    });
+    expect(s.pending).toBeNull();
+    expect(s.settings).toEqual(first);
+  });
+
+  it('edit_during_pending_diff_cannot_commit_unreviewed_settings', () => {
+    // Re-import: Next fires `pending: 'diff'`. An edit while
+    // diffAgainst is in flight must be ignored, or `diffed` would
+    // clear it and the user would review a diff for settings the
+    // commit never sees.
+    let s = settingsState(baseSettings(), [usable('ID')]);
+    s = wizard(s, { type: 'next' });
+    expect(s.pending).toBe('diff');
+
+    const again = wizard(s, {
+      type: 'settings',
+      settings: baseSettings({ header: false }),
+    });
+    expect(again).toBe(s);
+
+    s = wizard(s, { type: 'diffed', diff: DIFF_WITH_SCHEMA_CHANGE });
+    expect(s.step).toBe('diff');
+    expect(s.settings?.header).toBe(true);
+  });
+
+  it('file_choice_during_inspect_is_ignored', () => {
+    // A second file choice while inspectFile is in flight must not
+    // attach the first file's session to the second file's name.
+    const s = wizard(initialWizardState, {
+      type: 'file',
+      fileName: 'a.csv',
+      datasetId: null,
+    });
+    expect(s.pending).toBe('inspect');
+    expect(
+      wizard(s, { type: 'file', fileName: 'b.csv', datasetId: 'ds2' }),
+    ).toBe(s);
+  });
+
   it('close_after_done_shows_no_error', () => {
     // The wizard discards its session on close; the commit already
     // destroyed it, so `session_not_found` there must stay invisible.

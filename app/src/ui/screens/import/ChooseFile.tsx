@@ -19,13 +19,19 @@ export function ChooseFile({
 }) {
   const [datasetId, setDatasetId] = useState<string | null>(null);
   const updatable = datasets.filter((d) => d.currentVersion > 0);
+  const busy = state.pending !== null;
   return (
-    <section className={styles.section} aria-label={t.import.choosePrompt}>
+    <section
+      className={styles.section}
+      aria-label={t.import.choosePrompt}
+      aria-busy={busy}
+    >
       <p>{t.import.choosePrompt}</p>
       {updatable.length > 0 && (
         <RadioGroup
           value={datasetId ?? 'new'}
           onChange={(v) => setDatasetId(v === 'new' ? null : v)}
+          isDisabled={busy}
         >
           <Label>{t.import.importInto}</Label>
           <Radio value="new">{t.import.newDataset}</Radio>
@@ -43,10 +49,10 @@ export function ChooseFile({
             if (file !== null && file !== undefined) onFile(file, datasetId);
           }}
         >
-          <Button>{t.import.chooseFile}</Button>
+          <Button isDisabled={busy}>{t.import.chooseFile}</Button>
         </FileTrigger>
       </div>
-      {state.pending === 'inspect' && <p>{t.import.inspecting}</p>}
+      {busy && <p>{t.import.inspecting}</p>}
     </section>
   );
 }

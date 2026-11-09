@@ -162,6 +162,10 @@ export function ImportScreen() {
   }, [state, project, datasets.data, qc]);
 
   const onFile = async (file: File, datasetId: string | null) => {
+    // A call is in flight: the reducer ignores the choice anyway, and
+    // discarding the session here would free it under the running
+    // call. The control is disabled; this is the belt-and-braces.
+    if (stateRef.current.pending !== null) return;
     const prior = stateRef.current.sessionId;
     if (prior !== null) {
       void dataApi.discardSession(prior).catch(swallowGoneSession);

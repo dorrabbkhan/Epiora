@@ -69,6 +69,7 @@ async function walkNewImportToConfirm(page: Page): Promise<void> {
   await expect(
     page.getByRole('button', { name: 'Record key' }),
   ).toBeVisible();
+  await expectNoA11yViolations(page, 'wizard settings step');
   await page.getByRole('button', { name: 'Next' }).click();
   await expect(
     page.getByRole('heading', { name: 'Confirm import' }),
@@ -205,6 +206,7 @@ test('cancel_during_write_leaves_no_dataset', async ({ page }) => {
   await expect(
     page.getByRole('progressbar', { name: 'Write records' }),
   ).toBeVisible();
+  await expectNoA11yViolations(page, 'wizard progress step');
   await page.getByRole('button', { name: 'Cancel import' }).click();
   await expect(page.getByRole('alert')).toContainText(/cancelled/i);
 
