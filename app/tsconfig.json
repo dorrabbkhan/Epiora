@@ -17,7 +17,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["vite/client", "node"],
+    "types": ["vite/client", "vite-plugin-pwa/client", "node"],
     "paths": {
       "@engine/*": ["../crates/epiora-wasm/pkg/*"],
       "@engine-types/*": ["../crates/epiora-wasm/bindings/*"],

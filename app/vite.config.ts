@@ -1,6 +1,9 @@
 import { fileURLToPath } from 'node:url';
+import { readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 import react from '@vitejs/plugin-react';
 import { defineConfig, searchForWorkspaceRoot } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 
 // `?raw` imports of ../store/migrations/*.sql live outside the app
 // root; allow the dev server to serve them. Vite requires the workspace
@@ -21,8 +24,64 @@ const engineTypes = fileURLToPath(new URL('../crates/epiora-wasm/bindings', impo
 const importPkg = fileURLToPath(new URL('../crates/epiora-import-wasm/pkg', import.meta.url));
 const importTypes = fileURLToPath(new URL('../crates/epiora-import-wasm/bindings', import.meta.url));
 
+const MIB = 1024 * 1024;
+
+/** Largest file under `dir` in bytes (recursive). */
+function largestFile(dir: string): number {
+  let max = 0;
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      max = Math.max(max, largestFile(path));
+    } else if (entry.isFile()) {
+      max = Math.max(max, statSync(path).size);
+    }
+  }
+  return max;
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    // PWA (v0.3 spec §7.1, plan Task 13): Workbox precaches the shell
+    // and every emitted js/css/html/wasm/svg/png/webmanifest asset —
+    // core-wasm, import-wasm and sqlite-wasm included. Updates prompt
+    // ("New version available") instead of swapping mid-session, and
+    // registration is manual (`UpdatePrompt`) so the strict CSP in
+    // public/_headers never has to allow inline scripts. The web
+    // manifest ships from public/ and index.html links it.
+    VitePWA({
+      registerType: 'prompt',
+      injectRegister: null,
+      manifest: false,
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,wasm,svg,png,webmanifest}'],
+        // Claim the registering client on activation: without it the
+        // first-visit page stays uncontrolled until a reload, so a
+        // fresh install could not go offline on first use.
+        clientsClaim: true,
+        skipWaiting: false,
+        // Filled in by `beforeBuildServiceWorker` below, once every
+        // asset is on disk — no hand-typed constant.
+        maximumFileSizeToCacheInBytes: 0,
+      },
+      integration: {
+        beforeBuildServiceWorker(options) {
+          const dir =
+            typeof options.workbox.globDirectory === 'string'
+              ? options.workbox.globDirectory
+              : options.outDir;
+          const largest = largestFile(dir);
+          const cap = Math.ceil(largest / MIB) * MIB;
+          options.workbox.maximumFileSizeToCacheInBytes = cap;
+          console.log(
+            `[pwa] largest built asset ${largest} bytes → ` +
+              `maximumFileSizeToCacheInBytes ${cap} bytes`,
+          );
+        },
+      },
+    }),
+  ],
   resolve: {
     alias: {
       '@engine': enginePkg,

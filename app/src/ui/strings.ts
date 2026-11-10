@@ -240,6 +240,19 @@ export const t = {
       unbounded: 'the estimate is unbounded',
     },
   },
+  lock: {
+    title: 'Epiora is open in another tab',
+    openBody:
+      'Only one tab can use the local database at a time. Continue here and the other tab will let go of it.',
+    movedBody:
+      'Epiora was opened in another tab, so this tab let go of the local database.',
+    useHere: 'Use here',
+  },
+  update: {
+    available: 'New version available',
+    reload: 'Reload',
+    regionLabel: 'App updates',
+  },
   settings: {
     title: 'Settings',
     theme: 'Theme',

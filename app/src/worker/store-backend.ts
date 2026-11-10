@@ -8,9 +8,12 @@
 //
 // The database name comes from the worker's `name` option (falling
 // back to `epiora`) so tests can give each spawned worker its own db.
+// The app's worker is named `epiora:<tab id>` (client.ts) — the part
+// after ':' is the tab identity used by the lock channel.
 
 import { openOpfsStore } from '../store/opfs';
 import { StoreError, type Store } from '../store/types';
+import { acquireStoreLock, storeLockState } from './tab-lock';
 
 let storePromise: Promise<Store> | null = null;
 let queue: Promise<unknown> = Promise.resolve();
@@ -19,7 +22,7 @@ const TAINTED = (globalThis as Record<string, unknown>).__EPIORA_TAURI__ === tru
 
 function dbName(): string {
   const name = (globalThis as { name?: unknown }).name;
-  return typeof name === 'string' && name !== '' ? name : 'epiora';
+  return typeof name === 'string' && name !== '' ? name.split(':')[0]! : 'epiora';
 }
 
 /** A previous worker's sahpool handles take a beat to die after its
@@ -49,6 +52,16 @@ export function openStore(): Promise<Store> {
     );
   }
   storePromise ??= (async () => {
+    // The store only ever opens under the tab lock (Task 13): a
+    // second tab's worker reports 'held-elsewhere', and a worker
+    // whose lock was stolen never re-opens it.
+    await acquireStoreLock();
+    if (storeLockState() !== 'acquired') {
+      throw new StoreError(
+        'locked_elsewhere',
+        'Epiora is open in another tab or window',
+      );
+    }
     let last: unknown;
     for (let waited = 0; waited <= OPEN_RETRY_MS; waited += OPEN_RETRY_STEP) {
       try {
@@ -65,6 +78,22 @@ export function openStore(): Promise<Store> {
     storePromise = null;
   });
   return storePromise;
+}
+
+/**
+ * Closes the shared connection. Called when the tab lock is stolen:
+ * the store must be released before the new holder opens it. A later
+ * `openStore` still refuses — the lock state gates every open.
+ */
+export async function closeStore(): Promise<void> {
+  const p = storePromise;
+  storePromise = null;
+  const store = await p?.catch(() => null);
+  try {
+    await store?.close();
+  } catch {
+    // The connection may already be broken; the tab is locking anyway.
+  }
 }
 
 /**
