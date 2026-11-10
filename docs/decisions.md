@@ -1787,4 +1787,9 @@ present and the `VITE_TEST_HOOKS` identifier absent). `netlify-cli`
 exactly in `app/package.json` devDependencies and run via `npx netlify`
 from `app/`; secrets reach it through `env:` only and the job has
 `permissions: contents: read`.
+The owner added a `_headers` `/manifest.webmanifest` block via the
+conductor on PR #49: the live preview served it as
+`application/octet-stream`, so it now sets `Content-Type:
+application/manifest+json` (the `/*` security headers still apply to
+that path, and nothing else in `_headers` changed).
 Supersedes: —
