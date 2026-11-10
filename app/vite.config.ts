@@ -56,10 +56,10 @@ export default defineConfig({
       manifest: false,
       workbox: {
         globPatterns: ['**/*.{js,css,html,wasm,svg,png,webmanifest}'],
-        // Claim the registering client on activation: without it the
-        // first-visit page stays uncontrolled until a reload, so a
-        // fresh install could not go offline on first use.
-        clientsClaim: true,
+        // Updates must wait for the prompt: with clientsClaim on, a
+        // waiting update auto-activated mid-session (the controller
+        // changed under a live page), silently swapping versions.
+        clientsClaim: false,
         skipWaiting: false,
         // Filled in by `beforeBuildServiceWorker` below, once every
         // asset is on disk — no hand-typed constant.

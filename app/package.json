@@ -16,6 +16,7 @@
     "lint": "eslint .",
     "lint:css": "stylelint \"**/*.css\"",
     "tokens": "node src/design/build-tokens.mjs",
+    "icons": "node scripts/make-icons.mjs",
     "e2e": "playwright test"
   },
   "dependencies": {
