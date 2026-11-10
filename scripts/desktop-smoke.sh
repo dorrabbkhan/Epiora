@@ -34,7 +34,7 @@ fi
 if ! command -v tauri-driver >/dev/null 2>&1; then
   cargo install tauri-driver --locked
 fi
-tauri-driver --version
+cargo install --list | grep '^tauri-driver' || true
 
 # 3. The binary under test (the hooks build the workflow produces).
 bin="${EPIORA_APP_BINARY:-$root/app/src-tauri/target/release/epiora-app}"
