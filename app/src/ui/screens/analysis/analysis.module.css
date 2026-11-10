@@ -1,0 +1,170 @@
+/* Analysis workspace and result cards (v0.3 plan Task 12, spec §8.2):
+ * tokens only — Stylelint bans raw colours and px outside src/design. */
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(14rem, 18rem) 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (max-width: 40rem) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.variables {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.variables legend {
+  font-size: var(--font-size3);
+  font-weight: var(--font-weightBold);
+  padding: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.error {
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.hint {
+  color: var(--color-textMuted);
+  font-size: var(--font-size2);
+  margin: 0;
+}
+
+.log {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.log h2 {
+  margin: 0;
+  font-size: var(--font-size5);
+}
+
+.announce {
+  color: var(--color-textMuted);
+  font-size: var(--font-size2);
+  margin: 0;
+  min-height: 1.2em;
+}
+
+.card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2);
+  background: var(--color-surface);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+  overflow-x: auto;
+}
+
+.card h3 {
+  margin: 0;
+  font-size: var(--font-size4);
+}
+
+.timestamp {
+  color: var(--color-textMuted);
+  font-size: var(--font-size2);
+  margin: 0;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
+  color: var(--color-text);
+  font-size: var(--font-size3);
+}
+
+.result {
+  margin: var(--space-2) 0;
+}
+
+.result table {
+  border-collapse: collapse;
+  color: var(--color-text);
+  font-size: var(--font-size2);
+  margin: var(--space-2) 0;
+}
+
+.result caption {
+  padding: var(--space-1) 0;
+  color: var(--color-text);
+  font-weight: var(--font-weightBold);
+  text-align: left;
+}
+
+.result th,
+.result td {
+  border: 1px solid var(--color-border);
+  padding: var(--space-1) var(--space-2);
+  text-align: left;
+}
+
+.result p {
+  color: var(--color-textMuted);
+  font-size: var(--font-size2);
+  margin: var(--space-1) 0;
+}
+
+.receipt {
+  margin: var(--space-2) 0;
+}
+
+.receiptGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0 0 var(--space-2);
+  color: var(--color-text);
+  font-size: var(--font-size2);
+}
+
+.receiptGrid dt {
+  font-weight: var(--font-weightBold);
+}
+
+.receiptGrid dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.receiptGrid code {
+  font-family: var(--font-familyMono);
+  font-size: var(--font-size1);
+}

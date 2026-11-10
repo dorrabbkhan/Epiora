@@ -9,6 +9,7 @@ import {
 } from '../components';
 import { useDatasets, useProjects, useRuns } from '../queries';
 import { EmptyState } from '../screens/EmptyState';
+import { OutputLog } from '../screens/analysis/OutputLog';
 import { t } from '../strings';
 import styles from './routes.module.css';
 
@@ -88,33 +89,17 @@ function ProjectView({ projectId, name }: { projectId: string; name: string }) {
           </Table>
         )}
       </section>
-      <section>
-        <h2>{t.project.outputLog}</h2>
-        {runList === undefined ? (
-          <p>{t.common.loading}</p>
-        ) : runList.length === 0 ? (
-          <EmptyState message={t.project.emptyLog} />
-        ) : (
-          <Table caption={t.project.outputLog} aria-label={t.project.outputLog}>
-            <TableHeader>
-              <Column isRowHeader>{t.project.procedureColumn}</Column>
-              <Column>{t.project.datasetColumn}</Column>
-              <Column>{t.project.versionColumn}</Column>
-              <Column>{t.project.ranAtColumn}</Column>
-            </TableHeader>
-            <TableBody items={runList}>
-              {(run) => (
-                <Row id={run.id}>
-                  <Cell>{run.procedure.toUpperCase()}</Cell>
-                  <Cell>{nameOf.get(run.datasetId) ?? run.datasetId}</Cell>
-                  <Cell>{`v${run.version}`}</Cell>
-                  <Cell>{run.createdAt}</Cell>
-                </Row>
-              )}
-            </TableBody>
-          </Table>
-        )}
-      </section>
+      <OutputLog
+        runs={runList}
+        datasetName={(id) => nameOf.get(id) ?? id}
+        announce={null}
+        emptyMessage={t.project.emptyLog}
+        emptyAction={
+          <Link to="/p/$project/analysis" params={{ project: projectId }}>
+            {t.project.emptyLogAction}
+          </Link>
+        }
+      />
     </div>
   );
 }
