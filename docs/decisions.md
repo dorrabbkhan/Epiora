@@ -1793,3 +1793,85 @@ conductor on PR #49: the live preview served it as
 application/manifest+json` (the `/*` security headers still apply to
 that path, and nothing else in `_headers` changed).
 Supersedes: —
+
+### v0.3 Task 14 — Tauri shell
+
+- Vendored `libsqlite3-sys` 0.39.1 — the release matching the latest
+  rusqlite (0.41.1, which requires `^0.39.0`). Upstream crate checksum
+  (crates.io, verified at download):
+  `14a5f01b87b92705d07b433c06f96cbc764637d81a0bffb5734ce17cf0f9a2b3`.
+  The vendored build compiles `sqlite3mc-src`
+  `=206.1.0+sqlite3mc-2.6.1-sqlite-3.54.0`'s untouched
+  `sqlite3mc_amalgamation.c` in place of the stock `sqlite3.c` (removed,
+  as in the spike) and adds `-DSQLITE_ENABLE_MEMORY_MANAGEMENT`; the
+  stock `sqlite3.h` is also removed, so the `buildtime_bindgen` feature
+  cannot be used — we ship the prebuilt bindings.
+- Copy, not import: `vendor/libsqlite3-sys`'s patch approach and
+  `app/src-tauri/icons/**` are copies from `spikes/tauri-shell` (the
+  spike is not referenced or imported anywhere).
+- Keychain naming: `keyring` service `org.epiora.app`, user
+  `database-key-v1`, value 64 lowercase hex minted from `getrandom` on
+  first launch. `KeyError::Unavailable` → `keychain_unavailable`, a
+  malformed stored entry (`KeyError::Malformed`) → `key_invalid`.
+- Versions (latest at task time): tauri 2.12.5, tauri-build 2.7.4,
+  tauri-plugin-dialog 2.8.4, rusqlite 0.41.1, keyring 4.2.0,
+  getrandom 0.4.3, serde 1, serde_json 1; `@tauri-apps/api` 2.12.4 and
+  `@tauri-apps/cli` 2.12.4 (npm). Licences recorded: rust tree MIT /
+  Apache-2.0 except `sqlite3mc-src` which adds `Unlicense` to the
+  src-tauri deny.toml allow list (its expression is
+  `MIT AND CC0-1.0 AND Unlicense AND (CC0-1.0 OR Apache-2.0)`); npm
+  `@tauri-apps/*` are MIT OR Apache-2.0.
+- Wire: the worker's relay store posts `{ epiora: 'store-relay', id, op,
+  sql, params }` on the worker message channel (Comlink ignores them —
+  unknown `type`/`id`); `bridge.ts` invokes the five Rust commands.
+  Params and results cross IPC as one length-prefixed binary frame
+  (`Uint8Array` request body, `tauri::ipc::Response` bytes back) —
+  blob cells are raw bytes both ways, never JSON arrays. The spec's
+  `store_snapshot_get/put` commands are not implemented: snapshot blobs
+  already cross as binary params/results through `store_exec`/
+  `store_query` (ambiguity resolved toward the plan's five commands).
+- App commands carry no ACL identifiers in Tauri 2.12 (`gen/schemas`
+  lists only `core:*` and `dialog:*`), so `capabilities/default.json`
+  cannot name the five store commands; it keeps `core:app|event|webview|
+  window:default` + `dialog:allow-open` (menu/tray/path/image/resources
+  dropped as clearly unused).
+- `StoreErrorCode` gains `QuotaExceeded` beyond the plan's four
+  variants so a real `SQLITE_FULL` surfaces `quota_exceeded`
+  (review focus 3); the plan's variants are unchanged.
+- `NativeStore::exec` uses `execute_batch` when no params are bound —
+  `execute` runs only the first statement of a multi-statement string
+  and migrations are sent as one exec.
+- `store-stdio` (`required-features = ["stdio"]`, never bundled) speaks
+  JSON lines; integers are decimal strings (i64 lossless), blobs base64.
+  The `test_fail_next_write` op fails the next mutating exec with
+  `quota_exceeded` — `stdio.ts`'s `__simulateQuotaOnNextWrite`.
+- `cargo test --workspace` compiles the epiora-app bin, which links
+  webkit2gtk/gtk: `check-app.sh` builds `store-stdio` in all modes and
+  runs `cargo deny` + the workspace test in `full`, gating the app-crate
+  build on `pkg-config webkit2gtk-4.1` (the `native-store` CI job
+  installs the Tauri deps and stubs `app/dist`, which
+  `generate_context!` needs at build time).
+- deny.toml ignores: RUSTSEC-2024-0429 (glib `VariantStrIter`, unused by
+  the app), RUSTSEC-2024-0370 (proc-macro-error via gtk3-macros),
+  RUSTSEC-2026-0370/0371/0372 (zvariant, zbus_names, zvariant_derive via
+  keyring's secret-service backend — all merged into zbus 6, which the
+  keychain crates do not consume yet). Transitive, no safe upgrade.
+Evidence: `cargo test --workspace` in the CI-equivalent container —
+3 keystore + 4 native store tests pass; `npx vitest run
+src/store/conformance/native.test.ts` — 14/14 pass; `cargo deny check`,
+`cargo fmt --check`, `cargo clippy -D warnings` clean;
+`./scripts/check.sh quick` PASS.
+Files outside the Files block:
+- `app/src-tauri/icons/**` — copied from the spike; `generate_context!`
+  and bundling read `bundle.icon` paths at build time.
+- `app/src-tauri/.gitignore` — `/target` and `/gen` (spec §7.3: gen is
+  generated in CI, not committed).
+- `app/src/worker/client.ts` — exports the worker handle for
+  `startTauriBridge`, names it `epiora-tauri:<tab id>` when
+  `__TAURI_INTERNALS__` exists (the relay marker; workers cannot see
+  Tauri's injected internals), exports `inTauri` for main.tsx/settings.
+- `app/eslint.config.js` — ignores `src-tauri/target/**` (generated
+  build artifacts).
+- `app/package-lock.json` — regenerated for the new npm deps.
+- `docs/decisions.md` — this entry.
+Supersedes: —

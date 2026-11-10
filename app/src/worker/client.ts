@@ -77,13 +77,16 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
 
 /** The worker's `name` option: `<db>:<tab id>` — the db name feeds
  *  `openStore`, the tab id tags this tab's lock-channel messages
- *  (Task 13). */
-export const workerName = `epiora:${crypto.randomUUID()}`;
+ *  (Task 13). Under Tauri the name is `epiora-tauri:<tab id>`: Tauri's
+ *  IPC does not reach workers, so the name is how the store backend
+ *  learns to pick the native relay (Task 14, store-backend.ts). */
+export const inTauri =
+  typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
+export const workerName = `${inTauri ? 'epiora-tauri' : 'epiora'}:${crypto.randomUUID()}`;
 
 /** The app's one data worker. */
-export const dataApi: Remote<DataApi> = wrapDataApi(
-  new Worker(new URL('./data.worker.ts', import.meta.url), {
-    type: 'module',
-    name: workerName,
-  }),
+export const dataWorker = new Worker(
+  new URL('./data.worker.ts', import.meta.url),
+  { type: 'module', name: workerName },
 );
+export const dataApi: Remote<DataApi> = wrapDataApi(dataWorker);

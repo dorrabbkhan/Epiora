@@ -9,7 +9,7 @@ members = [
 # crates/epiora-core/fuzz (v0.2 Task 12) and crates/epiora-import/fuzz
 # (v0.3 Task 3) use cargo-fuzz on nightly and are never part of the
 # stable workspace.
-exclude = ["crates/epiora-core/fuzz", "crates/epiora-import/fuzz", "spikes"]
+exclude = ["crates/epiora-core/fuzz", "crates/epiora-import/fuzz", "spikes", "app/src-tauri"]
 
 [workspace.package]
 version = "0.2.0"

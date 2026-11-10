@@ -270,6 +270,9 @@ export const t = {
     persistedNo: 'not granted',
     engineVersion: 'Engine version',
     enginePlaceholder: 'Reported by the data worker.',
+    encryption: 'Encryption',
+    encryptionNote:
+      "Your data is encrypted with a key kept in this computer's keychain. If the key is lost, the data cannot be recovered.",
   },
   // User-facing message per RPC error detail code (spec §11): every
   // ImportError/EngineError/StoreError/worker code the worker can put
