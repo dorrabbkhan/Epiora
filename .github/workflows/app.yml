@@ -145,6 +145,7 @@ jobs:
         run: |
           npx netlify deploy --dir dist --alias "pr-${{ github.event.pull_request.number }}" --json > deploy.json
           url="$(node -p 'JSON.parse(require("fs").readFileSync("deploy.json", "utf8")).deploy_url')"
+          echo "Deploy preview: ${url}"
           echo "Deploy preview: ${url}" >> "$GITHUB_STEP_SUMMARY"
         working-directory: app
 
@@ -158,6 +159,7 @@ jobs:
             | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9-' '-' | cut -c1-37 | sed 's/^-*//; s/-*$//')"
           npx netlify deploy --dir dist --alias "${alias}" --json > deploy.json
           url="$(node -p 'JSON.parse(require("fs").readFileSync("deploy.json", "utf8")).deploy_url')"
+          echo "Deploy preview (${alias}): ${url}"
           echo "Deploy preview (${alias}): ${url}" >> "$GITHUB_STEP_SUMMARY"
         working-directory: app
 
@@ -169,5 +171,6 @@ jobs:
         run: |
           npx netlify deploy --dir dist --prod --json > deploy.json
           url="$(node -p 'JSON.parse(require("fs").readFileSync("deploy.json", "utf8")).deploy_url')"
+          echo "Production deploy: ${url}"
           echo "Production deploy: ${url}" >> "$GITHUB_STEP_SUMMARY"
         working-directory: app
