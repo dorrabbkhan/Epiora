@@ -7,6 +7,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { expect, test, type BrowserContext, type Page } from '@playwright/test';
+import { ROUTES } from './routes';
 
 const UTF8_COMMA = readFileSync(
   new URL('../../fixtures/import/utf8_comma/input.csv', import.meta.url),
@@ -94,6 +95,36 @@ function styleSrcSources(): string[] {
   return directive.split(/\s+/).slice(1);
 }
 
+/** Clicks the wizard's Choose file button and hands it `data`. */
+async function chooseFile(page: Page, name: string, data: string): Promise<void> {
+  const chooser = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: 'Choose file' }).click();
+  await (await chooser).setFiles({
+    name,
+    mimeType: 'text/csv',
+    buffer: Buffer.from(data, 'utf8'),
+  });
+}
+
+/** The plan's "run an import" below goes through `window.dataApi`, so
+ *  the wizard UI itself is driven to the settings step here: its
+ *  preview and settings components run under the policy. `atStep` is
+ *  called once the preview and once the settings step are visible. */
+async function driveWizard(
+  page: Page,
+  atStep: (step: string) => Promise<void>,
+): Promise<void> {
+  await page.goto('/p/demo/import');
+  await chooseFile(page, 'input.csv', UTF8_COMMA);
+  await expect(page.getByRole('columnheader', { name: /AGE/ })).toBeVisible();
+  await atStep('wizard preview');
+  await page.getByRole('button', { name: 'Next' }).click();
+  await expect(
+    page.getByRole('button', { name: 'Record key' }),
+  ).toBeVisible();
+  await atStep('wizard settings');
+}
+
 test.beforeEach(async ({ context, page }) => {
   await applyHeaders(context);
   await page.addInitScript(() => {
@@ -112,11 +143,13 @@ test('no_csp_violations_on_any_route', async ({ page }) => {
     expect(await violations(page), `CSP violations on ${where}`).toEqual([]);
   };
 
-  for (const path of ['/', '/settings', '/p/demo', '/p/demo/d/demo', '/p/demo/analysis']) {
+  for (const path of ROUTES) {
     await page.goto(path);
     await expect(page.locator('main')).toBeVisible();
     await expectClean(path);
   }
+
+  await driveWizard(page, expectClean);
 
   // A real import and a real run through the RPC: worker, wasm and
   // OPFS all run under the policy.
@@ -177,17 +210,13 @@ test('runtime_styles_are_exactly_the_csp_hashes', async ({
     for (const h of await styleHashes(page)) seen.add(h);
   };
 
-  for (const path of [
-    '/',
-    '/settings',
-    '/p/demo',
-    '/p/demo/d/demo',
-    '/p/demo/analysis',
-  ]) {
+  for (const path of ROUTES) {
     await page.goto(path);
     await expect(page.locator('main')).toBeVisible();
     await collect();
   }
+
+  await driveWizard(page, collect);
 
   // A real press that also opens a modal dialog: usePress's sheet is
   // injected with the first pressable, usePreventScroll's only while
