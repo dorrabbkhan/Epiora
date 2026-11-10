@@ -13,12 +13,20 @@ on:
       - 'scripts/check.sh'
       - '.github/workflows/app.yml'
   workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
 
 jobs:
   app:
     runs-on: ubuntu-latest
     steps:
+      # Release runs the gate against the tagged tree, not main.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
 
       - name: Install Node 24
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -91,3 +99,78 @@ jobs:
           name: playwright-report
           path: app/playwright-report/
           if-no-files-found: ignore
+
+      # Netlify deploys (v0.3 spec §7.2; owner's Step 5 change on PR #49):
+      # production deploys happen only on a published release, never on
+      # pushes to main. Same-repo PRs get an `pr-<number>` alias preview,
+      # manual runs a branch-name alias preview. Every step below only
+      # runs after every gate above has passed, and never on fork PRs
+      # (secrets stay env-only, so a fork would have no token anyway).
+
+      - name: Build production dist
+        if: >-
+          github.event_name == 'release' || github.event_name == 'workflow_dispatch' ||
+          github.event.pull_request.head.repo.full_name == github.repository
+        # check-app.sh built dist with VITE_TEST_HOOKS=1 for the e2e
+        # suite; the deploy must ship a fresh build without it.
+        run: env -u VITE_TEST_HOOKS npm run build
+        working-directory: app
+
+      - name: Assert no test hooks in the deploy build
+        if: >-
+          github.event_name == 'release' || github.event_name == 'workflow_dispatch' ||
+          github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          # A VITE_TEST_HOOKS=1 build compiles the __simulateQuotaOnNextWrite
+          # guard out of the worker bundle, so its rejection message is a
+          # canary that must be present; the flag's own identifier must
+          # never ship at all.
+          if ! grep -rqs 'test hooks are disabled' dist; then
+            echo 'FAIL: dist is missing the test-hook guard — it was built with VITE_TEST_HOOKS=1' >&2
+            exit 1
+          fi
+          if grep -rqs 'VITE_TEST_HOOKS' dist; then
+            echo 'FAIL: dist contains the VITE_TEST_HOOKS identifier' >&2
+            exit 1
+          fi
+        working-directory: app
+
+      - name: Deploy preview (pull request)
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          npx netlify deploy --dir dist --alias "pr-${{ github.event.pull_request.number }}" --json > deploy.json
+          url="$(node -p 'JSON.parse(require("fs").readFileSync("deploy.json", "utf8")).deploy_url')"
+          echo "Deploy preview: ${url}"
+          echo "Deploy preview: ${url}" >> "$GITHUB_STEP_SUMMARY"
+        working-directory: app
+
+      - name: Deploy preview (manual run)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          alias="$(printf '%s' "${GITHUB_REF_NAME}" \
+            | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9-' '-' | cut -c1-37 | sed 's/^-*//; s/-*$//')"
+          npx netlify deploy --dir dist --alias "${alias}" --json > deploy.json
+          url="$(node -p 'JSON.parse(require("fs").readFileSync("deploy.json", "utf8")).deploy_url')"
+          echo "Deploy preview (${alias}): ${url}"
+          echo "Deploy preview (${alias}): ${url}" >> "$GITHUB_STEP_SUMMARY"
+        working-directory: app
+
+      - name: Deploy production (release published)
+        if: github.event_name == 'release'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          npx netlify deploy --dir dist --prod --json > deploy.json
+          url="$(node -p 'JSON.parse(require("fs").readFileSync("deploy.json", "utf8")).deploy_url')"
+          echo "Production deploy: ${url}"
+          echo "Production deploy: ${url}" >> "$GITHUB_STEP_SUMMARY"
+        working-directory: app

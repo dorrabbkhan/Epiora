@@ -1,0 +1,10 @@
+# Netlify deploy config (v0.3 spec §7.2): no build runs on Netlify —
+# GitHub Actions deploys the finished `app/dist`; the SPA fallback
+# serves index.html for every route.
+[build]
+  publish = "app/dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

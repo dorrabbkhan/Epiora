@@ -44,8 +44,11 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
       settings: Parameters<DataApi['commitImport']>[2],
       acceptSchemaChanges: boolean,
       onProgress: (p: ImportProgress) => void,
-    ) =>
-      call(
+    ) => {
+      // Spec §7.1: persistent storage is requested on first import.
+      // The call is idempotent and the promise intentionally dropped.
+      void navigator.storage?.persist?.();
+      return call(
         r.commitImport(
           sessionId,
           target,
@@ -53,7 +56,8 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
           acceptSchemaChanges,
           Comlink.proxy(onProgress),
         ),
-      ),
+      );
+    },
     cancelImport: (sessionId) => call(r.cancelImport(sessionId)),
     discardSession: (sessionId) => call(r.discardSession(sessionId)),
     runFreq: (projectId, datasetId, version, options) =>
@@ -71,8 +75,15 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
   return api as Remote<DataApi>;
 }
 
-/** The app's one data worker; the `name` option becomes the OPFS
- *  database name (default `epiora`). */
+/** The worker's `name` option: `<db>:<tab id>` — the db name feeds
+ *  `openStore`, the tab id tags this tab's lock-channel messages
+ *  (Task 13). */
+export const workerName = `epiora:${crypto.randomUUID()}`;
+
+/** The app's one data worker. */
 export const dataApi: Remote<DataApi> = wrapDataApi(
-  new Worker(new URL('./data.worker.ts', import.meta.url), { type: 'module' }),
+  new Worker(new URL('./data.worker.ts', import.meta.url), {
+    type: 'module',
+    name: workerName,
+  }),
 );

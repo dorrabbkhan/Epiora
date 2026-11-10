@@ -1,0 +1,27 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  min-height: 100vh;
+  padding: var(--space-4);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-familySans);
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size4);
+  font-weight: var(--font-weightBold);
+}
+
+.body {
+  margin: 0;
+  max-width: 40em;
+  color: var(--color-textMuted);
+  font-size: var(--font-size3);
+  line-height: var(--font-lineHeight);
+}
