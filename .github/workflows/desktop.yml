@@ -1,0 +1,201 @@
+name: desktop
+
+# Desktop builds and smoke test (v0.3 plan Task 15, spec §10.1):
+# unsigned Tauri bundles for Linux, Windows and macOS uploaded as
+# artifacts, plus a WebdriverIO smoke test inside the real window on
+# Linux (import fixture → TABLES → encrypted-store header check).
+#
+# The uploaded bundles are production-shaped: the smoke binary is a
+# separate `--no-bundle` rebuild over a VITE_TEST_HOOKS=1 dist, so no
+# test hook ships in the artifacts.
+
+on:
+  pull_request:
+    paths:
+      - 'app/**'
+      - 'crates/**'
+      - 'scripts/desktop-smoke.sh'
+      - '.github/workflows/desktop.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'crates/**'
+      - 'scripts/desktop-smoke.sh'
+      - '.github/workflows/desktop.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  WASM_BINDGEN_VERSION: '0.2.129'
+  WASM_PACK_VERSION: '0.15.1'
+  BINARYEN_VERSION: 'version_133'
+
+jobs:
+  bundle:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            smoke: linux
+            wasm_bindgen_target: x86_64-unknown-linux-musl
+            wasm_bindgen_sha: 82d12bb940e2d4e72e0d5605387fc1b8ca179044e012b620f0ce4e7440e8320e
+            wasm_pack_target: x86_64-unknown-linux-musl
+            wasm_pack_sha: 410101009739b9d01c7d5affaaad6e9c9a24b4cba6791a4805db8e89b9bf7af2
+            binaryen_target: x86_64-linux
+            binaryen_sha: 2dc9c7813f5375db93d96ead4b78222fcc3e2677bbb832297af4797782a37489
+          - os: windows-latest
+            smoke: windows
+            wasm_bindgen_target: x86_64-pc-windows-msvc
+            wasm_bindgen_sha: 79e348c169d0c10c0b287647f1e753d0985353ca96800bc29be8f4261baf13e6
+            wasm_pack_target: x86_64-pc-windows-msvc
+            wasm_pack_sha: 80afe1f95aaa3f7442917c4457c8316bd1a383c1f27eb0e40601ff3ee3217583
+            binaryen_target: x86_64-windows
+            binaryen_sha: 17a2cbeac6b5693c5fbafab3838d3c65fd9c1eb38b05f5baec6c657e8c84995b
+          - os: macos-latest
+            smoke: none
+            wasm_bindgen_target: aarch64-apple-darwin
+            wasm_bindgen_sha: 81d4a23d56b3c3eb8187658329116d50e0b228a93b343825fb71f70179051cd1
+            wasm_pack_target: aarch64-apple-darwin
+            wasm_pack_sha: bcaf2a418ae39c874b072ea122fec58e11970862cbd8fd4eca2f00a17f76c536
+            binaryen_target: arm64-macos
+            binaryen_sha: ad66da82ac13f163e424b1643f16c6dfcccc98b5966296b43e52d3cab04f84a8
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Node 24
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install app dependencies
+        run: npm ci
+        working-directory: app
+
+      - name: Install Rust toolchain
+        run: |
+          rustup toolchain install 1.99.0 --profile minimal
+          rustup default 1.99.0
+          rustup target add wasm32-unknown-unknown
+          rustc --version
+
+      # Same pinned, SHA-256-verified tool triplet as app.yml; here the
+      # verified binaries land in target/bin, which wasm-build.sh
+      # prefers over PATH tools on every OS.
+      - name: Install wasm tools (SHA-256 verified)
+        run: |
+          set -euo pipefail
+          sha_of() {
+            if command -v sha256sum >/dev/null 2>&1; then
+              sha256sum "$1" | cut -d' ' -f1
+            else
+              shasum -a 256 "$1" | cut -d' ' -f1
+            fi
+          }
+          verify() {
+            actual="$(sha_of "$1")"
+            [ "$actual" = "$2" ] || {
+              echo "sha256 mismatch for $1: $actual (want $2)" >&2
+              exit 1
+            }
+          }
+          tools="$PWD/target/bin"
+          mkdir -p "$tools" dl
+          cd dl
+          curl -sSfLo wb.tar.gz \
+            "https://github.com/rustwasm/wasm-bindgen/releases/download/${WASM_BINDGEN_VERSION}/wasm-bindgen-${WASM_BINDGEN_VERSION}-${{ matrix.wasm_bindgen_target }}.tar.gz"
+          verify wb.tar.gz "${{ matrix.wasm_bindgen_sha }}"
+          curl -sSfLo wp.tar.gz \
+            "https://github.com/rustwasm/wasm-pack/releases/download/v${WASM_PACK_VERSION}/wasm-pack-v${WASM_PACK_VERSION}-${{ matrix.wasm_pack_target }}.tar.gz"
+          verify wp.tar.gz "${{ matrix.wasm_pack_sha }}"
+          curl -sSfLo be.tar.gz \
+            "https://github.com/WebAssembly/binaryen/releases/download/${BINARYEN_VERSION}/binaryen-${BINARYEN_VERSION}-${{ matrix.binaryen_target }}.tar.gz"
+          verify be.tar.gz "${{ matrix.binaryen_sha }}"
+          tar -xzf wb.tar.gz -C "$tools" --strip-components=1
+          tar -xzf wp.tar.gz -C "$tools" --strip-components=1
+          tar -xzf be.tar.gz -C "$tools" --strip-components=2 \
+            "binaryen-${BINARYEN_VERSION}/bin/"
+          cd ..
+          rm -rf dl
+          export PATH="$tools:$PATH"
+          wasm-bindgen --version
+          wasm-pack --version
+          wasm-opt --version
+
+      - name: Install Tauri Linux build deps
+        if: matrix.os == 'ubuntu-24.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev \
+            librsvg2-dev patchelf libdbus-1-dev pkg-config
+
+      - name: Build the two wasm packages
+        run: |
+          scripts/wasm-build.sh release epiora-wasm
+          scripts/wasm-build.sh release epiora-import-wasm
+
+      - name: Build app dist
+        run: npm run build
+        working-directory: app
+
+      - name: tauri build (unsigned)
+        run: npx tauri build
+        working-directory: app
+
+      - name: Upload bundles
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: epiora-desktop-${{ matrix.os }}-${{ github.sha }}
+          path: app/src-tauri/target/release/bundle/
+          if-no-files-found: error
+
+      # The smoke binary runs the test-hooks dist — a no-bundle rebuild,
+      # so the uploaded bundles stay free of VITE_TEST_HOOKS.
+      - name: Build test-hooks dist
+        if: matrix.smoke != 'none'
+        run: npm run build
+        working-directory: app
+        env:
+          VITE_TEST_HOOKS: '1'
+
+      - name: Build smoke binary (no bundling)
+        if: matrix.smoke != 'none'
+        run: npx tauri build --no-bundle
+        working-directory: app
+
+      - name: Linux smoke test (webkit2gtk-driver + xvfb + gnome-keyring)
+        if: matrix.smoke == 'linux'
+        run: scripts/desktop-smoke.sh
+
+      # Windows smoke attempt (plan Step 3): msedgedriver ships on the
+      # windows-latest image; the store key lives in Credential Manager,
+      # so no keyring setup is needed.
+      - name: Windows smoke test (msedgedriver + tauri-driver)
+        if: matrix.smoke == 'windows'
+        run: |
+          if ! command -v tauri-driver >/dev/null 2>&1; then
+            cargo install tauri-driver --locked
+          fi
+          tauri-driver --version
+          export EPIORA_APP_BINARY="$PWD/app/src-tauri/target/release/epiora-app.exe"
+          export EPIORA_APP_DATA_DIR="$APPDATA/org.epiora.app"
+          export EPIORA_FIXTURE="$PWD/fixtures/import/utf8_comma/input.csv"
+          tauri-driver --port 4444 &
+          driver_pid=$!
+          trap 'kill "$driver_pid" 2>/dev/null || true' EXIT
+          for _ in $(seq 1 60); do
+            curl -fsS http://127.0.0.1:4444/status >/dev/null 2>&1 && break
+            sleep 1
+          done
+          cd app
+          npx wdio run desktop-e2e/wdio.conf.mjs

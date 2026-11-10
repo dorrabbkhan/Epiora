@@ -1875,3 +1875,51 @@ Files outside the Files block:
 - `app/package-lock.json` — regenerated for the new npm deps.
 - `docs/decisions.md` — this entry.
 Supersedes: —
+
+### v0.3 Task 15 — Desktop builds and smoke test
+
+- `desktop.yml` runs a `ubuntu-24.04` / `windows-latest` / `macos-latest`
+  matrix on PRs touching `app/**` or `crates/**`, on pushes to `main`
+  and on `workflow_dispatch`: clean `npm run build` + `npx tauri build`
+  (no signing env), bundles uploaded as `epiora-desktop-<os>-<sha>`.
+- The uploaded bundles are production-shaped: the smoke test runs a
+  separate `npx tauri build --no-bundle` binary over a
+  `VITE_TEST_HOOKS=1` dist, so no test hook ships in the artifacts
+  (the same separation app.yml keeps between its e2e and deploy builds).
+- The wasm tool triplet is pinned and SHA-256-verified per OS —
+  wasm-bindgen 0.2.129, wasm-pack 0.15.1, binaryen version_133 (same
+  versions as `app.yml`) — installed into `target/bin/`, which
+  `scripts/wasm-build.sh` already prefers over PATH tools.
+- `scripts/desktop-smoke.sh` installs `webkit2gtk-driver`, `xvfb`,
+  `gnome-keyring` and `dbus`, runs the plan's
+  `cargo install tauri-driver --locked` verbatim (the resolved version
+  is logged), starts an unlocked gnome-keyring inside `dbus-run-session`
+  and runs WebdriverIO under `xvfb`. `XDG_DATA_HOME`/`XDG_CONFIG_HOME`
+  point at a mktemp dir, so first launch exercises key creation and the
+  database lands at a known path (`$XDG_DATA_HOME/org.epiora.app/
+  epiora.db`).
+- "The dialog test hook `VITE_TEST_HOOKS=1` that accepts a path": the
+  wizard's file input accepts a *path* via WebDriver element send keys
+  on `<input type=file>` — the WebDriver file-dialog mechanism. Drivers
+  that cannot set file inputs fall back to injecting the same fixture
+  bytes into the same input; either way the wizard's own onFile path
+  runs (ambiguity resolved toward the mechanism that needs no app
+  change, since no path-reading IPC exists or may be added).
+- `wdio.conf.mjs` sets `reporters: []` — the spec logs its own progress
+  and the launcher prints the summary; `@wdio/spec-reporter` stays out
+  of the dependency list (only the plan's three packages added, all
+  10.2.0, MIT; transitive deps incl. `edgedriver`/`geckodriver` via
+  `@wdio/utils` are MIT/Apache-2.0/BSD/ISC).
+- The `webdriverio` 10.2.0 engines floor is Node 24.22.1; the local
+  toolchain (24.22.0) warns EBADENGINE — install-only warning, CI's
+  `node-version: 24` resolves newer. The spec uses only the injected
+  `browser`/`$` globals, no package imports.
+- Local `scripts/desktop-smoke.sh` cannot pass in this sandbox (no
+  webkit2gtk-4.1 dev files, no display, sudo blocked): it fails at the
+  expected first step. The green run is the CI job — link recorded in
+  the PR.
+- Windows smoke attempt (plan Step 3): pending — see the PR for the
+  attempt's run link and outcome (kept if green, otherwise removed and
+  the reason recorded here).
+- Files outside the Files block: `app/package-lock.json` — regenerated
+  for the new dev dependencies (same convention as Task 14).
