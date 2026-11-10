@@ -114,6 +114,11 @@ describe('renderTables', () => {
     ).toBeGreaterThan(0);
     // The odds ratio is rendered through formatNumber (4 significant digits).
     expect(screen.getByRole('cell', { name: '23.45' })).toBeInTheDocument();
+    // Six p-values below 0.0001 take the open bound; the p column is
+    // the only cell routed through the 'p' kind.
+    expect(
+      screen.getAllByRole('cell', { name: '< 0.0001' }).length,
+    ).toBe(6);
   });
 
   it('undefined_estimate_renders_dash_with_reason', () => {
@@ -154,30 +159,44 @@ describe('renderFreq', () => {
     for (const h of headers) {
       expect(h).toHaveAttribute('scope', 'col');
     }
-    // Row 0 (label '0'): Clopper–Pearson 27.7–50.6, Wilson 28.4–49.9.
+    // Row 0 (label '0'): Clopper–Pearson 27.70–50.60, Wilson 28.40–49.90.
     expect(
-      within(table).getByRole('cell', { name: '27.7 – 50.6' }),
+      within(table).getByRole('cell', { name: '27.70 – 50.60' }),
     ).toBeInTheDocument();
     expect(
-      within(table).getByRole('cell', { name: '28.4 – 49.9' }),
+      within(table).getByRole('cell', { name: '28.40 – 49.90' }),
     ).toBeInTheDocument();
     expect(
-      within(table).getByRole('cell', { name: '49.4 – 72.3' }),
+      within(table).getByRole('cell', { name: '49.40 – 72.30' }),
     ).toBeInTheDocument();
     expect(
-      within(table).getByRole('cell', { name: '50.1 – 71.6' }),
+      within(table).getByRole('cell', { name: '50.10 – 71.60' }),
     ).toBeInTheDocument();
   });
 });
 
 describe('formatNumber', () => {
   it('small_p_value_formatting', () => {
-    expect(formatNumber(0.00004)).toBe('< 0.0001');
-    expect(formatNumber(0.0001)).toBe('0.0001');
-    expect(formatNumber(0)).toBe('0');
-    expect(formatNumber(23.454545454545453)).toBe('23.45');
+    // Only p-values take the open bound; a tiny estimate keeps digits.
+    expect(formatNumber(0.00004, 'p')).toBe('< 0.0001');
+    expect(formatNumber(0.00004)).toBe('0.00004000');
+    expect(formatNumber(-0.00004)).toBe('-0.00004000');
+    expect(formatNumber(0.0001, 'p')).toBe('0.0001000');
+    // Exactly 4 significant digits, trailing zeros kept.
+    expect(formatNumber(2.5)).toBe('2.500');
+    expect(formatNumber(1)).toBe('1.000');
+    expect(formatNumber(100)).toBe('100.0');
     expect(formatNumber(0.7962962962962963)).toBe('0.7963');
-    expect(formatNumber(1)).toBe('1');
-    expect(formatNumber(100)).toBe('100');
+    expect(formatNumber(23.454545454545453)).toBe('23.45');
+    expect(formatNumber(0.00003)).toBe('0.00003000');
+    expect(formatNumber(0)).toBe('0.000');
+    expect(formatNumber(-0.5)).toBe('-0.5000');
+    // Never exponent notation, however large or small the magnitude.
+    expect(formatNumber(12345.6)).toBe('12350');
+    expect(formatNumber(1e21)).toBe('1000000000000000000000');
+    expect(formatNumber(0.0000003)).toBe('0.0000003000');
+    // Non-finite input renders like an undefined estimate.
+    expect(formatNumber(Number.NaN)).toBe('—');
+    expect(formatNumber(Number.POSITIVE_INFINITY)).toBe('—');
   });
 });

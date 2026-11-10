@@ -2,8 +2,9 @@
 // `TablesResult` become semantic `<table>` markup — captions and
 // scoped headers; an undefined `Estimate` renders "—" with the reason
 // in a visually hidden span; every statistic goes through the one
-// `formatNumber` helper (4 significant digits, p-values below 0.0001
-// as "< 0.0001"). Visual styling comes from the caller's
+// `formatNumber` helper (exactly 4 significant digits, trailing
+// zeros kept, p-values below 0.0001 as "< 0.0001"). Visual styling
+// comes from the caller's
 // `.result` scope in analysis.module.css so this module stays free of
 // stylesheet imports.
 import type { CSSProperties, ReactNode } from 'react';
@@ -31,17 +32,42 @@ const VISUALLY_HIDDEN: CSSProperties = {
   border: 0,
 };
 
-/** The one number format (spec §8.2): 4 significant digits; magnitudes
- *  below 0.0001 render as an open bound. */
-export function formatNumber(x: number): string {
-  if (x !== 0 && Math.abs(x) < 0.0001) {
-    return x < 0 ? '> -0.0001' : '< 0.0001';
-  }
-  return String(Number(x.toPrecision(4)));
+/** The one number format (spec §8.2): exactly 4 significant digits
+ *  with trailing zeros kept, never exponent notation, locale-
+ *  independent via `toPrecision` (ECMA-262) plus `expandExponential`
+ *  for the magnitudes it renders in exponential form. `kind: 'p'`
+ *  adds the open bound: p-values in (0, 0.0001) render "< 0.0001";
+ *  estimates of the same magnitude keep their digits. Non-finite
+ *  input renders "—". */
+export function formatNumber(
+  x: number,
+  kind: 'estimate' | 'p' = 'estimate',
+): string {
+  if (!Number.isFinite(x)) return '—';
+  if (kind === 'p' && x > 0 && x < 0.0001) return '< 0.0001';
+  return expandExponential(x.toPrecision(4));
 }
 
-function estimate(e: Estimate): ReactNode {
-  if (typeof e === 'number') return formatNumber(e);
+const EXPONENTIAL = /^(-?)(\d)(?:\.(\d+))?e([+-]\d+)$/;
+
+/** `toPrecision` switches to exponential form outside [1e-6, 1e4);
+ *  expanding it by hand keeps the "no exponent" rule for every
+ *  finite input ("1.235e+4" → "12350", "3.000e-7" → "0.0000003000"). */
+function expandExponential(s: string): string {
+  const m = EXPONENTIAL.exec(s);
+  if (m === null) return s;
+  const [, sign, head, tail = '', expText] = m;
+  const digits = head + tail;
+  const point = Number(expText) + 1; // '.' sits `point` digits into `digits`
+  if (point <= 0) return `${sign}0.${'0'.repeat(-point)}${digits}`;
+  if (point >= digits.length) {
+    return `${sign}${digits}${'0'.repeat(point - digits.length)}`;
+  }
+  return `${sign}${digits.slice(0, point)}.${digits.slice(point)}`;
+}
+
+function estimate(e: Estimate, kind: 'estimate' | 'p' = 'estimate'): ReactNode {
+  if (typeof e === 'number') return formatNumber(e, kind);
   const reason = t.analysis.undefinedReason[e.undefined];
   return (
     <>
@@ -86,7 +112,7 @@ function StatsTable({ caption, rows }: { caption: string; rows: StatRow[] }) {
             <th scope="row">{r.label}</th>
             <td>{r.estimate === undefined ? '' : estimate(r.estimate)}</td>
             <td>{r.ci === undefined ? '' : interval(r.ci)}</td>
-            <td>{r.p === undefined ? '' : estimate(r.p)}</td>
+            <td>{r.p === undefined ? '' : estimate(r.p, 'p')}</td>
           </tr>
         ))}
       </tbody>
