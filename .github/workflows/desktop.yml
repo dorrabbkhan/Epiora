@@ -109,7 +109,8 @@ jobs:
             }
           }
           tools="$PWD/target/bin"
-          mkdir -p "$tools" dl
+          libdir="$PWD/target/lib"
+          mkdir -p "$tools" "$libdir" dl
           cd dl
           curl -sSfLo wb.tar.gz \
             "https://github.com/rustwasm/wasm-bindgen/releases/download/${WASM_BINDGEN_VERSION}/wasm-bindgen-${WASM_BINDGEN_VERSION}-${{ matrix.wasm_bindgen_target }}.tar.gz"
@@ -124,6 +125,10 @@ jobs:
           tar -xzf wp.tar.gz -C "$tools" --strip-components=1
           tar -xzf be.tar.gz -C "$tools" --strip-components=2 \
             "binaryen-${BINARYEN_VERSION}/bin/"
+          # macOS wasm-opt links @rpath/libbinaryen.dylib with rpath
+          # @loader_path/../lib — lib/ must sit beside bin/.
+          tar -xzf be.tar.gz -C "$libdir" --strip-components=2 \
+            "binaryen-${BINARYEN_VERSION}/lib/"
           cd ..
           rm -rf dl
           export PATH="$tools:$PATH"
@@ -186,7 +191,7 @@ jobs:
           if ! command -v tauri-driver >/dev/null 2>&1; then
             cargo install tauri-driver --locked
           fi
-          tauri-driver --version
+          cargo install --list | grep '^tauri-driver' || true
           export EPIORA_APP_BINARY="$PWD/app/src-tauri/target/release/epiora-app.exe"
           export EPIORA_APP_DATA_DIR="$APPDATA/org.epiora.app"
           export EPIORA_FIXTURE="$PWD/fixtures/import/utf8_comma/input.csv"
