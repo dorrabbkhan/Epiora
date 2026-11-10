@@ -36,15 +36,16 @@ const VISUALLY_HIDDEN: CSSProperties = {
  *  with trailing zeros kept, never exponent notation, locale-
  *  independent via `toPrecision` (ECMA-262) plus `expandExponential`
  *  for the magnitudes it renders in exponential form. `kind: 'p'`
- *  adds the open bound: p-values in (0, 0.0001) render "< 0.0001";
- *  estimates of the same magnitude keep their digits. Non-finite
- *  input renders "—". */
+ *  adds the open bound: p-values in [0, 0.0001) render "< 0.0001",
+ *  including an exact 0 (or -0) produced when an upper tail
+ *  underflows; estimates of the same magnitude keep their digits.
+ *  Non-finite input renders "—". */
 export function formatNumber(
   x: number,
   kind: 'estimate' | 'p' = 'estimate',
 ): string {
   if (!Number.isFinite(x)) return '—';
-  if (kind === 'p' && x > 0 && x < 0.0001) return '< 0.0001';
+  if (kind === 'p' && x >= 0 && x < 0.0001) return '< 0.0001';
   return expandExponential(x.toPrecision(4));
 }
 

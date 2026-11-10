@@ -182,6 +182,10 @@ describe('formatNumber', () => {
     expect(formatNumber(0.00004)).toBe('0.00004000');
     expect(formatNumber(-0.00004)).toBe('-0.00004000');
     expect(formatNumber(0.0001, 'p')).toBe('0.0001000');
+    // An upper tail underflows to exactly 0; p = 0 is impossible,
+    // so 0 (and -0) take the open bound while an estimate of 0 does not.
+    expect(formatNumber(0, 'p')).toBe('< 0.0001');
+    expect(formatNumber(-0, 'p')).toBe('< 0.0001');
     // Exactly 4 significant digits, trailing zeros kept.
     expect(formatNumber(2.5)).toBe('2.500');
     expect(formatNumber(1)).toBe('1.000');
