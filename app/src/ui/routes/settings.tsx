@@ -6,6 +6,7 @@ import {
   type Theme,
 } from '../../design/theme';
 import { useEngineVersion, useStorageEstimate } from '../queries';
+import { inTauri } from '../../worker/client';
 import { t } from '../strings';
 import styles from './routes.module.css';
 
@@ -77,6 +78,12 @@ export function SettingsScreen() {
         <h2>{t.settings.engineVersion}</h2>
         <p>{engine.data ?? t.common.loading}</p>
       </section>
+      {inTauri && (
+        <section>
+          <h2>{t.settings.encryption}</h2>
+          <p>{t.settings.encryptionNote}</p>
+        </section>
+      )}
     </div>
   );
 }

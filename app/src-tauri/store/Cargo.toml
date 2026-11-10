@@ -1,0 +1,23 @@
+[package]
+name = "epiora-store-native"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Native SQLite3MultipleCiphers store for the Epiora desktop shell"
+
+[features]
+default = []
+# `stdio` builds the test-only store-stdio binary (JSON-lines executor
+# over stdin/stdout) so the TypeScript conformance suite can run
+# against native SQLite3MC. Never bundled into the app.
+stdio = ["dep:serde", "dep:serde_json"]
+
+[dependencies]
+rusqlite = { version = "0.41.1", features = ["bundled"] }
+serde = { version = "1", features = ["derive"], optional = true }
+serde_json = { version = "1", optional = true }
+
+[[bin]]
+name = "store-stdio"
+path = "src/bin/store-stdio.rs"
+required-features = ["stdio"]

@@ -1,0 +1,52 @@
+# cargo-deny policy for the app/src-tauri workspace (v0.3 plan Task 14).
+# Same rules as the engine workspace's deny.toml: licences not on the
+# allow list are denied, as are all advisories. The rejected products of
+# platform spec §6 (GADM data, SQLite SEE, PowerSync) must never appear.
+
+[advisories]
+version = 2
+db-path = "${EPIORA_DENY_DB:-target/advisory-dbs}"
+unmaintained = "all"
+unsound = "all"
+yanked = "deny"
+# Transitive advisories with no safe upgrade at task time (2026-11-10);
+# each is recorded in docs/decisions.md (v0.3 Task 14):
+# - RUSTSEC-2024-0429: glib::VariantStrIter unsoundness (via gtk) — the
+#   app never iterates GVariants; no fix released for the gtk-rs line.
+# - RUSTSEC-2024-0370: proc-macro-error unmaintained (via gtk3-macros).
+# - RUSTSEC-2026-0370/0371/0372: zvariant, zbus_names, zvariant_derive
+#   merged into zbus 6 — keyring's secret-service backend still needs
+#   zbus 5.x.
+ignore = [
+    "RUSTSEC-2024-0429",
+    "RUSTSEC-2024-0370",
+    "RUSTSEC-2026-0370",
+    "RUSTSEC-2026-0371",
+    "RUSTSEC-2026-0372",
+]
+
+[licenses]
+version = 2
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "BSL-1.0",
+    "Unicode-3.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "AGPL-3.0-only",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "0BSD",
+    "CC0-1.0",
+    "MPL-2.0",
+    "Zlib",
+    # Unlicense: required by sqlite3mc-src's licence expression
+    # (v0.3 Task 14).
+    "Unlicense",
+]
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]

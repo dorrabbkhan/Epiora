@@ -12,13 +12,22 @@
 // after ':' is the tab identity used by the lock channel.
 
 import { openOpfsStore } from '../store/opfs';
+import { openRelayStore } from '../store/relay';
 import { StoreError, type Store } from '../store/types';
 import { acquireStoreLock, storeLockState } from './tab-lock';
 
 let storePromise: Promise<Store> | null = null;
 let queue: Promise<unknown> = Promise.resolve();
 
-const TAINTED = (globalThis as Record<string, unknown>).__EPIORA_TAURI__ === true;
+// Task 14: Tauri's IPC does not reach workers, so the main thread marks
+// the shell by naming this worker 'epiora-tauri:<tab>' (client.ts, when
+// window.__TAURI_INTERNALS__ exists); bridge.ts also sets
+// self.__EPIORA_TAURI__ on the main thread. Either marker picks the
+// native relay store.
+const TAINTED =
+  (globalThis as Record<string, unknown>).__EPIORA_TAURI__ === true ||
+  (typeof (globalThis as { name?: unknown }).name === 'string' &&
+    ((globalThis as { name?: string }).name as string).startsWith('epiora-tauri:'));
 
 function dbName(): string {
   const name = (globalThis as { name?: unknown }).name;
@@ -44,13 +53,6 @@ function isTransientOpen(e: unknown): boolean {
 
 /** Opens (creating if needed) this worker's one store connection. */
 export function openStore(): Promise<Store> {
-  if (TAINTED) {
-    // Task 14 installs `self.__EPIORA_TAURI__` on the main-thread
-    // bridge; its relay store does not exist yet.
-    return Promise.reject(
-      new StoreError('sql', 'the Tauri relay store arrives with Task 14'),
-    );
-  }
   storePromise ??= (async () => {
     // The store only ever opens under the tab lock (Task 13): a
     // second tab's worker reports 'held-elsewhere', and a worker
@@ -62,6 +64,7 @@ export function openStore(): Promise<Store> {
         'Epiora is open in another tab or window',
       );
     }
+    if (TAINTED) return openRelayStore();
     let last: unknown;
     for (let waited = 0; waited <= OPEN_RETRY_MS; waited += OPEN_RETRY_STEP) {
       try {

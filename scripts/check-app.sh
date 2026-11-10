@@ -33,6 +33,17 @@ step "wasm packages (epiora-wasm, epiora-import-wasm)"
 "$root/scripts/wasm-build.sh" release epiora-wasm
 "$root/scripts/wasm-build.sh" release epiora-import-wasm
 
+step "store-stdio binary (native conformance)"
+# Task 14: the native backend's TypeScript conformance suite runs
+# against the test-only store-stdio binary. The store crate is pure
+# Rust, so this needs no Tauri system deps.
+if command -v cargo >/dev/null && [ -d "$root/app/src-tauri" ]; then
+  cargo build --manifest-path "$root/app/src-tauri/Cargo.toml" \
+    -p epiora-store-native --features stdio
+else
+  echo "skipped (no cargo or no app/src-tauri yet)"
+fi
+
 step "tsc --noEmit"
 npx tsc --noEmit
 
@@ -60,6 +71,23 @@ npx license-checker-rseidelsohn --production \
   --summary
 
 [ "$mode" = quick ] && exit 0
+
+step "native store (Task 14: cargo deny + cargo test)"
+# `cargo test --workspace` compiles the epiora-app bin, which links
+# webkit2gtk/gtk — run it only where the Tauri system deps exist (the
+# app.yml native-store job installs them). The store crate itself is
+# always tested above via native.test.ts + store-stdio.
+if command -v cargo >/dev/null && [ -d "$root/app/src-tauri" ]; then
+  (cd "$root/app/src-tauri" && cargo deny check)
+  if pkg-config --exists webkit2gtk-4.1; then
+    (cd "$root/app/src-tauri" && cargo test --workspace)
+  else
+    echo "cargo test --workspace skipped (no webkit2gtk-4.1 dev files; CI's native-store job runs it)"
+    (cd "$root/app/src-tauri" && cargo test -p epiora-store-native --all-features)
+  fi
+else
+  echo "skipped (no cargo or no app/src-tauri yet)"
+fi
 
 step "vite build"
 # VITE_TEST_HOOKS=1 exposes the Task 8 store test hook through the

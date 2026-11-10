@@ -18,6 +18,7 @@ export default tseslint.config(
       'playwright-report/**',
       'test-results/**',
       'lint-fixtures/**',
+      'src-tauri/target/**',
     ],
   },
   ...tseslint.configs.recommended,
