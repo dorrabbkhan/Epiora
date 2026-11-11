@@ -2009,6 +2009,22 @@ except the Windows/macOS bundle legs (below).
   the PR; main pushes still build and upload both bundles, so the
   failure is caught there, and a PR that needs the other OS legs can
   trigger `workflow_dispatch`.
+- **push-to-main triggers** — `app.yml`, `engine.yml` and `import.yml`
+  now also run on `push` to `main` with the same `paths` filter as
+  their `pull_request` trigger. Required to make the Rust build cache
+  effective at all: `save-if: ${{ github.ref == 'refs/heads/main' }}`
+  only writes on a run whose ref is main, and these three workflows
+  had no trigger that ever ran on main, so their cache was never
+  saved and every PR restored a miss (desktop.yml already ran on main
+  pushes for its bundles). A merge that touches a workflow's paths now
+  warms the cache its next PR restores from. Nothing deploys or
+  publishes on `push`: app.yml's deploy-build and test-hook-assert
+  steps explicitly require `release`, `workflow_dispatch` or a
+  same-repo `pull_request`, the three Netlify deploy steps keep their
+  single-event `if`s, and engine.yml/import.yml contain no deploy or
+  publish steps (their `always()`/`failure()` steps only write job
+  summaries and diagnostic artifacts). Cost: one extra run of each of
+  the three workflows per merge that touches its paths.
 
 Evidence: baseline timings from app.yml run 43025518092 and desktop.yml
 run 43025517715 (`tauri build` 283–335 s/OS, `npm ci` 98–194 s, wasm

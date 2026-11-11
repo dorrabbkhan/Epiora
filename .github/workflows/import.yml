@@ -18,6 +18,20 @@ on:
       - 'scripts/check*.sh'
       - 'scripts/wasm-build.sh'
       - '.github/workflows/import.yml'
+  # push to main so a merge touching these paths writes the Rust cache
+  # (save-if only writes on main); no job below deploys or publishes.
+  push:
+    branches: [main]
+    paths:
+      - 'crates/epiora-import*/**'
+      - 'crates/epiora-core/**'
+      - 'fixtures/import/**'
+      - 'Cargo.*'
+      - 'deny.toml'
+      - 'rust-toolchain.toml'
+      - 'scripts/check*.sh'
+      - 'scripts/wasm-build.sh'
+      - '.github/workflows/import.yml'
   workflow_dispatch:
 
 env:
