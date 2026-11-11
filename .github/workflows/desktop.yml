@@ -72,9 +72,9 @@ jobs:
     # Windows/macOS bundle legs only do work on main pushes, manual runs
     # and releases (owner decision 2026-11-11): a job-level `if` cannot
     # read the matrix (it is evaluated before the matrix expands), so
-    # this per-leg flag skips every step on PRs for the non-ubuntu legs
-    # — the legs report skipped, not failure, and PRs keep the ubuntu
-    # bundle + Linux smoke.
+    # this per-leg flag skips every step on PRs for the non-ubuntu legs —
+    # each leg is a fast no-op success whose log shows every step
+    # skipped, and PRs keep the ubuntu bundle + Linux smoke.
     env:
       RUN_BUNDLE: ${{ matrix.os == 'ubuntu-24.04' || github.event_name != 'pull_request' }}
     steps:
