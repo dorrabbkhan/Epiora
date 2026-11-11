@@ -12,6 +12,16 @@ on:
       - 'scripts/check-app.sh'
       - 'scripts/check.sh'
       - '.github/workflows/app.yml'
+  # push to main so a merge touching these paths writes the Rust cache
+  # (save-if only writes on main); nothing below deploys on push.
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'crates/**'
+      - 'scripts/check-app.sh'
+      - 'scripts/check.sh'
+      - '.github/workflows/app.yml'
   workflow_dispatch:
     inputs:
       runs:
@@ -62,6 +72,14 @@ jobs:
           rustup toolchain install 1.99.0 --profile minimal
           rustup default 1.99.0
           rustc --version
+
+      # Only main writes the cache; PR and dispatch runs restore from it.
+      # This job compiles only the app/src-tauri workspace.
+      - name: Rust build cache
+        uses: Swatinem/rust-cache@2201cc584a476d1b508be977bbe4b7d1c7a52e9c # v2.9.3
+        with:
+          workspaces: app/src-tauri
+          save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Install cargo-deny 0.20.2 (pinned, SHA-256 verified)
         run: |
@@ -123,6 +141,21 @@ jobs:
         run: npm ci
         working-directory: app
 
+      - name: Playwright version (lockfile-pinned)
+        id: playwright_version
+        run: node -p '"version=" + require("./app/package-lock.json").packages["node_modules/playwright-core"].version' >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright_version.outputs.version }}
+
+      # Runs unconditionally: on a cache hit the download half verifies
+      # the binaries (~2 s) and tops up anything missing; the system-deps
+      # half always installs. This also self-heals a partial entry (a
+      # job that caches a browser subset — see the bench job's separate
+      # chromium-only key).
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium firefox webkit
         working-directory: app
@@ -135,6 +168,17 @@ jobs:
           rustup default 1.99.0
           rustup target add wasm32-unknown-unknown
           rustc --version
+
+      # Only main writes the cache; PR and release runs restore from it.
+      # check-app.sh compiles both workspaces: target/ for the wasm
+      # builds and app/src-tauri/target/ for the store-stdio build.
+      - name: Rust build cache
+        uses: Swatinem/rust-cache@2201cc584a476d1b508be977bbe4b7d1c7a52e9c # v2.9.3
+        with:
+          workspaces: |
+            .
+            app/src-tauri
+          save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Install wasm-bindgen 0.2.129 (pinned, SHA-256 verified)
         run: |
@@ -198,11 +242,14 @@ jobs:
       # manual runs a branch-name alias preview. Every step below only
       # runs after every gate above has passed, and never on fork PRs
       # (secrets stay env-only, so a fork would have no token anyway).
+      # The push trigger exists to warm the Rust cache on main; it
+      # matches none of these steps.
 
       - name: Build production dist
         if: >-
           github.event_name == 'release' || github.event_name == 'workflow_dispatch' ||
-          github.event.pull_request.head.repo.full_name == github.repository
+          (github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository)
         # check-app.sh built dist with VITE_TEST_HOOKS=1 for the e2e
         # suite; the deploy must ship a fresh build without it.
         run: env -u VITE_TEST_HOOKS npm run build
@@ -211,7 +258,8 @@ jobs:
       - name: Assert no test hooks in the deploy build
         if: >-
           github.event_name == 'release' || github.event_name == 'workflow_dispatch' ||
-          github.event.pull_request.head.repo.full_name == github.repository
+          (github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository)
         run: |
           # A VITE_TEST_HOOKS=1 build compiles the __simulateQuotaOnNextWrite
           # guard out of the worker bundle, so its rejection message is a
@@ -298,6 +346,14 @@ jobs:
           rustup default 1.99.0
           rustup target add wasm32-unknown-unknown
           rustc --version
+
+      # Only main writes the cache; dispatch runs restore from it.
+      # This job compiles only the root workspace (the wasm builds).
+      - name: Rust build cache
+        uses: Swatinem/rust-cache@2201cc584a476d1b508be977bbe4b7d1c7a52e9c # v2.9.3
+        with:
+          workspaces: .
+          save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Install wasm-bindgen 0.2.129 (pinned, SHA-256 verified)
         run: |

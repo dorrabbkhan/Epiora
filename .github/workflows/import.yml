@@ -18,6 +18,20 @@ on:
       - 'scripts/check*.sh'
       - 'scripts/wasm-build.sh'
       - '.github/workflows/import.yml'
+  # push to main so a merge touching these paths writes the Rust cache
+  # (save-if only writes on main); no job below deploys or publishes.
+  push:
+    branches: [main]
+    paths:
+      - 'crates/epiora-import*/**'
+      - 'crates/epiora-core/**'
+      - 'fixtures/import/**'
+      - 'Cargo.*'
+      - 'deny.toml'
+      - 'rust-toolchain.toml'
+      - 'scripts/check*.sh'
+      - 'scripts/wasm-build.sh'
+      - '.github/workflows/import.yml'
   workflow_dispatch:
 
 env:
@@ -38,6 +52,13 @@ jobs:
           rustup target add wasm32-unknown-unknown
           rustc --version
           cargo --version
+
+      # Only main writes the cache; PR and dispatch runs restore from it.
+      - name: Rust build cache
+        uses: Swatinem/rust-cache@2201cc584a476d1b508be977bbe4b7d1c7a52e9c # v2.9.3
+        with:
+          workspaces: .
+          save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Install Node 22
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0

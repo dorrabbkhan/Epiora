@@ -11,6 +11,19 @@ on:
       - 'scripts/check*.sh'
       - '.github/workflows/engine.yml'
       - '.github/workflows/fuzz-nightly.yml'
+  # push to main so a merge touching these paths writes the Rust cache
+  # (save-if only writes on main); no job below deploys or publishes.
+  push:
+    branches: [main]
+    paths:
+      - 'crates/**'
+      - 'Cargo.*'
+      - 'deny.toml'
+      - 'rust-toolchain.toml'
+      - 'fixtures/**'
+      - 'scripts/check*.sh'
+      - '.github/workflows/engine.yml'
+      - '.github/workflows/fuzz-nightly.yml'
   workflow_dispatch:
 
 env:
@@ -33,6 +46,13 @@ jobs:
           rustup target add wasm32-unknown-unknown
           rustc --version
           cargo --version
+
+      # Only main writes the cache; PR and dispatch runs restore from it.
+      - name: Rust build cache
+        uses: Swatinem/rust-cache@2201cc584a476d1b508be977bbe4b7d1c7a52e9c # v2.9.3
+        with:
+          workspaces: .
+          save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Install Node 22
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -146,10 +166,33 @@ jobs:
           rustc --version
           cargo --version
 
+      # Only main writes the cache; PR and dispatch runs restore from it.
+      - name: Rust build cache
+        uses: Swatinem/rust-cache@2201cc584a476d1b508be977bbe4b7d1c7a52e9c # v2.9.3
+        with:
+          workspaces: .
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
       - name: Install Node 22
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
+
+      # bench.sh runs `npx playwright install --with-deps chromium` under
+      # CI; a warm cache makes the browser download a no-op while the
+      # system-deps half still runs inside the script. The key gets a
+      # `-chromium` suffix: this job installs only chromium, so its
+      # saved entry is a subset that must never serve the app job's
+      # all-three-browsers key.
+      - name: Playwright version (bench lockfile-pinned)
+        id: playwright_version
+        run: node -p '"version=" + require("./crates/epiora-wasm/bench/package-lock.json").packages["node_modules/playwright-core"].version' >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright_version.outputs.version }}-chromium
 
       - name: Install wasm-bindgen 0.2.129 (pinned, SHA-256 verified)
         run: |
@@ -280,6 +323,13 @@ jobs:
           rustup default 1.99.0
           rustc --version
           cargo --version
+
+      # Only main writes the cache; PR and dispatch runs restore from it.
+      - name: Rust build cache
+        uses: Swatinem/rust-cache@2201cc584a476d1b508be977bbe4b7d1c7a52e9c # v2.9.3
+        with:
+          workspaces: .
+          save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Generate validation report
         env:

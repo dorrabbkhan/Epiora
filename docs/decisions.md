@@ -1942,6 +1942,99 @@ Supersedes: —
 - Files outside the Files block: `app/package-lock.json` — regenerated
   for the new dev dependencies (same convention as Task 14).
 
+### CI speed-ups (owner decision 2026-11-11)
+
+Decision: Add three caches and move two desktop bundle legs off PRs.
+Nothing is loosened or skipped: every check that ran on a PR still runs,
+except the Windows/macOS bundle legs (below).
+
+- **Rust build cache** — `Swatinem/rust-cache` v2.9.3 (pinned by SHA) in
+  every job that compiles Rust in `app.yml`, `desktop.yml`, `engine.yml`
+  and `import.yml`. `workspaces` covers each Cargo workspace the job
+  compiles: the root workspace (`.`), `app/src-tauri`, or both.
+  `save-if: ${{ github.ref == 'refs/heads/main' }}` — only main writes;
+  PRs, dispatches and release runs restore main's entry. On PR runs of
+  engine.yml/import.yml `GIT_SHA` differs per commit, so `build.rs`
+  (`rerun-if-env-changed`) rebuilds epiora-core and its dependents —
+  correct, and the dependency cache still applies. The nightly fuzz
+  jobs are left uncached: they use separate fuzz workspaces
+  (`crates/*/fuzz`, excluded from the root workspace) and the win was
+  not trivially safe to take.
+- **Playwright browsers** — `~/.cache/ms-playwright` cached via
+  `actions/cache` v6.1.0 (pinned by SHA) in app.yml's `app` job and
+  engine.yml's `bench` job. Key:
+  `<os>-playwright-<playwright-core version>` for the app job's
+  three-browser set, the same with a `-chromium` suffix for the bench
+  job's chromium-only set — the version read from the job's own
+  lockfile (`app/package-lock.json` /
+  `crates/epiora-wasm/bench/package-lock.json`, both pinned at 1.64.1).
+  The suffix matters: a subset entry must never serve a job needing
+  more browsers — this PR's first run proved it when the bench job
+  saved a chromium-only entry under the shared key and the app job
+  then restored it and had no firefox/webkit binaries. The app job
+  keeps a single unconditional `npx playwright install --with-deps
+  chromium firefox webkit`: on a hit the download half verifies the
+  binaries (and tops up a partial entry), the system-deps half always
+  runs. `npm ci` stays (lockfile authoritative); the setup-node npm
+  cache stays.
+- **wasm packages** — `crates/epiora-wasm/pkg` and
+  `crates/epiora-import-wasm/pkg` cached in desktop.yml's `bundle` job
+  only; a hit skips `scripts/wasm-build.sh`. Key:
+  `<os>-wasm-pkg-wbindgen<0.2.129>-wpack<0.15.1>-<version_133>-` +
+  `hashFiles('crates/**', 'Cargo.lock', 'rust-toolchain.toml',
+  'scripts/wasm-build.sh')`. The key covers every build input and
+  desktop.yml sets no `GIT_SHA`, so a hit restores byte-identical
+  output. Not cached elsewhere: app.yml's `app` job builds inside
+  `check-app.sh`, which cannot skip the build without a script change;
+  engine.yml's `engine` job runs the `wasm-size.sh` budget inside
+  `check-engine.sh` — no pkg cache there means the gate keeps measuring
+  a real, fresh build of the PR's tree — and engine.yml/import.yml set
+  `GIT_SHA: ${{ github.sha }}`, which `build.rs` embeds, so a
+  sha-less key would serve a binary stamped with another commit's sha
+  and a sha-ful key would never hit (bench/validation-report get
+  rust-cache only). The import.yml size report stays a fresh build for
+  the same reasons.
+- **desktop.yml `bundle` legs** — `windows-latest` and `macos-latest`
+  run only on `push` to `main`, `workflow_dispatch` and `release`. A
+  job-level `if` cannot read `matrix` (evaluated before the matrix
+  expands), so a per-leg `RUN_BUNDLE` env flag on the existing
+  `matrix.os` gates every step — no new matrix key, so the ubuntu
+  check name `bundle (ubuntu-24.04, linux, …)` is unchanged. On PRs the
+  non-ubuntu legs still appear as checks but finish in seconds with
+  every step skipped (verified on this PR's first desktop run:
+  `bundle (windows-latest, …)` 4 s, all 15 steps skipped). The ubuntu
+  bundle and
+  the Linux smoke test still gate every PR. Trade-off: an
+  OS-specific bundle break is found on main after merge instead of on
+  the PR; main pushes still build and upload both bundles, so the
+  failure is caught there, and a PR that needs the other OS legs can
+  trigger `workflow_dispatch`.
+- **push-to-main triggers** — `app.yml`, `engine.yml` and `import.yml`
+  now also run on `push` to `main` with the same `paths` filter as
+  their `pull_request` trigger. Required to make the Rust build cache
+  effective at all: `save-if: ${{ github.ref == 'refs/heads/main' }}`
+  only writes on a run whose ref is main, and these three workflows
+  had no trigger that ever ran on main, so their cache was never
+  saved and every PR restored a miss (desktop.yml already ran on main
+  pushes for its bundles). A merge that touches a workflow's paths now
+  warms the cache its next PR restores from. Nothing deploys or
+  publishes on `push`: app.yml's deploy-build and test-hook-assert
+  steps explicitly require `release`, `workflow_dispatch` or a
+  same-repo `pull_request`, the three Netlify deploy steps keep their
+  single-event `if`s, and engine.yml/import.yml contain no deploy or
+  publish steps (their `always()`/`failure()` steps only write job
+  summaries and diagnostic artifacts). Cost: one extra run of each of
+  the three workflows per merge that touches its paths.
+
+Evidence: baseline timings from app.yml run 43025518092 and desktop.yml
+run 43025517715 (`tauri build` 283–335 s/OS, `npm ci` 98–194 s, wasm
+build 40–84 s, `check-app.sh full` 388 s, Playwright install 49 s,
+native-store `cargo test` 81 s). First-run timings and the run URL are
+in the PR body; `save-if` means the speed-up lands after merge.
+Files outside the Files block: docs/decisions.md — required by the task
+brief (decisions entry for the cache keys and the main-only move).
+Supersedes: —
+
 ### v0.3 Task 16 — Performance and size measurement
 
 - `runs` gives N samples as N generated Playwright `test()`s inside one
@@ -2030,3 +2123,8 @@ Supersedes: —
   would silently depend on `LRU_SIZE = 2`. `app/playwright.config.ts`
   — the `EPIORA_PERF=1` switch so the measurement spec never enters
   the e2e gate.
+- Merge with `origin/main` (PR #53 CI speed-ups): the `perf` job gains
+  the same `Swatinem/rust-cache` step as the `app` job (same pinned
+  SHA, `save-if: ${{ github.ref == 'refs/heads/main' }}`), with
+  `workspaces: .` — it compiles only the root workspace (the wasm
+  builds), not `app/src-tauri`.
