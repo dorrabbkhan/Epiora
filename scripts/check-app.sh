@@ -60,6 +60,14 @@ git diff --exit-code -- src/design/tokens.css
 step "Vitest (unit)"
 npx vitest run --project unit
 
+step "node --test scripts (budget gate tests)"
+# Plain node:test files under app/scripts (v0.3 Task 17: budget.mjs).
+if compgen -G 'scripts/*.test.mjs' >/dev/null; then
+  node --test scripts/*.test.mjs
+else
+  echo "no script tests"
+fi
+
 step "Vitest (store-opfs browser suite: chromium, firefox, webkit)"
 npx vitest run --project store-opfs
 

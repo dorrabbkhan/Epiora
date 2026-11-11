@@ -101,4 +101,10 @@ export default defineConfig({
   worker: {
     format: 'es',
   },
+  build: {
+    // .vite/manifest.json names the entry's JS/CSS files — the
+    // first-load budget gate (app/scripts/budget.mjs, v0.3 Task 17)
+    // reads it.
+    manifest: true,
+  },
 });
