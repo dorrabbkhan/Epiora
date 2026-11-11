@@ -187,6 +187,13 @@ jobs:
       # so no keyring setup is needed.
       - name: Windows smoke test (msedgedriver + tauri-driver)
         if: matrix.smoke == 'windows'
+        env:
+          # In the CI session WebView2's browser process needs
+          # --no-sandbox to come up; without it msedgedriver's session
+          # fails with "DevToolsActivePort file doesn't exist". The var
+          # is read by the WebView2 loader inside the app (propagated
+          # through tauri-driver → msedgedriver → the app).
+          WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: '--no-sandbox --disable-gpu'
         run: |
           if ! command -v tauri-driver >/dev/null 2>&1; then
             cargo install tauri-driver --locked
