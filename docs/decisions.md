@@ -1985,6 +1985,28 @@ Supersedes: —
   `sqlite3-*.wasm` from `dist`, each `gzip -9`, summed; import-wasm is
   the same `pkg/epiora_import_wasm_bg.wasm` `import.yml` already
   reports.
+- Fix round 1 (review of run 43005184626, where `import_1m` threw
+  `SQLITE_IOERR` ~80 s in and `mode: 'serial'` skipped the other nine
+  samples): the spec drops `serial` so samples are independent, wraps
+  every scenario so a throw is recorded as `{scenario, error, …diagnostics}`
+  and dependent scenarios record `{scenario, skipped: reason}`; a
+  failed scenario also records the last `commitImport` progress stage,
+  `storage.estimate()`, every OPFS file's size with the sahpool
+  path decoded from each file's 512-byte name header, and the worker
+  console tail — the sahpool VFS `console.error`s the DOMException an
+  OPFS op threw, the only place the underlying error name survives the
+  RPC `sql` mapping. `summarise.mjs` counts ok/failed/skipped per
+  scenario next to median/p90 of successful samples and prints a clear
+  line when `results.jsonl` is missing. The job gains a `rows`
+  dispatch input (`PERF_ROWS`) so the smallest failing row count can
+  be probed without touching code, and a second `vite build` without
+  `VITE_TEST_HOOKS` into `target/perf/dist-nohooks`: the flag changes
+  the entry chunk (`TablesDialog`'s hook gate), so first-load sizes
+  are measured on the no-hooks build with the hooks build printed
+  alongside for comparison.
+- Files outside the Files block, fix round 1: `app/tsconfig.json`
+  (`perf/**/*.ts` added to `include` so the spec is typechecked with
+  the app).
 - Files outside the Files block: `app/src/worker/snapshots.ts`,
   `app/src/worker/api.ts`, `app/src/worker/client.ts` — the plan's
   "clearing the worker's handle LRU" needs an explicit hook

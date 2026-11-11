@@ -91,7 +91,10 @@ async function routeCsv(page: Page): Promise<void> {
 }
 
 /** inspectFile (untimed) + timed commitImport of `url` — the plan's
- *  `import_*` definition is "time from commitImport call to resolve". */
+ *  `import_*` definition is "time from commitImport call to resolve".
+ *  The progress callback writes `stage done/total` onto
+ *  `window.__perfProgress` so a failure mid-commit can report how far
+ *  the transaction got. */
 async function importCsv(
   page: Page,
   url: string,
@@ -100,6 +103,8 @@ async function importCsv(
   return page.evaluate(
     async ({ url, target }) => {
       const api = window.dataApi;
+      const w = window as unknown as { __perfProgress?: string };
+      w.__perfProgress = '';
       const bytes = await (await fetch(url)).arrayBuffer();
       const { sessionId, inspection } = await api.inspectFile('perf.csv', bytes);
       const t0 = performance.now();
@@ -108,12 +113,159 @@ async function importCsv(
         target,
         inspection.settings,
         false,
-        () => {},
+        (p) => {
+          w.__perfProgress = `${p.stage} ${p.done}/${p.total}`;
+        },
       );
       return { datasetId: result.datasetId, ms: performance.now() - t0 };
     },
     { url, target },
   );
+}
+
+/** `<name>/<code>/<detail>/<resultCode>: <message>` — RpcError keeps
+ *  `code`/`detail` across the Comlink wire, a sqlite error keeps
+ *  `resultCode`; whichever survived is named. */
+function errorText(e: unknown): string {
+  if (!(e instanceof Error)) return String(e);
+  const x = e as { code?: unknown; detail?: unknown; resultCode?: unknown };
+  const tag = [e.name, x.code, x.detail, x.resultCode]
+    .filter((v): v is string | number => typeof v === 'string' || typeof v === 'number')
+    .join('/');
+  return `${tag}: ${e.message}`;
+}
+
+/** Samples OPFS usage + sahpool file sizes every 5 s into `log`. The
+ *  curve is the evidence for where an IOERR stops (journal vs db vs
+ *  quota): after a rollback the journal is gone, so only in-flight
+ *  samples show what the transaction had grown to. */
+function startOpfsPoller(page: Page, log: string[]): { stop: () => void } {
+  const t0 = Date.now();
+  const timer = setInterval(() => {
+    void page
+      .evaluate(async () => {
+        const est = (await navigator.storage?.estimate?.()) ?? {};
+        const parts: string[] = [`usage=${est.usage ?? '?'}`];
+        try {
+          const dir = await (
+            await navigator.storage.getDirectory()
+          ).getDirectoryHandle('.opfs-sahpool');
+          const opaque = await dir.getDirectoryHandle('.opaque');
+          for await (const [, handle] of opaque.entries()) {
+            if (handle.kind !== 'file') continue;
+            let size: number | string = '?';
+            let assoc = '';
+            try {
+              const file = await (
+                handle as FileSystemFileHandle
+              ).getFile();
+              size = file.size;
+              const head = new Uint8Array(
+                await file.slice(0, 512).arrayBuffer(),
+              );
+              const nul = head.indexOf(0);
+              assoc = new TextDecoder().decode(
+                head.subarray(0, nul === -1 ? head.length : nul),
+              );
+            } catch {
+              // SAH-held files can refuse getFile(); name still lists.
+            }
+            if (assoc !== '') parts.push(`${assoc}=${size}`);
+          }
+        } catch {
+          // The pool directory may not exist yet.
+        }
+        return parts.join(' ');
+      })
+      .then((s) =>
+        log.push(`t+${Math.round((Date.now() - t0) / 1000)}s ${s}`),
+      )
+      .catch(() => {});
+  }, 5000);
+  return { stop: () => clearInterval(timer) };
+}
+
+/** Page-side evidence for a failed scenario: the last commitImport
+ *  progress stage, storage usage/quota, the OPFS growth curve sampled
+ *  while the transaction ran, and every OPFS file with its size — for
+ *  `.opfs-sahpool` files the associated sqlite path (db, journal, …)
+ *  is decoded from the 512-byte name field the VFS writes at offset 0.
+ *  The worker's console tail rides along too: the sahpool VFS
+ *  `console.error`s the DOMException a failed OPFS op threw, which is
+ *  the only place the underlying error name still exists once the RPC
+ *  layer has mapped it to `sql`. */
+async function failureDiagnostics(
+  page: Page,
+  consoleLines: string[],
+  growthLog: string[],
+): Promise<Record<string, unknown>> {
+  const diag: Record<string, unknown> = {
+    ua: await page
+      .evaluate(() => navigator.userAgent)
+      .catch(() => '(unavailable)'),
+    growth: growthLog.join(' | ') || '(none sampled)',
+    workerConsole:
+      consoleLines.slice(-25).join(' | ') || '(none captured)',
+  };
+  growthLog.length = 0;
+  try {
+    Object.assign(
+      diag,
+      await page.evaluate(async () => {
+        const out: Record<string, unknown> = {};
+        out.progress =
+          (window as unknown as { __perfProgress?: string }).__perfProgress ??
+          null;
+        const est = (await navigator.storage?.estimate?.()) ?? {};
+        out.usageBytes = est.usage ?? null;
+        out.quotaBytes = est.quota ?? null;
+        try {
+          const root = await navigator.storage.getDirectory();
+          const files: string[] = [];
+          const walk = async (
+            dir: FileSystemDirectoryHandle,
+            prefix: string,
+          ): Promise<void> => {
+            for await (const [name, handle] of dir.entries()) {
+              if (handle.kind === 'directory') {
+                await walk(
+                  handle as FileSystemDirectoryHandle,
+                  `${prefix}${name}/`,
+                );
+              } else {
+                const file = await (
+                  handle as FileSystemFileHandle
+                ).getFile();
+                let assoc = '';
+                try {
+                  const head = new Uint8Array(
+                    await file.slice(0, 512).arrayBuffer(),
+                  );
+                  const nul = head.indexOf(0);
+                  assoc = new TextDecoder().decode(
+                    head.subarray(0, nul === -1 ? head.length : nul),
+                  );
+                } catch {
+                  // Name field is best-effort; size alone still helps.
+                }
+                files.push(
+                  `${prefix}${name}${assoc === '' ? '' : ` (${assoc})`}=${file.size}`,
+                );
+              }
+            }
+          };
+          await walk(root, '');
+          out.opfs = files.join('; ') || '(empty)';
+        } catch (e) {
+          out.opfs = `(unavailable: ${e instanceof Error ? e.message : String(e)})`;
+        }
+        return out;
+      }),
+    );
+  } catch (e) {
+    diag.inPageDiag = `unavailable: ${errorText(e)}`;
+  }
+  return diag;
 }
 
 /** One scrolling pass over `[role="grid"]`, top to bottom. `steps = 0`
@@ -225,7 +377,10 @@ async function waitForGrid(page: Page): Promise<void> {
   );
 }
 
-test.describe.configure({ mode: 'serial', retries: 0 });
+// No `serial` mode: one failed sample must not skip the rest — the
+// run's whole point is a distribution, and a failure is a measurement.
+// `--workers=1` keeps the samples in order.
+test.describe.configure({ retries: 0 });
 
 for (let i = 0; i < RUNS; i++) {
   test(`sample ${i + 1}/${RUNS} (${label})`, async ({ page }) => {
@@ -234,77 +389,174 @@ for (let i = 0; i < RUNS; i++) {
     ensureEditedCsv();
     ensureCsv(SMALL_CSV, 10_000);
     await routeCsv(page);
-    await page.goto('/');
     const run = i + 1;
+
+    // The worker's console (sahpool's `storeErr` console.errors the
+    // DOMException a failed OPFS op threw) is the only place the
+    // underlying error name survives the RPC mapping — keep a tail.
+    const consoleLines: string[] = [];
+    page.on('console', (msg) => {
+      const text = msg.text();
+      if (/^perf-scroll-steps? \d+$/.test(text)) return;
+      consoleLines.push(`${msg.type()}: ${text}`);
+      if (consoleLines.length > 60) consoleLines.shift();
+    });
+    page.on('pageerror', (e) => consoleLines.push(`pageerror: ${e.message}`));
+
+    // OPFS growth samples taken while the big commits run; consumed by
+    // failureDiagnostics (and cleared) on the first failure.
+    const growthLog: string[] = [];
+
+    await page.goto('/');
+
+    /** A scenario throwing is a measurement, not a test failure: the
+     *  error plus the page-side diagnostics the first dispatch lacked
+     *  are recorded and independent scenarios still run. Returns the
+     *  recorded entry, or null when the scenario failed. */
+    const runScenario = async (
+      scenario: string,
+      fn: () => Promise<Record<string, unknown> | undefined>,
+    ): Promise<Record<string, unknown> | null> => {
+      const t0 = Date.now();
+      try {
+        const entry = { run, scenario, ...((await fn()) ?? {}) };
+        record(entry);
+        return entry;
+      } catch (e) {
+        record({
+          run,
+          scenario,
+          error: errorText(e),
+          elapsedMs: Date.now() - t0,
+          ...(await failureDiagnostics(page, consoleLines, growthLog)),
+        });
+        return null;
+      }
+    };
+    const skip = (scenario: string, reason: string): void => {
+      record({ run, scenario, skipped: reason });
+    };
 
     // Carryover (v0.3 Task 9): OPFS usage of an empty store — the
     // store opens (migrations + sahpool reservation) on the first
     // store RPC.
-    const empty = await page.evaluate(async () => {
-      const api = window.dataApi;
-      await api.listProjects();
-      return api.storageEstimate();
-    });
-    record({ run, scenario: 'empty_store_opfs', usageBytes: empty.usage, quotaBytes: empty.quota });
-
-    const projectId = await page.evaluate(
-      async () => (await window.dataApi.createProject('Perf')).id,
-    );
-
-    const imported = await importCsv(page, '/perf-csv/big', {
-      projectId,
-      datasetName: `perf-${label}.csv`,
-    });
-    record({ run, scenario: `import_${label}`, ms: imported.ms });
-
-    // Carryover (v0.3 Task 9): re-import with one field edited —
-    // `records` is deleted and fully rewritten in the new file order.
-    const reimported = await importCsv(page, '/perf-csv/edited', {
-      datasetId: imported.datasetId,
-    });
-    record({ run, scenario: `reimport_${label}`, ms: reimported.ms });
-
-    // The plan's open_tables_1m: cold snapshot load (handle LRU
-    // cleared) + hash check + 2×2 TABLES of the two binary columns.
-    const tablesMs = await page.evaluate(
-      async ({ projectId, datasetId }) => {
+    await runScenario('empty_store_opfs', async () => {
+      const empty = await page.evaluate(async () => {
         const api = window.dataApi;
-        const { currentVersion } = await api.getDataset(datasetId);
-        await api.__clearSnapshotCache();
-        const t0 = performance.now();
-        await api.runTables(projectId, datasetId, currentVersion, {
-          exposure: { name: 'exposure', levels: null },
-          outcome: { name: 'outcome', levels: null },
-          stratify_by: [],
-          include_missing: false,
-        });
-        return performance.now() - t0;
-      },
-      { projectId, datasetId: imported.datasetId },
-    );
-    record({ run, scenario: `open_tables_${label}`, ms: tablesMs });
+        await api.listProjects();
+        return api.storageEstimate();
+      });
+      return { usageBytes: empty.usage, quotaBytes: empty.quota };
+    });
+
+    // Not a measured scenario — recorded only on failure.
+    let projectId = '';
+    try {
+      projectId = await page.evaluate(
+        async () => (await window.dataApi.createProject('Perf')).id,
+      );
+    } catch (e) {
+      record({
+        run,
+        scenario: 'create_project',
+        error: errorText(e),
+        ...(await failureDiagnostics(page, consoleLines, growthLog)),
+      });
+    }
+
+    let datasetId: string | null = null;
+    if (projectId === '') {
+      skip(`import_${label}`, 'create_project failed');
+    } else {
+      await runScenario(`import_${label}`, async () => {
+        const poller = startOpfsPoller(page, growthLog);
+        try {
+          const imported = await importCsv(page, '/perf-csv/big', {
+            projectId,
+            datasetName: `perf-${label}.csv`,
+          });
+          datasetId = imported.datasetId;
+          return { ms: imported.ms };
+        } finally {
+          poller.stop();
+        }
+      });
+      growthLog.length = 0;
+    }
+
+    if (datasetId === null) {
+      // The 1M dataset is the fixture for everything below; each
+      // dependent records its own skip rather than vanishing.
+      skip(`reimport_${label}`, `import_${label} failed`);
+      skip(`open_tables_${label}`, `import_${label} failed`);
+    } else {
+      const did = datasetId;
+      // Carryover (v0.3 Task 9): re-import with one field edited —
+      // `records` is deleted and fully rewritten in the new file order.
+      await runScenario(`reimport_${label}`, async () => {
+        const poller = startOpfsPoller(page, growthLog);
+        try {
+          const reimported = await importCsv(page, '/perf-csv/edited', {
+            datasetId: did,
+          });
+          return { ms: reimported.ms };
+        } finally {
+          poller.stop();
+        }
+      });
+      growthLog.length = 0;
+
+      // The plan's open_tables_1m: cold snapshot load (handle LRU
+      // cleared) + hash check + 2×2 TABLES of the two binary columns.
+      await runScenario(`open_tables_${label}`, async () => {
+        const ms = await page.evaluate(
+          async ({ projectId: pid, datasetId: dataset }) => {
+            const api = window.dataApi;
+            const { currentVersion } = await api.getDataset(dataset);
+            await api.__clearSnapshotCache();
+            const t0 = performance.now();
+            await api.runTables(pid, dataset, currentVersion, {
+              exposure: { name: 'exposure', levels: null },
+              outcome: { name: 'outcome', levels: null },
+              stratify_by: [],
+              include_missing: false,
+            });
+            return performance.now() - t0;
+          },
+          { projectId, datasetId: did },
+        );
+        return { ms };
+      });
+    }
 
     // Carryover (v0.3 Task 10): JS heap + frame time scrolling the
     // 10,000-row grid end to end (one viewport per step), and the
     // same pass on the larger dataset.
-    const small = await importCsv(page, '/perf-csv/small', {
-      projectId,
-      datasetName: 'perf-10k.csv',
-    });
-    await page.goto(`/p/${projectId}/d/${small.datasetId}`);
-    await waitForGrid(page);
-    const smallScroll = await scrollGrid(page, 0);
-    record({ run, scenario: `grid_scroll_${SMALL_LABEL}`, ...smallScroll });
-
-    if ('crashed' in smallScroll) {
-      record({ run, scenario: `grid_scroll_${label}`, skipped_page_crashed: 1 });
+    let smallScroll: Record<string, unknown> | null = null;
+    if (projectId === '') {
+      skip(`grid_scroll_${SMALL_LABEL}`, 'create_project failed');
     } else {
-      await page.goto(`/p/${projectId}/d/${imported.datasetId}`);
-      await waitForGrid(page);
-      record({
-        run,
-        scenario: `grid_scroll_${label}`,
-        ...(await scrollGrid(page, BIG_GRID_STEPS)),
+      smallScroll = await runScenario(`grid_scroll_${SMALL_LABEL}`, async () => {
+        const small = await importCsv(page, '/perf-csv/small', {
+          projectId,
+          datasetName: 'perf-10k.csv',
+        });
+        await page.goto(`/p/${projectId}/d/${small.datasetId}`);
+        await waitForGrid(page);
+        return scrollGrid(page, 0);
+      });
+    }
+
+    if (datasetId === null) {
+      skip(`grid_scroll_${label}`, `import_${label} failed`);
+    } else if (smallScroll !== null && 'crashed' in smallScroll) {
+      skip(`grid_scroll_${label}`, 'page_crashed');
+    } else {
+      const did = datasetId;
+      await runScenario(`grid_scroll_${label}`, async () => {
+        await page.goto(`/p/${projectId}/d/${did}`);
+        await waitForGrid(page);
+        return scrollGrid(page, BIG_GRID_STEPS);
       });
     }
   });

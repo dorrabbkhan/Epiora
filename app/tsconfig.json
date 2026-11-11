@@ -29,6 +29,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "e2e/**/*.ts",
+    "perf/**/*.ts",
     "*.ts"
   ],
   "exclude": ["lint-fixtures", "node_modules", "dist", "test-results", "playwright-report"]
