@@ -167,7 +167,10 @@ jobs:
 
       # bench.sh runs `npx playwright install --with-deps chromium` under
       # CI; a warm cache makes the browser download a no-op while the
-      # system-deps half still runs inside the script.
+      # system-deps half still runs inside the script. The key gets a
+      # `-chromium` suffix: this job installs only chromium, so its
+      # saved entry is a subset that must never serve the app job's
+      # all-three-browsers key.
       - name: Playwright version (bench lockfile-pinned)
         id: playwright_version
         run: node -p '"version=" + require("./crates/epiora-wasm/bench/package-lock.json").packages["node_modules/playwright-core"].version' >> "$GITHUB_OUTPUT"
@@ -176,7 +179,7 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.playwright_version.outputs.version }}
+          key: ${{ runner.os }}-playwright-${{ steps.playwright_version.outputs.version }}-chromium
 
       - name: Install wasm-bindgen 0.2.129 (pinned, SHA-256 verified)
         run: |
