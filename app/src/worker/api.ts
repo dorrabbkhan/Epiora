@@ -22,7 +22,7 @@ import * as commit from './commit';
 import { engine } from './engines';
 import { rpc, throwWired } from './errors';
 import * as importer from './importer';
-import { gridPage, loadEntry, storedSettings } from './snapshots';
+import { clearSnapshotCache, gridPage, loadEntry, storedSettings } from './snapshots';
 import { withStore } from './store-backend';
 import * as datasets from '../store/repo/datasets';
 import * as projects from '../store/repo/projects';
@@ -153,6 +153,12 @@ export interface DataApi {
    * Only functional in builds made with `VITE_TEST_HOOKS=1`.
    */
   __simulateQuotaOnNextWrite(): Promise<void>;
+  /**
+   * Test hook (Task 16 perf): drops the snapshot LRU so a following
+   * run pays the cold `loadEntry` — store read, hash check, decode.
+   * Only functional in builds made with `VITE_TEST_HOOKS=1`.
+   */
+  __clearSnapshotCache(): Promise<void>;
 }
 
 function toDatasetInfo(d: datasets.Dataset): DatasetInfo {
@@ -246,5 +252,12 @@ export const api: DataApi = {
     return withStore(async (s) => {
       s.__simulateQuotaOnNextWrite?.();
     });
+  }),
+  __clearSnapshotCache: wire(() => {
+    if (import.meta.env.VITE_TEST_HOOKS !== '1') {
+      return Promise.reject(rpc('not_found', 'test hooks are disabled in this build'));
+    }
+    clearSnapshotCache();
+    return Promise.resolve();
   }),
 };

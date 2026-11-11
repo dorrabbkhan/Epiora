@@ -1941,3 +1941,55 @@ Supersedes: —
   Reinstating needs a runner where msedgedriver↔WebView2 attach works.
 - Files outside the Files block: `app/package-lock.json` — regenerated
   for the new dev dependencies (same convention as Task 14).
+
+### v0.3 Task 16 — Performance and size measurement
+
+- `runs` gives N samples as N generated Playwright `test()`s inside one
+  `perf` job invocation (`PERF_RUNS`), not a matrix of jobs: every
+  `test()` already gets a fresh browser context, hence a fresh OPFS
+  store, and one job produces one `results.jsonl` and one summary
+  instead of N scattered artifacts and N copies of the Rust/wasm
+  toolchain setup.
+- The `perf` job runs only on `workflow_dispatch` (input `runs`,
+  default 10); PR/push behaviour of the existing jobs is unchanged.
+  The 1,000,000-row and 10,000-row CSVs are generated in the job by
+  `perf/gen-csv.mjs` (seeded xorshift32, seed 20261105), never
+  committed — generated files and `results.jsonl` live under
+  `target/perf/`, which is already ignored.
+- Measure only: `perf.spec.ts` asserts nothing about timings or sizes;
+  the proposed thresholds in `docs/perf/v0.3-measurement.md` are
+  labelled proposals for the owner (spec §10.3).
+- Scenario names carry the row count (`import_1m` at the CI default,
+  `import_100k` locally) so a smaller local run can never be mistaken
+  for the 1M measurement. `open_tables_1m` clears the snapshot LRU,
+  then times `runTables` on the current version (v2, after the
+  re-import measurement): cold snapshot load + hash check + the 2×2
+  TABLES of `exposure`/`outcome`.
+- Carryover scenarios measured in the same spec: `empty_store_opfs`
+  (`storageEstimate()` right after the first store RPC opens the
+  store), `reimport_<label>` (the big CSV with the first data row's
+  `age` field bumped — one updated record, `records` still fully
+  rewritten), `grid_scroll_10k` (viewport stride, every scroll
+  position) and `grid_scroll_<label>` (150 evenly spaced steps on the
+  big dataset — a bounded pass, since each step's page loads pay the
+  `items` rebuild that scales with `total`). Heap is Chromium's
+  `performance.memory.usedJSHeapSize`; frame time is the rAF gap at
+  each step. Each pass is capped at 300 s wall-clock — the 100k-grid
+  local run exceeded 30 min without it — and a renderer crash is
+  recorded (`{crashed: 1, stepsDone}`), never hidden: the local 100k
+  run crashed the tab on one attempt. A page that crashes on the
+  10k pass reports the big-grid pass as `skipped_page_crashed`.
+- `summarise.mjs` p90 is nearest-rank; median averages the two middle
+  samples at even n. First-load set = `index.html` + the entry module
+  script + the entry stylesheet + `epiora_wasm_bg-*.wasm` +
+  `sqlite3-*.wasm` from `dist`, each `gzip -9`, summed; import-wasm is
+  the same `pkg/epiora_import_wasm_bg.wasm` `import.yml` already
+  reports.
+- Files outside the Files block: `app/src/worker/snapshots.ts`,
+  `app/src/worker/api.ts`, `app/src/worker/client.ts` — the plan's
+  "clearing the worker's handle LRU" needs an explicit hook
+  (`__clearSnapshotCache`, `VITE_TEST_HOOKS` builds only, same pattern
+  as `__simulateQuotaOnNextWrite`); evicting through unrelated loads
+  would silently depend on `LRU_SIZE = 2`. `app/playwright.config.ts`
+  — the `EPIORA_PERF=1` switch so the measurement spec never enters
+  the e2e gate.

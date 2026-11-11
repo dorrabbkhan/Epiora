@@ -177,6 +177,14 @@ export async function loadEntry(
   return entry;
 }
 
+/** Test hook (Task 16 perf spec): drops every cached snapshot entry
+ *  so the next `loadEntry` is a cold store read + hash check. Frees
+ *  the held engine handles like an LRU eviction. */
+export function clearSnapshotCache(): void {
+  for (const entry of cache.values()) entry.handle?.free();
+  cache.clear();
+}
+
 /** A verified engine handle for the version (LRU of 2). */
 export async function loadHandle(
   store: Store,
