@@ -2065,3 +2065,97 @@ are unchanged. `check-engine.sh`'s offline mirror now writes to
 `${EPIORA_DENY_DB:-target/advisory-dbs}` — the path deny.toml actually
 resolves. The advisories check, its ignores list and every fetch still
 run; no flag skips or ignores advisories.
+
+### v0.3 Task 16 — Performance and size measurement
+
+- `runs` gives N samples as N generated Playwright `test()`s inside one
+  `perf` job invocation (`PERF_RUNS`), not a matrix of jobs: every
+  `test()` already gets a fresh browser context, hence a fresh OPFS
+  store, and one job produces one `results.jsonl` and one summary
+  instead of N scattered artifacts and N copies of the Rust/wasm
+  toolchain setup.
+- The `perf` job runs only on `workflow_dispatch` (input `runs`,
+  default 10); PR/push behaviour of the existing jobs is unchanged.
+  The 1,000,000-row and 10,000-row CSVs are generated in the job by
+  `perf/gen-csv.mjs` (seeded xorshift32, seed 20261105), never
+  committed — generated files and `results.jsonl` live under
+  `target/perf/`, which is already ignored.
+- Measure only: `perf.spec.ts` asserts nothing about timings or sizes;
+  the proposed thresholds in `docs/perf/v0.3-measurement.md` are
+  labelled proposals for the owner (spec §10.3).
+- Scenario names carry the row count (`import_1m` at the CI default,
+  `import_100k` locally) so a smaller local run can never be mistaken
+  for the 1M measurement. `open_tables_1m` clears the snapshot LRU,
+  then times `runTables` on the current version (v2, after the
+  re-import measurement): cold snapshot load + hash check + the 2×2
+  TABLES of `exposure`/`outcome`.
+- Carryover scenarios measured in the same spec: `empty_store_opfs`
+  (`storageEstimate()` right after the first store RPC opens the
+  store), `reimport_<label>` (the big CSV with the first data row's
+  `age` field bumped — one updated record, `records` still fully
+  rewritten), `grid_scroll_10k` (viewport stride, every scroll
+  position) and `grid_scroll_<label>` (150 evenly spaced steps on the
+  big dataset — a bounded pass, since each step's page loads pay the
+  `items` rebuild that scales with `total`). Heap is Chromium's
+  `performance.memory.usedJSHeapSize`; frame time is the rAF gap at
+  each step. Each pass is capped at 300 s wall-clock — the 100k-grid
+  local run exceeded 30 min without it — and a renderer crash is
+  recorded (`{crashed: 1, stepsDone}`), never hidden: the local 100k
+  run crashed the tab on one attempt. A page that crashes on the
+  10k pass reports the big-grid pass as `skipped_page_crashed`.
+- `summarise.mjs` p90 is nearest-rank; median averages the two middle
+  samples at even n. First-load set = `index.html` + the entry module
+  script + the entry stylesheet + `epiora_wasm_bg-*.wasm` +
+  `sqlite3-*.wasm` from `dist`, each `gzip -9`, summed; import-wasm is
+  the same `pkg/epiora_import_wasm_bg.wasm` `import.yml` already
+  reports.
+- Fix round 1 (review of run 43005184626, where `import_1m` threw
+  `SQLITE_IOERR` ~80 s in and `mode: 'serial'` skipped the other nine
+  samples): the spec drops `serial` so samples are independent, wraps
+  every scenario so a throw is recorded as `{scenario, error, …diagnostics}`
+  and dependent scenarios record `{scenario, skipped: reason}`; a
+  failed scenario also records the last `commitImport` progress stage,
+  `storage.estimate()`, every OPFS file's size with the sahpool
+  path decoded from each file's 512-byte name header, and the worker
+  console tail — the sahpool VFS `console.error`s the DOMException an
+  OPFS op threw, the only place the underlying error name survives the
+  RPC `sql` mapping. `summarise.mjs` counts ok/failed/skipped per
+  scenario next to median/p90 of successful samples and prints a clear
+  line when `results.jsonl` is missing. The job gains a `rows`
+  dispatch input (`PERF_ROWS`) so the smallest failing row count can
+  be probed without touching code, `df`/`free` steps around the spec
+  so a full filesystem or exhausted RAM is distinguishable from an
+  OPFS-internal cap, and a second `vite build` without
+  `VITE_TEST_HOOKS` into `target/perf/dist-nohooks`: the flag changes
+  the entry chunk (`TablesDialog`'s hook gate), so first-load sizes
+  are measured on the no-hooks build with the hooks build printed
+  alongside for comparison.
+- Fix round 2 (owner's Option A on the `SQLITE_IOERR` ceiling): the
+  `perf` job gains a `profile` dispatch input (`persistent` |
+  `ephemeral`, default `persistent` → `PERF_PROFILE`). The spec stops
+  using the managed `page` fixture and launches Chromium itself via a
+  `perfPage` fixture: `persistent` gives each sample a
+  `launchPersistentContext` on a fresh temp user-data dir (a real
+  user's on-disk profile — the control the run 43010218889 diagnosis
+  lacked), deleted after the sample; `ephemeral` is `chromium.launch`
+  + `newContext` on the same project `use` options, matching the first
+  run's environment. Both launch with `--enable-precise-memory-info`
+  so `heapStartBytes`/`heapEndBytes` are exact bytes instead of
+  Chromium's quantised figures, and every `results.jsonl` line
+  records `profile`. `summarise.mjs` prints the profile(s) it read.
+- Files outside the Files block, fix round 1: `app/tsconfig.json`
+  (`perf/**/*.ts` added to `include` so the spec is typechecked with
+  the app).
+- Files outside the Files block: `app/src/worker/snapshots.ts`,
+  `app/src/worker/api.ts`, `app/src/worker/client.ts` — the plan's
+  "clearing the worker's handle LRU" needs an explicit hook
+  (`__clearSnapshotCache`, `VITE_TEST_HOOKS` builds only, same pattern
+  as `__simulateQuotaOnNextWrite`); evicting through unrelated loads
+  would silently depend on `LRU_SIZE = 2`. `app/playwright.config.ts`
+  — the `EPIORA_PERF=1` switch so the measurement spec never enters
+  the e2e gate.
+- Merge with `origin/main` (PR #53 CI speed-ups): the `perf` job gains
+  the same `Swatinem/rust-cache` step as the `app` job (same pinned
+  SHA, `save-if: ${{ github.ref == 'refs/heads/main' }}`), with
+  `workspaces: .` — it compiles only the root workspace (the wasm
+  builds), not `app/src-tauri`.

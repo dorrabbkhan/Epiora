@@ -23,6 +23,28 @@ on:
       - 'scripts/check.sh'
       - '.github/workflows/app.yml'
   workflow_dispatch:
+    inputs:
+      runs:
+        description: 'perf job: samples per scenario'
+        required: false
+        type: number
+        default: 10
+      rows:
+        description: 'perf job: rows in the big CSV (diagnosis aid)'
+        required: false
+        type: number
+        default: 1000000
+      profile:
+        description: >-
+          perf job: browser profile — persistent (fresh on-disk
+          user-data dir per sample, like a real user's) or ephemeral
+          (Playwright off-the-record context)
+        required: false
+        type: choice
+        options:
+          - persistent
+          - ephemeral
+        default: persistent
   release:
     types: [published]
 
@@ -307,3 +329,147 @@ jobs:
           echo "Production deploy: ${url}"
           echo "Production deploy: ${url}" >> "$GITHUB_STEP_SUMMARY"
         working-directory: app
+
+  # Task 16 perf measurement (spec §10.3): workflow_dispatch only, so
+  # no PR or push job gets slower or changes behaviour. Nothing here
+  # gates — the numbers are the owner's Task 17 input. One sample per
+  # Playwright test, each in a fresh browser context/store.
+  perf:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Node 24
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install app dependencies
+        run: npm ci
+        working-directory: app
+
+      - name: Install Playwright (chromium only)
+        run: npx playwright install --with-deps chromium
+        working-directory: app
+
+      - name: Install Rust toolchain
+        run: |
+          rustup toolchain install 1.99.0 --profile minimal
+          rustup default 1.99.0
+          rustup target add wasm32-unknown-unknown
+          rustc --version
+
+      # Only main writes the cache; dispatch runs restore from it.
+      # This job compiles only the root workspace (the wasm builds).
+      - name: Rust build cache
+        uses: Swatinem/rust-cache@2201cc584a476d1b508be977bbe4b7d1c7a52e9c # v2.9.3
+        with:
+          workspaces: .
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Install wasm-bindgen 0.2.129 (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/wasm-bindgen.tar.gz \
+            https://github.com/rustwasm/wasm-bindgen/releases/download/0.2.129/wasm-bindgen-0.2.129-x86_64-unknown-linux-musl.tar.gz
+          echo '82d12bb940e2d4e72e0d5605387fc1b8ca179044e012b620f0ce4e7440e8320e  /tmp/wasm-bindgen.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/wasm-bindgen.tar.gz -C /tmp
+          sudo install -m 0755 \
+            /tmp/wasm-bindgen-0.2.129-x86_64-unknown-linux-musl/wasm-bindgen \
+            /usr/local/bin/wasm-bindgen
+          wasm-bindgen --version
+
+      - name: Install wasm-pack 0.15.1 (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/wasm-pack.tar.gz \
+            https://github.com/rustwasm/wasm-pack/releases/download/v0.15.1/wasm-pack-v0.15.1-x86_64-unknown-linux-musl.tar.gz
+          echo '410101009739b9d01c7d5affaaad6e9c9a24b4cba6791a4805db8e89b9bf7af2  /tmp/wasm-pack.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/wasm-pack.tar.gz -C /tmp
+          sudo install -m 0755 /tmp/wasm-pack-v0.15.1-x86_64-unknown-linux-musl/wasm-pack \
+            /usr/local/bin/wasm-pack
+          wasm-pack --version
+
+      - name: Install binaryen version_133 wasm-opt (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo /tmp/binaryen.tar.gz \
+            https://github.com/WebAssembly/binaryen/releases/download/version_133/binaryen-version_133-x86_64-linux.tar.gz
+          echo '2dc9c7813f5375db93d96ead4b78222fcc3e2677bbb832297af4797782a37489  /tmp/binaryen.tar.gz' \
+            | sha256sum -c -
+          tar -xzf /tmp/binaryen.tar.gz -C /tmp
+          sudo install -m 0755 /tmp/binaryen-version_133/bin/wasm-opt /usr/local/bin/wasm-opt
+          wasm-opt --version
+
+      - name: Build wasm packages
+        run: |
+          scripts/wasm-build.sh release epiora-wasm
+          scripts/wasm-build.sh release epiora-import-wasm
+
+      # Generated in CI, never committed — the 1,000,000-row file is
+      # ~80 MB. The 10,000-row file feeds the grid-scroll scenario.
+      - name: Generate perf CSVs
+        run: |
+          node perf/gen-csv.mjs ${{ inputs.rows || 1000000 }} ../target/perf/perf-${{ inputs.rows || 1000000 }}.csv
+          node perf/gen-csv.mjs 10000 ../target/perf/perf-10000.csv
+        working-directory: app
+
+      # The spec drives window.dataApi plus the __clearSnapshotCache
+      # test hook, so it needs the same VITE_TEST_HOOKS=1 build lane
+      # as e2e — still a production `vite build`.
+      - name: Build dist (test hooks for the perf spec)
+        run: npm run build
+        working-directory: app
+        env:
+          VITE_TEST_HOOKS: '1'
+
+      # The first-load numbers must describe the shipping build —
+      # VITE_TEST_HOOKS changes the entry chunk (TablesDialog's hook
+      # gate) — so sizes are measured on a second build without the
+      # flag; the summary prints both dists' columns side by side.
+      - name: Build measurement dist (no test hooks)
+        run: npm run build -- --outDir ../target/perf/dist-nohooks --emptyOutDir
+        working-directory: app
+
+      # OPFS evidence for the SQLITE_IOERR diagnosis: sahpool's xWrite
+      # reports a bogus short count ("Unknown write() failure") when the
+      # backing store refuses a write — df shows whether the profile's
+      # filesystem was actually full, free whether RAM was.
+      - name: Storage and memory before the perf spec
+        run: |
+          df -h / /tmp "$HOME" || true
+          free -h || true
+
+      - name: Run perf spec (${{ inputs.runs || 10 }} samples, ${{ inputs.profile || 'persistent' }} profile)
+        run: >-
+          EPIORA_PERF=1 PERF_RUNS=${{ inputs.runs || 10 }}
+          PERF_ROWS=${{ inputs.rows || 1000000 }}
+          PERF_PROFILE=${{ inputs.profile || 'persistent' }}
+          npx playwright test --project=chromium --workers=1
+        working-directory: app
+
+      - name: Storage and memory after the perf spec
+        if: always()
+        run: |
+          df -h / /tmp "$HOME" || true
+          free -h || true
+
+      - name: Summarise results
+        if: always()
+        run: |
+          PERF_DIST=../target/perf/dist-nohooks PERF_COMPARE_DIST=dist \
+            node perf/summarise.mjs ../target/perf/results.jsonl | tee ../target/perf/summary.md
+          cat ../target/perf/summary.md >> "$GITHUB_STEP_SUMMARY"
+        working-directory: app
+
+      - name: Upload perf results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: perf-results
+          path: |
+            target/perf/results.jsonl
+            target/perf/summary.md
+          if-no-files-found: warn

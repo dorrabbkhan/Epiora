@@ -2,8 +2,13 @@ import { defineConfig, devices } from '@playwright/test';
 
 // Runs against `vite preview` (the production build); check-app.sh
 // builds before invoking Playwright.
+// EPIORA_PERF=1 swaps the test dir to ./perf for the Task 16
+// measurement spec — it never runs in the normal e2e gate, and the
+// normal gate never sees it.
+const perf = process.env.EPIORA_PERF === '1';
+
 export default defineConfig({
-  testDir: './e2e',
+  testDir: perf ? './perf' : './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
