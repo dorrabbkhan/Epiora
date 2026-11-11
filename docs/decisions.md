@@ -1993,8 +1993,11 @@ except the Windows/macOS bundle legs (below).
   job-level `if` cannot read `matrix` (evaluated before the matrix
   expands), so a per-leg `RUN_BUNDLE` env flag on the existing
   `matrix.os` gates every step — no new matrix key, so the ubuntu
-  check name `bundle (ubuntu-24.04, linux, …)` is unchanged and the
-  skipped legs report "skipped", not failure. The ubuntu bundle and
+  check name `bundle (ubuntu-24.04, linux, …)` is unchanged. On PRs the
+  non-ubuntu legs still appear as checks but finish in seconds with
+  every step skipped (verified on this PR's first desktop run:
+  `bundle (windows-latest, …)` 4 s, all 15 steps skipped). The ubuntu
+  bundle and
   the Linux smoke test still gate every PR. Trade-off: an
   OS-specific bundle break is found on main after merge instead of on
   the PR; main pushes still build and upload both bundles, so the
