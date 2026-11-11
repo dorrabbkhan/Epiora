@@ -24,6 +24,17 @@ on:
         required: false
         type: number
         default: 1000000
+      profile:
+        description: >-
+          perf job: browser profile — persistent (fresh on-disk
+          user-data dir per sample, like a real user's) or ephemeral
+          (Playwright off-the-record context)
+        required: false
+        type: choice
+        options:
+          - persistent
+          - ephemeral
+        default: persistent
   release:
     types: [published]
 
@@ -360,10 +371,11 @@ jobs:
           df -h / /tmp "$HOME" || true
           free -h || true
 
-      - name: Run perf spec (${{ inputs.runs || 10 }} samples)
+      - name: Run perf spec (${{ inputs.runs || 10 }} samples, ${{ inputs.profile || 'persistent' }} profile)
         run: >-
           EPIORA_PERF=1 PERF_RUNS=${{ inputs.runs || 10 }}
           PERF_ROWS=${{ inputs.rows || 1000000 }}
+          PERF_PROFILE=${{ inputs.profile || 'persistent' }}
           npx playwright test --project=chromium --workers=1
         working-directory: app
 

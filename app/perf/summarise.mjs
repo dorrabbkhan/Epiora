@@ -89,8 +89,10 @@ if (!existsSync(RESULTS)) {
     return ok.get(scenario);
   };
 
+  const profiles = new Set();
   for (const line of lines) {
-    const { scenario, run, error, skipped: reason, ...fields } = line;
+    const { scenario, run, error, skipped: reason, profile, ...fields } = line;
+    profiles.add(profile ?? 'unrecorded');
     if (typeof error === 'string') {
       seen(failed, scenario).push({ run, error, fields });
       continue;
@@ -109,6 +111,7 @@ if (!existsSync(RESULTS)) {
     }
   }
 
+  console.log(`profile(s): ${[...profiles].join(', ')}\n`);
   console.log('| scenario | ok | failed | skipped | field | median | p90 |');
   console.log('|---|---|---|---|---|---|---|');
   for (const scenario of [...scenarioOrder].sort()) {

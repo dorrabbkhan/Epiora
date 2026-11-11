@@ -2006,6 +2006,19 @@ Supersedes: —
   the entry chunk (`TablesDialog`'s hook gate), so first-load sizes
   are measured on the no-hooks build with the hooks build printed
   alongside for comparison.
+- Fix round 2 (owner's Option A on the `SQLITE_IOERR` ceiling): the
+  `perf` job gains a `profile` dispatch input (`persistent` |
+  `ephemeral`, default `persistent` → `PERF_PROFILE`). The spec stops
+  using the managed `page` fixture and launches Chromium itself via a
+  `perfPage` fixture: `persistent` gives each sample a
+  `launchPersistentContext` on a fresh temp user-data dir (a real
+  user's on-disk profile — the control the run 43010218889 diagnosis
+  lacked), deleted after the sample; `ephemeral` is `chromium.launch`
+  + `newContext` on the same project `use` options, matching the first
+  run's environment. Both launch with `--enable-precise-memory-info`
+  so `heapStartBytes`/`heapEndBytes` are exact bytes instead of
+  Chromium's quantised figures, and every `results.jsonl` line
+  records `profile`. `summarise.mjs` prints the profile(s) it read.
 - Files outside the Files block, fix round 1: `app/tsconfig.json`
   (`perf/**/*.ts` added to `include` so the spec is typechecked with
   the app).
