@@ -41,6 +41,14 @@ jobs:
           rustup default 1.99.0
           rustc --version
 
+      # Only main writes the cache; PR and dispatch runs restore from it.
+      # This job compiles only the app/src-tauri workspace.
+      - name: Rust build cache
+        uses: Swatinem/rust-cache@2201cc584a476d1b508be977bbe4b7d1c7a52e9c # v2.9.3
+        with:
+          workspaces: app/src-tauri
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
       - name: Install cargo-deny 0.20.2 (pinned, SHA-256 verified)
         run: |
           curl -sSfLo /tmp/cargo-deny.tar.gz \
@@ -101,7 +109,25 @@ jobs:
         run: npm ci
         working-directory: app
 
+      - name: Playwright version (lockfile-pinned)
+        id: playwright_version
+        run: node -p '"version=" + require("./app/package-lock.json").packages["node_modules/playwright-core"].version' >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright_browsers
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright_version.outputs.version }}
+
+      # System deps always install; on a browser-cache hit only they run.
+      - name: Install Playwright system deps (browsers cached)
+        if: steps.playwright_browsers.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium firefox webkit
+        working-directory: app
+
       - name: Install Playwright browsers
+        if: steps.playwright_browsers.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium firefox webkit
         working-directory: app
 
@@ -113,6 +139,17 @@ jobs:
           rustup default 1.99.0
           rustup target add wasm32-unknown-unknown
           rustc --version
+
+      # Only main writes the cache; PR and release runs restore from it.
+      # check-app.sh compiles both workspaces: target/ for the wasm
+      # builds and app/src-tauri/target/ for the store-stdio build.
+      - name: Rust build cache
+        uses: Swatinem/rust-cache@2201cc584a476d1b508be977bbe4b7d1c7a52e9c # v2.9.3
+        with:
+          workspaces: |
+            .
+            app/src-tauri
+          save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Install wasm-bindgen 0.2.129 (pinned, SHA-256 verified)
         run: |
