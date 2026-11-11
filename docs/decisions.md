@@ -1999,7 +1999,9 @@ Supersedes: —
   scenario next to median/p90 of successful samples and prints a clear
   line when `results.jsonl` is missing. The job gains a `rows`
   dispatch input (`PERF_ROWS`) so the smallest failing row count can
-  be probed without touching code, and a second `vite build` without
+  be probed without touching code, `df`/`free` steps around the spec
+  so a full filesystem or exhausted RAM is distinguishable from an
+  OPFS-internal cap, and a second `vite build` without
   `VITE_TEST_HOOKS` into `target/perf/dist-nohooks`: the flag changes
   the entry chunk (`TablesDialog`'s hook gate), so first-load sizes
   are measured on the no-hooks build with the hooks build printed

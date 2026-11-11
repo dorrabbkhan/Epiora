@@ -351,12 +351,27 @@ jobs:
         run: npm run build -- --outDir ../target/perf/dist-nohooks --emptyOutDir
         working-directory: app
 
+      # OPFS evidence for the SQLITE_IOERR diagnosis: sahpool's xWrite
+      # reports a bogus short count ("Unknown write() failure") when the
+      # backing store refuses a write — df shows whether the profile's
+      # filesystem was actually full, free whether RAM was.
+      - name: Storage and memory before the perf spec
+        run: |
+          df -h / /tmp "$HOME" || true
+          free -h || true
+
       - name: Run perf spec (${{ inputs.runs || 10 }} samples)
         run: >-
           EPIORA_PERF=1 PERF_RUNS=${{ inputs.runs || 10 }}
           PERF_ROWS=${{ inputs.rows || 1000000 }}
           npx playwright test --project=chromium --workers=1
         working-directory: app
+
+      - name: Storage and memory after the perf spec
+        if: always()
+        run: |
+          df -h / /tmp "$HOME" || true
+          free -h || true
 
       - name: Summarise results
         if: always()
