@@ -109,12 +109,13 @@ describe('Epiora desktop', () => {
     await waitForApp();
     say('app rendered');
 
-    // New project through the real dialog (the trigger and the dialog
-    // submit share the label, so the submit is dialog-scoped).
+    // New project through the real dialog: the submit is labelled
+    // "Create" (t.common.create), not the trigger's "New project", so
+    // it is addressed dialog-scoped.
     await clickText('button', 'New project');
     const dialog = await waitFor($('//*[@role="dialog"]'), 'project dialog');
     await (await dialog.$('.//input')).setValue('Smoke');
-    await clickText('*[@role="dialog"]//button', 'New project');
+    await clickText('*[@role="dialog"]//button', 'Create');
     say('project created');
 
     await clickText('a', 'Smoke');
@@ -130,7 +131,13 @@ describe('Epiora desktop', () => {
       'preview columns',
     );
     await clickText('button', 'Next');
-    await waitFor(byText('button', 'Record key'), 'wizard settings step');
+    // "Record key" is the select's accessible name, not its text: the
+    // Label span sits next to the trigger button (same pattern pick()
+    // uses for the TABLES selects).
+    await waitFor(
+      $(`//*[normalize-space()='Record key']/following-sibling::button[1]`),
+      'wizard settings step',
+    );
     await clickText('button', 'Next');
     await waitFor(
       $('//h2[normalize-space()="Confirm import"]'),
