@@ -1963,14 +1963,20 @@ except the Windows/macOS bundle legs (below).
 - **Playwright browsers** — `~/.cache/ms-playwright` cached via
   `actions/cache` v6.1.0 (pinned by SHA) in app.yml's `app` job and
   engine.yml's `bench` job. Key:
-  `<os>-playwright-<playwright-core version>`, the version read from the
-  job's own lockfile (`app/package-lock.json` /
-  `crates/epiora-wasm/bench/package-lock.json`, both pinned at 1.64.1,
-  so they share the entry). System deps always install: the app job
-  runs `install-deps` on a hit and `install --with-deps` on a miss;
-  `bench.sh` keeps its own `install --with-deps chromium`, which no-ops
-  on a warm cache. `npm ci` stays (lockfile authoritative); the
-  setup-node npm cache stays.
+  `<os>-playwright-<playwright-core version>` for the app job's
+  three-browser set, the same with a `-chromium` suffix for the bench
+  job's chromium-only set — the version read from the job's own
+  lockfile (`app/package-lock.json` /
+  `crates/epiora-wasm/bench/package-lock.json`, both pinned at 1.64.1).
+  The suffix matters: a subset entry must never serve a job needing
+  more browsers — this PR's first run proved it when the bench job
+  saved a chromium-only entry under the shared key and the app job
+  then restored it and had no firefox/webkit binaries. The app job
+  keeps a single unconditional `npx playwright install --with-deps
+  chromium firefox webkit`: on a hit the download half verifies the
+  binaries (and tops up a partial entry), the system-deps half always
+  runs. `npm ci` stays (lockfile authoritative); the setup-node npm
+  cache stays.
 - **wasm packages** — `crates/epiora-wasm/pkg` and
   `crates/epiora-import-wasm/pkg` cached in desktop.yml's `bundle` job
   only; a hit skips `scripts/wasm-build.sh`. Key:
