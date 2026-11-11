@@ -5,6 +5,9 @@
 
 [advisories]
 version = 2
+# As the root deny.toml: CI sets EPIORA_DENY_DB to $RUNNER_TEMP/
+# advisory-dbs because rust-cache caches target/ and its pre-save
+# cleanup deletes every file under it outside cargo profile dirs.
 db-path = "${EPIORA_DENY_DB:-target/advisory-dbs}"
 unmaintained = "all"
 unsound = "all"

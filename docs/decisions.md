@@ -2035,6 +2035,37 @@ Files outside the Files block: docs/decisions.md — required by the task
 brief (decisions entry for the cache keys and the main-only move).
 Supersedes: —
 
+Regression and fix (2026-11-11, `ci/fix-rust-cache-advisory-db`): the
+first warm-cache restore broke `cargo deny check` in every job that ran
+it — main push run 43101360702 (6d26661, cold cache) passed cargo-deny
+then saved the cache; PR #52 run 43101947021 restored it (`full match:
+true`) and cargo-deny failed with `[ERROR] failed to load advisory
+database: failed to load any advisories in the database`.
+Root cause: both `deny.toml`s set
+`db-path = "${EPIORA_DENY_DB:-<workspace>/target/advisory-dbs}"`, so the
+RustSec DB clone lives inside `target/`, a rust-cache path.
+rust-cache's pre-save `cleanTargetDir` (v2.9.3 `src/cleanup.ts`)
+deletes every *file* under `target/` outside cargo profile dirs
+(`build`/`.fingerprint`/`deps`); applied to the clone it leaves only an
+empty directory skeleton — verified locally by replaying its exact
+walk: 1,587 files in, 0 out. cargo-deny then loads zero advisories from
+the restored skeleton. Fix, not a loosening: every step that runs
+cargo-deny (`app.yml` native-store's `cargo deny check` and the app
+job's `check-app.sh full`, `engine.yml`'s `check-engine.sh full`,
+`import.yml`'s `cargo deny check`; `desktop.yml` runs none) sets
+step-level `EPIORA_DENY_DB: ${{ runner.temp }}/advisory-dbs` — outside
+every cached path, so the DB is fetched complete and fresh each run
+while the Rust build cache still works. It must be step env: the
+`runner` context doesn't exist in workflow- or job-level `env` (the
+first push of this fix failed every workflow at startup with a
+"workflow file issue" until the override moved onto the steps).
+`EPIORA_DENY_DB` matches none of rust-cache's key env prefixes
+(`CARGO`, `CC`, `CFLAGS`, `CXX`, `CMAKE`, `RUST`), so the cache keys
+are unchanged. `check-engine.sh`'s offline mirror now writes to
+`${EPIORA_DENY_DB:-target/advisory-dbs}` — the path deny.toml actually
+resolves. The advisories check, its ignores list and every fetch still
+run; no flag skips or ignores advisories.
+
 ### v0.3 Task 16 — Performance and size measurement
 
 - `runs` gives N samples as N generated Playwright `test()`s inside one
