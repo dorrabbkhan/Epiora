@@ -37,13 +37,16 @@ deny_args=()
 if [ "${CARGO_NET_OFFLINE:-}" = "true" ]; then
   deny_args+=(--offline)
   src="${CARGO_HOME:-$HOME/.cargo}/advisory-dbs"
+  # Mirror into the same path deny.toml resolves (its EPIORA_DENY_DB
+  # override, else the target/advisory-dbs default).
+  dst="${EPIORA_DENY_DB:-target/advisory-dbs}"
   if [ -d "$src" ] && [ ! -w "$src" ]; then
     # cp keeps the source's read-only modes, so recopy from scratch and
     # make the mirror writable for cargo-deny's lock file and re-copies.
-    rm -rf target/advisory-dbs
-    mkdir -p target/advisory-dbs
-    cp -r "$src/." target/advisory-dbs/
-    chmod -R u+w target/advisory-dbs
+    rm -rf "$dst"
+    mkdir -p "$dst"
+    cp -r "$src/." "$dst/"
+    chmod -R u+w "$dst"
   fi
 fi
 cargo deny "${deny_args[@]}" check
