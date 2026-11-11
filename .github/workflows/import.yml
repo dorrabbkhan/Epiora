@@ -36,10 +36,6 @@ on:
 
 env:
   GIT_SHA: ${{ github.sha }}
-  # cargo-deny's advisory DB must live outside every rust-cache path —
-  # see app.yml's comment. deny.toml's default target/advisory-dbs is
-  # gutted by rust-cache's target cleanup; runner.temp is uncached.
-  EPIORA_DENY_DB: ${{ runner.temp }}/advisory-dbs
 
 jobs:
   import:
@@ -157,8 +153,13 @@ jobs:
           NATIVE_IMPORT_UTF8_COMMA="$(grep '"case":"utf8_comma"' target/import-native.jsonl)" \
             node --test crates/epiora-import-wasm/tests/node/*.test.mjs
 
+      # EPIORA_DENY_DB: cargo-deny's advisory DB must live outside every
+      # rust-cache path — see app.yml's native-store comment. Step env
+      # because the runner context doesn't exist at workflow/job level.
       - name: cargo deny check
         run: cargo deny check
+        env:
+          EPIORA_DENY_DB: ${{ runner.temp }}/advisory-dbs
 
       - name: Wasm size in job summary
         if: always()

@@ -2049,11 +2049,16 @@ deletes every *file* under `target/` outside cargo profile dirs
 (`build`/`.fingerprint`/`deps`); applied to the clone it leaves only an
 empty directory skeleton — verified locally by replaying its exact
 walk: 1,587 files in, 0 out. cargo-deny then loads zero advisories from
-the restored skeleton. Fix, not a loosening: every workflow that runs
-cargo-deny (`app.yml`, `engine.yml`, `import.yml`; `desktop.yml` runs
-none) sets workflow-level `EPIORA_DENY_DB: ${{ runner.temp }}/
-advisory-dbs` — outside every cached path, so the DB is fetched
-complete and fresh each run while the Rust build cache still works.
+the restored skeleton. Fix, not a loosening: every step that runs
+cargo-deny (`app.yml` native-store's `cargo deny check` and the app
+job's `check-app.sh full`, `engine.yml`'s `check-engine.sh full`,
+`import.yml`'s `cargo deny check`; `desktop.yml` runs none) sets
+step-level `EPIORA_DENY_DB: ${{ runner.temp }}/advisory-dbs` — outside
+every cached path, so the DB is fetched complete and fresh each run
+while the Rust build cache still works. It must be step env: the
+`runner` context doesn't exist in workflow- or job-level `env` (the
+first push of this fix failed every workflow at startup with a
+"workflow file issue" until the override moved onto the steps).
 `EPIORA_DENY_DB` matches none of rust-cache's key env prefixes
 (`CARGO`, `CC`, `CFLAGS`, `CXX`, `CMAKE`, `RUST`), so the cache keys
 are unchanged. `check-engine.sh`'s offline mirror now writes to

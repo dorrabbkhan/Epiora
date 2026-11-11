@@ -28,10 +28,6 @@ on:
 
 env:
   GIT_SHA: ${{ github.sha }}
-  # cargo-deny's advisory DB must live outside every rust-cache path —
-  # see app.yml's comment. deny.toml's default target/advisory-dbs is
-  # gutted by rust-cache's target cleanup; runner.temp is uncached.
-  EPIORA_DENY_DB: ${{ runner.temp }}/advisory-dbs
 
 jobs:
   engine:
@@ -121,8 +117,13 @@ jobs:
           sudo install -m 0755 /tmp/binaryen-version_133/bin/wasm-opt /usr/local/bin/wasm-opt
           wasm-opt --version
 
+      # EPIORA_DENY_DB: cargo-deny's advisory DB must live outside every
+      # rust-cache path — see app.yml's native-store comment. Step env
+      # because the runner context doesn't exist at workflow/job level.
       - name: Engine gate
         run: ./scripts/check-engine.sh full
+        env:
+          EPIORA_DENY_DB: ${{ runner.temp }}/advisory-dbs
 
       - name: Float ban (std f64 methods rejected, libm accepted)
         run: bats scripts/tests/float-ban.bats
