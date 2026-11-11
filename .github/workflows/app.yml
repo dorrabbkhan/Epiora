@@ -12,6 +12,16 @@ on:
       - 'scripts/check-app.sh'
       - 'scripts/check.sh'
       - '.github/workflows/app.yml'
+  # push to main so a merge touching these paths writes the Rust cache
+  # (save-if only writes on main); nothing below deploys on push.
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'crates/**'
+      - 'scripts/check-app.sh'
+      - 'scripts/check.sh'
+      - '.github/workflows/app.yml'
   workflow_dispatch:
   release:
     types: [published]
@@ -210,11 +220,14 @@ jobs:
       # manual runs a branch-name alias preview. Every step below only
       # runs after every gate above has passed, and never on fork PRs
       # (secrets stay env-only, so a fork would have no token anyway).
+      # The push trigger exists to warm the Rust cache on main; it
+      # matches none of these steps.
 
       - name: Build production dist
         if: >-
           github.event_name == 'release' || github.event_name == 'workflow_dispatch' ||
-          github.event.pull_request.head.repo.full_name == github.repository
+          (github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository)
         # check-app.sh built dist with VITE_TEST_HOOKS=1 for the e2e
         # suite; the deploy must ship a fresh build without it.
         run: env -u VITE_TEST_HOOKS npm run build
@@ -223,7 +236,8 @@ jobs:
       - name: Assert no test hooks in the deploy build
         if: >-
           github.event_name == 'release' || github.event_name == 'workflow_dispatch' ||
-          github.event.pull_request.head.repo.full_name == github.repository
+          (github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository)
         run: |
           # A VITE_TEST_HOOKS=1 build compiles the __simulateQuotaOnNextWrite
           # guard out of the worker bundle, so its rejection message is a

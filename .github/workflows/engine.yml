@@ -11,6 +11,19 @@ on:
       - 'scripts/check*.sh'
       - '.github/workflows/engine.yml'
       - '.github/workflows/fuzz-nightly.yml'
+  # push to main so a merge touching these paths writes the Rust cache
+  # (save-if only writes on main); no job below deploys or publishes.
+  push:
+    branches: [main]
+    paths:
+      - 'crates/**'
+      - 'Cargo.*'
+      - 'deny.toml'
+      - 'rust-toolchain.toml'
+      - 'fixtures/**'
+      - 'scripts/check*.sh'
+      - '.github/workflows/engine.yml'
+      - '.github/workflows/fuzz-nightly.yml'
   workflow_dispatch:
 
 env:
