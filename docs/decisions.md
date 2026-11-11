@@ -1889,7 +1889,11 @@ Supersedes: —
 - The wasm tool triplet is pinned and SHA-256-verified per OS —
   wasm-bindgen 0.2.129, wasm-pack 0.15.1, binaryen version_133 (same
   versions as `app.yml`) — installed into `target/bin/`, which
-  `scripts/wasm-build.sh` already prefers over PATH tools.
+  `scripts/wasm-build.sh` already prefers over PATH tools. The binaryen
+  tarball's `lib/` is extracted beside it at `target/lib/`: the macOS
+  `wasm-opt` links `@rpath/libbinaryen.dylib` with rpath
+  `@loader_path/../lib`, so `bin/` alone aborts at launch (run
+  42924203593).
 - `scripts/desktop-smoke.sh` installs `webkit2gtk-driver`, `xvfb`,
   `gnome-keyring` and `dbus`, runs the plan's
   `cargo install tauri-driver --locked` verbatim (the resolved version
@@ -1918,8 +1922,22 @@ Supersedes: —
   webkit2gtk-4.1 dev files, no display, sudo blocked): it fails at the
   expected first step. The green run is the CI job — link recorded in
   the PR.
-- Windows smoke attempt (plan Step 3): pending — see the PR for the
-  attempt's run link and outcome (kept if green, otherwise removed and
-  the reason recorded here).
+- The smoke spec drives the real UI strings: the project dialog's
+  submit is "Create" (`t.common.create`), not the trigger's "New
+  project" — surfaced by run 42927777638 — and "Record key" is the
+  wizard select's accessible name (Label span beside the trigger
+  button), not its text — found by auditing every spec label against
+  `strings.ts`. The assertions, fixture and `SQLite format 3` check
+  are unchanged.
+- Windows smoke attempt (plan Step 3): removed from the matrix — the
+  leg kept its bundle build but lost the smoke step. msedgedriver
+  cannot create a WebDriver session for the app on `windows-latest`:
+  the WebView2 browser process never opens its DevTools port
+  ("DevToolsActivePort file doesn't exist") — unmodified in run
+  42927777638 and with
+  `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS='--no-sandbox --disable-gpu'`
+  in run 42930223305. The Linux leg runs the same spec green, so the
+  WebView2 session failure is Windows-image-specific, not a spec bug.
+  Reinstating needs a runner where msedgedriver↔WebView2 attach works.
 - Files outside the Files block: `app/package-lock.json` — regenerated
   for the new dev dependencies (same convention as Task 14).

@@ -48,7 +48,7 @@ jobs:
             binaryen_target: x86_64-linux
             binaryen_sha: 2dc9c7813f5375db93d96ead4b78222fcc3e2677bbb832297af4797782a37489
           - os: windows-latest
-            smoke: windows
+            smoke: none
             wasm_bindgen_target: x86_64-pc-windows-msvc
             wasm_bindgen_sha: 79e348c169d0c10c0b287647f1e753d0985353ca96800bc29be8f4261baf13e6
             wasm_pack_target: x86_64-pc-windows-msvc
@@ -182,32 +182,8 @@ jobs:
         if: matrix.smoke == 'linux'
         run: scripts/desktop-smoke.sh
 
-      # Windows smoke attempt (plan Step 3): msedgedriver ships on the
-      # windows-latest image; the store key lives in Credential Manager,
-      # so no keyring setup is needed.
-      - name: Windows smoke test (msedgedriver + tauri-driver)
-        if: matrix.smoke == 'windows'
-        env:
-          # In the CI session WebView2's browser process needs
-          # --no-sandbox to come up; without it msedgedriver's session
-          # fails with "DevToolsActivePort file doesn't exist". The var
-          # is read by the WebView2 loader inside the app (propagated
-          # through tauri-driver → msedgedriver → the app).
-          WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: '--no-sandbox --disable-gpu'
-        run: |
-          if ! command -v tauri-driver >/dev/null 2>&1; then
-            cargo install tauri-driver --locked
-          fi
-          cargo install --list | grep '^tauri-driver' || true
-          export EPIORA_APP_BINARY="$PWD/app/src-tauri/target/release/epiora-app.exe"
-          export EPIORA_APP_DATA_DIR="$APPDATA/org.epiora.app"
-          export EPIORA_FIXTURE="$PWD/fixtures/import/utf8_comma/input.csv"
-          tauri-driver --port 4444 &
-          driver_pid=$!
-          trap 'kill "$driver_pid" 2>/dev/null || true' EXIT
-          for _ in $(seq 1 60); do
-            curl -fsS http://127.0.0.1:4444/status >/dev/null 2>&1 && break
-            sleep 1
-          done
-          cd app
-          npx wdio run desktop-e2e/wdio.conf.mjs
+      # Windows smoke (plan Step 3) was attempted twice and removed:
+      # msedgedriver cannot create a WebView2 session on the
+      # windows-latest image ("DevToolsActivePort file doesn't exist",
+      # also with --no-sandbox). Reason and run links: docs/decisions.md
+      # under v0.3 Task 15.
