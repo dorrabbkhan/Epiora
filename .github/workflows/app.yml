@@ -29,6 +29,16 @@ on:
 permissions:
   contents: read
 
+env:
+  # cargo-deny's advisory DB must live outside every rust-cache path.
+  # deny.toml's default is <workspace>/target/advisory-dbs, but
+  # rust-cache's pre-save cleanup deletes every file under target/
+  # outside cargo profile dirs — it gutted the cached DB clone and
+  # restored empty dirs, so cargo-deny failed with "failed to load any
+  # advisories in the database" (run 43101947021). runner.temp is
+  # uncached and always fresh.
+  EPIORA_DENY_DB: ${{ runner.temp }}/advisory-dbs
+
 jobs:
   # Task 14: the native store side of the app gate — cargo deny, the
   # src-tauri workspace tests (incl. keystore), and the TypeScript

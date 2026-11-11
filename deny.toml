@@ -8,7 +8,11 @@ version = 2
 # Advisory DB lives under target/ (gitignored): check-engine.sh mirrors
 # $CARGO_HOME/advisory-dbs into it when one exists (e.g. a read-only
 # cargo home), otherwise cargo-deny fetches it there itself.
-# EPIORA_DENY_DB overrides for unusual layouts.
+# EPIORA_DENY_DB overrides for unusual layouts — CI sets it to
+# $RUNNER_TEMP/advisory-dbs because Swatinem/rust-cache caches target/
+# and its pre-save cleanup deletes every file under it outside cargo
+# profile dirs, which gutted this clone (docs/decisions.md, CI
+# speed-ups entry).
 db-path = "${EPIORA_DENY_DB:-target/advisory-dbs}"
 unmaintained = "all"
 unsound = "all"

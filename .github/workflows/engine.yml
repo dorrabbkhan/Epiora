@@ -28,6 +28,10 @@ on:
 
 env:
   GIT_SHA: ${{ github.sha }}
+  # cargo-deny's advisory DB must live outside every rust-cache path —
+  # see app.yml's comment. deny.toml's default target/advisory-dbs is
+  # gutted by rust-cache's target cleanup; runner.temp is uncached.
+  EPIORA_DENY_DB: ${{ runner.temp }}/advisory-dbs
 
 jobs:
   engine:
