@@ -2229,6 +2229,48 @@ run; no flag skips or ignores advisories.
   PASS); `open_tables_1m` medians 2,757.9 / 2,292.8 / 1,942.9 ms (all
   PASS).
 
+### Test fix — perf gate batch id and keyboard-path timeout (2026-11-12)
+
+Decision: Two CI/test fixes on branch `ci/fix-perf-batch-keyboard-timeout`
+(owner-approved 2026-11-12, "follow your recos"); not a plan task.
+
+- Perf gate batch id (bug fix): `app/perf/perf.spec.ts` stamped each
+  recorded line with `batch = pid-${process.pid}` and CI set no
+  PERF_BATCH. When a sample hit the 1,800,000 ms test timeout,
+  Playwright replaced the worker, so the gate test ran in a new
+  process and discarded every earlier sample. Evidence: main run
+  <https://github.com/dorrabbkhan/Epiora/actions/runs/43208388072>
+  attempt 1 — samples 1–4 passed, sample 5 timed out, and the gate
+  reported "import_1m: no successful sample; open_tables_1m: no
+  successful sample". Fix: the batch id is now the invocation id —
+  `run-${process.ppid}` (the Playwright runner is every worker's
+  parent, replacement workers included) — and `app.yml` sets
+  PERF_BATCH on each perf step from run id + run attempt + pass
+  (`-x1` / `-cpu4`), so the two passes and reruns never share a
+  batch. Gate semantics, thresholds (89,550 ms; 2,874 ms; 573,616
+  bytes; 5,000,000 bytes), sample counts and the timeout are
+  unchanged. The gate evaluation moved verbatim to
+  `app/perf/gate-eval.ts` so `app/scripts/perf-gate.test.mjs` (the
+  existing `node --test scripts/*.test.mjs` lane) exercises it: the
+  new test fails with the pid-scoped batch ("no successful sample")
+  and passes after the fix.
+- Keyboard-path Firefox timeout — owner-approved: keyboard-path test
+  timeout 30 s → 60 s (this test only), via `test.setTimeout(60_000)`
+  inside `app/e2e/keyboard-path.spec.ts`. The path runs ~20–24 s
+  alone but hits the 30 s default inside AxeBuilder.analyze when the
+  full suite runs. Evidence: main run 43208388072 attempt 1 (firefox,
+  failed + retry) and PR #56 run 43250830143 (failed twice before
+  passing). The global timeout, retries, workers and every other
+  test are unchanged.
+- Files outside the task's listed files: `app/perf/gate-eval.ts`
+  (gate logic + batch id extracted from perf.spec.ts) and
+  `app/scripts/perf-gate.test.mjs` (the required fail-before /
+  pass-after test) — placed in the existing `node --test
+  scripts/*.test.mjs` lane because a `*.test.ts` under `perf/` would
+  run under Playwright's testMatch, and the Vitest unit project only
+  includes `src/**/*.test.{ts,tsx}`.
+Supersedes: —
+
 ### v0.3 Task 18 — v0.3 closed (Foundations proven)
 
 - v0.3 delivered every feature its spec's F-table lists (F1–F15,
