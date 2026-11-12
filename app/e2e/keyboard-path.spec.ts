@@ -81,6 +81,10 @@ async function arrowTo(
 }
 
 test('keyboard path test', async ({ page }) => {
+  // Owner-approved 2026-11-12, this test only: ~20–24 s alone but hits
+  // the 30 s default inside AxeBuilder.analyze under the full suite
+  // (main run 43208388072; PR #56 run 43250830143).
+  test.setTimeout(60_000);
   await page.goto('/');
 
   // Create a project.

@@ -54,6 +54,7 @@ import {
   type BrowserContextOptions,
   type Page,
 } from '@playwright/test';
+import { batchId, evaluateGates, type PerfLine } from './gate-eval';
 
 const PERF_DIR = dirname(fileURLToPath(import.meta.url));
 const WORK = fileURLToPath(new URL('../../target/perf', import.meta.url));
@@ -73,11 +74,12 @@ const EDITED_CSV = `${BIG_CSV}.edited.csv`;
 const OUT = process.env.PERF_OUT ?? resolve(WORK, 'results.jsonl');
 const GATES_MD = resolve(dirname(OUT), 'gates.md');
 
-// Every recorded line carries the worker's batch id so the gate test
-// evaluates this invocation's samples only — a stale results.jsonl
-// from an earlier local run can't pass or fail it. PERF_BATCH
-// overrides it (exercising the gate against a hand-built file).
-const BATCH = process.env.PERF_BATCH ?? `pid-${process.pid}`;
+// Every recorded line carries the invocation's batch id so the gate
+// test evaluates this run's samples only — a stale results.jsonl
+// from an earlier local run can't pass or fail it. See batchId in
+// ./gate-eval.ts for why the id is the runner's (parent's) pid, not
+// the worker's.
+const BATCH = batchId(process.env, process);
 
 /** `1m` / `250k` / raw number — keeps scenario names honest at any
  *  PERF_ROWS. At the CI default the names are exactly the plan's
@@ -676,32 +678,9 @@ for (let i = 0; i < RUNS; i++) {
 
 // --- Owner gates (v0.3 Task 17) --------------------------------------
 //
-// Owner-picked thresholds (PR #52 comment, 2026-11-11:
-// https://github.com/dorrabbkhan/Epiora/pull/52#issuecomment-6807191386)
-// — basis is p90 × 1.25 of the persistent-profile run 43025510601. A
-// scenario passes when the median `ms` of its successful samples is
-// ≤ the threshold; a scenario with no successful sample cannot pass.
-// The gates evaluate the `1m` scenario names only: a run at another
-// PERF_ROWS records `*_<label>` names the gate does not apply.
-const GATES: Record<string, number> = {
-  import_1m: 89_550, // p90 71,639.3 ms × 1.25
-  open_tables_1m: 2_874, // p90 2,299.2 ms × 1.25
-};
-
-type PerfLine = Record<string, unknown> & {
-  scenario?: string;
-  ms?: number;
-  error?: string;
-  skipped?: string;
-};
-
-function medianOf(samples: number[]): number {
-  const sorted = [...samples].sort((a, b) => a - b);
-  const n = sorted.length;
-  const mid = Math.floor(n / 2);
-  return n % 2 === 1 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2;
-}
-
+// Thresholds, medians and the batch id live in ./gate-eval.ts so the
+// node:test lane (app/scripts/perf-gate.test.mjs) exercises the real
+// gate code; this test is the IO + verdict only.
 test('owner gates: medians meet the PR #52 thresholds', async () => {
   // The throttled (D7) pass records `*_cpu<N>` names and never gates;
   // pass 1's gates.md stays the report.
@@ -713,57 +692,11 @@ test('owner gates: medians meet the PR #52 thresholds', async () => {
         .filter((l) => l.trim() !== '')
         .map((l) => JSON.parse(l) as PerfLine)
     : [];
-  const mine = lines.filter(
-    (l) => l.batch === BATCH && l.profile === PROFILE,
-  );
-
-  const out = [
-    '### Perf gates — owner thresholds ([PR #52](https://github.com/dorrabbkhan/Epiora/pull/52#issuecomment-6807191386))',
-    '',
-    'A scenario passes when the median `ms` of its successful samples is ≤ the threshold.',
-    '',
-  ];
-  const failures: string[] = [];
-
-  if (label !== '1m') {
-    out.push(
-      `Not evaluated — scenarios are \`*_${label}\`; the owner thresholds ` +
-        'apply to `import_1m` / `open_tables_1m` only.',
-    );
-    writeFileSync(GATES_MD, `${out.join('\n')}\n`);
-    return;
-  }
-
-  out.push('| scenario | ok | failed | skipped | median ms | threshold ms | verdict |');
-  out.push('|---|---|---|---|---|---|---|');
-  for (const [name, limit] of Object.entries(GATES)) {
-    const ok = mine
-      .filter(
-        (l) =>
-          l.scenario === name &&
-          l.error === undefined &&
-          l.skipped === undefined &&
-          typeof l.ms === 'number',
-      )
-      .map((l) => l.ms as number);
-    const failed = mine.filter(
-      (l) => l.scenario === name && l.error !== undefined,
-    ).length;
-    const skippedN = mine.filter(
-      (l) => l.scenario === name && l.skipped !== undefined,
-    ).length;
-    if (ok.length === 0) {
-      failures.push(`${name}: no successful sample`);
-      out.push(`| ${name} | 0 | ${failed} | ${skippedN} | — | ${limit} | FAIL |`);
-      continue;
-    }
-    const med = medianOf(ok);
-    const pass = med <= limit;
-    if (!pass) failures.push(`${name}: median ${med} ms > ${limit} ms`);
-    out.push(
-      `| ${name} | ${ok.length} | ${failed} | ${skippedN} | ${med} | ${limit} | ${pass ? 'PASS' : 'FAIL'} |`,
-    );
-  }
-  writeFileSync(GATES_MD, `${out.join('\n')}\n`);
+  const { markdown, failures } = evaluateGates(lines, {
+    batch: BATCH,
+    profile: PROFILE,
+    label,
+  });
+  writeFileSync(GATES_MD, markdown);
   expect(failures, failures.join('; ')).toEqual([]);
 });
