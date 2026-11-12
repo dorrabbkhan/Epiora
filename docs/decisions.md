@@ -2423,3 +2423,39 @@ Supersedes: —
   the v0.3 Task 18 entry.
 - Post-release check: `scripts/release/verify-deploy.py
   https://epiora-dev.netlify.app` reported 36 checks, 0 FAIL.
+
+### v1.0 Task 1 — calculator inventory (2026-11-13)
+
+`docs/v1.0-calculators.md` inventories every OpenEpi 3.01 menu calculator and all
+eight Epi Info 7 StatCalc calculators, with inputs, outputs, methods and R
+references read from the live site source and from
+`Epi-Info/Epi-Info-Community-Edition @ 4cd353c62c40b78d9d1f013b0f5a2bb685a5fca6`.
+
+- Counts per family: counts 10 (`proportion`, `two_by_two`, `two_by_n`, `r_by_c`,
+  `dose_response`, `matched_case_control`, `screening`, `smr`, `binomial`,
+  `poisson`), person_time 2, continuous 4, sample_size 4, power 3, other 1 — 24
+  calculator ids, all from the plan's expected list, none renamed or added.
+- Merges with reason: OpenEpi's Power → Cohort / Clinical Trial / X-Sectional are
+  one computation with different labels → one `power_cohort` calculator with a
+  `design` input. EI7 "Tables (2x2, 2xN)" is stratified 2×2 → `two_by_n`,
+  separate from `two_by_two` because its output set is EI7's StatCalc block.
+- Excluded items: OpenEpi `Calculator/calculator.htm` (arithmetic calculator, not
+  statistical); Home, Info/Help pages, Language/Settings and Searches
+  (navigation/documentation). No statistical menu item dropped.
+- OpenEpi terms verdict: automated access is allowed — the site has no terms of
+  service beyond the Licensing/Disclaimer page (quoted in the doc), which grants
+  unrestricted use under MIT wording, and no robots.txt. Each page was fetched
+  once for this inventory; Task 3's capture workflow stays at one page at a time
+  with ≥2 s between cases.
+- Method differences recorded in the doc: OpenEpi's dose-response χ² includes a
+  continuity correction that EI7 lacks; EI7's population-survey and binomial
+  calculators have outputs OpenEpi lacks (per-cluster sizes, count-form CI);
+  OpenEpi caps exact computations for speed (`n > 100 001` in Proportion, "large
+  numbers" in TwobyTwo) where Epiora computes them; several calculators accept
+  arbitrary confidence percentages in OpenEpi where spec §5.3 fixes Epiora's
+  list at 90/95/99%.
+- R package list for Task 2 (`renv.lock`): `exactci` 1.4-5 (GPL-3), `exact2x2`
+  1.7.0 (GPL-3), `PropCIs` 0.3-0 (GPL), plus already-pinned `epitools` 0.5-10.1,
+  `epiR` 3.0.0, `DescTools` 0.99.60 and base `stats`. Methods without a published
+  R function are named as `fixtures/R/methods/*.R` functions with their
+  literature source (see the doc's "R packages" section).
