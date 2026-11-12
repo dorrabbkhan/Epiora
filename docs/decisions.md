@@ -2213,3 +2213,18 @@ run; no flag skips or ignores advisories.
   test directly with `node --test app/scripts`).
 - `.github/workflows/import.yml` also gained `scripts/wasm-size.sh` in
   its path filters so changes to the gate script itself run the gate.
+- Runner variance (owner decision, 2026-11-12, PR #55): the thresholds
+  stay exactly as they are — `import_1m` ≤ 89,550 ms, `open_tables_1m`
+  ≤ 2,874 ms, import-wasm ≤ 573,616 B, first-load < 5,000,000 B. For
+  the perf gate on push to `main`, a single red `perf` run is rerun
+  twice (`workflow_dispatch` or job rerun); it counts as a real
+  failure only if a rerun fails again. No automatic retry is added to
+  the workflow. Evidence — three `perf` runs on identical code:
+  `import_1m` medians 99,939.9 ms (run
+  [43119574950](https://github.com/dorrabbkhan/Epiora/actions/runs/43119574950),
+  FAIL), 70,682.3 ms (run
+  [43126454921](https://github.com/dorrabbkhan/Epiora/actions/runs/43126454921),
+  PASS) and 63,782 ms (run
+  [43126475469](https://github.com/dorrabbkhan/Epiora/actions/runs/43126475469),
+  PASS); `open_tables_1m` medians 2,757.9 / 2,292.8 / 1,942.9 ms (all
+  PASS).
