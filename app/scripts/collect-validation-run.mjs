@@ -17,8 +17,20 @@ import {
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
+// Newer `gh api` refuses to print responses containing terminal
+// escape sequences (job logs are full of them) unless
+// --allow-escape-sequences is passed; gh ≤ 2.46 predates both the
+// guard and the flag, so probe support once.
+const escapeFlag = execFileSync('gh', ['api', '--help'], { encoding: 'utf8' })
+  .includes('escape-sequences')
+  ? ['--allow-escape-sequences']
+  : [];
+
 const ghText = (endpoint) =>
-  execFileSync('gh', ['api', endpoint], { encoding: 'utf8', maxBuffer: 128 * 1024 * 1024 });
+  execFileSync('gh', ['api', endpoint, ...escapeFlag], {
+    encoding: 'utf8',
+    maxBuffer: 128 * 1024 * 1024,
+  });
 const ghJson = (endpoint) => JSON.parse(ghText(endpoint));
 
 function ghUnzip(endpoint, destDir) {
@@ -26,7 +38,10 @@ function ghUnzip(endpoint, destDir) {
   const zip = join(destDir, 'artifact.zip');
   writeFileSync(
     zip,
-    execFileSync('gh', ['api', endpoint], { encoding: 'buffer', maxBuffer: 128 * 1024 * 1024 }),
+    execFileSync('gh', ['api', endpoint, ...escapeFlag], {
+      encoding: 'buffer',
+      maxBuffer: 128 * 1024 * 1024,
+    }),
   );
   execFileSync('unzip', ['-o', '-q', zip, '-d', destDir]);
   rmSync(zip);
