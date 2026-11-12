@@ -13,6 +13,7 @@ task's PR first (`gh pr list --head <plan>/task-<N>-*`); if no open PR exists fo
 - `v0.1` → `docs/superpowers/plans/2026-10-28-epiora-v0.1-spikes.md`
 - `v0.2` → `docs/superpowers/plans/2026-10-31-epiora-v0.2-engine-core.md`
 - `v0.3` → `docs/superpowers/plans/2026-11-05-epiora-v0.3-app-shell.md`
+- `v1.0` → `docs/superpowers/plans/2026-11-12-epiora-v1.0-calculators-and-means.md`
 - A missing `<plan>` means the newest file in `docs/superpowers/plans/` (by date in the filename).
 
 The matching spec is read from the plan's `**Spec:**` line, not hard-coded.
@@ -25,7 +26,9 @@ The matching spec is read from the plan's `**Spec:**` line, not hard-coded.
    FAILs; cite the failing check and its log (`gh run view --log`).
 4. Check each item below and mark it PASS or FAIL, with evidence (file:line or command output):
    - Only files listed in the task's Files block changed (plus lockfiles and `docs/decisions.md`).
-   - Nothing under `fixtures/` changed except through `fixtures/generate.R` in v0.1 Task 5.
+   - Nothing under `fixtures/` changed except in a plan's fixture task, through its named generator or
+     workflow output: v0.1 Task 5; v0.2 Tasks 2–3; v0.3 Task 2; v1.0 Task 2 (`fixtures/generate.R`), Task 3
+     (`openepi.yml` output or the owner's human-step capture) and Task 4 (`ei7.yml` output).
    - Every test or check named in the task exists, with the plan's exact values and assertions.
    - No test was removed, skipped or loosened; no threshold or decision rule changed.
    - Names and signatures match the task's Interfaces block exactly.

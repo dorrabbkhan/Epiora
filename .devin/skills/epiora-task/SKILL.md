@@ -13,6 +13,7 @@ Map `<plan>` to a file:
 - `v0.1` → `docs/superpowers/plans/2026-10-28-epiora-v0.1-spikes.md`
 - `v0.2` → `docs/superpowers/plans/2026-10-31-epiora-v0.2-engine-core.md`
 - `v0.3` → `docs/superpowers/plans/2026-11-05-epiora-v0.3-app-shell.md`
+- `v1.0` → `docs/superpowers/plans/2026-11-12-epiora-v1.0-calculators-and-means.md`
 - A missing `<plan>` (only a task number was given) means the newest file in `docs/superpowers/plans/` (by
   date in the filename).
 
@@ -54,7 +55,7 @@ The matching spec is read from the plan's `**Spec:**` line, not hard-coded.
 
 - Plan and spec values are authoritative. If a reference or fixture test fails, the implementation is wrong.
   Never change expected values, thresholds or decision rules.
-- Never edit anything under `fixtures/` except by running `Rscript fixtures/generate.R` in v0.2 Task 2 or v0.3 Task 2, or by committing the `ei7.yml` workflow output in v0.2 Task 3.
+- Never edit anything under `fixtures/` except by running `Rscript fixtures/generate.R` in v0.2 Task 2 or v0.3 Task 2, or by committing the `ei7.yml` workflow output in v0.2 Task 3; in v1.0, only Task 2 (`Rscript fixtures/generate.R`), Task 3 (the `openepi.yml` output, or the owner's human-step capture) and Task 4 (the `ei7.yml` output) may change `fixtures/`.
 - Never skip, delete or loosen a test, and never relax a lint rule.
 - Never simulate a "(human step)": stop with a `STOP:` line naming it.
 - Do not start work that belongs to any other task. List it under "Follow-ups noticed" instead.
