@@ -458,11 +458,17 @@ jobs:
           df -h / /tmp "$HOME" || true
           free -h || true
 
+      # PERF_BATCH: one batch id per invocation — run id + attempt +
+      # pass — so a worker Playwright replaces after a sample timeout
+      # still reports to the same batch, while the two passes and job
+      # reruns never share one (run 43208388072 lost samples 1–4 to a
+      # pid-scoped batch).
       - name: Run perf spec (persistent profile)
         run: >-
           EPIORA_PERF=1 PERF_RUNS=$PERF_SAMPLES
           PERF_ROWS=$PERF_CSV_ROWS
           PERF_PROFILE=persistent
+          PERF_BATCH="${{ github.run_id }}-${{ github.run_attempt }}-x1"
           npx playwright test --project=chromium --workers=1
         working-directory: app
 
@@ -478,6 +484,7 @@ jobs:
           PERF_ROWS=$PERF_CSV_ROWS
           PERF_PROFILE=persistent
           PERF_CPU_THROTTLE=4
+          PERF_BATCH="${{ github.run_id }}-${{ github.run_attempt }}-cpu4"
           npx playwright test --project=chromium --workers=1
         working-directory: app
 
