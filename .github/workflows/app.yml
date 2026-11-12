@@ -34,17 +34,6 @@ on:
         required: false
         type: number
         default: 1000000
-      profile:
-        description: >-
-          perf job: browser profile — persistent (fresh on-disk
-          user-data dir per sample, like a real user's) or ephemeral
-          (Playwright off-the-record context)
-        required: false
-        type: choice
-        options:
-          - persistent
-          - ephemeral
-        default: persistent
   release:
     types: [published]
 
@@ -251,6 +240,22 @@ jobs:
           path: app/playwright-report/
           if-no-files-found: ignore
 
+      # First-load budget gate (v0.3 Task 17, spec §10.2): fails at or
+      # above 5,000,000 bytes gzip -9. The budget describes the shipping
+      # build, so it measures a second production build made without
+      # VITE_TEST_HOOKS — the same pattern as the perf job's
+      # dist-nohooks. Runs on every event, fork PRs included.
+      - name: First-load budget
+        run: |
+          env -u VITE_TEST_HOOKS npm run build -- --outDir ../target/budget-dist --emptyOutDir
+          set +e
+          node scripts/budget.mjs ../target/budget-dist | tee ../target/budget.md
+          rc=${PIPESTATUS[0]}
+          set -e
+          cat ../target/budget.md >> "$GITHUB_STEP_SUMMARY"
+          exit $rc
+        working-directory: app
+
       # Netlify deploys (v0.3 spec §7.2; owner's Step 5 change on PR #49):
       # production deploys happen only on a published release, never on
       # pushes to main. Same-repo PRs get an `pr-<number>` alias preview,
@@ -330,13 +335,24 @@ jobs:
           echo "Production deploy: ${url}" >> "$GITHUB_STEP_SUMMARY"
         working-directory: app
 
-  # Task 16 perf measurement (spec §10.3): workflow_dispatch only, so
-  # no PR or push job gets slower or changes behaviour. Nothing here
-  # gates — the numbers are the owner's Task 17 input. One sample per
-  # Playwright test, each in a fresh browser context/store.
+  # Perf gate + measurement (v0.3 spec §10.3, Task 17): runs on push
+  # to main (median of 5 samples, 1,000,000 rows) and on
+  # workflow_dispatch — never on pull_request (owner decision on
+  # PR #52, replacing the plan's "perf job on PRs" wording) and always
+  # on the persistent, disk-backed Chromium profile (the ephemeral
+  # context fails 1M imports with SQLITE_IOERR; kept for local
+  # diagnosis only). One sample per Playwright test, each in a fresh
+  # browser context/store. The spec's last test gates
+  # import_1m ≤ 89,550 ms and open_tables_1m ≤ 2,874 ms (median of
+  # successful samples ≤ threshold); the second pass below is the D7
+  # report — both scenarios under CPU throttling ×4, medians in the
+  # step summary, not gated.
   perf:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
     runs-on: ubuntu-latest
+    env:
+      PERF_SAMPLES: ${{ inputs.runs || 5 }}
+      PERF_CSV_ROWS: ${{ inputs.rows || 1000000 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -412,7 +428,7 @@ jobs:
       # ~80 MB. The 10,000-row file feeds the grid-scroll scenario.
       - name: Generate perf CSVs
         run: |
-          node perf/gen-csv.mjs ${{ inputs.rows || 1000000 }} ../target/perf/perf-${{ inputs.rows || 1000000 }}.csv
+          node perf/gen-csv.mjs "$PERF_CSV_ROWS" "../target/perf/perf-${PERF_CSV_ROWS}.csv"
           node perf/gen-csv.mjs 10000 ../target/perf/perf-10000.csv
         working-directory: app
 
@@ -442,11 +458,26 @@ jobs:
           df -h / /tmp "$HOME" || true
           free -h || true
 
-      - name: Run perf spec (${{ inputs.runs || 10 }} samples, ${{ inputs.profile || 'persistent' }} profile)
+      - name: Run perf spec (persistent profile)
         run: >-
-          EPIORA_PERF=1 PERF_RUNS=${{ inputs.runs || 10 }}
-          PERF_ROWS=${{ inputs.rows || 1000000 }}
-          PERF_PROFILE=${{ inputs.profile || 'persistent' }}
+          EPIORA_PERF=1 PERF_RUNS=$PERF_SAMPLES
+          PERF_ROWS=$PERF_CSV_ROWS
+          PERF_PROFILE=persistent
+          npx playwright test --project=chromium --workers=1
+        working-directory: app
+
+      # D7 report (spec §10.2): both gated scenarios under Chromium CPU
+      # throttling ×4 — recorded as import_1m_cpu4 / open_tables_1m_cpu4
+      # so they never touch the gated medians. 3 samples for a median;
+      # reported in the step summary, not gated. `always()` so the
+      # report still lands when the gate failed.
+      - name: D7 report — CPU throttling ×4
+        if: always()
+        run: >-
+          EPIORA_PERF=1 PERF_RUNS=3
+          PERF_ROWS=$PERF_CSV_ROWS
+          PERF_PROFILE=persistent
+          PERF_CPU_THROTTLE=4
           npx playwright test --project=chromium --workers=1
         working-directory: app
 
@@ -462,6 +493,9 @@ jobs:
           PERF_DIST=../target/perf/dist-nohooks PERF_COMPARE_DIST=dist \
             node perf/summarise.mjs ../target/perf/results.jsonl | tee ../target/perf/summary.md
           cat ../target/perf/summary.md >> "$GITHUB_STEP_SUMMARY"
+          if [ -f ../target/perf/gates.md ]; then
+            cat ../target/perf/gates.md >> "$GITHUB_STEP_SUMMARY"
+          fi
         working-directory: app
 
       - name: Upload perf results
@@ -472,4 +506,5 @@ jobs:
           path: |
             target/perf/results.jsonl
             target/perf/summary.md
+            target/perf/gates.md
           if-no-files-found: warn

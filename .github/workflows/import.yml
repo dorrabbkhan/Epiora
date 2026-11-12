@@ -3,8 +3,8 @@ name: import
 # The epiora-import gate (v0.3 spec §10.1): fmt, clippy, unit/fixture/
 # regression tests, wasm build, bindings regeneration, native/wasm
 # parity over fixtures/import, cargo-deny, 60 s per fuzz target (long
-# runs in fuzz-nightly.yml) and the import-wasm gzip size reported in
-# the job summary (the gate is Task 17).
+# runs in fuzz-nightly.yml) and the import-wasm gzip -9 size gate —
+# 573,616 bytes (owner threshold, PR #52, v0.3 Task 17).
 
 on:
   pull_request:
@@ -17,6 +17,7 @@ on:
       - 'rust-toolchain.toml'
       - 'scripts/check*.sh'
       - 'scripts/wasm-build.sh'
+      - 'scripts/wasm-size.sh'
       - '.github/workflows/import.yml'
   # push to main so a merge touching these paths writes the Rust cache
   # (save-if only writes on main); no job below deploys or publishes.
@@ -31,6 +32,7 @@ on:
       - 'rust-toolchain.toml'
       - 'scripts/check*.sh'
       - 'scripts/wasm-build.sh'
+      - 'scripts/wasm-size.sh'
       - '.github/workflows/import.yml'
   workflow_dispatch:
 
@@ -161,14 +163,27 @@ jobs:
         env:
           EPIORA_DENY_DB: ${{ runner.temp }}/advisory-dbs
 
-      - name: Wasm size in job summary
+      # import-wasm size gate (v0.3 Task 17): fails when the gzip -9
+      # size exceeds the owner's 573,616-byte threshold (PR #52
+      # comment — 521,469 measured × 1.10). `always()` so a missing
+      # file after a failed build is reported as the real failure it
+      # is, and the measured size still lands in the summary.
+      - name: import-wasm size gate (573,616 B)
         if: always()
         run: |
-          if [ -f crates/epiora-import-wasm/pkg/epiora_import_wasm_bg.wasm ]; then
-            size="$(gzip -9 -c crates/epiora-import-wasm/pkg/epiora_import_wasm_bg.wasm | wc -c | tr -d ' ')"
-            echo "import .wasm gzip -9 size: **${size} bytes** (reported only; the gate is Task 17)" \
-              >> "$GITHUB_STEP_SUMMARY"
+          f=crates/epiora-import-wasm/pkg/epiora_import_wasm_bg.wasm
+          if [ ! -f "$f" ]; then
+            echo "import-wasm: $f missing — the wasm build did not produce it" >&2
+            exit 1
           fi
+          set +e
+          size="$(scripts/wasm-size.sh "$f" 573616)"
+          rc=$?
+          set -e
+          verdict=PASS; [ "$rc" -eq 0 ] || verdict=FAIL
+          echo "import-wasm gzip -9: **${size} bytes** vs gate **573,616 bytes** → ${verdict} (fails above the limit)" \
+            >> "$GITHUB_STEP_SUMMARY"
+          exit $rc
 
       - name: Upload parity lines
         if: always()

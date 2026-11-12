@@ -2159,3 +2159,72 @@ run; no flag skips or ignores advisories.
   SHA, `save-if: ${{ github.ref == 'refs/heads/main' }}`), with
   `workspaces: .` — it compiles only the root workspace (the wasm
   builds), not `app/src-tauri`.
+
+### v0.3 Task 17 — Performance and size gates (2026-11-12)
+
+- Owner thresholds (PR #52 comment 2026-11-11T21:14:51Z,
+  <https://github.com/dorrabbkhan/Epiora/pull/52#issuecomment-6807191386>,
+  "Owner decision recorded by the conductor"), copied exactly:
+  `import_1m` ≤ **89,550 ms** (p90 71,639.3 ms × 1.25, persistent-profile
+  run 43025510601); `open_tables_1m` ≤ **2,874 ms** (p90 2,299.2 ms ×
+  1.25, same run); import-wasm ≤ **573,616 bytes** gzip -9
+  (521,469 × 1.10). Gate semantics: a scenario passes when its measured
+  median over successful samples is ≤ the threshold; the size gates
+  fail when the gzip -9 size exceeds 573,616 bytes (import-wasm) or
+  reaches 5,000,000 bytes (first-load budget — the plan's fixed
+  number, not a new threshold).
+- Gate placement follows the owner's PR #52 decision (comment
+  2026-11-11T15:07:55Z,
+  <https://github.com/dorrabbkhan/Epiora/pull/52#issuecomment-6799432942>),
+  which replaces the plan's "perf job on PRs" wording for this task:
+  the `perf` job runs on push to `main` (median of 5 samples,
+  `rows=1000000`) and on `workflow_dispatch` (the `runs` input kept),
+  never on `pull_request`, and always on the persistent, disk-backed
+  Chromium profile — the `profile` dispatch input was removed so the
+  ephemeral context (which fails 1M imports with SQLITE_IOERR) cannot
+  be selected; the spec's `PERF_PROFILE=ephemeral` path remains for
+  local diagnosis. PRs keep the size gates: the first-load budget
+  (`app/scripts/budget.mjs`, < 5,000,000 bytes) in `app.yml` and the
+  import-wasm 573,616-byte gate (`scripts/wasm-size.sh` with a limit
+  argument) in `import.yml`.
+- The perf gate lives in `app/perf/perf.spec.ts`'s last test (the
+  thresholds live where the plan put them): it reads this invocation's
+  `results.jsonl` lines (each line carries `profile`, `cpu` and a
+  `batch` id so stale local lines can never pass or fail it), computes
+  the median of each gated scenario's successful samples, writes
+  `target/perf/gates.md` (appended to the step summary), and fails when
+  a median exceeds its owner threshold or a gated scenario has no
+  successful sample. A run at `PERF_ROWS` ≠ 1,000,000 records `*_<label>`
+  names the thresholds do not apply to and the gate is not evaluated.
+- D7 report (spec §10.2): the `perf` job runs a second pass with
+  `PERF_CPU_THROTTLE=4` (`Emulation.setCPUThrottlingRate`) over the two
+  gated scenarios, 3 samples; recorded as `import_1m_cpu4` /
+  `open_tables_1m_cpu4` so they never contaminate the gated medians —
+  the medians land in the step summary via `summarise.mjs`, not gated.
+- The first-load budget step in `app.yml` measures a second `vite
+  build` made without `VITE_TEST_HOOKS` (the flag changes the entry
+  chunk) into `target/budget-dist` — the same two-build pattern the
+  perf job uses; the step runs on every event including fork PRs.
+- Files outside the Files block: `app/vite.config.ts` —
+  `build.manifest: true` so `budget.mjs` reads the entry's JS/CSS from
+  `dist/.vite/manifest.json` as the plan's interface specifies;
+  `scripts/check-app.sh` — a `node --test scripts/*.test.mjs` step so
+  `budget.test.mjs` runs in the local gate and CI (the plan runs the
+  test directly with `node --test app/scripts`).
+- `.github/workflows/import.yml` also gained `scripts/wasm-size.sh` in
+  its path filters so changes to the gate script itself run the gate.
+- Runner variance (owner decision, 2026-11-12, PR #55): the thresholds
+  stay exactly as they are — `import_1m` ≤ 89,550 ms, `open_tables_1m`
+  ≤ 2,874 ms, import-wasm ≤ 573,616 B, first-load < 5,000,000 B. For
+  the perf gate on push to `main`, a single red `perf` run is rerun
+  twice (`workflow_dispatch` or job rerun); it counts as a real
+  failure only if a rerun fails again. No automatic retry is added to
+  the workflow. Evidence — three `perf` runs on identical code:
+  `import_1m` medians 99,939.9 ms (run
+  [43119574950](https://github.com/dorrabbkhan/Epiora/actions/runs/43119574950),
+  FAIL), 70,682.3 ms (run
+  [43126454921](https://github.com/dorrabbkhan/Epiora/actions/runs/43126454921),
+  PASS) and 63,782 ms (run
+  [43126475469](https://github.com/dorrabbkhan/Epiora/actions/runs/43126475469),
+  PASS); `open_tables_1m` medians 2,757.9 / 2,292.8 / 1,942.9 ms (all
+  PASS).
