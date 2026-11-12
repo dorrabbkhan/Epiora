@@ -126,7 +126,7 @@ use (open decision D9).
 | A6 | Boundaries from geoBoundaries; never GADM | GADM forbids commercial use and redistribution without permission | GADM |
 | A7 | No SQLite Encryption Extension in the browser | SEE builds may not be hosted on public-facing sites | SEE |
 | A8 | Hand-write only the hot statistical core; delegate niche methods to R; use existing libraries where they preserve determinism (§7.4); distribution functions are hand-written on `libm` | Speed, offline, determinism where it matters; no reinvention elsewhere | All-Rust statistics; all-R statistics |
-| A9 | Netlify for the web app, with per-PR deploy previews | Deploys run from GitHub Actions after the gates; `main` deploys the stable URL | Cloudflare |
+| A9 | Netlify for the web app, with per-PR deploy previews | Deploys run from GitHub Actions after the gates; production deploys only on a published release | Cloudflare |
 
 ## 7. Architecture
 

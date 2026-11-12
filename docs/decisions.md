@@ -2267,6 +2267,15 @@ run; no flag skips or ignores advisories.
   v0.3-posture clause on the D6 row; edit 5's "§4 of this spec" was
   qualified to "§4 of the v0.3 app-shell spec" so the reference does
   not point at the platform spec's own §4.
+- Spec-edit placements — owner decision (2026-11-12, option B on
+  PR #56): the five §14 edits stand as placed on the branch — edit 2
+  → §12 item 8; edit 3 → decision row A9 in §6 (the platform spec
+  has no Hosting section); edit 4 → §8.3 bullet + D6 row; edit 5 →
+  §7.3, with "§4 of this spec" rendered as "§4 of the v0.3 app-shell
+  spec" so the reference resolves. A9's rationale is corrected to
+  "Deploys run from GitHub Actions after the gates; production
+  deploys only on a published release" — the release-only production
+  deploy decided in v0.3 Task 13.
 - Netlify URL — owner decision (2026-11-12, option B): the site is
   <https://epiora-dev.netlify.app>, named after the site name in the
   preview deploy log of run
