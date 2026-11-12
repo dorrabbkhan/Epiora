@@ -47,6 +47,23 @@ fake_repo() { # version_to_write
   [[ "$output" == *"all app version fields are 0.3.0"* ]]
 }
 
+@test "checkpoint.sh fails closed when gh pr list errors (gh stub)" {
+  fake_repo 0.3.0
+  mkdir -p "$DIR/bin"
+  cat > "$DIR/bin/gh" <<'EOF'
+#!/usr/bin/env bash
+if [ "$1 $2" = "repo view" ]; then echo 'stub/stub'; exit 0; fi
+if [ "$1 $2" = "pr list" ]; then echo 'stub: pr list boom' >&2; exit 1; fi
+echo "stub: unhandled gh $*" >&2; exit 1
+EOF
+  chmod +x "$DIR/bin/gh"
+  run env PATH="$DIR/bin:$PATH" bash -c "cd '$DIR/repo' && '$CK' 0.3.0"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"owner gates merged"* ]]
+  [[ "$output" == *"gh pr list failed"* ]]
+  [[ "$output" != *"no open [OWNER GATE]/[OWNER REVIEW] PR"* ]]
+}
+
 @test "collect-assets.sh: usage error on no args" {
   run "$CA"
   [ "$status" -eq 2 ]
@@ -86,6 +103,39 @@ EOF
   [ "$status" -eq 1 ]
   run "$CA" --check-name 0.3.0
   [ "$status" -eq 2 ]
+}
+
+@test "collect-assets.sh --title prints the releasing.md title" {
+  mkdir -p "$DIR/repo/docs"
+  git -C "$DIR/repo" init -q
+  cat > "$DIR/repo/docs/releasing.md" <<'EOF'
+| field | value |
+|---|---|
+| Release title | `Epiora v9.9.9 — App shell` |
+| Title | `Epiora v9.9.9 — App shell` |
+EOF
+  run bash -c "cd '$DIR/repo' && '$CA' --title 9.9.9"
+  [ "$status" -eq 0 ]
+  [[ "$output" == "Epiora v9.9.9 — App shell" ]]
+}
+
+@test "collect-assets.sh --title refuses a missing, disagreeing or wrong-version title" {
+  mkdir -p "$DIR/repo/docs"
+  git -C "$DIR/repo" init -q
+  echo "# no title row" > "$DIR/repo/docs/releasing.md"
+  run bash -c "cd '$DIR/repo' && '$CA' --title 9.9.9"
+  [ "$status" -eq 1 ]
+  cat > "$DIR/repo/docs/releasing.md" <<'EOF'
+| Release title | `Epiora v9.9.9 — App shell` |
+| Title | `Epiora v9.9.9 — Something else` |
+EOF
+  run bash -c "cd '$DIR/repo' && '$CA' --title 9.9.9"
+  [ "$status" -eq 1 ]
+  cat > "$DIR/repo/docs/releasing.md" <<'EOF'
+| Title | `Epiora v0.3.0 — App shell` |
+EOF
+  run bash -c "cd '$DIR/repo' && '$CA' --title 9.9.9"
+  [ "$status" -eq 1 ]
 }
 
 @test "verify-deploy.py: usage error on no args" {
