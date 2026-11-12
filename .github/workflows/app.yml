@@ -34,6 +34,11 @@ on:
         required: false
         type: number
         default: 1000000
+      validation_run:
+        description: 'validation-report job: app-workflow run URL to read'
+        required: false
+        type: string
+        default: 'https://github.com/dorrabbkhan/Epiora/actions/runs/43208388072'
   release:
     types: [published]
 
@@ -508,3 +513,39 @@ jobs:
             target/perf/summary.md
             target/perf/gates.md
           if-no-files-found: warn
+
+  # Validation report (v0.3 Task 18, spec §10.5): renders
+  # docs/validation/v0.3.md from the source run's artifacts and job
+  # logs via the Actions API. The perf and desktop results it reports
+  # exist only on main-push and manual runs, so the canonical source
+  # for v0.3 is the e19042c app run (attempt 3, the green one),
+  # overridable with the `validation_run` dispatch input. The artifact
+  # is committed unchanged as docs/validation/v0.3.md.
+  validation-report:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    env:
+      VALIDATION_RUN: >-
+        ${{ inputs.validation_run ||
+        'https://github.com/dorrabbkhan/Epiora/actions/runs/43208388072' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Node 24
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+
+      - name: Generate docs/validation/v0.3.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p target
+          node app/scripts/validation-report.mjs "$VALIDATION_RUN" > target/v0.3.md
+
+      - name: Upload the validation report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: validation-report-v0.3
+          path: target/v0.3.md
+          if-no-files-found: error
