@@ -10,10 +10,12 @@ Checks: HTTP -> HTTPS redirect; / and /index.html serve HTML; the SPA
 fallback (/p/does-not-exist -> 200 HTML); every app/public/_headers rule
 (CSP exact match, nosniff, no-referrer, Cache-Control for /index.html,
 /sw.js and /assets/*, manifest content type); /sw.js and
-/manifest.webmanifest exist; every asset referenced from index.html and
-the JS is reachable and every .wasm is application/wasm; no JS contains
-the VITE_TEST_HOOKS identifier and some JS contains the test-hook
-canary "test hooks are disabled".
+/manifest.webmanifest exist; every /assets/* path referenced from
+index.html and the JS answers 200 with a non-HTML content type
+(.js a JavaScript type, .css text/css, .wasm application/wasm — a
+missing asset would come back as the SPA fallback's 200 text/html); no
+JS contains the VITE_TEST_HOOKS identifier and some JS contains the
+test-hook canary "test hooks are disabled".
 
 Prints PASS/FAIL (and SKIP) per check; exit 1 on any FAIL.
 """
@@ -42,6 +44,10 @@ CT = {
     ".wasm": "application/wasm", ".webmanifest": "application/manifest+json",
     ".svg": "image/svg+xml", ".png": "image/png", ".ico": "image/x-icon",
 }
+
+# Content type a crawled /assets/* file must be served with; anything
+# not listed just has to not be text/html (the SPA fallback's type).
+ASSET_CT = {".js": "javascript", ".css": "text/css", ".wasm": "application/wasm"}
 
 
 def load_rules(path):
@@ -170,9 +176,21 @@ def run_checks(base_url, rules):
         seen.add(path)
         st_a, hd_a, body_a = get(path)
         ctype = hd_a.get("content-type", "?")
-        ok = check(f"asset {path}", st_a == 200, f"status {st_a}, content-type {ctype}")
+        cbase = ctype.split(";")[0].strip().lower()
+        # A missing asset is answered by the SPA fallback — 200 text/html
+        # — so a bare 200 is not enough: /assets/* must carry a real
+        # asset content type.
+        ok = st_a == 200
+        want = ""
+        if path.startswith("/assets/"):
+            want = ASSET_CT.get(os.path.splitext(path)[1].lower())
+            ok = ok and ((want in cbase) if want else (cbase != "text/html"))
+        detail = f"status {st_a}, content-type {ctype}"
+        if path.startswith("/assets/"):
+            detail += f" (want {want or 'not text/html'})"
+        ok = check(f"asset {path}", ok, detail)
         if path.endswith(".wasm"):
-            check(f"wasm content-type {path}", ctype.split(";")[0].strip() == "application/wasm",
+            check(f"wasm content-type {path}", cbase == "application/wasm",
                   f"content-type {ctype}")
         if ok:
             text = ""
@@ -249,7 +267,11 @@ FIXTURE = {
     "manifest.webmanifest": '{"name":"Epiora","short_name":"Epiora"}',
 }
 
+# Broken fixture: VITE_TEST_HOOKS in the bundle AND a reference to an
+# asset that does not exist — the SPA fallback serves it as 200
+# text/html, which the asset check must reject.
 BROKEN_JS = 'const flag = "VITE_TEST_HOOKS"; import "assets/worker-bbb222.js";\n' + \
+            'import "assets/missing-fff666.js";\n' + \
             'const w = new URL("assets/core-ddd444.wasm", import.meta.url);\n'
 
 
@@ -322,7 +344,8 @@ def self_test():
     got = {n for n, s, _ in rows if s == "FAIL"}
     want = ["GET /sw.js", "headers /", f"no {FORBIDDEN} in JS",
             f"canary '{CANARY}' present",
-            "wasm content-type /assets/core-ddd444.wasm"]
+            "wasm content-type /assets/core-ddd444.wasm",
+            "asset /assets/missing-fff666.js"]
     missing = [w for w in want if not any(n.startswith(w) for n in got)]
 
     print("\n== self-test verdict", file=out)

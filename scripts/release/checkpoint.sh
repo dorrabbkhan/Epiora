@@ -39,6 +39,28 @@ warn()   { row WARN "$1" "$2"; warns=$((warns + 1)); }
 manual() { row MANUAL "$1" "$2"; manuals=$((manuals + 1)); }
 info()   { row INFO "$1" "$2"; }
 
+# The release title lives in exactly one place: the tables in
+# docs/releasing.md ("Release title" in Phase 3, "Title" in the values
+# table). The scripts read it from the doc so the printed gh command can
+# never drift from the checklist the owner follows.
+release_title() {
+  local t r
+  t="$(grep -oP '^\|\s*Title\s*\|\s*`\K[^`]+' docs/releasing.md | head -n1 || true)"
+  r="$(grep -oP '^\|\s*Release title\s*\|\s*`\K[^`]+' docs/releasing.md | head -n1 || true)"
+  if [ -n "$t" ] && [ -n "$r" ] && [ "$t" != "$r" ]; then
+    echo "docs/releasing.md title rows disagree: '$t' vs '$r'" >&2; return 1
+  fi
+  [ -n "$t$r" ] || return 1
+  printf '%s\n' "${t:-$r}"
+}
+
+release_title_for() { # <tag> — doc title, validated against the version
+  local t
+  t="$(release_title)" || return 1
+  [[ "$t" == "Epiora $1 "* ]] || return 1
+  printf '%s\n' "$t"
+}
+
 echo "== Epiora release checkpoint $TAG"
 
 # --- B. Versions (this whole section is --versions-only mode) -------------
@@ -76,33 +98,58 @@ branch="$(git branch --show-current)"
 [ "$branch" = main ] && pass "on main" "branch main" || fail "on main" "current branch is '$branch'; run: git checkout main"
 if git diff --quiet && git diff --cached --quiet; then pass "clean tree" "no tracked changes"
 else fail "clean tree" "tracked changes present; commit or stash them"; fi
-git fetch -q origin main || fail "fetch" "git fetch origin main failed"
+fetch_out="$(git fetch -q origin main 2>&1)" \
+  || fail "fetch" "git fetch origin main failed: ${fetch_out%%$'\n'*}"
 HEAD_SHA="$(git rev-parse HEAD)"; ORIGIN_SHA="$(git rev-parse origin/main)"
 if [ "$HEAD_SHA" = "$ORIGIN_SHA" ]; then pass "up to date" "HEAD = origin/main = ${HEAD_SHA:0:7}"
 else fail "up to date" "HEAD ${HEAD_SHA:0:7} != origin/main ${ORIGIN_SHA:0:7}; run: git pull --ff-only"; fi
 
 # --- C. Tag and release -----------------------------------------------------
-if [ -n "$(git ls-remote --tags origin "refs/tags/$TAG")" ]; then fail "tag free" "tag $TAG already exists on origin"
+# Every remote lookup fails CLOSED: an API/command error is a FAIL row
+# carrying the error, never a silent PASS.
+if ! tags="$(git ls-remote --tags origin "refs/tags/$TAG" 2>&1)"; then
+  fail "tag free" "git ls-remote failed: ${tags%%$'\n'*}"
+elif [ -n "$tags" ]; then fail "tag free" "tag $TAG already exists on origin"
 else pass "tag free" "no $TAG tag on origin yet"; fi
-if gh api "repos/$REPO/releases/tags/$TAG" >/dev/null 2>&1; then fail "release free" "a published GitHub release for $TAG already exists"
-else pass "release free" "no published GitHub release for $TAG yet"; fi
-draft="$(gh api "repos/$REPO/releases" -q "[.[] | select(.draft and .tag_name == \"$TAG\")] | length" 2>/dev/null || echo 0)"
-[ "$draft" = 0 ] || warn "draft" "a draft release for $TAG already exists — reuse it or delete it"
-rs="$(gh api "repos/$REPO/rulesets" -q '[.[] | select(.target == "tag" and .enforcement == "active")] | length' 2>/dev/null || echo "?")"
-if [ "$rs" != "?" ] && [ "$rs" -ge 1 ]; then
-  info "tag ruleset" "an active tag ruleset protects refs/tags/v* (creation/update/deletion)"
-  manual "tag bypass" "Settings → Rules → Rulesets → 'release tags' → Bypass list must include you (e.g. Repository admin), or publishing $TAG is refused"
+if rel="$(gh api "repos/$REPO/releases/tags/$TAG" 2>&1)"; then
+  fail "release free" "a published GitHub release for $TAG already exists"
+elif grep -q 'HTTP 404' <<<"$rel"; then
+  pass "release free" "no published GitHub release for $TAG yet"
 else
-  warn "tag ruleset" "no active tag ruleset found (or not readable) — release tags are unprotected"
+  fail "release free" "gh api releases/tags/$TAG failed: ${rel%%$'\n'*}"
+fi
+if drafts="$(gh api --paginate "repos/$REPO/releases" -q '.[] | select(.draft and .tag_name == "'"$TAG"'") | .id' 2>&1)"; then
+  grep -q . <<<"$drafts" && warn "draft" "a draft release for $TAG already exists — reuse it or delete it"
+else
+  fail "draft" "gh api releases failed: ${drafts%%$'\n'*}"
+fi
+if rsp="$(gh api --paginate "repos/$REPO/rulesets" -q '[.[] | select(.target == "tag" and .enforcement == "active")] | length' 2>&1)"; then
+  rs="$(awk '{s+=$1} END{print s+0}' <<<"$rsp")"
+  if [ "$rs" -ge 1 ]; then
+    info "tag ruleset" "an active tag ruleset protects refs/tags/v* (creation/update/deletion)"
+    manual "tag bypass" "Settings → Rules → Rulesets → 'release tags' → Bypass list must include you (e.g. Repository admin), or publishing $TAG is refused"
+  else
+    warn "tag ruleset" "no active tag ruleset found — release tags are unprotected"
+  fi
+else
+  fail "tag ruleset" "gh api rulesets failed: ${rsp%%$'\n'*}"
+fi
+if RT="$(release_title_for "$TAG")"; then
+  pass "release title" "docs/releasing.md: $RT"
+else
+  fail "release title" "docs/releasing.md has no '| Title |' row starting with 'Epiora $TAG '"
 fi
 
 # --- D. Merged work -----------------------------------------------------------
-open_prs="$(gh pr list --state open --json number,title -q '.[] | "#\(.number) \(.title)"')"
-gated="$(grep -E 'OWNER (GATE|REVIEW)' <<<"$open_prs" || true)"
-if [ -n "$gated" ]; then fail "owner gates merged" "open gated PRs: $(tr '\n' ';' <<<"$gated")"
-else pass "owner gates merged" "no open [OWNER GATE]/[OWNER REVIEW] PR"; fi
-others="$(grep -vE 'OWNER (GATE|REVIEW)' <<<"$open_prs" | grep -v '^$' || true)"
-[ -z "$others" ] || warn "open PRs" "still open (release ships without them): $(tr '\n' ';' <<<"$others")"
+if open_prs="$(gh pr list --state open --limit 200 --json number,title -q '.[] | "#\(.number) \(.title)"' 2>&1)"; then
+  gated="$(grep -iE 'owner (gate|review)' <<<"$open_prs" || true)"
+  if [ -n "$gated" ]; then fail "owner gates merged" "open gated PRs: $(tr '\n' ';' <<<"$gated")"
+  else pass "owner gates merged" "no open [OWNER GATE]/[OWNER REVIEW] PR"; fi
+  others="$(grep -viE 'owner (gate|review)' <<<"$open_prs" | grep -v '^$' || true)"
+  [ -z "$others" ] || warn "open PRs" "still open (release ships without them): $(tr '\n' ';' <<<"$others")"
+else
+  fail "owner gates merged" "gh pr list failed: ${open_prs%%$'\n'*}"
+fi
 VAL="docs/validation/v$MM.md"
 [ -f "$VAL" ] && pass "validation report" "$VAL present" || fail "validation report" "$VAL missing (closing task not merged?)"
 if grep -qE "^### v$MM Task [0-9]+ — v$MM closed" docs/decisions.md; then pass "closing record" "decisions.md has the v$MM closing entry"
@@ -115,14 +162,24 @@ else fail "closing record" "no '### v$MM Task N — v$MM closed' entry in docs/d
 declare -A RUN_OF SHA_OF URL_OF
 for wf in app desktop import engine spikes; do
   file=".github/workflows/$wf.yml"
-  mapfile -t paths < <(python3 -c '
+  if [ ! -f "$file" ]; then fail "$wf CI" "$file missing"; continue; fi
+  if ! paths_out="$(python3 -c '
 import sys, yaml
 d = yaml.safe_load(open(sys.argv[1]))
 on = d.get(True) or d.get("on") or {}
-for p in (on.get("push") or {}).get("paths") or []: print(p)' "$file")
-  inprog="$(gh run list --workflow "$wf.yml" --branch main --event push --commit "$HEAD_SHA" \
-            --json status -q '[.[] | select(.status != "completed")] | length' 2>/dev/null || echo 0)"
+for p in (on.get("push") or {}).get("paths") or []: print(p)' "$file" 2>&1)"; then
+    fail "$wf CI" "cannot parse push paths in $file: ${paths_out%%$'\n'*}"; continue
+  fi
+  paths=(); while IFS= read -r pl; do [ -n "$pl" ] && paths+=("$pl"); done <<<"$paths_out"
+  if ! inprog="$(gh run list --workflow "$wf.yml" --branch main --event push --commit "$HEAD_SHA" \
+            --json status -q '[.[] | select(.status != "completed")] | length' 2>&1)"; then
+    fail "$wf CI" "gh run list failed: ${inprog%%$'\n'*}"; continue
+  fi
   [ "$inprog" = 0 ] || warn "$wf CI" "a run for HEAD is still in progress — wait for it and re-run this script"
+  if ! runs_tsv="$(gh run list --workflow "$wf.yml" --branch main --event push --status completed --limit 30 \
+             --json databaseId,headSha,conclusion,url -q '.[] | [.databaseId, .headSha, .conclusion, .url] | @tsv' 2>&1)"; then
+    fail "$wf CI" "gh run list failed: ${runs_tsv%%$'\n'*}"; continue
+  fi
   found=""
   while IFS=$'\t' read -r id sha concl url; do
     [ -n "$id" ] || continue
@@ -139,19 +196,22 @@ for p in (on.get("push") or {}).get("paths") or []: print(p)' "$file")
       RUN_OF[$wf]="$id"; SHA_OF[$wf]="$sha"; URL_OF[$wf]="$url"
     fi
     break
-  done < <(gh run list --workflow "$wf.yml" --branch main --event push --status completed --limit 30 \
-             --json databaseId,headSha,conclusion,url -q '.[] | [.databaseId, .headSha, .conclusion, .url] | @tsv')
+  done <<<"$runs_tsv"
   [ -n "$found" ] || fail "$wf CI" "no completed main push run on an ancestor of HEAD"
 done
 
-PERF_TABLE=""; PERF_FAILED=""; PERF_SIZES=""; PERF_NOTES=""; PERF_JOB_URL=""
+PERF_TABLE=""; PERF_FAILED=""; PERF_SIZES=""; PERF_NOTES=""; PERF_JOB_URL=""; pj=""
 if [ -n "${RUN_OF[app]:-}" ]; then
-  perf_job="$(gh run view "${RUN_OF[app]}" --json jobs -q '.jobs[] | select(.name == "perf") | "\(.databaseId) \(.conclusion)"')"
-  if [ -z "$perf_job" ]; then fail "perf gate" "app run ${RUN_OF[app]} has no perf job"
+  if ! perf_job="$(gh run view "${RUN_OF[app]}" --json jobs -q '.jobs[] | select(.name == "perf") | "\(.databaseId) \(.conclusion)"' 2>&1)"; then
+    fail "perf gate" "gh run view ${RUN_OF[app]} failed: ${perf_job%%$'\n'*}"
+  elif [ -z "$perf_job" ]; then
+    fail "perf gate" "app run ${RUN_OF[app]} has no perf job"
+  elif ! log="$(gh api "repos/$REPO/actions/jobs/${perf_job%% *}/logs" 2>/dev/null)"; then
+    fail "perf gate" "could not fetch the log of perf job ${perf_job%% *}"
   else
     pj="${perf_job%% *}"; pc="${perf_job##* }"
     PERF_JOB_URL="${URL_OF[app]}/job/$pj"
-    log="$(gh api "repos/$REPO/actions/jobs/$pj/logs" 2>/dev/null | sed -E 's/^[0-9TZ:.+-]+ //')"
+    log="$(sed -E 's/^[0-9TZ:.+-]+ //' <<<"$log")"
     PERF_TABLE="$(awk '/^\| scenario \|/{t=1} t&&/^\|/{print;next} t{exit}' <<<"$log" | awk '!seen[$0]++')"
     PERF_FAILED="$(grep -E '^- run [0-9]+ · ' <<<"$log" | sed -E 's/ · cpu=.*$//' | awk '!seen[$0]++')"
     PERF_SIZES="$(awk '/^\| file \|/{t=1} t&&/^\|/{print;next} t{exit}' <<<"$log" | awk '!seen[$0]++')"
@@ -163,26 +223,31 @@ fi
 
 if [ -n "${RUN_OF[desktop]:-}" ]; then
   dr="${RUN_OF[desktop]}"; ds="${SHA_OF[desktop]}"
-  arts="$(gh api "repos/$REPO/actions/runs/$dr/artifacts" -q '.artifacts[] | select(.expired | not) | .name')"
-  missing=""
-  for os in ubuntu-24.04 windows-latest macos-latest; do
-    grep -qx "epiora-desktop-$os-$ds" <<<"$arts" || missing="$missing $os"
-  done
-  [ -z "$missing" ] && pass "desktop bundles" "Linux, Windows and macOS artifacts present in run $dr" \
-                    || fail "desktop bundles" "missing or expired in run $dr:$missing"
+  if ! arts="$(gh api --paginate "repos/$REPO/actions/runs/$dr/artifacts" -q '.artifacts[] | select(.expired | not) | .name' 2>&1)"; then
+    fail "desktop bundles" "gh api artifacts for run $dr failed: ${arts%%$'\n'*}"
+  else
+    missing=""
+    for os in ubuntu-24.04 windows-latest macos-latest; do
+      grep -qx "epiora-desktop-$os-$ds" <<<"$arts" || missing="$missing $os"
+    done
+    [ -z "$missing" ] && pass "desktop bundles" "Linux, Windows and macOS artifacts present in run $dr" \
+                      || fail "desktop bundles" "missing or expired in run $dr:$missing"
+  fi
   # The Linux smoke step exists on every matrix leg but runs only on
   # ubuntu; read it from the ubuntu job, not the first match overall.
-  smoke="$(gh run view "$dr" --json jobs -q '[.jobs[] | select(.name | test("ubuntu")) | .steps[]? | select(.name | startswith("Linux smoke test")) | .conclusion] | first // empty')"
-  [ "$smoke" = success ] && pass "desktop smoke" "Linux smoke test passed in run $dr" || fail "desktop smoke" "Linux smoke test step is '${smoke:-absent}' in run $dr"
+  if ! smoke="$(gh run view "$dr" --json jobs -q '[.jobs[] | select(.name | test("ubuntu")) | .steps[]? | select(.name | startswith("Linux smoke test")) | .conclusion] | first // empty' 2>&1)"; then
+    fail "desktop smoke" "gh run view $dr failed: ${smoke%%$'\n'*}"
+  elif [ "$smoke" = success ]; then pass "desktop smoke" "Linux smoke test passed in run $dr"
+  else fail "desktop smoke" "Linux smoke test step is '${smoke:-absent}' in run $dr"; fi
 fi
 
 # --- F. Netlify ---------------------------------------------------------------
-if names="$(gh secret list --json name -q '.[].name' 2>/dev/null)"; then
+if names="$(gh secret list --json name -q '.[].name' 2>&1)"; then
   for s in NETLIFY_AUTH_TOKEN NETLIFY_SITE_ID; do
     grep -qx "$s" <<<"$names" && pass "secret $s" "set" || fail "secret $s" "missing: production deploy will fail"
   done
 else
-  manual "Netlify secrets" "your token cannot list secrets: check Settings → Secrets and variables → Actions has NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID"
+  manual "Netlify secrets" "gh secret list failed (${names%%$'\n'*}): check Settings → Secrets and variables → Actions has NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID"
 fi
 manual "Netlify token" "NETLIFY_AUTH_TOKEN has not expired"
 manual "browser check" "Phase 2 of docs/releasing.md on the latest preview"
