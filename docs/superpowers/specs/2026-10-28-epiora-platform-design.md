@@ -213,6 +213,9 @@ only to generate expected values; its code is not copied.
 ### 8.6 StatCalc
 - Parity: sample size and power (cohort, case-control, cross-sectional, population survey), 2×2
   calculator, chi-square for trend, Poisson. Reference: OpenEpi and R.
+- Additions (OpenEpi parity for teaching): screening-test accuracy (sensitivity, specificity,
+  predictive values, likelihood ratios), person-time rates and rate comparison, standardized
+  mortality ratio, matched-pair and 1:n matched case-control calculators.
 
 ### 8.7 Growth (AnthStat)
 - Parity: z-scores and percentiles against WHO 2006, WHO 2007 and CDC 2000 references.
@@ -403,7 +406,8 @@ diff, unsigned desktop artifacts. **🔬 Foundations proven.**
 ### Phase 1 — The home for Epi Info users (v1.0–v1.5)
 
 **v1.0 Analysis parity I (L).** Means (t-test, ANOVA, Kruskal–Wallis), linear and logistic
-regression, data-management commands, StatCalc, explain mode, reproduce-in-R/Stata export,
+regression, data-management commands, StatCalc with the OpenEpi calculators it lacks (screening
+tests, rates and SMR, matched case-control; §8.6), explain mode, reproduce-in-R/Stata export,
 offline PWA. First university pilot. *Hero USP 2 (receipts) in usable form.*
 
 **v1.1 Forms and entry (L).** Form Designer, the check-code language, entry with validation and
