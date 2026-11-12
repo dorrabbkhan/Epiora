@@ -2394,3 +2394,32 @@ Supersedes: —
   in the Files block; `app/scripts/collect-validation-run.mjs` —
   the `gh api` collection half of the report generator, split out so
   `validation-report.mjs` stays under the ~400-line guideline.
+
+### v0.3.0 released (2026-11-12)
+
+- Release: <https://github.com/dorrabbkhan/Epiora/releases/tag/v0.3.0>, a
+  pre-release published 2026-11-12T18:57:45Z by the owner. Tag `v0.3.0`
+  points at `300434c28469993342c7270ff986bf9d8475feab`.
+- Pre-release checkpoint: `scripts/release/checkpoint.sh 0.3.0` on
+  `300434c` reported 0 FAIL, 0 WARN, 5 MANUAL. The owner did the manual
+  items: tag-ruleset bypass, Netlify secrets and token, browser and
+  desktop checks.
+- Evidence (main push runs): app
+  [43272671408](https://github.com/dorrabbkhan/Epiora/actions/runs/43272671408)
+  on `94bd873`, perf gate: `import_1m` median 71,593.2 ms ≤ 89,550,
+  `open_tables_1m` median 2,351.2 ms ≤ 2,874; desktop
+  [43272817786](https://github.com/dorrabbkhan/Epiora/actions/runs/43272817786)
+  on `5f493f1` (macOS leg re-run after a cancelled runner; Linux smoke
+  passed). Import, engine and spikes runs as listed in the release notes.
+- Assets: the six unsigned desktop bundles from desktop run 43272817786
+  (AppImage, deb, rpm, NSIS setup exe, msi, dmg) plus `SHA256SUMS.txt`,
+  collected by `scripts/release/collect-assets.sh`.
+- Production deploy: release run
+  [43285225716](https://github.com/dorrabbkhan/Epiora/actions/runs/43285225716)
+  (success), Netlify deploy `6af60e4f8b28b699a219a43f`
+  (<https://6af60e4f8b28b699a219a43f--epiora-dev.netlify.app>). The site
+  <https://epiora-dev.netlify.app> now holds its first production deploy,
+  superseding the "no production deploy until the first release" note in
+  the v0.3 Task 18 entry.
+- Post-release check: `scripts/release/verify-deploy.py
+  https://epiora-dev.netlify.app` reported 36 checks, 0 FAIL.
