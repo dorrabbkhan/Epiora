@@ -2441,7 +2441,10 @@ references read from the live site source and from
   separate from `two_by_two` because its output set is EI7's StatCalc block.
 - Excluded items: OpenEpi `Calculator/calculator.htm` (arithmetic calculator, not
   statistical); Home, Info/Help pages, Language/Settings and Searches
-  (navigation/documentation). No statistical menu item dropped.
+  (navigation/documentation); "Internet Links" (external links), "Download OpenEpi"
+  (download page) and the "Development" branch — Proposal, Toolkit Description,
+  Translations, JavaScript Tips (project documentation). No statistical menu item
+  dropped.
 - OpenEpi terms verdict: automated access is allowed — the site has no terms of
   service beyond the Licensing/Disclaimer page (quoted in the doc), which grants
   unrestricted use under MIT wording, and no robots.txt. Each page was fetched
@@ -2455,7 +2458,14 @@ references read from the live site source and from
   arbitrary confidence percentages in OpenEpi where spec §5.3 fixes Epiora's
   list at 90/95/99%.
 - R package list for Task 2 (`renv.lock`): `exactci` 1.4-5 (GPL-3), `exact2x2`
-  1.7.0 (GPL-3), `PropCIs` 0.3-0 (GPL), plus already-pinned `epitools` 0.5-10.1,
-  `epiR` 3.0.0, `DescTools` 0.99.60 and base `stats`. Methods without a published
-  R function are named as `fixtures/R/methods/*.R` functions with their
-  literature source (see the doc's "R packages" section).
+  1.7.0 (GPL-3), `PropCIs` 0.3-0 (DESCRIPTION states `GPL`; CRAN expands to
+  GPL-2 | GPL-3), plus already-pinned `epitools` 0.5-10.1, `epiR` 3.0.0 (renv
+  pin; CRAN now serves 3.0.1), `DescTools` 0.99.60 and base `stats`. Every
+  `pkg::fn` in the doc was verified with `exists()` in R at these versions
+  (output posted on PR #62). Mid-p in `exactci`/`exact2x2` is `midp=TRUE`, not
+  a `tsmethod` value. Each output row names exactly one method, one R reference
+  (or "no R reference" for trivial/input-echo statistics) and one tolerance
+  class. Methods without a published R function are named as
+  `fixtures/R/methods/*.R` functions with their literature source (see the
+  doc's "R packages" section). Two owner questions (confidence-level list vs
+  spec §5.3; 1:n matching scope) are recorded at the end of the doc.
