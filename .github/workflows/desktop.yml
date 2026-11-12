@@ -2,10 +2,12 @@ name: desktop
 
 # Desktop builds and smoke test (v0.3 plan Task 15, spec §10.1):
 # unsigned Tauri bundles uploaded as artifacts — Linux on every trigger,
-# Windows/macOS only on main pushes, manual runs and releases (owner
-# decision 2026-11-11) — plus a WebdriverIO smoke test inside the real
+# Windows/macOS only on main pushes and manual runs (owner decision
+# 2026-11-11) — plus a WebdriverIO smoke test inside the real
 # window on Linux (import fixture → TABLES → encrypted-store header
-# check).
+# check). Publishing a release does NOT trigger this workflow: release
+# bundles come from the main-push run at the tagged commit
+# (docs/releasing.md).
 #
 # The uploaded bundles are production-shaped: the smoke binary is a
 # separate `--no-bundle` rebuild over a VITE_TEST_HOOKS=1 dist, so no
@@ -69,8 +71,8 @@ jobs:
     defaults:
       run:
         shell: bash
-    # Windows/macOS bundle legs only do work on main pushes, manual runs
-    # and releases (owner decision 2026-11-11): a job-level `if` cannot
+    # Windows/macOS bundle legs only do work on main pushes and manual
+    # runs (owner decision 2026-11-11): a job-level `if` cannot
     # read the matrix (it is evaluated before the matrix expands), so
     # this per-leg flag skips every step on PRs for the non-ubuntu legs —
     # each leg is a fast no-op success whose log shows every step

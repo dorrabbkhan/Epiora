@@ -2271,6 +2271,59 @@ Decision: Two CI/test fixes on branch `ci/fix-perf-batch-keyboard-timeout`
   includes `src/**/*.test.{ts,tsx}`.
 Supersedes: —
 
+### Release checkpoint and helpers (2026-11-12)
+
+Decision: owner-requested release tooling ("release checkpoint doc +
+helpers + GitHub form values", 2026-11-12); not a plan task. Branch
+`docs/release-checkpoint`.
+
+- `docs/releasing.md` — the owner's checklist (Phases 0–6 plus
+  rollback and a filled-in values table for v0.3.0).
+- `scripts/release/checkpoint.sh <version>` — the Phase 1 gate: on
+  `main`, clean and up to date; all five app version fields equal the
+  release version while the engine workspace version is explicitly
+  left alone; tag/release still free; tag ruleset and its owner
+  bypass; every `[OWNER GATE]`/`[OWNER REVIEW]` PR merged;
+  `docs/validation/v<MM>.md` and the closing decisions.md entry
+  present; the latest completed main-push run of every push-triggered
+  workflow (app, desktop, import, engine, spikes) green on an ancestor
+  of HEAD with no changes under that workflow's path filter since;
+  the `perf` job's summary table read from its log; the three desktop
+  artifacts present and the Linux smoke step green on the *ubuntu*
+  matrix leg; Netlify secrets checked when the token can list them
+  (MANUAL fallback otherwise). Writes
+  `target/release/v<V>/{checkpoint.md,release-notes.md,ci.env}`; exit
+  1 on any FAIL.
+- `scripts/release/collect-assets.sh <version>` — refuses unless the
+  checkpoint ran with 0 FAILs; downloads the three desktop artifacts
+  of the checkpoint-verified run; copies installable bundles
+  (.AppImage/.deb/.rpm/.msi/.exe/.dmg) into
+  `target/release/v<V>/upload/` with `SHA256SUMS.txt`; refuses when a
+  bundle filename's version ≠ the release version; prints the exact
+  `gh release create/upload/edit` commands for the owner.
+- `scripts/release/verify-deploy.py <url>` (stdlib only) — post-deploy
+  checks: http→https redirect, `/` and `/index.html`, the SPA
+  fallback, every `app/public/_headers` rule (CSP exact; Cache-Control
+  compared without optional whitespace — Netlify re-serializes it),
+  `/sw.js` and `/manifest.webmanifest`, a full asset crawl from
+  index.html and the JS (every `.wasm` must be `application/wasm`),
+  no `VITE_TEST_HOOKS` in any JS, the `test hooks are disabled` canary
+  present. `--self-test` runs a compliant and a deliberately broken
+  fixture site in-process.
+- `scripts/tests/release.bats` — usage errors, the version-mismatch
+  path (in a temp repo via `--versions-only` and `--check-name`), the
+  FAIL-refusal and the verify-deploy self-test.
+- Comment fix: `.github/workflows/desktop.yml` claimed Windows/macOS
+  bundle legs run "on main pushes, manual runs and releases" — the
+  workflow has no `release:` trigger, so publishing a release builds
+  nothing; the comments now say "main pushes and manual runs" and note
+  that release bundles come from the main-push run at the tagged
+  commit. Comment only — no trigger or behaviour change.
+- The helpers are read-only towards GitHub and Netlify: they never
+  create a tag or release, never push, never upload assets, never
+  change settings. Tagging and publishing stay owner-only.
+Supersedes: —
+
 ### v0.3 Task 18 — v0.3 closed (Foundations proven)
 
 - v0.3 delivered every feature its spec's F-table lists (F1–F15,
