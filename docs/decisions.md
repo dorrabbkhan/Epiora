@@ -2553,6 +2553,9 @@ references read from the live site source and from
   runner, so the drift check is green again. Determinism verified: three
   consecutive `Rscript fixtures/generate.R` runs produced byte-identical
   fixtures otherwise.
+- Green fixtures workflow run (regeneration + schema validation + drift
+  check over all families):
+  https://github.com/dorrabbkhan/Epiora/actions/runs/43348086896
 - Generation: `Rscript fixtures/generate.R` run three times consecutively
   with no drift (`git status --porcelain fixtures/` unchanged after the
   second and third runs, tracked files only).
