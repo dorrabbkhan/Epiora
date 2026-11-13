@@ -53,41 +53,23 @@ test('parses a 2x2 block', () => {
   assert.equal(or.decimals, 4);
 });
 
-// The MEANS sections of the oswego.html produced by ei7.yml run
-// https://github.com/dorrabbkhan/Epiora/actions/runs/43498896712 (v1.0
-// Task 4 — the first dispatch of the oswego.pgm that gained
-// "MEANS AGE" and "MEANS AGE SEX"). Copied verbatim.
-const MEANS_SNIPPET = `<!DOCTYPE HTML>
-<html><body>
-<h3>MEANS AGE</h3><hr/><TABLE ALIGN=CENTER><TR class='Stats'><TD  class='Stats' ALIGN=CENTER>&nbsp;</TD><TD  class='Stats' ALIGN=CENTER>Obs</TD><TD class='Stats' ALIGN=CENTER>Total</TD> <TD class='Stats' ALIGN=CENTER>Mean</TD><TD class='Stats'>Variance</TD><TD class='Stats' ALIGN=CENTER>Std Dev</TD></TR><TR><TD  class='Stats' ALIGN=CENTER></TD><TD class='Stats' ALIGN=RIGHT>75.0000</TD><TD class='Stats' ALIGN=RIGHT>2761.0000</TD><TD class='Stats' ALIGN=RIGHT>36.8133</TD><TD class='Stats' ALIGN=RIGHT>460.1809</TD><TD class='Stats' ALIGN=RIGHT>21.4518</TD></TR></TABLE><TABLE ALIGN=CENTER><TR><TD class='Stats' ALIGN=CENTER>&nbsp;</TD><TD class='Stats' ALIGN=CENTER>Minimum</TD><TD class='Stats' ALIGN=CENTER>25%</TD><TD class='Stats' ALIGN=CENTER>Median</TD><TD class='Stats' ALIGN=CENTER>75%</TD><TD class='Stats' ALIGN=CENTER>Maximum</TD><TD class='Stats' ALIGN=CENTER>Mode</TD></TR><TR><TD  class='Stats' ALIGN=CENTER></TD><TD class='Stats' ALIGN=RIGHT>3.0000</TD><TD class='Stats' ALIGN=RIGHT>16.0000</TD><TD class='Stats' ALIGN=RIGHT>36.0000</TD><TD class='Stats' ALIGN=RIGHT>58.0000</TD><TD class='Stats' ALIGN=RIGHT>77.0000</TD><TD class='Stats' ALIGN=RIGHT>11.0000</TD></TR></TABLE><BR CLEAR=ALL/><a name="#Results4"></a>
-<h3>MEANS AGE SEX</h3><hr/><TABLE ALIGN=CENTER><TR class='Stats'><TH  class='Stats' ALIGN=CENTER colspan=6>Descriptive Statistics for Each Value of Crosstab Variable</TH></TR><TR class='Stats'><TD  class='Stats' ALIGN=CENTER>&nbsp;</TD><TD  class='Stats' ALIGN=CENTER>Obs</TD><TD class='Stats' ALIGN=CENTER>Total</TD> <TD class='Stats' ALIGN=CENTER>Mean</TD><TD class='Stats'>Variance</TD><TD class='Stats' ALIGN=CENTER>Std Dev</TD></TR><TR><TD  class='Stats' ALIGN=CENTER>Female</TD><TD class='Stats' ALIGN=RIGHT>44.0000</TD><TD class='Stats' ALIGN=RIGHT>1619.0000</TD><TD class='Stats' ALIGN=RIGHT>36.7955</TD><TD class='Stats' ALIGN=RIGHT>385.9339</TD><TD class='Stats' ALIGN=RIGHT>19.6452</TD></TR><TR><TD  class='Stats' ALIGN=CENTER>Male</TD><TD class='Stats' ALIGN=RIGHT>31.0000</TD><TD class='Stats' ALIGN=RIGHT>1142.0000</TD><TD class='Stats' ALIGN=RIGHT>36.8387</TD><TD class='Stats' ALIGN=RIGHT>581.9398</TD><TD class='Stats' ALIGN=RIGHT>24.1234</TD></TR></TABLE><TABLE ALIGN=CENTER><TR><TD  class='Stats' ALIGN=CENTER>&nbsp;</TD><TD class='Stats' ALIGN=CENTER>Minimum</TD><TD class='Stats' ALIGN=CENTER>25%</TD><TD class='Stats' ALIGN=CENTER>Median</TD><TD class='Stats' ALIGN=CENTER>75%</TD><TD class='Stats' ALIGN=CENTER>Maximum</TD><TD class='Stats' ALIGN=CENTER>Mode</TD></TR><TR><TD  class='Stats' ALIGN=CENTER>Female</TD><TD class='Stats' ALIGN=RIGHT>8.0000</TD><TD class='Stats' ALIGN=RIGHT>16.5000</TD><TD class='Stats' ALIGN=RIGHT>35.5000</TD><TD class='Stats' ALIGN=RIGHT>53.5000</TD><TD class='Stats' ALIGN=RIGHT>72.0000</TD><TD class='Stats' ALIGN=RIGHT>35.0000</TD></TR><TR><TD  class='Stats' ALIGN=CENTER>Male</TD><TD class='Stats' ALIGN=RIGHT>3.0000</TD><TD class='Stats' ALIGN=RIGHT>15.0000</TD><TD class='Stats' ALIGN=RIGHT>36.0000</TD><TD class='Stats' ALIGN=RIGHT>62.0000</TD><TD class='Stats' ALIGN=RIGHT>77.0000</TD><TD class='Stats' ALIGN=RIGHT>17.0000</TD></TR></TABLE><BR CLEAR=ALL/><BR><H4 ALIGN=CENTER>T-Test</H4>
-<TABLE ALIGN=CENTER><TR><TD Class='Stats'></TD><TD ALIGN=LEFT Class='Stats'>Method</TD><TD ALIGN=CENTER Class='Stats'>Mean</TD><TD ALIGN=CENTER Class='Stats' Colspan='2'>95% CL Mean</TD><TD Class='Stats'>Std Dev</TD></TR>
-<TR><TD Class='Stats'>Diff (Group 1 - Group 2)</TD><TD ALIGN=LEFT Class='Stats'>Pooled</TD><TD ALIGN=RIGHT Class='Stats'>-0.0433</TD><TD ALIGN=RIGHT Class='Stats'>-10.1369</TD><TD ALIGN=RIGHT Class='Stats'>10.0504</TD><TD ALIGN=RIGHT Class='Stats'>21.5982</TD></TR>
-<TR><TD Class='Stats'>Diff (Group 1 - Group 2)</TD><TD ALIGN=LEFT Class='Stats'>Satterthwaite</TD><TD ALIGN=RIGHT Class='Stats'>-0.0433</TD><TD ALIGN=RIGHT Class='Stats'>-10.5528</TD><TD ALIGN=RIGHT Class='Stats'>10.4663</TD><TD Class='Stats'></TD></TR>
-</TABLE><BR/>
-<TABLE ALIGN=CENTER><TR><TD Class='Stats'>Method</TD><TD ALIGN=CENTER Class='Stats'>Variances</TD><TD ALIGN=CENTER Class='Stats'>DF</TD><TD ALIGN=CENTER Class='Stats'>t Value</TD><TD Class='Stats'>Pr > |t|</TD></TR>
-<TR><TD Class='Stats'>Pooled</TD><TD ALIGN=LEFT Class='Stats'>Equal</TD><TD ALIGN=RIGHT Class='Stats'>73</TD><TD ALIGN=RIGHT Class='Stats'>-0.01</TD><TD ALIGN=RIGHT Class='Stats'>0.9932</TD></TR>
-<TR><TD Class='Stats'>Satterthwaite</TD><TD ALIGN=LEFT Class='Stats'>Unequal</TD><TD ALIGN=RIGHT Class='Stats'>56.05</TD><TD ALIGN=RIGHT Class='Stats'>-0.01</TD><TD ALIGN=RIGHT Class='Stats'>0.9935</TD></TR>
-</TABLE><BR/>
-<BR><H4 ALIGN=CENTER>ANOVA, a Parametric Test for Inequality of Population Means</H4>
-<P ALIGN=CENTER>(For normally distributed data only)</P>
-<TABLE ALIGN=CENTER><TR><TD Class='Stats'>Variation</TD><TD ALIGN=CENTER Class='Stats'>SS</TD><TD ALIGN=CENTER Class='Stats'>df</TD><TD ALIGN=CENTER Class='Stats'>MS</TD><TD Class='Stats'>F statistic</TD></TR>
-<TR><TD Class='Stats'>Between</TD><TD ALIGN=RIGHT Class='Stats'>0.03403</TD><TD ALIGN=RIGHT Class='Stats'>1</TD><TD ALIGN=RIGHT Class='Stats'>0.03403</TD><TD ALIGN=RIGHT Class='Stats'>0.00007</TD></TR>
-<TR><TD Class='Stats'>Within</TD><TD ALIGN=RIGHT Class='Stats'>34053.35264</TD><TD ALIGN=RIGHT Class='Stats'>73</TD><TD ALIGN=RIGHT Class='Stats'>466.48428</TD><TD Class='Stats'>&nbsp;</TD></TR>
-<TR><TD Class='Stats'>Total</TD><TD ALIGN=RIGHT Class='Stats'>34053.38667</TD><TD ALIGN=RIGHT Class='Stats'>74</TD><TD Class='Stats'>&nbsp;</TD><TD Class='Stats'>&nbsp;</TD></TR>
-</TABLE><BR/>
-<P ALIGN=CENTER>P-value = 0.99321</P><BR>
-<H4 ALIGN=CENTER> Bartlett's Test for Inequality of Population Variances</H4>
-<TABLE ALIGN=CENTER>
-<TR><TD Class='Stats'>Bartlett's chi square=</TD><TD Class='Stats'>1.49534</TD><TD Class='Stats'>df=1</TD><TD Class='Stats'>P value=0.22139</TD></TR>
-</TABLE><P ALIGN=CENTER>A small p-value (e.g., less than 0.05 suggests that the variances are not homogeneous and that the ANOVA may not be appropriate.</p>
-<H4 ALIGN=CENTER>Mann-Whitney/Wilcoxon Two-Sample Test (Kruskal-Wallis test for two groups)</H4>
-<TABLE ALIGN=CENTER>
-<TR><TD ALIGN=RIGHT Class='Stats'>Kruskal-Wallis H (equivalent to Chi square) = </TD><TD ALIGN=RIGHT Class='Stats'>0.0005</TD></TR>
-<TR><TD ALIGN=RIGHT Class='Stats'>  Degrees of freedom = </TD><TD ALIGN=RIGHT Class='Stats'>1</TD><TR><TD ALIGN=RIGHT Class='Stats'> P value = </TD><TD ALIGN=RIGHT Class='Stats'> 0.9828</TD></TR></TABLE>
-</body></html>`;
+// The MEANS excerpt is a byte-verbatim slice of the committed
+// fixtures/ei7/oswego.html — itself byte-identical (SHA-256 1a599aa2…)
+// to the ei7-output artifact of ei7.yml runs 43498896712 and
+// 43500418310 (v1.0 Task 4). Everything from the #Results3 anchor to
+// end of file is exactly the "MEANS AGE" and "MEANS AGE SEX" sections.
+// Slicing the committed file (rather than pasting a copy) keeps the
+// excerpt verbatim by construction; parses_means_blocks asserts the
+// substring property anyway.
+const OSWEGO_HTML = readFileSync(join(HERE, 'oswego.html'), 'utf8');
+const MEANS_START = OSWEGO_HTML.indexOf('<a name="#Results3"');
+const MEANS_EXCERPT = OSWEGO_HTML.slice(MEANS_START);
+const MEANS_SNIPPET = `<!DOCTYPE HTML>\n<html><body>\n${MEANS_EXCERPT}</body></html>`;
 
 test('parses_means_blocks', () => {
+  assert.ok(MEANS_START >= 0, 'no #Results3 anchor in fixtures/ei7/oswego.html');
+  assert.ok(OSWEGO_HTML.includes(MEANS_EXCERPT),
+    'the MEANS excerpt is not a byte-verbatim substring of fixtures/ei7/oswego.html');
   const { outputs } = parseHtml(MEANS_SNIPPET, labels);
   assert.equal(outputs.length, 2);
   assert.equal(outputs[0].command, 'MEANS AGE');
