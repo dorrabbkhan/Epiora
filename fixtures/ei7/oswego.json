@@ -1560,14 +1560,14 @@
           "text": "-10.5528",
           "value": -10.5528,
           "decimals": 4,
-          "key": "means.t_test.welch.diff_ci_95.lower"
+          "key": null
         },
         {
           "label": "T-Test: Diff (Group 1 - Group 2) 95% CL Mean (4)",
           "text": "10.4663",
           "value": 10.4663,
           "decimals": 4,
-          "key": "means.t_test.welch.diff_ci_95.upper"
+          "key": null
         },
         {
           "label": "T-Test: Pooled DF",
