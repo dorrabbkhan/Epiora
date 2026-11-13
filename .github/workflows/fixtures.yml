@@ -124,6 +124,16 @@ jobs:
             fixtures/tools/node_modules/.bin/ajv validate \
               -s fixtures/schema/import.schema.json -d "$f" || fail=1
           done
+          # fixtures/openepi/ is captured by openepi.yml, never regenerated
+          # here; its <id>.json outputs are validated against their own schema.
+          mapfile -d '' oefiles < <(find fixtures/openepi -maxdepth 1 -name '*.json' \
+            ! -name 'cases.json' ! -name 'labels.json' \
+            ! -name 'package.json' ! -name 'package-lock.json' -print0 2>/dev/null)
+          for f in "${oefiles[@]:-}"; do
+            [ -n "$f" ] || continue
+            fixtures/tools/node_modules/.bin/ajv validate \
+              -s fixtures/schema/openepi.schema.json -d "$f" || fail=1
+          done
           if [ "$fail" -ne 0 ]; then
             echo "ERROR: fixture validation failed" >&2
             exit 1
@@ -135,8 +145,10 @@ jobs:
 
       - name: No fixture drift after regeneration
         run: |
-          git diff --exit-code fixtures/
-          status="$(git status --porcelain --untracked-files=all -- fixtures/)"
+          # fixtures/openepi is produced by openepi.yml, not by generate.R;
+          # regeneration must not touch it and its own workflow checks drift.
+          git diff --exit-code -- fixtures/ ':(exclude)fixtures/openepi'
+          status="$(git status --porcelain --untracked-files=all -- fixtures/ ':(exclude)fixtures/openepi')"
           if [ -n "$status" ]; then
             echo "ERROR: regeneration left uncommitted changes under fixtures/:" >&2
             echo "$status" >&2

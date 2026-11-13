@@ -2723,3 +2723,27 @@ from v1.0). First pilot: an FETP or health department with legacy Epi Info data.
 phone collection and earlier fr/es/pt are answered by v1.3 and v1.6.
 Evidence: docs/research/d9-competitor-scan.md, "User signals" (r/epidemiology thread, pasted by the owner).
 Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 content.
+
+### v1.0 Task 3 — OpenEpi reference capture (2026-11-13)
+- OpenEpi version 3.01 (openepi.com). Terms: the Task 1 entry records automated access as allowed
+  (MIT-worded Licensing/Disclaimer page, no robots.txt, no prohibiting ToS), so the plan's human-step
+  STOP does not apply. Capture is polite: one page at a time, >=2 s between cases.
+- `cases.json`: 79 cases whose ids equal the Task 2 `fixtures/calc/<id>/<case>.json` ids for the 20
+  calculators OpenEpi can represent. `binomial`, `poisson`, `two_by_n` and `random_numbers` have no
+  OpenEpi page, so they are absent from the OpenEpi reference; their R fixtures still govern.
+- `labels.json`: 415 emitted labels, 178 mapped to canonical `calc.<id>.<path>` statistic ids; the
+  rest are `null` — input echoes, or labels identical across stratum and combined sections where the
+  flat label cannot disambiguate (recorded "shown but not compared" per spec §9).
+- Tooling: Playwright 1.65.0, latest release at task time, licence Apache-2.0 per its package
+  metadata, pinned in `fixtures/openepi/package-lock.json`; Chromium only.
+- `captured_at` is preserved across reruns so a no-drift rerun is byte-identical (ei7.yml precedent);
+  output files are produced only by openepi.yml and are never hand-edited.
+- Notes: `.github/workflows/openepi.yml` carries a temporary `push` trigger on this branch so the
+  workflow can run before it exists on the default branch (v0.2 Task 3 precedent); it is removed
+  before the PR is final, leaving `workflow_dispatch` + a monthly schedule.
+- Producing run: PENDING — filled in with the run URL that produced the committed output.
+- Files outside the Files block: `.github/workflows/fixtures.yml` (schema-validates the new family
+  and excludes `fixtures/openepi` from the generate.R drift check — otherwise regeneration flags a
+  family it does not own); `fixtures/openepi/drivers.mjs` (per-page input driving/validation —
+  capture.mjs stays the runner); `fixtures/openepi/package.json` and `package-lock.json` (pin the
+  required latest Playwright for this fixture tool only).

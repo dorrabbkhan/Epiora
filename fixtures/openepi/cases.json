@@ -1,0 +1,1317 @@
+[
+  {
+    "calculator": "proportion",
+    "case": "textbook",
+    "inputs": {
+      "numerator": 10,
+      "denominator": 45,
+      "conf_level": 95,
+      "multiplier": 100,
+      "population_size": 1000000,
+      "compare_with": 50
+    }
+  },
+  {
+    "calculator": "proportion",
+    "case": "all_positive",
+    "inputs": {
+      "numerator": 40,
+      "denominator": 40,
+      "conf_level": 95,
+      "multiplier": 100,
+      "population_size": 1000000,
+      "compare_with": 50
+    }
+  },
+  {
+    "calculator": "proportion",
+    "case": "finite_population",
+    "inputs": {
+      "numerator": 30,
+      "denominator": 100,
+      "conf_level": 95,
+      "multiplier": 100,
+      "population_size": 500,
+      "compare_with": 35
+    }
+  },
+  {
+    "calculator": "proportion",
+    "case": "large",
+    "inputs": {
+      "numerator": 60000,
+      "denominator": 100000,
+      "conf_level": 95,
+      "multiplier": 100,
+      "population_size": 0
+    }
+  },
+  {
+    "calculator": "proportion",
+    "case": "zero_numerator",
+    "inputs": {
+      "numerator": 0,
+      "denominator": 40,
+      "conf_level": 95,
+      "multiplier": 100,
+      "population_size": 1000000
+    }
+  },
+  {
+    "calculator": "two_by_two",
+    "case": "textbook",
+    "inputs": {
+      "strata": [
+        [
+          [
+            10,
+            11
+          ],
+          [
+            4,
+            20
+          ]
+        ]
+      ],
+      "conf_level": 95,
+      "study_type": "cohort"
+    }
+  },
+  {
+    "calculator": "two_by_two",
+    "case": "zero_cell",
+    "inputs": {
+      "strata": [
+        [
+          [
+            0,
+            15
+          ],
+          [
+            8,
+            30
+          ]
+        ]
+      ],
+      "conf_level": 95,
+      "study_type": "cohort"
+    }
+  },
+  {
+    "calculator": "two_by_two",
+    "case": "zero_event",
+    "inputs": {
+      "strata": [
+        [
+          [
+            0,
+            10
+          ],
+          [
+            5,
+            20
+          ]
+        ],
+        [
+          [
+            0,
+            15
+          ],
+          [
+            8,
+            30
+          ]
+        ]
+      ],
+      "conf_level": 95,
+      "study_type": "cohort"
+    }
+  },
+  {
+    "calculator": "two_by_two",
+    "case": "support_max",
+    "inputs": {
+      "strata": [
+        [
+          [
+            10,
+            0
+          ],
+          [
+            5,
+            20
+          ]
+        ],
+        [
+          [
+            15,
+            0
+          ],
+          [
+            8,
+            30
+          ]
+        ]
+      ],
+      "conf_level": 95,
+      "study_type": "cohort"
+    }
+  },
+  {
+    "calculator": "two_by_two",
+    "case": "one_inside_boundary",
+    "inputs": {
+      "strata": [
+        [
+          [
+            1,
+            50
+          ],
+          [
+            10,
+            200
+          ]
+        ],
+        [
+          [
+            0,
+            10
+          ],
+          [
+            5,
+            25
+          ]
+        ]
+      ],
+      "conf_level": 95,
+      "study_type": "cohort"
+    }
+  },
+  {
+    "calculator": "two_by_two",
+    "case": "case_control",
+    "inputs": {
+      "strata": [
+        [
+          [
+            40,
+            20
+          ],
+          [
+            15,
+            45
+          ]
+        ]
+      ],
+      "conf_level": 95,
+      "study_type": "case_control"
+    }
+  },
+  {
+    "calculator": "two_by_two",
+    "case": "stratified",
+    "inputs": {
+      "strata": [
+        [
+          [
+            30,
+            70
+          ],
+          [
+            10,
+            90
+          ]
+        ],
+        [
+          [
+            5,
+            15
+          ],
+          [
+            20,
+            60
+          ]
+        ],
+        [
+          [
+            8,
+            12
+          ],
+          [
+            3,
+            25
+          ]
+        ]
+      ],
+      "conf_level": 95,
+      "study_type": "cohort"
+    }
+  },
+  {
+    "calculator": "two_by_two",
+    "case": "large",
+    "inputs": {
+      "strata": [
+        [
+          [
+            4000,
+            6000
+          ],
+          [
+            2500,
+            7500
+          ]
+        ]
+      ],
+      "conf_level": 99,
+      "study_type": "cohort"
+    }
+  },
+  {
+    "calculator": "two_by_two",
+    "case": "large_counts",
+    "inputs": {
+      "strata": [
+        [
+          [
+            1000000,
+            500
+          ],
+          [
+            2000000,
+            500
+          ]
+        ],
+        [
+          [
+            1000000,
+            500
+          ],
+          [
+            2000000,
+            500
+          ]
+        ]
+      ],
+      "conf_level": 95,
+      "study_type": "cohort"
+    }
+  },
+  {
+    "calculator": "dose_response",
+    "case": "textbook",
+    "inputs": {
+      "table": [
+        [
+          [
+            0,
+            50,
+            100
+          ],
+          [
+            1,
+            40,
+            90
+          ],
+          [
+            2,
+            30,
+            80
+          ],
+          [
+            3,
+            20,
+            70
+          ]
+        ]
+      ],
+      "strata": 1
+    }
+  },
+  {
+    "calculator": "dose_response",
+    "case": "decreasing",
+    "inputs": {
+      "table": [
+        [
+          [
+            0,
+            40,
+            60
+          ],
+          [
+            1,
+            25,
+            65
+          ],
+          [
+            2,
+            12,
+            68
+          ],
+          [
+            3,
+            0,
+            70
+          ]
+        ]
+      ],
+      "strata": 1
+    }
+  },
+  {
+    "calculator": "dose_response",
+    "case": "stratified",
+    "inputs": {
+      "table": [
+        [
+          [
+            0,
+            20,
+            40
+          ],
+          [
+            1,
+            25,
+            35
+          ],
+          [
+            2,
+            30,
+            30
+          ]
+        ],
+        [
+          [
+            0,
+            10,
+            50
+          ],
+          [
+            1,
+            15,
+            45
+          ],
+          [
+            2,
+            20,
+            40
+          ]
+        ]
+      ],
+      "strata": 2
+    }
+  },
+  {
+    "calculator": "dose_response",
+    "case": "large",
+    "inputs": {
+      "table": [
+        [
+          [
+            0,
+            1000,
+            2000
+          ],
+          [
+            1,
+            1500,
+            1800
+          ],
+          [
+            2,
+            2000,
+            1500
+          ],
+          [
+            3,
+            2500,
+            1200
+          ]
+        ]
+      ],
+      "strata": 1
+    }
+  },
+  {
+    "calculator": "r_by_c",
+    "case": "textbook",
+    "inputs": {
+      "table": [
+        [
+          10,
+          20,
+          15
+        ],
+        [
+          5,
+          30,
+          25
+        ]
+      ]
+    }
+  },
+  {
+    "calculator": "r_by_c",
+    "case": "sparse",
+    "inputs": {
+      "table": [
+        [
+          1,
+          0,
+          2,
+          3,
+          0
+        ],
+        [
+          1,
+          4,
+          2,
+          1,
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "calculator": "r_by_c",
+    "case": "large",
+    "inputs": {
+      "table": [
+        [
+          200,
+          150,
+          400,
+          300
+        ],
+        [
+          50,
+          350,
+          600,
+          100
+        ]
+      ]
+    }
+  },
+  {
+    "calculator": "matched_case_control",
+    "case": "textbook",
+    "inputs": {
+      "controls_per_case": 1,
+      "matched_sets": [
+        [
+          30,
+          8
+        ],
+        [
+          3,
+          60
+        ]
+      ],
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "matched_case_control",
+    "case": "few_discordant",
+    "inputs": {
+      "controls_per_case": 1,
+      "matched_sets": [
+        [
+          15,
+          4
+        ],
+        [
+          2,
+          20
+        ]
+      ],
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "screening",
+    "case": "textbook",
+    "inputs": {
+      "table": [
+        [
+          80,
+          40
+        ],
+        [
+          20,
+          360
+        ]
+      ],
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "screening",
+    "case": "boundary",
+    "inputs": {
+      "table": [
+        [
+          50,
+          0
+        ],
+        [
+          50,
+          200
+        ]
+      ],
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "screening",
+    "case": "multi_level",
+    "inputs": {
+      "table": [
+        [
+          60,
+          15
+        ],
+        [
+          15,
+          10
+        ],
+        [
+          10,
+          35
+        ],
+        [
+          15,
+          340
+        ]
+      ],
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "smr",
+    "case": "textbook",
+    "inputs": {
+      "observed": 50,
+      "expected": 36,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "smr",
+    "case": "boundary_low",
+    "inputs": {
+      "observed": 2,
+      "expected": 4.5,
+      "conf_level": 90
+    }
+  },
+  {
+    "calculator": "smr",
+    "case": "large",
+    "inputs": {
+      "observed": 500,
+      "expected": 400,
+      "conf_level": 99
+    }
+  },
+  {
+    "calculator": "rate_one",
+    "case": "textbook",
+    "inputs": {
+      "cases": 25,
+      "person_time": 5000,
+      "per_unit": 1000,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "rate_one",
+    "case": "boundary",
+    "inputs": {
+      "cases": 2,
+      "person_time": 1200,
+      "per_unit": 10000,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "rate_one",
+    "case": "large",
+    "inputs": {
+      "cases": 4000,
+      "person_time": 2000000,
+      "per_unit": 100000,
+      "conf_level": 99
+    }
+  },
+  {
+    "calculator": "rate_compare",
+    "case": "textbook",
+    "inputs": {
+      "strata": [
+        [
+          [
+            40,
+            20
+          ],
+          [
+            5000,
+            4000
+          ]
+        ]
+      ],
+      "per_unit": 1000,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "rate_compare",
+    "case": "boundary",
+    "inputs": {
+      "strata": [
+        [
+          [
+            10,
+            20
+          ],
+          [
+            1000,
+            2000
+          ]
+        ]
+      ],
+      "per_unit": 1000,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "rate_compare",
+    "case": "zero_event",
+    "inputs": {
+      "strata": [
+        [
+          [
+            0,
+            20
+          ],
+          [
+            1000,
+            2000
+          ]
+        ]
+      ],
+      "per_unit": 1000,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "rate_compare",
+    "case": "support_max",
+    "inputs": {
+      "strata": [
+        [
+          [
+            20,
+            0
+          ],
+          [
+            1000,
+            2000
+          ]
+        ]
+      ],
+      "per_unit": 1000,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "rate_compare",
+    "case": "one_inside_boundary",
+    "inputs": {
+      "strata": [
+        [
+          [
+            1,
+            20
+          ],
+          [
+            1000,
+            2000
+          ]
+        ]
+      ],
+      "per_unit": 1000,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "rate_compare",
+    "case": "stratified",
+    "inputs": {
+      "strata": [
+        [
+          [
+            30,
+            10
+          ],
+          [
+            2000,
+            1500
+          ]
+        ],
+        [
+          [
+            50,
+            40
+          ],
+          [
+            3000,
+            5000
+          ]
+        ]
+      ],
+      "per_unit": 10000,
+      "conf_level": 90
+    }
+  },
+  {
+    "calculator": "rate_compare",
+    "case": "large",
+    "inputs": {
+      "strata": [
+        [
+          [
+            400,
+            200
+          ],
+          [
+            80000,
+            90000
+          ]
+        ]
+      ],
+      "per_unit": 10000,
+      "conf_level": 99
+    }
+  },
+  {
+    "calculator": "rate_compare",
+    "case": "large_counts",
+    "inputs": {
+      "strata": [
+        [
+          [
+            1000000,
+            200000
+          ],
+          [
+            4000000,
+            1000000
+          ]
+        ]
+      ],
+      "per_unit": 1000,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "mean_ci",
+    "case": "textbook",
+    "inputs": {
+      "mean": 10.5,
+      "sd_or": "sd",
+      "sd_value": 2.5,
+      "n": 25,
+      "population_size": 999999999,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "mean_ci",
+    "case": "se_input",
+    "inputs": {
+      "mean": 10.5,
+      "sd_or": "se",
+      "sd_value": 0.5,
+      "n": 25,
+      "population_size": 999999999,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "mean_ci",
+    "case": "variance_input",
+    "inputs": {
+      "mean": 10.5,
+      "sd_or": "variance",
+      "sd_value": 6.25,
+      "n": 25,
+      "population_size": 250,
+      "conf_level": 90
+    }
+  },
+  {
+    "calculator": "median_ci",
+    "case": "median",
+    "inputs": {
+      "n": 25,
+      "percentile": 50,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "median_ci",
+    "case": "p25",
+    "inputs": {
+      "n": 100,
+      "percentile": 25,
+      "conf_level": 90
+    }
+  },
+  {
+    "calculator": "median_ci",
+    "case": "boundary",
+    "inputs": {
+      "n": 30,
+      "percentile": 5,
+      "conf_level": 95
+    }
+  },
+  {
+    "calculator": "median_ci",
+    "case": "large",
+    "inputs": {
+      "n": 5000,
+      "percentile": 75,
+      "conf_level": 99
+    }
+  },
+  {
+    "calculator": "t_test_summary",
+    "case": "textbook",
+    "inputs": {
+      "conf_level": 95,
+      "n_1": 25,
+      "mean_1": 10.5,
+      "sd_1": 2.5,
+      "n_2": 30,
+      "mean_2": 8.5,
+      "sd_2": 3
+    }
+  },
+  {
+    "calculator": "t_test_summary",
+    "case": "equal_n",
+    "inputs": {
+      "conf_level": 99,
+      "n_1": 20,
+      "mean_1": 100,
+      "sd_1": 10,
+      "n_2": 20,
+      "mean_2": 95,
+      "sd_2": 12
+    }
+  },
+  {
+    "calculator": "t_test_summary",
+    "case": "boundary",
+    "inputs": {
+      "conf_level": 95,
+      "n_1": 2,
+      "mean_1": 10.5,
+      "sd_1": 3,
+      "n_2": 30,
+      "mean_2": 8.5,
+      "sd_2": 4
+    }
+  },
+  {
+    "calculator": "t_test_summary",
+    "case": "large",
+    "inputs": {
+      "conf_level": 99,
+      "n_1": 5000,
+      "mean_1": 100.2,
+      "sd_1": 15,
+      "n_2": 4500,
+      "mean_2": 99.8,
+      "sd_2": 16
+    }
+  },
+  {
+    "calculator": "anova_summary",
+    "case": "textbook",
+    "inputs": {
+      "table": [
+        [
+          10,
+          5,
+          1.5
+        ],
+        [
+          12,
+          7.5,
+          2
+        ],
+        [
+          8,
+          6,
+          1.2
+        ]
+      ]
+    }
+  },
+  {
+    "calculator": "anova_summary",
+    "case": "two_groups",
+    "inputs": {
+      "table": [
+        [
+          15,
+          50,
+          5
+        ],
+        [
+          15,
+          55,
+          6
+        ]
+      ]
+    }
+  },
+  {
+    "calculator": "anova_summary",
+    "case": "small_group",
+    "inputs": {
+      "table": [
+        [
+          2,
+          5,
+          1
+        ],
+        [
+          25,
+          6.5,
+          1.8
+        ],
+        [
+          30,
+          7,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "calculator": "anova_summary",
+    "case": "large",
+    "inputs": {
+      "table": [
+        [
+          2000,
+          50.1,
+          4.9
+        ],
+        [
+          2000,
+          51.2,
+          5.1
+        ],
+        [
+          2000,
+          49.8,
+          5
+        ],
+        [
+          2000,
+          50.5,
+          5.2
+        ],
+        [
+          2000,
+          50,
+          4.8
+        ],
+        [
+          2000,
+          50.9,
+          5
+        ]
+      ]
+    }
+  },
+  {
+    "calculator": "ss_proportion",
+    "case": "textbook",
+    "inputs": {
+      "population_size": 1000000,
+      "expected_freq": 50,
+      "margin_error": 5,
+      "design_effect": 1,
+      "clusters": 1
+    }
+  },
+  {
+    "calculator": "ss_proportion",
+    "case": "small_population",
+    "inputs": {
+      "population_size": 350,
+      "expected_freq": 50,
+      "margin_error": 5,
+      "design_effect": 1,
+      "clusters": 1
+    }
+  },
+  {
+    "calculator": "ss_proportion",
+    "case": "large",
+    "inputs": {
+      "population_size": 10000000,
+      "expected_freq": 10,
+      "margin_error": 1,
+      "design_effect": 1,
+      "clusters": 1
+    }
+  },
+  {
+    "calculator": "ss_proportion",
+    "case": "clustered",
+    "inputs": {
+      "population_size": 5000,
+      "expected_freq": 30,
+      "margin_error": 5,
+      "design_effect": 1.8,
+      "clusters": 25
+    }
+  },
+  {
+    "calculator": "ss_unmatched_cc",
+    "case": "odds_ratio_input",
+    "inputs": {
+      "conf_level": 95,
+      "power": 80,
+      "ratio_controls_per_case": 1,
+      "percent_controls_exposed": 40,
+      "odds_ratio": 2
+    }
+  },
+  {
+    "calculator": "ss_unmatched_cc",
+    "case": "percent_input",
+    "inputs": {
+      "conf_level": 95,
+      "power": 80,
+      "ratio_controls_per_case": 2,
+      "percent_controls_exposed": 25,
+      "percent_cases_exposed": 40
+    }
+  },
+  {
+    "calculator": "ss_unmatched_cc",
+    "case": "power_90",
+    "inputs": {
+      "conf_level": 90,
+      "power": 90,
+      "ratio_controls_per_case": 1,
+      "percent_controls_exposed": 30,
+      "odds_ratio": 2.5
+    }
+  },
+  {
+    "calculator": "ss_cohort",
+    "case": "odds_ratio_input",
+    "inputs": {
+      "conf_level": 95,
+      "power": 80,
+      "ratio_unexposed_per_exposed": 1,
+      "percent_unexposed_outcome": 5,
+      "odds_ratio": 2
+    }
+  },
+  {
+    "calculator": "ss_cohort",
+    "case": "percent_input",
+    "inputs": {
+      "conf_level": 95,
+      "power": 80,
+      "ratio_unexposed_per_exposed": 1,
+      "percent_unexposed_outcome": 5,
+      "percent_exposed_outcome": 10
+    }
+  },
+  {
+    "calculator": "ss_cohort",
+    "case": "risk_ratio_input",
+    "inputs": {
+      "conf_level": 95,
+      "power": 80,
+      "ratio_unexposed_per_exposed": 1,
+      "percent_unexposed_outcome": 5,
+      "risk_ratio": 2
+    }
+  },
+  {
+    "calculator": "ss_cohort",
+    "case": "risk_difference_input",
+    "inputs": {
+      "conf_level": 95,
+      "power": 80,
+      "ratio_unexposed_per_exposed": 2,
+      "percent_unexposed_outcome": 20,
+      "risk_difference": 10
+    }
+  },
+  {
+    "calculator": "ss_mean_difference",
+    "case": "textbook",
+    "inputs": {
+      "conf_level": 95,
+      "power": 80,
+      "ratio": 1,
+      "difference": 5,
+      "sd_1": 10,
+      "sd_2": 10
+    }
+  },
+  {
+    "calculator": "ss_mean_difference",
+    "case": "small_effect",
+    "inputs": {
+      "conf_level": 95,
+      "power": 80,
+      "ratio": 1,
+      "difference": 0.5,
+      "sd_1": 10,
+      "sd_2": 12
+    }
+  },
+  {
+    "calculator": "ss_mean_difference",
+    "case": "high_power",
+    "inputs": {
+      "conf_level": 99,
+      "power": 99,
+      "ratio": 2,
+      "difference": 5,
+      "sd_1": 10,
+      "sd_2": 12
+    }
+  },
+  {
+    "calculator": "power_unmatched_cc",
+    "case": "textbook",
+    "inputs": {
+      "conf_level": 95,
+      "n_cases": 100,
+      "n_controls": 150,
+      "percent_cases_exposed": 50,
+      "percent_controls_exposed": 30
+    }
+  },
+  {
+    "calculator": "power_unmatched_cc",
+    "case": "rare_exposure",
+    "inputs": {
+      "conf_level": 95,
+      "n_cases": 200,
+      "n_controls": 400,
+      "percent_cases_exposed": 30,
+      "percent_controls_exposed": 10
+    }
+  },
+  {
+    "calculator": "power_unmatched_cc",
+    "case": "small_effect",
+    "inputs": {
+      "conf_level": 95,
+      "n_cases": 100,
+      "n_controls": 150,
+      "percent_cases_exposed": 31,
+      "percent_controls_exposed": 30
+    }
+  },
+  {
+    "calculator": "power_unmatched_cc",
+    "case": "large",
+    "inputs": {
+      "conf_level": 99,
+      "n_cases": 5000,
+      "n_controls": 10000,
+      "percent_cases_exposed": 45,
+      "percent_controls_exposed": 30
+    }
+  },
+  {
+    "calculator": "power_cohort",
+    "case": "cohort",
+    "inputs": {
+      "design": "cohort",
+      "conf_level": 95,
+      "n_exposed": 200,
+      "n_unexposed": 400,
+      "percent_exposed_outcome": 10,
+      "percent_unexposed_outcome": 5
+    }
+  },
+  {
+    "calculator": "power_cohort",
+    "case": "rct",
+    "inputs": {
+      "design": "rct",
+      "conf_level": 95,
+      "n_exposed": 150,
+      "n_unexposed": 150,
+      "percent_exposed_outcome": 30,
+      "percent_unexposed_outcome": 20
+    }
+  },
+  {
+    "calculator": "power_cohort",
+    "case": "cross_sectional",
+    "inputs": {
+      "design": "cross_sectional",
+      "conf_level": 95,
+      "n_exposed": 300,
+      "n_unexposed": 300,
+      "percent_exposed_outcome": 40,
+      "percent_unexposed_outcome": 30
+    }
+  },
+  {
+    "calculator": "power_mean_difference",
+    "case": "textbook",
+    "inputs": {
+      "conf_level": 95,
+      "n_1": 50,
+      "n_2": 50,
+      "difference": 5,
+      "sd_1": 10,
+      "sd_2": 10
+    }
+  },
+  {
+    "calculator": "power_mean_difference",
+    "case": "small_effect",
+    "inputs": {
+      "conf_level": 95,
+      "n_1": 30,
+      "n_2": 30,
+      "difference": 0.5,
+      "sd_1": 10,
+      "sd_2": 10
+    }
+  },
+  {
+    "calculator": "power_mean_difference",
+    "case": "large",
+    "inputs": {
+      "conf_level": 99,
+      "n_1": 5000,
+      "n_2": 6000,
+      "difference": 2,
+      "sd_1": 10,
+      "sd_2": 12
+    }
+  }
+]
