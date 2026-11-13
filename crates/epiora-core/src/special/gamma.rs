@@ -202,6 +202,11 @@ fn pd_lower_series(lambda: f64, mut y: f64) -> f64 {
     sum
 }
 
+/// `P(a, x)` for the §4.1 quantile solvers — `inc_gamma_lower` itself.
+pub(crate) fn reg_inc_gamma_lower(a: f64, x: f64) -> f64 {
+    inc_gamma_lower(a, x)
+}
+
 /// `pgamma_raw(x, a, lower_tail = TRUE, log_p = FALSE)` — the lower
 /// tail as R's `pgamma` computes it (nmath `pgamma.c` branch for
 /// branch). The "x large" region is a verbatim port: it returns

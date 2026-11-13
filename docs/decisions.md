@@ -3030,3 +3030,39 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   pure functions — parsing, emissions, scaling, compare — required by the tests-ship-with-code
   rule); `fixtures/openepi/package.json` and `package-lock.json` (pin the required latest
   Playwright for this fixture tool only).
+
+### v1.0 Task 5 — special functions (t, F, gamma/chi-square quantiles, Poisson tails, binomial quantile)
+
+- Grid tests replaced (owner decision 2026-11-13, option a): the seven
+  `special.*` grids were deferred out of Task 2 because they break the
+  corpus gate before the runner knows the names, and the fixture guard
+  forbids `fixtures/` in a `crates/` PR. This PR therefore replaces the
+  plan's `*_matches_grid` tests with `*_matches_reference` tests whose
+  values come from a single `Rscript -e` command (R 4.6.2 `pt`, `qt`,
+  `pf(lower.tail=FALSE)`, `qgamma`, `qchisq`, `ppois`, `qbinom`), quoted
+  verbatim in a comment block at the top of the section in
+  `crates/epiora-core/tests/special.rs`. Tolerances are the plan's
+  classes only: closed-form 1e-9 relative, root-found quantiles 1e-6
+  (rule E7), `binomial_quantile` exact; plus the plan's proptests
+  `t_quantile_symmetry` (1e-9 relative) and `poisson_tail_complements`
+  (1e-12 absolute). The follow-up fixtures-only PR adds
+  `fixtures/R/special.R` and the generated `fixtures/special/*.json`
+  grids (OWNER REVIEW); `run_special.rs` already accepts all eight new
+  names (`t_cdf`, `t_sf`, `t_quantile`, `f_sf`, `gamma_quantile`,
+  `chisq_quantile`, `poisson_tail`, `binomial_quantile`) in the
+  `inputs.grid` shape that script emits, verified by an in-memory
+  dispatch test, so that PR needs no `crates/` change.
+- Implementation notes: quantile solvers run Brent in shifted log
+  coordinates (`v = ln x − u_est`); the root then sits near 0 where
+  `brent_root`'s absolute 1e-14 tolerance is reachable — at |ln x| ≳ 45
+  the ulp alone exceeds it. `t_quantile` inverts the beta relation via
+  `beta_quantile` with a residual check and log-space fallback.
+  `t_quantile(0.5, df)` returns the exact median 0; the reference table
+  uses 0 rather than R's printed Newton residual 2.57e-16 for
+  `qt(0.5, 0.5)` (noted in the test table). `binomial_quantile` resolves
+  `p ≤ 0`/`p ≥ 1` before the degenerate `prob` cases, matching
+  `qbinom(1, 10, 0) = 10`. `poisson_tail(upper)` encodes `P(X ≥ k)`
+  (`ppois(k−1, λ, lower.tail=FALSE)`), the corpus numeric-`upper`
+  convention.
+- Files outside the Files block: `docs/decisions.md` (this entry, as the
+  owner note requires).
