@@ -2808,8 +2808,13 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   committed artifact byte-for-byte; only the drift step failed because the remapped output was not
   yet committed) and https://github.com/dorrabbkhan/Epiora/actions/runs/43449861312 (green:
   capture, schema validation, drift check — regenerated output byte-identical to the committed
-  reference). `--compare-r` on the committed corpus: `ok 949 mismatch 303 unresolved 0
-  no-r-counterpart 1 r-null 30`, exit 0.
+  reference). Round 3: https://github.com/dorrabbkhan/Epiora/actions/runs/43471843290 (capture
+  produced the committed `proportion.json` byte-for-byte — the only changed output; only the drift
+  step failed because the regenerated output was not yet committed) and
+  https://github.com/dorrabbkhan/Epiora/actions/runs/43473532537 (green: capture, schema
+  validation, drift check — regenerated output byte-identical to the committed reference; the
+  input guard held on all 79 cases). `--compare-r` on the committed corpus: `ok 949 mismatch 303
+  unresolved 0 no-r-counterpart 0 r-null 30`, exit 0.
 - Files outside the Files block: `.github/workflows/fixtures.yml` (schema-validates the new family
   and excludes `fixtures/openepi` from the generate.R drift check — otherwise regeneration flags a
   family it does not own); `fixtures/openepi/drivers.mjs` (per-page input driving/validation —

@@ -11,7 +11,6 @@ name: openepi
 # Task 3 (ei7.yml) precedent in docs/decisions.md.
 
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron: '0 7 1 * *' # monthly, 1st 07:00 UTC
