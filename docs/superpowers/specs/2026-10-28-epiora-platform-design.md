@@ -1,6 +1,7 @@
 # Epiora — platform design and roadmap
 
 **Status:** draft for owner review · **Date:** 2026-10-28 · **Owner:** Dorrabb
+**Revised:** 2026-11-13 roadmap review: user signals ([D9 scan, user signals](../../research/d9-competitor-scan.md#user-signals-repidemiology-thread-added-2026-11-13)), Phase 1 reordered (§14), v1.0 renumbering applied.
 **Name:** Epiora (chosen 2026-10-28; formal trademark clearance is open decision D1, §17).
 
 This is the platform-level spec: intent, decisions, architecture, modules, integrations,
@@ -30,8 +31,9 @@ It must be monetizable.
 **Assumptions (correct these if wrong).**
 - The NeoPhylo engineering discipline (reference corpus, never-loosened tolerances, fuzzing,
   owner gates) applies unchanged.
-- The owner will recruit at least one epidemiologist adviser before v1.0 ships.
-- English first; localization later (v4.3).
+- The owner recruits at least one epidemiologist adviser, preferably from field epidemiology (an FETP, a
+  ministry or a health department); v1.0 ships as a pre-release with sign-off pending (v1.0 spec G5).
+- English first; French, Spanish and Portuguese at v1.6; other languages later (v4.3).
 
 ## 2. Context
 
@@ -68,7 +70,7 @@ StatCalc and AnthStat (child growth), plus data packaging and import/export tool
 - Replacing R or Stata for advanced statisticians; we bridge to them instead.
 
 **Success criteria by milestone.**
-- *Parity (after v1.5):* every Classic Analysis command in the parity list (§8.3) matches Epi Info
+- *Parity (after v1.6):* every Classic Analysis command in the parity list (§8.3) matches Epi Info
   7 and R on the reference corpus; the CDC sample projects import and their scripts run
   unchanged; the open app is listed as a Digital Public Good candidate.
 - *Field-ready (after v2.5):* paying Team customers (NGOs or health departments) in at least
@@ -81,14 +83,19 @@ StatCalc and AnthStat (child growth), plus data packaging and import/export tool
 
 | Segment | Needs | Enters at |
 |---|---|---|
-| Students, instructors, individual epidemiologists | Free, offline, explainable analysis; Epi Info replacement | v1.0 |
-| Researchers | Reproducibility, REDCap, exports to R/Stata | v1.0, deepened v2.2 |
-| NGOs and field teams | Offline mobile capture and analysis, Kobo/ODK, outbreak tools | v2.0–v2.4 |
-| Local and state health departments | Teams, audit, privacy, surveillance, HIPAA | v2.1–v3.4 |
-| Ministries, WHO-linked teams | Self-hosting, data sovereignty, DHIS2, Go.Data, multi-level | v3.2–v4.2 |
+| Students, instructors, individual epidemiologists | Free, offline, explainable analysis; OpenEpi and StatCalc calculators; method guidance | v1.0 |
+| Stranded Epi Info users (FETPs, LMIC ministries, small health departments) | Get legacy projects out, keep their analyses running, move on to REDCap/Kobo/R without losing work | v1.1–v1.3 |
+| Researchers | Reproducibility, REDCap, exports to R, SAS and Stata | v1.0, v1.2, deepened v2.2 |
+| NGOs and field teams | Offline mobile capture and analysis, Kobo/ODK, outbreak tools | v1.2–v2.4 |
+| Local and state health departments | Teams, audit, privacy, surveillance, HIPAA | v1.1, v2.1–v3.4 |
+| Ministries, WHO-linked teams | Self-hosting, data sovereignty, DHIS2, Go.Data, multi-level | v1.1, v3.2–v4.2 |
 | US federal agencies | FedRAMP or agency-hosted deployment | v4.4 |
 
-Order principle: segments that need no certification come first. Agencies adopt early through
+Order principle: segments that need no certification come first, and within them the users Epi Info's
+sunset left without a supported tool (2026-11-13 roadmap review): LMIC ministries, FETPs and small health
+departments still hold Epi Info projects, whereas US/UK academic epidemiology mostly moved to R, SAS or Stata
+long ago ([user signals](../../research/d9-competitor-scan.md#user-signals-repidemiology-thread-added-2026-11-13)).
+Epi Info users are the first customers to win, not the whole market. Agencies adopt early through
 self-hosting (§11), long before Epiora holds certifications itself.
 
 ## 5. Unique selling points
@@ -107,12 +114,20 @@ Hero USPs (each early version ships one in usable form):
    basemaps, and reports with no connection.
 
 Supporting USPs: a one-click home for Epi Info users with a parity report (5); explain mode, in
-plain language and in maths with live numbers (6); privacy by default with automatic small-cell
+plain language and in maths with live numbers, with method guidance (a "which calculator?" guide,
+engine-computed assumption notes, and from v1.2 a confounder helper) (6); privacy by default with automatic small-cell
 suppression and tiered sharing (7); an AI copilot that never states a number the engine did not
 compute (8); a free tier better than Epi Info (9).
 
 Competitive claims in this section must be re-checked in a competitor scan before any marketing
-use (open decision D9).
+use (D9, resolved by the [competitor scan](../../research/d9-competitor-scan.md); use its suggested
+wording).
+
+**Positioning (2026-11-13).** Not "Epi Info, rebuilt": a validated epidemiology workbench, offline, that
+bridges to R, SAS and Stata rather than replacing them. Against Excel the claim is *validated*, not *built in*.
+Against R the claim is method guidance, no code, and offline use on cheap hardware. For buyers who need an
+accountable vendor (the "no one to sue" objection to open source), the claim is AGPL code plus a public
+validation dossier and a paid support agreement.
 
 ## 6. Decisions
 
@@ -195,6 +210,9 @@ only to generate expected values; its code is not copied.
   conditional; Kaplan–Meier and Cox; complex-sample frequencies, tables and means; data
   management commands (select, sort, recode, define, assign, merge, relate); `.pgm` scripts via
   the compatibility interpreter.
+- Method guidance: a "which calculator?" guide (v1.0); assumption notes computed by the engine
+  (for example expected counts below 5, unequal variances), shown with results and in explain mode,
+  never changing a number (v1.0); a DAG adjustment-set helper beside regression (v1.2, D11).
 - Data wrangling engine: SQLite SQL for the on-device store; DuckDB-wasm lazy-loaded alongside it
   for analytic queries (D3 resolved v0.1: a SQLite weekly-curve median exceeded the 1 s §12.8
   budget in CI; the ~8.0 MB gz payload loads on demand, outside the first-load budget).
@@ -225,7 +243,11 @@ only to generate expected values; its code is not copied.
 ### 8.8 Reports, receipts and reproducibility
 - Every result carries a receipt: dataset id, version and content hash; method and options;
   engine version; reference software and tolerance it was validated against; timestamp.
-- One-click export of an equivalent R, Stata or Python script.
+- One-click export of an equivalent R script, verified in CI by running it (v1.0); SAS and Stata
+  scripts when a verification route exists (v1.2, D10, v1.0 spec G6); an `epiora` R package that
+  reads Epiora export bundles and receipts (v1.6).
+- A public validation dossier: an in-app validation page listing every statistic, its method,
+  references, tolerance class and worst observed error, from v1.0; independently audited at v4.4.
 - PDF and HTML reports with Typst (Apache-2.0), in the browser or on the server.
 
 ### 8.9 Outbreak and surveillance
@@ -251,7 +273,7 @@ only to generate expected values; its code is not copied.
 |---|---|---|
 | Rust core (hand-written, validated) | Everyday procedures in §8.3, StatCalc, growth z-scores, outbreak and alert algorithms that must run on phones | Instant, offline, deterministic, drives interactive dashboards |
 | Existing Rust libraries | Distributions (`statrs`), linear algebra (`faer`/`nalgebra`), file formats | No reinvention |
-| R via WebR (on demand), server R in hosted tiers | Complex Cox options, mixed models, GAMs, survey-weighted regression, Farrington, nowcasting, Bayesian methods, user R code | R's ecosystem is far ahead; rewriting is waste |
+| R via WebR (on demand), server R in hosted tiers | Complex Cox options, mixed models, GAMs, survey-weighted regression, causal inference (propensity scores, inverse probability weighting, g-formula), latent-variable models (SEM, latent class), DAG adjustment sets, Farrington, nowcasting, Bayesian methods, user R code | R's ecosystem is far ahead; rewriting is waste |
 | R, Stata, SAS, OpenEpi, Epi Info 7 | References for the corpus | Validation |
 
 WebR on low-end Android measured unacceptable in the v0.1 spike (D7: warm ready ~70 s vs the 10 s
@@ -262,14 +284,18 @@ used.
 ## 10. Integrations and connectors
 
 Credentialed connectors run on `epiora-sync`; file imports run in the browser. Every connector
-has a field-mapping screen, dry-run preview, incremental pull and a change log.
+has a field-mapping screen, dry-run preview, incremental pull and a change log (v2.2). Before
+that, v1.2 ships a read-only bridge: the desktop app pulls REDCap, KoboToolbox and ODK Central
+records and metadata by API token into a new dataset version (manual refresh, re-import diff from
+v0.3); the browser app reads the same platforms' export files, because their APIs are not
+guaranteed to allow cross-origin requests from a web app.
 
 | Order | Integration | Notes | Version |
 |---|---|---|---|
-| 1 | CSV, Excel, SPSS `.sav`, Stata `.dta`, SAS `.sas7bdat`, Parquet, XLSForm | `calamine`, `rust_xlsxwriter`, ReadStat, `arrow-rs` | v0.3, v1.1, v1.5 |
-| 1 | Epi Info `.prj`/`.mdb`, SQL Server-backed projects | `epiora-mdb`; direct DB connection for SQL Server | v1.2 |
-| 2 | ODK Central, KoboToolbox | ODK Central is Apache-2.0 with REST, OpenRosa and OData APIs; Kobo shares the form standard | v2.2 |
-| 3 | REDCap | Per-project API tokens; export and import of records and metadata | v2.2 |
+| 1 | CSV, Excel, SPSS `.sav`, Stata `.dta`, SAS `.sas7bdat`, Parquet, XLSForm | `calamine`, `rust_xlsxwriter`, ReadStat, `arrow-rs` | v0.3, v1.3 (XLSForm), v1.6 |
+| 1 | Epi Info `.prj`/`.mdb`, SQL Server-backed projects | `epiora-mdb`; direct DB connection for SQL Server | v1.1 |
+| 2 | ODK Central, KoboToolbox | ODK Central is Apache-2.0 with REST, OpenRosa and OData APIs; Kobo shares the form standard | v1.2 (read-only), v2.2 |
+| 3 | REDCap | Per-project API tokens; export and import of records and metadata | v1.2 (read-only), v2.2 |
 | 4 | Go.Data | WHO open-sourced it in April 2024; exchange cases and contacts; OpenFn adaptor exists | v3.2 |
 | 5 | DHIS2 | Aggregate push, tracker pull | v3.2 |
 | 6 | SORMAS | REST API for pseudonymized or anonymized data | v4.1 |
@@ -347,6 +373,7 @@ and Digital Public Goods requirements.
    (`epiora_import_wasm_bg.wasm`) ≤ 573,616 bytes gzip -9.
 9. **Human review.** The epidemiologist adviser signs off each statistics module before release.
 10. **Validation report per release.** Generated by CI: procedures, references, tolerances, results.
+    From v1.0 the same data is published in the app as the validation page (§8.8).
 
 Process: NeoPhylo's loop (spec → plan → one task per branch, CI gates, owner gates on
 tolerances, fixtures and baselines).
@@ -359,14 +386,15 @@ $199/month; SurveyCTO $225–630/month. Epiora does not compete on collection pr
 
 | Tier | For | Includes | Starting price hypothesis |
 |---|---|---|---|
-| Open (AGPL) | Students, individuals, self-hosters | Full offline app, legacy import, local exports, basic self-hosted sync | Free |
+| Open (AGPL) | Students, individuals, self-hosters | Full offline app, calculators, legacy import, local exports, validation dossier, basic self-hosted sync | Free |
 | Solo cloud | Researchers, consultants | Hosted sync and backup, small sharing, reports | $15–29/month |
 | Team | Health departments, NGOs, research groups | Roles, audit, connectors, outbreak module, AI quota, priority support | $149–299/month |
 | Education | Departments, training programmes | Course workspaces, LTI, assignments, instructor dashboards | $1–5k/year per department |
 | Enterprise / government | Ministries, agencies, large NGOs | SSO, data residency, SLA, compliance pack, DHIS2/FHIR/Go.Data, managed self-hosting | Custom, ~$10k–100k+/year |
 
 Standing discount for nonprofits and low- and middle-income countries. Other revenue: legacy
-migration service with a validation report; training and certification; support contracts and
+migration service with a validation report; a support agreement for validated releases, which
+gives buyers who need one a named, accountable vendor; training and certification; support contracts and
 custom connectors; grants from global health digital-goods funders. Prices are validated with
 pilots before each tier launches.
 
@@ -379,7 +407,7 @@ worked example or template. Re-plan after every pilot.
 | Milestone | After | Meaning |
 |---|---|---|
 | 🔬 Foundations proven | v0.3 | Every risky technical bet has been tested; the engine and app shell exist |
-| 🏠 Epi Info parity | v1.5 | Open core does everything Epi Info did, offline, with receipts; public launch |
+| 🏠 Epi Info parity | v1.6 | Open core does everything Epi Info did, offline, with receipts |
 | 🧭 Field-ready | v2.5 | Sync, teams, connectors, outbreak in a box, mobile; first paid tiers |
 | 🦅 Powerhouse | v3.4 | Surveillance, AI copilot, ministry connectors, advanced statistics, SOC 2 and HIPAA |
 | 🏛️ Agency production | v4.4 | Enterprise, health standards, multi-level deployments, localization, government certifications |
@@ -403,30 +431,43 @@ log, CSV and Excel import, the Analysis workspace running v0.2 procedures, desig
 accessibility checks in CI, projects and dataset versions, output log with receipts, re-import
 diff, unsigned desktop artifacts. **🔬 Foundations proven.**
 
-### Phase 1 — The home for Epi Info users (v1.0–v1.5)
+### Phase 1 — The home for Epi Info users (v1.0–v1.6)
 
-**v1.0 Analysis parity I (L).** Means (t-test, ANOVA, Kruskal–Wallis), linear and logistic
-regression, data-management commands, StatCalc with the OpenEpi calculators it lacks (screening
-tests, rates and SMR, matched case-control; §8.6), explain mode, reproduce-in-R/Stata export,
-offline PWA. First university pilot. *Hero USP 2 (receipts) in usable form.*
+Order (2026-11-13 roadmap review, owner-accepted): serve the user Epi Info's sunset stranded first. After
+the calculators, that means getting their data out of legacy projects, then bridging to the collection tools
+they are moving to, then collecting in Epiora itself. Academic-only methods come later.
 
-**v1.1 Forms and entry (L).** Form Designer, the check-code language, entry with validation and
-skip logic, child forms and grids, form versioning, XLSForm import and export, double-entry
-verification, template library v1.
+**v1.0 Calculators and MEANS (M–L).** Every OpenEpi and Epi Info StatCalc calculator from a link (no project,
+offline), MEANS (t-test, ANOVA, Bartlett, Kruskal–Wallis), explain mode, a "which calculator?" guide and
+engine-computed assumption notes, R export verified in CI, the Epi Info command line on every result, and a
+public validation page. *Hero USP 2 (receipts) in usable form.* (v1.0 spec.)
 
-**v1.2 Legacy import (L).** `epiora-mdb`, `.prj` and SQL Server project import, check-code
-translation, the `.pgm` compatibility interpreter, migration report with parity results against
-Epi Info 7. Public "home for Epi Info users" launch; apply for Digital Public Good listing.
+**v1.1 Epi Info projects and data management (L).** `epiora-mdb`; `.prj`/`.mdb` and SQL Server project
+import (data, form metadata, value labels); data-management commands (select, sort, recode, define, assign,
+merge, relate); the `.pgm` compatibility interpreter for every command Epiora implements, with unsupported
+commands listed; a migration report with parity results against Epi Info 7. Public "home for Epi Info users"
+launch; apply for Digital Public Good listing. First field pilot.
 
-**v1.3 Survival, complex samples and growth (M).** Kaplan–Meier, Cox, conditional logistic
-regression, complex-sample frequencies, tables and means; growth z-scores (WHO 2006, WHO 2007,
-CDC 2000) once D4 is resolved.
+**v1.2 Regression and the collection bridge (L).** Linear and logistic regression with explain mode and R
+export; a DAG adjustment-set helper beside regression (D11); a read-only bridge from REDCap, KoboToolbox and
+ODK Central (§10); SAS and Stata script export where a verification route exists (D10). *Hero USP 1 (keep
+your collection tool) in first usable form.*
+
+**v1.3 Forms and entry (L).** Form Designer, the check-code language and translation of legacy check code
+from v1.1 projects, entry with validation and skip logic, child forms and grids, form versioning, XLSForm
+import and export, double-entry verification, template library v1; offline phone entry in the PWA, and
+merging records between devices by export file with a duplicate and conflict report (until v2.0 sync).
 
 **v1.4 Dashboards, epi curves and maps (L).** ECharts dashboards with linked filters, epi curves,
 population pyramids; MapLibre maps with offline PMTiles basemaps and geoBoundaries.
 
-**v1.5 Reports and polish (M).** Typst reports and templates; SPSS, Stata, SAS and Parquet import
-and export; design-system pass; independent WCAG 2.1 AA audit. **🏠 Epi Info parity.**
+**v1.5 Survival, complex samples and growth (M).** Kaplan–Meier, Cox, conditional logistic
+regression, complex-sample frequencies, tables and means; growth z-scores (WHO 2006, WHO 2007,
+CDC 2000) once D4 is resolved.
+
+**v1.6 Reports, interoperability, languages and polish (L).** Typst reports and templates; SPSS, Stata, SAS
+and Parquet import and export; the `epiora` R package (§8.8); French, Spanish and Portuguese UI; design-system
+pass; independent WCAG 2.1 AA audit. **🏠 Epi Info parity.**
 
 ### Phase 2 — Field and teams (v2.0–v2.5)
 
@@ -437,8 +478,8 @@ backups; Paddle billing; DPA template and EU hosting. *First paid tier.*
 **v2.1 Teams and privacy (M).** Roles with field-level permissions, audit log, comments, shared
 templates; de-identified export, small-cell suppression, tiered sharing. Team tier opens.
 
-**v2.2 Connectors I (M).** ODK Central, KoboToolbox and REDCap with mapping screens and dry runs.
-*Hero USP 1 (keep your collection tool) in usable form.*
+**v2.2 Connectors (M).** ODK Central, KoboToolbox and REDCap on `epiora-sync`: mapping screens, dry runs,
+scheduled incremental pull and change logs, building on the v1.2 read-only bridge. *Hero USP 1 complete.*
 
 **v2.3 Outbreak in a box (L).** Case definitions and automatic classification, line lists,
 attack-rate tables, food-specific 2×2 with stratification, transmission chains, investigation
@@ -462,8 +503,9 @@ answers, admin controls, form and report drafting.
 **v3.2 Connectors II (L).** Go.Data, DHIS2 (aggregate push, tracker pull), OData feed, Postgres BI
 views, Parquet exports to object storage.
 
-**v3.3 Advanced statistics (M).** Mixed models, GAMs, survey-weighted regression and nowcasting
-via WebR and server R, with receipts and references.
+**v3.3 Advanced statistics (M).** Mixed models, GAMs, survey-weighted regression, causal inference
+(propensity scores, inverse probability weighting, g-formula), latent-variable models (SEM, latent class)
+and nowcasting via WebR and server R, with receipts and references.
 
 **v3.4 Compliance I (M).** SOC 2 Type II, HIPAA BAA and HIPAA-eligible hosting, first independent
 penetration test, ISO 27001 preparation, Section 508 VPAT. **🦅 Powerhouse.**
@@ -478,24 +520,26 @@ managed self-hosting (Docker and Helm), air-gapped installation.
 **v4.2 Multi-level deployments (L).** District → region → national roll-ups, tiered sharing at
 scale, multi-tenant ministry deployments.
 
-**v4.3 Localization (M).** French, Spanish, Portuguese, Arabic (right-to-left), Russian and
-Chinese for app, templates and reports.
+**v4.3 Localization (M).** Arabic (right-to-left), Russian and Chinese for the app; every shipped language
+for templates and reports. (French, Spanish and Portuguese UI ship at v1.6.)
 
 **v4.4 Government readiness (L).** ISO 27001 certification, GovRAMP, a FedRAMP path with a
-partner, and a public validation dossier. **🏛️ Agency production.**
+partner, and an independent audit of the validation dossier (public since v1.0). **🏛️ Agency production.**
 
-Indicative horizon at part-time pace, summed from the sizes above: Phase 0 about 4–6 months,
-Phase 1 about 10–15 months, Phase 2 about 8–12 months, Phase 3 about 7–11 months, Phase 4 about
+Indicative horizon at part-time pace, summed from the sizes above: Phase 0 about 4–6 months
+(actual: about two weeks with the agent loop, 2026-10-28 to 2026-11-12; re-estimate after v1.0),
+Phase 1 about 13–20 months, Phase 2 about 8–12 months, Phase 3 about 7–11 months, Phase 4 about
 9–14 months; roughly three to five years to agency production. The first paid tier (v2.0) starts
-around month 14–21; university pilots start earlier, at v1.0.
+around month 17–26 on these sizes; pilots start earlier (§15).
 
 ## 15. Running tracks
 
 | When | Track |
 |---|---|
-| Before v1.0 | Recruit an epidemiologist adviser; competitor scan (D9) |
-| From v1.0 | University pilots; outreach to former Epi Info users, field epidemiology training programmes and MPH courses |
-| After v1.2 | Digital Public Good application; migration-service offer; JOSS paper on the engine and validation |
+| Before v1.0 | Recruit an epidemiologist adviser, preferably from field epidemiology; competitor scan (D9, done) |
+| From v1.0 | A free teaching pack (calculator labs built on the calculators and explain mode); outreach to former Epi Info users, field epidemiology training programmes and MPH courses; university courses that teach alongside R |
+| From v1.1 | First pilot: an FETP, or an LMIC or local health department with legacy Epi Info projects; Digital Public Good application; migration-service offer |
+| After v1.2 | JOSS paper on the engine and validation |
 | From v2.0 | NGO and health-department pilots; price validation before each tier |
 | After v2.3 | Case study from a real outbreak investigation; conference demos (epidemiology and public-health informatics meetings) |
 | Phase 3–4 | Grants from global health digital-goods funders; partner search for FedRAMP |
@@ -506,7 +550,8 @@ around month 14–21; university pilots start earlier, at v1.0.
 |---|---|
 | Scope far exceeds one part-time developer | Strict version gates; each version shippable alone; agent-driven loop; re-plan after pilots |
 | A wrong number in an outbreak analysis | Reference corpus, never-loosened tolerances, adviser sign-off, receipts |
-| A free fork of Epi Info 7 gains traction | Compete on what a fork lacks: offline mobile, receipts, outbreak in a box, connectors |
+| A free fork or rebuild of Epi Info 7 (for example Epi Info AI, D9) becomes the default migration path | Legacy import at v1.1; compete on what a rebuild lacks: OpenEpi calculators, validation dossier, offline mobile, outbreak in a box, connectors |
+| Epi Info users are fewer than assumed outside LMIC ministries, FETPs and small health departments (2026-11-13 user signals) | Position as a validated workbench that bridges to R, SAS and Stata (§5); first pilot in the segment that still uses Epi Info; re-plan after it |
 | A competitor copies the analysis layer | AGPL on the open core; the validation corpus and connectors take years to rebuild |
 | Sync bugs corrupt data | Own spec, simulation suite, conflict queue instead of silent merges |
 | WebR too heavy for phones | Measured in v0.1; fall back to hosted R for advanced methods on mobile |
@@ -517,15 +562,17 @@ around month 14–21; university pilots start earlier, at v1.0.
 
 | # | Decision | Resolve by |
 |---|---|---|
-| D1 | Formal trademark clearance for "Epiora" (USPTO, EUIPO/TMview), domain and package names | Before v1.2 public launch |
+| D1 | Formal trademark clearance for "Epiora" (USPTO, EUIPO/TMview), domain and package names | Before v1.1 public launch |
 | D2 | Exact licence of the Epi Info 7 source (Apache 2.0 or public domain) before reusing its grammar or code | **Resolved (v0.1):** "Reuse permitted with notice (Apache-2.0)" — [report](../../spikes/d2-epi-info-licence.md), [decision](../../decisions.md) |
 | D3 | DuckDB-wasm alongside SQLite, or SQLite alone | **Resolved (v0.1):** "SQLite for storage plus DuckDB-wasm for analytic queries" — [report](../../spikes/d3-query-engine.md), [decision](../../decisions.md) |
-| D4 | Licence for bundling WHO growth reference tables | Before v1.3 |
+| D4 | Licence for bundling WHO growth reference tables | Before v1.5 |
 | D5 | geoBoundaries commercial-use terms | Before v1.4 |
 | D6 | Whole-database encryption in the browser (open SQLCipher wasm build or field-level only) | **Resolved (v0.1):** "field-level only" — [report](../../spikes/d6-browser-encryption.md), [decision](../../decisions.md). v0.3 posture: browser databases are not encrypted in v0.3 — field-level encryption starts with the first version that marks identifiable fields — and desktop is encrypted at rest from v0.3 |
 | D7 | Low-end Android reference device | **Resolved (v0.1):** "Pixel emulator + Chrome DevTools 4× CPU throttle and Slow 4G" (owner-chosen proxy); "advanced methods are hosted-only on mobile (spec §9)" — [report](../../spikes/d7-webr-mobile.md), [decision](../../decisions.md) |
 | D8 | Whether Electric replaces the custom sync protocol | v2.0 spec |
-| D9 | Competitor scan confirming USP claims | Before v1.0 |
+| D9 | Competitor scan confirming USP claims | **Resolved (2026-11-12):** [competitor scan](../../research/d9-competitor-scan.md); user signals added 2026-11-13 |
+| D10 | Verification route for SAS script export (for example whether SAS OnDemand for Academics terms allow verifying an export generator), alongside the Stata route (v1.0 spec G6) | Before v1.2 |
+| D11 | DAG adjustment-set helper: via WebR (`dagitty`, GPL-2: check the licence for running it from an AGPL app) or an own implementation validated against `dagitty` | Before v1.2 |
 
 ## 18. Sources
 
