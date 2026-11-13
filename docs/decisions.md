@@ -2731,10 +2731,12 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
 - `cases.json`: 79 cases whose ids equal the Task 2 `fixtures/calc/<id>/<case>.json` ids for the 20
   calculators OpenEpi can represent. `binomial`, `poisson`, `two_by_n` and `random_numbers` have no
   OpenEpi page, so they are absent from the OpenEpi reference; their R fixtures still govern.
-- `labels.json`: 893 emitted labels, 437 mapped to canonical `calc.<id>.<path>` statistic ids; the
-  rest are `null` — input echoes, derived table cells, or displays with no corresponding R fixture
-  leaf (recorded "shown but not compared" per spec §9). Counts:
-  `python3 -c "import json; lj=json.load(open('fixtures/openepi/labels.json')); print(sum(len(v) for v in lj.values()), sum(1 for v in lj.values() for x in v.values() if x))"` → 893 437.
+- `labels.json`: 893 emitted labels, 429 mapped to canonical `calc.<id>.<path>` statistic ids; the
+  rest are `null` — input echoes, derived table cells, displays with no corresponding R fixture
+  leaf, and the round-2 unmapped different-quantity labels (recorded "shown but not compared" per
+  spec §9). Counts:
+  `python3 -c "import json; lj=json.load(open('fixtures/openepi/labels.json')); print(sum(len(v) for v in lj.values()), sum(1 for v in lj.values() for x in v.values() if x))"` → 893 429
+  (round 1: 893 437 — 8 mappings nulled and 2 retargeted in the same-quantity audit).
 - Section-label rule (round 1): a label that repeats under more than one section is qualified by its
   section context in the emitted label — `1 / Uncorrected chi square`, `Crude / Risk in Exposed`,
   `Adjusted / Mantel-Haenszel Summary Chi Sqr`, `Statistics / d.f. / p-value (2 sided) / Byar
@@ -2794,6 +2796,12 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   which exposed and fixed the negative-decimals/`value` union schema gaps) and
   https://github.com/dorrabbkhan/Epiora/actions/runs/43441647872 (green: capture, schema
   validation, drift check — regenerated output byte-identical to the committed reference).
+  Round 2: https://github.com/dorrabbkhan/Epiora/actions/runs/43448188046 (capture produced the
+  committed artifact byte-for-byte; only the drift step failed because the remapped output was not
+  yet committed) and https://github.com/dorrabbkhan/Epiora/actions/runs/43449861312 (green:
+  capture, schema validation, drift check — regenerated output byte-identical to the committed
+  reference). `--compare-r` on the committed corpus: `ok 949 mismatch 303 unresolved 0
+  no-r-counterpart 1 r-null 30`, exit 0.
 - Files outside the Files block: `.github/workflows/fixtures.yml` (schema-validates the new family
   and excludes `fixtures/openepi` from the generate.R drift check — otherwise regeneration flags a
   family it does not own); `fixtures/openepi/drivers.mjs` (per-page input driving/validation —
