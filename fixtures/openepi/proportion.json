@@ -408,8 +408,8 @@
         {
           "label": "z-value",
           "statistic": null,
-          "value": "'undefined'",
-          "decimals": 0
+          "value": 63.25,
+          "decimals": 2
         },
         {
           "label": "Two-sided p-value",
@@ -509,14 +509,14 @@
         {
           "label": "z-value",
           "statistic": null,
-          "value": "'?'",
-          "decimals": 0
+          "value": -6.325,
+          "decimals": 3
         },
         {
           "label": "Two-sided p-value",
-          "statistic": "calc.proportion.ztest.p",
-          "value": 2,
-          "decimals": 2
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
         }
       ]
     }
