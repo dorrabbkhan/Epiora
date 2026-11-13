@@ -2988,8 +2988,9 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   Run 43498896712's `oswego.json` artifact (sha256
   `923ec1e1aa7ed6768791296178bc32c1813a7e4de4338e3625c8012e15aeba05`)
   differs: it predates the final labels. `ei7.schema.json` unchanged
-  (the oswego.json shape did not change). No file outside the task's
-  Files block.
+  (the oswego.json shape did not change). Superseded by the
+  owner-decision regeneration recorded in the resolution bullet below.
+  No file outside the task's Files block.
 - **Percentile definition: R `quantile(type = 2)`.** Verified by
   computation, not assertion:
   `quantile(x, c(.25,.5,.75), type = k)` for `k = 1..9` and `fivenum(x)`
@@ -3147,3 +3148,57 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   `groups[0]` (vs `overall`), and no `overall` block in the grouped
   fixture. Task 6 must reconcile these; the owner decides which side
   moves.
+- **Resolution (owner decision on PR #67, comments 6865307135 and
+  6865623756): option 1 — the engine keeps the exact Welch CI; the two
+  EI7 Welch CL labels are mapped to `null` here.** The cause is in the
+  Epi Info source (Epi-Info-Community-Edition @ 4cd353c — D2 covers
+  the source at that commit only, not CDC release binaries):
+  `Epi.Analysis.Statistics/Means.cs:1469-1478` computes the Welch CLs
+  (1464-1468 the p-value) through `StatLib.TfromP`
+  (`StatisticsRepository/StatLib.vb:518-565`; `PfromT` at 80-143),
+  which linearly interpolates the t critical value between floor and
+  ceil of the Satterthwaite df instead of evaluating the t quantile at
+  the fractional df: `t* = T(57) + 0.04735·(T(56) − T(57)) = 2.002502`
+  vs `qt(0.975, 56.0474) = 2.003203`. The interpolation reproduces
+  EI7's printed (−10.5528, 10.4663) exactly:
+
+  ```text
+  $ Rscript -e 'df<-56.04735430648786; f<-df-56; t<-qt(.975,57)+f*(qt(.975,56)-qt(.975,57)); d<-read.csv("fixtures/data/oswego.csv"); x<-d$AGE[d$SEX=="Female"]; y<-d$AGE[d$SEX=="Male"]; diff<-mean(x)-mean(y); se<-sqrt(var(x)/length(x)+var(y)/length(y)); cat(sprintf("interp t*=%.10f vs qt(.975,df)=%.10f\n",t,qt(.975,df))); cat(sprintf("interp CI=(%.10f, %.10f) -> (%.4f, %.4f); exact CI=(%.4f, %.4f); EI7 prints (-10.5528, 10.4663)\n",diff-t*se,diff+t*se,diff-t*se,diff+t*se,diff-qt(.975,df)*se,diff+qt(.975,df)*se))'
+  interp t*=2.0025021712 vs qt(.975,df)=2.0032033696
+  interp CI=(-10.5527629164, 10.4662526524) -> (-10.5528, 10.4663); exact CI=(-10.5564, 10.4699); EI7 prints (-10.5528, 10.4663)
+  ```
+
+  The EI7 Welch p-value and df still agree with R at display
+  precision and stay mapped (`means.t_test.welch.p_value`,
+  `means.t_test.welch.df`). `labels.json` maps the two CL labels to
+  `null`; `parse.test.mjs` asserts them parsed but unmapped.
+  `oswego.json` was regenerated only via the ei7 workflow: producing
+  run https://github.com/dorrabbkhan/Epiora/actions/runs/43513433527
+  (its drift step failed by construction — the committed json
+  predated the labels change; the `ei7-output` artifact was committed
+  byte-for-byte, `oswego.json` sha256
+  `7928845c3504dc9a172813e4f548ff2f7354f323baf008d08fdfc513b19b2e4c`,
+  `oswego.html` unchanged at sha256 `1a599aa2…`), and green
+  verification run
+  https://github.com/dorrabbkhan/Epiora/actions/runs/43513632984
+  whose `ei7-output` artifact is byte-identical to the committed
+  files (cmp + sha256). The only json change vs the previous commit
+  is the two leaves losing their key. The engine CI red on
+  `oswego_matches_epi_info_7` (`means.*` "actual missing") is known
+  and stays per owner decision 1.1.
+- **After PR #68 (owner decision 2.1), the EI7–R comparison is 59
+  agree / 0 disagree of 59 mapped leaves.** #68 resolves the four
+  quartile disagreements and the field-name mismatches recorded above
+  by regenerating `fixtures/means/means_oswego_age*.json` with R
+  `quantile(type = 2)` and the `labels.json` key names (`min`/`max`,
+  `p_value`, `diff_ci_95.lower`/`upper`, `bartlett.statistic`, a real
+  `overall` block); the two Welch CL labels are now unmapped.
+  Recomputed with the same comparison script (shortened — post-#68
+  fixtures share the labels.json key paths, so `rValue` walks
+  `key.split('.')` directly) against
+  `origin/v1.0/task-2-means-quartiles-and-names:fixtures/means/means_oswego_age*.json`:
+
+  ```text
+  $ node ei7_vs_r.mjs /tmp/ei7fix/oswego_new.json /tmp/ei7fix
+  59 agree / 0 disagree of 59 mapped leaves (3 null-mapped)
+  ```
