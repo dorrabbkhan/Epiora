@@ -347,9 +347,12 @@ function validateCases(cases) {
 // ---------- compare with R fixtures (--compare-r) ----------
 // For every mapped value, resolve its statistic path in
 // fixtures/calc/<id>/<case>.json `expected` (leaves are {value, class}) and
-// report |openepi - R| against 0.5 x 10^-decimals. Unresolved statistic paths
-// fail (non-zero exit); fixture leaves with value null are listed as R-NULL;
-// mismatches are listed, not failures.
+// report |openepi - R| against 0.5 x 10^-decimals. A mapped path with no leaf
+// in that case's fixture is listed as NO-R-COUNTERPART (the case's fixture
+// does not cover that statistic, e.g. proportion's ztest needs a
+// compare_with input the case lacks) and does not fail the run; a missing
+// fixture file still fails (UNRESOLVED, non-zero exit). Fixture leaves with
+// value null are listed as R-NULL; mismatches are listed, not failures.
 
 // Returns {found: true, value} for a numeric leaf, {found: true, value: null}
 // when the fixture marks the leaf undefined, {found: false} when absent.
@@ -368,6 +371,7 @@ function compareR() {
   let ok = 0;
   let mismatch = 0;
   let unresolved = 0;
+  let norcounterpart = 0;
   let rnull = 0;
   const files = fs.readdirSync(DIR).filter((f) => f.endsWith('.json') && !OUTPUT_SKIP.has(f)).sort();
   for (const f of files) {
@@ -385,8 +389,8 @@ function compareR() {
         if (!v.statistic || typeof v.value !== 'number') continue;
         const r = resolveStatPath(fx, v.statistic);
         if (!r.found) {
-          unresolved += 1;
-          items.push(`UNRESOLVED ${c.case} '${v.label}' -> ${v.statistic}`);
+          norcounterpart += 1;
+          items.push(`NO-R-COUNTERPART ${c.case} '${v.label}' -> ${v.statistic} openepi=${v.value}`);
           continue;
         }
         if (typeof r.value !== 'number') {
@@ -407,7 +411,7 @@ function compareR() {
       for (const i of items) console.log(`   ${i}`);
     }
   }
-  console.log(`ok ${ok} mismatch ${mismatch} unresolved ${unresolved} r-null ${rnull}`);
+  console.log(`ok ${ok} mismatch ${mismatch} unresolved ${unresolved} no-r-counterpart ${norcounterpart} r-null ${rnull}`);
   return unresolved ? 1 : 0;
 }
 

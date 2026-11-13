@@ -2758,9 +2758,30 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
 - Bounds: `<0.0000001`-style displays, `'?'` and `'undefined'` are stored as displayed text with
   `statistic: null` — never parsed as equalities.
 - `--compare-r` resolves every mapped statistic path into `fixtures/calc/<id>/<case>.json` and
-  reports |openepi − R| against 0.5×10^-decimals; absent paths exit non-zero (UNRESOLVED), fixture
-  leaves whose value is null are listed as R-NULL, numeric disagreements are listed for the owner
-  (spec G7) — local mirror run: ok 958, mismatch 319, unresolved 1, r-null 30.
+  reports |openepi − R| against 0.5×10^-decimals. A mapped path with no leaf in that case's
+  fixture is listed as NO-R-COUNTERPART and does not fail the run (round 2 rule): it means the
+  case's fixture does not cover that statistic — e.g. `proportion/zero_numerator` enters no
+  `compare_with`, so its fixture has no `ztest` leaf while OpenEpi still prints a p-value row.
+  A missing fixture file still fails as UNRESOLVED (non-zero exit). Fixture leaves whose value
+  is null are listed as R-NULL, numeric disagreements are listed for the owner (spec G7).
+- Same-quantity audit (round 2): every mapped label was re-checked against OpenEpi's own
+  JavaScript (local site mirror) and corrected where the display is a different quantity than
+  the fixture leaf: `t_test_summary` "Test for equality of variance2 [1..4]" → `null`
+  (OpenEpi's Hartley F test divides the larger variance by the smaller and reports the df of
+  the larger-variance group first — t_testMean.js:124-137,216 — never the input-order
+  `f_variance.*` ratio/df pair, and its displayed p is its own FishF approximation, not the
+  leaf's `2·min(pf,1−pf)`); `rate_compare` per-stratum/crude "z-score [1]" → `null` (OpenEpi
+  absolutizes the z statistic — PersonTime2.js:485 `zstat=Math.abs(zstat)` — while
+  `zscore.value` is signed; the p-value columns [2]/[3] stay mapped because both compute the
+  p on |z|); `dose_response` "Extended Mantel-Haenszel chi square for linear trend" retargeted
+  from `xmh.uncorrected` to `xmh.cc` (OpenEpi applies the continuity correction to the signed
+  numerator `(V1sum−0.5)²` — DoseResponse.js:144 — so its display is the corrected statistic;
+  it equals `xmh.cc` exactly when V1sum>0 and inflates the statistic when V1sum<0, recorded as
+  a genuine disagreement). Everything else verified same-quantity: Fisher/Mid-P two-sided p is
+  OpenEpi's `min(1, 2×min tail)` convention (MartinStats.js:670-682) vs R's probability-ordered
+  p — a method difference on the same estimand; power `Norm(z)` leaves `Math.abs` commented
+  out (PowerMean.js:35) so negative powerz scores below 50%; ss_mean_difference's power lookup
+  covers only {95,90,80,70,60} (SSMean.js:63-68), leaving power=0 for other requests.
 - Tooling: Playwright 1.65.0, latest release at task time, licence Apache-2.0 per its package
   metadata, pinned in `fixtures/openepi/package-lock.json`; Chromium only.
 - `captured_at` is preserved across reruns so a no-drift rerun is byte-identical (ei7.yml precedent);
@@ -2776,5 +2797,7 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
 - Files outside the Files block: `.github/workflows/fixtures.yml` (schema-validates the new family
   and excludes `fixtures/openepi` from the generate.R drift check — otherwise regeneration flags a
   family it does not own); `fixtures/openepi/drivers.mjs` (per-page input driving/validation —
-  capture.mjs stays the runner); `fixtures/openepi/package.json` and `package-lock.json` (pin the
-  required latest Playwright for this fixture tool only).
+  capture.mjs stays the runner); `fixtures/openepi/capture.test.mjs` (unit tests for the capture's
+  pure functions — parsing, emissions, scaling, compare — required by the tests-ship-with-code
+  rule); `fixtures/openepi/package.json` and `package-lock.json` (pin the required latest
+  Playwright for this fixture tool only).
