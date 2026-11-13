@@ -2423,3 +2423,64 @@ Supersedes: —
   the v0.3 Task 18 entry.
 - Post-release check: `scripts/release/verify-deploy.py
   https://epiora-dev.netlify.app` reported 36 checks, 0 FAIL.
+
+### v1.0 Task 1 — calculator inventory (2026-11-13)
+
+`docs/v1.0-calculators.md` inventories every OpenEpi 3.01 menu calculator and all
+eight Epi Info 7 StatCalc calculators, with inputs, outputs, methods and R
+references read from the live site source and from
+`Epi-Info/Epi-Info-Community-Edition @ 4cd353c62c40b78d9d1f013b0f5a2bb685a5fca6`.
+
+- Counts per family: counts 10 (`proportion`, `two_by_two`, `two_by_n`, `r_by_c`,
+  `dose_response`, `matched_case_control`, `screening`, `smr`, `binomial`,
+  `poisson`), person_time 2, continuous 4, sample_size 4, power 3, other 1 — 24
+  calculator ids, all from the plan's expected list, none renamed or added.
+- Merges with reason: OpenEpi's Power → Cohort / Clinical Trial / X-Sectional are
+  one computation with different labels → one `power_cohort` calculator with a
+  `design` input. EI7 "Tables (2x2, 2xN)" is stratified 2×2 → `two_by_n`,
+  separate from `two_by_two` because its output set is EI7's StatCalc block.
+- Excluded items: OpenEpi `Calculator/calculator.htm` (arithmetic calculator, not
+  statistical); Home, Info/Help pages, Language/Settings and Searches
+  (navigation/documentation); "Internet Links" (external links), "Download OpenEpi"
+  (download page) and the "Development" branch — Proposal, Toolkit Description,
+  Translations, JavaScript Tips (project documentation). No statistical menu item
+  dropped.
+- OpenEpi terms verdict: automated access is allowed — the site has no terms of
+  service beyond the Licensing/Disclaimer page (quoted in the doc), which grants
+  unrestricted use under MIT wording, and no robots.txt. Each page was fetched
+  once for this inventory; Task 3's capture workflow stays at one page at a time
+  with ≥2 s between cases.
+- Method differences recorded in the doc: OpenEpi's dose-response χ² includes a
+  continuity correction that EI7 lacks; EI7's population-survey and binomial
+  calculators have outputs OpenEpi lacks (per-cluster sizes, count-form CI);
+  OpenEpi caps exact computations for speed (`n > 100 001` in Proportion, "large
+  numbers" in TwobyTwo) where Epiora computes them; several calculators accept
+  arbitrary confidence percentages in OpenEpi where spec §5.3 fixes Epiora's
+  list at 90/95/99%.
+- R package list for Task 2 (`renv.lock`): `exactci` 1.4-5 (GPL-3), `exact2x2`
+  1.7.0 (GPL-3), `PropCIs` 0.3-0 (DESCRIPTION states `GPL`; CRAN expands to
+  GPL-2 | GPL-3), plus already-pinned `epitools` 0.5-10.1, `epiR` 3.0.0 (renv
+  pin; CRAN now serves 3.0.1), `DescTools` 0.99.60, `survival` 3.8.12
+  (recommended package shipped with R 4.6.2, LGPL ≥ 2 — added in the fix round
+  for `clogit`, the 1:n conditional-MLE reference) and base `stats`. Every
+  `pkg::fn` in the doc was verified with `exists()` in R at these versions
+  (output posted on PR #62; `survival::clogit` verified in the fix round, also
+  posted on PR #62). Mid-p in `exactci`/`exact2x2` is `midp=TRUE`, not
+  a `tsmethod` value. Each output row names exactly one method, one R reference
+  (or "no R reference" for trivial/input-echo statistics) and one tolerance
+  class. Methods without a published R function are named as
+  `fixtures/R/methods/*.R` functions with their literature source (see the
+  doc's "R packages" section).
+- Owner decisions (2026-11-13, via the conductor, PR #62) on the two questions
+  raised in review: (1) confidence levels keep spec §5.3's fixed list
+  90/95/99 — the `conf_level` inputs are unchanged; (2) 1:n matching stays in
+  v1.0 as Epiora's own implementation — only the 1:1 outputs are compared with
+  OpenEpi and Epi Info 7; the `matched_case_control.matched_n.*` outputs are
+  validated against R only. The 1:n input is a `controls_per_case` integer
+  M = 1..4 plus a 2×(M+1) matched-set table (case exposure × number of exposed
+  controls); the 1:1 pair table is its M = 1 special case. Two choices the fix
+  flags for the owner in the PR body: the M ≤ 4 bound (relative efficiency of
+  M controls per case is M/(M+1), reaching 80% at M = 4 — Breslow & Day 1980,
+  ch. 5) and variable per-set ratios excluded (a 2×(M+1) set table cannot
+  express mixed M; neither reference tool has it). Calculator counts are
+  unchanged: 1:n adds outputs under the existing `matched_case_control` id.
