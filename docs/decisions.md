@@ -2544,7 +2544,11 @@ references read from the live site source and from
   port (bit-for-bit checked wherever the stock function runs).
 - Files outside the Files block: `.github/workflows/fixtures.yml` —
   added `means` to the schema-validation family list and a `calc/<id>`
-  depth-2 loop so the new fixture families are actually validated.
+  depth-2 loop so the new fixture families are actually validated;
+  fix round 3 added a `push` trigger on `main` with the same `paths`
+  filter as `pull_request`, so fixture drift on main (like the
+  `ods_dates/input.ods` drift this PR exposed) is caught instead of
+  going unnoticed until the next PR.
 - `fixtures/import/ods_dates/input.ods`: the bytes committed by
   6d26661 carried a foreign host's font list (drift first exposed by this
   PR's fixtures run — the fixtures workflow had not run since 6d26661).
@@ -2641,6 +2645,69 @@ references read from the live site source and from
     new `check_cmle_exact` generation-time check and a zero-drift
     regeneration):
     https://github.com/dorrabbkhan/Epiora/actions/runs/43358183499
+- Fix round 3 (PR #64 review, owner-authorised third round) — CMLE
+  reference edge cases plus the fixtures workflow on push to main:
+  - Robust convolution. `poly_strat_cc`/`poly_strat_pt` now return
+    log coefficients (`lchoose`-based, normalised to a max of 0);
+    `mult_poly` is replaced by `logmult_poly` (convolution via
+    log-sum-exp, the same O(n1*n2) shape, every product renormalised);
+    `eval_poly` is replaced by `logeval_poly` (log-sum-exp
+    evaluation — the linear P(r) is unrepresentable at the roots for
+    large supports), and `martin_func` gets an exact `r = 0` branch
+    from the lowest-degree nonzero coefficients. Existing fixture
+    values moved only in the last ulps: 5 files changed —
+    `fixtures/calc/two_by_two/stratified.json` (max 2.0e-14 rel),
+    `rate_compare/textbook.json` (2.9e-15), `stratified.json`
+    (5.5e-15), `boundary.json` (5.8e-15), `large.json` (2.2e-13,
+    the round's maximum) — all under the 1e-12 stop bound. `git
+    status --porcelain fixtures/` shows no other tracked-file
+    changes and the second of two consecutive `Rscript
+    fixtures/generate.R` runs is byte-identical (293 files, sha256).
+  - Support boundaries are explicit in `martin_cmle`/`martin_lim`:
+    observed sum at the support minimum gives estimate 0 and both
+    lower limits 0; at the maximum the estimate and both upper
+    limits are infinite and emit the corpus's existing
+    undefined/null leaf (`{value: null, class}` — the engine
+    answers `{"undefined": <reason>}`, where the reason is
+    engine-side, as elsewhere in the corpus; the leaf schema
+    carries no reason field). One step inside the boundary computes
+    normally. `martin_root` now falls back to 1 when the crude
+    `approx` is non-finite and returns `NA` (undefined leaf) rather
+    than erroring when the bracket expansion overflows.
+  - Generation-time stock cross-checks at 1e-3 relative (sanity
+    checks, not fixture tolerances): `check_cmle_single_cc` runs
+    `fisher.test(conf.int = TRUE)` on every two_by_two stratum and
+    the crude table; `check_cmle_single_pt` runs the
+    conditional-binomial identity (RR = (a/b)·(n0/n1), limits from
+    `binom.test(a, a+b)$conf.int` mapped p → p/(1-p)·(n0/n1)) on
+    every rate_compare stratum and the crude table. Measured
+    agreement includes the boundary shapes — port vs stock at the
+    support maximum: est Inf = Inf, fisher_lower 9.874124 =
+    9.874124 (4e-15 rel), upper Inf = Inf.
+  - `check_cmle_exact` is gated to `sum(arr) <= 5e4`: stock
+    `mantelhaen.test(exact = TRUE)` itself silently overflows at
+    large counts — measured on this corpus it still agrees with the
+    port at ~8e4 total counts, drifts past the 1e-3 sanity bound by
+    ~1e5 and returns a garbage estimate (~8e-5 for OR ~0.33 strata)
+    by ~1.3e5 — so no stock reference exists beyond that gate. The
+    `large_counts` stratified fixture instead uses two identical
+    strata `[[1e6, 500], [2e6, 500]]`: the convolved CMLE then
+    solves the same E_r[K] = a equation as the single-table
+    `fisher.test` CMLE, keeping a real stock check at million counts
+    (port est 0.5000001 vs stock 0.4999849, 3.0e-5 rel).
+  - 8 new fixtures by category: `two_by_two` and `rate_compare`
+    `zero_event` (support minimum → est 0, lower limits 0),
+    `support_max` (→ est and upper limits null leaves),
+    `one_inside_boundary` (degree-0 Fisher numerator — the round-1
+    blocker — computes normally; its strata are sized so stock
+    `fisher.test`'s looser boundary root, ~1.3e-3 relative on small
+    tables measured against the port's 1e-14 root, stays inside the
+    1e-3 sanity bound) and `large_counts` (counts in the millions).
+  - `.github/workflows/fixtures.yml` gained a `push` trigger on
+    `main` with the same `paths` filter as `pull_request`; nothing
+    else in the workflow changed.
+  - Fixtures workflow run (green on the round-3 head):
+    <to be linked once CI is green>
 
 ### G8 — Roadmap review from user signals (2026-11-13)
 Decision: owner accepted every proposed roadmap change, including v1.0. v1.0 gains Tasks 22 (engine assumption

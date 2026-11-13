@@ -210,18 +210,19 @@ oe_cells_cc <- function(tab) {
 }
 
 poly_strat_cc <- function(t) {
-  if (!t$informative) return(list(poly = 1, deg = 0, min_a = 0, max_a = 0))
+  if (!t$informative) return(list(lp = 0, deg = 0, min_a = 0, max_a = 0))
   min_a <- max(0, t$m1 - t$n0)
   max_a <- min(t$m1, t$n1)
-  deg <- max_a - min_a
-  poly <- numeric(deg + 1)
-  poly[1] <- 1
-  aa <- min_a; bb <- t$m1 - min_a + 1; cc <- t$n1 - min_a + 1
-  dd <- t$n0 - t$m1 + min_a
-  for (i in seq_len(deg)) {
-    poly[i + 1] <- poly[i] * ((bb - i) / (aa + i)) * ((cc - i) / (dd + i))
-  }
-  list(poly = poly, deg = deg, min_a = min_a, max_a = max_a)
+  # Log coefficient at k = min_a..max_a, proportional to
+  # C(n1,k)*C(n0,m1-k) (the hypergeometric generating function the
+  # ratio recurrence used to produce). Kept in log space and
+  # normalised to max 0: the raw coefficients overflow double range
+  # at large counts and only the polynomial's ratios matter
+  # downstream.
+  k <- min_a:max_a
+  lp <- lchoose(t$n1, k) + lchoose(t$n0, t$m1 - k)
+  list(lp = lp - max(lp), deg = max_a - min_a,
+       min_a = min_a, max_a = max_a)
 }
 
 # Person-time stratum: [[cases_exp, cases_unexp],[pt_exp, pt_unexp]];
@@ -233,54 +234,65 @@ oe_cells_pt <- function(tab) {
 }
 
 poly_strat_pt <- function(t) {
-  if (!t$informative) return(list(poly = 1, deg = 0, min_a = 0, max_a = 0))
+  if (!t$informative) return(list(lp = 0, deg = 0, min_a = 0, max_a = 0))
   m1 <- round(t$m1)
-  poly <- numeric(m1 + 1)
-  poly[m1 + 1] <- 1
+  # Log coefficient at k = 0..m1: C(m1,k)*c0^(m1-k) with c0 = n0/n1.
+  # Log space + normalised to max 0 (the binomial coefficients
+  # overflow double range for m1 in the thousands). Zero person-time
+  # on one arm gives c0 = 0 or Inf: a single-point mass.
   c0 <- t$n0 / t$n1
-  for (i in seq(m1 - 1, 0, by = -1)) {
-    poly[i + 1] <- poly[i + 2] * c0 * (i + 1) / (m1 - i)
+  lp <- if (c0 == 0) {
+    c(rep(-Inf, m1), 0)
+  } else if (!is.finite(c0)) {
+    c(0, rep(-Inf, m1))
+  } else {
+    l <- lchoose(m1, 0:m1) + (m1:0) * log(c0)
+    l - max(l)
   }
-  list(poly = poly, deg = m1, min_a = 0, max_a = m1)
+  list(lp = lp, deg = m1, min_a = 0, max_a = m1)
 }
 
-mult_poly <- function(p1, p2) {
-  out <- numeric(length(p1) + length(p2) - 1)
-  for (i in seq_along(p1)) {
-    for (j in seq_along(p2)) {
-      out[i + j - 1] <- out[i + j - 1] + p1[i] * p2[j]
-    }
+# Convolution in log space: out[k] = logsumexp_i lp1[i]+lp2[k-i],
+# the same O(n1*n2) shape as a linear polynomial product. Coefficients
+# keep their full (log) dynamic range — the linear values can sit far
+# below double underflow at large counts, where -Inf marks a true
+# structural zero.
+logmult_poly <- function(lp1, lp2) {
+  n1 <- length(lp1); n2 <- length(lp2)
+  out <- rep(-Inf, n1 + n2 - 1)
+  for (j in seq_len(n2)) {
+    idx <- (j - 1) + seq_len(n1)
+    lt <- lp1 + lp2[j]
+    prev <- out[idx]
+    m <- pmax(prev, lt)
+    add <- m + log(exp(prev - m) + exp(lt - m))
+    add[m == -Inf] <- -Inf
+    out[idx] <- add
   }
   out
 }
 
-# EvalPoly port: avoids overflow for r > 1.
-eval_poly <- function(c, r) {
-  deg_c <- length(c) - 1
-  if (r == 0) return(c[1])
-  if (r <= 1) {
-    y <- c[deg_c + 1]
-    if (r < 1) {
-      for (i in seq(deg_c, 1)) y <- y * r + c[i]
-    } else {
-      for (i in seq(deg_c, 1)) y <- y + c[i]
-    }
-    y
-  } else {
-    y <- c[1]
-    rr <- 1 / r
-    for (i in 2:(deg_c + 1)) y <- y * rr + c[i]
-    y
-  }
+# EvalPoly equivalent in log space: log(sum_k c_k r^k) with
+# lc = log c_k via the log-sum-exp trick. Neither the coefficients nor
+# the r^k weights can overflow or underflow — the linear P(r) is
+# unrepresentable at the roots for large supports. lc is
+# max-normalised to 0. log P(0) = lc[1].
+logeval_poly <- function(lc, r) {
+  if (r == 0) return(lc[1])
+  lt <- lc + (seq_along(lc) - 1) * log(r)
+  m <- max(lt)
+  if (m == -Inf) return(-Inf) # every coefficient is a true zero
+  m + log(sum(exp(lt - m)))
 }
 
 # Shared convolved-polynomial solver. `cells_fn`/`poly_fn` select the
 # case-control or person-time variant. `tol` is the uniroot tolerance
 # (1e-14 for the recorded value; the caller also runs the R default for
-# r_default).
+# r_default). Returns the convolved denominator as log coefficients
+# (max-normalised to 0), the observed a-sum and the support bounds.
 martin_setup <- function(strata, cells_fn, poly_fn) {
   sum_a <- 0; min_sum <- 0; max_sum <- 0
-  poly_d <- 1
+  lp_d <- NULL
   for (tab in strata) {
     t <- cells_fn(tab)
     if (t$informative) {
@@ -288,41 +300,58 @@ martin_setup <- function(strata, cells_fn, poly_fn) {
       p <- poly_fn(t)
       min_sum <- min_sum + p$min_a
       max_sum <- max_sum + p$max_a
-      poly_d <- mult_poly(poly_d, p$poly)
+      # Each polynomial is rescaled by its largest coefficient before
+      # convolving and each product after (in log space: subtract the
+      # max log), so the convolved coefficients stay anchored ~1 at
+      # any count. The roots are scale-free.
+      lp <- p$lp - max(p$lp)
+      lp_d <- if (is.null(lp_d)) lp else logmult_poly(lp_d, lp)
+      lp_d <- lp_d - max(lp_d)
     }
   }
-  list(poly_d = poly_d, sum_a = sum_a, min_sum = min_sum, max_sum = max_sum)
+  list(lp_d = if (is.null(lp_d)) 0 else lp_d, sum_a = sum_a,
+       min_sum = min_sum, max_sum = max_sum)
 }
 
-martin_func <- function(poly_n, poly_d, r, value) {
-  numer <- eval_poly(poly_n, r)
-  denom <- eval_poly(poly_d, r)
-  deg_diff <- (length(poly_d) - 1) - (length(poly_n) - 1)
-  if (r <= 1) numer / denom - value
-  else numer / r^deg_diff / denom - value
+martin_func <- function(lp_n, lp_d, r, value) {
+  if (r > 0) {
+    return(exp(logeval_poly(lp_n, r) - logeval_poly(lp_d, r)) - value)
+  }
+  # r = 0: the ratio is set by the lowest-degree terms with nonzero
+  # coefficients (log coefficient -Inf means a true zero).
+  jn <- which(is.finite(lp_n))[1]
+  jd <- which(is.finite(lp_d))[1]
+  if (is.na(jn) || jn > jd) return(0 - value)
+  if (jn < jd) return(Inf - value)
+  exp(lp_n[jn] - lp_d[jd]) - value
 }
 
-martin_root <- function(poly_n, poly_d, value, approx, tol) {
-  f <- function(r) martin_func(poly_n, poly_d, r, value)
-  x0 <- 0; x1 <- max(0.5, approx); iter <- 0
+martin_root <- function(lp_n, lp_d, value, approx, tol) {
+  f <- function(r) martin_func(lp_n, lp_d, r, value)
+  # `approx` is only a bracketing hint: at the support maximum the
+  # crude ratio is Inf, which is not a valid uniroot endpoint — fall
+  # back to 1 and let the expansion loop find the bracket.
+  x0 <- 0; x1 <- if (is.finite(approx)) max(0.5, approx) else 1
+  iter <- 0
   f0 <- f(x0); f1 <- f(x1)
   while (f1 * f0 > 0 && iter < 10000) {
     iter <- iter + 1
     x0 <- x1; f0 <- f1
     x1 <- x1 * 1.5 * iter
+    if (!is.finite(x1)) return(NA_real_) # no finite root; never log(Inf)
     f1 <- f(x1)
   }
   if (f1 * f0 > 0) return(NA_real_)
   uniroot(f, c(x0, x1), tol = tol)$root
 }
 
-# diff = sum_a - min_sum index into poly_d/poly_n (0-based).
+# diff = sum_a - min_sum index into lp_d/lp_n (0-based).
 martin_cmle <- function(s, approx, tol) {
   if (s$min_sum == s$max_sum) return(NA_real_)
   if (s$sum_a == s$min_sum) return(0)
   if (s$sum_a == s$max_sum) return(Inf)
-  poly_n <- ((s$min_sum + seq(0, length(s$poly_d) - 1)) * s$poly_d)
-  martin_root(poly_n, s$poly_d, s$sum_a, approx, tol)
+  lp_n <- log(s$min_sum + seq(0, length(s$lp_d) - 1)) + s$lp_d
+  martin_root(lp_n, s$lp_d, s$sum_a, approx, tol)
 }
 
 # Exact limit: lower = TRUE solves for the lower bound, fisher = TRUE
@@ -330,13 +359,17 @@ martin_cmle <- function(s, approx, tol) {
 martin_lim <- function(s, lower, fisher, conf, approx, tol) {
   diff <- s$sum_a - s$min_sum
   value <- if (lower) 0.5 * (1 + conf) else 0.5 * (1 - conf)
-  deg_n <- if (lower && fisher) diff - 1 else diff
-  if (deg_n < 0) return(0) # cannot form numerator; limit is the boundary
+  # Support boundaries are explicit, not errors: the observed sum at
+  # its minimum gives lower limit 0, at its maximum upper limit Inf
+  # (the corpus's undefined/null leaf). One step inside the boundary
+  # (diff = 1) still computes a finite limit.
   if (lower && s$sum_a == s$min_sum) return(0)
   if (!lower && s$sum_a == s$max_sum) return(Inf)
-  poly_n <- s$poly_d[seq_len(deg_n + 1)]
-  if (!fisher) poly_n[length(poly_n)] <- 0.5 * poly_n[length(poly_n)]
-  martin_root(poly_n, s$poly_d, value, approx, tol)
+  deg_n <- if (lower && fisher) diff - 1 else diff
+  if (deg_n < 0) return(0) # cannot form numerator; limit is the boundary
+  lp_n <- s$lp_d[seq_len(deg_n + 1)]
+  if (!fisher) lp_n[length(lp_n)] <- lp_n[length(lp_n)] + log(0.5)
+  martin_root(lp_n, s$lp_d, value, approx, tol)
 }
 
 # Stratified CMLE odds ratio over 2x2 strata: est plus mid-p and Fisher

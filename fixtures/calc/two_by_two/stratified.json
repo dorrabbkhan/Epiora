@@ -1307,32 +1307,32 @@
       },
       "cmle_or": {
         "est": {
-          "value": 2.7651727076105361,
+          "value": 2.7651727076105428,
           "class": "iterative",
-          "r_default": 2.7651429363690534
+          "r_default": 2.7651429363690303
         },
         "midp": {
           "lower": {
-            "value": 1.596334821424477,
+            "value": 1.5963348214244564,
             "class": "iterative",
-            "r_default": 1.5963606413818416
+            "r_default": 1.5963606413818743
           },
           "upper": {
-            "value": 4.8502522038064004,
+            "value": 4.8502522038064031,
             "class": "iterative",
-            "r_default": 4.8502545213776846
+            "r_default": 4.8502545213776855
           }
         },
         "fisher": {
           "lower": {
-            "value": 1.5446268009946689,
+            "value": 1.5446268009946762,
             "class": "iterative",
-            "r_default": 1.5446335355438581
+            "r_default": 1.5446335355438874
           },
           "upper": {
-            "value": 5.0277823325556676,
+            "value": 5.0277823325556712,
             "class": "iterative",
-            "r_default": 5.027783018058372
+            "r_default": 5.0277830180583782
           }
         }
       }

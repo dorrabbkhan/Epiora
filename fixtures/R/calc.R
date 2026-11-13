@@ -191,6 +191,17 @@ crude_table <- function(strata) {
   matrix(m, 2, 2)
 }
 
+# Kind of a limit value for boundary agreement in the generation-time
+# checks: "undefined" (NA/NaN), "inf", "-inf" or "finite". Non-finite
+# port/stock pairs agree only when they are the same kind (the support
+# boundary returns 0 / Inf on both).
+val_kind <- function(v) {
+  if (is.na(v)) "undefined"
+  else if (v == Inf) "inf"
+  else if (v == -Inf) "-inf"
+  else "finite"
+}
+
 # Generation-time sanity check (fix round 2): for a stratified
 # two_by_two fixture, the recorded `stratified_cmle` estimate and
 # Fisher limits must agree with stats::mantelhaen.test(exact = TRUE)
@@ -203,13 +214,14 @@ crude_table <- function(strata) {
 # Non-finite sides agree only when they are the same kind (the
 # boundary returns 0 / Inf on both).
 check_cmle_exact <- function(arr, conf, cmle, what) {
+  # stats::mantelhaen.test's exact method silently overflows at large
+  # counts — measured on this corpus: it still agrees with the port at
+  # ~8e4 total counts, drifts past the 1e-3 sanity bound by ~1e5, and
+  # returns a garbage estimate (~8e-5 for OR ~0.33 strata) by ~1.3e5.
+  # No stock reference exists beyond that, so the check applies only
+  # below 5e4 total counts — clear headroom under the measured break.
+  if (sum(arr) > 5e4) return(invisible(TRUE))
   stock <- mantelhaen.test(arr, exact = TRUE, conf.level = conf)
-  kind <- function(v) {
-    if (is.na(v)) "undefined"
-    else if (v == Inf) "inf"
-    else if (v == -Inf) "-inf"
-    else "finite"
-  }
   for (p in list(
     list(cmle$est, unname(stock$estimate), "est"),
     list(cmle$fisher_lower, unname(stock$conf.int[1]),
@@ -220,7 +232,7 @@ check_cmle_exact <- function(arr, conf, cmle, what) {
     bad <- if (is.finite(port) && is.finite(ref)) {
       abs(port - ref) > 1e-3 * abs(ref)
     } else {
-      kind(port) != kind(ref)
+      val_kind(port) != val_kind(ref)
     }
     stop_if(bad, sprintf(paste0(
       "exact-CMLE sanity check failed for %s %s: port=%s ",
@@ -230,7 +242,63 @@ check_cmle_exact <- function(arr, conf, cmle, what) {
   invisible(TRUE)
 }
 
+# Generation-time sanity checks (fix round 3) for the MartinStats
+# port's single-stratum paths — the shapes no multi-stratum fixture
+# can give stock. A lone 2x2 must reproduce stats::fisher.test's
+# conditional-MLE estimate and central limits; a lone person-time
+# stratum must reproduce the conditional-binomial identity
+# RR = (a/b)*(n0/n1) with stats::binom.test's Clopper-Pearson limits
+# mapped p -> p/(1-p)*(n0/n1). Same 1e-3-relative sanity bound as
+# check_cmle_exact (stock's own root tolerance; never a fixture
+# tolerance) and the same non-finite kind agreement.
+check_cmle_single <- function(port_est, port_lo, port_hi, ref_est,
+                              ref_lo, ref_hi, what) {
+  for (p in list(
+    list(port_est, ref_est, "est"),
+    list(port_lo, ref_lo, "fisher.lower"),
+    list(port_hi, ref_hi, "fisher.upper"))) {
+    port <- p[[1]]; ref <- p[[2]]
+    bad <- if (is.finite(port) && is.finite(ref)) {
+      abs(port - ref) > 1e-3 * abs(ref)
+    } else {
+      val_kind(port) != val_kind(ref)
+    }
+    stop_if(bad, sprintf(paste0(
+      "single-stratum CMLE sanity check failed for %s %s: port=%s ",
+      "stock=%s"), what, p[[3]],
+      format(port, digits = 17), format(ref, digits = 17)))
+  }
+  invisible(TRUE)
+}
+
+check_cmle_single_cc <- function(tab, conf, what) {
+  if (sum(tab) == 0) return(invisible(TRUE)) # no stock reference
+  port <- stratified_cmle_one(list(tab), conf, 1e-14)
+  stock <- fisher.test(tab, conf.level = conf)
+  check_cmle_single(port$est, port$fisher_lower, port$fisher_upper,
+                    unname(stock$estimate), stock$conf.int[1],
+                    stock$conf.int[2], what)
+}
+
+check_cmle_single_pt <- function(tab, conf, what) {
+  a <- tab[1, 1]; b <- tab[1, 2]; n1 <- tab[2, 1]; n0 <- tab[2, 2]
+  if (a + b == 0) return(invisible(TRUE)) # no stock reference
+  port <- stratified_cmle_pt_one(list(tab), conf, 1e-14)
+  ci <- binom.test(a, a + b, conf.level = conf)$conf.int
+  map <- function(p) p / (1 - p) * (n0 / n1)
+  check_cmle_single(port$est, port$fisher_lower, port$fisher_upper,
+                    (a / b) * (n0 / n1), map(ci[1]), map(ci[2]), what)
+}
+
 two_by_two_expected <- function(strata, conf, id) {
+  # Single-stratum port-vs-fisher.test sanity check on every table
+  # that feeds this fixture (fix round 3).
+  for (i in seq_along(strata)) {
+    check_cmle_single_cc(strata[[i]], conf / 100,
+                         paste0(id, ".", i, ".cmle_or"))
+  }
+  check_cmle_single_cc(crude_table(strata), conf / 100,
+                       paste0(id, ".crude.cmle_or"))
   out <- list(
     strata = lapply(seq_along(strata), function(i)
       two_by_two_table(strata[[i]], conf, paste0(id, ".", i))),
@@ -817,6 +885,8 @@ rate_compare_table <- function(tab, per_unit, conf, id) {
               paste0(id, " cmle_rr.fisher_lower"))
   check_tight(cmle$tight$fisher_upper, cmle$r_default$fisher_upper,
               paste0(id, " cmle_rr.fisher_upper"))
+  # Single-stratum port-vs-binom.test sanity check (fix round 3).
+  check_cmle_single_pt(tab, conf / 100, paste0(id, " cmle_rr"))
   efp <- ef_person_time(a, b, n1, n0, conf)
   list(
     zscore = pt_zscore(a, b, n1, n0),
@@ -1099,6 +1169,44 @@ two_by_two_write("large", list(matrix(c(4000, 6000, 2500, 7500), 2, 2,
 two_by_two_write("case_control",
                  list(matrix(c(40, 20, 15, 45), 2, 2, byrow = TRUE)),
                  study_type = "case_control")
+# Fix round 3 — CMLE support-boundary and large-count coverage (the
+# MartinStats port's robust convolution and explicit boundary paths).
+# zero_event: every stratum's a-cell sits at the support minimum, so
+# sum_a = min_sum -> est 0, both lower limits 0, finite uppers.
+two_by_two_write("zero_event", list(
+  matrix(c(0, 10, 5, 20), 2, 2, byrow = TRUE),
+  matrix(c(0, 15, 8, 30), 2, 2, byrow = TRUE)))
+# support_max: every a-cell sits at the support maximum, so
+# sum_a = max_sum -> est and both upper limits undefined (the
+# corpus's null leaf), finite lowers.
+two_by_two_write("support_max", list(
+  matrix(c(10, 0, 5, 20), 2, 2, byrow = TRUE),
+  matrix(c(15, 0, 8, 30), 2, 2, byrow = TRUE)))
+# one_inside_boundary: sum_a - min_sum = 1 — the fisher numerator is
+# degree 0 and used to error; now computes normally. Stock
+# fisher.test's own root at this extreme tail is loose (~1.3e-3
+# relative on small tables, verified against the port's 1e-14 root),
+# so the margins are sized to keep the 1e-3 sanity check meaningful.
+two_by_two_write("one_inside_boundary", list(
+  matrix(c(1, 50, 10, 200), 2, 2, byrow = TRUE),
+  matrix(c(0, 10, 5, 25), 2, 2, byrow = TRUE)))
+# large_counts: cells in the millions — the unnormalised convolved
+# coefficients overflow double range; the rescaled convolution does
+# not. Two identical strata: the convolved CMLE then solves
+# 2*E_r[K] = 2*a — the same equation as fisher.test's single-table
+# CMLE — so the stratified estimate still has a stock check at counts
+# where mantelhaen.test(exact) silently overflows (it is gated off
+# inside check_cmle_exact above 5e4 total counts; measured there).
+{
+  lc <- matrix(c(1e6, 500, 2e6, 500), 2, 2, byrow = TRUE)
+  two_by_two_write("large_counts", list(lc, lc))
+  lc_ref <- unname(fisher.test(lc)$estimate)
+  lc_port <- stratified_cmle_one(list(lc, lc), 0.95, 1e-14)$est
+  stop_if(abs(lc_port - lc_ref) > 1e-3 * abs(lc_ref), sprintf(paste0(
+    "large_counts stratified CMLE sanity check failed: port=%s ",
+    "fisher.test=%s"),
+    format(lc_port, digits = 17), format(lc_ref, digits = 17)))
+}
 
 two_by_n_write("textbook", list(matrix(c(10, 11, 4, 20), 2, 2,
                                        byrow = TRUE)))
@@ -1177,17 +1285,34 @@ rate_compare_write("stratified", list(
   matrix(c(50, 40, 3000, 5000), 2, 2, byrow = TRUE)),
   per_unit = 10000, conf = 90)
 # Boundary: equal rates (RR = 1, null effect — z ~ 0, CIs straddle
-# the null). A near-zero exposed count is not a fixture: when
-# sum_a - min_a <= 1 the CMLE numerator polynomial degenerates.
+# the null).
 rate_compare_write("boundary",
                    list(matrix(c(10, 20, 1000, 2000), 2, 2,
                                byrow = TRUE)))
-# Large counts; the case count stays low enough that the CMLE
-# coefficient polynomial does not overflow double range.
 rate_compare_write("large",
                    list(matrix(c(400, 200, 80000, 90000), 2, 2,
                                byrow = TRUE)),
                    per_unit = 10000, conf = 99)
+# Fix round 3 — CMLE support-boundary and large-count coverage.
+# zero_event: a = 0, the support minimum -> est 0, both lower limits
+# 0, finite uppers. support_max: b = 0, the support maximum -> est
+# and both upper limits undefined (the corpus's null leaf), finite
+# lowers. one_inside_boundary: a = 1 — the fisher numerator is
+# degree 0 and used to error; now computes normally.
+rate_compare_write("zero_event",
+                   list(matrix(c(0, 20, 1000, 2000), 2, 2,
+                               byrow = TRUE)))
+rate_compare_write("support_max",
+                   list(matrix(c(20, 0, 1000, 2000), 2, 2,
+                               byrow = TRUE)))
+rate_compare_write("one_inside_boundary",
+                   list(matrix(c(1, 20, 1000, 2000), 2, 2,
+                               byrow = TRUE)))
+# Counts in the millions: the binomial coefficient polynomial
+# overflows double range before rescaling.
+rate_compare_write("large_counts",
+                   list(matrix(c(1e6, 2e5, 4e6, 1e6), 2, 2,
+                               byrow = TRUE)))
 
 mean_ci_write("textbook", 10.5, "sd", 2.5, 25)
 mean_ci_write("se_input", 10.5, "se", 0.5, 25)

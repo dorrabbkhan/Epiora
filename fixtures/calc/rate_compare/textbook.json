@@ -107,24 +107,24 @@
             "r_default": 1.6000000000000001
           },
           "midp_lower": {
-            "value": 0.94160722543491671,
+            "value": 0.94160722543491659,
             "class": "iterative",
-            "r_default": 0.94158977954879497
+            "r_default": 0.94158977954879775
           },
           "midp_upper": {
-            "value": 2.7863923378371429,
+            "value": 2.786392337837142,
             "class": "iterative",
-            "r_default": 2.7863752802094379
+            "r_default": 2.7863752802094361
           },
           "fisher_lower": {
-            "value": 0.91352928384739385,
+            "value": 0.91352928384739507,
             "class": "iterative",
-            "r_default": 0.91352542154834693
+            "r_default": 0.91352542154834715
           },
           "fisher_upper": {
-            "value": 2.8888552853052922,
+            "value": 2.8888552853052905,
             "class": "iterative",
-            "r_default": 2.8888475008305288
+            "r_default": 2.8888475008305283
           }
         },
         "etiologic": {
@@ -281,24 +281,24 @@
           "r_default": 1.6000000000000001
         },
         "midp_lower": {
-          "value": 0.94160722543491671,
+          "value": 0.94160722543491659,
           "class": "iterative",
-          "r_default": 0.94158977954879497
+          "r_default": 0.94158977954879775
         },
         "midp_upper": {
-          "value": 2.7863923378371429,
+          "value": 2.786392337837142,
           "class": "iterative",
-          "r_default": 2.7863752802094379
+          "r_default": 2.7863752802094361
         },
         "fisher_lower": {
-          "value": 0.91352928384739385,
+          "value": 0.91352928384739507,
           "class": "iterative",
-          "r_default": 0.91352542154834693
+          "r_default": 0.91352542154834715
         },
         "fisher_upper": {
-          "value": 2.8888552853052922,
+          "value": 2.8888552853052905,
           "class": "iterative",
-          "r_default": 2.8888475008305288
+          "r_default": 2.8888475008305283
         }
       },
       "etiologic": {

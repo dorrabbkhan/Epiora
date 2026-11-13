@@ -5,6 +5,12 @@ on:
     paths:
       - 'fixtures/**'
       - '.github/workflows/fixtures.yml'
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'fixtures/**'
+      - '.github/workflows/fixtures.yml'
   workflow_dispatch:
 
 env:

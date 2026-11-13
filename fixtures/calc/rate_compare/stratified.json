@@ -106,14 +106,14 @@
         },
         "cmle_rr": {
           "est": {
-            "value": 2.2500000000000058,
+            "value": 2.2499999999999933,
             "class": "iterative",
             "r_default": 2.2499999999999996
           },
           "midp_lower": {
-            "value": 1.2480711926003609,
+            "value": 1.24807119260036,
             "class": "iterative",
-            "r_default": 1.2480736384184621
+            "r_default": 1.2480736384184639
           },
           "midp_upper": {
             "value": 4.2253182861394141,
@@ -121,14 +121,14 @@
             "r_default": 4.2253164544544433
           },
           "fisher_lower": {
-            "value": 1.1876828780494191,
+            "value": 1.1876828780494135,
             "class": "iterative",
-            "r_default": 1.1876834410647306
+            "r_default": 1.1876834410647301
           },
           "fisher_upper": {
-            "value": 4.5179680909283952,
+            "value": 4.5179680909283988,
             "class": "iterative",
-            "r_default": 4.5179526376891328
+            "r_default": 4.5179526376891319
           }
         },
         "etiologic": {
@@ -279,29 +279,29 @@
         },
         "cmle_rr": {
           "est": {
-            "value": 2.0833333333333335,
+            "value": 2.0833333333333219,
             "class": "iterative",
             "r_default": 2.0833333333333335
           },
           "midp_lower": {
-            "value": 1.4690759403682572,
+            "value": 1.4690759403682594,
             "class": "iterative",
-            "r_default": 1.4690759640532836
+            "r_default": 1.4690759640532889
           },
           "midp_upper": {
-            "value": 2.9630578238861371,
+            "value": 2.9630578238861363,
             "class": "iterative",
-            "r_default": 2.9630625820872853
+            "r_default": 2.963062582087284
           },
           "fisher_lower": {
-            "value": 1.4395750425629512,
+            "value": 1.4395750425629514,
             "class": "iterative",
-            "r_default": 1.439575533959272
+            "r_default": 1.4395755339592686
           },
           "fisher_upper": {
             "value": 3.0262177853874954,
             "class": "iterative",
-            "r_default": 3.0262196946134825
+            "r_default": 3.0262196946134807
           }
         },
         "etiologic": {
@@ -453,29 +453,29 @@
       },
       "cmle_rr": {
         "est": {
-          "value": 2.0800000000000001,
+          "value": 2.0800000000000076,
           "class": "iterative",
           "r_default": 2.0800000000000001
         },
         "midp_lower": {
-          "value": 1.54786396674089,
+          "value": 1.547863966740898,
           "class": "iterative",
-          "r_default": 1.5478421289157611
+          "r_default": 1.5478421289157553
         },
         "midp_upper": {
-          "value": 2.8072470547503952,
+          "value": 2.8072470547503929,
           "class": "iterative",
-          "r_default": 2.8072570082112676
+          "r_default": 2.8072570082112667
         },
         "fisher_lower": {
-          "value": 1.525419100033754,
+          "value": 1.5254191000337611,
           "class": "iterative",
-          "r_default": 1.5254140614329823
+          "r_default": 1.5254140614329876
         },
         "fisher_upper": {
-          "value": 2.851518166069591,
+          "value": 2.8515181660695919,
           "class": "iterative",
-          "r_default": 2.8515332013522645
+          "r_default": 2.851533201352265
         }
       },
       "etiologic": {

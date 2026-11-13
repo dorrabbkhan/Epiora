@@ -102,27 +102,27 @@
         },
         "cmle_rr": {
           "est": {
-            "value": 2.25,
+            "value": 2.2500000000001381,
             "class": "iterative",
             "r_default": 2.25
           },
           "midp_lower": {
-            "value": 1.8037676495104253,
+            "value": 1.8037676495102946,
             "class": "iterative",
-            "r_default": 1.8037956658738981
+            "r_default": 1.8037956658739631
           },
           "midp_upper": {
-            "value": 2.8198844889697234,
+            "value": 2.8198844889697239,
             "class": "iterative",
-            "r_default": 2.8198836606381805
+            "r_default": 2.8198836606381801
           },
           "fisher_lower": {
-            "value": 1.7976015758628567,
+            "value": 1.7976015758627693,
             "class": "iterative",
-            "r_default": 1.7976016443196046
+            "r_default": 1.7976016443192073
           },
           "fisher_upper": {
-            "value": 2.8302977890553329,
+            "value": 2.8302977890553334,
             "class": "iterative",
             "r_default": 2.8302732747067423
           }
@@ -276,27 +276,27 @@
       },
       "cmle_rr": {
         "est": {
-          "value": 2.25,
+          "value": 2.2500000000001381,
           "class": "iterative",
           "r_default": 2.25
         },
         "midp_lower": {
-          "value": 1.8037676495104253,
+          "value": 1.8037676495102946,
           "class": "iterative",
-          "r_default": 1.8037956658738981
+          "r_default": 1.8037956658739631
         },
         "midp_upper": {
-          "value": 2.8198844889697234,
+          "value": 2.8198844889697239,
           "class": "iterative",
-          "r_default": 2.8198836606381805
+          "r_default": 2.8198836606381801
         },
         "fisher_lower": {
-          "value": 1.7976015758628567,
+          "value": 1.7976015758627693,
           "class": "iterative",
-          "r_default": 1.7976016443196046
+          "r_default": 1.7976016443192073
         },
         "fisher_upper": {
-          "value": 2.8302977890553329,
+          "value": 2.8302977890553334,
           "class": "iterative",
           "r_default": 2.8302732747067423
         }
