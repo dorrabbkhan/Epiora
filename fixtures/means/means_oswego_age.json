@@ -37,12 +37,12 @@
           "value": 21.451827448982076,
           "class": "closed_form"
         },
-        "minimum": {
+        "min": {
           "value": 3,
           "class": "closed_form"
         },
         "p25": {
-          "value": 16.5,
+          "value": 16,
           "class": "closed_form"
         },
         "median": {
@@ -50,10 +50,10 @@
           "class": "closed_form"
         },
         "p75": {
-          "value": 57.5,
+          "value": 58,
           "class": "closed_form"
         },
-        "maximum": {
+        "max": {
           "value": 77,
           "class": "closed_form"
         },
@@ -62,7 +62,53 @@
           "class": "closed_form"
         }
       }
-    ]
+    ],
+    "overall": {
+      "observations": {
+        "value": 75,
+        "class": "closed_form"
+      },
+      "total": {
+        "value": 2761,
+        "class": "closed_form"
+      },
+      "mean": {
+        "value": 36.813333333333333,
+        "class": "closed_form"
+      },
+      "variance": {
+        "value": 460.18090090090089,
+        "class": "closed_form"
+      },
+      "std_dev": {
+        "value": 21.451827448982076,
+        "class": "closed_form"
+      },
+      "min": {
+        "value": 3,
+        "class": "closed_form"
+      },
+      "p25": {
+        "value": 16,
+        "class": "closed_form"
+      },
+      "median": {
+        "value": 36,
+        "class": "closed_form"
+      },
+      "p75": {
+        "value": 58,
+        "class": "closed_form"
+      },
+      "max": {
+        "value": 77,
+        "class": "closed_form"
+      },
+      "mode": {
+        "value": 11,
+        "class": "closed_form"
+      }
+    }
   },
   "tolerance_classes": {
     "closed_form": 1.0000000000000001e-09,

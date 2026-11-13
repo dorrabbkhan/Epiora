@@ -38,7 +38,7 @@
           "value": 0,
           "class": "closed_form"
         },
-        "minimum": {
+        "min": {
           "value": 7.25,
           "class": "closed_form"
         },
@@ -54,7 +54,7 @@
           "value": 7.25,
           "class": "closed_form"
         },
-        "maximum": {
+        "max": {
           "value": 7.25,
           "class": "closed_form"
         },
@@ -84,7 +84,7 @@
           "value": 0,
           "class": "closed_form"
         },
-        "minimum": {
+        "min": {
           "value": 7.25,
           "class": "closed_form"
         },
@@ -100,7 +100,7 @@
           "value": 7.25,
           "class": "closed_form"
         },
-        "maximum": {
+        "max": {
           "value": 7.25,
           "class": "closed_form"
         },
@@ -110,6 +110,52 @@
         }
       }
     ],
+    "overall": {
+      "observations": {
+        "value": 8,
+        "class": "closed_form"
+      },
+      "total": {
+        "value": 58,
+        "class": "closed_form"
+      },
+      "mean": {
+        "value": 7.25,
+        "class": "closed_form"
+      },
+      "variance": {
+        "value": 0,
+        "class": "closed_form"
+      },
+      "std_dev": {
+        "value": 0,
+        "class": "closed_form"
+      },
+      "min": {
+        "value": 7.25,
+        "class": "closed_form"
+      },
+      "p25": {
+        "value": 7.25,
+        "class": "closed_form"
+      },
+      "median": {
+        "value": 7.25,
+        "class": "closed_form"
+      },
+      "p75": {
+        "value": 7.25,
+        "class": "closed_form"
+      },
+      "max": {
+        "value": 7.25,
+        "class": "closed_form"
+      },
+      "mode": {
+        "value": 7.25,
+        "class": "closed_form"
+      }
+    },
     "anova": {
       "ss_between": {
         "value": 0,
@@ -139,7 +185,7 @@
         "value": null,
         "class": "closed_form"
       },
-      "p": {
+      "p_value": {
         "value": null,
         "class": "closed_form"
       },
@@ -153,7 +199,7 @@
       }
     },
     "bartlett": {
-      "chisq": {
+      "statistic": {
         "value": null,
         "class": "closed_form"
       },
@@ -161,7 +207,7 @@
         "value": 1,
         "class": "closed_form"
       },
-      "p": {
+      "p_value": {
         "value": null,
         "class": "closed_form"
       }
@@ -175,7 +221,7 @@
         "value": 1,
         "class": "closed_form"
       },
-      "p": {
+      "p_value": {
         "value": null,
         "class": "closed_form"
       }

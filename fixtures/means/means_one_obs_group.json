@@ -38,7 +38,7 @@
           "value": 1.2909944487358056,
           "class": "closed_form"
         },
-        "minimum": {
+        "min": {
           "value": 1.5,
           "class": "closed_form"
         },
@@ -54,7 +54,7 @@
           "value": 4,
           "class": "closed_form"
         },
-        "maximum": {
+        "max": {
           "value": 4.5,
           "class": "closed_form"
         },
@@ -84,7 +84,7 @@
           "value": null,
           "class": "closed_form"
         },
-        "minimum": {
+        "min": {
           "value": 99.5,
           "class": "closed_form"
         },
@@ -100,7 +100,7 @@
           "value": 99.5,
           "class": "closed_form"
         },
-        "maximum": {
+        "max": {
           "value": 99.5,
           "class": "closed_form"
         },
@@ -130,7 +130,7 @@
           "value": 0.70710678118654757,
           "class": "closed_form"
         },
-        "minimum": {
+        "min": {
           "value": 5.5,
           "class": "closed_form"
         },
@@ -146,7 +146,7 @@
           "value": 6.5,
           "class": "closed_form"
         },
-        "maximum": {
+        "max": {
           "value": 6.5,
           "class": "closed_form"
         },
@@ -156,6 +156,52 @@
         }
       }
     ],
+    "overall": {
+      "observations": {
+        "value": 7,
+        "class": "closed_form"
+      },
+      "total": {
+        "value": 123.5,
+        "class": "closed_form"
+      },
+      "mean": {
+        "value": 17.642857142857142,
+        "class": "closed_form"
+      },
+      "variance": {
+        "value": 1305.8095238095239,
+        "class": "closed_form"
+      },
+      "std_dev": {
+        "value": 36.13598654817001,
+        "class": "closed_form"
+      },
+      "min": {
+        "value": 1.5,
+        "class": "closed_form"
+      },
+      "p25": {
+        "value": 2.5,
+        "class": "closed_form"
+      },
+      "median": {
+        "value": 4.5,
+        "class": "closed_form"
+      },
+      "p75": {
+        "value": 6.5,
+        "class": "closed_form"
+      },
+      "max": {
+        "value": 99.5,
+        "class": "closed_form"
+      },
+      "mode": {
+        "value": 1.5,
+        "class": "closed_form"
+      }
+    },
     "anova": {
       "ss_between": {
         "value": 7829.357142857144,
@@ -185,7 +231,7 @@
         "value": null,
         "class": "closed_form"
       },
-      "p": {
+      "p_value": {
         "value": null,
         "class": "closed_form"
       },
@@ -207,7 +253,7 @@
         "value": 2,
         "class": "closed_form"
       },
-      "p": {
+      "p_value": {
         "value": 0.089751163697020922,
         "class": "closed_form"
       }

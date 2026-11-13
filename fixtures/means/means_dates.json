@@ -38,7 +38,7 @@
           "value": 4.6904157598234297,
           "class": "closed_form"
         },
-        "minimum": {
+        "min": {
           "value": -2,
           "class": "closed_form"
         },
@@ -54,7 +54,7 @@
           "value": 6.5,
           "class": "closed_form"
         },
-        "maximum": {
+        "max": {
           "value": 9,
           "class": "closed_form"
         },
@@ -84,12 +84,12 @@
           "value": 7.6376261582597333,
           "class": "closed_form"
         },
-        "minimum": {
+        "min": {
           "value": -3487,
           "class": "closed_form"
         },
         "p25": {
-          "value": -3484.5,
+          "value": -3487,
           "class": "closed_form"
         },
         "median": {
@@ -97,10 +97,10 @@
           "class": "closed_form"
         },
         "p75": {
-          "value": -3477,
+          "value": -3472,
           "class": "closed_form"
         },
-        "maximum": {
+        "max": {
           "value": -3472,
           "class": "closed_form"
         },
@@ -110,6 +110,52 @@
         }
       }
     ],
+    "overall": {
+      "observations": {
+        "value": 7,
+        "class": "closed_form"
+      },
+      "total": {
+        "value": -10429,
+        "class": "closed_form"
+      },
+      "mean": {
+        "value": -1489.8571428571429,
+        "class": "closed_form"
+      },
+      "variance": {
+        "value": 3466776.4761904762,
+        "class": "closed_form"
+      },
+      "std_dev": {
+        "value": 1861.928160856502,
+        "class": "closed_form"
+      },
+      "min": {
+        "value": -3487,
+        "class": "closed_form"
+      },
+      "p25": {
+        "value": -3482,
+        "class": "closed_form"
+      },
+      "median": {
+        "value": -2,
+        "class": "closed_form"
+      },
+      "p75": {
+        "value": 4,
+        "class": "closed_form"
+      },
+      "max": {
+        "value": 9,
+        "class": "closed_form"
+      },
+      "mode": {
+        "value": -3487,
+        "class": "closed_form"
+      }
+    },
     "t_test": {
       "pooled": {
         "t": {
@@ -120,7 +166,7 @@
           "value": 5,
           "class": "closed_form"
         },
-        "p": {
+        "p_value": {
           "value": 7.7595358501257966e-14,
           "class": "closed_form"
         },
@@ -128,13 +174,15 @@
           "value": 3483.3333333333335,
           "class": "closed_form"
         },
-        "lower": {
-          "value": 3471.4665098851356,
-          "class": "closed_form"
-        },
-        "upper": {
-          "value": 3495.2001567815309,
-          "class": "closed_form"
+        "diff_ci_95": {
+          "lower": {
+            "value": 3471.4665098851356,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 3495.2001567815309,
+            "class": "closed_form"
+          }
         }
       },
       "welch": {
@@ -146,7 +194,7 @@
           "value": 3.1247733155602404,
           "class": "closed_form"
         },
-        "p": {
+        "p_value": {
           "value": 3.2217825153468829e-09,
           "class": "closed_form"
         },
@@ -154,13 +202,15 @@
           "value": 3483.3333333333335,
           "class": "closed_form"
         },
-        "lower": {
-          "value": 3467.79187764485,
-          "class": "closed_form"
-        },
-        "upper": {
-          "value": 3498.874789021816,
-          "class": "closed_form"
+        "diff_ci_95": {
+          "lower": {
+            "value": 3467.79187764485,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 3498.874789021816,
+            "class": "closed_form"
+          }
         }
       }
     },
@@ -193,7 +243,7 @@
         "value": 569356.10010427528,
         "class": "closed_form"
       },
-      "p": {
+      "p_value": {
         "value": 7.7595358501257966e-14,
         "class": "closed_form"
       },
@@ -207,7 +257,7 @@
       }
     },
     "bartlett": {
-      "chisq": {
+      "statistic": {
         "value": 0.48356479704490235,
         "class": "closed_form"
       },
@@ -215,7 +265,7 @@
         "value": 1,
         "class": "closed_form"
       },
-      "p": {
+      "p_value": {
         "value": 0.48681203168412057,
         "class": "closed_form"
       }
@@ -229,7 +279,7 @@
         "value": 1,
         "class": "closed_form"
       },
-      "p": {
+      "p_value": {
         "value": 0.033894853524689267,
         "class": "closed_form"
       }
