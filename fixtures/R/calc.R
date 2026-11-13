@@ -19,6 +19,55 @@ stat_ci <- function(x, class = "closed_form") {
        upper = leaf(x[3], class))
 }
 
+# Generation-time conf-level guard (fix round 4). A package call that
+# drops conf.level silently uses its 0.95 default (the
+# riskratio/oddsratio leak fixed this round), so for a case with
+# conf_level != 95 its limits come out identical to the 95%
+# computation. The guard rebuilds the case's expected at 95 and
+# requires every interval leaf — a leaf under a key containing
+# "lower" or "upper" (lower, upper, lower_rank, midp_lower,
+# fisher_lower, ...) — to differ; an unchanged leaf stops generation.
+# identical() flags any bitwise-same value: a real limit at a
+# different level always differs, and an undefined leaf (NA at both
+# levels) is indistinguishable from a leak, so it flags too.
+# Estimate leaves are conf-invariant and unchecked. `rebuild`
+# recomputes the case's expected at a level given in percent (the
+# same units as each writer's `conf`); the guard is a no-op at 95.
+conf_interval_walk <- function(at_conf, at_95, path, bad) {
+  if (is.list(at_conf) &&
+      identical(sort(names(at_conf)[names(at_conf) != "r_default"]),
+                c("class", "value"))) {
+    if (grepl("lower|upper", path[length(path)]) &&
+        identical(at_conf$value, at_95$value)) {
+      bad[[length(bad) + 1]] <- paste(path, collapse = ".")
+    }
+    return(bad)
+  }
+  if (is.list(at_conf)) {
+    nms <- names(at_conf)
+    for (i in seq_along(at_conf)) {
+      nm <- if (!is.null(nms) && nms[i] != "") {
+        nms[i]
+      } else {
+        paste0("[", i, "]")
+      }
+      bad <- conf_interval_walk(at_conf[[i]], at_95[[i]],
+                                c(path, nm), bad)
+    }
+  }
+  bad
+}
+
+check_conf_leak <- function(id, conf, expected, rebuild) {
+  if (conf == 95) return(invisible(TRUE))
+  bad <- conf_interval_walk(expected, rebuild(95), id, list())
+  stop_if(length(bad) > 0, sprintf(paste0(
+    "conf-level leak check failed for %s (conf=%s): interval leaves ",
+    "identical at 95%%: %s"),
+    id, conf, paste(unlist(bad), collapse = ", ")))
+  invisible(TRUE)
+}
+
 # --- proportion ---------------------------------------------------------
 
 proportion_expected <- function(x, n, conf, pop, compare_with) {
@@ -65,8 +114,10 @@ proportion_write <- function(id, x, n, conf = 95, pop = 1000000,
   inputs <- list(numerator = x, denominator = n, conf_level = conf,
                  multiplier = multiplier, population_size = pop)
   if (!is.null(compare_with)) inputs$compare_with <- compare_with
-  calc_write("proportion", id, inputs,
-             proportion_expected(x, n, conf, pop, compare_with),
+  build <- function(c) proportion_expected(x, n, c, pop, compare_with)
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
+  calc_write("proportion", id, inputs, expected,
              c("stats", "exactci", "PropCIs"))
 }
 
@@ -128,9 +179,11 @@ two_by_two_table <- function(tab, conf, id) {
   a <- tab[1, 1]; b <- tab[1, 2]; cc <- tab[2, 1]; d <- tab[2, 2]
   n1 <- a + b; n0 <- cc + d; n <- n1 + n0
   pv <- tab_pvals(tab)
-  rr <- tryCatch(riskratio(tab, rev = "both", method = "wald"),
+  rr <- tryCatch(riskratio(tab, rev = "both", method = "wald",
+                           conf.level = conf / 100),
                  error = function(e) NULL)
-  orw <- tryCatch(oddsratio(tab, rev = "both", method = "wald"),
+  orw <- tryCatch(oddsratio(tab, rev = "both", method = "wald",
+                            conf.level = conf / 100),
                   error = function(e) NULL)
   # epiR reports risks/RD in percent; scale accordingly.
   rre <- risk_ci(a, n1, conf) * 100
@@ -330,7 +383,7 @@ two_by_two_expected <- function(strata, conf, id) {
                              paste0(id, ".crude")))
   if (length(strata) > 1) {
     arr <- array(unlist(strata), dim = c(2, 2, length(strata)))
-    mh <- mantelhaen.test(arr, correct = FALSE)
+    mh <- mantelhaen.test(arr, correct = FALSE, conf.level = conf / 100)
     check_mh_port(arr, paste0(id, ".adjusted"))
     da_or <- direct_adjust(strata, conf, "or")
     da_rr <- direct_adjust(strata, conf, "rr")
@@ -400,8 +453,10 @@ two_by_two_write <- function(id, strata, conf = 95,
                              study_type = "cohort") {
   inputs <- list(strata = lapply(strata, function(t) t),
                  conf_level = conf, study_type = study_type)
-  calc_write("two_by_two", id, inputs,
-             two_by_two_expected(strata, conf, id),
+  build <- function(c) two_by_two_expected(strata, c, id)
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
+  calc_write("two_by_two", id, inputs, expected,
              c("stats", "epitools", "exact2x2", "epiR", "DescTools"))
 }
 
@@ -411,9 +466,11 @@ two_by_n_table <- function(tab, conf, id) {
   a <- tab[1, 1]; b <- tab[1, 2]; cc <- tab[2, 1]; d <- tab[2, 2]
   n1 <- a + b; n0 <- cc + d
   pv <- tab_pvals(tab)
-  rr <- tryCatch(riskratio(tab, rev = "both", method = "wald"),
+  rr <- tryCatch(riskratio(tab, rev = "both", method = "wald",
+                           conf.level = conf / 100),
                  error = function(e) NULL)
-  orw <- tryCatch(oddsratio(tab, rev = "both", method = "wald"),
+  orw <- tryCatch(oddsratio(tab, rev = "both", method = "wald",
+                            conf.level = conf / 100),
                   error = function(e) NULL)
   mle <- tryCatch(
     exact2x2::exact2x2(tab, midp = TRUE, conf.level = conf / 100),
@@ -475,11 +532,13 @@ two_by_n_table <- function(tab, conf, id) {
 
 two_by_n_write <- function(id, strata, conf = 95) {
   inputs <- list(strata = strata, conf_level = conf)
-  expected <- list(
+  build <- function(c) list(
     strata = lapply(seq_along(strata), function(i)
-      two_by_n_table(strata[[i]], conf, paste0(id, ".", i))),
-    crude = two_by_n_table(crude_table(strata), conf,
+      two_by_n_table(strata[[i]], c, paste0(id, ".", i))),
+    crude = two_by_n_table(crude_table(strata), c,
                            paste0(id, ".crude")))
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   calc_write("two_by_n", id, inputs, expected,
              c("stats", "epitools", "exact2x2", "epiR", "DescTools"))
 }
@@ -556,16 +615,18 @@ dose_response_write <- function(id, strata, conf = 95) {
     controls = Reduce(`+`, lapply(dfs, function(d) d$controls)))
   xmh_cc <- xmh_trend(dfs, correct = TRUE)
   xmh_u <- xmh_trend(dfs, correct = FALSE)
-  expected <- list(
+  build <- function(c) list(
     strata = lapply(seq_along(dfs), function(i) list(
-      odds_ratio = lapply(dr_or_levels(dfs[[i]], conf), leaf))),
+      odds_ratio = lapply(dr_or_levels(dfs[[i]], c), leaf))),
     crude = list(
-      odds_ratio = lapply(dr_or_levels(crude_df, conf), leaf)),
+      odds_ratio = lapply(dr_or_levels(crude_df, c), leaf)),
     mh_or = lapply(dr_mh_or_est(dfs), leaf),
     xmh = list(
       cc = list(value = leaf(xmh_cc$value), p = leaf(xmh_cc$p)),
       uncorrected = list(value = leaf(xmh_u$value),
                          p = leaf(xmh_u$p))))
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   inputs <- list(table = strata, strata = length(strata))
   calc_write("dose_response", id, inputs, expected,
              c("stats", "epiR"))
@@ -651,8 +712,8 @@ matched_expected <- function(matched_sets, controls_per_case, conf, id) {
       }
     }
     arr <- array(unlist(arrs), dim = c(2, 2, length(arrs)))
-    mh <- mantelhaen.test(arr, correct = FALSE)
-    mhc <- mantelhaen.test(arr, correct = TRUE)
+    mh <- mantelhaen.test(arr, correct = FALSE, conf.level = conf / 100)
+    mhc <- mantelhaen.test(arr, correct = TRUE, conf.level = conf / 100)
     # clogit: one stratum per set; case first with its exposure flag,
     # then M controls, the first k exposed (order irrelevant).
     rows <- list()
@@ -710,8 +771,12 @@ matched_write <- function(id, matched_sets, controls_per_case = 1,
                           conf = 95) {
   inputs <- list(controls_per_case = controls_per_case,
                  matched_sets = matched_sets, conf_level = conf)
-  calc_write("matched_case_control", id, inputs,
-             matched_expected(matched_sets, controls_per_case, conf, id),
+  build <- function(c) {
+    matched_expected(matched_sets, controls_per_case, c, id)
+  }
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
+  calc_write("matched_case_control", id, inputs, expected,
              c("stats", "exact2x2", "survival"))
 }
 
@@ -771,8 +836,11 @@ screening_expected <- function(tab, conf) {
 }
 
 screening_write <- function(id, tab, conf = 95) {
+  build <- function(c) screening_expected(tab, c)
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   calc_write("screening", id, list(table = tab, conf_level = conf),
-             screening_expected(tab, conf), c("stats", "PropCIs", "epiR"))
+             expected, c("stats", "PropCIs", "epiR"))
 }
 
 # --- smr ------------------------------------------------------------------
@@ -811,9 +879,12 @@ smr_expected <- function(o, e, conf) {
 }
 
 smr_write <- function(id, o, e, conf = 95) {
+  build <- function(c) smr_expected(o, e, c)
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   calc_write("smr", id,
              list(observed = o, expected = e, conf_level = conf),
-             smr_expected(o, e, conf),
+             expected,
              c("stats", "exactci", "epitools", "epiR"))
 }
 
@@ -859,25 +930,32 @@ poisson_write <- function(id, o, e) {
 # --- rate_one --------------------------------------------------------------
 
 rate_one_write <- function(id, cases, pt, per_unit = 1000, conf = 95) {
-  cl <- conf / 100
-  midp <- exactci::poisson.exact(cases, pt, conf.level = cl, midp = TRUE)
-  fis <- exactci::poisson.exact(cases, pt, conf.level = cl)
-  na_ <- epitools::pois.approx(cases, pt, conf = cl)
-  by <- epitools::pois.byar(cases, pt, conf = cl)
-  rg <- rg_ci(cases, pt, conf)
-  expected <- list(
-    estimate = leaf(cases / pt * per_unit),
-    ci = list(
-      midp = list(lower = leaf(midp$conf.int[1] * per_unit, "iterative"),
-                  upper = leaf(midp$conf.int[2] * per_unit, "iterative")),
-      fisher = list(lower = leaf(fis$conf.int[1] * per_unit, "iterative"),
-                    upper = leaf(fis$conf.int[2] * per_unit, "iterative")),
-      normal = list(lower = leaf(na_$lower * per_unit),
-                    upper = leaf(na_$upper * per_unit)),
-      byar = list(lower = leaf(by$lower * per_unit),
-                  upper = leaf(by$upper * per_unit)),
-      rothman_greenland = list(lower = leaf(rg[1] * per_unit),
-                               upper = leaf(rg[2] * per_unit))))
+  build <- function(c) {
+    cl <- c / 100
+    midp <- exactci::poisson.exact(cases, pt, conf.level = cl,
+                                   midp = TRUE)
+    fis <- exactci::poisson.exact(cases, pt, conf.level = cl)
+    na_ <- epitools::pois.approx(cases, pt, conf = cl)
+    by <- epitools::pois.byar(cases, pt, conf = cl)
+    rg <- rg_ci(cases, pt, c)
+    list(
+      estimate = leaf(cases / pt * per_unit),
+      ci = list(
+        midp = list(
+          lower = leaf(midp$conf.int[1] * per_unit, "iterative"),
+          upper = leaf(midp$conf.int[2] * per_unit, "iterative")),
+        fisher = list(
+          lower = leaf(fis$conf.int[1] * per_unit, "iterative"),
+          upper = leaf(fis$conf.int[2] * per_unit, "iterative")),
+        normal = list(lower = leaf(na_$lower * per_unit),
+                      upper = leaf(na_$upper * per_unit)),
+        byar = list(lower = leaf(by$lower * per_unit),
+                    upper = leaf(by$upper * per_unit)),
+        rothman_greenland = list(lower = leaf(rg[1] * per_unit),
+                                 upper = leaf(rg[2] * per_unit))))
+  }
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   calc_write("rate_one", id,
              list(cases = cases, person_time = pt, per_unit = per_unit,
                   conf_level = conf),
@@ -947,23 +1025,28 @@ rate_compare_table <- function(tab, per_unit, conf, id) {
 }
 
 rate_compare_write <- function(id, strata, per_unit = 1000, conf = 95) {
-  expected <- list(
-    strata = lapply(seq_along(strata), function(i)
-      rate_compare_table(strata[[i]], per_unit, conf,
-                         paste0(id, ".", i))),
-    crude = rate_compare_table(crude_table(strata), per_unit, conf,
-                               paste0(id, ".crude")))
-  if (length(strata) > 1) {
-    adj <- adjust(strata, conf)
-    bd <- breslow_day_rates(strata, conf)
-    expected$adjusted <- list(
-      zscore = list(value = leaf(adj$zscore[1]),
-                    p = leaf(adj$zscore[2])),
-      direct_rr = lapply(adj$direct_rr, leaf),
-      mh_rr = lapply(adj$mh_rr, leaf),
-      direct_rd = lapply(adj$direct_rd, leaf),
-      breslow_day = lapply(bd, leaf))
+  build <- function(c) {
+    out <- list(
+      strata = lapply(seq_along(strata), function(i)
+        rate_compare_table(strata[[i]], per_unit, c,
+                           paste0(id, ".", i))),
+      crude = rate_compare_table(crude_table(strata), per_unit, c,
+                                 paste0(id, ".crude")))
+    if (length(strata) > 1) {
+      adj <- adjust(strata, c)
+      bd <- breslow_day_rates(strata, c)
+      out$adjusted <- list(
+        zscore = list(value = leaf(adj$zscore[1]),
+                      p = leaf(adj$zscore[2])),
+        direct_rr = lapply(adj$direct_rr, leaf),
+        mh_rr = lapply(adj$mh_rr, leaf),
+        direct_rd = lapply(adj$direct_rd, leaf),
+        breslow_day = lapply(bd, leaf))
+    }
+    out
   }
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   calc_write("rate_compare", id,
              list(strata = strata, per_unit = per_unit,
                   conf_level = conf),
@@ -979,20 +1062,25 @@ mean_ci_write <- function(id, mean, sd_or, sd_value, n,
                se = sd_value * sqrt(n),
                variance = sqrt(sd_value))
   pop_finite <- population_size > 0 && population_size < 999999999
-  zci <- mean_ci(mean, sd, n, conf,
-                 if (pop_finite) population_size else Inf)
-  tc <- qt((1 + conf / 100) / 2, df = n - 1)
-  # The t-row applies the same finite-population correction the z-row
-  # gets inside mean_ci (OpenEpi CIMean.js:161 applies it to both).
-  se_t <- sd / sqrt(n)
-  if (pop_finite) {
-    se_t <- se_t *
-      sqrt((population_size - n) / (population_size - 1))
+  build <- function(c) {
+    zci <- mean_ci(mean, sd, n, c,
+                   if (pop_finite) population_size else Inf)
+    tc <- qt((1 + c / 100) / 2, df = n - 1)
+    # The t-row applies the same finite-population correction the
+    # z-row gets inside mean_ci (OpenEpi CIMean.js:161 applies it to
+    # both).
+    se_t <- sd / sqrt(n)
+    if (pop_finite) {
+      se_t <- se_t *
+        sqrt((population_size - n) / (population_size - 1))
+    }
+    half <- tc * se_t
+    list(
+      z = list(lower = leaf(zci[1]), upper = leaf(zci[2])),
+      t = list(lower = leaf(mean - half), upper = leaf(mean + half)))
   }
-  half <- tc * se_t
-  expected <- list(
-    z = list(lower = leaf(zci[1]), upper = leaf(zci[2])),
-    t = list(lower = leaf(mean - half), upper = leaf(mean + half)))
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   calc_write("mean_ci", id,
              list(mean = mean, sd_or = sd_or, sd_value = sd_value,
                   n = n, population_size = population_size,
@@ -1001,9 +1089,14 @@ mean_ci_write <- function(id, mean, sd_or, sd_value, n,
 }
 
 median_ci_write <- function(id, n, percentile, conf = 95) {
-  pc <- percentile_ci(n, percentile, conf)
-  expected <- list(
-    normal = list(lower_rank = leaf(pc[1]), upper_rank = leaf(pc[2])))
+  build <- function(c) {
+    pc <- percentile_ci(n, percentile, c)
+    list(
+      normal = list(lower_rank = leaf(pc[1]),
+                    upper_rank = leaf(pc[2])))
+  }
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   calc_write("median_ci", id,
              list(n = n, percentile = percentile, conf_level = conf),
              expected, c("stats"))
@@ -1011,31 +1104,35 @@ median_ci_write <- function(id, n, percentile, conf = 95) {
 
 t_test_summary_write <- function(id, n1, mean1, sd1, n2, mean2, sd2,
                                  conf = 95) {
-  cl <- conf / 100
   diff <- mean1 - mean2
   sp2 <- ((n1 - 1) * sd1^2 + (n2 - 1) * sd2^2) / (n1 + n2 - 2)
   se_p <- sqrt(sp2 * (1 / n1 + 1 / n2))
   t_p <- diff / se_p; df_p <- n1 + n2 - 2
-  tc_p <- qt(1 - (1 - cl) / 2, df_p)
   se_w <- sqrt(sd1^2 / n1 + sd2^2 / n2)
   t_w <- diff / se_w
   df_w <- (sd1^2 / n1 + sd2^2 / n2)^2 /
     ((sd1^2 / n1)^2 / (n1 - 1) + (sd2^2 / n2)^2 / (n2 - 1))
-  tc_w <- qt(1 - (1 - cl) / 2, df_w)
   f <- sd1^2 / sd2^2
   pf_f <- pf(f, n1 - 1, n2 - 1)
-  tset <- function(t_, df_, tc_, se_) list(
-    t = leaf(t_), df = leaf(df_),
-    p_2t = leaf(2 * pt(-abs(t_), df_)),
-    diff = leaf(diff),
-    lower = leaf(diff - tc_ * se_),
-    upper = leaf(diff + tc_ * se_))
-  expected <- list(
-    pooled = tset(t_p, df_p, tc_p, se_p),
-    welch = tset(t_w, df_w, tc_w, se_w),
-    f_variance = list(
-      f = leaf(f), df_num = leaf(n1 - 1), df_den = leaf(n2 - 1),
-      p = leaf(2 * min(pf_f, 1 - pf_f))))
+  build <- function(c) {
+    cl <- c / 100
+    tc_p <- qt(1 - (1 - cl) / 2, df_p)
+    tc_w <- qt(1 - (1 - cl) / 2, df_w)
+    tset <- function(t_, df_, tc_, se_) list(
+      t = leaf(t_), df = leaf(df_),
+      p_2t = leaf(2 * pt(-abs(t_), df_)),
+      diff = leaf(diff),
+      lower = leaf(diff - tc_ * se_),
+      upper = leaf(diff + tc_ * se_))
+    list(
+      pooled = tset(t_p, df_p, tc_p, se_p),
+      welch = tset(t_w, df_w, tc_w, se_w),
+      f_variance = list(
+        f = leaf(f), df_num = leaf(n1 - 1), df_den = leaf(n2 - 1),
+        p = leaf(2 * min(pf_f, 1 - pf_f))))
+  }
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   calc_write("t_test_summary", id,
              list(conf_level = conf,
                   n_1 = n1, mean_1 = mean1, sd_1 = sd1,
@@ -1089,16 +1186,20 @@ ss_cc_write <- function(id, conf, power, r, p2_pct, p1_pct = NULL,
   } else {
     p1_pct / 100
   }
-  ke <- kelsey(conf, power, r, p2, p1)
-  fl <- fleiss(conf, power, r, p2, p1)
-  fc <- fleiss_cc(conf, power, r, p2, p1)
-  expected <- list(
-    kelsey = list(cases = leaf(ke[1]), controls = leaf(ke[2]),
-                  total = leaf(ke[3])),
-    fleiss = list(cases = leaf(fl[1]), controls = leaf(fl[2]),
-                  total = leaf(fl[3])),
-    fleiss_cc = list(cases = leaf(fc[1]), controls = leaf(fc[2]),
-                     total = leaf(fc[3])))
+  build <- function(c) {
+    ke <- kelsey(c, power, r, p2, p1)
+    fl <- fleiss(c, power, r, p2, p1)
+    fc <- fleiss_cc(c, power, r, p2, p1)
+    list(
+      kelsey = list(cases = leaf(ke[1]), controls = leaf(ke[2]),
+                    total = leaf(ke[3])),
+      fleiss = list(cases = leaf(fl[1]), controls = leaf(fl[2]),
+                    total = leaf(fl[3])),
+      fleiss_cc = list(cases = leaf(fc[1]), controls = leaf(fc[2]),
+                       total = leaf(fc[3])))
+  }
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   inputs <- list(conf_level = conf, power = power,
                  ratio_controls_per_case = r,
                  percent_controls_exposed = p2_pct)
@@ -1120,16 +1221,20 @@ ss_cohort_write <- function(id, conf, power, r, p2_pct,
   } else {
     percent_exposed / 100
   }
-  ke <- kelsey(conf, power, r, p2, p1)
-  fl <- fleiss(conf, power, r, p2, p1)
-  fc <- fleiss_cc(conf, power, r, p2, p1)
-  expected <- list(
-    kelsey = list(exposed = leaf(ke[1]), unexposed = leaf(ke[2]),
-                  total = leaf(ke[3])),
-    fleiss = list(exposed = leaf(fl[1]), unexposed = leaf(fl[2]),
-                  total = leaf(fl[3])),
-    fleiss_cc = list(exposed = leaf(fc[1]), unexposed = leaf(fc[2]),
-                     total = leaf(fc[3])))
+  build <- function(c) {
+    ke <- kelsey(c, power, r, p2, p1)
+    fl <- fleiss(c, power, r, p2, p1)
+    fc <- fleiss_cc(c, power, r, p2, p1)
+    list(
+      kelsey = list(exposed = leaf(ke[1]), unexposed = leaf(ke[2]),
+                    total = leaf(ke[3])),
+      fleiss = list(exposed = leaf(fl[1]), unexposed = leaf(fl[2]),
+                    total = leaf(fl[3])),
+      fleiss_cc = list(exposed = leaf(fc[1]), unexposed = leaf(fc[2]),
+                       total = leaf(fc[3])))
+  }
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   inputs <- list(conf_level = conf, power = power,
                  ratio_unexposed_per_exposed = r,
                  percent_unexposed_outcome = p2_pct)
@@ -1144,9 +1249,13 @@ ss_cohort_write <- function(id, conf, power, r, p2_pct,
 ss_mean_difference_write <- function(id, conf, power, ratio, diff,
                                      s1, s2, mean_1 = NULL,
                                      mean_2 = NULL) {
-  ss <- ss_means(conf, power, ratio, diff, s1, s2)
-  expected <- list(n1 = leaf(ss[1]), n2 = leaf(ss[2]),
-                   total = leaf(ss[3]))
+  build <- function(c) {
+    ss <- ss_means(c, power, ratio, diff, s1, s2)
+    list(n1 = leaf(ss[1]), n2 = leaf(ss[2]),
+         total = leaf(ss[3]))
+  }
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   inputs <- list(conf_level = conf, power = power, ratio = ratio,
                  difference = diff, sd_1 = s1, sd_2 = s2)
   calc_write("ss_mean_difference", id, inputs, expected, c("stats"))
@@ -1154,12 +1263,14 @@ ss_mean_difference_write <- function(id, conf, power, ratio, diff,
 
 power_unmatched_cc_write <- function(id, conf, n_cases, n_controls,
                                      pct_cases, pct_controls) {
-  expected <- list(
+  build <- function(c) list(
     normal = leaf(power_cc(n_cases, n_controls, pct_cases,
-                           pct_controls, conf)),
+                           pct_controls, c)),
     normal_cc = leaf(power_cc_cc(n_cases, n_controls, pct_cases,
-                                 pct_controls, conf)),
+                                 pct_controls, c)),
     odds_ratio = leaf(implied_or(pct_cases, pct_controls)))
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   calc_write("power_unmatched_cc", id,
              list(conf_level = conf, n_cases = n_cases,
                   n_controls = n_controls,
@@ -1171,13 +1282,15 @@ power_unmatched_cc_write <- function(id, conf, n_cases, n_controls,
 power_cohort_write <- function(id, conf, n_exp, n_unexp, pct_exp,
                                pct_unexp, design = "cohort") {
   rr_rd <- implied_rr_rd(pct_exp, pct_unexp)
-  expected <- list(
+  build <- function(c) list(
     normal = leaf(power_cohort(n_exp, n_unexp, pct_exp, pct_unexp,
-                               conf)),
+                               c)),
     normal_cc = leaf(power_cohort_cc(n_exp, n_unexp, pct_exp,
-                                     pct_unexp, conf)),
+                                     pct_unexp, c)),
     risk_ratio = leaf(rr_rd[1]),
     risk_difference = leaf(rr_rd[2]))
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   calc_write("power_cohort", id,
              list(design = design, conf_level = conf,
                   n_exposed = n_exp, n_unexposed = n_unexp,
@@ -1188,8 +1301,11 @@ power_cohort_write <- function(id, conf, n_exp, n_unexp, pct_exp,
 
 power_mean_difference_write <- function(id, conf, n1, n2, diff, s1,
                                         s2) {
-  expected <- list(power = leaf(power_means(n1, n2, diff, s1, s2,
-                                            conf)))
+  build <- function(c) {
+    list(power = leaf(power_means(n1, n2, diff, s1, s2, c)))
+  }
+  expected <- build(conf)
+  check_conf_leak(id, conf, expected, build)
   calc_write("power_mean_difference", id,
              list(conf_level = conf, n_1 = n1, n_2 = n2,
                   difference = diff, sd_1 = s1, sd_2 = s2),

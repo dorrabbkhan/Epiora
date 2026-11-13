@@ -128,11 +128,11 @@
             "class": "closed_form"
           },
           "lower": {
-            "value": 1.5348405731654891,
+            "value": 1.5149191000281459,
             "class": "closed_form"
           },
           "upper": {
-            "value": 1.6679256756421288,
+            "value": 1.689859214232917,
             "class": "closed_form"
           }
         },
@@ -156,11 +156,11 @@
             "class": "closed_form"
           },
           "lower": {
-            "value": 1.8827567014770838,
+            "value": 1.847354820987517,
             "class": "closed_form"
           },
           "upper": {
-            "value": 2.1245442902218166,
+            "value": 2.1652581055661906,
             "class": "closed_form"
           }
         },
@@ -423,11 +423,11 @@
           "class": "closed_form"
         },
         "lower": {
-          "value": 1.5348405731654891,
+          "value": 1.5149191000281459,
           "class": "closed_form"
         },
         "upper": {
-          "value": 1.6679256756421288,
+          "value": 1.689859214232917,
           "class": "closed_form"
         }
       },
@@ -451,11 +451,11 @@
           "class": "closed_form"
         },
         "lower": {
-          "value": 1.8827567014770838,
+          "value": 1.847354820987517,
           "class": "closed_form"
         },
         "upper": {
-          "value": 2.1245442902218166,
+          "value": 2.1652581055661906,
           "class": "closed_form"
         }
       },

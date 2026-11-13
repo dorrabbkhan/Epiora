@@ -2797,6 +2797,40 @@ no drift).
   nulls are mathematically undefined (log-Wald upper limits on zero
   cells, etiologic fractions, direct-OR at support max, clogit
   failures) and stay null.
+- **Confidence-level leak (owner-directed round 4, same PR).**
+  `two_by_two_table` and `two_by_n_table` called
+  `epitools::riskratio`/`oddsratio` without `conf.level` (epitools
+  defaults to 0.95), and `two_by_two_expected`/`matched_expected`
+  called `stats::mantelhaen.test` without it. All now pass
+  `conf.level = conf / 100`. Only `two_by_two/large`
+  (conf_level 99) changed: `risk_ratio` → [1.5149191000281459,
+  1.689859214232917], `odds_ratio` → [1.847354820987517,
+  2.1652581055661906] on the stratum and the crude table — the
+  closed-form log-Wald 99% limits computed independently
+  (`exp(log RR ± qnorm(0.995)·√(1/a−1/n1+1/c−1/n0))` and the 1/cell
+  OR form) are bitwise the new leaves, and OpenEpi displays
+  1.515–1.69. The mantelhaen.test sites had no non-95
+  multi-stratum/matched case yet, so no other fixture moved.
+  Sweep of every interval-producing call in `fixtures/R/*.R` and
+  `fixtures/R/methods/*.R` (epitools, epiR, exactci, PropCIs,
+  exact2x2, DescTools, stats::* .test calls, survival::clogit,
+  own helpers taking z or conf): all other sites already receive
+  the case level — `conf / 100` where the API wants a fraction
+  (`conf = cl` for epitools' pois.*), percent for the own
+  z-helpers, and the round-3 sanity checks take `conf` as a
+  fraction because their callers pass `conf / 100`
+  (check_cmle_exact, check_cmle_single_cc/pt). Calls that never
+  read `$conf.int` (fisher/mcnemar/chisq p-values, clogit's
+  hand-built z CI, mh_2x2xk's statistic-only uses,
+  check_mh_port's stock-vs-port identity at 0.95 on both sides)
+  need no level. Fixed-95-by-design corpora (2x2, stratified,
+  freq, means §4.2, binomial `ci_95_count`, anova `qt(0.975)`)
+  keep 0.95 — those fixtures have no conf_level input. New
+  generation-time guard `check_conf_leak` (fixtures/R/calc.R):
+  every conf-taking calc writer rebuilds its expected at 95, and
+  for `conf_level ≠ 95` each interval leaf must differ bitwise —
+  demonstrated to stop generation on the unfixed code, naming the
+  eight leaked leaves, and to pass after.
 - **Inventory rows amended in `docs/v1.0-calculators.md`**
   (R-function column + note only):
   `calc.two_by_two.<s>.risk_difference.*`,
@@ -2811,7 +2845,10 @@ no drift).
   tables (fix 2), 6 `cmle_or.midp.est` + 15 `cmle_or.midp` limit
   leaves filled on zero-cell tables (fix 5), 24 `risk_difference`
   leaves filled (fix 5), 22 `adjusted.mh_or`/`mh_rr` leaves
-  (fix 4). No other leaf changed.
+  (fix 4). Round 4 adds 1 file, 8 leaf-value changes:
+  `two_by_two/large` `risk_ratio.{lower,upper}` and
+  `odds_ratio.{lower,upper}` on stratum 1 and crude (fix 6). No
+  other leaf changed.
 - **Files outside the Task 2 Files block:** none — edits confined
   to `fixtures/R/methods/sample_size.R`,
   `fixtures/R/methods/tables.R`, `fixtures/R/common.R`
