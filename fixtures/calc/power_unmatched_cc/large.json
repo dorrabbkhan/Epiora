@@ -1,0 +1,35 @@
+{
+  "id": "large",
+  "procedure": "calc.power_unmatched_cc",
+  "inputs": {
+    "conf_level": 99,
+    "n_cases": 5000,
+    "n_controls": 10000,
+    "percent_cases_exposed": 45,
+    "percent_controls_exposed": 30
+  },
+  "expected": {
+    "normal": {
+      "value": 100,
+      "class": "closed_form"
+    },
+    "normal_cc": {
+      "value": 100,
+      "class": "closed_form"
+    },
+    "odds_ratio": {
+      "value": 1.9090909090909089,
+      "class": "closed_form"
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

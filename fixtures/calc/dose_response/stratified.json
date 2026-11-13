@@ -1,0 +1,114 @@
+{
+  "id": "stratified",
+  "procedure": "calc.dose_response",
+  "inputs": {
+    "table": [
+      [
+        [0, 20, 40],
+        [1, 25, 35],
+        [2, 30, 30]
+      ],
+      [
+        [0, 10, 50],
+        [1, 15, 45],
+        [2, 20, 40]
+      ]
+    ],
+    "strata": 2
+  },
+  "expected": {
+    "strata": [
+      {
+        "odds_ratio": [
+          {
+            "value": 1,
+            "class": "closed_form"
+          },
+          {
+            "value": 1.4285714285714286,
+            "class": "closed_form"
+          },
+          {
+            "value": 2,
+            "class": "closed_form"
+          }
+        ]
+      },
+      {
+        "odds_ratio": [
+          {
+            "value": 1,
+            "class": "closed_form"
+          },
+          {
+            "value": 1.6666666666666665,
+            "class": "closed_form"
+          },
+          {
+            "value": 2.5,
+            "class": "closed_form"
+          }
+        ]
+      }
+    ],
+    "crude": {
+      "odds_ratio": [
+        {
+          "value": 1,
+          "class": "closed_form"
+        },
+        {
+          "value": 1.5,
+          "class": "closed_form"
+        },
+        {
+          "value": 2.1428571428571432,
+          "class": "closed_form"
+        }
+      ]
+    },
+    "mh_or": [
+      {
+        "value": 1.5217391304347829,
+        "class": "closed_form"
+      },
+      {
+        "value": 2.2000000000000002,
+        "class": "closed_form"
+      }
+    ],
+    "xmh": {
+      "cc": {
+        "value": {
+          "value": 7.3187903225806457,
+          "class": "closed_form"
+        },
+        "p": {
+          "value": 0.0068237327347543215,
+          "class": "closed_form"
+        }
+      },
+      "uncorrected": {
+        "value": {
+          "value": 7.698924731182796,
+          "class": "closed_form"
+        },
+        "p": {
+          "value": 0.0055253731831289331,
+          "class": "closed_form"
+        }
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "epiR": "3.0.0"
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "id": "boundary",
+  "procedure": "calc.t_test_summary",
+  "inputs": {
+    "conf_level": 95,
+    "n_1": 2,
+    "mean_1": 10.5,
+    "sd_1": 3,
+    "n_2": 30,
+    "mean_2": 8.5,
+    "sd_2": 4
+  },
+  "expected": {
+    "pooled": {
+      "t": {
+        "value": 0.68970073480755434,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 30,
+        "class": "closed_form"
+      },
+      "p_2t": {
+        "value": 0.49568330291447404,
+        "class": "closed_form"
+      },
+      "diff": {
+        "value": 2,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": -3.9221988704161337,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 7.9221988704161337,
+        "class": "closed_form"
+      }
+    },
+    "welch": {
+      "t": {
+        "value": 0.8914605918126538,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 1.2504779861606221,
+        "class": "closed_form"
+      },
+      "p_2t": {
+        "value": 0.51103787167809556,
+        "class": "closed_form"
+      },
+      "diff": {
+        "value": 2,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": -15.998552822887877,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 19.998552822887877,
+        "class": "closed_form"
+      }
+    },
+    "f_variance": {
+      "f": {
+        "value": 0.5625,
+        "class": "closed_form"
+      },
+      "df_num": {
+        "value": 1,
+        "class": "closed_form"
+      },
+      "df_den": {
+        "value": 29,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.91859309941650502,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "cross_sectional",
+  "procedure": "calc.power_cohort",
+  "inputs": {
+    "design": "cross_sectional",
+    "conf_level": 95,
+    "n_exposed": 300,
+    "n_unexposed": 300,
+    "percent_exposed_outcome": 40,
+    "percent_unexposed_outcome": 30
+  },
+  "expected": {
+    "normal": {
+      "value": 86.472762781217725,
+      "class": "closed_form"
+    },
+    "normal_cc": {
+      "value": 84.98635288800287,
+      "class": "closed_form"
+    },
+    "risk_ratio": {
+      "value": 1.3333333333333335,
+      "class": "closed_form"
+    },
+    "risk_difference": {
+      "value": 0.10000000000000003,
+      "class": "closed_form"
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

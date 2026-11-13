@@ -1,0 +1,91 @@
+{
+  "id": "large",
+  "procedure": "calc.proportion",
+  "inputs": {
+    "numerator": 60000,
+    "denominator": 100000,
+    "conf_level": 95,
+    "multiplier": 100,
+    "population_size": 0
+  },
+  "expected": {
+    "estimate": {
+      "value": 0.59999999999999998,
+      "class": "closed_form"
+    },
+    "ci": {
+      "midp": {
+        "lower": {
+          "value": 0.59697681958967197,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": 0.60302879688025846,
+          "class": "iterative"
+        }
+      },
+      "clopper_pearson": {
+        "lower": {
+          "value": 0.5969557723413762,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": 0.6030384264896711,
+          "class": "iterative"
+        }
+      },
+      "wald": {
+        "lower": {
+          "value": 0.59696363685148401,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.60303636314851594,
+          "class": "closed_form"
+        }
+      },
+      "agresti_coull": {
+        "lower": {
+          "value": 0.59695984899921606,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.60303246837826729,
+          "class": "closed_form"
+        }
+      },
+      "wilson": {
+        "lower": {
+          "value": 0.59699999999999998,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.60299999999999998,
+          "class": "closed_form"
+        }
+      },
+      "score_cc": {
+        "lower": {
+          "value": 0.59695484529583642,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.60303745943087295,
+          "class": "closed_form"
+        }
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "exactci": "1.4.5",
+      "PropCIs": "0.3.0"
+    }
+  }
+}

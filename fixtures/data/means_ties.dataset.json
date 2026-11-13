@@ -1,0 +1,16 @@
+{
+  "id": "means_ties",
+  "version": 1,
+  "columns": [
+    {
+      "name": "value",
+      "type": "integer",
+      "values": [3, 3, 4, 4, 5, 7, 7, 7, 8, 8, 8, 9, null]
+    },
+    {
+      "name": "grp",
+      "type": "text",
+      "values": ["X", "X", "X", "X", "X", "X", "Y", "Y", "Y", "Y", "Y", "Y", "Y"]
+    }
+  ]
+}

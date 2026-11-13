@@ -1,0 +1,76 @@
+{
+  "id": "matched_1to2",
+  "procedure": "calc.matched_case_control",
+  "inputs": {
+    "controls_per_case": 2,
+    "matched_sets": [
+      [20, 10, 4],
+      [10, 8, 12]
+    ],
+    "conf_level": 95
+  },
+  "expected": {
+    "matched_n": {
+      "mh_or": {
+        "est": {
+          "value": 1.5624999999999998,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 0.90833300953238416,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 2.6877876553851672,
+          "class": "closed_form"
+        }
+      },
+      "mh_chisq": {
+        "value": {
+          "value": 3.2400000000000033,
+          "class": "closed_form"
+        },
+        "p": {
+          "value": 0.071860638225851245,
+          "class": "closed_form"
+        }
+      },
+      "mh_chisq_cc": {
+        "value": {
+          "value": 2.7225000000000028,
+          "class": "closed_form"
+        },
+        "p": {
+          "value": 0.098942936067295886,
+          "class": "closed_form"
+        }
+      },
+      "cmle_or": {
+        "est": {
+          "value": null,
+          "class": "iterative"
+        },
+        "lower": {
+          "value": null,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": null,
+          "class": "iterative"
+        }
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "exact2x2": "1.7.0",
+      "survival": "3.8.12"
+    }
+  }
+}

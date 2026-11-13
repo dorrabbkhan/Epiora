@@ -1,0 +1,65 @@
+{
+  "id": "odds_ratio_input",
+  "procedure": "calc.ss_cohort",
+  "inputs": {
+    "conf_level": 95,
+    "power": 80,
+    "ratio_unexposed_per_exposed": 1,
+    "percent_unexposed_outcome": 5,
+    "odds_ratio": 2
+  },
+  "expected": {
+    "kelsey": {
+      "exposed": {
+        "value": 517,
+        "class": "closed_form"
+      },
+      "unexposed": {
+        "value": 517,
+        "class": "closed_form"
+      },
+      "total": {
+        "value": 1034,
+        "class": "closed_form"
+      }
+    },
+    "fleiss": {
+      "exposed": {
+        "value": 516,
+        "class": "closed_form"
+      },
+      "unexposed": {
+        "value": 516,
+        "class": "closed_form"
+      },
+      "total": {
+        "value": 1032,
+        "class": "closed_form"
+      }
+    },
+    "fleiss_cc": {
+      "exposed": {
+        "value": 559,
+        "class": "closed_form"
+      },
+      "unexposed": {
+        "value": 559,
+        "class": "closed_form"
+      },
+      "total": {
+        "value": 1118,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

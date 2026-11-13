@@ -1,0 +1,240 @@
+{
+  "id": "means_include_missing",
+  "procedure": "means",
+  "inputs": {
+    "dataset": "means_basic",
+    "variable": "value",
+    "include_missing": true,
+    "group_by": "grp"
+  },
+  "expected": {
+    "total": {
+      "value": 10,
+      "class": "closed_form"
+    },
+    "missing": {
+      "value": 1,
+      "class": "closed_form"
+    },
+    "groups": [
+      {
+        "observations": {
+          "value": 3,
+          "class": "closed_form"
+        },
+        "total": {
+          "value": 10,
+          "class": "closed_form"
+        },
+        "mean": {
+          "value": 3.3333333333333335,
+          "class": "closed_form"
+        },
+        "variance": {
+          "value": 0.58333333333333337,
+          "class": "closed_form"
+        },
+        "std_dev": {
+          "value": 0.76376261582597338,
+          "class": "closed_form"
+        },
+        "minimum": {
+          "value": 2.5,
+          "class": "closed_form"
+        },
+        "p25": {
+          "value": 3,
+          "class": "closed_form"
+        },
+        "median": {
+          "value": 3.5,
+          "class": "closed_form"
+        },
+        "p75": {
+          "value": 3.75,
+          "class": "closed_form"
+        },
+        "maximum": {
+          "value": 4,
+          "class": "closed_form"
+        },
+        "mode": {
+          "value": 2.5,
+          "class": "closed_form"
+        }
+      },
+      {
+        "observations": {
+          "value": 3,
+          "class": "closed_form"
+        },
+        "total": {
+          "value": 24.5,
+          "class": "closed_form"
+        },
+        "mean": {
+          "value": 8.1666666666666661,
+          "class": "closed_form"
+        },
+        "variance": {
+          "value": 0.58333333333333337,
+          "class": "closed_form"
+        },
+        "std_dev": {
+          "value": 0.76376261582597338,
+          "class": "closed_form"
+        },
+        "minimum": {
+          "value": 7.5,
+          "class": "closed_form"
+        },
+        "p25": {
+          "value": 7.75,
+          "class": "closed_form"
+        },
+        "median": {
+          "value": 8,
+          "class": "closed_form"
+        },
+        "p75": {
+          "value": 8.5,
+          "class": "closed_form"
+        },
+        "maximum": {
+          "value": 9,
+          "class": "closed_form"
+        },
+        "mode": {
+          "value": 7.5,
+          "class": "closed_form"
+        }
+      },
+      {
+        "observations": {
+          "value": 3,
+          "class": "closed_form"
+        },
+        "total": {
+          "value": 46,
+          "class": "closed_form"
+        },
+        "mean": {
+          "value": 15.333333333333334,
+          "class": "closed_form"
+        },
+        "variance": {
+          "value": 1.0833333333333333,
+          "class": "closed_form"
+        },
+        "std_dev": {
+          "value": 1.0408329997330663,
+          "class": "closed_form"
+        },
+        "minimum": {
+          "value": 14.5,
+          "class": "closed_form"
+        },
+        "p25": {
+          "value": 14.75,
+          "class": "closed_form"
+        },
+        "median": {
+          "value": 15,
+          "class": "closed_form"
+        },
+        "p75": {
+          "value": 15.75,
+          "class": "closed_form"
+        },
+        "maximum": {
+          "value": 16.5,
+          "class": "closed_form"
+        },
+        "mode": {
+          "value": 14.5,
+          "class": "closed_form"
+        }
+      }
+    ],
+    "anova": {
+      "ss_between": {
+        "value": 218.72222222222223,
+        "class": "closed_form"
+      },
+      "df_between": {
+        "value": 2,
+        "class": "closed_form"
+      },
+      "ms_between": {
+        "value": 109.36111111111111,
+        "class": "closed_form"
+      },
+      "ss_within": {
+        "value": 4.5,
+        "class": "closed_form"
+      },
+      "df_within": {
+        "value": 6,
+        "class": "closed_form"
+      },
+      "ms_within": {
+        "value": 0.75,
+        "class": "closed_form"
+      },
+      "f": {
+        "value": 145.81481481481481,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 8.1926661805356019e-06,
+        "class": "closed_form"
+      },
+      "ss_total": {
+        "value": 223.22222222222223,
+        "class": "closed_form"
+      },
+      "df_total": {
+        "value": 8,
+        "class": "closed_form"
+      }
+    },
+    "bartlett": {
+      "chisq": {
+        "value": 0.22075212507790043,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 2,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.8954973089749807,
+        "class": "closed_form"
+      }
+    },
+    "kruskal_wallis": {
+      "h": {
+        "value": 7.2000000000000028,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 2,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.027323722447292521,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

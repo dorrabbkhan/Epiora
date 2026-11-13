@@ -1,0 +1,112 @@
+{
+  "id": "finite_population",
+  "procedure": "calc.proportion",
+  "inputs": {
+    "numerator": 30,
+    "denominator": 100,
+    "conf_level": 95,
+    "multiplier": 100,
+    "population_size": 500,
+    "compare_with": 35
+  },
+  "expected": {
+    "estimate": {
+      "value": 0.29999999999999999,
+      "class": "closed_form"
+    },
+    "ci": {
+      "midp": {
+        "lower": {
+          "value": 0.21634658209994601,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": 0.39509477697842582,
+          "class": "iterative"
+        }
+      },
+      "clopper_pearson": {
+        "lower": {
+          "value": 0.21240642048953665,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": 0.39981467617980404,
+          "class": "iterative"
+        }
+      },
+      "wald": {
+        "lower": {
+          "value": 0.21018316681457944,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.38981683318542054,
+          "class": "closed_form"
+        }
+      },
+      "agresti_coull": {
+        "lower": {
+          "value": 0.21865135554501819,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.39614604373777601,
+          "class": "closed_form"
+        }
+      },
+      "wilson": {
+        "lower": {
+          "value": 0.21890000000000001,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.39579999999999999,
+          "class": "closed_form"
+        }
+      },
+      "score_cc": {
+        "lower": {
+          "value": 0.21454256992906132,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.40106042434519273,
+          "class": "closed_form"
+        }
+      },
+      "wilson_fpc": {
+        "lower": {
+          "value": 0.2282075209062665,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.38658987837652764,
+          "class": "closed_form"
+        }
+      }
+    },
+    "ztest": {
+      "z": {
+        "value": -1.0482848367219182,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.2945073936801102,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "exactci": "1.4.5",
+      "PropCIs": "0.3.0"
+    }
+  }
+}

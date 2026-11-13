@@ -1,0 +1,116 @@
+{
+  "id": "large",
+  "procedure": "calc.smr",
+  "inputs": {
+    "observed": 500,
+    "expected": 400,
+    "conf_level": 99
+  },
+  "expected": {
+    "estimate": {
+      "value": 1.25,
+      "class": "closed_form"
+    },
+    "test": {
+      "midp_p": {
+        "value": 1.4536884630925372e-06,
+        "class": "iterative"
+      },
+      "fisher_p": {
+        "value": 1.6218762157598321e-06,
+        "class": "iterative"
+      },
+      "byar_chisq": {
+        "value": 22.979399310055978,
+        "class": "closed_form"
+      },
+      "byar_p": {
+        "value": 1.6374672775011502e-06,
+        "class": "closed_form"
+      },
+      "chisq_value": {
+        "value": 25,
+        "class": "closed_form"
+      },
+      "chisq_p": {
+        "value": 5.7330314375838793e-07,
+        "class": "closed_form"
+      }
+    },
+    "ci": {
+      "midp": {
+        "lower": {
+          "value": 1.1118476571315699,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": 1.400044184736299,
+          "class": "iterative"
+        }
+      },
+      "fisher": {
+        "lower": {
+          "value": 1.1107044039768355,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": 1.4013290090620234,
+          "class": "iterative"
+        }
+      },
+      "byar": {
+        "lower": {
+          "value": 1.1118727149110403,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 1.4000166944827879,
+          "class": "closed_form"
+        }
+      },
+      "rothman_greenland": {
+        "lower": {
+          "value": 1.1139908890609183,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 1.4026147029956142,
+          "class": "closed_form"
+        }
+      },
+      "ury_wiggins": {
+        "lower": {
+          "value": 1.111006764470718,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 1.401493235529282,
+          "class": "closed_form"
+        }
+      },
+      "vandenbroucke": {
+        "lower": {
+          "value": null,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": null,
+          "class": "closed_form"
+        }
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "exactci": "1.4.5",
+      "epitools": "0.5.10.1",
+      "epiR": "3.0.0"
+    }
+  }
+}

@@ -24,7 +24,18 @@ FIXTURES_DIR <- script_dir
 # oddsratio, riskratio.small); epiR and DescTools are used qualified.
 library(epitools)
 
-for (f in c("common.R", "nchyper.R", "data.R", "special.R",
-            "twobytwo.R", "stratified.R", "rxc.R", "freq.R", "import.R")) {
+# v1.0 Task 2: method helpers (methods/*.R) load before every
+# generator that calls them; means.R and calc.R run after the
+# generators they depend on; import.R stays last.
+method_files <- sort(list.files(file.path(FIXTURES_DIR, "R", "methods"),
+                                pattern = "\\.R$", full.names = TRUE))
+for (f in c("common.R", "nchyper.R", "data.R", "special.R")) {
+  source(file.path(FIXTURES_DIR, "R", f))
+}
+for (f in method_files) {
+  source(f)
+}
+for (f in c("twobytwo.R", "stratified.R", "rxc.R", "freq.R",
+            "means.R", "calc.R", "import.R")) {
   source(file.path(FIXTURES_DIR, "R", f))
 }

@@ -1,0 +1,1354 @@
+{
+  "id": "stratified",
+  "procedure": "calc.two_by_two",
+  "inputs": {
+    "strata": [
+      [
+        [30, 70],
+        [10, 90]
+      ],
+      [
+        [5, 15],
+        [20, 60]
+      ],
+      [
+        [8, 12],
+        [3, 25]
+      ]
+    ],
+    "conf_level": 95,
+    "study_type": "cohort"
+  },
+  "expected": {
+    "strata": [
+      {
+        "chisq": {
+          "uncorrected": {
+            "value": {
+              "value": 12.5,
+              "class": "closed_form"
+            },
+            "p_1t": {
+              "value": 0.00020347600872247951,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 0.00040695201744495903,
+              "class": "closed_form"
+            }
+          },
+          "yates": {
+            "value": {
+              "value": 11.28125,
+              "class": "closed_form"
+            },
+            "p_1t": {
+              "value": 0.00039146910894555942,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 0.00078293821789111883,
+              "class": "closed_form"
+            }
+          },
+          "mantel_haenszel": {
+            "value": {
+              "value": 12.437500000000002,
+              "class": "closed_form"
+            },
+            "p_1t": {
+              "value": 0.00021039933525213506,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 0.00042079867050427011,
+              "class": "closed_form"
+            }
+          }
+        },
+        "fisher_exact": {
+          "p_1t": {
+            "value": 0.00032520535380171022,
+            "class": "iterative"
+          },
+          "p_2t": {
+            "value": 0.00065041070760342087,
+            "class": "iterative"
+          }
+        },
+        "midp_exact": {
+          "p_1t": {
+            "value": 0.00020120410780931277,
+            "class": "iterative"
+          },
+          "p_2t": {
+            "value": 0.00040240821561862553,
+            "class": "iterative"
+          }
+        },
+        "risk": {
+          "exposed": {
+            "est": {
+              "value": 30,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 21.018316681457943,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 38.981683318542053,
+              "class": "closed_form"
+            }
+          },
+          "unexposed": {
+            "est": {
+              "value": 10,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 4.1201080463798387,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 15.879891953620163,
+              "class": "closed_form"
+            }
+          },
+          "overall": {
+            "est": {
+              "value": 20,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 14.456384702601291,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 25.543615297398713,
+              "class": "closed_form"
+            }
+          }
+        },
+        "risk_ratio": {
+          "est": {
+            "value": 2.9999999999999996,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 1.5508297195435499,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 5.8033450652783056,
+            "class": "closed_form"
+          }
+        },
+        "risk_difference": {
+          "est": {
+            "value": 20,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 9.2648351376970588,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 30.735164862302938,
+            "class": "closed_form"
+          }
+        },
+        "odds_ratio": {
+          "est": {
+            "value": 3.8571428571428572,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 1.7666027896243972,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 8.4215597913616591,
+            "class": "closed_form"
+          }
+        },
+        "cmle_or": {
+          "midp": {
+            "est": {
+              "value": 3.7968516589082273,
+              "class": "iterative"
+            },
+            "lower": {
+              "value": 1.7831445414896305,
+              "class": "iterative"
+            },
+            "upper": {
+              "value": 8.72831207377825,
+              "class": "iterative"
+            }
+          },
+          "fisher": {
+            "lower": {
+              "value": 1.6845369188498209,
+              "class": "iterative"
+            },
+            "upper": {
+              "value": 9.40598428823054,
+              "class": "iterative"
+            }
+          }
+        },
+        "etiologic": {
+          "efp": {
+            "est": {
+              "value": 50,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 25.015263492227994,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 74.984736507771999,
+              "class": "closed_form"
+            }
+          },
+          "efe": {
+            "est": {
+              "value": 66.666666666666657,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 35.518388163574372,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 82.768558671738333,
+              "class": "closed_form"
+            }
+          },
+          "pfp": {
+            "est": {
+              "value": -100,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -299.75593313685869,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": -33.360473954102957,
+              "class": "closed_form"
+            }
+          },
+          "pfe": {
+            "est": {
+              "value": -199.99999999999997,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -480.33450652783046,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": -55.082971954354988,
+              "class": "closed_form"
+            }
+          }
+        },
+        "etiologic_or": {
+          "efp_or": {
+            "est": {
+              "value": 55.555555555555557,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 30.93866204038579,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 80.172449070725321,
+              "class": "closed_form"
+            }
+          },
+          "efe_or": {
+            "est": {
+              "value": 74.074074074074076,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 43.394179728844819,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 88.125715131468382,
+              "class": "closed_form"
+            }
+          },
+          "pfp_or": {
+            "est": {
+              "value": -125,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -404.34872343388389,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": -44.798816464398847,
+              "class": "closed_form"
+            }
+          },
+          "pfe_or": {
+            "est": {
+              "value": -285.71428571428572,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -742.15597913616591,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": -76.660278962439719,
+              "class": "closed_form"
+            }
+          }
+        }
+      },
+      {
+        "chisq": {
+          "uncorrected": {
+            "value": {
+              "value": 0,
+              "class": "closed_form"
+            },
+            "p_1t": {
+              "value": 0.5,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 1,
+              "class": "closed_form"
+            }
+          },
+          "yates": {
+            "value": {
+              "value": 0,
+              "class": "closed_form"
+            },
+            "p_1t": {
+              "value": 0.5,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 1,
+              "class": "closed_form"
+            }
+          },
+          "mantel_haenszel": {
+            "value": {
+              "value": 0,
+              "class": "closed_form"
+            },
+            "p_1t": {
+              "value": 0.5,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 1,
+              "class": "closed_form"
+            }
+          }
+        },
+        "fisher_exact": {
+          "p_1t": {
+            "value": 0.60247557439789901,
+            "class": "iterative"
+          },
+          "p_2t": {
+            "value": 1,
+            "class": "iterative"
+          }
+        },
+        "midp_exact": {
+          "p_1t": {
+            "value": 0.489471066483819,
+            "class": "iterative"
+          },
+          "p_2t": {
+            "value": 0.97894213296763799,
+            "class": "iterative"
+          }
+        },
+        "risk": {
+          "exposed": {
+            "est": {
+              "value": 25,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 6.0227303217751018,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 43.977269678224893,
+              "class": "closed_form"
+            }
+          },
+          "unexposed": {
+            "est": {
+              "value": 25,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 15.511365160887552,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 34.48863483911245,
+              "class": "closed_form"
+            }
+          },
+          "overall": {
+            "est": {
+              "value": 25,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 16.513106994428714,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 33.486893005571282,
+              "class": "closed_form"
+            }
+          }
+        },
+        "risk_ratio": {
+          "est": {
+            "value": 1,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 0.42797551175747511,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 2.3365822869012174,
+            "class": "closed_form"
+          }
+        },
+        "risk_difference": {
+          "est": {
+            "value": 0,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": -21.217232513928213,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 21.217232513928213,
+            "class": "closed_form"
+          }
+        },
+        "odds_ratio": {
+          "est": {
+            "value": 1,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 0.32252141750726576,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 3.1005692822786628,
+            "class": "closed_form"
+          }
+        },
+        "cmle_or": {
+          "midp": {
+            "est": {
+              "value": 1.0156330586530358,
+              "class": "iterative"
+            },
+            "lower": {
+              "value": 0.29252387853855871,
+              "class": "iterative"
+            },
+            "upper": {
+              "value": 3.0488744485852304,
+              "class": "iterative"
+            }
+          },
+          "fisher": {
+            "lower": {
+              "value": 0.251959981311762,
+              "class": "iterative"
+            },
+            "upper": {
+              "value": 3.3914645177697964,
+              "class": "iterative"
+            }
+          }
+        },
+        "etiologic": {
+          "efp": {
+            "est": {
+              "value": 0,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -16.973786011142572,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 16.973786011142572,
+              "class": "closed_form"
+            }
+          },
+          "efe": {
+            "est": {
+              "value": 0,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -100,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 57.202448824252492,
+              "class": "closed_form"
+            }
+          },
+          "pfp": {
+            "est": {
+              "value": 0,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -20.443887774312518,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 14.510760564359003,
+              "class": "closed_form"
+            }
+          },
+          "pfe": {
+            "est": {
+              "value": 0,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -133.65822869012175,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 57.202448824252492,
+              "class": "closed_form"
+            }
+          }
+        },
+        "etiologic_or": {
+          "efp_or": {
+            "est": {
+              "value": 0,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -22.631714681523434,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 22.631714681523434,
+              "class": "closed_form"
+            }
+          },
+          "efe_or": {
+            "est": {
+              "value": 0,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -100,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 67.74785824927342,
+              "class": "closed_form"
+            }
+          },
+          "pfp_or": {
+            "est": {
+              "value": 0,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -29.251927438178171,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 18.455025879967803,
+              "class": "closed_form"
+            }
+          },
+          "pfe_or": {
+            "est": {
+              "value": 0,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -210.05692822786619,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 67.747858249273406,
+              "class": "closed_form"
+            }
+          }
+        }
+      },
+      {
+        "chisq": {
+          "uncorrected": {
+            "value": {
+              "value": 5.6643032643032649,
+              "class": "closed_form"
+            },
+            "p_1t": {
+              "value": 0.0086567964375953033,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 0.017313592875190607,
+              "class": "closed_form"
+            }
+          },
+          "yates": {
+            "value": {
+              "value": 4.127764127764129,
+              "class": "closed_form"
+            },
+            "p_1t": {
+              "value": 0.02109252605680104,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 0.04218505211360208,
+              "class": "closed_form"
+            }
+          },
+          "mantel_haenszel": {
+            "value": {
+              "value": 5.5462969462969474,
+              "class": "closed_form"
+            },
+            "p_1t": {
+              "value": 0.0092599139389960439,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 0.018519827877992088,
+              "class": "closed_form"
+            }
+          }
+        },
+        "fisher_exact": {
+          "p_1t": {
+            "value": 0.02131017738979319,
+            "class": "iterative"
+          },
+          "p_2t": {
+            "value": 0.033876402755164126,
+            "class": "iterative"
+          }
+        },
+        "midp_exact": {
+          "p_1t": {
+            "value": 0.012178199950362137,
+            "class": "iterative"
+          },
+          "p_2t": {
+            "value": 0.024356399900724274,
+            "class": "iterative"
+          }
+        },
+        "risk": {
+          "exposed": {
+            "est": {
+              "value": 40,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 18.529670275394121,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 61.47032972460589,
+              "class": "closed_form"
+            }
+          },
+          "unexposed": {
+            "est": {
+              "value": 10.714285714285714,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -0.74194300834445615,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 22.170514436915884,
+              "class": "closed_form"
+            }
+          },
+          "overall": {
+            "est": {
+              "value": 22.916666666666664,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 11.026623274225166,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 34.806710059108163,
+              "class": "closed_form"
+            }
+          }
+        },
+        "risk_ratio": {
+          "est": {
+            "value": 3.7333333333333338,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 1.1285006408968856,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 12.350704352901928,
+            "class": "closed_form"
+          }
+        },
+        "risk_difference": {
+          "est": {
+            "value": 29.285714285714288,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 4.9501387834067376,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 53.621289788021834,
+            "class": "closed_form"
+          }
+        },
+        "odds_ratio": {
+          "est": {
+            "value": 5.5555555555555554,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 1.2460658075843893,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 24.769315828268503,
+            "class": "closed_form"
+          }
+        },
+        "cmle_or": {
+          "midp": {
+            "est": {
+              "value": 5.2104204727550059,
+              "class": "iterative"
+            },
+            "lower": {
+              "value": 1.2284985266174451,
+              "class": "iterative"
+            },
+            "upper": {
+              "value": 28.842273042084788,
+              "class": "iterative"
+            }
+          },
+          "fisher": {
+            "lower": {
+              "value": 1.0463323487285197,
+              "class": "iterative"
+            },
+            "upper": {
+              "value": 36.949834077436634,
+              "class": "iterative"
+            }
+          }
+        },
+        "etiologic": {
+          "efp": {
+            "est": {
+              "value": 53.246753246753244,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 11.721262532667181,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 94.77224396083929,
+              "class": "closed_form"
+            }
+          },
+          "efe": {
+            "est": {
+              "value": 73.214285714285722,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 11.38684695781463,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 91.903295784381399,
+              "class": "closed_form"
+            }
+          },
+          "pfp": {
+            "est": {
+              "value": -113.88888888888889,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -1812.8666152534279,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": -13.277560224515671,
+              "class": "closed_form"
+            }
+          },
+          "pfe": {
+            "est": {
+              "value": -273.33333333333337,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -1135.0704352901928,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": -12.850064089688562,
+              "class": "closed_form"
+            }
+          }
+        },
+        "etiologic_or": {
+          "efp_or": {
+            "est": {
+              "value": 59.636363636363633,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 19.656026234732195,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 99.616701037995071,
+              "class": "closed_form"
+            }
+          },
+          "efe_or": {
+            "est": {
+              "value": 82,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 19.747416716410044,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 95.962746783426581,
+              "class": "closed_form"
+            }
+          },
+          "pfp_or": {
+            "est": {
+              "value": -147.74774774774775,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -25989.295801096858,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": -24.464841995690989,
+              "class": "closed_form"
+            }
+          },
+          "pfe_or": {
+            "est": {
+              "value": -455.55555555555554,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -2376.9315828268509,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": -24.606580758438955,
+              "class": "closed_form"
+            }
+          }
+        }
+      }
+    ],
+    "crude": {
+      "chisq": {
+        "uncorrected": {
+          "value": {
+            "value": 10.80878174650427,
+            "class": "closed_form"
+          },
+          "p_1t": {
+            "value": 0.00050509878008734633,
+            "class": "closed_form"
+          },
+          "p_2t": {
+            "value": 0.0010101975601746927,
+            "class": "closed_form"
+          }
+        },
+        "yates": {
+          "value": {
+            "value": 9.9563824454376881,
+            "class": "closed_form"
+          },
+          "p_1t": {
+            "value": 0.00080146357128380345,
+            "class": "closed_form"
+          },
+          "p_2t": {
+            "value": 0.0016029271425676069,
+            "class": "closed_form"
+          }
+        },
+        "mantel_haenszel": {
+          "value": {
+            "value": 10.777722028841902,
+            "class": "closed_form"
+          },
+          "p_1t": {
+            "value": 0.00051364515291324095,
+            "class": "closed_form"
+          },
+          "p_2t": {
+            "value": 0.0010272903058264819,
+            "class": "closed_form"
+          }
+        }
+      },
+      "fisher_exact": {
+        "p_1t": {
+          "value": 0.00086778883546680173,
+          "class": "iterative"
+        },
+        "p_2t": {
+          "value": 0.0014110356757181827,
+          "class": "iterative"
+        }
+      },
+      "midp_exact": {
+        "p_1t": {
+          "value": 0.00060604457589409817,
+          "class": "iterative"
+        },
+        "p_2t": {
+          "value": 0.0012120891517881963,
+          "class": "iterative"
+        }
+      },
+      "risk": {
+        "exposed": {
+          "est": {
+            "value": 30.714285714285715,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 23.072829438626574,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 38.35574198994486,
+            "class": "closed_form"
+          }
+        },
+        "unexposed": {
+          "est": {
+            "value": 15.865384615384615,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 10.900272233954784,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 20.830496996814446,
+            "class": "closed_form"
+          }
+        },
+        "overall": {
+          "est": {
+            "value": 21.839080459770116,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 17.498273494803573,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 26.179887424736659,
+            "class": "closed_form"
+          }
+        }
+      },
+      "risk_ratio": {
+        "est": {
+          "value": 1.9359307359307361,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 1.2979584080373987,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 2.8874791296188698,
+          "class": "closed_form"
+        }
+      },
+      "risk_difference": {
+        "est": {
+          "value": 14.848901098901102,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 5.7360423282935891,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 23.961759869508615,
+          "class": "closed_form"
+        }
+      },
+      "odds_ratio": {
+        "est": {
+          "value": 2.3508278662917839,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 1.4018024712674229,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 3.9423469213443179,
+          "class": "closed_form"
+        }
+      },
+      "cmle_or": {
+        "midp": {
+          "est": {
+            "value": 2.3422887478068448,
+            "class": "iterative"
+          },
+          "lower": {
+            "value": 1.3981901398718239,
+            "class": "iterative"
+          },
+          "upper": {
+            "value": 3.9571408961755687,
+            "class": "iterative"
+          }
+        },
+        "fisher": {
+          "lower": {
+            "value": 1.3571979771109333,
+            "class": "iterative"
+          },
+          "upper": {
+            "value": 4.0827260617582217,
+            "class": "iterative"
+          }
+        }
+      },
+      "etiologic": {
+        "efp": {
+          "est": {
+            "value": 27.353238866396769,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 10.724653135192622,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 43.981824597600919,
+            "class": "closed_form"
+          }
+        },
+        "efe": {
+          "est": {
+            "value": 48.345259391771023,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 22.955928802674954,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 65.367715051433322,
+            "class": "closed_form"
+          }
+        },
+        "pfp": {
+          "est": {
+            "value": -37.652385928248009,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": -78.5134900979251,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": -12.013006403025583,
+            "class": "closed_form"
+          }
+        },
+        "pfe": {
+          "est": {
+            "value": -93.593073593073612,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": -188.74791296188693,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": -29.79584080373985,
+            "class": "closed_form"
+          }
+        }
+      },
+      "etiologic_or": {
+        "efp_or": {
+          "est": {
+            "value": 32.511278195488721,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 14.190791820075841,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 50.831764570901605,
+            "class": "closed_form"
+          }
+        },
+        "efe_or": {
+          "est": {
+            "value": 57.461794019933556,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 28.663273143193845,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 74.634398748981596,
+            "class": "closed_form"
+          }
+        },
+        "pfp_or": {
+          "est": {
+            "value": -48.172905525846701,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": -103.38334114959657,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": -16.537609565538336,
+            "class": "closed_form"
+          }
+        },
+        "pfe_or": {
+          "est": {
+            "value": -135.08278662917837,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": -294.23469213443178,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": -40.180247126742287,
+            "class": "closed_form"
+          }
+        }
+      }
+    },
+    "adjusted": {
+      "mh_chisq": {
+        "value": {
+          "value": 13.66249477921922,
+          "class": "closed_form"
+        },
+        "p": {
+          "value": 0.0002187806328495057,
+          "class": "closed_form"
+        }
+      },
+      "mh_or": {
+        "est": {
+          "value": 2.8505747126436778,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 1.6275895266445168,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 4.992521799471092,
+          "class": "closed_form"
+        }
+      },
+      "direct_or": {
+        "est": {
+          "value": 2.8273305641225837,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 1.5665827118633397,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 5.1026977754105749,
+          "class": "closed_form"
+        }
+      },
+      "direct_rr": {
+        "est": {
+          "value": 2.19358431107272,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 1.3606070289386811,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 3.5365186475170232,
+          "class": "closed_form"
+        }
+      },
+      "direct_rd": {
+        "est": {
+          "value": 0.17716086585992097,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 0.088028494418439185,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.26629323730140275,
+          "class": "closed_form"
+        }
+      },
+      "mh_rr": {
+        "est": {
+          "value": 2.308943089430894,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 1.4498525226208716,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 3.6770761902000464,
+          "class": "closed_form"
+        }
+      },
+      "breslow_day": {
+        "or_chisq": {
+          "value": 4.6327805817512031,
+          "class": "closed_form"
+        },
+        "or_p": {
+          "value": 0.098628965686484021,
+          "class": "closed_form"
+        },
+        "rr_chisq": {
+          "value": 4.9147604979190529,
+          "class": "closed_form"
+        },
+        "rr_p": {
+          "value": 0.08565906269930719,
+          "class": "closed_form"
+        },
+        "rd_chisq": {
+          "value": 3.7204088196302458,
+          "class": "closed_form"
+        },
+        "rd_p": {
+          "value": 0.15564081260644624,
+          "class": "closed_form"
+        }
+      },
+      "cmle_or": {
+        "est": {
+          "value": 2.7651727076105428,
+          "class": "iterative",
+          "r_default": 2.7651429363690303
+        },
+        "midp": {
+          "lower": {
+            "value": 1.5963348214244564,
+            "class": "iterative",
+            "r_default": 1.5963606413818743
+          },
+          "upper": {
+            "value": 4.8502522038064031,
+            "class": "iterative",
+            "r_default": 4.8502545213776855
+          }
+        },
+        "fisher": {
+          "lower": {
+            "value": 1.5446268009946762,
+            "class": "iterative",
+            "r_default": 1.5446335355438874
+          },
+          "upper": {
+            "value": 5.0277823325556712,
+            "class": "iterative",
+            "r_default": 5.0277830180583782
+          }
+        }
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "epitools": "0.5.10.1",
+      "exact2x2": "1.7.0",
+      "epiR": "3.0.0"
+    }
+  }
+}

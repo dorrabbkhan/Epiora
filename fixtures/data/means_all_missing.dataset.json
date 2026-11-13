@@ -1,0 +1,16 @@
+{
+  "id": "means_all_missing",
+  "version": 1,
+  "columns": [
+    {
+      "name": "value",
+      "type": "real",
+      "values": [null, null, null, null]
+    },
+    {
+      "name": "grp",
+      "type": "text",
+      "values": ["A", "A", "B", "B"]
+    }
+  ]
+}

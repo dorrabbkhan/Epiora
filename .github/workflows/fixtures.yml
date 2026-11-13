@@ -5,6 +5,12 @@ on:
     paths:
       - 'fixtures/**'
       - '.github/workflows/fixtures.yml'
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'fixtures/**'
+      - '.github/workflows/fixtures.yml'
   workflow_dispatch:
 
 env:
@@ -79,7 +85,7 @@ jobs:
         run: |
           set -u
           fail=0
-          for dir in special 2x2 stratified rxc freq; do
+          for dir in special 2x2 stratified rxc freq means; do
             mapfile -d '' files < <(find "fixtures/$dir" -maxdepth 1 -name '*.json' -print0 2>/dev/null)
             if [ "${#files[@]}" -eq 0 ]; then
               echo "ERROR: fixtures/$dir has no fixture JSON files" >&2
@@ -90,6 +96,17 @@ jobs:
               fixtures/tools/node_modules/.bin/ajv validate \
                 -s fixtures/schema/fixture.schema.json -d "$f" || fail=1
             done
+          done
+          # Calculator fixtures live one level deeper: fixtures/calc/<id>/*.json.
+          mapfile -d '' calcfiles < <(find fixtures/calc -mindepth 2 -maxdepth 2 -name '*.json' -print0 2>/dev/null)
+          if [ "${#calcfiles[@]}" -eq 0 ]; then
+            echo "ERROR: fixtures/calc has no fixture JSON files" >&2
+            fail=1
+          fi
+          for f in "${calcfiles[@]:-}"; do
+            [ -n "$f" ] || continue
+            fixtures/tools/node_modules/.bin/ajv validate \
+              -s fixtures/schema/fixture.schema.json -d "$f" || fail=1
           done
           mapfile -d '' datasets < <(find fixtures/data -maxdepth 1 -name '*.dataset.json' -print0 2>/dev/null)
           for f in "${datasets[@]:-}"; do

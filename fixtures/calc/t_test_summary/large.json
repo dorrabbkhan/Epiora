@@ -1,0 +1,95 @@
+{
+  "id": "large",
+  "procedure": "calc.t_test_summary",
+  "inputs": {
+    "conf_level": 99,
+    "n_1": 5000,
+    "mean_1": 100.2,
+    "sd_1": 15,
+    "n_2": 4500,
+    "mean_2": 99.799999999999997,
+    "sd_2": 16
+  },
+  "expected": {
+    "pooled": {
+      "t": {
+        "value": 1.2573896775086164,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 9498,
+        "class": "closed_form"
+      },
+      "p_2t": {
+        "value": 0.20864348116604914,
+        "class": "closed_form"
+      },
+      "diff": {
+        "value": 0.40000000000000568,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": -0.41958587314133466,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 1.219585873141346,
+        "class": "closed_form"
+      }
+    },
+    "welch": {
+      "t": {
+        "value": 1.2531313015353667,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 9232.550499956933,
+        "class": "closed_form"
+      },
+      "p_2t": {
+        "value": 0.21018966112742862,
+        "class": "closed_form"
+      },
+      "diff": {
+        "value": 0.40000000000000568,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": -0.42237573262494599,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 1.2223757326249574,
+        "class": "closed_form"
+      }
+    },
+    "f_variance": {
+      "f": {
+        "value": 0.87890625,
+        "class": "closed_form"
+      },
+      "df_num": {
+        "value": 4999,
+        "class": "closed_form"
+      },
+      "df_den": {
+        "value": 4499,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 8.7832946020026003e-06,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

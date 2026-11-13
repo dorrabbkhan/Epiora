@@ -1,0 +1,36 @@
+{
+  "id": "textbook",
+  "procedure": "calc.ss_mean_difference",
+  "inputs": {
+    "conf_level": 95,
+    "power": 80,
+    "ratio": 1,
+    "difference": 5,
+    "sd_1": 10,
+    "sd_2": 10
+  },
+  "expected": {
+    "n1": {
+      "value": 63,
+      "class": "closed_form"
+    },
+    "n2": {
+      "value": 63,
+      "class": "closed_form"
+    },
+    "total": {
+      "value": 126,
+      "class": "closed_form"
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "id": "large",
+  "procedure": "calc.dose_response",
+  "inputs": {
+    "table": [
+      [
+        [0, 1000, 2000],
+        [1, 1500, 1800],
+        [2, 2000, 1500],
+        [3, 2500, 1200]
+      ]
+    ],
+    "strata": 1
+  },
+  "expected": {
+    "strata": [
+      {
+        "odds_ratio": [
+          {
+            "value": 1,
+            "class": "closed_form"
+          },
+          {
+            "value": 1.6666666666666667,
+            "class": "closed_form"
+          },
+          {
+            "value": 2.6666666666666665,
+            "class": "closed_form"
+          },
+          {
+            "value": 4.166666666666667,
+            "class": "closed_form"
+          }
+        ]
+      }
+    ],
+    "crude": {
+      "odds_ratio": [
+        {
+          "value": 1,
+          "class": "closed_form"
+        },
+        {
+          "value": 1.6666666666666667,
+          "class": "closed_form"
+        },
+        {
+          "value": 2.6666666666666665,
+          "class": "closed_form"
+        },
+        {
+          "value": 4.166666666666667,
+          "class": "closed_form"
+        }
+      ]
+    },
+    "mh_or": [
+      {
+        "value": 1.6666666666666667,
+        "class": "closed_form"
+      },
+      {
+        "value": 2.6666666666666665,
+        "class": "closed_form"
+      },
+      {
+        "value": 4.166666666666667,
+        "class": "closed_form"
+      }
+    ],
+    "xmh": {
+      "cc": {
+        "value": {
+          "value": 869.91260597783776,
+          "class": "closed_form"
+        },
+        "p": {
+          "value": 3.4086481907986336e-191,
+          "class": "closed_form"
+        }
+      },
+      "uncorrected": {
+        "value": {
+          "value": 870.36974405180911,
+          "class": "closed_form"
+        },
+        "p": {
+          "value": 2.7114530462854075e-191,
+          "class": "closed_form"
+        }
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "epiR": "3.0.0"
+    }
+  }
+}

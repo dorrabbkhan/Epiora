@@ -1,0 +1,248 @@
+{
+  "id": "means_oswego_age_sex",
+  "procedure": "means",
+  "inputs": {
+    "dataset": "oswego",
+    "variable": "AGE",
+    "include_missing": false,
+    "group_by": "SEX"
+  },
+  "expected": {
+    "total": {
+      "value": 75,
+      "class": "closed_form"
+    },
+    "missing": {
+      "value": 0,
+      "class": "closed_form"
+    },
+    "groups": [
+      {
+        "observations": {
+          "value": 44,
+          "class": "closed_form"
+        },
+        "total": {
+          "value": 1619,
+          "class": "closed_form"
+        },
+        "mean": {
+          "value": 36.795454545454547,
+          "class": "closed_form"
+        },
+        "variance": {
+          "value": 385.93393234672305,
+          "class": "closed_form"
+        },
+        "std_dev": {
+          "value": 19.645201254930505,
+          "class": "closed_form"
+        },
+        "minimum": {
+          "value": 8,
+          "class": "closed_form"
+        },
+        "p25": {
+          "value": 16.5,
+          "class": "closed_form"
+        },
+        "median": {
+          "value": 35.5,
+          "class": "closed_form"
+        },
+        "p75": {
+          "value": 53.5,
+          "class": "closed_form"
+        },
+        "maximum": {
+          "value": 72,
+          "class": "closed_form"
+        },
+        "mode": {
+          "value": 35,
+          "class": "closed_form"
+        }
+      },
+      {
+        "observations": {
+          "value": 31,
+          "class": "closed_form"
+        },
+        "total": {
+          "value": 1142,
+          "class": "closed_form"
+        },
+        "mean": {
+          "value": 36.838709677419352,
+          "class": "closed_form"
+        },
+        "variance": {
+          "value": 581.93978494623661,
+          "class": "closed_form"
+        },
+        "std_dev": {
+          "value": 24.123428134206726,
+          "class": "closed_form"
+        },
+        "minimum": {
+          "value": 3,
+          "class": "closed_form"
+        },
+        "p25": {
+          "value": 16,
+          "class": "closed_form"
+        },
+        "median": {
+          "value": 36,
+          "class": "closed_form"
+        },
+        "p75": {
+          "value": 61,
+          "class": "closed_form"
+        },
+        "maximum": {
+          "value": 77,
+          "class": "closed_form"
+        },
+        "mode": {
+          "value": 17,
+          "class": "closed_form"
+        }
+      }
+    ],
+    "t_test": {
+      "pooled": {
+        "t": {
+          "value": -0.0085407436546355922,
+          "class": "closed_form"
+        },
+        "df": {
+          "value": 73,
+          "class": "closed_form"
+        },
+        "p": {
+          "value": 0.99320885297379791,
+          "class": "closed_form"
+        },
+        "diff": {
+          "value": -0.043255131964805571,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": -10.136914088589011,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 10.0504038246594,
+          "class": "closed_form"
+        }
+      },
+      "welch": {
+        "t": {
+          "value": -0.0082419174570913783,
+          "class": "closed_form"
+        },
+        "df": {
+          "value": 56.047354306487861,
+          "class": "closed_form"
+        },
+        "p": {
+          "value": 0.99345324265943147,
+          "class": "closed_form"
+        },
+        "diff": {
+          "value": -0.043255131964805571,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": -10.556442937780664,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 10.469932673851053,
+          "class": "closed_form"
+        }
+      }
+    },
+    "anova": {
+      "ss_between": {
+        "value": 0.03402737047897738,
+        "class": "closed_form"
+      },
+      "df_between": {
+        "value": 1,
+        "class": "closed_form"
+      },
+      "ms_between": {
+        "value": 0.03402737047897738,
+        "class": "closed_form"
+      },
+      "ss_within": {
+        "value": 34053.352639296194,
+        "class": "closed_form"
+      },
+      "df_within": {
+        "value": 73,
+        "class": "closed_form"
+      },
+      "ms_within": {
+        "value": 466.48428273008483,
+        "class": "closed_form"
+      },
+      "f": {
+        "value": 7.2944302174198124e-05,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.99320885297379791,
+        "class": "closed_form"
+      },
+      "ss_total": {
+        "value": 34053.386666666673,
+        "class": "closed_form"
+      },
+      "df_total": {
+        "value": 74,
+        "class": "closed_form"
+      }
+    },
+    "bartlett": {
+      "chisq": {
+        "value": 1.4953414830009246,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 1,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.22138954450325871,
+        "class": "closed_form"
+      }
+    },
+    "kruskal_wallis": {
+      "h": {
+        "value": 0.00046346953961963645,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 1,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.98282419449011282,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

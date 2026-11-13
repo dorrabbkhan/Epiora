@@ -2484,6 +2484,232 @@ references read from the live site source and from
   ch. 5) and variable per-set ratios excluded (a 2×(M+1) set table cannot
   express mixed M; neither reference tool has it). Calculator counts are
   unchanged: 1:n adds outputs under the existing `matched_case_control` id.
+### v1.0 Task 2 — R corpus v3
+
+- Scope shipped: `fixtures/R/methods/*.R` (nine files, SPDX MIT header, plain
+  side-effect-free functions), `fixtures/R/means.R`, `fixtures/R/calc.R`,
+  MEANS datasets and fixtures, calculator fixtures, `generate.R` source
+  order, `renv.lock`, fixture schema. No `crates/`, `app/` or `spikes/`
+  file touched; `fixtures/R/special.R` and `fixtures/special/*` untouched.
+- Deferred: the seven special.* grids (owner decision 2026-11-13, conductor
+  escalation) — they land in a fixture-only PR sequenced with Task 5.
+- Fixture counts: `fixtures/means/` 10 fixtures (ungrouped, grouped,
+  include_missing, ties, one-obs group, constant, all-missing, dates,
+  Oswego AGE, Oswego AGE×SEX) over 6 new `means_*.dataset.json` datasets
+  plus `oswego`; `fixtures/calc/` 83 fixtures over 23 calculators (every
+  calculator in `docs/v1.0-calculators.md` except `random_numbers`, which
+  has no R reference — spec §5.2): proportion 5, two_by_two 5, two_by_n 3,
+  r_by_c 3, dose_response 4, matched_case_control 4, screening 3, smr 4,
+  binomial 3, poisson 3, rate_one 3, rate_compare 4, mean_ci 3, median_ci
+  4, t_test_summary 4, anova_summary 4, ss_proportion 4, ss_unmatched_cc 3,
+  ss_cohort 4, ss_mean_difference 3, power_unmatched_cc 4, power_cohort 3,
+  power_mean_difference 3. Each calculator carries at least a textbook,
+  boundary/zero-cell and large or option-variant case; every input-option
+  combination in the inventory is covered (`sd_or` ×3 for mean_ci, the
+  four ss_cohort alternates, the three power_cohort designs, conf-level
+  variants 90/95/97/99).
+- R versions (renv.lock): `exactci` 1.4-5, `exact2x2` 1.7.0, `PropCIs`
+  0.3-0, `epitools` 0.5-10.1, `epiR` 3.0.0, `DescTools` 0.99.60,
+  `survival` 3.8-12, R 4.6.2.
+- Methods files and literature (header comment in each): `proportion.R`
+  — Wilson score + FPC (Cochran 1977 §2.8), Fleiss score CC; `tables.R` —
+  Rothman & Greenland direct pooling, Breslow & Day 1980, OR/risk
+  etiologic fractions (Kahn/Sempos), stratified CMLE OR (Martin & Austin
+  1991/1996, `MartinStats.js` port); `dose_response.R` — extended MH trend
+  (Rosner 5th ed. p.606 CC; Schlesselman 1982 p.203 uncorrected);
+  `matched.R` — pair OR b/c Taylor CI; `screening.R` — diagnostic odds
+  (Simel et al. 1991 log method), entropy/bias/level LRs
+  (DiagnosticTest.js); `poisson.R` — Byar (Rothman & Boice 1979),
+  Rothman & Greenland, Ury–Wiggins 1985, Vandenbroucke 1982; `rates.R` —
+  RD Byar, CMLE RR (Martin & Austin 1996), PEPI etiologic fractions
+  (Abramson & Gahlinger), Breslow–Day rates 1987; `means.R` — mean CI
+  with FPC, Conover percentile-rank CI, ANOVA/Bartlett from summary;
+  `sample_size.R` — Kelsey et al. Table 12-15, Fleiss 3.18–3.19, Lwanga &
+  Lemeshow (OpenEpi + EI7 population-survey forms), power z ±CC.
+- MEANS conventions: quartiles are EI7's Tukey hinges (`fivenum()` — no
+  single `quantile(type)` reproduces hinges for all n); mode is the
+  smallest value among tied modes (EI7 `cDataSetHelper.cs`); dates are
+  days since 1970-01-01 including negatives; a one-observation group
+  emits undefined variance/std_dev (null leaves); "(missing)" is the last
+  group when `include_missing` is true.
+- API notes recorded for the engine tasks: `epiR` 3.0.0 emits no
+  prevented-fraction or per-group-risk outputs, so `etiologic.*` and
+  `etiologic_or.*` come from `fixtures/R/methods/tables.R` (OpenEpi
+  TwobyTwo.js formulas) and `risk.*` uses a Taylor proportion CI scaled
+  ×100, matching `epiR::epi.2by2`'s percent units; `risk_difference` is
+  `epi.2by2 ARisk.strata.wald` (percent). `epitools::rate2by2.test`
+  returns only wald/midp p-values; `zscore.{value,p_1t}` uses the same
+  z statistic it computes internally. Stock `mantelhaen.test` cannot run
+  on K = 1, so single-table MH uses the corpus's existing `mh_2x2xk`
+  port (bit-for-bit checked wherever the stock function runs).
+- Files outside the Files block: `.github/workflows/fixtures.yml` —
+  added `means` to the schema-validation family list and a `calc/<id>`
+  depth-2 loop so the new fixture families are actually validated;
+  fix round 3 added a `push` trigger on `main` with the same `paths`
+  filter as `pull_request`, so fixture drift on main (like the
+  `ods_dates/input.ods` drift this PR exposed) is caught instead of
+  going unnoticed until the next PR.
+- `fixtures/import/ods_dates/input.ods`: the bytes committed by
+  6d26661 carried a foreign host's font list (drift first exposed by this
+  PR's fixtures run — the fixtures workflow had not run since 6d26661).
+  The file was regenerated with the pinned TDF 26.2.6.3 build; the
+  output (git hash 9b3e712) is byte-identical on this host and on the CI
+  runner, so the drift check is green again. Determinism verified: three
+  consecutive `Rscript fixtures/generate.R` runs produced byte-identical
+  fixtures otherwise.
+- Green fixtures workflow run (regeneration + schema validation + drift
+  check over all families):
+  https://github.com/dorrabbkhan/Epiora/actions/runs/43348086896
+- Generation: `Rscript fixtures/generate.R` run three times consecutively
+  with no drift (`git status --porcelain fixtures/` unchanged after the
+  second and third runs, tracked files only).
+- Fix round 1 (PR #64 review):
+  - `dose_response.R::xmh_trend` continuity correction changed from the
+    signed `(v1sum - 0.5)^2` to the Rosner p.606 literature form
+    `max(|v1sum| - 0.5, 0)^2`: the signed form *raised* the statistic
+    when V < 0 (textbook: 3.7956 corrected vs 3.6198 uncorrected); a
+    correction only shrinks |V|. The corrected statistic is now always
+    <= the uncorrected one (textbook 3.4481 vs 3.6198; decreasing 40.74
+    vs 41.49). Only pre-existing fixture whose values changed:
+    `fixtures/calc/dose_response/textbook.json`.
+  - 18 new calculator fixtures so every calculator has a textbook, a
+    boundary/zero-cell and a large or option case: dose_response
+    `decreasing` (V < 0 sign coverage + zero case) and `large`;
+    rate_compare `boundary` (equal rates, RR = 1) and `large`; median_ci
+    `boundary` (p = 5 — normal-approximation ranks leave [1, n],
+    recorded as the reference output) and `large`; t_test_summary
+    `boundary` (n1 = 2) and `large`; anova_summary `small_group`
+    (a group at n = 2) and `large`; ss_proportion `small_population`
+    (uncorrected n > N — FPC at the limit) and `large`;
+    ss_mean_difference `small_effect` (diff 0.5) and `high_power`
+    (99/99, ratio 2); power_unmatched_cc `small_effect` (31% vs 30%)
+    and `large`; power_mean_difference `small_effect` and `large`.
+    Boundary constraints of the MartinStats port discovered while
+    picking cases: a person-time stratum with sum_a - min_a <= 1 makes
+    the numerator polynomial degenerate (degree 0) and large case
+    counts overflow the convolved coefficients — both error the
+    generator, so such inputs are not fixtures.
+  - OpenEpi MIT attribution (copyright + permission notice) added below
+    the SPDX line in `fixtures/R/methods/tables.R` and `rates.R`, the
+    two files that port `js/MartinStats.js` / PersonTime2 code.
+  - Stratified CMLE cross-check — resolved at fix round 2. The 1e-6
+    bound in the round-1 instruction was the conductor's, not a plan
+    or fixture tolerance; it is unmeetable because stock
+    `stats::mantelhaen.test(exact = TRUE)` finds its exact-CI roots
+    with `uniroot`'s default tolerance (`tol` unset, so
+    `.Machine$double.eps^0.25` ~ 1.2e-4). The generation-time check
+    now lives in `calc.R::check_cmle_exact` at 1e-3 relative — a
+    sanity check at stock's own convergence chosen by the conductor,
+    not a fixture tolerance; it never changes a fixture value.
+    Measured on the `stratified` fixture (port vs stock): est
+    2.7651727076105361 vs 2.7651730451773968 (1.2e-7 rel);
+    fisher_lower 1.5446268009946689 vs 1.5445617077397695
+    (4.2e-5 rel); fisher_upper 5.0277823325556676 vs
+    5.0270823927319812 (1.4e-4 rel) — all within 1e-3. The
+    `r_default` variant (port run at stock's own uniroot tolerance)
+    sits est 1.1e-5, lower 4.7e-5, upper 1.4e-4 rel from stock — the
+    two root-finders land on different endpoints inside the same
+    loose envelope. Against stock's own algorithm re-converged at
+    `tol = 1e-14` the port agrees within 6.8e-15 rel
+    (2.7651727076105344 / 1.5446268009946793 / 5.0277823325556668 vs
+    the port's 2.7651727076105361 / 1.5446268009946689 /
+    5.0277823325556676), produced on R 4.6.2 from the repo root by:
+
+      ```sh
+      Rscript - <<'EOF'
+      source("fixtures/R/methods/tables.R")
+      strata <- list(matrix(c(30, 70, 10, 90), 2, 2, byrow = TRUE),
+                     matrix(c(5, 15, 20, 60), 2, 2, byrow = TRUE),
+                     matrix(c(8, 12, 3, 25), 2, 2, byrow = TRUE))
+      arr <- array(unlist(strata), dim = c(2, 2, 3))
+      # stock's mantelhaen.test with tol = 1e-14 injected into its
+      # six uniroot interval arguments; nothing else changes.
+      src <- capture.output(print(stats::mantelhaen.test))
+      src <- paste(src[!grepl("^<", src)], collapse = "\n")
+      src <- gsub("c\\(0,\\s*1\\)\\)", "c(0, 1), tol = 1e-14)", src)
+      src <- gsub("c\\(\\.Machine\\$double\\.eps,\\s*1\\)\\)",
+                  "c(.Machine$double.eps, 1), tol = 1e-14)", src)
+      f <- eval(parse(text = src))
+      environment(f) <- environment(stats::mantelhaen.test)
+      port <- stratified_cmle(strata, 0.95)$tight
+      t <- f(arr, exact = TRUE)
+      cat(sprintf("%.17g %.17g %.17g\n", unname(t$estimate),
+                  t$conf.int[1], t$conf.int[2]))
+      EOF
+      ```
+
+      Output: `2.7651727076105344 1.5446268009946793 5.0277823325556668`.
+  - Fixtures workflow run (green on the round-1 head):
+    https://github.com/dorrabbkhan/Epiora/actions/runs/43355570221
+  - Fixtures workflow run (green on the round-2 head, covering the
+    new `check_cmle_exact` generation-time check and a zero-drift
+    regeneration):
+    https://github.com/dorrabbkhan/Epiora/actions/runs/43358183499
+- Fix round 3 (PR #64 review, owner-authorised third round) — CMLE
+  reference edge cases plus the fixtures workflow on push to main:
+  - Robust convolution. `poly_strat_cc`/`poly_strat_pt` now return
+    log coefficients (`lchoose`-based, normalised to a max of 0);
+    `mult_poly` is replaced by `logmult_poly` (convolution via
+    log-sum-exp, the same O(n1*n2) shape, every product renormalised);
+    `eval_poly` is replaced by `logeval_poly` (log-sum-exp
+    evaluation — the linear P(r) is unrepresentable at the roots for
+    large supports), and `martin_func` gets an exact `r = 0` branch
+    from the lowest-degree nonzero coefficients. Existing fixture
+    values moved only in the last ulps: 5 files changed —
+    `fixtures/calc/two_by_two/stratified.json` (max 2.0e-14 rel),
+    `rate_compare/textbook.json` (2.9e-15), `stratified.json`
+    (5.5e-15), `boundary.json` (5.8e-15), `large.json` (2.2e-13,
+    the round's maximum) — all under the 1e-12 stop bound. `git
+    status --porcelain fixtures/` shows no other tracked-file
+    changes and the second of two consecutive `Rscript
+    fixtures/generate.R` runs is byte-identical (293 files, sha256).
+  - Support boundaries are explicit in `martin_cmle`/`martin_lim`:
+    observed sum at the support minimum gives estimate 0 and both
+    lower limits 0; at the maximum the estimate and both upper
+    limits are infinite and emit the corpus's existing
+    undefined/null leaf (`{value: null, class}` — the engine
+    answers `{"undefined": <reason>}`, where the reason is
+    engine-side, as elsewhere in the corpus; the leaf schema
+    carries no reason field). One step inside the boundary computes
+    normally. `martin_root` now falls back to 1 when the crude
+    `approx` is non-finite and returns `NA` (undefined leaf) rather
+    than erroring when the bracket expansion overflows.
+  - Generation-time stock cross-checks at 1e-3 relative (sanity
+    checks, not fixture tolerances): `check_cmle_single_cc` runs
+    `fisher.test(conf.int = TRUE)` on every two_by_two stratum and
+    the crude table; `check_cmle_single_pt` runs the
+    conditional-binomial identity (RR = (a/b)·(n0/n1), limits from
+    `binom.test(a, a+b)$conf.int` mapped p → p/(1-p)·(n0/n1)) on
+    every rate_compare stratum and the crude table. Measured
+    agreement includes the boundary shapes — port vs stock at the
+    support maximum: est Inf = Inf, fisher_lower 9.874124 =
+    9.874124 (4e-15 rel), upper Inf = Inf.
+  - `check_cmle_exact` is gated to `sum(arr) <= 5e4`: stock
+    `mantelhaen.test(exact = TRUE)` itself silently overflows at
+    large counts — measured on this corpus it still agrees with the
+    port at ~8e4 total counts, drifts past the 1e-3 sanity bound by
+    ~1e5 and returns a garbage estimate (~8e-5 for OR ~0.33 strata)
+    by ~1.3e5 — so no stock reference exists beyond that gate. The
+    `large_counts` stratified fixture instead uses two identical
+    strata `[[1e6, 500], [2e6, 500]]`: the convolved CMLE then
+    solves the same E_r[K] = a equation as the single-table
+    `fisher.test` CMLE, keeping a real stock check at million counts
+    (port est 0.5000001 vs stock 0.4999849, 3.0e-5 rel).
+  - 8 new fixtures by category: `two_by_two` and `rate_compare`
+    `zero_event` (support minimum → est 0, lower limits 0),
+    `support_max` (→ est and upper limits null leaves),
+    `one_inside_boundary` (degree-0 Fisher numerator — the round-1
+    blocker — computes normally; its strata are sized so stock
+    `fisher.test`'s looser boundary root, ~1.3e-3 relative on small
+    tables measured against the port's 1e-14 root, stays inside the
+    1e-3 sanity bound) and `large_counts` (counts in the millions).
+  - `.github/workflows/fixtures.yml` gained a `push` trigger on
+    `main` with the same `paths` filter as `pull_request`; nothing
+    else in the workflow changed.
+  - Fixtures workflow run (green on the round-3 head):
+    https://github.com/dorrabbkhan/Epiora/actions/runs/43412250457
+    (6m41s — regenerate fixtures, schema validation, Epi Info 7
+    parser tests, no drift after regeneration)
 
 ### G8 — Roadmap review from user signals (2026-11-13)
 Decision: owner accepted every proposed roadmap change, including v1.0. v1.0 gains Tasks 22 (engine assumption
