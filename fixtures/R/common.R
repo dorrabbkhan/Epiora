@@ -136,6 +136,36 @@ check_mh_port <- function(x, what) {
   invisible(TRUE)
 }
 
+# Generation-time check: where no stratum has a zero cell, the
+# uncorrected MH-RR port (mh_rr_2x2xk in methods/tables.R) must
+# reproduce epiR::epi.mh(method = "risk.ratio") bit for bit — epi.mh's
+# only deviation is its 0.5 zero-cell correction, so with every cell
+# positive it computes the same uncorrected estimator and
+# Greenland-Robins CI. Where a zero cell exists there is no stock
+# reference for the MH risk ratio and the check is skipped (the
+# OpenEpi captures supply display-level evidence there instead).
+check_mh_rr_port <- function(strata, conf, port, what) {
+  if (any(vapply(strata, function(t) any(t == 0), logical(1)))) {
+    return(invisible(TRUE))
+  }
+  ev_t <- vapply(strata, function(t) t[1, 1], numeric(1))
+  n_t <- vapply(strata, function(t) t[1, 1] + t[1, 2], numeric(1))
+  ev_c <- vapply(strata, function(t) t[2, 1], numeric(1))
+  n_c <- vapply(strata, function(t) t[2, 1] + t[2, 2], numeric(1))
+  stock <- epiR::epi.mh(ev_t, n_t, ev_c, n_c,
+                        names = paste0("s", seq_along(strata)),
+                        method = "risk.ratio",
+                        conf.level = conf / 100)
+  stop_if(
+    !isTRUE(all.equal(
+      unname(port),
+      c(stock$RR.summary$est, stock$RR.summary$lower,
+        stock$RR.summary$upper),
+      tolerance = 0)),
+    sprintf("uncorrected MH-RR port mismatch for %s", what))
+  invisible(TRUE)
+}
+
 # Installed versions of `pkgs` as a named list (for source.packages).
 pkg_versions <- function(pkgs) {
   v <- vapply(pkgs, function(p) as.character(utils::packageVersion(p)),

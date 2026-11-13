@@ -2711,6 +2711,153 @@ references read from the live site source and from
     (6m41s — regenerate fixtures, schema validation, Epi Info 7
     parser tests, no drift after regeneration)
 
+### v1.0 Task 2 follow-up — R method fixes (2026-11-13)
+
+Owner-directed follow-up, found while validating Task 3 (PR #65,
+the OpenEpi capture): five method bugs in the Task 2 R reference
+corpus. Fixtures still change only via `Rscript
+fixtures/generate.R`; the run is deterministic (second run produced
+no drift).
+
+- **Power (`power_norm` in `fixtures/R/methods/sample_size.R`).**
+  The helper computed `(1 - Q(|z|)/2)·100`; the inventory's quantity
+  is one-sided normal power `Φ(z_pow)·100`. OpenEpi's `Norm(z)`
+  returns the two-sided tail `2Q(z)`, so OpenEpi's
+  `(1 - Norm(powerz)/2)·100` is `Φ(powerz)·100`; at `powerz ≤ 0`
+  OpenEpi's own A&S polynomial mis-extrapolates (it shows 3.128 on
+  `power_mean_difference/small_effect` where `Φ(z_pow)·100` is
+  3.867). Now `power_norm <- function(powerz) pnorm(powerz) * 100`;
+  all five callers share it. Evidence: `power_cohort/cohort` →
+  63.9147 (OpenEpi 63.92), `rct` → 51.6075 (OE 51.61),
+  `cross_sectional` → 72.9455 (OE 72.95),
+  `power_mean_difference/textbook` → 70.5414 (OE 70.55),
+  `small_effect` → 3.8672 (OE's own display 3.128 is its
+  extrapolation artefact; stock `power.t.test(n=30, delta=0.5,
+  sd=10, strict=TRUE)` → 5.4166 ≈ the owner's "≈5.4" cross-check —
+  the leaf holds the named one-sided quantity, not the two-sided
+  strict power). All power_* fixtures updated (15 leaves).
+- **CMLE point estimates.** `cmle_or.midp.est` in `two_by_two`
+  (every stratum and crude table) now uses
+  `stats::fisher.test(tab)$estimate` — the conditional MLE,
+  bit-identical to `exact2x2`'s estimate and 0/Inf at the support
+  boundaries — instead of `epitools::or.midp`'s median-unbiased
+  estimate (4.3089 → 4.38445 on textbook; OpenEpi 4.385). The mid-p
+  limits stay `or.midp`'s where it runs (`or.midp` vs `exact2x2`
+  mid-p limits agree to ~1e-4 on every corpus table); on zero cells
+  where `or.midp` fails, `exact2x2(midp=TRUE)` supplies the same
+  mid-p limits. The Fisher-central limits (`exact2x2`,
+  tsmethod="central") are unchanged. Audit: `two_by_n`'s
+  `odds_ratio_mle.midp.est` already used `exact2x2` (the CMLE);
+  `matched_case_control.cmle_or.midp.est` is
+  `exact2x2(paired=TRUE)`'s matched CMLE (= b/c, verified 2.6667 =
+  8/3); `matched_n.cmle_or` is `survival::clogit` (the conditional
+  MLE for 1:n sets); `rate_compare.cmle_rr.est` is the MartinStats
+  port's conditional MLE (check_cmle_single_pt vs the
+  conditional-binomial identity); `adjusted.cmle_or` is the
+  stratified conditional MLE (check vs
+  `mantelhaen.test(exact=TRUE)`). No change needed in those.
+- **mean_ci t-row FPC.** `mean_ci_write` applied the
+  finite-population correction `√((N−n)/(N−1))` only to the z-row;
+  the t-row now applies the same factor (OpenEpi `CIMean.js:161`
+  applies it to both). Only `mean_ci/variance_input`
+  (population_size = 250) changes: t → [9.6868, 11.3132] from
+  [9.6446, 11.3554].
+- **Adjusted Mantel–Haenszel estimates.** `epiR::epi.mh` adds 0.5
+  to every cell of any stratum containing a zero, which changes the
+  estimator. `adjusted.mh_or.*` now uses
+  `stats::mantelhaen.test(correct=FALSE)` — the uncorrected MH
+  estimate and Robins–Breslow–Greenland CI, already generated for
+  `mh_chisq` and verified bit-for-bit by `check_mh_port`
+  (`one_inside_boundary` → 0.2420575; OpenEpi 0.2421).
+  `adjusted.mh_rr.*` uses the new port
+  `fixtures/R/methods/tables.R::mh_rr_2x2xk` (uncorrected MH RR with
+  the Greenland & Robins 1985 log-variance CI — epi.mh's own
+  formulas minus its 0.5 loop), checked bit-for-bit against
+  `epi.mh` on every all-positive-stratum fixture by the new
+  `check_mh_rr_port`. Zero-cell cases match OpenEpi's captures:
+  `zero_event` → est 0, lower 0, upper undefined (OE 0/0/'?');
+  `support_max` → 4.8467/2.9861/7.8666 (OE 4.847/2.986/7.866);
+  `one_inside_boundary` → 0.2511/0.0347/1.8172 (OE
+  0.2511/0.03471/1.817). Genuinely-undefined leaves stay null
+  (`support_max` mh_or: Σbc/n = 0 → est Inf; `zero_event` mh_or CI:
+  0/0 variance).
+- **Zero-cell exact results.** Where `epi.2by2`/`or.midp` errored
+  and a stock routine defines the quantity, the leaves now hold
+  values: `cmle_or.midp.est` → conditional MLE 0 at support minimum
+  (fisher.test; stays undefined — null — at support maximum, Inf);
+  `cmle_or.midp.{lower,upper}` → `exact2x2(midp=TRUE)` limits
+  (`zero_cell` [0, 1.0439], `zero_event` strata [0, 1.9672]/[0,
+  1.0439], crude [0, 0.5682] — matching OpenEpi's captured
+  0/1.967/1.044/0.5682); `risk_difference.*` →
+  `DescTools::BinomDiffCI(method="wald")` ×100, verified
+  bit-identical to `epi.2by2`'s `ARisk.strata.wald` on every
+  non-zero-cell table. `two_by_two` and `two_by_n` fixture `source`
+  blocks gain `DescTools 0.99.60` (already pinned in renv.lock; GPL
+  ≥2). 42 previously-null leaves now hold defined values; all other
+  nulls are mathematically undefined (log-Wald upper limits on zero
+  cells, etiologic fractions, direct-OR at support max, clogit
+  failures) and stay null.
+- **Confidence-level leak (owner-directed round 4, same PR).**
+  `two_by_two_table` and `two_by_n_table` called
+  `epitools::riskratio`/`oddsratio` without `conf.level` (epitools
+  defaults to 0.95), and `two_by_two_expected`/`matched_expected`
+  called `stats::mantelhaen.test` without it. All now pass
+  `conf.level = conf / 100`. Only `two_by_two/large`
+  (conf_level 99) changed: `risk_ratio` → [1.5149191000281459,
+  1.689859214232917], `odds_ratio` → [1.847354820987517,
+  2.1652581055661906] on the stratum and the crude table — the
+  closed-form log-Wald 99% limits computed independently
+  (`exp(log RR ± qnorm(0.995)·√(1/a−1/n1+1/c−1/n0))` and the 1/cell
+  OR form) are bitwise the new leaves, and OpenEpi displays
+  1.515–1.69. The mantelhaen.test sites had no non-95
+  multi-stratum/matched case yet, so no other fixture moved.
+  Sweep of every interval-producing call in `fixtures/R/*.R` and
+  `fixtures/R/methods/*.R` (epitools, epiR, exactci, PropCIs,
+  exact2x2, DescTools, stats::* .test calls, survival::clogit,
+  own helpers taking z or conf): all other sites already receive
+  the case level — `conf / 100` where the API wants a fraction
+  (`conf = cl` for epitools' pois.*), percent for the own
+  z-helpers, and the round-3 sanity checks take `conf` as a
+  fraction because their callers pass `conf / 100`
+  (check_cmle_exact, check_cmle_single_cc/pt). Calls that never
+  read `$conf.int` (fisher/mcnemar/chisq p-values, clogit's
+  hand-built z CI, mh_2x2xk's statistic-only uses,
+  check_mh_port's stock-vs-port identity at 0.95 on both sides)
+  need no level. Fixed-95-by-design corpora (2x2, stratified,
+  freq, means §4.2, binomial `ci_95_count`, anova `qt(0.975)`)
+  keep 0.95 — those fixtures have no conf_level input. New
+  generation-time guard `check_conf_leak` (fixtures/R/calc.R):
+  every conf-taking calc writer rebuilds its expected at 95, and
+  for `conf_level ≠ 95` each interval leaf must differ bitwise —
+  demonstrated to stop generation on the unfixed code, naming the
+  eight leaked leaves, and to pass after.
+- **Inventory rows amended in `docs/v1.0-calculators.md`**
+  (R-function column + note only):
+  `calc.two_by_two.<s>.risk_difference.*`,
+  `calc.two_by_two.<s>.cmle_or.midp.*`,
+  `calc.two_by_two.adjusted.mh_or.*`,
+  `calc.two_by_two.adjusted.mh_rr.*`,
+  `calc.two_by_n.<s>.risk_difference.*`.
+- **Changed-leaf census** (fixtures/calc): 22 fixture files, 99
+  leaf-value changes + `source.packages` (DescTools) on the 12
+  two_by_two/two_by_n files: 15 power leaves (fix 1), 2 mean_ci t
+  leaves (fix 3), 15 `cmle_or.midp.est` recomputed on non-boundary
+  tables (fix 2), 6 `cmle_or.midp.est` + 15 `cmle_or.midp` limit
+  leaves filled on zero-cell tables (fix 5), 24 `risk_difference`
+  leaves filled (fix 5), 22 `adjusted.mh_or`/`mh_rr` leaves
+  (fix 4). Round 4 adds 1 file, 8 leaf-value changes:
+  `two_by_two/large` `risk_ratio.{lower,upper}` and
+  `odds_ratio.{lower,upper}` on stratum 1 and crude (fix 6). No
+  other leaf changed.
+- **Files outside the Task 2 Files block:** none — edits confined
+  to `fixtures/R/methods/sample_size.R`,
+  `fixtures/R/methods/tables.R`, `fixtures/R/common.R`
+  (`check_mh_rr_port`), `fixtures/R/calc.R`, the regenerated
+  `fixtures/calc` JSONs, `docs/v1.0-calculators.md` and this file.
+  `fixtures/R/` and `docs/` are Task 2's own files; no crates/, app/,
+  spikes/, fixtures/openepi/, fixtures/special/ or
+  fixtures/R/special.R was touched.
+
 ### G8 — Roadmap review from user signals (2026-11-13)
 Decision: owner accepted every proposed roadmap change, including v1.0. v1.0 gains Tasks 22 (engine assumption
 notes, OWNER REVIEW of rules), 23 ("which calculator?" guide, notes on cards and in explain) and 24 (public

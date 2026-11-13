@@ -171,7 +171,7 @@
         "cmle_or": {
           "midp": {
             "est": {
-              "value": 0.45096067963667319,
+              "value": 0.40105571150221675,
               "class": "iterative"
             },
             "lower": {
@@ -436,15 +436,15 @@
         },
         "risk_difference": {
           "est": {
-            "value": null,
+            "value": -16.666666666666664,
             "class": "closed_form"
           },
           "lower": {
-            "value": null,
+            "value": -30.002532434320301,
             "class": "closed_form"
           },
           "upper": {
-            "value": null,
+            "value": -3.3308008990130311,
             "class": "closed_form"
           }
         },
@@ -465,15 +465,15 @@
         "cmle_or": {
           "midp": {
             "est": {
-              "value": null,
+              "value": 0,
               "class": "iterative"
             },
             "lower": {
-              "value": null,
+              "value": 0,
               "class": "iterative"
             },
             "upper": {
-              "value": null,
+              "value": 2.4190534911126935,
               "class": "iterative"
             }
           },
@@ -760,7 +760,7 @@
       "cmle_or": {
         "midp": {
           "est": {
-            "value": 0.28354200306595212,
+            "value": 0.25076087633294952,
             "class": "iterative"
           },
           "lower": {
@@ -913,15 +913,15 @@
       },
       "mh_or": {
         "est": {
-          "value": 0.32511383246356323,
+          "value": 0.24205748865355523,
           "class": "closed_form"
         },
         "lower": {
-          "value": 0.059129346047166839,
+          "value": 0.032508420676675018,
           "class": "closed_form"
         },
         "upper": {
-          "value": 1.7875896001763818,
+          "value": 1.8023584841605667,
           "class": "closed_form"
         }
       },
@@ -969,15 +969,15 @@
       },
       "mh_rr": {
         "est": {
-          "value": 0.34574918369814978,
+          "value": 0.25112107623318392,
           "class": "closed_form"
         },
         "lower": {
-          "value": 0.067144630502226979,
+          "value": 0.034702350012513261,
           "class": "closed_form"
         },
         "upper": {
-          "value": 1.7803731606501587,
+          "value": 1.8172197244789825,
           "class": "closed_form"
         }
       },
@@ -1050,7 +1050,8 @@
       "stats": "4.6.2",
       "epitools": "0.5.10.1",
       "exact2x2": "1.7.0",
-      "epiR": "3.0.0"
+      "epiR": "3.0.0",
+      "DescTools": "0.99.60"
     }
   }
 }

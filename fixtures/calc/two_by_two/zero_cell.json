@@ -138,15 +138,15 @@
         },
         "risk_difference": {
           "est": {
-            "value": null,
+            "value": -21.052631578947366,
             "class": "closed_form"
           },
           "lower": {
-            "value": null,
+            "value": -34.014819605824719,
             "class": "closed_form"
           },
           "upper": {
-            "value": null,
+            "value": -8.0904435520700151,
             "class": "closed_form"
           }
         },
@@ -167,15 +167,15 @@
         "cmle_or": {
           "midp": {
             "est": {
-              "value": null,
+              "value": 0,
               "class": "iterative"
             },
             "lower": {
-              "value": null,
+              "value": 0,
               "class": "iterative"
             },
             "upper": {
-              "value": null,
+              "value": 1.0438779279683756,
               "class": "iterative"
             }
           },
@@ -433,15 +433,15 @@
       },
       "risk_difference": {
         "est": {
-          "value": null,
+          "value": -21.052631578947366,
           "class": "closed_form"
         },
         "lower": {
-          "value": null,
+          "value": -34.014819605824719,
           "class": "closed_form"
         },
         "upper": {
-          "value": null,
+          "value": -8.0904435520700151,
           "class": "closed_form"
         }
       },
@@ -462,15 +462,15 @@
       "cmle_or": {
         "midp": {
           "est": {
-            "value": null,
+            "value": 0,
             "class": "iterative"
           },
           "lower": {
-            "value": null,
+            "value": 0,
             "class": "iterative"
           },
           "upper": {
-            "value": null,
+            "value": 1.0438779279683756,
             "class": "iterative"
           }
         },
@@ -613,7 +613,8 @@
       "stats": "4.6.2",
       "epitools": "0.5.10.1",
       "exact2x2": "1.7.0",
-      "epiR": "3.0.0"
+      "epiR": "3.0.0",
+      "DescTools": "0.99.60"
     }
   }
 }

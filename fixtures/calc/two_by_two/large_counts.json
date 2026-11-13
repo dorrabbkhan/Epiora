@@ -171,7 +171,7 @@
         "cmle_or": {
           "midp": {
             "est": {
-              "value": 0.49999802968343615,
+              "value": 0.49998487886941012,
               "class": "iterative"
             },
             "lower": {
@@ -465,7 +465,7 @@
         "cmle_or": {
           "midp": {
             "est": {
-              "value": 0.49999802968343615,
+              "value": 0.49998487886941012,
               "class": "iterative"
             },
             "lower": {
@@ -760,7 +760,7 @@
       "cmle_or": {
         "midp": {
           "est": {
-            "value": 0.50000815844431001,
+            "value": 0.49998481640856202,
             "class": "iterative"
           },
           "lower": {
@@ -917,7 +917,7 @@
           "class": "closed_form"
         },
         "lower": {
-          "value": 0.458032165092295,
+          "value": 0.45803216509229494,
           "class": "closed_form"
         },
         "upper": {
@@ -1050,7 +1050,8 @@
       "stats": "4.6.2",
       "epitools": "0.5.10.1",
       "exact2x2": "1.7.0",
-      "epiR": "3.0.0"
+      "epiR": "3.0.0",
+      "DescTools": "0.99.60"
     }
   }
 }
