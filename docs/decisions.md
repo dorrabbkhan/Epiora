@@ -3065,4 +3065,9 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   (`ppois(k−1, λ, lower.tail=FALSE)`), the corpus numeric-`upper`
   convention.
 - Files outside the Files block: `docs/decisions.md` (this entry, as the
-  owner note requires).
+  owner note requires); `.github/workflows/app.yml` (CI repair — the
+  `app` job pinned `ubuntu-latest` → `ubuntu-24.04` because
+  ubuntu-latest moved to 26.04 resolute on 2026-11-13 and Playwright's
+  WebKit build needs `libicudata.so.74`, absent on resolute; the
+  store-opfs suite and Playwright e2e fail at browser launch on every
+  PR until reverted or Playwright supports resolute).
