@@ -20,13 +20,13 @@
         },
         {
           "label": "Mid-P exact test [1]",
-          "statistic": null,
+          "statistic": "calc.rate_one.ci.midp.lower",
           "value": 3.307,
           "decimals": 3
         },
         {
           "label": "Mid-P exact test [2]",
-          "statistic": "calc.rate_one.ci.midp.lower",
+          "statistic": "calc.rate_one.estimate",
           "value": 5,
           "decimals": 0
         },
@@ -103,69 +103,69 @@
         },
         {
           "label": "Mid-P exact test [1]",
-          "statistic": null,
-          "value": 0.2794,
-          "decimals": 4
+          "statistic": "calc.rate_one.ci.midp.lower",
+          "value": 2.7939999999999996,
+          "decimals": 3
         },
         {
           "label": "Mid-P exact test [2]",
-          "statistic": "calc.rate_one.ci.midp.lower",
-          "value": 1.667,
-          "decimals": 3
+          "statistic": "calc.rate_one.estimate",
+          "value": 16.67,
+          "decimals": 2
         },
         {
           "label": "Mid-P exact test [3]",
           "statistic": "calc.rate_one.ci.midp.upper",
-          "value": 5.506,
-          "decimals": 3
+          "value": 55.06,
+          "decimals": 2
         },
         {
           "label": "Fisher's exact test [1]",
           "statistic": "calc.rate_one.ci.fisher.lower",
-          "value": 0.2018,
-          "decimals": 4
+          "value": 2.0180000000000002,
+          "decimals": 3
         },
         {
           "label": "Fisher's exact test [2]",
           "statistic": "calc.rate_one.ci.fisher.upper",
-          "value": 6.021,
-          "decimals": 3
+          "value": 60.21,
+          "decimals": 2
         },
         {
           "label": "Normal approximation [1]",
           "statistic": "calc.rate_one.ci.normal.lower",
           "value": 0,
-          "decimals": 1
+          "decimals": 0
         },
         {
           "label": "Normal approximation [2]",
           "statistic": "calc.rate_one.ci.normal.upper",
-          "value": 3.976,
-          "decimals": 3
+          "value": 39.76,
+          "decimals": 2
         },
         {
           "label": "Byar approx. Poisson [1]",
           "statistic": "calc.rate_one.ci.byar.lower",
-          "value": 0.1872,
-          "decimals": 4
+          "value": 1.872,
+          "decimals": 3
         },
         {
           "label": "Byar approx. Poisson [2]",
           "statistic": "calc.rate_one.ci.byar.upper",
-          "value": 6.017,
-          "decimals": 3
+          "value": 60.17,
+          "decimals": 2
         },
         {
           "label": "Rothman/Greenland [1]",
           "statistic": "calc.rate_one.ci.rothman_greenland.lower",
-          "value": 0.4169,
-          "decimals": 4
+          "value": 4.169,
+          "decimals": 3
         },
         {
           "label": "Rothman/Greenland [2]",
           "statistic": "calc.rate_one.ci.rothman_greenland.upper",
-          "value": 6.664,
-          "decimals": 3
+          "value": 66.64,
+          "decimals": 2
         }
       ]
     },
@@ -186,69 +186,69 @@
         },
         {
           "label": "Mid-P exact test [1]",
-          "statistic": null,
-          "value": 1.92,
-          "decimals": 2
+          "statistic": "calc.rate_one.ci.midp.lower",
+          "value": 192,
+          "decimals": 0
         },
         {
           "label": "Mid-P exact test [2]",
-          "statistic": "calc.rate_one.ci.midp.lower",
-          "value": 2,
-          "decimals": 0
+          "statistic": "calc.rate_one.estimate",
+          "value": 200,
+          "decimals": -2
         },
         {
           "label": "Mid-P exact test [3]",
           "statistic": "calc.rate_one.ci.midp.upper",
-          "value": 2.083,
-          "decimals": 3
+          "value": 208.3,
+          "decimals": 1
         },
         {
           "label": "Fisher's exact test [1]",
           "statistic": "calc.rate_one.ci.fisher.lower",
-          "value": 1.919,
-          "decimals": 3
+          "value": 191.9,
+          "decimals": 1
         },
         {
           "label": "Fisher's exact test [2]",
           "statistic": "calc.rate_one.ci.fisher.upper",
-          "value": 2.083,
-          "decimals": 3
+          "value": 208.3,
+          "decimals": 1
         },
         {
           "label": "Normal approximation [1]",
           "statistic": "calc.rate_one.ci.normal.lower",
-          "value": 1.919,
-          "decimals": 3
+          "value": 191.9,
+          "decimals": 1
         },
         {
           "label": "Normal approximation [2]",
           "statistic": "calc.rate_one.ci.normal.upper",
-          "value": 2.081,
-          "decimals": 3
+          "value": 208.1,
+          "decimals": 1
         },
         {
           "label": "Byar approx. Poisson [1]",
           "statistic": "calc.rate_one.ci.byar.lower",
-          "value": 1.919,
-          "decimals": 3
+          "value": 191.9,
+          "decimals": 1
         },
         {
           "label": "Byar approx. Poisson [2]",
           "statistic": "calc.rate_one.ci.byar.upper",
-          "value": 2.083,
-          "decimals": 3
+          "value": 208.3,
+          "decimals": 1
         },
         {
           "label": "Rothman/Greenland [1]",
           "statistic": "calc.rate_one.ci.rothman_greenland.lower",
-          "value": 1.92,
-          "decimals": 2
+          "value": 192,
+          "decimals": 0
         },
         {
           "label": "Rothman/Greenland [2]",
           "statistic": "calc.rate_one.ci.rothman_greenland.upper",
-          "value": 2.083,
-          "decimals": 3
+          "value": 208.3,
+          "decimals": 1
         }
       ]
     }

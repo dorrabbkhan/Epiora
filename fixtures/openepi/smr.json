@@ -19,26 +19,26 @@
           "decimals": 0
         },
         {
-          "label": "Mid-P exact test [1]",
-          "statistic": null,
+          "label": "Statistics / d.f. / p-value (2 sided) / Mid-P exact test [1]",
+          "statistic": "calc.smr.test.midp_p",
           "value": 0.02626,
           "decimals": 5
         },
         {
-          "label": "Fisher exact test [1]",
-          "statistic": null,
+          "label": "Statistics / d.f. / p-value (2 sided) / Fisher exact test [1]",
+          "statistic": "calc.smr.test.fisher_p",
           "value": 0.03124,
           "decimals": 5
         },
         {
-          "label": "Byar approximation [1]",
-          "statistic": "calc.smr.ci.byar.lower",
+          "label": "Statistics / d.f. / p-value (2 sided) / Byar approximation [1]",
+          "statistic": null,
           "value": 2.153,
           "decimals": 3
         },
         {
-          "label": "Byar approximation [2]",
-          "statistic": "calc.smr.ci.byar.upper",
+          "label": "Statistics / d.f. / p-value (2 sided) / Byar approximation [2]",
+          "statistic": "calc.smr.test.byar_p",
           "value": 0.03131,
           "decimals": 5
         },
@@ -61,43 +61,43 @@
           "decimals": 5
         },
         {
-          "label": "Mid-P exact test [1]",
-          "statistic": null,
+          "label": "Lower CL / SMR / Upper CL / Mid-P exact test [1]",
+          "statistic": "calc.smr.ci.midp.lower",
           "value": 1.042,
           "decimals": 3
         },
         {
-          "label": "Mid-P exact test [2]",
-          "statistic": "calc.smr.ci.midp.lower",
+          "label": "Lower CL / SMR / Upper CL / Mid-P exact test [2]",
+          "statistic": "calc.smr.estimate",
           "value": 1.389,
           "decimals": 3
         },
         {
-          "label": "Mid-P exact test [3]",
+          "label": "Lower CL / SMR / Upper CL / Mid-P exact test [3]",
           "statistic": "calc.smr.ci.midp.upper",
           "value": 1.816,
           "decimals": 3
         },
         {
-          "label": "Fisher exact test [1]",
-          "statistic": null,
+          "label": "Lower CL / SMR / Upper CL / Fisher exact test [1]",
+          "statistic": "calc.smr.ci.fisher.lower",
           "value": 1.031,
           "decimals": 3
         },
         {
-          "label": "Fisher exact test [2]",
-          "statistic": "calc.smr.test.fisher_p",
+          "label": "Lower CL / SMR / Upper CL / Fisher exact test [2]",
+          "statistic": "calc.smr.ci.fisher.upper",
           "value": 1.831,
           "decimals": 3
         },
         {
-          "label": "Byar approximation [1]",
+          "label": "Lower CL / SMR / Upper CL / Byar approximation [1]",
           "statistic": "calc.smr.ci.byar.lower",
           "value": 1.031,
           "decimals": 3
         },
         {
-          "label": "Byar approximation [2]",
+          "label": "Lower CL / SMR / Upper CL / Byar approximation [2]",
           "statistic": "calc.smr.ci.byar.upper",
           "value": 1.831,
           "decimals": 3
@@ -156,26 +156,26 @@
           "decimals": 1
         },
         {
-          "label": "Mid-P exact test [1]",
-          "statistic": null,
+          "label": "Statistics / d.f. / p-value (2 sided) / Mid-P exact test [1]",
+          "statistic": "calc.smr.test.midp_p",
           "value": 0.2347,
           "decimals": 4
         },
         {
-          "label": "Fisher exact test [1]",
-          "statistic": null,
+          "label": "Statistics / d.f. / p-value (2 sided) / Fisher exact test [1]",
+          "statistic": "calc.smr.test.fisher_p",
           "value": 0.3472,
           "decimals": 4
         },
         {
-          "label": "Byar approximation [1]",
-          "statistic": "calc.smr.ci.byar.lower",
+          "label": "Statistics / d.f. / p-value (2 sided) / Byar approximation [1]",
+          "statistic": null,
           "value": 0.9444,
           "decimals": 4
         },
         {
-          "label": "Byar approximation [2]",
-          "statistic": "calc.smr.ci.byar.upper",
+          "label": "Statistics / d.f. / p-value (2 sided) / Byar approximation [2]",
+          "statistic": "calc.smr.test.byar_p",
           "value": 0.345,
           "decimals": 3
         },
@@ -198,43 +198,43 @@
           "decimals": 4
         },
         {
-          "label": "Mid-P exact test [1]",
-          "statistic": null,
+          "label": "Lower CL / SMR / Upper CL / Mid-P exact test [1]",
+          "statistic": "calc.smr.ci.midp.lower",
           "value": 0.1084,
           "decimals": 4
         },
         {
-          "label": "Mid-P exact test [2]",
-          "statistic": "calc.smr.ci.midp.lower",
+          "label": "Lower CL / SMR / Upper CL / Mid-P exact test [2]",
+          "statistic": "calc.smr.estimate",
           "value": 0.4444,
           "decimals": 4
         },
         {
-          "label": "Mid-P exact test [3]",
+          "label": "Lower CL / SMR / Upper CL / Mid-P exact test [3]",
           "statistic": "calc.smr.ci.midp.upper",
           "value": 1.264,
           "decimals": 3
         },
         {
-          "label": "Fisher exact test [1]",
-          "statistic": null,
+          "label": "Lower CL / SMR / Upper CL / Fisher exact test [1]",
+          "statistic": "calc.smr.ci.fisher.lower",
           "value": 0.07897,
           "decimals": 5
         },
         {
-          "label": "Fisher exact test [2]",
-          "statistic": "calc.smr.test.fisher_p",
+          "label": "Lower CL / SMR / Upper CL / Fisher exact test [2]",
+          "statistic": "calc.smr.ci.fisher.upper",
           "value": 1.399,
           "decimals": 3
         },
         {
-          "label": "Byar approximation [1]",
+          "label": "Lower CL / SMR / Upper CL / Byar approximation [1]",
           "statistic": "calc.smr.ci.byar.lower",
           "value": 0.07669,
           "decimals": 5
         },
         {
-          "label": "Byar approximation [2]",
+          "label": "Lower CL / SMR / Upper CL / Byar approximation [2]",
           "statistic": "calc.smr.ci.byar.upper",
           "value": 1.397,
           "decimals": 3
@@ -262,6 +262,18 @@
           "statistic": "calc.smr.ci.ury_wiggins.upper",
           "value": 1.35,
           "decimals": 2
+        },
+        {
+          "label": "Vandenbroucke method [1]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
+        },
+        {
+          "label": "Vandenbroucke method [2]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
         }
       ]
     },
@@ -281,15 +293,27 @@
           "decimals": 0
         },
         {
-          "label": "Byar approximation [1]",
-          "statistic": "calc.smr.ci.byar.lower",
+          "label": "Statistics / d.f. / p-value (2 sided) / Mid-P exact test [1]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
+        },
+        {
+          "label": "Statistics / d.f. / p-value (2 sided) / Fisher exact test [1]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
+        },
+        {
+          "label": "Statistics / d.f. / p-value (2 sided) / Byar approximation [1]",
+          "statistic": null,
           "value": 4.794,
           "decimals": 3
         },
         {
-          "label": "Byar approximation [2]",
-          "statistic": "calc.smr.ci.byar.upper",
-          "value": 0.001,
+          "label": "Statistics / d.f. / p-value (2 sided) / Byar approximation [2]",
+          "statistic": null,
+          "value": "<0.001",
           "decimals": 3
         },
         {
@@ -306,48 +330,48 @@
         },
         {
           "label": "Chi-square test [3]",
-          "statistic": "calc.smr.test.chisq_p",
-          "value": 0.001,
+          "statistic": null,
+          "value": "<0.001",
           "decimals": 3
         },
         {
-          "label": "Mid-P exact test [1]",
-          "statistic": null,
+          "label": "Lower CL / SMR / Upper CL / Mid-P exact test [1]",
+          "statistic": "calc.smr.ci.midp.lower",
           "value": 1.112,
           "decimals": 3
         },
         {
-          "label": "Mid-P exact test [2]",
-          "statistic": "calc.smr.ci.midp.lower",
+          "label": "Lower CL / SMR / Upper CL / Mid-P exact test [2]",
+          "statistic": "calc.smr.estimate",
           "value": 1.25,
           "decimals": 2
         },
         {
-          "label": "Mid-P exact test [3]",
+          "label": "Lower CL / SMR / Upper CL / Mid-P exact test [3]",
           "statistic": "calc.smr.ci.midp.upper",
           "value": 1.4,
           "decimals": 1
         },
         {
-          "label": "Fisher exact test [1]",
-          "statistic": null,
+          "label": "Lower CL / SMR / Upper CL / Fisher exact test [1]",
+          "statistic": "calc.smr.ci.fisher.lower",
           "value": 1.111,
           "decimals": 3
         },
         {
-          "label": "Fisher exact test [2]",
-          "statistic": "calc.smr.test.fisher_p",
+          "label": "Lower CL / SMR / Upper CL / Fisher exact test [2]",
+          "statistic": "calc.smr.ci.fisher.upper",
           "value": 1.401,
           "decimals": 3
         },
         {
-          "label": "Byar approximation [1]",
+          "label": "Lower CL / SMR / Upper CL / Byar approximation [1]",
           "statistic": "calc.smr.ci.byar.lower",
           "value": 1.111,
           "decimals": 3
         },
         {
-          "label": "Byar approximation [2]",
+          "label": "Lower CL / SMR / Upper CL / Byar approximation [2]",
           "statistic": "calc.smr.ci.byar.upper",
           "value": 1.401,
           "decimals": 3
@@ -375,6 +399,18 @@
           "statistic": "calc.smr.ci.ury_wiggins.upper",
           "value": 1.401,
           "decimals": 3
+        },
+        {
+          "label": "Vandenbroucke method [1]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
+        },
+        {
+          "label": "Vandenbroucke method [2]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
         }
       ]
     }

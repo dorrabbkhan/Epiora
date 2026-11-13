@@ -33,8 +33,8 @@
         {
           "label": "Hypothetical proportion of cases with exposure: [1]",
           "statistic": null,
-          "value": 0,
-          "decimals": 0
+          "value": 57.14,
+          "decimals": 2
         },
         {
           "label": "Least extreme Odds Ratio to be detected: [1]",
@@ -134,7 +134,7 @@
         {
           "label": "Least extreme Odds Ratio to be detected: [1]",
           "statistic": null,
-          "value": 0,
+          "value": 2,
           "decimals": 2
         },
         {
@@ -223,8 +223,8 @@
         {
           "label": "Hypothetical proportion of cases with exposure: [1]",
           "statistic": null,
-          "value": 0,
-          "decimals": 0
+          "value": 51.72,
+          "decimals": 2
         },
         {
           "label": "Least extreme Odds Ratio to be detected: [1]",

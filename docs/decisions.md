@@ -2731,9 +2731,36 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
 - `cases.json`: 79 cases whose ids equal the Task 2 `fixtures/calc/<id>/<case>.json` ids for the 20
   calculators OpenEpi can represent. `binomial`, `poisson`, `two_by_n` and `random_numbers` have no
   OpenEpi page, so they are absent from the OpenEpi reference; their R fixtures still govern.
-- `labels.json`: 415 emitted labels, 178 mapped to canonical `calc.<id>.<path>` statistic ids; the
-  rest are `null` — input echoes, or labels identical across stratum and combined sections where the
-  flat label cannot disambiguate (recorded "shown but not compared" per spec §9).
+- `labels.json`: 893 emitted labels, 437 mapped to canonical `calc.<id>.<path>` statistic ids; the
+  rest are `null` — input echoes, derived table cells, or displays with no corresponding R fixture
+  leaf (recorded "shown but not compared" per spec §9). Counts:
+  `python3 -c "import json; lj=json.load(open('fixtures/openepi/labels.json')); print(sum(len(v) for v in lj.values()), sum(1 for v in lj.values() for x in v.values() if x))"` → 893 437.
+- Section-label rule (round 1): a label that repeats under more than one section is qualified by its
+  section context in the emitted label — `1 / Uncorrected chi square`, `Crude / Risk in Exposed`,
+  `Adjusted / Mantel-Haenszel Summary Chi Sqr`, `Statistics / d.f. / p-value (2 sided) / Byar
+  approximation`, `Lower CL / SMR / Upper CL / Byar approximation` — so no flat label ever maps
+  ambiguously. Labels with no trustworthy R statistic (screening multi-level cut-off rows, the SMR
+  Byar z column, dose-response input echoes) map to `null`, never to a wrong statistic.
+- Percent rule (round 1): displays on a 0-100 scale whose fixture leaf is a 0-1 fraction are stored
+  divided by 100 with decimals +2, leaving the 0.5×10^-d tolerance exactly unchanged. Applies to
+  `proportion` (multiplier 100), `screening` sensitivity/specificity/ppv/npv/accuracy/entropy,
+  `two_by_two.adjusted.direct_rd` and `power_cohort.risk_difference`. Power estimates themselves are
+  percent-scale in the R fixtures and are NOT converted; strata/crude risk differences are
+  percent-scale in both and are NOT converted.
+- Person-time rule (round 1): OpenEpi picks its own display unit ("Per N Person-Time Units"). The
+  scraper reads N from the panel and restates rate values on the case's `inputs.per_unit`
+  (value × N/per_unit, decimals −log10(N/per_unit)); the directly adjusted RD, stored per single
+  person-time unit in the R fixture, is stored divided by N.
+- Input guard (round 1): before scraping, the capture reads back `dataMatrix` (multiplicity-aware
+  subset — sample-size pages legitimately write derived values back) plus `Evals` (dose-response
+  exposure scores live outside data cells) and `ConfLevel`, and fails the run non-zero if OpenEpi
+  did not hold every written input.
+- Bounds: `<0.0000001`-style displays, `'?'` and `'undefined'` are stored as displayed text with
+  `statistic: null` — never parsed as equalities.
+- `--compare-r` resolves every mapped statistic path into `fixtures/calc/<id>/<case>.json` and
+  reports |openepi − R| against 0.5×10^-decimals; absent paths exit non-zero (UNRESOLVED), fixture
+  leaves whose value is null are listed as R-NULL, numeric disagreements are listed for the owner
+  (spec G7) — local mirror run: ok 958, mismatch 319, unresolved 1, r-null 30.
 - Tooling: Playwright 1.65.0, latest release at task time, licence Apache-2.0 per its package
   metadata, pinned in `fixtures/openepi/package-lock.json`; Chromium only.
 - `captured_at` is preserved across reruns so a no-drift rerun is byte-identical (ei7.yml precedent);

@@ -25,19 +25,19 @@
           "decimals": 0
         },
         {
-          "label": "Cases [1]",
+          "label": "Cases / (-) [1]",
           "statistic": null,
           "value": 3,
           "decimals": 0
         },
         {
-          "label": "Cases [2]",
+          "label": "Cases / (-) [2]",
           "statistic": null,
           "value": 60,
           "decimals": 0
         },
         {
-          "label": "Cases [3]",
+          "label": "Cases / (-) [3]",
           "statistic": null,
           "value": 63,
           "decimals": 0
@@ -98,7 +98,7 @@
         },
         {
           "label": "Fisher exact [1]",
-          "statistic": null,
+          "statistic": "calc.matched_case_control.exact.fisher_p_1t",
           "value": 0.1133,
           "decimals": 4
         },
@@ -121,37 +121,37 @@
           "decimals": 4
         },
         {
-          "label": "Pair-Matched Odds Ratio: [1]",
+          "label": "Pair-Matched Odds Ratio: / Taylor series [1]",
           "statistic": "calc.matched_case_control.or.est",
           "value": 2.667,
           "decimals": 3
         },
         {
-          "label": "Pair-Matched Odds Ratio: [2]",
+          "label": "Pair-Matched Odds Ratio: / Taylor series [2]",
           "statistic": "calc.matched_case_control.or.lower",
           "value": 0.7075,
           "decimals": 4
         },
         {
-          "label": "Pair-Matched Odds Ratio: [3]",
+          "label": "Pair-Matched Odds Ratio: / Taylor series [3]",
           "statistic": "calc.matched_case_control.or.upper",
           "value": 10.05,
           "decimals": 2
         },
         {
-          "label": "CMLE Odds Ratio* [1]",
+          "label": "CMLE Odds Ratio* / Mid-P Exact [1]",
           "statistic": "calc.matched_case_control.cmle_or.midp.est",
           "value": 2.667,
           "decimals": 3
         },
         {
-          "label": "CMLE Odds Ratio* [2]",
+          "label": "CMLE Odds Ratio* / Mid-P Exact [2]",
           "statistic": "calc.matched_case_control.cmle_or.midp.lower",
           "value": 0.7298,
           "decimals": 4
         },
         {
-          "label": "CMLE Odds Ratio* [3]",
+          "label": "CMLE Odds Ratio* / Mid-P Exact [3]",
           "statistic": "calc.matched_case_control.cmle_or.midp.upper",
           "value": 12.42,
           "decimals": 2
@@ -180,19 +180,19 @@
           "decimals": 0
         },
         {
-          "label": "Cases [1]",
+          "label": "Cases / (-) [1]",
           "statistic": null,
           "value": 2,
           "decimals": 0
         },
         {
-          "label": "Cases [2]",
+          "label": "Cases / (-) [2]",
           "statistic": null,
           "value": 20,
           "decimals": 0
         },
         {
-          "label": "Cases [3]",
+          "label": "Cases / (-) [3]",
           "statistic": null,
           "value": 22,
           "decimals": 0
@@ -253,7 +253,7 @@
         },
         {
           "label": "Fisher exact [1]",
-          "statistic": null,
+          "statistic": "calc.matched_case_control.exact.fisher_p_1t",
           "value": 0.3438,
           "decimals": 4
         },
@@ -276,37 +276,37 @@
           "decimals": 4
         },
         {
-          "label": "Pair-Matched Odds Ratio: [1]",
+          "label": "Pair-Matched Odds Ratio: / Taylor series [1]",
           "statistic": "calc.matched_case_control.or.est",
           "value": 2,
           "decimals": 0
         },
         {
-          "label": "Pair-Matched Odds Ratio: [2]",
+          "label": "Pair-Matched Odds Ratio: / Taylor series [2]",
           "statistic": "calc.matched_case_control.or.lower",
           "value": 0.3664,
           "decimals": 4
         },
         {
-          "label": "Pair-Matched Odds Ratio: [3]",
+          "label": "Pair-Matched Odds Ratio: / Taylor series [3]",
           "statistic": "calc.matched_case_control.or.upper",
           "value": 10.92,
           "decimals": 2
         },
         {
-          "label": "CMLE Odds Ratio* [1]",
+          "label": "CMLE Odds Ratio* / Mid-P Exact [1]",
           "statistic": "calc.matched_case_control.cmle_or.midp.est",
           "value": 2,
           "decimals": 0
         },
         {
-          "label": "CMLE Odds Ratio* [2]",
+          "label": "CMLE Odds Ratio* / Mid-P Exact [2]",
           "statistic": "calc.matched_case_control.cmle_or.midp.lower",
           "value": 0.3548,
           "decimals": 4
         },
         {
-          "label": "CMLE Odds Ratio* [3]",
+          "label": "CMLE Odds Ratio* / Mid-P Exact [3]",
           "statistic": "calc.matched_case_control.cmle_or.midp.upper",
           "value": 15.61,
           "decimals": 2

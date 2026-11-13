@@ -15,80 +15,80 @@
         {
           "label": "Proportion as Percent [1]",
           "statistic": "calc.proportion.estimate",
-          "value": 22.2222,
-          "decimals": 4
+          "value": 0.222222,
+          "decimals": 6
         },
         {
           "label": "Mid-P Exact [1]",
           "statistic": "calc.proportion.ci.midp.lower",
-          "value": 11.88,
-          "decimals": 2
+          "value": 0.1188,
+          "decimals": 4
         },
         {
           "label": "Mid-P Exact [2]",
           "statistic": "calc.proportion.ci.midp.upper",
-          "value": 36.05,
-          "decimals": 2
+          "value": 0.3605,
+          "decimals": 4
         },
         {
           "label": "Fisher Exact(Clopper-Pearson) [1]",
           "statistic": "calc.proportion.ci.clopper_pearson.lower",
-          "value": 11.2,
-          "decimals": 1
+          "value": 0.11199999999999999,
+          "decimals": 3
         },
         {
           "label": "Fisher Exact(Clopper-Pearson) [2]",
           "statistic": "calc.proportion.ci.clopper_pearson.upper",
-          "value": 37.09,
-          "decimals": 2
+          "value": 0.3709,
+          "decimals": 4
         },
         {
           "label": "Wald (Normal Approx.) [1]",
           "statistic": "calc.proportion.ci.wald.lower",
-          "value": 10.08,
-          "decimals": 2
+          "value": 0.1008,
+          "decimals": 4
         },
         {
           "label": "Wald (Normal Approx.) [2]",
           "statistic": "calc.proportion.ci.wald.upper",
-          "value": 34.37,
-          "decimals": 2
+          "value": 0.34369999999999995,
+          "decimals": 4
         },
         {
           "label": "Modified Wald(Agresti-Coull) [1]",
           "statistic": "calc.proportion.ci.agresti_coull.lower",
-          "value": 12.36,
-          "decimals": 2
+          "value": 0.12359999999999999,
+          "decimals": 4
         },
         {
           "label": "Modified Wald(Agresti-Coull) [2]",
           "statistic": "calc.proportion.ci.agresti_coull.upper",
-          "value": 36.45,
-          "decimals": 2
+          "value": 0.36450000000000005,
+          "decimals": 4
         },
         {
           "label": "Score(Wilson)* [1]",
           "statistic": "calc.proportion.ci.wilson.lower",
-          "value": 12.55,
-          "decimals": 2
+          "value": 0.1255,
+          "decimals": 4
         },
         {
           "label": "Score(Wilson)* [2]",
           "statistic": "calc.proportion.ci.wilson.upper",
-          "value": 36.27,
-          "decimals": 2
+          "value": 0.3627,
+          "decimals": 4
         },
         {
           "label": "Correction (Fleiss Quadratic) [1]",
           "statistic": "calc.proportion.ci.score_cc.lower",
-          "value": 11.72,
-          "decimals": 2
+          "value": 0.11720000000000001,
+          "decimals": 4
         },
         {
           "label": "Correction (Fleiss Quadratic) [2]",
           "statistic": "calc.proportion.ci.score_cc.upper",
-          "value": 37.48,
-          "decimals": 2
+          "value": 0.37479999999999997,
+          "decimals": 4
         },
         {
           "label": "z-value",
@@ -116,80 +116,80 @@
         {
           "label": "Proportion as Percent [1]",
           "statistic": "calc.proportion.estimate",
-          "value": 100,
-          "decimals": 0
+          "value": 1,
+          "decimals": 2
         },
         {
           "label": "Mid-P Exact [1]",
           "statistic": "calc.proportion.ci.midp.lower",
-          "value": 92.78,
-          "decimals": 2
+          "value": 0.9278,
+          "decimals": 4
         },
         {
           "label": "Mid-P Exact [2]",
           "statistic": "calc.proportion.ci.midp.upper",
-          "value": 100,
-          "decimals": 0
+          "value": 1,
+          "decimals": 2
         },
         {
           "label": "Fisher Exact(Clopper-Pearson) [1]",
           "statistic": "calc.proportion.ci.clopper_pearson.lower",
-          "value": 91.19,
-          "decimals": 2
+          "value": 0.9118999999999999,
+          "decimals": 4
         },
         {
           "label": "Fisher Exact(Clopper-Pearson) [2]",
           "statistic": "calc.proportion.ci.clopper_pearson.upper",
-          "value": 100,
-          "decimals": 0
+          "value": 1,
+          "decimals": 2
         },
         {
           "label": "Wald (Normal Approx.) [1]",
           "statistic": "calc.proportion.ci.wald.lower",
-          "value": 100,
-          "decimals": 0
+          "value": 1,
+          "decimals": 2
         },
         {
           "label": "Wald (Normal Approx.) [2]",
           "statistic": "calc.proportion.ci.wald.upper",
-          "value": 100,
-          "decimals": 0
+          "value": 1,
+          "decimals": 2
         },
         {
           "label": "Modified Wald(Agresti-Coull) [1]",
           "statistic": "calc.proportion.ci.agresti_coull.lower",
-          "value": 89.56,
-          "decimals": 2
+          "value": 0.8956000000000001,
+          "decimals": 4
         },
         {
           "label": "Modified Wald(Agresti-Coull) [2]",
           "statistic": "calc.proportion.ci.agresti_coull.upper",
-          "value": 100,
-          "decimals": 0
+          "value": 1,
+          "decimals": 2
         },
         {
           "label": "Score(Wilson)* [1]",
           "statistic": "calc.proportion.ci.wilson.lower",
-          "value": 91.24,
-          "decimals": 2
+          "value": 0.9124,
+          "decimals": 4
         },
         {
           "label": "Score(Wilson)* [2]",
           "statistic": "calc.proportion.ci.wilson.upper",
-          "value": 100,
-          "decimals": 0
+          "value": 1,
+          "decimals": 2
         },
         {
           "label": "Correction (Fleiss Quadratic) [1]",
           "statistic": "calc.proportion.ci.score_cc.lower",
-          "value": 89.09,
-          "decimals": 2
+          "value": 0.8909,
+          "decimals": 4
         },
         {
           "label": "Correction (Fleiss Quadratic) [2]",
           "statistic": "calc.proportion.ci.score_cc.upper",
-          "value": 100,
-          "decimals": 0
+          "value": 1,
+          "decimals": 2
         },
         {
           "label": "z-value",
@@ -199,8 +199,8 @@
         },
         {
           "label": "Two-sided p-value",
-          "statistic": "calc.proportion.ztest.p",
-          "value": 1e-7,
+          "statistic": null,
+          "value": "<0.0000001",
           "decimals": 7
         }
       ]
@@ -217,92 +217,92 @@
         {
           "label": "Proportion as Percent [1]",
           "statistic": "calc.proportion.estimate",
-          "value": 30,
-          "decimals": 0
+          "value": 0.3,
+          "decimals": 2
         },
         {
           "label": "Mid-P Exact [1]",
           "statistic": "calc.proportion.ci.midp.lower",
-          "value": 21.63,
-          "decimals": 2
+          "value": 0.2163,
+          "decimals": 4
         },
         {
           "label": "Mid-P Exact [2]",
           "statistic": "calc.proportion.ci.midp.upper",
-          "value": 39.51,
-          "decimals": 2
+          "value": 0.3951,
+          "decimals": 4
         },
         {
           "label": "Fisher Exact(Clopper-Pearson) [1]",
           "statistic": "calc.proportion.ci.clopper_pearson.lower",
-          "value": 21.24,
-          "decimals": 2
+          "value": 0.21239999999999998,
+          "decimals": 4
         },
         {
           "label": "Fisher Exact(Clopper-Pearson) [2]",
           "statistic": "calc.proportion.ci.clopper_pearson.upper",
-          "value": 39.98,
-          "decimals": 2
+          "value": 0.3998,
+          "decimals": 4
         },
         {
           "label": "Wald (Normal Approx.) [1]",
           "statistic": "calc.proportion.ci.wald.lower",
-          "value": 21.02,
-          "decimals": 2
+          "value": 0.2102,
+          "decimals": 4
         },
         {
           "label": "Wald (Normal Approx.) [2]",
           "statistic": "calc.proportion.ci.wald.upper",
-          "value": 38.98,
-          "decimals": 2
+          "value": 0.3898,
+          "decimals": 4
         },
         {
           "label": "Modified Wald(Agresti-Coull) [1]",
           "statistic": "calc.proportion.ci.agresti_coull.lower",
-          "value": 21.87,
-          "decimals": 2
+          "value": 0.2187,
+          "decimals": 4
         },
         {
           "label": "Modified Wald(Agresti-Coull) [2]",
           "statistic": "calc.proportion.ci.agresti_coull.upper",
-          "value": 39.61,
-          "decimals": 2
+          "value": 0.3961,
+          "decimals": 4
         },
         {
           "label": "Score(Wilson)* [1]",
           "statistic": "calc.proportion.ci.wilson.lower",
-          "value": 21.9,
-          "decimals": 1
+          "value": 0.21899999999999997,
+          "decimals": 3
         },
         {
           "label": "Score(Wilson)* [2]",
           "statistic": "calc.proportion.ci.wilson.upper",
-          "value": 39.58,
-          "decimals": 2
+          "value": 0.3958,
+          "decimals": 4
         },
         {
           "label": "Score with Finite Population Correction [1]",
           "statistic": "calc.proportion.ci.wilson_fpc.lower",
-          "value": 22.82,
-          "decimals": 2
+          "value": 0.22820000000000001,
+          "decimals": 4
         },
         {
           "label": "Score with Finite Population Correction [2]",
           "statistic": "calc.proportion.ci.wilson_fpc.upper",
-          "value": 38.66,
-          "decimals": 2
+          "value": 0.38659999999999994,
+          "decimals": 4
         },
         {
           "label": "Correction (Fleiss Quadratic) [1]",
           "statistic": "calc.proportion.ci.score_cc.lower",
-          "value": 21.45,
-          "decimals": 2
+          "value": 0.2145,
+          "decimals": 4
         },
         {
           "label": "Correction (Fleiss Quadratic) [2]",
           "statistic": "calc.proportion.ci.score_cc.upper",
-          "value": 40.11,
-          "decimals": 2
+          "value": 0.4011,
+          "decimals": 4
         },
         {
           "label": "z-value",
@@ -330,85 +330,91 @@
         {
           "label": "Proportion as Percent [1]",
           "statistic": "calc.proportion.estimate",
-          "value": 60,
-          "decimals": 0
+          "value": 0.6,
+          "decimals": 2
         },
         {
           "label": "Mid-P Exact [1]",
           "statistic": "calc.proportion.ci.midp.lower",
-          "value": 59.7,
-          "decimals": 1
+          "value": 0.597,
+          "decimals": 3
         },
         {
           "label": "Mid-P Exact [2]",
           "statistic": "calc.proportion.ci.midp.upper",
-          "value": 60.3,
-          "decimals": 1
+          "value": 0.603,
+          "decimals": 3
         },
         {
           "label": "Fisher Exact(Clopper-Pearson) [1]",
           "statistic": "calc.proportion.ci.clopper_pearson.lower",
-          "value": 59.7,
-          "decimals": 1
+          "value": 0.597,
+          "decimals": 3
         },
         {
           "label": "Fisher Exact(Clopper-Pearson) [2]",
           "statistic": "calc.proportion.ci.clopper_pearson.upper",
-          "value": 60.3,
-          "decimals": 1
+          "value": 0.603,
+          "decimals": 3
         },
         {
           "label": "Wald (Normal Approx.) [1]",
           "statistic": "calc.proportion.ci.wald.lower",
-          "value": 59.7,
-          "decimals": 1
+          "value": 0.597,
+          "decimals": 3
         },
         {
           "label": "Wald (Normal Approx.) [2]",
           "statistic": "calc.proportion.ci.wald.upper",
-          "value": 60.3,
-          "decimals": 1
+          "value": 0.603,
+          "decimals": 3
         },
         {
           "label": "Modified Wald(Agresti-Coull) [1]",
           "statistic": "calc.proportion.ci.agresti_coull.lower",
-          "value": 59.7,
-          "decimals": 1
+          "value": 0.597,
+          "decimals": 3
         },
         {
           "label": "Modified Wald(Agresti-Coull) [2]",
           "statistic": "calc.proportion.ci.agresti_coull.upper",
-          "value": 60.3,
-          "decimals": 1
+          "value": 0.603,
+          "decimals": 3
         },
         {
           "label": "Score(Wilson)* [1]",
           "statistic": "calc.proportion.ci.wilson.lower",
-          "value": 59.7,
-          "decimals": 1
+          "value": 0.597,
+          "decimals": 3
         },
         {
           "label": "Score(Wilson)* [2]",
           "statistic": "calc.proportion.ci.wilson.upper",
-          "value": 60.3,
-          "decimals": 1
+          "value": 0.603,
+          "decimals": 3
         },
         {
           "label": "Correction (Fleiss Quadratic) [1]",
           "statistic": "calc.proportion.ci.score_cc.lower",
-          "value": 59.7,
-          "decimals": 1
+          "value": 0.597,
+          "decimals": 3
         },
         {
           "label": "Correction (Fleiss Quadratic) [2]",
           "statistic": "calc.proportion.ci.score_cc.upper",
-          "value": 60.3,
-          "decimals": 1
+          "value": 0.603,
+          "decimals": 3
+        },
+        {
+          "label": "z-value",
+          "statistic": null,
+          "value": "'undefined'",
+          "decimals": 0
         },
         {
           "label": "Two-sided p-value",
-          "statistic": "calc.proportion.ztest.p",
-          "value": 1e-7,
+          "statistic": null,
+          "value": "<0.0000001",
           "decimals": 7
         }
       ]
@@ -426,79 +432,85 @@
           "label": "Proportion as Percent [1]",
           "statistic": "calc.proportion.estimate",
           "value": 0,
-          "decimals": 1
+          "decimals": 3
         },
         {
           "label": "Mid-P Exact [1]",
           "statistic": "calc.proportion.ci.midp.lower",
           "value": 0,
-          "decimals": 1
+          "decimals": 3
         },
         {
           "label": "Mid-P Exact [2]",
           "statistic": "calc.proportion.ci.midp.upper",
-          "value": 7.215,
-          "decimals": 3
+          "value": 0.07214999999999999,
+          "decimals": 5
         },
         {
           "label": "Fisher Exact(Clopper-Pearson) [1]",
           "statistic": "calc.proportion.ci.clopper_pearson.lower",
           "value": 0,
-          "decimals": 1
+          "decimals": 3
         },
         {
           "label": "Fisher Exact(Clopper-Pearson) [2]",
           "statistic": "calc.proportion.ci.clopper_pearson.upper",
-          "value": 8.81,
-          "decimals": 2
+          "value": 0.08810000000000001,
+          "decimals": 4
         },
         {
           "label": "Wald (Normal Approx.) [1]",
           "statistic": "calc.proportion.ci.wald.lower",
           "value": 0,
-          "decimals": 1
+          "decimals": 3
         },
         {
           "label": "Wald (Normal Approx.) [2]",
           "statistic": "calc.proportion.ci.wald.upper",
           "value": 0,
-          "decimals": 1
+          "decimals": 3
         },
         {
           "label": "Modified Wald(Agresti-Coull) [1]",
           "statistic": "calc.proportion.ci.agresti_coull.lower",
           "value": 0,
-          "decimals": 1
+          "decimals": 3
         },
         {
           "label": "Modified Wald(Agresti-Coull) [2]",
           "statistic": "calc.proportion.ci.agresti_coull.upper",
-          "value": 10.44,
-          "decimals": 2
+          "value": 0.10439999999999999,
+          "decimals": 4
         },
         {
           "label": "Score(Wilson)* [1]",
           "statistic": "calc.proportion.ci.wilson.lower",
           "value": 0,
-          "decimals": 1
+          "decimals": 3
         },
         {
           "label": "Score(Wilson)* [2]",
           "statistic": "calc.proportion.ci.wilson.upper",
-          "value": 8.761,
-          "decimals": 3
+          "value": 0.08761,
+          "decimals": 5
         },
         {
           "label": "Correction (Fleiss Quadratic) [1]",
           "statistic": "calc.proportion.ci.score_cc.lower",
           "value": 0,
-          "decimals": 1
+          "decimals": 3
         },
         {
           "label": "Correction (Fleiss Quadratic) [2]",
           "statistic": "calc.proportion.ci.score_cc.upper",
-          "value": 10.91,
-          "decimals": 2
+          "value": 0.1091,
+          "decimals": 4
+        },
+        {
+          "label": "z-value",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
         },
         {
           "label": "Two-sided p-value",

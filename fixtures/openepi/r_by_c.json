@@ -81,8 +81,8 @@
         {
           "label": "Chi Square= [1]",
           "statistic": "calc.r_by_c.chisq.value",
-          "value": 350100,
-          "decimals": 0
+          "value": 4.108,
+          "decimals": 3
         },
         {
           "label": "Degrees of Freedom= [1]",
@@ -93,8 +93,8 @@
         {
           "label": "p-value= [1]",
           "statistic": "calc.r_by_c.chisq.p",
-          "value": 1e-7,
-          "decimals": 7
+          "value": 0.1282,
+          "decimals": 4
         }
       ]
     },
@@ -180,12 +180,6 @@
           "decimals": 0
         },
         {
-          "label": "Var 1 [2]",
-          "statistic": null,
-          "value": 4,
-          "decimals": 0
-        },
-        {
           "label": "Var 1 [3]",
           "statistic": null,
           "value": 4,
@@ -198,12 +192,6 @@
           "decimals": 0
         },
         {
-          "label": "Var 1 [5]",
-          "statistic": null,
-          "value": 0,
-          "decimals": 0
-        },
-        {
           "label": "Var 1 [6]",
           "statistic": null,
           "value": 14,
@@ -213,6 +201,12 @@
           "label": "Degrees of Freedom= [1]",
           "statistic": "calc.r_by_c.chisq.df",
           "value": 4,
+          "decimals": 0
+        },
+        {
+          "label": "p-value= [1]",
+          "statistic": null,
+          "value": "'?'",
           "decimals": 0
         }
       ]
@@ -313,8 +307,8 @@
         {
           "label": "Chi Square= [1]",
           "statistic": "calc.r_by_c.chisq.value",
-          "value": 1029999999999.9999,
-          "decimals": 4
+          "value": 309,
+          "decimals": 0
         },
         {
           "label": "Degrees of Freedom= [1]",
@@ -324,8 +318,8 @@
         },
         {
           "label": "p-value= [1]",
-          "statistic": "calc.r_by_c.chisq.p",
-          "value": 1e-7,
+          "statistic": null,
+          "value": "<0.0000001",
           "decimals": 7
         }
       ]

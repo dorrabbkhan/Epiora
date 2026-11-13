@@ -45,12 +45,12 @@
                   "type": ["string", "null"]
                 },
                 "value": {
-                  "type": ["number", "string"],
+                  "anyOf": [{ "type": "number" }, { "type": "string" }],
                   "description": "Displayed number, or the displayed text itself for bound/not-available displays such as '<0.0000001' — those always carry statistic null."
                 },
                 "decimals": {
                   "type": "integer",
-                  "minimum": 0
+                  "description": "Decimals in the displayed text before parsing; may be negative when a person-time rate is restated to a coarser per-unit scale (0.5 x 10^-decimals stays the tolerance)."
                 }
               }
             }

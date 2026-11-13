@@ -9,18 +9,6 @@
         {
           "label": "Mean [1]",
           "statistic": null,
-          "value": 125,
-          "decimals": 0
-        },
-        {
-          "label": "Mean [2]",
-          "statistic": null,
-          "value": 120,
-          "decimals": 0
-        },
-        {
-          "label": "Mean [3]",
-          "statistic": null,
           "value": 5,
           "decimals": 0
         },
@@ -74,20 +62,8 @@
         {
           "label": "Mean [1]",
           "statistic": null,
-          "value": 125,
-          "decimals": 0
-        },
-        {
-          "label": "Mean [2]",
-          "statistic": null,
-          "value": 120,
-          "decimals": 0
-        },
-        {
-          "label": "Mean [3]",
-          "statistic": null,
-          "value": 5,
-          "decimals": 0
+          "value": 0.5,
+          "decimals": 1
         },
         {
           "label": "Sample size [1]",
@@ -139,19 +115,7 @@
         {
           "label": "Mean [1]",
           "statistic": null,
-          "value": 125,
-          "decimals": 0
-        },
-        {
-          "label": "Mean [2]",
-          "statistic": null,
-          "value": 120,
-          "decimals": 0
-        },
-        {
-          "label": "Mean [3]",
-          "statistic": null,
-          "value": 5,
+          "value": 2,
           "decimals": 0
         },
         {
