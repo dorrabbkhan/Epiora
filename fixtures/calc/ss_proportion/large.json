@@ -1,0 +1,143 @@
+{
+  "id": "large",
+  "procedure": "calc.ss_proportion",
+  "inputs": {
+    "population_size": 10000000,
+    "expected_freq": 10,
+    "margin_error": 1,
+    "design_effect": 1,
+    "clusters": 1
+  },
+  "expected": {
+    "n_openepi": {
+      "80": {
+        "value": 1478,
+        "class": "closed_form"
+      },
+      "90": {
+        "value": 2435,
+        "class": "closed_form"
+      },
+      "95": {
+        "value": 3457,
+        "class": "closed_form"
+      },
+      "97": {
+        "value": 4237,
+        "class": "closed_form"
+      },
+      "99": {
+        "value": 5968,
+        "class": "closed_form"
+      },
+      "999": {
+        "value": 9736,
+        "class": "closed_form"
+      },
+      "9999": {
+        "value": 13605,
+        "class": "closed_form"
+      }
+    },
+    "n_ei7": {
+      "80": {
+        "value": 1478,
+        "class": "closed_form"
+      },
+      "90": {
+        "value": 2434,
+        "class": "closed_form"
+      },
+      "95": {
+        "value": 3456,
+        "class": "closed_form"
+      },
+      "97": {
+        "value": 4237,
+        "class": "closed_form"
+      },
+      "99": {
+        "value": 5968,
+        "class": "closed_form"
+      },
+      "999": {
+        "value": 9735,
+        "class": "closed_form"
+      },
+      "9999": {
+        "value": 13605,
+        "class": "closed_form"
+      }
+    },
+    "cluster_size": {
+      "80": {
+        "value": 1478,
+        "class": "closed_form"
+      },
+      "90": {
+        "value": 2434,
+        "class": "closed_form"
+      },
+      "95": {
+        "value": 3456,
+        "class": "closed_form"
+      },
+      "97": {
+        "value": 4237,
+        "class": "closed_form"
+      },
+      "99": {
+        "value": 5968,
+        "class": "closed_form"
+      },
+      "999": {
+        "value": 9735,
+        "class": "closed_form"
+      },
+      "9999": {
+        "value": 13605,
+        "class": "closed_form"
+      }
+    },
+    "total": {
+      "80": {
+        "value": 1478,
+        "class": "closed_form"
+      },
+      "90": {
+        "value": 2434,
+        "class": "closed_form"
+      },
+      "95": {
+        "value": 3456,
+        "class": "closed_form"
+      },
+      "97": {
+        "value": 4237,
+        "class": "closed_form"
+      },
+      "99": {
+        "value": 5968,
+        "class": "closed_form"
+      },
+      "999": {
+        "value": 9735,
+        "class": "closed_form"
+      },
+      "9999": {
+        "value": 13605,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

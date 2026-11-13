@@ -2496,14 +2496,14 @@ references read from the live site source and from
 - Fixture counts: `fixtures/means/` 10 fixtures (ungrouped, grouped,
   include_missing, ties, one-obs group, constant, all-missing, dates,
   Oswego AGE, Oswego AGE×SEX) over 6 new `means_*.dataset.json` datasets
-  plus `oswego`; `fixtures/calc/` 65 fixtures over 23 calculators (every
+  plus `oswego`; `fixtures/calc/` 83 fixtures over 23 calculators (every
   calculator in `docs/v1.0-calculators.md` except `random_numbers`, which
   has no R reference — spec §5.2): proportion 5, two_by_two 5, two_by_n 3,
-  r_by_c 3, dose_response 2, matched_case_control 4, screening 3, smr 4,
-  binomial 3, poisson 3, rate_one 3, rate_compare 2, mean_ci 3, median_ci
-  2, t_test_summary 2, anova_summary 2, ss_proportion 2, ss_unmatched_cc 3,
-  ss_cohort 4, ss_mean_difference 1, power_unmatched_cc 2, power_cohort 3,
-  power_mean_difference 1. Each calculator carries at least a textbook,
+  r_by_c 3, dose_response 4, matched_case_control 4, screening 3, smr 4,
+  binomial 3, poisson 3, rate_one 3, rate_compare 4, mean_ci 3, median_ci
+  4, t_test_summary 4, anova_summary 4, ss_proportion 4, ss_unmatched_cc 3,
+  ss_cohort 4, ss_mean_difference 3, power_unmatched_cc 4, power_cohort 3,
+  power_mean_difference 3. Each calculator carries at least a textbook,
   boundary/zero-cell and large or option-variant case; every input-option
   combination in the inventory is covered (`sd_or` ×3 for mean_ci, the
   four ss_cohort alternates, the three power_cohort designs, conf-level
@@ -2559,7 +2559,52 @@ references read from the live site source and from
 - Generation: `Rscript fixtures/generate.R` run three times consecutively
   with no drift (`git status --porcelain fixtures/` unchanged after the
   second and third runs, tracked files only).
-- Fixtures workflow run: PENDING (added on PR).
+- Fix round 1 (PR #64 review):
+  - `dose_response.R::xmh_trend` continuity correction changed from the
+    signed `(v1sum - 0.5)^2` to the Rosner p.606 literature form
+    `max(|v1sum| - 0.5, 0)^2`: the signed form *raised* the statistic
+    when V < 0 (textbook: 3.7956 corrected vs 3.6198 uncorrected); a
+    correction only shrinks |V|. The corrected statistic is now always
+    <= the uncorrected one (textbook 3.4481 vs 3.6198; decreasing 40.74
+    vs 41.49). Only pre-existing fixture whose values changed:
+    `fixtures/calc/dose_response/textbook.json`.
+  - 18 new calculator fixtures so every calculator has a textbook, a
+    boundary/zero-cell and a large or option case: dose_response
+    `decreasing` (V < 0 sign coverage + zero case) and `large`;
+    rate_compare `boundary` (equal rates, RR = 1) and `large`; median_ci
+    `boundary` (p = 5 — normal-approximation ranks leave [1, n],
+    recorded as the reference output) and `large`; t_test_summary
+    `boundary` (n1 = 2) and `large`; anova_summary `small_group`
+    (a group at n = 2) and `large`; ss_proportion `small_population`
+    (uncorrected n > N — FPC at the limit) and `large`;
+    ss_mean_difference `small_effect` (diff 0.5) and `high_power`
+    (99/99, ratio 2); power_unmatched_cc `small_effect` (31% vs 30%)
+    and `large`; power_mean_difference `small_effect` and `large`.
+    Boundary constraints of the MartinStats port discovered while
+    picking cases: a person-time stratum with sum_a - min_a <= 1 makes
+    the numerator polynomial degenerate (degree 0) and large case
+    counts overflow the convolved coefficients — both error the
+    generator, so such inputs are not fixtures.
+  - OpenEpi MIT attribution (copyright + permission notice) added below
+    the SPDX line in `fixtures/R/methods/tables.R` and `rates.R`, the
+    two files that port `js/MartinStats.js` / PersonTime2 code.
+  - Stratified CMLE cross-check — PENDING, blocked on owner decision:
+    `stratified_cmle`'s Fisher limits do not match
+    `stats::mantelhaen.test(exact = TRUE)$conf.int` within the required
+    1e-6 relative bound because stock finds its exact-CI roots at
+    uniroot's default tolerance. Measured on the `stratified` fixture:
+    est 2.7651727076105361 vs 2.7651730451773968 (1.2e-7 rel, passes);
+    fisher_lower 1.5446268009946689 vs 1.5445617077397695 (4.2e-5 rel);
+    fisher_upper 5.0277823325556676 vs 5.0270823927319812 (1.4e-4 rel).
+    Running the same stock algorithm at `uniroot(tol = 1e-14)` gives
+    2.7651727076105344 / 1.5446268009946791 / 5.0277823325556685 —
+    identical to the port within 7e-15 rel, so the port is correct
+    and the 1e-6 bound is unmeetable against the loose reference. The
+    `r_default` variant (port run at stock's own uniroot tolerance)
+    also misses the bound (est 1.1e-5, lower 4.7e-5, upper 1.4e-4
+    rel) — the two root-finders converge to different endpoints
+    inside the same loose envelope. The comparison form awaits the
+    owner (STOP reported on PR #64).
 
 ### G8 — Roadmap review from user signals (2026-11-13)
 Decision: owner accepted every proposed roadmap change, including v1.0. v1.0 gains Tasks 22 (engine assumption

@@ -1,0 +1,143 @@
+{
+  "id": "small_group",
+  "procedure": "calc.anova_summary",
+  "inputs": {
+    "table": [
+      [2, 5, 1],
+      [25, 6.5, 1.8],
+      [30, 7, 2]
+    ]
+  },
+  "expected": {
+    "anova": {
+      "ss_between": {
+        "value": 9.4736842105263168,
+        "class": "closed_form"
+      },
+      "df_between": {
+        "value": 2,
+        "class": "closed_form"
+      },
+      "ms_between": {
+        "value": 4.7368421052631584,
+        "class": "closed_form"
+      },
+      "ss_within": {
+        "value": 194.75999999999999,
+        "class": "closed_form"
+      },
+      "df_within": {
+        "value": 54,
+        "class": "closed_form"
+      },
+      "ms_within": {
+        "value": 3.6066666666666665,
+        "class": "closed_form"
+      },
+      "f": {
+        "value": 1.3133573304796189,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.27736690575372663,
+        "class": "closed_form"
+      },
+      "ss_total": {
+        "value": 204.23368421052632,
+        "class": "closed_form"
+      },
+      "df_total": {
+        "value": 56,
+        "class": "closed_form"
+      }
+    },
+    "bartlett": {
+      "chisq": {
+        "value": 0.72605564106325338,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 2,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.69556708218390606,
+        "class": "closed_form"
+      }
+    },
+    "group_ci": [
+      {
+        "lower": {
+          "value": -3.9846435320937523,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 13.984643532093752,
+          "class": "closed_form"
+        }
+      },
+      {
+        "lower": {
+          "value": 5.7569965178139109,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 7.2430034821860891,
+          "class": "closed_form"
+        }
+      },
+      {
+        "lower": {
+          "value": 6.2531877264837998,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 7.7468122735162002,
+          "class": "closed_form"
+        }
+      }
+    ],
+    "group_ci_pooled": [
+      {
+        "lower": {
+          "value": 2.3076827456190903,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 7.6923172543809102,
+          "class": "closed_form"
+        }
+      },
+      {
+        "lower": {
+          "value": 5.7384976849286851,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 7.2615023150713149,
+          "class": "closed_form"
+        }
+      },
+      {
+        "lower": {
+          "value": 6.3048466740717242,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 7.6951533259282758,
+          "class": "closed_form"
+        }
+      }
+    ]
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

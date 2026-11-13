@@ -1079,6 +1079,14 @@ dose_response_write("textbook", list(
 dose_response_write("stratified", list(
   matrix(c(0, 20, 40, 1, 25, 35, 2, 30, 30), 3, 3, byrow = TRUE),
   matrix(c(0, 10, 50, 1, 15, 45, 2, 20, 40), 3, 3, byrow = TRUE)))
+# Boundary + sign coverage: a decreasing trend (V < 0) with a zero
+# case at the highest level — exercises the (|V| - 0.5) correction.
+dose_response_write("decreasing", list(
+  matrix(c(0, 40, 60, 1, 25, 65, 2, 12, 68, 3, 0, 70), 4, 3,
+         byrow = TRUE)))
+dose_response_write("large", list(
+  matrix(c(0, 1000, 2000, 1, 1500, 1800, 2, 2000, 1500, 3, 2500,
+           1200), 4, 3, byrow = TRUE)))
 
 matched_write("textbook",
               matrix(c(30, 8, 3, 60), 2, 2, byrow = TRUE))
@@ -1124,6 +1132,18 @@ rate_compare_write("stratified", list(
   matrix(c(30, 10, 2000, 1500), 2, 2, byrow = TRUE),
   matrix(c(50, 40, 3000, 5000), 2, 2, byrow = TRUE)),
   per_unit = 10000, conf = 90)
+# Boundary: equal rates (RR = 1, null effect — z ~ 0, CIs straddle
+# the null). A near-zero exposed count is not a fixture: when
+# sum_a - min_a <= 1 the CMLE numerator polynomial degenerates.
+rate_compare_write("boundary",
+                   list(matrix(c(10, 20, 1000, 2000), 2, 2,
+                               byrow = TRUE)))
+# Large counts; the case count stays low enough that the CMLE
+# coefficient polynomial does not overflow double range.
+rate_compare_write("large",
+                   list(matrix(c(400, 200, 80000, 90000), 2, 2,
+                               byrow = TRUE)),
+                   per_unit = 10000, conf = 99)
 
 mean_ci_write("textbook", 10.5, "sd", 2.5, 25)
 mean_ci_write("se_input", 10.5, "se", 0.5, 25)
@@ -1132,9 +1152,17 @@ mean_ci_write("variance_input", 10.5, "variance", 6.25, 25,
 
 median_ci_write("median", 25, 50)
 median_ci_write("p25", 100, 25, conf = 90)
+# Boundary: an extreme percentile — the normal-approximation ranks
+# leave [1, n], which the fixture records as the reference output.
+median_ci_write("boundary", 30, 5)
+median_ci_write("large", 5000, 75, conf = 99)
 
 t_test_summary_write("textbook", 25, 10.5, 2.5, 30, 8.5, 3.0)
 t_test_summary_write("equal_n", 20, 100.0, 10.0, 20, 95.0, 12.0,
+                     conf = 99)
+# Boundary: minimum group size n1 = 2.
+t_test_summary_write("boundary", 2, 10.5, 3.0, 30, 8.5, 4.0)
+t_test_summary_write("large", 5000, 100.2, 15.0, 4500, 99.8, 16.0,
                      conf = 99)
 
 anova_summary_write("textbook",
@@ -1143,9 +1171,22 @@ anova_summary_write("textbook",
 anova_summary_write("two_groups",
                     matrix(c(15, 50.0, 5.0, 15, 55.0, 6.0), 2, 3,
                            byrow = TRUE))
+# Boundary: a group at the minimum n = 2.
+anova_summary_write("small_group",
+                    matrix(c(2, 5.0, 1.0, 25, 6.5, 1.8, 30, 7.0,
+                             2.0), 3, 3, byrow = TRUE))
+anova_summary_write("large",
+                    matrix(c(2000, 50.1, 4.9, 2000, 51.2, 5.1, 2000,
+                             49.8, 5.0, 2000, 50.5, 5.2, 2000, 50.0,
+                             4.8, 2000, 50.9, 5.0), 6, 3,
+                           byrow = TRUE))
 
 ss_proportion_write("textbook", 1000000, 50, 5, 1)
 ss_proportion_write("clustered", 5000, 30, 5, 1.8, clusters = 25)
+# Boundary: finite population at the limit — the uncorrected n (~384
+# at 95%) exceeds N = 350, so the FPC pulls it below the population.
+ss_proportion_write("small_population", 350, 50, 5, 1)
+ss_proportion_write("large", 10000000, 10, 1, 1)
 
 ss_cc_write("odds_ratio_input", 95, 80, 1, 40, odds_ratio = 2.0)
 ss_cc_write("percent_input", 95, 80, 2, 25, p1_pct = 40)
@@ -1158,9 +1199,16 @@ ss_cohort_write("risk_difference_input", 95, 80, 2, 20,
                 risk_difference = 10)
 
 ss_mean_difference_write("textbook", 95, 80, 1, 5, 10, 10)
+# Boundary: a very small standardised effect.
+ss_mean_difference_write("small_effect", 95, 80, 1, 0.5, 10, 12)
+# Large: 99% power at 99% confidence with ratio != 1.
+ss_mean_difference_write("high_power", 99, 99, 2, 5, 10, 12)
 
 power_unmatched_cc_write("textbook", 95, 100, 150, 50, 30)
 power_unmatched_cc_write("rare_exposure", 95, 200, 400, 30, 10)
+# Boundary: a very small exposure difference (31% vs 30%).
+power_unmatched_cc_write("small_effect", 95, 100, 150, 31, 30)
+power_unmatched_cc_write("large", 99, 5000, 10000, 45, 30)
 
 power_cohort_write("cohort", 95, 200, 400, 10, 5, "cohort")
 power_cohort_write("rct", 95, 150, 150, 30, 20, "rct")
@@ -1168,3 +1216,6 @@ power_cohort_write("cross_sectional", 95, 300, 300, 40, 30,
                    "cross_sectional")
 
 power_mean_difference_write("textbook", 95, 50, 50, 5, 10, 10)
+# Boundary: a very small standardised effect.
+power_mean_difference_write("small_effect", 95, 30, 30, 0.5, 10, 10)
+power_mean_difference_write("large", 99, 5000, 6000, 2, 10, 12)

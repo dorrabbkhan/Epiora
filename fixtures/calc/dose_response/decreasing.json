@@ -1,0 +1,106 @@
+{
+  "id": "decreasing",
+  "procedure": "calc.dose_response",
+  "inputs": {
+    "table": [
+      [
+        [0, 40, 60],
+        [1, 25, 65],
+        [2, 12, 68],
+        [3, 0, 70]
+      ]
+    ],
+    "strata": 1
+  },
+  "expected": {
+    "strata": [
+      {
+        "odds_ratio": [
+          {
+            "value": 1,
+            "class": "closed_form"
+          },
+          {
+            "value": 0.57692307692307698,
+            "class": "closed_form"
+          },
+          {
+            "value": 0.26470588235294124,
+            "class": "closed_form"
+          },
+          {
+            "value": 0,
+            "class": "closed_form"
+          }
+        ]
+      }
+    ],
+    "crude": {
+      "odds_ratio": [
+        {
+          "value": 1,
+          "class": "closed_form"
+        },
+        {
+          "value": 0.57692307692307698,
+          "class": "closed_form"
+        },
+        {
+          "value": 0.26470588235294124,
+          "class": "closed_form"
+        },
+        {
+          "value": 0,
+          "class": "closed_form"
+        }
+      ]
+    },
+    "mh_or": [
+      {
+        "value": 0.57692307692307687,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.26470588235294118,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      }
+    ],
+    "xmh": {
+      "cc": {
+        "value": {
+          "value": 40.740247186541296,
+          "class": "closed_form"
+        },
+        "p": {
+          "value": 1.7386902982948896e-10,
+          "class": "closed_form"
+        }
+      },
+      "uncorrected": {
+        "value": {
+          "value": 41.48876890795168,
+          "class": "closed_form"
+        },
+        "p": {
+          "value": 1.1855004833901803e-10,
+          "class": "closed_form"
+        }
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "epiR": "3.0.0"
+    }
+  }
+}
