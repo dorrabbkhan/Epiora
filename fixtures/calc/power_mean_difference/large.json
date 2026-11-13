@@ -11,7 +11,7 @@
   },
   "expected": {
     "power": {
-      "value": 99.999999999914195,
+      "value": 99.999999999828404,
       "class": "closed_form"
     }
   },

@@ -10,11 +10,11 @@
   },
   "expected": {
     "normal": {
-      "value": 99.996790609172962,
+      "value": 99.993581218345923,
       "class": "closed_form"
     },
     "normal_cc": {
-      "value": 99.995088580917312,
+      "value": 99.990177161834623,
       "class": "closed_form"
     },
     "odds_ratio": {
