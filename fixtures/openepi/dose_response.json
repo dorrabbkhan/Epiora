@@ -1,0 +1,969 @@
+{
+  "calculator": "dose_response",
+  "captured_at": "2026-11-13T12:11:40.204Z",
+  "openepi_url": "https://www.openepi.com/DoseResponse/DoseResponse.htm",
+  "cases": [
+    {
+      "case": "textbook",
+      "values": [
+        {
+          "label": "Exposure Level [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [2]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [4]",
+          "statistic": null,
+          "value": 150,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [5]",
+          "statistic": null,
+          "value": 0.5,
+          "decimals": 1
+        },
+        {
+          "label": "Exposure Level [6]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [2]",
+          "statistic": null,
+          "value": 40,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [3]",
+          "statistic": null,
+          "value": 90,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [4]",
+          "statistic": null,
+          "value": 130,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [5]",
+          "statistic": null,
+          "value": 0.44,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [6]",
+          "statistic": null,
+          "value": 0.89,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [2]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [3]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [4]",
+          "statistic": null,
+          "value": 110,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [5]",
+          "statistic": null,
+          "value": 0.38,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [6]",
+          "statistic": null,
+          "value": 0.75,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [1]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [2]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [3]",
+          "statistic": null,
+          "value": 70,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [4]",
+          "statistic": null,
+          "value": 90,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [5]",
+          "statistic": null,
+          "value": 0.29,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [6]",
+          "statistic": null,
+          "value": 0.57,
+          "decimals": 2
+        },
+        {
+          "label": "Total [1]",
+          "statistic": null,
+          "value": 140,
+          "decimals": 0
+        },
+        {
+          "label": "Total [2]",
+          "statistic": null,
+          "value": 340,
+          "decimals": 0
+        },
+        {
+          "label": "Total [3]",
+          "statistic": null,
+          "value": 480,
+          "decimals": 0
+        },
+        {
+          "label": "Level 0 vs. Level 0: [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Level 0 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.0",
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Level 1 vs. Level 0: [1]",
+          "statistic": "calc.dose_response.mh_or.0",
+          "value": 0.889,
+          "decimals": 3
+        },
+        {
+          "label": "Level 1 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.1",
+          "value": 0.889,
+          "decimals": 3
+        },
+        {
+          "label": "Level 2 vs. Level 0: [1]",
+          "statistic": "calc.dose_response.mh_or.1",
+          "value": 0.75,
+          "decimals": 2
+        },
+        {
+          "label": "Level 2 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.2",
+          "value": 0.75,
+          "decimals": 2
+        },
+        {
+          "label": "Level 3 vs. Level 0: [1]",
+          "statistic": "calc.dose_response.mh_or.2",
+          "value": 0.571,
+          "decimals": 3
+        },
+        {
+          "label": "Level 3 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.3",
+          "value": 0.571,
+          "decimals": 3
+        },
+        {
+          "label": "Extended Mantel-Haenszel chi square for linear trend= [1]",
+          "statistic": "calc.dose_response.xmh.cc.value",
+          "value": 3.8,
+          "decimals": 1
+        },
+        {
+          "label": "p-value(1 degree of freedom)= [1]",
+          "statistic": "calc.dose_response.xmh.cc.p",
+          "value": 0.05139,
+          "decimals": 5
+        }
+      ]
+    },
+    {
+      "case": "decreasing",
+      "values": [
+        {
+          "label": "Exposure Level [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [2]",
+          "statistic": null,
+          "value": 40,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [3]",
+          "statistic": null,
+          "value": 60,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [4]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [5]",
+          "statistic": null,
+          "value": 0.67,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [6]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [2]",
+          "statistic": null,
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [3]",
+          "statistic": null,
+          "value": 65,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [4]",
+          "statistic": null,
+          "value": 90,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [5]",
+          "statistic": null,
+          "value": 0.38,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [6]",
+          "statistic": null,
+          "value": 0.58,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [2]",
+          "statistic": null,
+          "value": 12,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [3]",
+          "statistic": null,
+          "value": 68,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [4]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [5]",
+          "statistic": null,
+          "value": 0.18,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [6]",
+          "statistic": null,
+          "value": 0.26,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [1]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [2]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [3]",
+          "statistic": null,
+          "value": 70,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [4]",
+          "statistic": null,
+          "value": 70,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [5]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [6]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Total [1]",
+          "statistic": null,
+          "value": 77,
+          "decimals": 0
+        },
+        {
+          "label": "Total [2]",
+          "statistic": null,
+          "value": 263,
+          "decimals": 0
+        },
+        {
+          "label": "Total [3]",
+          "statistic": null,
+          "value": 340,
+          "decimals": 0
+        },
+        {
+          "label": "Level 0 vs. Level 0: [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Level 0 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.0",
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Level 1 vs. Level 0: [1]",
+          "statistic": "calc.dose_response.mh_or.0",
+          "value": 0.577,
+          "decimals": 3
+        },
+        {
+          "label": "Level 1 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.1",
+          "value": 0.577,
+          "decimals": 3
+        },
+        {
+          "label": "Level 2 vs. Level 0: [1]",
+          "statistic": "calc.dose_response.mh_or.1",
+          "value": 0.265,
+          "decimals": 3
+        },
+        {
+          "label": "Level 2 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.2",
+          "value": 0.265,
+          "decimals": 3
+        },
+        {
+          "label": "Level 3 vs. Level 0: [1]",
+          "statistic": "calc.dose_response.mh_or.2",
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Level 3 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.3",
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Extended Mantel-Haenszel chi square for linear trend= [1]",
+          "statistic": "calc.dose_response.xmh.cc.value",
+          "value": 42.24,
+          "decimals": 2
+        },
+        {
+          "label": "p-value(1 degree of freedom)= [1]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        }
+      ]
+    },
+    {
+      "case": "stratified",
+      "values": [
+        {
+          "label": "Stratum 1 / Exposure Level [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [2]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [3]",
+          "statistic": null,
+          "value": 40,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [4]",
+          "statistic": null,
+          "value": 60,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [5]",
+          "statistic": null,
+          "value": 0.5,
+          "decimals": 1
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [6]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [2]",
+          "statistic": null,
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [3]",
+          "statistic": null,
+          "value": 35,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [5]",
+          "statistic": null,
+          "value": 0.71,
+          "decimals": 2
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [6]",
+          "statistic": null,
+          "value": 1.43,
+          "decimals": 2
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [2]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [3]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [5]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Exposure Level [6]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Total [1]",
+          "statistic": null,
+          "value": 75,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Total [2]",
+          "statistic": null,
+          "value": 105,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 1 / Total [3]",
+          "statistic": null,
+          "value": 180,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [2]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [3]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [4]",
+          "statistic": null,
+          "value": 60,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [5]",
+          "statistic": null,
+          "value": 0.2,
+          "decimals": 1
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [6]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [2]",
+          "statistic": null,
+          "value": 15,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [3]",
+          "statistic": null,
+          "value": 45,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [5]",
+          "statistic": null,
+          "value": 0.33,
+          "decimals": 2
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [6]",
+          "statistic": null,
+          "value": 1.67,
+          "decimals": 2
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [2]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [3]",
+          "statistic": null,
+          "value": 40,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [5]",
+          "statistic": null,
+          "value": 0.5,
+          "decimals": 1
+        },
+        {
+          "label": "Stratum 2 / Exposure Level [6]",
+          "statistic": null,
+          "value": 2.5,
+          "decimals": 1
+        },
+        {
+          "label": "Stratum 2 / Total [1]",
+          "statistic": null,
+          "value": 45,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Total [2]",
+          "statistic": null,
+          "value": 135,
+          "decimals": 0
+        },
+        {
+          "label": "Stratum 2 / Total [3]",
+          "statistic": null,
+          "value": 180,
+          "decimals": 0
+        },
+        {
+          "label": "Level 0 vs. Level 0: [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Level 0 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.0",
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Level 1 vs. Level 0: [1]",
+          "statistic": "calc.dose_response.mh_or.0",
+          "value": 1.522,
+          "decimals": 3
+        },
+        {
+          "label": "Level 1 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.1",
+          "value": 1.5,
+          "decimals": 1
+        },
+        {
+          "label": "Level 2 vs. Level 0: [1]",
+          "statistic": "calc.dose_response.mh_or.1",
+          "value": 2.2,
+          "decimals": 1
+        },
+        {
+          "label": "Level 2 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.2",
+          "value": 2.143,
+          "decimals": 3
+        },
+        {
+          "label": "Extended Mantel-Haenszel chi square for linear trend= [1]",
+          "statistic": "calc.dose_response.xmh.cc.value",
+          "value": 7.32,
+          "decimals": 2
+        },
+        {
+          "label": "p-value(1 degree of freedom)= [1]",
+          "statistic": "calc.dose_response.xmh.cc.p",
+          "value": 0.006824,
+          "decimals": 6
+        }
+      ]
+    },
+    {
+      "case": "large",
+      "values": [
+        {
+          "label": "Exposure Level [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [2]",
+          "statistic": null,
+          "value": 1000,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [3]",
+          "statistic": null,
+          "value": 2000,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [4]",
+          "statistic": null,
+          "value": 3000,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [5]",
+          "statistic": null,
+          "value": 0.5,
+          "decimals": 1
+        },
+        {
+          "label": "Exposure Level [6]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [2]",
+          "statistic": null,
+          "value": 1500,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [3]",
+          "statistic": null,
+          "value": 1800,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [4]",
+          "statistic": null,
+          "value": 3300,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [5]",
+          "statistic": null,
+          "value": 0.83,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [6]",
+          "statistic": null,
+          "value": 1.67,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [2]",
+          "statistic": null,
+          "value": 2000,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [3]",
+          "statistic": null,
+          "value": 1500,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [4]",
+          "statistic": null,
+          "value": 3500,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [5]",
+          "statistic": null,
+          "value": 1.33,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [6]",
+          "statistic": null,
+          "value": 2.67,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [1]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [2]",
+          "statistic": null,
+          "value": 2500,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [3]",
+          "statistic": null,
+          "value": 1200,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [4]",
+          "statistic": null,
+          "value": 3700,
+          "decimals": 0
+        },
+        {
+          "label": "Exposure Level [5]",
+          "statistic": null,
+          "value": 2.08,
+          "decimals": 2
+        },
+        {
+          "label": "Exposure Level [6]",
+          "statistic": null,
+          "value": 4.17,
+          "decimals": 2
+        },
+        {
+          "label": "Total [1]",
+          "statistic": null,
+          "value": 7000,
+          "decimals": 0
+        },
+        {
+          "label": "Total [2]",
+          "statistic": null,
+          "value": 6500,
+          "decimals": 0
+        },
+        {
+          "label": "Total [3]",
+          "statistic": null,
+          "value": 13500,
+          "decimals": 0
+        },
+        {
+          "label": "Level 0 vs. Level 0: [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Level 0 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.0",
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Level 1 vs. Level 0: [1]",
+          "statistic": "calc.dose_response.mh_or.0",
+          "value": 1.667,
+          "decimals": 3
+        },
+        {
+          "label": "Level 1 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.1",
+          "value": 1.667,
+          "decimals": 3
+        },
+        {
+          "label": "Level 2 vs. Level 0: [1]",
+          "statistic": "calc.dose_response.mh_or.1",
+          "value": 2.667,
+          "decimals": 3
+        },
+        {
+          "label": "Level 2 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.2",
+          "value": 2.667,
+          "decimals": 3
+        },
+        {
+          "label": "Level 3 vs. Level 0: [1]",
+          "statistic": "calc.dose_response.mh_or.2",
+          "value": 4.167,
+          "decimals": 3
+        },
+        {
+          "label": "Level 3 vs. Level 0: [2]",
+          "statistic": "calc.dose_response.crude.odds_ratio.3",
+          "value": 4.167,
+          "decimals": 3
+        },
+        {
+          "label": "Extended Mantel-Haenszel chi square for linear trend= [1]",
+          "statistic": "calc.dose_response.xmh.cc.value",
+          "value": 869.91,
+          "decimals": 2
+        },
+        {
+          "label": "p-value(1 degree of freedom)= [1]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "calculator": "power_unmatched_cc",
+  "captured_at": "2026-11-13T12:17:28.704Z",
+  "openepi_url": "https://www.openepi.com/Power/PowerCC.htm",
+  "cases": [
+    {
+      "case": "textbook",
+      "values": [
+        {
+          "label": "Two-sided confidence interval (%) [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Number of cases [1]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of exposure among cases (%) [1]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Number of controls [1]",
+          "statistic": null,
+          "value": 150,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of exposure among controls (%) [1]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Odds Ratio [1]",
+          "statistic": "calc.power_unmatched_cc.odds_ratio",
+          "value": 2.3,
+          "decimals": 1
+        },
+        {
+          "label": "Normal approximation [1]",
+          "statistic": "calc.power_unmatched_cc.normal",
+          "value": 89.18,
+          "decimals": 2
+        },
+        {
+          "label": "Normal approximation with continuity correction [1]",
+          "statistic": "calc.power_unmatched_cc.normal_cc",
+          "value": 86.43,
+          "decimals": 2
+        }
+      ]
+    },
+    {
+      "case": "rare_exposure",
+      "values": [
+        {
+          "label": "Two-sided confidence interval (%) [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Number of cases [1]",
+          "statistic": null,
+          "value": 200,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of exposure among cases (%) [1]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Number of controls [1]",
+          "statistic": null,
+          "value": 400,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of exposure among controls (%) [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Odds Ratio [1]",
+          "statistic": "calc.power_unmatched_cc.odds_ratio",
+          "value": 3.9,
+          "decimals": 1
+        },
+        {
+          "label": "Normal approximation [1]",
+          "statistic": "calc.power_unmatched_cc.normal",
+          "value": 99.99,
+          "decimals": 2
+        },
+        {
+          "label": "Normal approximation with continuity correction [1]",
+          "statistic": "calc.power_unmatched_cc.normal_cc",
+          "value": 99.99,
+          "decimals": 2
+        }
+      ]
+    },
+    {
+      "case": "small_effect",
+      "values": [
+        {
+          "label": "Two-sided confidence interval (%) [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Number of cases [1]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of exposure among cases (%) [1]",
+          "statistic": null,
+          "value": 31,
+          "decimals": 0
+        },
+        {
+          "label": "Number of controls [1]",
+          "statistic": null,
+          "value": 150,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of exposure among controls (%) [1]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Odds Ratio [1]",
+          "statistic": "calc.power_unmatched_cc.odds_ratio",
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Normal approximation [1]",
+          "statistic": "calc.power_unmatched_cc.normal",
+          "value": 2.886,
+          "decimals": 3
+        },
+        {
+          "label": "Normal approximation with continuity correction [1]",
+          "statistic": "calc.power_unmatched_cc.normal_cc",
+          "value": 2.552,
+          "decimals": 3
+        }
+      ]
+    },
+    {
+      "case": "large",
+      "values": [
+        {
+          "label": "Two-sided confidence interval (%) [1]",
+          "statistic": null,
+          "value": 99,
+          "decimals": 0
+        },
+        {
+          "label": "Number of cases [1]",
+          "statistic": null,
+          "value": 5000,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of exposure among cases (%) [1]",
+          "statistic": null,
+          "value": 45,
+          "decimals": 0
+        },
+        {
+          "label": "Number of controls [1]",
+          "statistic": null,
+          "value": 10000,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of exposure among controls (%) [1]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Odds Ratio [1]",
+          "statistic": "calc.power_unmatched_cc.odds_ratio",
+          "value": 1.9,
+          "decimals": 1
+        },
+        {
+          "label": "Normal approximation [1]",
+          "statistic": "calc.power_unmatched_cc.normal",
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Normal approximation with continuity correction [1]",
+          "statistic": "calc.power_unmatched_cc.normal_cc",
+          "value": 100,
+          "decimals": 0
+        }
+      ]
+    }
+  ]
+}

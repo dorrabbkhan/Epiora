@@ -1,0 +1,1449 @@
+{
+  "calculator": "anova_summary",
+  "captured_at": "2026-11-13T12:15:34.366Z",
+  "openepi_url": "https://www.openepi.com/Mean/ANOVA.htm",
+  "cases": [
+    {
+      "case": "textbook",
+      "values": [
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [2]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 1.5,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [2]",
+          "statistic": null,
+          "value": 12,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 7.5,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [2]",
+          "statistic": null,
+          "value": 8,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 6,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 1.2,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 4,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 6,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 7,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 8,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 9,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Between Groups [1]",
+          "statistic": "calc.anova_summary.anova.ss_between",
+          "value": 34.8667,
+          "decimals": 4
+        },
+        {
+          "label": "Between Groups [2]",
+          "statistic": "calc.anova_summary.anova.df_between",
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Between Groups [3]",
+          "statistic": "calc.anova_summary.anova.ms_between",
+          "value": 17.4333,
+          "decimals": 4
+        },
+        {
+          "label": "Between Groups [4]",
+          "statistic": "calc.anova_summary.anova.f",
+          "value": 6.33257,
+          "decimals": 5
+        },
+        {
+          "label": "Between Groups [5]",
+          "statistic": "calc.anova_summary.anova.p",
+          "value": 0.00555762,
+          "decimals": 8
+        },
+        {
+          "label": "Within Groups [1]",
+          "statistic": "calc.anova_summary.anova.ss_within",
+          "value": 74.33,
+          "decimals": 2
+        },
+        {
+          "label": "Within Groups [2]",
+          "statistic": "calc.anova_summary.anova.df_within",
+          "value": 27,
+          "decimals": 0
+        },
+        {
+          "label": "Within Groups [3]",
+          "statistic": "calc.anova_summary.anova.ms_within",
+          "value": 2.75296,
+          "decimals": 5
+        },
+        {
+          "label": "Total [1]",
+          "statistic": "calc.anova_summary.anova.ss_total",
+          "value": 109.197,
+          "decimals": 3
+        },
+        {
+          "label": "Total [2]",
+          "statistic": "calc.anova_summary.anova.df_total",
+          "value": 29,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance [1]",
+          "statistic": "calc.anova_summary.bartlett.chisq",
+          "value": 2.13276,
+          "decimals": 5
+        },
+        {
+          "label": "Test for equality of variance [2]",
+          "statistic": "calc.anova_summary.bartlett.df",
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance [3]",
+          "statistic": "calc.anova_summary.bartlett.p",
+          "value": 0.344252,
+          "decimals": 6
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 3.92697,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 6.07303,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 3.81308,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 6.18692,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 7.5,
+          "decimals": 1
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 6.22925,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 8.77075,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 6.44579,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 8.55421,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 6,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 4.99677,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 7.00323,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 4.61286,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 7.38714,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 4,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 6,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 7,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 8,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 9,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "two_groups",
+      "values": [
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [2]",
+          "statistic": null,
+          "value": 15,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 55,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 6,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 4,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 6,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 7,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 8,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 9,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Between Groups [1]",
+          "statistic": "calc.anova_summary.anova.ss_between",
+          "value": 187.5,
+          "decimals": 1
+        },
+        {
+          "label": "Between Groups [2]",
+          "statistic": "calc.anova_summary.anova.df_between",
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Between Groups [3]",
+          "statistic": "calc.anova_summary.anova.ms_between",
+          "value": 187.5,
+          "decimals": 1
+        },
+        {
+          "label": "Between Groups [4]",
+          "statistic": "calc.anova_summary.anova.f",
+          "value": 6.14754,
+          "decimals": 5
+        },
+        {
+          "label": "Between Groups [5]",
+          "statistic": "calc.anova_summary.anova.p",
+          "value": 0.0194465,
+          "decimals": 7
+        },
+        {
+          "label": "Within Groups [1]",
+          "statistic": "calc.anova_summary.anova.ss_within",
+          "value": 854,
+          "decimals": 0
+        },
+        {
+          "label": "Within Groups [2]",
+          "statistic": "calc.anova_summary.anova.df_within",
+          "value": 28,
+          "decimals": 0
+        },
+        {
+          "label": "Within Groups [3]",
+          "statistic": "calc.anova_summary.anova.ms_within",
+          "value": 30.5,
+          "decimals": 1
+        },
+        {
+          "label": "Total [1]",
+          "statistic": "calc.anova_summary.anova.ss_total",
+          "value": 1041.5,
+          "decimals": 1
+        },
+        {
+          "label": "Total [2]",
+          "statistic": "calc.anova_summary.anova.df_total",
+          "value": 29,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance [1]",
+          "statistic": "calc.anova_summary.bartlett.chisq",
+          "value": 0.446861,
+          "decimals": 6
+        },
+        {
+          "label": "Test for equality of variance [2]",
+          "statistic": "calc.anova_summary.bartlett.df",
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance [3]",
+          "statistic": "calc.anova_summary.bartlett.p",
+          "value": 0.503829,
+          "decimals": 6
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 47.2311,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 52.7689,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 46.9417,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 53.0583,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 55,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 51.6773,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 58.3227,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 51.9417,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 58.0583,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 4,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 6,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 7,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 8,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 9,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "small_group",
+      "values": [
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [2]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [2]",
+          "statistic": null,
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 6.5,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 1.8,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [2]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 7,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 4,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 6,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 7,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 8,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 9,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Between Groups [1]",
+          "statistic": "calc.anova_summary.anova.ss_between",
+          "value": 9.47368,
+          "decimals": 5
+        },
+        {
+          "label": "Between Groups [2]",
+          "statistic": "calc.anova_summary.anova.df_between",
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Between Groups [3]",
+          "statistic": "calc.anova_summary.anova.ms_between",
+          "value": 4.73684,
+          "decimals": 5
+        },
+        {
+          "label": "Between Groups [4]",
+          "statistic": "calc.anova_summary.anova.f",
+          "value": 1.31336,
+          "decimals": 5
+        },
+        {
+          "label": "Between Groups [5]",
+          "statistic": "calc.anova_summary.anova.p",
+          "value": 0.277367,
+          "decimals": 6
+        },
+        {
+          "label": "Within Groups [1]",
+          "statistic": "calc.anova_summary.anova.ss_within",
+          "value": 194.76,
+          "decimals": 2
+        },
+        {
+          "label": "Within Groups [2]",
+          "statistic": "calc.anova_summary.anova.df_within",
+          "value": 54,
+          "decimals": 0
+        },
+        {
+          "label": "Within Groups [3]",
+          "statistic": "calc.anova_summary.anova.ms_within",
+          "value": 3.60667,
+          "decimals": 5
+        },
+        {
+          "label": "Total [1]",
+          "statistic": "calc.anova_summary.anova.ss_total",
+          "value": 204.234,
+          "decimals": 3
+        },
+        {
+          "label": "Total [2]",
+          "statistic": "calc.anova_summary.anova.df_total",
+          "value": 56,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance [1]",
+          "statistic": "calc.anova_summary.bartlett.chisq",
+          "value": 0.726056,
+          "decimals": 6
+        },
+        {
+          "label": "Test for equality of variance [2]",
+          "statistic": "calc.anova_summary.bartlett.df",
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance [3]",
+          "statistic": "calc.anova_summary.bartlett.p",
+          "value": 0.695567,
+          "decimals": 6
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": -3.98486,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 13.9849,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": -12.0634,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 22.0634,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 6.5,
+          "decimals": 1
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 5.75699,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 7.24301,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 5.71607,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 7.28393,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 7,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 6.25319,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 7.74681,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 6.29086,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 7.70914,
+          "decimals": 5
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 4,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 6,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 7,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 8,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 9,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "large",
+      "values": [
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [2]",
+          "statistic": null,
+          "value": 2000,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 50.1,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 4.9,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 51.2,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 5.1,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 49.8,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 4,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 50.5,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 5.2,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [4]",
+          "statistic": null,
+          "value": 4.8,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 6,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [3]",
+          "statistic": null,
+          "value": 50.9,
+          "decimals": 1
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 7,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 8,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 9,
+          "decimals": 0
+        },
+        {
+          "label": "Group / N (count) / Mean / Std. Dev. / Std. error / Group [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Between Groups [1]",
+          "statistic": "calc.anova_summary.anova.ss_between",
+          "value": 3016.67,
+          "decimals": 2
+        },
+        {
+          "label": "Between Groups [2]",
+          "statistic": "calc.anova_summary.anova.df_between",
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Between Groups [3]",
+          "statistic": "calc.anova_summary.anova.ms_between",
+          "value": 603.333,
+          "decimals": 3
+        },
+        {
+          "label": "Between Groups [4]",
+          "statistic": "calc.anova_summary.anova.f",
+          "value": 24.1173,
+          "decimals": 4
+        },
+        {
+          "label": "Between Groups [5]",
+          "statistic": "calc.anova_summary.anova.p",
+          "value": 2.33147e-15,
+          "decimals": 20
+        },
+        {
+          "label": "Within Groups [1]",
+          "statistic": "calc.anova_summary.anova.ss_within",
+          "value": 300050,
+          "decimals": 0
+        },
+        {
+          "label": "Within Groups [2]",
+          "statistic": "calc.anova_summary.anova.df_within",
+          "value": 11994,
+          "decimals": 0
+        },
+        {
+          "label": "Within Groups [3]",
+          "statistic": "calc.anova_summary.anova.ms_within",
+          "value": 25.0167,
+          "decimals": 4
+        },
+        {
+          "label": "Total [1]",
+          "statistic": "calc.anova_summary.anova.ss_total",
+          "value": 303067,
+          "decimals": 0
+        },
+        {
+          "label": "Total [2]",
+          "statistic": "calc.anova_summary.anova.df_total",
+          "value": 11999,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance [1]",
+          "statistic": "calc.anova_summary.bartlett.chisq",
+          "value": 15.9917,
+          "decimals": 4
+        },
+        {
+          "label": "Test for equality of variance [2]",
+          "statistic": "calc.anova_summary.bartlett.df",
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance [3]",
+          "statistic": "calc.anova_summary.bartlett.p",
+          "value": 0.0068679,
+          "decimals": 7
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 50.1,
+          "decimals": 1
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 49.8851,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 50.3149,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 49.8807,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 50.3193,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 51.2,
+          "decimals": 1
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 50.9764,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 51.4236,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 50.9807,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 51.4193,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 49.8,
+          "decimals": 1
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 49.5807,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 50.0193,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 49.5807,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 50.0193,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 4,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 50.5,
+          "decimals": 1
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 50.272,
+          "decimals": 3
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 50.728,
+          "decimals": 3
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 50.2807,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 50.7193,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 49.7895,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 50.2105,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 49.7807,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 50.2193,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 6,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [2]",
+          "statistic": null,
+          "value": 50.9,
+          "decimals": 1
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [3]",
+          "statistic": null,
+          "value": 50.6807,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [4]",
+          "statistic": null,
+          "value": 51.1193,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [5]",
+          "statistic": null,
+          "value": 50.6807,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [6]",
+          "statistic": null,
+          "value": 51.1193,
+          "decimals": 4
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 7,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 8,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 9,
+          "decimals": 0
+        },
+        {
+          "label": "Group / Mean / Lower Limit / Upper Limit / Lower Limit / Upper Limit / Group [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,292 @@
+{
+  "calculator": "ss_unmatched_cc",
+  "captured_at": "2026-11-13T12:16:18.604Z",
+  "openepi_url": "https://www.openepi.com/SampleSize/SSCC.htm",
+  "cases": [
+    {
+      "case": "odds_ratio_input",
+      "values": [
+        {
+          "label": "Two-sided confidence level(1-alpha) [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Power(% chance of detecting) [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Ratio of Controls to Cases [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Hypothetical proportion of controls with exposure [1]",
+          "statistic": null,
+          "value": 40,
+          "decimals": 0
+        },
+        {
+          "label": "Hypothetical proportion of cases with exposure: [1]",
+          "statistic": null,
+          "value": 57.14,
+          "decimals": 2
+        },
+        {
+          "label": "Least extreme Odds Ratio to be detected: [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 2
+        },
+        {
+          "label": "Sample Size - Cases [1]",
+          "statistic": "calc.ss_unmatched_cc.kelsey.cases",
+          "value": 134,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Cases [2]",
+          "statistic": "calc.ss_unmatched_cc.fleiss.cases",
+          "value": 133,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Cases [3]",
+          "statistic": "calc.ss_unmatched_cc.fleiss_cc.cases",
+          "value": 144,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Controls [1]",
+          "statistic": "calc.ss_unmatched_cc.kelsey.controls",
+          "value": 134,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Controls [2]",
+          "statistic": "calc.ss_unmatched_cc.fleiss.controls",
+          "value": 133,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Controls [3]",
+          "statistic": "calc.ss_unmatched_cc.fleiss_cc.controls",
+          "value": 144,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [1]",
+          "statistic": "calc.ss_unmatched_cc.kelsey.total",
+          "value": 268,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [2]",
+          "statistic": "calc.ss_unmatched_cc.fleiss.total",
+          "value": 266,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [3]",
+          "statistic": "calc.ss_unmatched_cc.fleiss_cc.total",
+          "value": 288,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "percent_input",
+      "values": [
+        {
+          "label": "Two-sided confidence level(1-alpha) [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Power(% chance of detecting) [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Ratio of Controls to Cases [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Hypothetical proportion of controls with exposure [1]",
+          "statistic": null,
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Hypothetical proportion of cases with exposure: [1]",
+          "statistic": null,
+          "value": 40,
+          "decimals": 0
+        },
+        {
+          "label": "Least extreme Odds Ratio to be detected: [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 2
+        },
+        {
+          "label": "Sample Size - Cases [1]",
+          "statistic": "calc.ss_unmatched_cc.kelsey.cases",
+          "value": 110,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Cases [2]",
+          "statistic": "calc.ss_unmatched_cc.fleiss.cases",
+          "value": 112,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Cases [3]",
+          "statistic": "calc.ss_unmatched_cc.fleiss_cc.cases",
+          "value": 122,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Controls [1]",
+          "statistic": "calc.ss_unmatched_cc.kelsey.controls",
+          "value": 220,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Controls [2]",
+          "statistic": "calc.ss_unmatched_cc.fleiss.controls",
+          "value": 224,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Controls [3]",
+          "statistic": "calc.ss_unmatched_cc.fleiss_cc.controls",
+          "value": 244,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [1]",
+          "statistic": "calc.ss_unmatched_cc.kelsey.total",
+          "value": 330,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [2]",
+          "statistic": "calc.ss_unmatched_cc.fleiss.total",
+          "value": 336,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [3]",
+          "statistic": "calc.ss_unmatched_cc.fleiss_cc.total",
+          "value": 366,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "power_90",
+      "values": [
+        {
+          "label": "Two-sided confidence level(1-alpha) [1]",
+          "statistic": null,
+          "value": 90,
+          "decimals": 0
+        },
+        {
+          "label": "Power(% chance of detecting) [1]",
+          "statistic": null,
+          "value": 90,
+          "decimals": 0
+        },
+        {
+          "label": "Ratio of Controls to Cases [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Hypothetical proportion of controls with exposure [1]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Hypothetical proportion of cases with exposure: [1]",
+          "statistic": null,
+          "value": 51.72,
+          "decimals": 2
+        },
+        {
+          "label": "Least extreme Odds Ratio to be detected: [1]",
+          "statistic": null,
+          "value": 2.5,
+          "decimals": 2
+        },
+        {
+          "label": "Sample Size - Cases [1]",
+          "statistic": "calc.ss_unmatched_cc.kelsey.cases",
+          "value": 88,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Cases [2]",
+          "statistic": "calc.ss_unmatched_cc.fleiss.cases",
+          "value": 86,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Cases [3]",
+          "statistic": "calc.ss_unmatched_cc.fleiss_cc.cases",
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Controls [1]",
+          "statistic": "calc.ss_unmatched_cc.kelsey.controls",
+          "value": 88,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Controls [2]",
+          "statistic": "calc.ss_unmatched_cc.fleiss.controls",
+          "value": 86,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Controls [3]",
+          "statistic": "calc.ss_unmatched_cc.fleiss_cc.controls",
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [1]",
+          "statistic": "calc.ss_unmatched_cc.kelsey.total",
+          "value": 176,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [2]",
+          "statistic": "calc.ss_unmatched_cc.fleiss.total",
+          "value": 172,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [3]",
+          "statistic": "calc.ss_unmatched_cc.fleiss_cc.total",
+          "value": 190,
+          "decimals": 0
+        }
+      ]
+    }
+  ]
+}

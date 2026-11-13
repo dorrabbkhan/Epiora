@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OpenEpi reference output",
+  "description": "Labelled numbers captured by fixtures/openepi/capture.mjs from the live OpenEpi site (v1.0 spec §9). Produced by the openepi workflow on demand/monthly, never hand-edited. `statistic` is the labels.json mapping: a calc.<id>.<path> key or null (shown but not compared). `decimals` counts the decimals OpenEpi displayed; the comparison rule is |engine - value| <= 0.5 x 10^-decimals.",
+  "type": "object",
+  "required": ["calculator", "captured_at", "openepi_url", "cases"],
+  "additionalProperties": false,
+  "properties": {
+    "calculator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "captured_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "openepi_url": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["case", "values"],
+        "additionalProperties": false,
+        "properties": {
+          "case": {
+            "type": "string",
+            "minLength": 1
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["label", "statistic", "value", "decimals"],
+              "additionalProperties": false,
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "statistic": {
+                  "type": ["string", "null"]
+                },
+                "value": {
+                  "anyOf": [{ "type": "number" }, { "type": "string" }],
+                  "description": "Displayed number, or the displayed text itself for bound/not-available displays such as '<0.0000001' — those always carry statistic null."
+                },
+                "decimals": {
+                  "type": "integer",
+                  "description": "Decimals in the displayed text before parsing; may be negative when a person-time rate is restated to a coarser per-unit scale (0.5 x 10^-decimals stays the tolerance)."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

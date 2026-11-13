@@ -2870,3 +2870,104 @@ from v1.0). First pilot: an FETP or health department with legacy Epi Info data.
 phone collection and earlier fr/es/pt are answered by v1.3 and v1.6.
 Evidence: docs/research/d9-competitor-scan.md, "User signals" (r/epidemiology thread, pasted by the owner).
 Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 content.
+
+### v1.0 Task 3 — OpenEpi reference capture (2026-11-13)
+- OpenEpi version 3.01 (openepi.com). Terms: the Task 1 entry records automated access as allowed
+  (MIT-worded Licensing/Disclaimer page, no robots.txt, no prohibiting ToS), so the plan's human-step
+  STOP does not apply. Capture is polite: one page at a time, >=2 s between cases.
+- `cases.json`: 79 cases whose ids equal the Task 2 `fixtures/calc/<id>/<case>.json` ids for the 20
+  calculators OpenEpi can represent. `binomial`, `poisson`, `two_by_n` and `random_numbers` have no
+  OpenEpi page, so they are absent from the OpenEpi reference; their R fixtures still govern.
+- `labels.json`: 893 emitted labels, 429 mapped to canonical `calc.<id>.<path>` statistic ids; the
+  rest are `null` — input echoes, derived table cells, displays with no corresponding R fixture
+  leaf, and the round-2 unmapped different-quantity labels (recorded "shown but not compared" per
+  spec §9). Counts:
+  `python3 -c "import json; lj=json.load(open('fixtures/openepi/labels.json')); print(sum(len(v) for v in lj.values()), sum(1 for v in lj.values() for x in v.values() if x))"` → 893 429
+  (round 1: 893 437 — 8 mappings nulled and 2 retargeted in the same-quantity audit).
+- Section-label rule (round 1): a label that repeats under more than one section is qualified by its
+  section context in the emitted label — `1 / Uncorrected chi square`, `Crude / Risk in Exposed`,
+  `Adjusted / Mantel-Haenszel Summary Chi Sqr`, `Statistics / d.f. / p-value (2 sided) / Byar
+  approximation`, `Lower CL / SMR / Upper CL / Byar approximation` — so no flat label ever maps
+  ambiguously. Labels with no trustworthy R statistic (screening multi-level cut-off rows, the SMR
+  Byar z column, dose-response input echoes) map to `null`, never to a wrong statistic.
+- Percent rule (round 1): displays on a 0-100 scale whose fixture leaf is a 0-1 fraction are stored
+  divided by 100 with decimals +2, leaving the 0.5×10^-d tolerance exactly unchanged. Applies to
+  `proportion` (multiplier 100), `screening` sensitivity/specificity/ppv/npv/accuracy/entropy,
+  `two_by_two.adjusted.direct_rd` and `power_cohort.risk_difference`. Power estimates themselves are
+  percent-scale in the R fixtures and are NOT converted; strata/crude risk differences are
+  percent-scale in both and are NOT converted.
+- Person-time rule (round 1): OpenEpi picks its own display unit ("Per N Person-Time Units"). The
+  scraper reads N from the panel and restates rate values on the case's `inputs.per_unit`
+  (value × N/per_unit, decimals −log10(N/per_unit)); the directly adjusted RD, stored per single
+  person-time unit in the R fixture, is stored divided by N.
+- Input guard (round 1): before scraping, the capture reads back `dataMatrix` (multiplicity-aware
+  subset — sample-size pages legitimately write derived values back) plus `Evals` (dose-response
+  exposure scores live outside data cells) and `ConfLevel`, and fails the run non-zero if OpenEpi
+  did not hold every written input.
+- Bounds: `<0.0000001`-style displays, `'?'` and `'undefined'` are stored as displayed text with
+  `statistic: null` — never parsed as equalities.
+- `--compare-r` resolves every mapped statistic path into `fixtures/calc/<id>/<case>.json` and
+  reports |openepi − R| against 0.5×10^-decimals. A mapped path with no leaf in that case's
+  fixture is listed as NO-R-COUNTERPART and does not fail the run (round 2 rule): it means the
+  case's fixture does not cover that statistic. A missing fixture file still fails as UNRESOLVED
+  (non-zero exit). Fixture leaves whose value is null are listed as R-NULL, numeric disagreements
+  are listed for the owner (spec G7).
+- Unrequested-emission rule (round 3): OpenEpi's Proportion page has no "no comparison" state —
+  the "Compare to %" cell ships with 50.0 (Proportion.htm `data:50.0`) and Proportion.js always
+  runs the one-sample z-test on whatever the cell holds. A case without `compare_with` now leaves
+  the cell in that shipped state (the `''` write was a state no user produces — `parseFloat('')`
+  is NaN and the page displayed "Two-sided p-value=2"), and a driver `unrequested(stat, inputs)`
+  predicate marks emissions OpenEpi always produces although the case did not request them —
+  `calc.proportion.ztest.*` when `compare_with` is absent — which are recorded with
+  `statistic: null`. This removed the corpus's only NO-R-COUNTERPART (`proportion/zero_numerator`
+  ztest).
+- Same-quantity audit (round 2): every mapped label was re-checked against OpenEpi's own
+  JavaScript (local site mirror) and corrected where the display is a different quantity than
+  the fixture leaf: `t_test_summary` "Test for equality of variance2 [1..4]" → `null`
+  (OpenEpi's Hartley F test divides the larger variance by the smaller and reports the df of
+  the larger-variance group first — t_testMean.js:124-137,216 — never the input-order
+  `f_variance.*` ratio/df pair, and its displayed p is its own FishF approximation, not the
+  leaf's `2·min(pf,1−pf)`); `rate_compare` per-stratum/crude "z-score [1]" → `null` (OpenEpi
+  absolutizes the z statistic — PersonTime2.js:485 `zstat=Math.abs(zstat)` — while
+  `zscore.value` is signed; the p-value columns [2]/[3] stay mapped because both compute the
+  p on |z|); `dose_response` "Extended Mantel-Haenszel chi square for linear trend" retargeted
+  from `xmh.uncorrected` to `xmh.cc` (OpenEpi applies the continuity correction to the signed
+  numerator `(V1sum−0.5)²` — DoseResponse.js:144 — so its display is the corrected statistic;
+  it equals `xmh.cc` exactly when V1sum>0 and inflates the statistic when V1sum<0, recorded as
+  a genuine disagreement). Everything else verified same-quantity: Fisher/Mid-P two-sided p is
+  OpenEpi's `min(1, 2×min tail)` convention (MartinStats.js:670-682) vs R's probability-ordered
+  p — a method difference on the same estimand; power `Norm(z)` leaves `Math.abs` commented
+  out (PowerMean.js:35) so negative powerz scores below 50%; ss_mean_difference's power lookup
+  covers only {95,90,80,70,60} (SSMean.js:63-68), leaving power=0 for other requests.
+- Tooling: Playwright 1.65.0, latest release at task time, licence Apache-2.0 per its package
+  metadata, pinned in `fixtures/openepi/package-lock.json`; Chromium only.
+- `captured_at` is preserved across reruns so a no-drift rerun is byte-identical (ei7.yml precedent);
+  output files are produced only by openepi.yml and are never hand-edited.
+- Notes: `.github/workflows/openepi.yml` carried a temporary `push` trigger on this branch so the
+  workflow can run before it existed on the default branch (v0.2 Task 3 precedent); it was removed
+  in the final commit, leaving `workflow_dispatch` + a monthly schedule.
+- Producing runs: https://github.com/dorrabbkhan/Epiora/actions/runs/43439924337 (round-1
+  regeneration — artifact committed byte-for-byte; the run itself stopped at schema validation,
+  which exposed and fixed the negative-decimals/`value` union schema gaps) and
+  https://github.com/dorrabbkhan/Epiora/actions/runs/43441647872 (green: capture, schema
+  validation, drift check — regenerated output byte-identical to the committed reference).
+  Round 2: https://github.com/dorrabbkhan/Epiora/actions/runs/43448188046 (capture produced the
+  committed artifact byte-for-byte; only the drift step failed because the remapped output was not
+  yet committed) and https://github.com/dorrabbkhan/Epiora/actions/runs/43449861312 (green:
+  capture, schema validation, drift check — regenerated output byte-identical to the committed
+  reference). Round 3: https://github.com/dorrabbkhan/Epiora/actions/runs/43471843290 (capture
+  produced the committed `proportion.json` byte-for-byte — the only changed output; only the drift
+  step failed because the regenerated output was not yet committed) and
+  https://github.com/dorrabbkhan/Epiora/actions/runs/43473532537 (green: capture, schema
+  validation, drift check — regenerated output byte-identical to the committed reference; the
+  input guard held on all 79 cases). `--compare-r` on the committed corpus against post-#66
+  `fixtures/calc`: `ok 1003 mismatch 279 unresolved 0 no-r-counterpart 0 r-null 0`, exit 0 —
+  all R-BUG/R-NULL rows resolved by #66's six fixes (pre-#66: `ok 949 mismatch 303 unresolved 0
+  no-r-counterpart 0 r-null 30`).
+- Files outside the Files block: `.github/workflows/fixtures.yml` (schema-validates the new family
+  and excludes `fixtures/openepi` from the generate.R drift check — otherwise regeneration flags a
+  family it does not own); `fixtures/openepi/drivers.mjs` (per-page input driving/validation —
+  capture.mjs stays the runner); `fixtures/openepi/capture.test.mjs` (unit tests for the capture's
+  pure functions — parsing, emissions, scaling, compare — required by the tests-ship-with-code
+  rule); `fixtures/openepi/package.json` and `package-lock.json` (pin the required latest
+  Playwright for this fixture tool only).

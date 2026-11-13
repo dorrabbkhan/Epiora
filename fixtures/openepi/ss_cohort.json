@@ -1,0 +1,435 @@
+{
+  "calculator": "ss_cohort",
+  "captured_at": "2026-11-13T12:16:44.140Z",
+  "openepi_url": "https://www.openepi.com/SampleSize/SSCohort.htm",
+  "cases": [
+    {
+      "case": "odds_ratio_input",
+      "values": [
+        {
+          "label": "Two-sided significance level(1-alpha): [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Power(1-beta, % chance of detecting): [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Ratio of sample size, Unexposed/Exposed: [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of Unexposed with Outcome: [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of Exposed with Outcome: [1]",
+          "statistic": null,
+          "value": 9.5,
+          "decimals": 1
+        },
+        {
+          "label": "Odds Ratio: [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Risk/Prevalence Ratio: [1]",
+          "statistic": null,
+          "value": 1.9,
+          "decimals": 1
+        },
+        {
+          "label": "Risk/Prevalence difference: [1]",
+          "statistic": null,
+          "value": 4.5,
+          "decimals": 1
+        },
+        {
+          "label": "Sample Size - Exposed [1]",
+          "statistic": "calc.ss_cohort.kelsey.exposed",
+          "value": 517,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Exposed [2]",
+          "statistic": "calc.ss_cohort.fleiss.exposed",
+          "value": 516,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Exposed [3]",
+          "statistic": "calc.ss_cohort.fleiss_cc.exposed",
+          "value": 559,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size-Nonexposed [1]",
+          "statistic": "calc.ss_cohort.kelsey.unexposed",
+          "value": 517,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size-Nonexposed [2]",
+          "statistic": "calc.ss_cohort.fleiss.unexposed",
+          "value": 516,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size-Nonexposed [3]",
+          "statistic": "calc.ss_cohort.fleiss_cc.unexposed",
+          "value": 559,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [1]",
+          "statistic": "calc.ss_cohort.kelsey.total",
+          "value": 1034,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [2]",
+          "statistic": "calc.ss_cohort.fleiss.total",
+          "value": 1032,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [3]",
+          "statistic": "calc.ss_cohort.fleiss_cc.total",
+          "value": 1118,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "percent_input",
+      "values": [
+        {
+          "label": "Two-sided significance level(1-alpha): [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Power(1-beta, % chance of detecting): [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Ratio of sample size, Unexposed/Exposed: [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of Unexposed with Outcome: [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of Exposed with Outcome: [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Odds Ratio: [1]",
+          "statistic": null,
+          "value": 2.1,
+          "decimals": 1
+        },
+        {
+          "label": "Risk/Prevalence Ratio: [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Risk/Prevalence difference: [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Exposed [1]",
+          "statistic": "calc.ss_cohort.kelsey.exposed",
+          "value": 437,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Exposed [2]",
+          "statistic": "calc.ss_cohort.fleiss.exposed",
+          "value": 436,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Exposed [3]",
+          "statistic": "calc.ss_cohort.fleiss_cc.exposed",
+          "value": 475,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size-Nonexposed [1]",
+          "statistic": "calc.ss_cohort.kelsey.unexposed",
+          "value": 437,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size-Nonexposed [2]",
+          "statistic": "calc.ss_cohort.fleiss.unexposed",
+          "value": 436,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size-Nonexposed [3]",
+          "statistic": "calc.ss_cohort.fleiss_cc.unexposed",
+          "value": 475,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [1]",
+          "statistic": "calc.ss_cohort.kelsey.total",
+          "value": 874,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [2]",
+          "statistic": "calc.ss_cohort.fleiss.total",
+          "value": 872,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [3]",
+          "statistic": "calc.ss_cohort.fleiss_cc.total",
+          "value": 950,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "risk_ratio_input",
+      "values": [
+        {
+          "label": "Two-sided significance level(1-alpha): [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Power(1-beta, % chance of detecting): [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Ratio of sample size, Unexposed/Exposed: [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of Unexposed with Outcome: [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of Exposed with Outcome: [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Odds Ratio: [1]",
+          "statistic": null,
+          "value": 2.1,
+          "decimals": 1
+        },
+        {
+          "label": "Risk/Prevalence Ratio: [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Risk/Prevalence difference: [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Exposed [1]",
+          "statistic": "calc.ss_cohort.kelsey.exposed",
+          "value": 437,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Exposed [2]",
+          "statistic": "calc.ss_cohort.fleiss.exposed",
+          "value": 436,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Exposed [3]",
+          "statistic": "calc.ss_cohort.fleiss_cc.exposed",
+          "value": 475,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size-Nonexposed [1]",
+          "statistic": "calc.ss_cohort.kelsey.unexposed",
+          "value": 437,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size-Nonexposed [2]",
+          "statistic": "calc.ss_cohort.fleiss.unexposed",
+          "value": 436,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size-Nonexposed [3]",
+          "statistic": "calc.ss_cohort.fleiss_cc.unexposed",
+          "value": 475,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [1]",
+          "statistic": "calc.ss_cohort.kelsey.total",
+          "value": 874,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [2]",
+          "statistic": "calc.ss_cohort.fleiss.total",
+          "value": 872,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [3]",
+          "statistic": "calc.ss_cohort.fleiss_cc.total",
+          "value": 950,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "risk_difference_input",
+      "values": [
+        {
+          "label": "Two-sided significance level(1-alpha): [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Power(1-beta, % chance of detecting): [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Ratio of sample size, Unexposed/Exposed: [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of Unexposed with Outcome: [1]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Percent of Exposed with Outcome: [1]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Odds Ratio: [1]",
+          "statistic": null,
+          "value": 1.7,
+          "decimals": 1
+        },
+        {
+          "label": "Risk/Prevalence Ratio: [1]",
+          "statistic": null,
+          "value": 1.5,
+          "decimals": 1
+        },
+        {
+          "label": "Risk/Prevalence difference: [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Exposed [1]",
+          "statistic": "calc.ss_cohort.kelsey.exposed",
+          "value": 213,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Exposed [2]",
+          "statistic": "calc.ss_cohort.fleiss.exposed",
+          "value": 218,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size - Exposed [3]",
+          "statistic": "calc.ss_cohort.fleiss_cc.exposed",
+          "value": 233,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size-Nonexposed [1]",
+          "statistic": "calc.ss_cohort.kelsey.unexposed",
+          "value": 426,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size-Nonexposed [2]",
+          "statistic": "calc.ss_cohort.fleiss.unexposed",
+          "value": 436,
+          "decimals": 0
+        },
+        {
+          "label": "Sample Size-Nonexposed [3]",
+          "statistic": "calc.ss_cohort.fleiss_cc.unexposed",
+          "value": 466,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [1]",
+          "statistic": "calc.ss_cohort.kelsey.total",
+          "value": 639,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [2]",
+          "statistic": "calc.ss_cohort.fleiss.total",
+          "value": 654,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size: [3]",
+          "statistic": "calc.ss_cohort.fleiss_cc.total",
+          "value": 699,
+          "decimals": 0
+        }
+      ]
+    }
+  ]
+}

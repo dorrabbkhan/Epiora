@@ -1,0 +1,166 @@
+{
+  "calculator": "power_mean_difference",
+  "captured_at": "2026-11-13T12:18:07.906Z",
+  "openepi_url": "https://www.openepi.com/Power/PowerMean.htm",
+  "cases": [
+    {
+      "case": "textbook",
+      "values": [
+        {
+          "label": "Mean [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Sample size [1]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Sample size [2]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Standard deviation [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Standard deviation [2]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Variance [1]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Variance [2]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Power",
+          "statistic": "calc.power_mean_difference.power",
+          "value": 70.55,
+          "decimals": 2
+        }
+      ]
+    },
+    {
+      "case": "small_effect",
+      "values": [
+        {
+          "label": "Mean [1]",
+          "statistic": null,
+          "value": 0.5,
+          "decimals": 1
+        },
+        {
+          "label": "Sample size [1]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Sample size [2]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Standard deviation [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Standard deviation [2]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Variance [1]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Variance [2]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Power",
+          "statistic": "calc.power_mean_difference.power",
+          "value": 3.128,
+          "decimals": 3
+        }
+      ]
+    },
+    {
+      "case": "large",
+      "values": [
+        {
+          "label": "Mean [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Sample size [1]",
+          "statistic": null,
+          "value": 5000,
+          "decimals": 0
+        },
+        {
+          "label": "Sample size [2]",
+          "statistic": null,
+          "value": 6000,
+          "decimals": 0
+        },
+        {
+          "label": "Standard deviation [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Standard deviation [2]",
+          "statistic": null,
+          "value": 12,
+          "decimals": 0
+        },
+        {
+          "label": "Variance [1]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Variance [2]",
+          "statistic": null,
+          "value": 144,
+          "decimals": 0
+        },
+        {
+          "label": "Power",
+          "statistic": "calc.power_mean_difference.power",
+          "value": 100,
+          "decimals": 0
+        }
+      ]
+    }
+  ]
+}

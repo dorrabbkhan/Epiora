@@ -1,0 +1,2663 @@
+{
+  "calculator": "rate_compare",
+  "captured_at": "2026-11-13T12:13:59.431Z",
+  "openepi_url": "https://www.openepi.com/PersonTime2/PersonTime2.htm",
+  "cases": [
+    {
+      "case": "textbook",
+      "values": [
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 40,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 60,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 66.7,
+          "decimals": 1
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 33.3,
+          "decimals": 1
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [1]",
+          "statistic": null,
+          "value": 5000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [2]",
+          "statistic": null,
+          "value": 4000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [3]",
+          "statistic": null,
+          "value": 9000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease [1]",
+          "statistic": null,
+          "value": 55.6,
+          "decimals": 1
+        },
+        {
+          "label": "Disease [2]",
+          "statistic": null,
+          "value": 44.4,
+          "decimals": 1
+        },
+        {
+          "label": "Disease [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "z-score [1]",
+          "statistic": null,
+          "value": 1.732,
+          "decimals": 3
+        },
+        {
+          "label": "z-score [2]",
+          "statistic": "calc.rate_compare.crude.zscore.p_1t",
+          "value": 0.04163,
+          "decimals": 5
+        },
+        {
+          "label": "z-score [3]",
+          "statistic": "calc.rate_compare.crude.zscore.p_2t",
+          "value": 0.08326,
+          "decimals": 5
+        },
+        {
+          "label": "Fisher exact [1]",
+          "statistic": null,
+          "value": 0.05331,
+          "decimals": 5
+        },
+        {
+          "label": "Fisher exact [2]",
+          "statistic": null,
+          "value": 0.1066,
+          "decimals": 4
+        },
+        {
+          "label": "Mid-P exact [1]",
+          "statistic": null,
+          "value": 0.04165,
+          "decimals": 5
+        },
+        {
+          "label": "Mid-P exact [2]",
+          "statistic": null,
+          "value": 0.08329,
+          "decimals": 5
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [1]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.est",
+          "value": 1.6,
+          "decimals": 1
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [2]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.midp_lower",
+          "value": 0.9416,
+          "decimals": 4
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [3]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.midp_upper",
+          "value": 2.786,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the exposed / Taylor [1]",
+          "statistic": null,
+          "value": 8,
+          "decimals": 0
+        },
+        {
+          "label": "Rate in the exposed / Taylor [2]",
+          "statistic": null,
+          "value": 5.715,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the exposed / Taylor [3]",
+          "statistic": null,
+          "value": 10.89,
+          "decimals": 2
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [2]",
+          "statistic": null,
+          "value": 3.053,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [3]",
+          "statistic": null,
+          "value": 7.722,
+          "decimals": 3
+        },
+        {
+          "label": "Overall Rate / Taylor [1]",
+          "statistic": null,
+          "value": 6.667,
+          "decimals": 3
+        },
+        {
+          "label": "Overall Rate / Taylor [2]",
+          "statistic": null,
+          "value": 5.087,
+          "decimals": 3
+        },
+        {
+          "label": "Overall Rate / Taylor [3]",
+          "statistic": null,
+          "value": 8.581,
+          "decimals": 3
+        },
+        {
+          "label": "RateRatio / Byar [1]",
+          "statistic": null,
+          "value": 1.6,
+          "decimals": 1
+        },
+        {
+          "label": "RateRatio / Byar [2]",
+          "statistic": null,
+          "value": 0.9355,
+          "decimals": 4
+        },
+        {
+          "label": "RateRatio / Byar [3]",
+          "statistic": null,
+          "value": 2.737,
+          "decimals": 3
+        },
+        {
+          "label": "RateDifference / Byar [1]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "RateDifference / Byar [2]",
+          "statistic": null,
+          "value": -0.3086,
+          "decimals": 4
+        },
+        {
+          "label": "RateDifference / Byar [3]",
+          "statistic": null,
+          "value": 6.309,
+          "decimals": 3
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [1]",
+          "statistic": null,
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [2]",
+          "statistic": null,
+          "value": -3.719,
+          "decimals": 3
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [3]",
+          "statistic": null,
+          "value": 49.1,
+          "decimals": 1
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [1]",
+          "statistic": null,
+          "value": 37.5,
+          "decimals": 1
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [2]",
+          "statistic": null,
+          "value": -6.9,
+          "decimals": 1
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [3]",
+          "statistic": null,
+          "value": 63.46,
+          "decimals": 2
+        }
+      ]
+    },
+    {
+      "case": "boundary",
+      "values": [
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 33.3,
+          "decimals": 1
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 66.7,
+          "decimals": 1
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [1]",
+          "statistic": null,
+          "value": 1000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [2]",
+          "statistic": null,
+          "value": 2000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [3]",
+          "statistic": null,
+          "value": 3000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease [1]",
+          "statistic": null,
+          "value": 33.3,
+          "decimals": 1
+        },
+        {
+          "label": "Disease [2]",
+          "statistic": null,
+          "value": 66.7,
+          "decimals": 1
+        },
+        {
+          "label": "Disease [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "z-score [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "z-score [2]",
+          "statistic": "calc.rate_compare.crude.zscore.p_1t",
+          "value": 0.5,
+          "decimals": 4
+        },
+        {
+          "label": "z-score [3]",
+          "statistic": null,
+          "value": ">0.9999999",
+          "decimals": 7
+        },
+        {
+          "label": "Fisher exact [1]",
+          "statistic": null,
+          "value": 0.5683,
+          "decimals": 4
+        },
+        {
+          "label": "Fisher exact [2]",
+          "statistic": null,
+          "value": ">0.9999999",
+          "decimals": 7
+        },
+        {
+          "label": "Mid-P exact [1]",
+          "statistic": null,
+          "value": 0.4917,
+          "decimals": 4
+        },
+        {
+          "label": "Mid-P exact [2]",
+          "statistic": null,
+          "value": 0.9835,
+          "decimals": 4
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [1]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.est",
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [2]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.midp_lower",
+          "value": 0.4489,
+          "decimals": 4
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [3]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.midp_upper",
+          "value": 2.117,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the exposed / Taylor [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Rate in the exposed / Taylor [2]",
+          "statistic": null,
+          "value": 0.4788,
+          "decimals": 4
+        },
+        {
+          "label": "Rate in the exposed / Taylor [3]",
+          "statistic": null,
+          "value": 1.839,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [2]",
+          "statistic": null,
+          "value": 0.6106,
+          "decimals": 4
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [3]",
+          "statistic": null,
+          "value": 1.544,
+          "decimals": 3
+        },
+        {
+          "label": "Overall Rate / Taylor [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Overall Rate / Taylor [2]",
+          "statistic": null,
+          "value": 0.6746,
+          "decimals": 4
+        },
+        {
+          "label": "Overall Rate / Taylor [3]",
+          "statistic": null,
+          "value": 1.428,
+          "decimals": 3
+        },
+        {
+          "label": "RateRatio / Byar [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "RateRatio / Byar [2]",
+          "statistic": null,
+          "value": 0.4681,
+          "decimals": 4
+        },
+        {
+          "label": "RateRatio / Byar [3]",
+          "statistic": null,
+          "value": 2.136,
+          "decimals": 3
+        },
+        {
+          "label": "RateDifference / Byar [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "RateDifference / Byar [2]",
+          "statistic": null,
+          "value": -0.759,
+          "decimals": 3
+        },
+        {
+          "label": "RateDifference / Byar [3]",
+          "statistic": null,
+          "value": 0.759,
+          "decimals": 3
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [2]",
+          "statistic": null,
+          "value": -21.55,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [3]",
+          "statistic": null,
+          "value": 27.47,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [2]",
+          "statistic": null,
+          "value": -113.6,
+          "decimals": 1
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [3]",
+          "statistic": null,
+          "value": 53.19,
+          "decimals": 2
+        },
+        {
+          "label": "Preventive fraction in pop.(PFp) / PEPI [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "Preventive fraction in pop.(PFp) / PEPI [2]",
+          "statistic": null,
+          "value": -37.87,
+          "decimals": 2
+        },
+        {
+          "label": "Preventive fraction in pop.(PFp) / PEPI [3]",
+          "statistic": null,
+          "value": 17.73,
+          "decimals": 2
+        },
+        {
+          "label": "Preventive fraction in exposed(PFe) / PEPI [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "Preventive fraction in exposed(PFe) / PEPI [2]",
+          "statistic": null,
+          "value": -113.6,
+          "decimals": 1
+        },
+        {
+          "label": "Preventive fraction in exposed(PFe) / PEPI [3]",
+          "statistic": null,
+          "value": 53.19,
+          "decimals": 2
+        }
+      ]
+    },
+    {
+      "case": "zero_event",
+      "values": [
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [1]",
+          "statistic": null,
+          "value": 1000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [2]",
+          "statistic": null,
+          "value": 2000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [3]",
+          "statistic": null,
+          "value": 3000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease [1]",
+          "statistic": null,
+          "value": 33.3,
+          "decimals": 1
+        },
+        {
+          "label": "Disease [2]",
+          "statistic": null,
+          "value": 66.7,
+          "decimals": 1
+        },
+        {
+          "label": "Disease [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "z-score [1]",
+          "statistic": null,
+          "value": 3.162,
+          "decimals": 3
+        },
+        {
+          "label": "z-score [2]",
+          "statistic": "calc.rate_compare.crude.zscore.p_1t",
+          "value": 0.0007827,
+          "decimals": 7
+        },
+        {
+          "label": "z-score [3]",
+          "statistic": "calc.rate_compare.crude.zscore.p_2t",
+          "value": 0.001565,
+          "decimals": 6
+        },
+        {
+          "label": "Fisher exact [1]",
+          "statistic": null,
+          "value": 0.0003007,
+          "decimals": 7
+        },
+        {
+          "label": "Fisher exact [2]",
+          "statistic": null,
+          "value": 0.0006015,
+          "decimals": 7
+        },
+        {
+          "label": "Mid-P exact [1]",
+          "statistic": null,
+          "value": 0.0001504,
+          "decimals": 7
+        },
+        {
+          "label": "Mid-P exact [2]",
+          "statistic": null,
+          "value": 0.0003007,
+          "decimals": 7
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [1]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.est",
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [2]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.midp_lower",
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [3]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.midp_upper",
+          "value": 0.3232,
+          "decimals": 4
+        },
+        {
+          "label": "Rate in the exposed / Taylor [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "Rate in the exposed / Taylor [2]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
+        },
+        {
+          "label": "Rate in the exposed / Taylor [3]",
+          "statistic": null,
+          "value": 0.3668,
+          "decimals": 4
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [2]",
+          "statistic": null,
+          "value": 0.6106,
+          "decimals": 4
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [3]",
+          "statistic": null,
+          "value": 1.544,
+          "decimals": 3
+        },
+        {
+          "label": "Overall Rate / Taylor [1]",
+          "statistic": null,
+          "value": 0.6667,
+          "decimals": 4
+        },
+        {
+          "label": "Overall Rate / Taylor [2]",
+          "statistic": null,
+          "value": 0.4071,
+          "decimals": 4
+        },
+        {
+          "label": "Overall Rate / Taylor [3]",
+          "statistic": null,
+          "value": 1.03,
+          "decimals": 2
+        },
+        {
+          "label": "RateRatio / Byar [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "RateRatio / Byar [2]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "RateRatio / Byar [3]",
+          "statistic": null,
+          "value": "'?'¹",
+          "decimals": 0
+        },
+        {
+          "label": "RateDifference / Byar [1]",
+          "statistic": null,
+          "value": -1,
+          "decimals": 0
+        },
+        {
+          "label": "RateDifference / Byar [2]",
+          "statistic": null,
+          "value": -1.438,
+          "decimals": 3
+        },
+        {
+          "label": "RateDifference / Byar [3]",
+          "statistic": null,
+          "value": -0.5618,
+          "decimals": 4
+        },
+        {
+          "label": "Preventive fraction in pop.(PFp) / PEPI [1]",
+          "statistic": null,
+          "value": 33.33,
+          "decimals": 2
+        },
+        {
+          "label": "Preventive fraction in pop.(PFp) / PEPI [2]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
+        },
+        {
+          "label": "Preventive fraction in pop.(PFp) / PEPI [3]",
+          "statistic": null,
+          "value": 33.33,
+          "decimals": 2
+        },
+        {
+          "label": "Preventive fraction in exposed(PFe) / PEPI [1]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Preventive fraction in exposed(PFe) / PEPI [2]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
+        },
+        {
+          "label": "Preventive fraction in exposed(PFe) / PEPI [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "support_max",
+      "values": [
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [1]",
+          "statistic": null,
+          "value": 1000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [2]",
+          "statistic": null,
+          "value": 2000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [3]",
+          "statistic": null,
+          "value": 3000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease [1]",
+          "statistic": null,
+          "value": 33.3,
+          "decimals": 1
+        },
+        {
+          "label": "Disease [2]",
+          "statistic": null,
+          "value": 66.7,
+          "decimals": 1
+        },
+        {
+          "label": "Disease [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "z-score [1]",
+          "statistic": null,
+          "value": 6.325,
+          "decimals": 3
+        },
+        {
+          "label": "z-score [2]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "z-score [3]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "Fisher exact [1]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "Fisher exact [2]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "Mid-P exact [1]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "Mid-P exact [2]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "CMLE Rate Ratio* / undefined / Mid-P Exact [1]",
+          "statistic": null,
+          "value": 12.38,
+          "decimals": 2
+        },
+        {
+          "label": "CMLE Rate Ratio* / undefined / Mid-P Exact [2]",
+          "statistic": null,
+          "value": "'undefined'¹",
+          "decimals": 0
+        },
+        {
+          "label": "Rate in the exposed / Taylor [1]",
+          "statistic": null,
+          "value": 200,
+          "decimals": 0
+        },
+        {
+          "label": "Rate in the exposed / Taylor [2]",
+          "statistic": null,
+          "value": 122.1,
+          "decimals": 1
+        },
+        {
+          "label": "Rate in the exposed / Taylor [3]",
+          "statistic": null,
+          "value": 308.9,
+          "decimals": 1
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [1]",
+          "statistic": null,
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [2]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [3]",
+          "statistic": null,
+          "value": 18.34,
+          "decimals": 2
+        },
+        {
+          "label": "Overall Rate / Taylor [1]",
+          "statistic": null,
+          "value": 66.67,
+          "decimals": 2
+        },
+        {
+          "label": "Overall Rate / Taylor [2]",
+          "statistic": null,
+          "value": 40.71,
+          "decimals": 2
+        },
+        {
+          "label": "Overall Rate / Taylor [3]",
+          "statistic": null,
+          "value": 103,
+          "decimals": 0
+        },
+        {
+          "label": "RateRatio / Byar [1]",
+          "statistic": null,
+          "value": "'undefined'",
+          "decimals": 0
+        },
+        {
+          "label": "RateRatio / Byar [2]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
+        },
+        {
+          "label": "RateRatio / Byar [3]",
+          "statistic": null,
+          "value": "'undefined'¹",
+          "decimals": 0
+        },
+        {
+          "label": "RateDifference / Byar [1]",
+          "statistic": null,
+          "value": 200,
+          "decimals": 0
+        },
+        {
+          "label": "RateDifference / Byar [2]",
+          "statistic": null,
+          "value": 112.4,
+          "decimals": 1
+        },
+        {
+          "label": "RateDifference / Byar [3]",
+          "statistic": null,
+          "value": 287.6,
+          "decimals": 1
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [1]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [2]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [3]",
+          "statistic": null,
+          "value": "'?'°",
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "one_inside_boundary",
+      "values": [
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 21,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 4.8,
+          "decimals": 1
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 95.2,
+          "decimals": 1
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [1]",
+          "statistic": null,
+          "value": 1000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [2]",
+          "statistic": null,
+          "value": 2000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [3]",
+          "statistic": null,
+          "value": 3000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease [1]",
+          "statistic": null,
+          "value": 33.3,
+          "decimals": 1
+        },
+        {
+          "label": "Disease [2]",
+          "statistic": null,
+          "value": 66.7,
+          "decimals": 1
+        },
+        {
+          "label": "Disease [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "z-score [1]",
+          "statistic": null,
+          "value": 2.777,
+          "decimals": 3
+        },
+        {
+          "label": "z-score [2]",
+          "statistic": "calc.rate_compare.crude.zscore.p_1t",
+          "value": 0.002739,
+          "decimals": 6
+        },
+        {
+          "label": "z-score [3]",
+          "statistic": "calc.rate_compare.crude.zscore.p_2t",
+          "value": 0.005479,
+          "decimals": 6
+        },
+        {
+          "label": "Fisher exact [1]",
+          "statistic": null,
+          "value": 0.002306,
+          "decimals": 6
+        },
+        {
+          "label": "Fisher exact [2]",
+          "statistic": null,
+          "value": 0.004611,
+          "decimals": 6
+        },
+        {
+          "label": "Mid-P exact [1]",
+          "statistic": null,
+          "value": 0.001253,
+          "decimals": 6
+        },
+        {
+          "label": "Mid-P exact [2]",
+          "statistic": null,
+          "value": 0.002506,
+          "decimals": 6
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [1]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.est",
+          "value": 0.1,
+          "decimals": 1
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [2]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.midp_lower",
+          "value": 0.004775,
+          "decimals": 6
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [3]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.midp_upper",
+          "value": 0.542,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the exposed / Taylor [1]",
+          "statistic": null,
+          "value": 0.1,
+          "decimals": 1
+        },
+        {
+          "label": "Rate in the exposed / Taylor [2]",
+          "statistic": null,
+          "value": 0.001308,
+          "decimals": 6
+        },
+        {
+          "label": "Rate in the exposed / Taylor [3]",
+          "statistic": null,
+          "value": 0.5563,
+          "decimals": 4
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [2]",
+          "statistic": null,
+          "value": 0.6106,
+          "decimals": 4
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [3]",
+          "statistic": null,
+          "value": 1.544,
+          "decimals": 3
+        },
+        {
+          "label": "Overall Rate / Taylor [1]",
+          "statistic": null,
+          "value": 0.7,
+          "decimals": 1
+        },
+        {
+          "label": "Overall Rate / Taylor [2]",
+          "statistic": null,
+          "value": 0.4332,
+          "decimals": 4
+        },
+        {
+          "label": "Overall Rate / Taylor [3]",
+          "statistic": null,
+          "value": 1.07,
+          "decimals": 2
+        },
+        {
+          "label": "RateRatio / Byar [1]",
+          "statistic": null,
+          "value": 0.1,
+          "decimals": 1
+        },
+        {
+          "label": "RateRatio / Byar [2]",
+          "statistic": null,
+          "value": 0.01342,
+          "decimals": 5
+        },
+        {
+          "label": "RateRatio / Byar [3]",
+          "statistic": null,
+          "value": 0.745,
+          "decimals": 3
+        },
+        {
+          "label": "RateDifference / Byar [1]",
+          "statistic": null,
+          "value": -0.9,
+          "decimals": 1
+        },
+        {
+          "label": "RateDifference / Byar [2]",
+          "statistic": null,
+          "value": -1.38,
+          "decimals": 2
+        },
+        {
+          "label": "RateDifference / Byar [3]",
+          "statistic": null,
+          "value": -0.4199,
+          "decimals": 4
+        },
+        {
+          "label": "Preventive fraction in pop.(PFp) / PEPI [1]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Preventive fraction in pop.(PFp) / PEPI [2]",
+          "statistic": null,
+          "value": 8.499,
+          "decimals": 3
+        },
+        {
+          "label": "Preventive fraction in pop.(PFp) / PEPI [3]",
+          "statistic": null,
+          "value": 32.89,
+          "decimals": 2
+        },
+        {
+          "label": "Preventive fraction in exposed(PFe) / PEPI [1]",
+          "statistic": null,
+          "value": 90,
+          "decimals": 0
+        },
+        {
+          "label": "Preventive fraction in exposed(PFe) / PEPI [2]",
+          "statistic": null,
+          "value": 25.5,
+          "decimals": 1
+        },
+        {
+          "label": "Preventive fraction in exposed(PFe) / PEPI [3]",
+          "statistic": null,
+          "value": 98.66,
+          "decimals": 2
+        }
+      ]
+    },
+    {
+      "case": "stratified",
+      "values": [
+        {
+          "label": "Values for Stratum 1 / Cases [1]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 1 / Cases [2]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 1 / Cases [3]",
+          "statistic": null,
+          "value": 40,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 1 / Cases [1]",
+          "statistic": null,
+          "value": 75,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 1 / Cases [2]",
+          "statistic": null,
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 1 / Cases [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 1 / Disease / Person-Time [1]",
+          "statistic": null,
+          "value": 2000,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 1 / Disease / Person-Time [2]",
+          "statistic": null,
+          "value": 1500,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 1 / Disease / Person-Time [3]",
+          "statistic": null,
+          "value": 3500,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 1 / Disease [1]",
+          "statistic": null,
+          "value": 57.1,
+          "decimals": 1
+        },
+        {
+          "label": "Values for Stratum 1 / Disease [2]",
+          "statistic": null,
+          "value": 42.9,
+          "decimals": 1
+        },
+        {
+          "label": "Values for Stratum 1 / Disease [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 2 / Cases [1]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 2 / Cases [2]",
+          "statistic": null,
+          "value": 40,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 2 / Cases [3]",
+          "statistic": null,
+          "value": 90,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 2 / Cases [1]",
+          "statistic": null,
+          "value": 55.6,
+          "decimals": 1
+        },
+        {
+          "label": "Values for Stratum 2 / Cases [2]",
+          "statistic": null,
+          "value": 44.4,
+          "decimals": 1
+        },
+        {
+          "label": "Values for Stratum 2 / Cases [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 2 / Disease / Person-Time [1]",
+          "statistic": null,
+          "value": 3000,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 2 / Disease / Person-Time [2]",
+          "statistic": null,
+          "value": 5000,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 2 / Disease / Person-Time [3]",
+          "statistic": null,
+          "value": 8000,
+          "decimals": 0
+        },
+        {
+          "label": "Values for Stratum 2 / Disease [1]",
+          "statistic": null,
+          "value": 37.5,
+          "decimals": 1
+        },
+        {
+          "label": "Values for Stratum 2 / Disease [2]",
+          "statistic": null,
+          "value": 62.5,
+          "decimals": 1
+        },
+        {
+          "label": "Values for Stratum 2 / Disease [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Unstratified (Crude) Values / Cases [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Unstratified (Crude) Values / Cases [2]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Unstratified (Crude) Values / Cases [3]",
+          "statistic": null,
+          "value": 130,
+          "decimals": 0
+        },
+        {
+          "label": "Unstratified (Crude) Values / Cases [1]",
+          "statistic": null,
+          "value": 61.5,
+          "decimals": 1
+        },
+        {
+          "label": "Unstratified (Crude) Values / Cases [2]",
+          "statistic": null,
+          "value": 38.5,
+          "decimals": 1
+        },
+        {
+          "label": "Unstratified (Crude) Values / Cases [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Unstratified (Crude) Values / Disease / Person-Time [1]",
+          "statistic": null,
+          "value": 5000,
+          "decimals": 0
+        },
+        {
+          "label": "Unstratified (Crude) Values / Disease / Person-Time [2]",
+          "statistic": null,
+          "value": 6500,
+          "decimals": 0
+        },
+        {
+          "label": "Unstratified (Crude) Values / Disease / Person-Time [3]",
+          "statistic": null,
+          "value": 11500,
+          "decimals": 0
+        },
+        {
+          "label": "Unstratified (Crude) Values / Disease [1]",
+          "statistic": null,
+          "value": 43.5,
+          "decimals": 1
+        },
+        {
+          "label": "Unstratified (Crude) Values / Disease [2]",
+          "statistic": null,
+          "value": 56.5,
+          "decimals": 1
+        },
+        {
+          "label": "Unstratified (Crude) Values / Disease [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "1 / z-score [1]",
+          "statistic": null,
+          "value": 2.282,
+          "decimals": 3
+        },
+        {
+          "label": "1 / z-score [2]",
+          "statistic": "calc.rate_compare.strata.0.zscore.p_1t",
+          "value": 0.01124,
+          "decimals": 5
+        },
+        {
+          "label": "1 / z-score [3]",
+          "statistic": "calc.rate_compare.strata.0.zscore.p_2t",
+          "value": 0.02248,
+          "decimals": 5
+        },
+        {
+          "label": "1 / Fisher exact [1]",
+          "statistic": null,
+          "value": 0.01506,
+          "decimals": 5
+        },
+        {
+          "label": "1 / Fisher exact [2]",
+          "statistic": null,
+          "value": 0.03012,
+          "decimals": 5
+        },
+        {
+          "label": "1 / Mid-P exact [1]",
+          "statistic": null,
+          "value": 0.01053,
+          "decimals": 5
+        },
+        {
+          "label": "1 / Mid-P exact [2]",
+          "statistic": null,
+          "value": 0.02106,
+          "decimals": 5
+        },
+        {
+          "label": "2 / z-score [1]",
+          "statistic": null,
+          "value": 3.538,
+          "decimals": 3
+        },
+        {
+          "label": "2 / z-score [2]",
+          "statistic": "calc.rate_compare.strata.1.zscore.p_1t",
+          "value": 0.0002015,
+          "decimals": 7
+        },
+        {
+          "label": "2 / z-score [3]",
+          "statistic": "calc.rate_compare.strata.1.zscore.p_2t",
+          "value": 0.0004029,
+          "decimals": 7
+        },
+        {
+          "label": "2 / Fisher exact [1]",
+          "statistic": null,
+          "value": 0.0003779,
+          "decimals": 7
+        },
+        {
+          "label": "2 / Fisher exact [2]",
+          "statistic": null,
+          "value": 0.0007558,
+          "decimals": 7
+        },
+        {
+          "label": "2 / Mid-P exact [1]",
+          "statistic": null,
+          "value": 0.0002749,
+          "decimals": 7
+        },
+        {
+          "label": "2 / Mid-P exact [2]",
+          "statistic": null,
+          "value": 0.0005498,
+          "decimals": 7
+        },
+        {
+          "label": "Crude / z-score [1]",
+          "statistic": null,
+          "value": 4.154,
+          "decimals": 3
+        },
+        {
+          "label": "Crude / z-score [2]",
+          "statistic": "calc.rate_compare.crude.zscore.p_1t",
+          "value": 0.00001635,
+          "decimals": 8
+        },
+        {
+          "label": "Crude / z-score [3]",
+          "statistic": "calc.rate_compare.crude.zscore.p_2t",
+          "value": 0.00003269,
+          "decimals": 8
+        },
+        {
+          "label": "Crude / Fisher exact [1]",
+          "statistic": null,
+          "value": 0.00002601,
+          "decimals": 8
+        },
+        {
+          "label": "Crude / Fisher exact [2]",
+          "statistic": null,
+          "value": 0.00005202,
+          "decimals": 8
+        },
+        {
+          "label": "Crude / Mid-P exact [1]",
+          "statistic": null,
+          "value": 0.00001902,
+          "decimals": 8
+        },
+        {
+          "label": "Crude / Mid-P exact [2]",
+          "statistic": null,
+          "value": 0.00003804,
+          "decimals": 8
+        },
+        {
+          "label": "Adjusted / z-score statistic [1]",
+          "statistic": "calc.rate_compare.adjusted.zscore.value",
+          "value": 4.209,
+          "decimals": 3
+        },
+        {
+          "label": "Adjusted / z-score statistic [2]",
+          "statistic": null,
+          "value": 0.00001283,
+          "decimals": 8
+        },
+        {
+          "label": "Adjusted / z-score statistic [3]",
+          "statistic": "calc.rate_compare.adjusted.zscore.p",
+          "value": 0.00002565,
+          "decimals": 8
+        },
+        {
+          "label": "Adjusted / Fisher exact [1]",
+          "statistic": null,
+          "value": 0.00002074,
+          "decimals": 8
+        },
+        {
+          "label": "Adjusted / Fisher exact [2]",
+          "statistic": null,
+          "value": 0.00004149,
+          "decimals": 8
+        },
+        {
+          "label": "Adjusted / Mid-P exact [1]",
+          "statistic": null,
+          "value": 0.00001507,
+          "decimals": 8
+        },
+        {
+          "label": "Adjusted / Mid-P exact [2]",
+          "statistic": null,
+          "value": 0.00003013,
+          "decimals": 8
+        },
+        {
+          "label": "1 / CMLE Rate Ratio* / Mid-P Exact [1]",
+          "statistic": "calc.rate_compare.strata.0.cmle_rr.est",
+          "value": 2.25,
+          "decimals": 2
+        },
+        {
+          "label": "1 / CMLE Rate Ratio* / Mid-P Exact [2]",
+          "statistic": "calc.rate_compare.strata.0.cmle_rr.midp_lower",
+          "value": 1.248,
+          "decimals": 3
+        },
+        {
+          "label": "1 / CMLE Rate Ratio* / Mid-P Exact [3]",
+          "statistic": "calc.rate_compare.strata.0.cmle_rr.midp_upper",
+          "value": 4.225,
+          "decimals": 3
+        },
+        {
+          "label": "1 / Rate in the exposed / Taylor [1]",
+          "statistic": null,
+          "value": 15,
+          "decimals": 0
+        },
+        {
+          "label": "1 / Rate in the exposed / Taylor [2]",
+          "statistic": null,
+          "value": 10.8,
+          "decimals": 1
+        },
+        {
+          "label": "1 / Rate in the exposed / Taylor [3]",
+          "statistic": null,
+          "value": 20.34,
+          "decimals": 2
+        },
+        {
+          "label": "1 / Rate in the unexposed / Taylor [1]",
+          "statistic": null,
+          "value": 6.667,
+          "decimals": 3
+        },
+        {
+          "label": "1 / Rate in the unexposed / Taylor [2]",
+          "statistic": null,
+          "value": 3.615,
+          "decimals": 3
+        },
+        {
+          "label": "1 / Rate in the unexposed / Taylor [3]",
+          "statistic": null,
+          "value": 11.31,
+          "decimals": 2
+        },
+        {
+          "label": "1 / Overall Rate / Taylor [1]",
+          "statistic": null,
+          "value": 11.43,
+          "decimals": 2
+        },
+        {
+          "label": "1 / Overall Rate / Taylor [2]",
+          "statistic": null,
+          "value": 8.627,
+          "decimals": 3
+        },
+        {
+          "label": "1 / Overall Rate / Taylor [3]",
+          "statistic": null,
+          "value": 14.88,
+          "decimals": 2
+        },
+        {
+          "label": "1 / RateRatio / Byar [1]",
+          "statistic": null,
+          "value": 2.25,
+          "decimals": 2
+        },
+        {
+          "label": "1 / RateRatio / Byar [2]",
+          "statistic": null,
+          "value": 1.234,
+          "decimals": 3
+        },
+        {
+          "label": "1 / RateRatio / Byar [3]",
+          "statistic": null,
+          "value": 4.102,
+          "decimals": 3
+        },
+        {
+          "label": "1 / RateDifference / Byar [1]",
+          "statistic": null,
+          "value": 8.333,
+          "decimals": 3
+        },
+        {
+          "label": "1 / RateDifference / Byar [2]",
+          "statistic": null,
+          "value": 2.648,
+          "decimals": 3
+        },
+        {
+          "label": "1 / RateDifference / Byar [3]",
+          "statistic": null,
+          "value": 14.02,
+          "decimals": 2
+        },
+        {
+          "label": "2 / CMLE Rate Ratio* / Mid-P Exact [1]",
+          "statistic": "calc.rate_compare.strata.1.cmle_rr.est",
+          "value": 2.083,
+          "decimals": 3
+        },
+        {
+          "label": "2 / CMLE Rate Ratio* / Mid-P Exact [2]",
+          "statistic": "calc.rate_compare.strata.1.cmle_rr.midp_lower",
+          "value": 1.469,
+          "decimals": 3
+        },
+        {
+          "label": "2 / CMLE Rate Ratio* / Mid-P Exact [3]",
+          "statistic": "calc.rate_compare.strata.1.cmle_rr.midp_upper",
+          "value": 2.963,
+          "decimals": 3
+        },
+        {
+          "label": "2 / Rate in the exposed / Taylor [1]",
+          "statistic": null,
+          "value": 16.67,
+          "decimals": 2
+        },
+        {
+          "label": "2 / Rate in the exposed / Taylor [2]",
+          "statistic": null,
+          "value": 12.99,
+          "decimals": 2
+        },
+        {
+          "label": "2 / Rate in the exposed / Taylor [3]",
+          "statistic": null,
+          "value": 21.1,
+          "decimals": 1
+        },
+        {
+          "label": "2 / Rate in the unexposed / Taylor [1]",
+          "statistic": null,
+          "value": 8,
+          "decimals": 0
+        },
+        {
+          "label": "2 / Rate in the unexposed / Taylor [2]",
+          "statistic": null,
+          "value": 6.039,
+          "decimals": 3
+        },
+        {
+          "label": "2 / Rate in the unexposed / Taylor [3]",
+          "statistic": null,
+          "value": 10.41,
+          "decimals": 2
+        },
+        {
+          "label": "2 / Overall Rate / Taylor [1]",
+          "statistic": null,
+          "value": 11.25,
+          "decimals": 2
+        },
+        {
+          "label": "2 / Overall Rate / Taylor [2]",
+          "statistic": null,
+          "value": 9.373,
+          "decimals": 3
+        },
+        {
+          "label": "2 / Overall Rate / Taylor [3]",
+          "statistic": null,
+          "value": 13.4,
+          "decimals": 1
+        },
+        {
+          "label": "2 / RateRatio / Byar [1]",
+          "statistic": null,
+          "value": 2.083,
+          "decimals": 3
+        },
+        {
+          "label": "2 / RateRatio / Byar [2]",
+          "statistic": null,
+          "value": 1.47,
+          "decimals": 2
+        },
+        {
+          "label": "2 / RateRatio / Byar [3]",
+          "statistic": null,
+          "value": 2.953,
+          "decimals": 3
+        },
+        {
+          "label": "2 / RateDifference / Byar [1]",
+          "statistic": null,
+          "value": 8.667,
+          "decimals": 3
+        },
+        {
+          "label": "2 / RateDifference / Byar [2]",
+          "statistic": null,
+          "value": 4.266,
+          "decimals": 3
+        },
+        {
+          "label": "2 / RateDifference / Byar [3]",
+          "statistic": null,
+          "value": 13.07,
+          "decimals": 2
+        },
+        {
+          "label": "Crude / CMLE Rate Ratio* / Mid-P Exact [1]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.est",
+          "value": 2.08,
+          "decimals": 2
+        },
+        {
+          "label": "Crude / CMLE Rate Ratio* / Mid-P Exact [2]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.midp_lower",
+          "value": 1.548,
+          "decimals": 3
+        },
+        {
+          "label": "Crude / CMLE Rate Ratio* / Mid-P Exact [3]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.midp_upper",
+          "value": 2.807,
+          "decimals": 3
+        },
+        {
+          "label": "Crude / Rate in the exposed / Taylor [1]",
+          "statistic": null,
+          "value": 16,
+          "decimals": 0
+        },
+        {
+          "label": "Crude / Rate in the exposed / Taylor [2]",
+          "statistic": null,
+          "value": 13.18,
+          "decimals": 2
+        },
+        {
+          "label": "Crude / Rate in the exposed / Taylor [3]",
+          "statistic": null,
+          "value": 19.27,
+          "decimals": 2
+        },
+        {
+          "label": "Crude / Rate in the unexposed / Taylor [1]",
+          "statistic": null,
+          "value": 7.692,
+          "decimals": 3
+        },
+        {
+          "label": "Crude / Rate in the unexposed / Taylor [2]",
+          "statistic": null,
+          "value": 5.994,
+          "decimals": 3
+        },
+        {
+          "label": "Crude / Rate in the unexposed / Taylor [3]",
+          "statistic": null,
+          "value": 9.736,
+          "decimals": 3
+        },
+        {
+          "label": "Crude / Overall Rate / Taylor [1]",
+          "statistic": null,
+          "value": 11.3,
+          "decimals": 1
+        },
+        {
+          "label": "Crude / Overall Rate / Taylor [2]",
+          "statistic": null,
+          "value": 9.724,
+          "decimals": 3
+        },
+        {
+          "label": "Crude / Overall Rate / Taylor [3]",
+          "statistic": null,
+          "value": 13.08,
+          "decimals": 2
+        },
+        {
+          "label": "Crude / RateRatio / Byar [1]",
+          "statistic": null,
+          "value": 2.08,
+          "decimals": 2
+        },
+        {
+          "label": "Crude / RateRatio / Byar [2]",
+          "statistic": null,
+          "value": 1.546,
+          "decimals": 3
+        },
+        {
+          "label": "Crude / RateRatio / Byar [3]",
+          "statistic": null,
+          "value": 2.798,
+          "decimals": 3
+        },
+        {
+          "label": "Crude / RateDifference / Byar [1]",
+          "statistic": null,
+          "value": 8.308,
+          "decimals": 3
+        },
+        {
+          "label": "Crude / RateDifference / Byar [2]",
+          "statistic": null,
+          "value": 4.864,
+          "decimals": 3
+        },
+        {
+          "label": "Crude / RateDifference / Byar [3]",
+          "statistic": null,
+          "value": 11.75,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [1]",
+          "statistic": null,
+          "value": 31.95,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [2]",
+          "statistic": null,
+          "value": 19.19,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [3]",
+          "statistic": null,
+          "value": 43.88,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [1]",
+          "statistic": null,
+          "value": 51.92,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [2]",
+          "statistic": null,
+          "value": 35.33,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [3]",
+          "statistic": null,
+          "value": 64.26,
+          "decimals": 2
+        },
+        {
+          "label": "Adjusted / CMLE Rate Ratio* / Mid-P Exact [1]",
+          "statistic": null,
+          "value": 2.125,
+          "decimals": 3
+        },
+        {
+          "label": "Adjusted / CMLE Rate Ratio* / Mid-P Exact [2]",
+          "statistic": null,
+          "value": 1.574,
+          "decimals": 3
+        },
+        {
+          "label": "Adjusted / CMLE Rate Ratio* / Mid-P Exact [3]",
+          "statistic": null,
+          "value": 2.88,
+          "decimals": 2
+        },
+        {
+          "label": "Directly Adjusted RR / Taylor [1]",
+          "statistic": "calc.rate_compare.adjusted.direct_rr.est",
+          "value": 2.124,
+          "decimals": 3
+        },
+        {
+          "label": "Directly Adjusted RR / Taylor [2]",
+          "statistic": "calc.rate_compare.adjusted.direct_rr.lower",
+          "value": 1.571,
+          "decimals": 3
+        },
+        {
+          "label": "Directly Adjusted RR / Taylor [3]",
+          "statistic": "calc.rate_compare.adjusted.direct_rr.upper",
+          "value": 2.872,
+          "decimals": 3
+        },
+        {
+          "label": "MH Adjusted RR / Taylor [1]",
+          "statistic": "calc.rate_compare.adjusted.mh_rr.est",
+          "value": 2.129,
+          "decimals": 3
+        },
+        {
+          "label": "MH Adjusted RR / Taylor [2]",
+          "statistic": "calc.rate_compare.adjusted.mh_rr.lower",
+          "value": 1.574,
+          "decimals": 3
+        },
+        {
+          "label": "MH Adjusted RR / Taylor [3]",
+          "statistic": "calc.rate_compare.adjusted.mh_rr.upper",
+          "value": 2.881,
+          "decimals": 3
+        },
+        {
+          "label": "Directly Adjusted RD / Taylor [1]",
+          "statistic": "calc.rate_compare.adjusted.direct_rd.est",
+          "value": 0.008542,
+          "decimals": 6
+        },
+        {
+          "label": "Directly Adjusted RD / Taylor [2]",
+          "statistic": "calc.rate_compare.adjusted.direct_rd.lower",
+          "value": 0.0050620000000000005,
+          "decimals": 6
+        },
+        {
+          "label": "Directly Adjusted RD / Taylor [3]",
+          "statistic": "calc.rate_compare.adjusted.direct_rd.upper",
+          "value": 0.01202,
+          "decimals": 5
+        },
+        {
+          "label": "Breslow-Day test for interaction of Rate Ratio over strata: / chi square= / p= [1]",
+          "statistic": "calc.rate_compare.adjusted.breslow_day.rr_chisq",
+          "value": 0.03321,
+          "decimals": 5
+        },
+        {
+          "label": "Breslow-Day test for interaction of Rate Ratio over strata: / chi square= / p= [2]",
+          "statistic": "calc.rate_compare.adjusted.breslow_day.rr_p",
+          "value": 0.8554,
+          "decimals": 4
+        },
+        {
+          "label": "Breslow-Day test for interaction of Risk Difference over strata: / chi square= / p= [1]",
+          "statistic": "calc.rate_compare.adjusted.breslow_day.rd_chisq",
+          "value": 0.005817,
+          "decimals": 6
+        },
+        {
+          "label": "Breslow-Day test for interaction of Risk Difference over strata: / chi square= / p= [2]",
+          "statistic": "calc.rate_compare.adjusted.breslow_day.rd_p",
+          "value": 0.9392,
+          "decimals": 4
+        }
+      ]
+    },
+    {
+      "case": "large",
+      "values": [
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 400,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 200,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 600,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 66.7,
+          "decimals": 1
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 33.3,
+          "decimals": 1
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [1]",
+          "statistic": null,
+          "value": 80000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [2]",
+          "statistic": null,
+          "value": 90000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [3]",
+          "statistic": null,
+          "value": 170000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease [1]",
+          "statistic": null,
+          "value": 47.1,
+          "decimals": 1
+        },
+        {
+          "label": "Disease [2]",
+          "statistic": null,
+          "value": 52.9,
+          "decimals": 1
+        },
+        {
+          "label": "Disease [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "z-score [1]",
+          "statistic": null,
+          "value": 9.623,
+          "decimals": 3
+        },
+        {
+          "label": "z-score [2]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "z-score [3]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "Fisher exact [1]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "Fisher exact [2]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "Mid-P exact [1]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "Mid-P exact [2]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [1]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.est",
+          "value": 2.25,
+          "decimals": 2
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [2]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.midp_lower",
+          "value": 1.804,
+          "decimals": 3
+        },
+        {
+          "label": "CMLE Rate Ratio* / Mid-P Exact [3]",
+          "statistic": "calc.rate_compare.crude.cmle_rr.midp_upper",
+          "value": 2.82,
+          "decimals": 2
+        },
+        {
+          "label": "Rate in the exposed / Taylor [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Rate in the exposed / Taylor [2]",
+          "statistic": null,
+          "value": 4.379,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the exposed / Taylor [3]",
+          "statistic": null,
+          "value": 5.681,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [1]",
+          "statistic": null,
+          "value": 2.222,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [2]",
+          "statistic": null,
+          "value": 1.838,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [3]",
+          "statistic": null,
+          "value": 2.66,
+          "decimals": 2
+        },
+        {
+          "label": "Overall Rate / Taylor [1]",
+          "statistic": null,
+          "value": 3.529,
+          "decimals": 3
+        },
+        {
+          "label": "Overall Rate / Taylor [2]",
+          "statistic": null,
+          "value": 3.169,
+          "decimals": 3
+        },
+        {
+          "label": "Overall Rate / Taylor [3]",
+          "statistic": null,
+          "value": 3.918,
+          "decimals": 3
+        },
+        {
+          "label": "RateRatio / Byar [1]",
+          "statistic": null,
+          "value": 2.25,
+          "decimals": 2
+        },
+        {
+          "label": "RateRatio / Byar [2]",
+          "statistic": null,
+          "value": 1.8,
+          "decimals": 1
+        },
+        {
+          "label": "RateRatio / Byar [3]",
+          "statistic": null,
+          "value": 2.812,
+          "decimals": 3
+        },
+        {
+          "label": "RateDifference / Byar [1]",
+          "statistic": null,
+          "value": 2.778,
+          "decimals": 3
+        },
+        {
+          "label": "RateDifference / Byar [2]",
+          "statistic": null,
+          "value": 2.017,
+          "decimals": 3
+        },
+        {
+          "label": "RateDifference / Byar [3]",
+          "statistic": null,
+          "value": 3.538,
+          "decimals": 3
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [1]",
+          "statistic": null,
+          "value": 37.04,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [2]",
+          "statistic": null,
+          "value": 27.35,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [3]",
+          "statistic": null,
+          "value": 46.03,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [1]",
+          "statistic": null,
+          "value": 55.56,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [2]",
+          "statistic": null,
+          "value": 44.45,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [3]",
+          "statistic": null,
+          "value": 64.44,
+          "decimals": 2
+        }
+      ]
+    },
+    {
+      "case": "large_counts",
+      "values": [
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 1000000,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 200000,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 1200000,
+          "decimals": 0
+        },
+        {
+          "label": "Cases [1]",
+          "statistic": null,
+          "value": 83.3,
+          "decimals": 1
+        },
+        {
+          "label": "Cases [2]",
+          "statistic": null,
+          "value": 16.7,
+          "decimals": 1
+        },
+        {
+          "label": "Cases [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [1]",
+          "statistic": null,
+          "value": 4000000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [2]",
+          "statistic": null,
+          "value": 1000000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease / Person-Time [3]",
+          "statistic": null,
+          "value": 5000000,
+          "decimals": 0
+        },
+        {
+          "label": "Disease [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Disease [2]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Disease [3]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "z-score [1]",
+          "statistic": null,
+          "value": 91.29,
+          "decimals": 2
+        },
+        {
+          "label": "z-score [2]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "z-score [3]",
+          "statistic": null,
+          "value": "<0.0000001",
+          "decimals": 7
+        },
+        {
+          "label": "Rate in the exposed / Taylor [1]",
+          "statistic": null,
+          "value": 2.5,
+          "decimals": 1
+        },
+        {
+          "label": "Rate in the exposed / Taylor [2]",
+          "statistic": null,
+          "value": 2.495,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the exposed / Taylor [3]",
+          "statistic": null,
+          "value": 2.505,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [2]",
+          "statistic": null,
+          "value": 1.991,
+          "decimals": 3
+        },
+        {
+          "label": "Rate in the unexposed / Taylor [3]",
+          "statistic": null,
+          "value": 2.009,
+          "decimals": 3
+        },
+        {
+          "label": "Overall Rate / Taylor [1]",
+          "statistic": null,
+          "value": 2.4,
+          "decimals": 1
+        },
+        {
+          "label": "Overall Rate / Taylor [2]",
+          "statistic": null,
+          "value": 2.396,
+          "decimals": 3
+        },
+        {
+          "label": "Overall Rate / Taylor [3]",
+          "statistic": null,
+          "value": 2.404,
+          "decimals": 3
+        },
+        {
+          "label": "RateRatio / Byar [1]",
+          "statistic": null,
+          "value": 1.25,
+          "decimals": 2
+        },
+        {
+          "label": "RateRatio / Byar [2]",
+          "statistic": null,
+          "value": 1.244,
+          "decimals": 3
+        },
+        {
+          "label": "RateRatio / Byar [3]",
+          "statistic": null,
+          "value": 1.256,
+          "decimals": 3
+        },
+        {
+          "label": "RateDifference / Byar [1]",
+          "statistic": null,
+          "value": 0.5,
+          "decimals": 1
+        },
+        {
+          "label": "RateDifference / Byar [2]",
+          "statistic": null,
+          "value": 0.49,
+          "decimals": 2
+        },
+        {
+          "label": "RateDifference / Byar [3]",
+          "statistic": null,
+          "value": 0.51,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [1]",
+          "statistic": null,
+          "value": 16.67,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [2]",
+          "statistic": null,
+          "value": 16.33,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in pop.(EFp) / PEPI [3]",
+          "statistic": null,
+          "value": 17,
+          "decimals": 0
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [1]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [2]",
+          "statistic": null,
+          "value": 19.62,
+          "decimals": 2
+        },
+        {
+          "label": "Etiologic fraction in exposed(EFe) / PEPI [3]",
+          "statistic": null,
+          "value": 20.38,
+          "decimals": 2
+        }
+      ]
+    }
+  ]
+}

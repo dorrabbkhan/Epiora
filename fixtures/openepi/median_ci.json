@@ -1,0 +1,171 @@
+{
+  "calculator": "median_ci",
+  "captured_at": "2026-11-13T12:14:43.521Z",
+  "openepi_url": "https://www.openepi.com/Median/CIMedian.htm",
+  "cases": [
+    {
+      "case": "median",
+      "values": [
+        {
+          "label": "Sample Size [1]",
+          "statistic": null,
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Desired percentile [1]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence Interval (%) [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Normal Approximation [1]",
+          "statistic": "calc.median_ci.normal.lower_rank",
+          "value": 8,
+          "decimals": 0
+        },
+        {
+          "label": "Normal Approximation [2]",
+          "statistic": null,
+          "value": 13,
+          "decimals": 0
+        },
+        {
+          "label": "Normal Approximation [3]",
+          "statistic": "calc.median_ci.normal.upper_rank",
+          "value": 18,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "p25",
+      "values": [
+        {
+          "label": "Sample Size [1]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Desired percentile [1]",
+          "statistic": null,
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence Interval (%) [1]",
+          "statistic": null,
+          "value": 90,
+          "decimals": 0
+        },
+        {
+          "label": "Normal Approximation [1]",
+          "statistic": "calc.median_ci.normal.lower_rank",
+          "value": 18,
+          "decimals": 0
+        },
+        {
+          "label": "Normal Approximation [2]",
+          "statistic": null,
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Normal Approximation [3]",
+          "statistic": "calc.median_ci.normal.upper_rank",
+          "value": 33,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "boundary",
+      "values": [
+        {
+          "label": "Sample Size [1]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Desired percentile [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence Interval (%) [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Normal Approximation [1]",
+          "statistic": "calc.median_ci.normal.lower_rank",
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "Normal Approximation [2]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Normal Approximation [3]",
+          "statistic": "calc.median_ci.normal.upper_rank",
+          "value": 5,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "large",
+      "values": [
+        {
+          "label": "Sample Size [1]",
+          "statistic": null,
+          "value": 5000,
+          "decimals": 0
+        },
+        {
+          "label": "Desired percentile [1]",
+          "statistic": null,
+          "value": 75,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence Interval (%) [1]",
+          "statistic": null,
+          "value": 99,
+          "decimals": 0
+        },
+        {
+          "label": "Normal Approximation [1]",
+          "statistic": "calc.median_ci.normal.lower_rank",
+          "value": 3671,
+          "decimals": 0
+        },
+        {
+          "label": "Normal Approximation [2]",
+          "statistic": null,
+          "value": 3750,
+          "decimals": 0
+        },
+        {
+          "label": "Normal Approximation [3]",
+          "statistic": "calc.median_ci.normal.upper_rank",
+          "value": 3830,
+          "decimals": 0
+        }
+      ]
+    }
+  ]
+}

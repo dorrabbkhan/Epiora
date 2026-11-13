@@ -1,0 +1,220 @@
+{
+  "calculator": "ss_mean_difference",
+  "captured_at": "2026-11-13T12:17:03.400Z",
+  "openepi_url": "https://www.openepi.com/SampleSize/SSMean.htm",
+  "cases": [
+    {
+      "case": "textbook",
+      "values": [
+        {
+          "label": "Confidence Interval (2-sided) [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Power [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Ratio of sample size (Group 2/Group 1) [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Mean [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Standard deviation [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Standard deviation [2]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Variance [1]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Variance [2]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Sample size of Group 1 [1]",
+          "statistic": "calc.ss_mean_difference.n1",
+          "value": 63,
+          "decimals": 0
+        },
+        {
+          "label": "Sample size of Group 2 [1]",
+          "statistic": "calc.ss_mean_difference.n2",
+          "value": 63,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size [1]",
+          "statistic": "calc.ss_mean_difference.total",
+          "value": 126,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "small_effect",
+      "values": [
+        {
+          "label": "Confidence Interval (2-sided) [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Power [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Ratio of sample size (Group 2/Group 1) [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Mean [1]",
+          "statistic": null,
+          "value": 0.5,
+          "decimals": 1
+        },
+        {
+          "label": "Standard deviation [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Standard deviation [2]",
+          "statistic": null,
+          "value": 12,
+          "decimals": 0
+        },
+        {
+          "label": "Variance [1]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Variance [2]",
+          "statistic": null,
+          "value": 144,
+          "decimals": 0
+        },
+        {
+          "label": "Sample size of Group 1 [1]",
+          "statistic": "calc.ss_mean_difference.n1",
+          "value": 7660,
+          "decimals": 0
+        },
+        {
+          "label": "Sample size of Group 2 [1]",
+          "statistic": "calc.ss_mean_difference.n2",
+          "value": 7660,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size [1]",
+          "statistic": "calc.ss_mean_difference.total",
+          "value": 15320,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "high_power",
+      "values": [
+        {
+          "label": "Confidence Interval (2-sided) [1]",
+          "statistic": null,
+          "value": 99,
+          "decimals": 0
+        },
+        {
+          "label": "Power [1]",
+          "statistic": null,
+          "value": 99,
+          "decimals": 0
+        },
+        {
+          "label": "Ratio of sample size (Group 2/Group 1) [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Mean [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Standard deviation [1]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Standard deviation [2]",
+          "statistic": null,
+          "value": 12,
+          "decimals": 0
+        },
+        {
+          "label": "Variance [1]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Variance [2]",
+          "statistic": null,
+          "value": 144,
+          "decimals": 0
+        },
+        {
+          "label": "Sample size of Group 1 [1]",
+          "statistic": "calc.ss_mean_difference.n1",
+          "value": 46,
+          "decimals": 0
+        },
+        {
+          "label": "Sample size of Group 2 [1]",
+          "statistic": "calc.ss_mean_difference.n2",
+          "value": 92,
+          "decimals": 0
+        },
+        {
+          "label": "Total sample size [1]",
+          "statistic": "calc.ss_mean_difference.total",
+          "value": 138,
+          "decimals": 0
+        }
+      ]
+    }
+  ]
+}

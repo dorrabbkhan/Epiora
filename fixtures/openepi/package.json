@@ -1,0 +1,9 @@
+{
+  "name": "epiora-openepi-capture",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Playwright capture of OpenEpi displayed values for fixtures/openepi/ (v1.0 Task 3). Run only by .github/workflows/openepi.yml.",
+  "devDependencies": {
+    "playwright": "1.65.0"
+  }
+}

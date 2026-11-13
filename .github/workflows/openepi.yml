@@ -1,0 +1,88 @@
+name: openepi
+
+# v1.0 Task 3 (spec §9): capture OpenEpi's displayed values for the cases in
+# fixtures/openepi/cases.json with Playwright (Chromium, one page at a time,
+# >=2 s between cases), write fixtures/openepi/<calculator>.json and fail on
+# any drift of the committed reference output.
+#
+# When this workflow is changed and a runner capture is needed before it
+# exists on the default branch, a temporary `push` trigger is added only for
+# the duration of that run and removed before the PR is final, per the v0.2
+# Task 3 (ei7.yml) precedent in docs/decisions.md.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 7 1 * *' # monthly, 1st 07:00 UTC
+
+env:
+  NODE_VERSION: '22.23.4'
+
+jobs:
+  openepi:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install capture tooling (npm ci, lockfile-pinned)
+        working-directory: fixtures/openepi
+        run: npm ci
+
+      - name: Install Chromium for Playwright
+        working-directory: fixtures/openepi
+        run: npx playwright install --with-deps chromium
+
+      - name: Unit-test capture logic (parser, emissions, compare)
+        working-directory: fixtures/openepi
+        run: node --test capture.test.mjs
+
+      - name: Validate cases.json offline
+        working-directory: fixtures/openepi
+        run: node capture.mjs --dry-run
+
+      - name: Capture OpenEpi displayed values
+        working-directory: fixtures/openepi
+        run: node capture.mjs
+
+      - name: Install validator tooling (npm ci, lockfile-pinned)
+        working-directory: fixtures/tools
+        run: npm ci
+
+      - name: Validate output against openepi.schema.json
+        shell: bash
+        run: |
+          set -u
+          fail=0
+          for f in fixtures/openepi/*.json; do
+            case "$f" in
+              */cases.json|*/labels.json|*/package.json|*/package-lock.json) continue ;;
+            esac
+            fixtures/tools/node_modules/.bin/ajv validate \
+              -s fixtures/schema/openepi.schema.json -d "$f" || fail=1
+          done
+          [ "$fail" -eq 0 ]
+
+      - name: Upload openepi-output artifact
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: openepi-output
+          path: |
+            fixtures/openepi/*.json
+            !fixtures/openepi/cases.json
+            !fixtures/openepi/labels.json
+            !fixtures/openepi/package.json
+            !fixtures/openepi/package-lock.json
+          include-hidden-files: false
+
+      - name: No drift in fixtures/openepi
+        shell: bash
+        run: |
+          git diff --exit-code fixtures/openepi
+          # New output files (untracked) are drift too.
+          test -z "$(git status --porcelain fixtures/openepi)"

@@ -1,0 +1,579 @@
+{
+  "calculator": "t_test_summary",
+  "captured_at": "2026-11-13T12:15:08.812Z",
+  "openepi_url": "https://www.openepi.com/Mean/t_testMean.htm",
+  "cases": [
+    {
+      "case": "textbook",
+      "values": [
+        {
+          "label": "Two-sided confidence interval [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Group-1 [1]",
+          "statistic": null,
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Group-1 [2]",
+          "statistic": null,
+          "value": 10.5,
+          "decimals": 1
+        },
+        {
+          "label": "Group-1 [3]",
+          "statistic": null,
+          "value": 2.5,
+          "decimals": 1
+        },
+        {
+          "label": "Group-2 [1]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Group-2 [2]",
+          "statistic": null,
+          "value": 8.5,
+          "decimals": 1
+        },
+        {
+          "label": "Group-2 [3]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Equal variance [1]",
+          "statistic": "calc.t_test_summary.pooled.t",
+          "value": 2.65214,
+          "decimals": 5
+        },
+        {
+          "label": "Equal variance [2]",
+          "statistic": "calc.t_test_summary.pooled.df",
+          "value": 53,
+          "decimals": 0
+        },
+        {
+          "label": "Equal variance [3]",
+          "statistic": "calc.t_test_summary.pooled.p_2t",
+          "value": 0.01053,
+          "decimals": 5
+        },
+        {
+          "label": "Equal variance [4]",
+          "statistic": "calc.t_test_summary.pooled.diff",
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Equal variance [5]",
+          "statistic": "calc.t_test_summary.pooled.lower",
+          "value": 0.487456,
+          "decimals": 6
+        },
+        {
+          "label": "Equal variance [6]",
+          "statistic": "calc.t_test_summary.pooled.upper",
+          "value": 3.51254,
+          "decimals": 5
+        },
+        {
+          "label": "Unequal variance [1]",
+          "statistic": "calc.t_test_summary.welch.t",
+          "value": 2.6968,
+          "decimals": 4
+        },
+        {
+          "label": "Unequal variance [2]",
+          "statistic": "calc.t_test_summary.welch.df",
+          "value": 53,
+          "decimals": 0
+        },
+        {
+          "label": "Unequal variance [3]",
+          "statistic": "calc.t_test_summary.welch.p_2t",
+          "value": 0.009365,
+          "decimals": 6
+        },
+        {
+          "label": "Unequal variance [4]",
+          "statistic": "calc.t_test_summary.welch.diff",
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Unequal variance [5]",
+          "statistic": "calc.t_test_summary.welch.lower",
+          "value": 0.512504,
+          "decimals": 6
+        },
+        {
+          "label": "Unequal variance [6]",
+          "statistic": "calc.t_test_summary.welch.upper",
+          "value": 3.4875,
+          "decimals": 4
+        },
+        {
+          "label": "Test for equality of variance2 [1]",
+          "statistic": null,
+          "value": 1.44,
+          "decimals": 2
+        },
+        {
+          "label": "Test for equality of variance2 [2]",
+          "statistic": null,
+          "value": 29,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance2 [3]",
+          "statistic": null,
+          "value": 24,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance2 [4]",
+          "statistic": null,
+          "value": 0.3652,
+          "decimals": 4
+        }
+      ]
+    },
+    {
+      "case": "equal_n",
+      "values": [
+        {
+          "label": "Two-sided confidence interval [1]",
+          "statistic": null,
+          "value": 99,
+          "decimals": 0
+        },
+        {
+          "label": "Group-1 [1]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Group-1 [2]",
+          "statistic": null,
+          "value": 100,
+          "decimals": 0
+        },
+        {
+          "label": "Group-1 [3]",
+          "statistic": null,
+          "value": 10,
+          "decimals": 0
+        },
+        {
+          "label": "Group-2 [1]",
+          "statistic": null,
+          "value": 20,
+          "decimals": 0
+        },
+        {
+          "label": "Group-2 [2]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Group-2 [3]",
+          "statistic": null,
+          "value": 12,
+          "decimals": 0
+        },
+        {
+          "label": "Equal variance [1]",
+          "statistic": "calc.t_test_summary.pooled.t",
+          "value": 1.4315,
+          "decimals": 4
+        },
+        {
+          "label": "Equal variance [2]",
+          "statistic": "calc.t_test_summary.pooled.df",
+          "value": 38,
+          "decimals": 0
+        },
+        {
+          "label": "Equal variance [3]",
+          "statistic": "calc.t_test_summary.pooled.p_2t",
+          "value": 0.1605,
+          "decimals": 4
+        },
+        {
+          "label": "Equal variance [4]",
+          "statistic": "calc.t_test_summary.pooled.diff",
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Equal variance [5]",
+          "statistic": "calc.t_test_summary.pooled.lower",
+          "value": -4.47099,
+          "decimals": 5
+        },
+        {
+          "label": "Equal variance [6]",
+          "statistic": "calc.t_test_summary.pooled.upper",
+          "value": 14.471,
+          "decimals": 3
+        },
+        {
+          "label": "Unequal variance [1]",
+          "statistic": "calc.t_test_summary.welch.t",
+          "value": 1.4315,
+          "decimals": 4
+        },
+        {
+          "label": "Unequal variance [2]",
+          "statistic": "calc.t_test_summary.welch.df",
+          "value": 37,
+          "decimals": 0
+        },
+        {
+          "label": "Unequal variance [3]",
+          "statistic": "calc.t_test_summary.welch.p_2t",
+          "value": 0.1607,
+          "decimals": 4
+        },
+        {
+          "label": "Unequal variance [4]",
+          "statistic": "calc.t_test_summary.welch.diff",
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Unequal variance [5]",
+          "statistic": "calc.t_test_summary.welch.lower",
+          "value": -4.48459,
+          "decimals": 5
+        },
+        {
+          "label": "Unequal variance [6]",
+          "statistic": "calc.t_test_summary.welch.upper",
+          "value": 14.4846,
+          "decimals": 4
+        },
+        {
+          "label": "Test for equality of variance2 [1]",
+          "statistic": null,
+          "value": 1.44,
+          "decimals": 2
+        },
+        {
+          "label": "Test for equality of variance2 [2]",
+          "statistic": null,
+          "value": 19,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance2 [3]",
+          "statistic": null,
+          "value": 19,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance2 [4]",
+          "statistic": null,
+          "value": 0.4341,
+          "decimals": 4
+        }
+      ]
+    },
+    {
+      "case": "boundary",
+      "values": [
+        {
+          "label": "Two-sided confidence interval [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Group-1 [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Group-1 [2]",
+          "statistic": null,
+          "value": 10.5,
+          "decimals": 1
+        },
+        {
+          "label": "Group-1 [3]",
+          "statistic": null,
+          "value": 3,
+          "decimals": 0
+        },
+        {
+          "label": "Group-2 [1]",
+          "statistic": null,
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Group-2 [2]",
+          "statistic": null,
+          "value": 8.5,
+          "decimals": 1
+        },
+        {
+          "label": "Group-2 [3]",
+          "statistic": null,
+          "value": 4,
+          "decimals": 0
+        },
+        {
+          "label": "Equal variance [1]",
+          "statistic": "calc.t_test_summary.pooled.t",
+          "value": 0.689701,
+          "decimals": 6
+        },
+        {
+          "label": "Equal variance [2]",
+          "statistic": "calc.t_test_summary.pooled.df",
+          "value": 30,
+          "decimals": 0
+        },
+        {
+          "label": "Equal variance [3]",
+          "statistic": "calc.t_test_summary.pooled.p_2t",
+          "value": 0.4957,
+          "decimals": 4
+        },
+        {
+          "label": "Equal variance [4]",
+          "statistic": "calc.t_test_summary.pooled.diff",
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Equal variance [5]",
+          "statistic": "calc.t_test_summary.pooled.lower",
+          "value": -3.92216,
+          "decimals": 5
+        },
+        {
+          "label": "Equal variance [6]",
+          "statistic": "calc.t_test_summary.pooled.upper",
+          "value": 7.92216,
+          "decimals": 5
+        },
+        {
+          "label": "Unequal variance [1]",
+          "statistic": "calc.t_test_summary.welch.t",
+          "value": 0.891461,
+          "decimals": 6
+        },
+        {
+          "label": "Unequal variance [2]",
+          "statistic": "calc.t_test_summary.welch.df",
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Unequal variance [3]",
+          "statistic": "calc.t_test_summary.welch.p_2t",
+          "value": 0.5365,
+          "decimals": 4
+        },
+        {
+          "label": "Unequal variance [4]",
+          "statistic": "calc.t_test_summary.welch.diff",
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Unequal variance [5]",
+          "statistic": "calc.t_test_summary.welch.lower",
+          "value": -26.5072,
+          "decimals": 4
+        },
+        {
+          "label": "Unequal variance [6]",
+          "statistic": "calc.t_test_summary.welch.upper",
+          "value": 30.5072,
+          "decimals": 4
+        },
+        {
+          "label": "Test for equality of variance2 [1]",
+          "statistic": null,
+          "value": 1.77778,
+          "decimals": 5
+        },
+        {
+          "label": "Test for equality of variance2 [2]",
+          "statistic": null,
+          "value": 29,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance2 [3]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance2 [4]",
+          "statistic": null,
+          "value": 1.08,
+          "decimals": 2
+        }
+      ]
+    },
+    {
+      "case": "large",
+      "values": [
+        {
+          "label": "Two-sided confidence interval [1]",
+          "statistic": null,
+          "value": 99,
+          "decimals": 0
+        },
+        {
+          "label": "Group-1 [1]",
+          "statistic": null,
+          "value": 5000,
+          "decimals": 0
+        },
+        {
+          "label": "Group-1 [2]",
+          "statistic": null,
+          "value": 100.2,
+          "decimals": 1
+        },
+        {
+          "label": "Group-1 [3]",
+          "statistic": null,
+          "value": 15,
+          "decimals": 0
+        },
+        {
+          "label": "Group-2 [1]",
+          "statistic": null,
+          "value": 4500,
+          "decimals": 0
+        },
+        {
+          "label": "Group-2 [2]",
+          "statistic": null,
+          "value": 99.8,
+          "decimals": 1
+        },
+        {
+          "label": "Group-2 [3]",
+          "statistic": null,
+          "value": 16,
+          "decimals": 0
+        },
+        {
+          "label": "Equal variance [1]",
+          "statistic": "calc.t_test_summary.pooled.t",
+          "value": 1.25739,
+          "decimals": 5
+        },
+        {
+          "label": "Equal variance [2]",
+          "statistic": "calc.t_test_summary.pooled.df",
+          "value": 9498,
+          "decimals": 0
+        },
+        {
+          "label": "Equal variance [3]",
+          "statistic": "calc.t_test_summary.pooled.p_2t",
+          "value": 0.2086,
+          "decimals": 4
+        },
+        {
+          "label": "Equal variance [4]",
+          "statistic": "calc.t_test_summary.pooled.diff",
+          "value": 0.4,
+          "decimals": 1
+        },
+        {
+          "label": "Equal variance [5]",
+          "statistic": "calc.t_test_summary.pooled.lower",
+          "value": -0.419584,
+          "decimals": 6
+        },
+        {
+          "label": "Equal variance [6]",
+          "statistic": "calc.t_test_summary.pooled.upper",
+          "value": 1.21958,
+          "decimals": 5
+        },
+        {
+          "label": "Unequal variance [1]",
+          "statistic": "calc.t_test_summary.welch.t",
+          "value": 1.25313,
+          "decimals": 5
+        },
+        {
+          "label": "Unequal variance [2]",
+          "statistic": "calc.t_test_summary.welch.df",
+          "value": 9233,
+          "decimals": 0
+        },
+        {
+          "label": "Unequal variance [3]",
+          "statistic": "calc.t_test_summary.welch.p_2t",
+          "value": 0.2102,
+          "decimals": 4
+        },
+        {
+          "label": "Unequal variance [4]",
+          "statistic": "calc.t_test_summary.welch.diff",
+          "value": 0.4,
+          "decimals": 1
+        },
+        {
+          "label": "Unequal variance [5]",
+          "statistic": "calc.t_test_summary.welch.lower",
+          "value": -0.422369,
+          "decimals": 6
+        },
+        {
+          "label": "Unequal variance [6]",
+          "statistic": "calc.t_test_summary.welch.upper",
+          "value": 1.22237,
+          "decimals": 5
+        },
+        {
+          "label": "Test for equality of variance2 [1]",
+          "statistic": null,
+          "value": 1.13778,
+          "decimals": 5
+        },
+        {
+          "label": "Test for equality of variance2 [2]",
+          "statistic": null,
+          "value": 4499,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance2 [3]",
+          "statistic": null,
+          "value": 4999,
+          "decimals": 0
+        },
+        {
+          "label": "Test for equality of variance2 [4]",
+          "statistic": null,
+          "value": "'?'",
+          "decimals": 0
+        }
+      ]
+    }
+  ]
+}
