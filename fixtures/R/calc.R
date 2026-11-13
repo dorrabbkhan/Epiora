@@ -191,6 +191,45 @@ crude_table <- function(strata) {
   matrix(m, 2, 2)
 }
 
+# Generation-time sanity check (fix round 2): for a stratified
+# two_by_two fixture, the recorded `stratified_cmle` estimate and
+# Fisher limits must agree with stats::mantelhaen.test(exact = TRUE)
+# ($estimate, $conf.int) within 1e-3 relative. Stock finds its
+# exact-CI roots at uniroot's default tolerance
+# (.Machine$double.eps^0.25, ~1.2e-4), so 1e-3 is a sanity bound at
+# stock's own convergence — a conductor-chosen check, not a fixture
+# tolerance; it never changes a fixture value. Stock's every-stratum
+# n >= 2 guard is already enforced by the non-exact call above.
+# Non-finite sides agree only when they are the same kind (the
+# boundary returns 0 / Inf on both).
+check_cmle_exact <- function(arr, conf, cmle, what) {
+  stock <- mantelhaen.test(arr, exact = TRUE, conf.level = conf)
+  kind <- function(v) {
+    if (is.na(v)) "undefined"
+    else if (v == Inf) "inf"
+    else if (v == -Inf) "-inf"
+    else "finite"
+  }
+  for (p in list(
+    list(cmle$est, unname(stock$estimate), "est"),
+    list(cmle$fisher_lower, unname(stock$conf.int[1]),
+         "fisher.lower"),
+    list(cmle$fisher_upper, unname(stock$conf.int[2]),
+         "fisher.upper"))) {
+    port <- p[[1]]; ref <- p[[2]]
+    bad <- if (is.finite(port) && is.finite(ref)) {
+      abs(port - ref) > 1e-3 * abs(ref)
+    } else {
+      kind(port) != kind(ref)
+    }
+    stop_if(bad, sprintf(paste0(
+      "exact-CMLE sanity check failed for %s %s: port=%s ",
+      "mantelhaen.test(exact = TRUE)=%s"), what, p[[3]],
+      format(port, digits = 17), format(ref, digits = 17)))
+  }
+  invisible(TRUE)
+}
+
 two_by_two_expected <- function(strata, conf, id) {
   out <- list(
     strata = lapply(seq_along(strata), function(i)
@@ -216,6 +255,11 @@ two_by_two_expected <- function(strata, conf, id) {
                 paste0(id, ".adjusted.cmle_or.fisher.lower"))
     check_tight(cmle$tight$fisher_upper, cmle$r_default$fisher_upper,
                 paste0(id, ".adjusted.cmle_or.fisher.upper"))
+    # Sanity check against stock's exact CMLE at stock's own
+    # convergence (1e-3 relative; check only — fixture keeps the
+    # tight values).
+    check_cmle_exact(arr, conf / 100, cmle$tight,
+                     paste0(id, ".adjusted.cmle_or"))
     ev_t <- vapply(strata, function(t) t[1, 1], numeric(1))
     n_t <- vapply(strata, function(t) t[1, 1] + t[1, 2], numeric(1))
     ev_c <- vapply(strata, function(t) t[2, 1], numeric(1))

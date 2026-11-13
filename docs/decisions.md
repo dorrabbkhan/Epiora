@@ -2588,23 +2588,53 @@ references read from the live site source and from
   - OpenEpi MIT attribution (copyright + permission notice) added below
     the SPDX line in `fixtures/R/methods/tables.R` and `rates.R`, the
     two files that port `js/MartinStats.js` / PersonTime2 code.
-  - Stratified CMLE cross-check — PENDING, blocked on owner decision:
-    `stratified_cmle`'s Fisher limits do not match
-    `stats::mantelhaen.test(exact = TRUE)$conf.int` within the required
-    1e-6 relative bound because stock finds its exact-CI roots at
-    uniroot's default tolerance. Measured on the `stratified` fixture:
-    est 2.7651727076105361 vs 2.7651730451773968 (1.2e-7 rel, passes);
-    fisher_lower 1.5446268009946689 vs 1.5445617077397695 (4.2e-5 rel);
-    fisher_upper 5.0277823325556676 vs 5.0270823927319812 (1.4e-4 rel).
-    Running the same stock algorithm at `uniroot(tol = 1e-14)` gives
-    2.7651727076105344 / 1.5446268009946791 / 5.0277823325556685 —
-    identical to the port within 7e-15 rel, so the port is correct
-    and the 1e-6 bound is unmeetable against the loose reference. The
+  - Stratified CMLE cross-check — resolved at fix round 2. The 1e-6
+    bound in the round-1 instruction was the conductor's, not a plan
+    or fixture tolerance; it is unmeetable because stock
+    `stats::mantelhaen.test(exact = TRUE)` finds its exact-CI roots
+    with `uniroot`'s default tolerance (`tol` unset, so
+    `.Machine$double.eps^0.25` ~ 1.2e-4). The generation-time check
+    now lives in `calc.R::check_cmle_exact` at 1e-3 relative — a
+    sanity check at stock's own convergence chosen by the conductor,
+    not a fixture tolerance; it never changes a fixture value.
+    Measured on the `stratified` fixture (port vs stock): est
+    2.7651727076105361 vs 2.7651730451773968 (1.2e-7 rel);
+    fisher_lower 1.5446268009946689 vs 1.5445617077397695
+    (4.2e-5 rel); fisher_upper 5.0277823325556676 vs
+    5.0270823927319812 (1.4e-4 rel) — all within 1e-3. The
     `r_default` variant (port run at stock's own uniroot tolerance)
-    also misses the bound (est 1.1e-5, lower 4.7e-5, upper 1.4e-4
-    rel) — the two root-finders converge to different endpoints
-    inside the same loose envelope. The comparison form awaits the
-    owner (STOP reported on PR #64).
+    sits est 1.1e-5, lower 4.7e-5, upper 1.4e-4 rel from stock — the
+    two root-finders land on different endpoints inside the same
+    loose envelope. Against stock's own algorithm re-converged at
+    `tol = 1e-14` the port agrees within 6.8e-15 rel
+    (2.7651727076105344 / 1.5446268009946793 / 5.0277823325556668 vs
+    the port's 2.7651727076105361 / 1.5446268009946689 /
+    5.0277823325556676), produced on R 4.6.2 from the repo root by:
+
+      ```sh
+      Rscript - <<'EOF'
+      source("fixtures/R/methods/tables.R")
+      strata <- list(matrix(c(30, 70, 10, 90), 2, 2, byrow = TRUE),
+                     matrix(c(5, 15, 20, 60), 2, 2, byrow = TRUE),
+                     matrix(c(8, 12, 3, 25), 2, 2, byrow = TRUE))
+      arr <- array(unlist(strata), dim = c(2, 2, 3))
+      # stock's mantelhaen.test with tol = 1e-14 injected into its
+      # six uniroot interval arguments; nothing else changes.
+      src <- capture.output(print(stats::mantelhaen.test))
+      src <- paste(src[!grepl("^<", src)], collapse = "\n")
+      src <- gsub("c\\(0,\\s*1\\)\\)", "c(0, 1), tol = 1e-14)", src)
+      src <- gsub("c\\(\\.Machine\\$double\\.eps,\\s*1\\)\\)",
+                  "c(.Machine$double.eps, 1), tol = 1e-14)", src)
+      f <- eval(parse(text = src))
+      environment(f) <- environment(stats::mantelhaen.test)
+      port <- stratified_cmle(strata, 0.95)$tight
+      t <- f(arr, exact = TRUE)
+      cat(sprintf("%.17g %.17g %.17g\n", unname(t$estimate),
+                  t$conf.int[1], t$conf.int[2]))
+      EOF
+      ```
+
+      Output: `2.7651727076105344 1.5446268009946793 5.0277823325556668`.
   - Fixtures workflow run (green on the round-1 head):
     https://github.com/dorrabbkhan/Epiora/actions/runs/43355570221
 
