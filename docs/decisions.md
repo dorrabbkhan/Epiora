@@ -2545,11 +2545,14 @@ references read from the live site source and from
 - Files outside the Files block: `.github/workflows/fixtures.yml` —
   added `means` to the schema-validation family list and a `calc/<id>`
   depth-2 loop so the new fixture families are actually validated.
-- `fixtures/import/ods_dates/input.ods` embeds host font lists in
-  styles.xml; its committed bytes are the CI environment's output, so the
-  locally regenerated copy (identical except fonts) was not committed.
-  Determinism verified: three consecutive `Rscript fixtures/generate.R`
-  runs produced byte-identical fixtures otherwise.
+- `fixtures/import/ods_dates/input.ods`: the bytes committed by
+  6d26661 carried a foreign host's font list (drift first exposed by this
+  PR's fixtures run — the fixtures workflow had not run since 6d26661).
+  The file was regenerated with the pinned TDF 26.2.6.3 build; the
+  output (git hash 9b3e712) is byte-identical on this host and on the CI
+  runner, so the drift check is green again. Determinism verified: three
+  consecutive `Rscript fixtures/generate.R` runs produced byte-identical
+  fixtures otherwise.
 - Generation: `Rscript fixtures/generate.R` run three times consecutively
   with no drift (`git status --porcelain fixtures/` unchanged after the
   second and third runs, tracked files only).
