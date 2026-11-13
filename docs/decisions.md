@@ -2738,10 +2738,10 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   metadata, pinned in `fixtures/openepi/package-lock.json`; Chromium only.
 - `captured_at` is preserved across reruns so a no-drift rerun is byte-identical (ei7.yml precedent);
   output files are produced only by openepi.yml and are never hand-edited.
-- Notes: `.github/workflows/openepi.yml` carries a temporary `push` trigger on this branch so the
-  workflow can run before it exists on the default branch (v0.2 Task 3 precedent); it is removed
-  before the PR is final, leaving `workflow_dispatch` + a monthly schedule.
-- Producing run: PENDING — filled in with the run URL that produced the committed output.
+- Notes: `.github/workflows/openepi.yml` carried a temporary `push` trigger on this branch so the
+  workflow can run before it existed on the default branch (v0.2 Task 3 precedent); it was removed
+  in the final commit, leaving `workflow_dispatch` + a monthly schedule.
+- Producing run: https://github.com/dorrabbkhan/Epiora/actions/runs/43422756126 (green: capture, schema validation, drift check; output committed byte-for-byte from the run artifact).
 - Files outside the Files block: `.github/workflows/fixtures.yml` (schema-validates the new family
   and excludes `fixtures/openepi` from the generate.R drift check — otherwise regeneration flags a
   family it does not own); `fixtures/openepi/drivers.mjs` (per-page input driving/validation —

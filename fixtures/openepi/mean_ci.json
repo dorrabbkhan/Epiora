@@ -1,0 +1,86 @@
+{
+  "calculator": "mean_ci",
+  "captured_at": "2026-11-13T12:14:18.409Z",
+  "openepi_url": "https://www.openepi.com/Mean/CIMean.htm",
+  "cases": [
+    {
+      "case": "textbook",
+      "values": [
+        {
+          "label": "Sample Mean [1]",
+          "statistic": null,
+          "value": 10.5,
+          "decimals": 1
+        },
+        {
+          "label": "Sample Std. Deviation [1]",
+          "statistic": null,
+          "value": 2.5,
+          "decimals": 1
+        },
+        {
+          "label": "Sample Std. Deviation [2]",
+          "statistic": null,
+          "value": 0.5,
+          "decimals": 1
+        },
+        {
+          "label": "Sample Std. Deviation [3]",
+          "statistic": null,
+          "value": 6.25,
+          "decimals": 2
+        },
+        {
+          "label": "Sample size [1]",
+          "statistic": null,
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Population size [1]",
+          "statistic": null,
+          "value": 999999999,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence Interval [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "z-test [1]",
+          "statistic": "calc.mean_ci.z.lower",
+          "value": 9.52008,
+          "decimals": 5
+        },
+        {
+          "label": "z-test [2]",
+          "statistic": "calc.mean_ci.z.upper",
+          "value": 11.4799,
+          "decimals": 4
+        },
+        {
+          "label": "t-test [1]",
+          "statistic": "calc.mean_ci.t.lower",
+          "value": 9.46804,
+          "decimals": 5
+        },
+        {
+          "label": "t-test [2]",
+          "statistic": "calc.mean_ci.t.upper",
+          "value": 11.532,
+          "decimals": 3
+        }
+      ]
+    },
+    {
+      "case": "se_input",
+      "values": []
+    },
+    {
+      "case": "variance_input",
+      "values": []
+    }
+  ]
+}

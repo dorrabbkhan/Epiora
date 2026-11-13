@@ -1,0 +1,435 @@
+{
+  "calculator": "ss_proportion",
+  "captured_at": "2026-11-13T12:15:59.611Z",
+  "openepi_url": "https://www.openepi.com/SampleSize/SSPropor.htm",
+  "cases": [
+    {
+      "case": "textbook",
+      "values": [
+        {
+          "label": "Population size(for finite population correction factor or fpc)(N): [1]",
+          "statistic": null,
+          "value": 1000000,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence limits as % of 100(absolute +/- %)(d): [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Design effect (for cluster surveys-DEFF): [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 384,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 165,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 90,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 271,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 97,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 471,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 99,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 664,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 99.9,
+          "decimals": 1
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 1082,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 99.99,
+          "decimals": 2
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 1512,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "small_population",
+      "values": [
+        {
+          "label": "Population size(for finite population correction factor or fpc)(N): [1]",
+          "statistic": null,
+          "value": 350,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence limits as % of 100(absolute +/- %)(d): [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Design effect (for cluster surveys-DEFF): [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 184,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 113,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 90,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 153,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 97,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 202,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 99,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 230,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 99.9,
+          "decimals": 1
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 265,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 99.99,
+          "decimals": 2
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 285,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "large",
+      "values": [
+        {
+          "label": "Population size(for finite population correction factor or fpc)(N): [1]",
+          "statistic": null,
+          "value": 10000000,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence limits as % of 100(absolute +/- %)(d): [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Design effect (for cluster surveys-DEFF): [1]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 3457,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 1478,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 90,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 2435,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 97,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 4237,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 99,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 5968,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 99.9,
+          "decimals": 1
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 9736,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 99.99,
+          "decimals": 2
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 13610,
+          "decimals": 0
+        }
+      ]
+    },
+    {
+      "case": "clustered",
+      "values": [
+        {
+          "label": "Population size(for finite population correction factor or fpc)(N): [1]",
+          "statistic": null,
+          "value": 5000,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence limits as % of 100(absolute +/- %)(d): [1]",
+          "statistic": null,
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Design effect (for cluster surveys-DEFF): [1]",
+          "statistic": null,
+          "value": 1.8,
+          "decimals": 1
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 95,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 546,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 80,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 242,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 90,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 392,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 97,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 660,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 99,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 903,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 99.9,
+          "decimals": 1
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 1386,
+          "decimals": 0
+        },
+        {
+          "label": "Confidence [1]",
+          "statistic": null,
+          "value": 99.99,
+          "decimals": 2
+        },
+        {
+          "label": "Confidence [2]",
+          "statistic": null,
+          "value": 1826,
+          "decimals": 0
+        }
+      ]
+    }
+  ]
+}

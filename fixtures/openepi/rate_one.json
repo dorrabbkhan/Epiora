@@ -1,0 +1,256 @@
+{
+  "calculator": "rate_one",
+  "captured_at": "2026-11-13T12:13:08.721Z",
+  "openepi_url": "https://www.openepi.com/PersonTime1/PersonTime1.htm",
+  "cases": [
+    {
+      "case": "textbook",
+      "values": [
+        {
+          "label": "Number of cases: [1]",
+          "statistic": null,
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Person-Time: [1]",
+          "statistic": null,
+          "value": 5000,
+          "decimals": 0
+        },
+        {
+          "label": "Mid-P exact test [1]",
+          "statistic": null,
+          "value": 3.307,
+          "decimals": 3
+        },
+        {
+          "label": "Mid-P exact test [2]",
+          "statistic": "calc.rate_one.ci.midp.lower",
+          "value": 5,
+          "decimals": 0
+        },
+        {
+          "label": "Mid-P exact test [3]",
+          "statistic": "calc.rate_one.ci.midp.upper",
+          "value": 7.272,
+          "decimals": 3
+        },
+        {
+          "label": "Fisher's exact test [1]",
+          "statistic": "calc.rate_one.ci.fisher.lower",
+          "value": 3.236,
+          "decimals": 3
+        },
+        {
+          "label": "Fisher's exact test [2]",
+          "statistic": "calc.rate_one.ci.fisher.upper",
+          "value": 7.381,
+          "decimals": 3
+        },
+        {
+          "label": "Normal approximation [1]",
+          "statistic": "calc.rate_one.ci.normal.lower",
+          "value": 3.04,
+          "decimals": 2
+        },
+        {
+          "label": "Normal approximation [2]",
+          "statistic": "calc.rate_one.ci.normal.upper",
+          "value": 6.96,
+          "decimals": 2
+        },
+        {
+          "label": "Byar approx. Poisson [1]",
+          "statistic": "calc.rate_one.ci.byar.lower",
+          "value": 3.235,
+          "decimals": 3
+        },
+        {
+          "label": "Byar approx. Poisson [2]",
+          "statistic": "calc.rate_one.ci.byar.upper",
+          "value": 7.381,
+          "decimals": 3
+        },
+        {
+          "label": "Rothman/Greenland [1]",
+          "statistic": "calc.rate_one.ci.rothman_greenland.lower",
+          "value": 3.379,
+          "decimals": 3
+        },
+        {
+          "label": "Rothman/Greenland [2]",
+          "statistic": "calc.rate_one.ci.rothman_greenland.upper",
+          "value": 7.399,
+          "decimals": 3
+        }
+      ]
+    },
+    {
+      "case": "boundary",
+      "values": [
+        {
+          "label": "Number of cases: [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Person-Time: [1]",
+          "statistic": null,
+          "value": 1200,
+          "decimals": 0
+        },
+        {
+          "label": "Mid-P exact test [1]",
+          "statistic": null,
+          "value": 0.2794,
+          "decimals": 4
+        },
+        {
+          "label": "Mid-P exact test [2]",
+          "statistic": "calc.rate_one.ci.midp.lower",
+          "value": 1.667,
+          "decimals": 3
+        },
+        {
+          "label": "Mid-P exact test [3]",
+          "statistic": "calc.rate_one.ci.midp.upper",
+          "value": 5.506,
+          "decimals": 3
+        },
+        {
+          "label": "Fisher's exact test [1]",
+          "statistic": "calc.rate_one.ci.fisher.lower",
+          "value": 0.2018,
+          "decimals": 4
+        },
+        {
+          "label": "Fisher's exact test [2]",
+          "statistic": "calc.rate_one.ci.fisher.upper",
+          "value": 6.021,
+          "decimals": 3
+        },
+        {
+          "label": "Normal approximation [1]",
+          "statistic": "calc.rate_one.ci.normal.lower",
+          "value": 0,
+          "decimals": 1
+        },
+        {
+          "label": "Normal approximation [2]",
+          "statistic": "calc.rate_one.ci.normal.upper",
+          "value": 3.976,
+          "decimals": 3
+        },
+        {
+          "label": "Byar approx. Poisson [1]",
+          "statistic": "calc.rate_one.ci.byar.lower",
+          "value": 0.1872,
+          "decimals": 4
+        },
+        {
+          "label": "Byar approx. Poisson [2]",
+          "statistic": "calc.rate_one.ci.byar.upper",
+          "value": 6.017,
+          "decimals": 3
+        },
+        {
+          "label": "Rothman/Greenland [1]",
+          "statistic": "calc.rate_one.ci.rothman_greenland.lower",
+          "value": 0.4169,
+          "decimals": 4
+        },
+        {
+          "label": "Rothman/Greenland [2]",
+          "statistic": "calc.rate_one.ci.rothman_greenland.upper",
+          "value": 6.664,
+          "decimals": 3
+        }
+      ]
+    },
+    {
+      "case": "large",
+      "values": [
+        {
+          "label": "Number of cases: [1]",
+          "statistic": null,
+          "value": 4000,
+          "decimals": 0
+        },
+        {
+          "label": "Person-Time: [1]",
+          "statistic": null,
+          "value": 2000000,
+          "decimals": 0
+        },
+        {
+          "label": "Mid-P exact test [1]",
+          "statistic": null,
+          "value": 1.92,
+          "decimals": 2
+        },
+        {
+          "label": "Mid-P exact test [2]",
+          "statistic": "calc.rate_one.ci.midp.lower",
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Mid-P exact test [3]",
+          "statistic": "calc.rate_one.ci.midp.upper",
+          "value": 2.083,
+          "decimals": 3
+        },
+        {
+          "label": "Fisher's exact test [1]",
+          "statistic": "calc.rate_one.ci.fisher.lower",
+          "value": 1.919,
+          "decimals": 3
+        },
+        {
+          "label": "Fisher's exact test [2]",
+          "statistic": "calc.rate_one.ci.fisher.upper",
+          "value": 2.083,
+          "decimals": 3
+        },
+        {
+          "label": "Normal approximation [1]",
+          "statistic": "calc.rate_one.ci.normal.lower",
+          "value": 1.919,
+          "decimals": 3
+        },
+        {
+          "label": "Normal approximation [2]",
+          "statistic": "calc.rate_one.ci.normal.upper",
+          "value": 2.081,
+          "decimals": 3
+        },
+        {
+          "label": "Byar approx. Poisson [1]",
+          "statistic": "calc.rate_one.ci.byar.lower",
+          "value": 1.919,
+          "decimals": 3
+        },
+        {
+          "label": "Byar approx. Poisson [2]",
+          "statistic": "calc.rate_one.ci.byar.upper",
+          "value": 2.083,
+          "decimals": 3
+        },
+        {
+          "label": "Rothman/Greenland [1]",
+          "statistic": "calc.rate_one.ci.rothman_greenland.lower",
+          "value": 1.92,
+          "decimals": 2
+        },
+        {
+          "label": "Rothman/Greenland [2]",
+          "statistic": "calc.rate_one.ci.rothman_greenland.upper",
+          "value": 2.083,
+          "decimals": 3
+        }
+      ]
+    }
+  ]
+}

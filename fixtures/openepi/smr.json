@@ -1,0 +1,382 @@
+{
+  "calculator": "smr",
+  "captured_at": "2026-11-13T12:12:49.851Z",
+  "openepi_url": "https://www.openepi.com/SMR/SMR.htm",
+  "cases": [
+    {
+      "case": "textbook",
+      "values": [
+        {
+          "label": "Observed number of cases [1]",
+          "statistic": null,
+          "value": 50,
+          "decimals": 0
+        },
+        {
+          "label": "Expected number of cases [1]",
+          "statistic": null,
+          "value": 36,
+          "decimals": 0
+        },
+        {
+          "label": "Mid-P exact test [1]",
+          "statistic": null,
+          "value": 0.02626,
+          "decimals": 5
+        },
+        {
+          "label": "Fisher exact test [1]",
+          "statistic": null,
+          "value": 0.03124,
+          "decimals": 5
+        },
+        {
+          "label": "Byar approximation [1]",
+          "statistic": "calc.smr.ci.byar.lower",
+          "value": 2.153,
+          "decimals": 3
+        },
+        {
+          "label": "Byar approximation [2]",
+          "statistic": "calc.smr.ci.byar.upper",
+          "value": 0.03131,
+          "decimals": 5
+        },
+        {
+          "label": "Chi-square test [1]",
+          "statistic": "calc.smr.test.chisq_value",
+          "value": 5.444,
+          "decimals": 3
+        },
+        {
+          "label": "Chi-square test [2]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Chi-square test [3]",
+          "statistic": "calc.smr.test.chisq_p",
+          "value": 0.01963,
+          "decimals": 5
+        },
+        {
+          "label": "Mid-P exact test [1]",
+          "statistic": null,
+          "value": 1.042,
+          "decimals": 3
+        },
+        {
+          "label": "Mid-P exact test [2]",
+          "statistic": "calc.smr.ci.midp.lower",
+          "value": 1.389,
+          "decimals": 3
+        },
+        {
+          "label": "Mid-P exact test [3]",
+          "statistic": "calc.smr.ci.midp.upper",
+          "value": 1.816,
+          "decimals": 3
+        },
+        {
+          "label": "Fisher exact test [1]",
+          "statistic": null,
+          "value": 1.031,
+          "decimals": 3
+        },
+        {
+          "label": "Fisher exact test [2]",
+          "statistic": "calc.smr.test.fisher_p",
+          "value": 1.831,
+          "decimals": 3
+        },
+        {
+          "label": "Byar approximation [1]",
+          "statistic": "calc.smr.ci.byar.lower",
+          "value": 1.031,
+          "decimals": 3
+        },
+        {
+          "label": "Byar approximation [2]",
+          "statistic": "calc.smr.ci.byar.upper",
+          "value": 1.831,
+          "decimals": 3
+        },
+        {
+          "label": "Rothman/Greenland method [1]",
+          "statistic": "calc.smr.ci.rothman_greenland.lower",
+          "value": 1.053,
+          "decimals": 3
+        },
+        {
+          "label": "Rothman/Greenland method [2]",
+          "statistic": "calc.smr.ci.rothman_greenland.upper",
+          "value": 1.832,
+          "decimals": 3
+        },
+        {
+          "label": "Ury and Wiggins method [1]",
+          "statistic": "calc.smr.ci.ury_wiggins.lower",
+          "value": 1.032,
+          "decimals": 3
+        },
+        {
+          "label": "Ury and Wiggins method [2]",
+          "statistic": "calc.smr.ci.ury_wiggins.upper",
+          "value": 1.832,
+          "decimals": 3
+        },
+        {
+          "label": "Vandenbroucke method [1]",
+          "statistic": "calc.smr.ci.vandenbroucke.lower",
+          "value": 1.031,
+          "decimals": 3
+        },
+        {
+          "label": "Vandenbroucke method [2]",
+          "statistic": "calc.smr.ci.vandenbroucke.upper",
+          "value": 1.801,
+          "decimals": 3
+        }
+      ]
+    },
+    {
+      "case": "boundary_low",
+      "values": [
+        {
+          "label": "Observed number of cases [1]",
+          "statistic": null,
+          "value": 2,
+          "decimals": 0
+        },
+        {
+          "label": "Expected number of cases [1]",
+          "statistic": null,
+          "value": 4.5,
+          "decimals": 1
+        },
+        {
+          "label": "Mid-P exact test [1]",
+          "statistic": null,
+          "value": 0.2347,
+          "decimals": 4
+        },
+        {
+          "label": "Fisher exact test [1]",
+          "statistic": null,
+          "value": 0.3472,
+          "decimals": 4
+        },
+        {
+          "label": "Byar approximation [1]",
+          "statistic": "calc.smr.ci.byar.lower",
+          "value": 0.9444,
+          "decimals": 4
+        },
+        {
+          "label": "Byar approximation [2]",
+          "statistic": "calc.smr.ci.byar.upper",
+          "value": 0.345,
+          "decimals": 3
+        },
+        {
+          "label": "Chi-square test [1]",
+          "statistic": "calc.smr.test.chisq_value",
+          "value": 1.389,
+          "decimals": 3
+        },
+        {
+          "label": "Chi-square test [2]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Chi-square test [3]",
+          "statistic": "calc.smr.test.chisq_p",
+          "value": 0.2386,
+          "decimals": 4
+        },
+        {
+          "label": "Mid-P exact test [1]",
+          "statistic": null,
+          "value": 0.1084,
+          "decimals": 4
+        },
+        {
+          "label": "Mid-P exact test [2]",
+          "statistic": "calc.smr.ci.midp.lower",
+          "value": 0.4444,
+          "decimals": 4
+        },
+        {
+          "label": "Mid-P exact test [3]",
+          "statistic": "calc.smr.ci.midp.upper",
+          "value": 1.264,
+          "decimals": 3
+        },
+        {
+          "label": "Fisher exact test [1]",
+          "statistic": null,
+          "value": 0.07897,
+          "decimals": 5
+        },
+        {
+          "label": "Fisher exact test [2]",
+          "statistic": "calc.smr.test.fisher_p",
+          "value": 1.399,
+          "decimals": 3
+        },
+        {
+          "label": "Byar approximation [1]",
+          "statistic": "calc.smr.ci.byar.lower",
+          "value": 0.07669,
+          "decimals": 5
+        },
+        {
+          "label": "Byar approximation [2]",
+          "statistic": "calc.smr.ci.byar.upper",
+          "value": 1.397,
+          "decimals": 3
+        },
+        {
+          "label": "Rothman/Greenland method [1]",
+          "statistic": "calc.smr.ci.rothman_greenland.lower",
+          "value": 0.1389,
+          "decimals": 4
+        },
+        {
+          "label": "Rothman/Greenland method [2]",
+          "statistic": "calc.smr.ci.rothman_greenland.upper",
+          "value": 1.422,
+          "decimals": 3
+        },
+        {
+          "label": "Ury and Wiggins method [1]",
+          "statistic": "calc.smr.ci.ury_wiggins.lower",
+          "value": 0.07192,
+          "decimals": 5
+        },
+        {
+          "label": "Ury and Wiggins method [2]",
+          "statistic": "calc.smr.ci.ury_wiggins.upper",
+          "value": 1.35,
+          "decimals": 2
+        }
+      ]
+    },
+    {
+      "case": "large",
+      "values": [
+        {
+          "label": "Observed number of cases [1]",
+          "statistic": null,
+          "value": 500,
+          "decimals": 0
+        },
+        {
+          "label": "Expected number of cases [1]",
+          "statistic": null,
+          "value": 400,
+          "decimals": 0
+        },
+        {
+          "label": "Byar approximation [1]",
+          "statistic": "calc.smr.ci.byar.lower",
+          "value": 4.794,
+          "decimals": 3
+        },
+        {
+          "label": "Byar approximation [2]",
+          "statistic": "calc.smr.ci.byar.upper",
+          "value": 0.001,
+          "decimals": 3
+        },
+        {
+          "label": "Chi-square test [1]",
+          "statistic": "calc.smr.test.chisq_value",
+          "value": 25,
+          "decimals": 0
+        },
+        {
+          "label": "Chi-square test [2]",
+          "statistic": null,
+          "value": 1,
+          "decimals": 0
+        },
+        {
+          "label": "Chi-square test [3]",
+          "statistic": "calc.smr.test.chisq_p",
+          "value": 0.001,
+          "decimals": 3
+        },
+        {
+          "label": "Mid-P exact test [1]",
+          "statistic": null,
+          "value": 1.112,
+          "decimals": 3
+        },
+        {
+          "label": "Mid-P exact test [2]",
+          "statistic": "calc.smr.ci.midp.lower",
+          "value": 1.25,
+          "decimals": 2
+        },
+        {
+          "label": "Mid-P exact test [3]",
+          "statistic": "calc.smr.ci.midp.upper",
+          "value": 1.4,
+          "decimals": 1
+        },
+        {
+          "label": "Fisher exact test [1]",
+          "statistic": null,
+          "value": 1.111,
+          "decimals": 3
+        },
+        {
+          "label": "Fisher exact test [2]",
+          "statistic": "calc.smr.test.fisher_p",
+          "value": 1.401,
+          "decimals": 3
+        },
+        {
+          "label": "Byar approximation [1]",
+          "statistic": "calc.smr.ci.byar.lower",
+          "value": 1.111,
+          "decimals": 3
+        },
+        {
+          "label": "Byar approximation [2]",
+          "statistic": "calc.smr.ci.byar.upper",
+          "value": 1.401,
+          "decimals": 3
+        },
+        {
+          "label": "Rothman/Greenland method [1]",
+          "statistic": "calc.smr.ci.rothman_greenland.lower",
+          "value": 1.114,
+          "decimals": 3
+        },
+        {
+          "label": "Rothman/Greenland method [2]",
+          "statistic": "calc.smr.ci.rothman_greenland.upper",
+          "value": 1.403,
+          "decimals": 3
+        },
+        {
+          "label": "Ury and Wiggins method [1]",
+          "statistic": "calc.smr.ci.ury_wiggins.lower",
+          "value": 1.111,
+          "decimals": 3
+        },
+        {
+          "label": "Ury and Wiggins method [2]",
+          "statistic": "calc.smr.ci.ury_wiggins.upper",
+          "value": 1.401,
+          "decimals": 3
+        }
+      ]
+    }
+  ]
+}
