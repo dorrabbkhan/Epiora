@@ -1280,6 +1280,450 @@
           "key": "stratified_two_by_two.breslow_day_tarone.p_value"
         }
       ]
+    },
+    {
+      "command": "MEANS AGE",
+      "values": [
+        {
+          "label": "Obs",
+          "text": "75.0000",
+          "value": 75,
+          "decimals": 4,
+          "key": "means.overall.observations"
+        },
+        {
+          "label": "Total",
+          "text": "2761.0000",
+          "value": 2761,
+          "decimals": 4,
+          "key": "means.overall.total"
+        },
+        {
+          "label": "Mean",
+          "text": "36.8133",
+          "value": 36.8133,
+          "decimals": 4,
+          "key": "means.overall.mean"
+        },
+        {
+          "label": "Variance",
+          "text": "460.1809",
+          "value": 460.1809,
+          "decimals": 4,
+          "key": "means.overall.variance"
+        },
+        {
+          "label": "Std Dev",
+          "text": "21.4518",
+          "value": 21.4518,
+          "decimals": 4,
+          "key": "means.overall.std_dev"
+        },
+        {
+          "label": "Minimum",
+          "text": "3.0000",
+          "value": 3,
+          "decimals": 4,
+          "key": "means.overall.min"
+        },
+        {
+          "label": "25%",
+          "text": "16.0000",
+          "value": 16,
+          "decimals": 4,
+          "key": "means.overall.p25"
+        },
+        {
+          "label": "Median",
+          "text": "36.0000",
+          "value": 36,
+          "decimals": 4,
+          "key": "means.overall.median"
+        },
+        {
+          "label": "75%",
+          "text": "58.0000",
+          "value": 58,
+          "decimals": 4,
+          "key": "means.overall.p75"
+        },
+        {
+          "label": "Maximum",
+          "text": "77.0000",
+          "value": 77,
+          "decimals": 4,
+          "key": "means.overall.max"
+        },
+        {
+          "label": "Mode",
+          "text": "11.0000",
+          "value": 11,
+          "decimals": 4,
+          "key": "means.overall.mode"
+        }
+      ]
+    },
+    {
+      "command": "MEANS AGE SEX",
+      "values": [
+        {
+          "label": "Female Obs",
+          "text": "44.0000",
+          "value": 44,
+          "decimals": 4,
+          "key": "means.groups[0].observations"
+        },
+        {
+          "label": "Female Total",
+          "text": "1619.0000",
+          "value": 1619,
+          "decimals": 4,
+          "key": "means.groups[0].total"
+        },
+        {
+          "label": "Female Mean",
+          "text": "36.7955",
+          "value": 36.7955,
+          "decimals": 4,
+          "key": "means.groups[0].mean"
+        },
+        {
+          "label": "Female Variance",
+          "text": "385.9339",
+          "value": 385.9339,
+          "decimals": 4,
+          "key": "means.groups[0].variance"
+        },
+        {
+          "label": "Female Std Dev",
+          "text": "19.6452",
+          "value": 19.6452,
+          "decimals": 4,
+          "key": "means.groups[0].std_dev"
+        },
+        {
+          "label": "Male Obs",
+          "text": "31.0000",
+          "value": 31,
+          "decimals": 4,
+          "key": "means.groups[1].observations"
+        },
+        {
+          "label": "Male Total",
+          "text": "1142.0000",
+          "value": 1142,
+          "decimals": 4,
+          "key": "means.groups[1].total"
+        },
+        {
+          "label": "Male Mean",
+          "text": "36.8387",
+          "value": 36.8387,
+          "decimals": 4,
+          "key": "means.groups[1].mean"
+        },
+        {
+          "label": "Male Variance",
+          "text": "581.9398",
+          "value": 581.9398,
+          "decimals": 4,
+          "key": "means.groups[1].variance"
+        },
+        {
+          "label": "Male Std Dev",
+          "text": "24.1234",
+          "value": 24.1234,
+          "decimals": 4,
+          "key": "means.groups[1].std_dev"
+        },
+        {
+          "label": "Female Minimum",
+          "text": "8.0000",
+          "value": 8,
+          "decimals": 4,
+          "key": "means.groups[0].min"
+        },
+        {
+          "label": "Female 25%",
+          "text": "16.5000",
+          "value": 16.5,
+          "decimals": 4,
+          "key": "means.groups[0].p25"
+        },
+        {
+          "label": "Female Median",
+          "text": "35.5000",
+          "value": 35.5,
+          "decimals": 4,
+          "key": "means.groups[0].median"
+        },
+        {
+          "label": "Female 75%",
+          "text": "53.5000",
+          "value": 53.5,
+          "decimals": 4,
+          "key": "means.groups[0].p75"
+        },
+        {
+          "label": "Female Maximum",
+          "text": "72.0000",
+          "value": 72,
+          "decimals": 4,
+          "key": "means.groups[0].max"
+        },
+        {
+          "label": "Female Mode",
+          "text": "35.0000",
+          "value": 35,
+          "decimals": 4,
+          "key": "means.groups[0].mode"
+        },
+        {
+          "label": "Male Minimum",
+          "text": "3.0000",
+          "value": 3,
+          "decimals": 4,
+          "key": "means.groups[1].min"
+        },
+        {
+          "label": "Male 25%",
+          "text": "15.0000",
+          "value": 15,
+          "decimals": 4,
+          "key": "means.groups[1].p25"
+        },
+        {
+          "label": "Male Median",
+          "text": "36.0000",
+          "value": 36,
+          "decimals": 4,
+          "key": "means.groups[1].median"
+        },
+        {
+          "label": "Male 75%",
+          "text": "62.0000",
+          "value": 62,
+          "decimals": 4,
+          "key": "means.groups[1].p75"
+        },
+        {
+          "label": "Male Maximum",
+          "text": "77.0000",
+          "value": 77,
+          "decimals": 4,
+          "key": "means.groups[1].max"
+        },
+        {
+          "label": "Male Mode",
+          "text": "17.0000",
+          "value": 17,
+          "decimals": 4,
+          "key": "means.groups[1].mode"
+        },
+        {
+          "label": "T-Test: Diff (Group 1 - Group 2) Mean",
+          "text": "-0.0433",
+          "value": -0.0433,
+          "decimals": 4,
+          "key": "means.t_test.pooled.diff"
+        },
+        {
+          "label": "T-Test: Diff (Group 1 - Group 2) 95% CL Mean",
+          "text": "-10.1369",
+          "value": -10.1369,
+          "decimals": 4,
+          "key": "means.t_test.pooled.diff_ci_95.lower"
+        },
+        {
+          "label": "T-Test: Diff (Group 1 - Group 2) 95% CL Mean (2)",
+          "text": "10.0504",
+          "value": 10.0504,
+          "decimals": 4,
+          "key": "means.t_test.pooled.diff_ci_95.upper"
+        },
+        {
+          "label": "T-Test: Diff (Group 1 - Group 2) Std Dev",
+          "text": "21.5982",
+          "value": 21.5982,
+          "decimals": 4,
+          "key": null
+        },
+        {
+          "label": "T-Test: Diff (Group 1 - Group 2) Mean (2)",
+          "text": "-0.0433",
+          "value": -0.0433,
+          "decimals": 4,
+          "key": "means.t_test.welch.diff"
+        },
+        {
+          "label": "T-Test: Diff (Group 1 - Group 2) 95% CL Mean (3)",
+          "text": "-10.5528",
+          "value": -10.5528,
+          "decimals": 4,
+          "key": "means.t_test.welch.diff_ci_95.lower"
+        },
+        {
+          "label": "T-Test: Diff (Group 1 - Group 2) 95% CL Mean (4)",
+          "text": "10.4663",
+          "value": 10.4663,
+          "decimals": 4,
+          "key": "means.t_test.welch.diff_ci_95.upper"
+        },
+        {
+          "label": "T-Test: Pooled DF",
+          "text": "73",
+          "value": 73,
+          "decimals": 0,
+          "key": "means.t_test.pooled.df"
+        },
+        {
+          "label": "T-Test: Pooled t Value",
+          "text": "-0.01",
+          "value": -0.01,
+          "decimals": 2,
+          "key": "means.t_test.pooled.t"
+        },
+        {
+          "label": "T-Test: Pooled Pr > |t|",
+          "text": "0.9932",
+          "value": 0.9932,
+          "decimals": 4,
+          "key": "means.t_test.pooled.p_value"
+        },
+        {
+          "label": "T-Test: Satterthwaite DF",
+          "text": "56.05",
+          "value": 56.05,
+          "decimals": 2,
+          "key": "means.t_test.welch.df"
+        },
+        {
+          "label": "T-Test: Satterthwaite t Value",
+          "text": "-0.01",
+          "value": -0.01,
+          "decimals": 2,
+          "key": "means.t_test.welch.t"
+        },
+        {
+          "label": "T-Test: Satterthwaite Pr > |t|",
+          "text": "0.9935",
+          "value": 0.9935,
+          "decimals": 4,
+          "key": "means.t_test.welch.p_value"
+        },
+        {
+          "label": "ANOVA, a Parametric Test for Inequality of Population Means: Between SS",
+          "text": "0.03403",
+          "value": 0.03403,
+          "decimals": 5,
+          "key": "means.anova.ss_between"
+        },
+        {
+          "label": "ANOVA, a Parametric Test for Inequality of Population Means: Between df",
+          "text": "1",
+          "value": 1,
+          "decimals": 0,
+          "key": "means.anova.df_between"
+        },
+        {
+          "label": "ANOVA, a Parametric Test for Inequality of Population Means: Between MS",
+          "text": "0.03403",
+          "value": 0.03403,
+          "decimals": 5,
+          "key": "means.anova.ms_between"
+        },
+        {
+          "label": "ANOVA, a Parametric Test for Inequality of Population Means: Between F statistic",
+          "text": "0.00007",
+          "value": 0.00007,
+          "decimals": 5,
+          "key": "means.anova.f"
+        },
+        {
+          "label": "ANOVA, a Parametric Test for Inequality of Population Means: Within SS",
+          "text": "34053.35264",
+          "value": 34053.35264,
+          "decimals": 5,
+          "key": "means.anova.ss_within"
+        },
+        {
+          "label": "ANOVA, a Parametric Test for Inequality of Population Means: Within df",
+          "text": "73",
+          "value": 73,
+          "decimals": 0,
+          "key": "means.anova.df_within"
+        },
+        {
+          "label": "ANOVA, a Parametric Test for Inequality of Population Means: Within MS",
+          "text": "466.48428",
+          "value": 466.48428,
+          "decimals": 5,
+          "key": "means.anova.ms_within"
+        },
+        {
+          "label": "ANOVA, a Parametric Test for Inequality of Population Means: Total SS",
+          "text": "34053.38667",
+          "value": 34053.38667,
+          "decimals": 5,
+          "key": "means.anova.ss_total"
+        },
+        {
+          "label": "ANOVA, a Parametric Test for Inequality of Population Means: Total df",
+          "text": "74",
+          "value": 74,
+          "decimals": 0,
+          "key": "means.anova.df_total"
+        },
+        {
+          "label": "ANOVA, a Parametric Test for Inequality of Population Means: P-value",
+          "text": "0.99321",
+          "value": 0.99321,
+          "decimals": 5,
+          "key": "means.anova.p_value"
+        },
+        {
+          "label": "Bartlett's Test for Inequality of Population Variances: Bartlett's chi square",
+          "text": "1.49534",
+          "value": 1.49534,
+          "decimals": 5,
+          "key": "means.bartlett.statistic"
+        },
+        {
+          "label": "Bartlett's Test for Inequality of Population Variances: df",
+          "text": "1",
+          "value": 1,
+          "decimals": 0,
+          "key": "means.bartlett.df"
+        },
+        {
+          "label": "Bartlett's Test for Inequality of Population Variances: P value",
+          "text": "0.22139",
+          "value": 0.22139,
+          "decimals": 5,
+          "key": "means.bartlett.p_value"
+        },
+        {
+          "label": "Mann-Whitney/Wilcoxon Two-Sample Test (Kruskal-Wallis test for two groups): Kruskal-Wallis H (equivalent to Chi square)",
+          "text": "0.0005",
+          "value": 0.0005,
+          "decimals": 4,
+          "key": "means.kruskal_wallis.h"
+        },
+        {
+          "label": "Mann-Whitney/Wilcoxon Two-Sample Test (Kruskal-Wallis test for two groups): Degrees of freedom",
+          "text": "1",
+          "value": 1,
+          "decimals": 0,
+          "key": "means.kruskal_wallis.df"
+        },
+        {
+          "label": "Mann-Whitney/Wilcoxon Two-Sample Test (Kruskal-Wallis test for two groups): P value",
+          "text": "0.9828",
+          "value": 0.9828,
+          "decimals": 4,
+          "key": "means.kruskal_wallis.p_value"
+        }
+      ]
     }
   ]
 }
