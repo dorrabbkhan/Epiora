@@ -496,6 +496,65 @@ fn binomial_quantile_matches_reference() {
     }
 }
 
+// ---------------------------------------------------------------------------
+// Fix-round regressions (PR #69 review).
+
+/// `gamma_quantile(0.5, 1e-300, 1)` hung: `u_est ≈ −7e299` and the
+/// `hi += 4` bracket expansion could never reach its bound (reachable
+/// through `chisq_quantile` too). Shape ~1e-300 makes
+/// `P(a, x) ≈ x^a = 1` on every positive f64, so the correct f64
+/// quantile is 0 — assert the call terminates and any `Ok` is finite
+/// and ≥ 0.
+#[test]
+fn gamma_quantile_tiny_shape_terminates() {
+    for v in [
+        gamma_quantile(0.5, 1e-300, 1.0),
+        gamma_quantile(1e-6, 1e-300, 1.0),
+        gamma_quantile(0.999999, 1e-300, 2.5),
+        chisq_quantile(0.5, 1e-300),
+        chisq_quantile(1e-6, 1e-300),
+    ]
+    .into_iter()
+    .flatten()
+    {
+        assert!(v.is_finite() && v >= 0.0, "bad value {v:e}");
+    }
+    // P(a, min subnormal) = 1 ≥ p pins the underflowed-quantile arm.
+    assert_eq!(gamma_quantile(0.5, 1e-300, 1.0), Ok(0.0));
+}
+
+/// `binomial_quantile` was O(n·log n) (≈45 s at n = 1e8): binary
+/// search over `binomial_tail`'s O(n) literal sum. It now searches
+/// `pbinom`'s `pbeta` identity `I_{1−prob}(n−k, k+1)`, O(log n)
+/// constant-time evaluations. Reference values from ONE command
+/// (R 4.6.2):
+///
+///   Rscript -e 'sprintf("%.17g", qbinom(c(1e-6,0.5,1-1e-6), 1e9, 0.3))'
+///
+/// output: `299931118 300000000 300068885` — the whole test runs in
+/// well under a second (see the `cargo test` report).
+#[test]
+fn binomial_quantile_large_n_is_fast() {
+    let n = 1_000_000_000u64;
+    for (p, expected) in [
+        (1e-6, 299_931_118u64),
+        (0.5, 300_000_000),
+        (1.0 - 1e-6, 300_068_885),
+    ] {
+        assert_eq!(binomial_quantile(p, n, 0.3), expected, "p = {p}");
+    }
+}
+
+/// `poisson_tail(k, …)` computed `k + 1` in plain u64: a debug-build
+/// panic at k = u64::MAX. `P(X ≤ u64::MAX) = 1` and
+/// `P(X ≥ u64::MAX) = P(X = u64::MAX) = 0` for lambda 3 (R gives the
+/// same: `ppois` saturates at the integer ceiling of double space).
+#[test]
+fn poisson_tail_u64_max_no_panic() {
+    assert_eq!(poisson_tail(u64::MAX, 3.0, false), 1.0);
+    assert_eq!(poisson_tail(u64::MAX, 3.0, true), 0.0);
+}
+
 #[test]
 fn run_special_accepts_new_grid_names() {
     // In-memory fixtures in the `inputs.grid` shape

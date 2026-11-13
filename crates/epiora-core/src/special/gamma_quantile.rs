@@ -22,26 +22,51 @@ pub fn gamma_quantile(p: f64, shape: f64, scale: f64) -> Result<f64, RootError> 
     {
         return Err(RootError::NotBracketed);
     }
+    // For shape ≲ 1e-300, P(a, x) ≈ x^a ≈ 1 on every positive f64
+    // (a·ln x → 0): the quantile is smaller than the smallest
+    // subnormal, and its f64 value is 0. Returning here also keeps the
+    // expansions below finite — u_est ≈ −1e300 would need ~1e300
+    // steps to reach its bound otherwise.
+    if reg_inc_gamma_lower(shape, f64::from_bits(1)) >= p {
+        return Ok(0.0);
+    }
     // Solve in v = u − u_est so the root sits near 0: brent_root's
     // absolute 1e-14 tolerance is unreachable where |u| ≳ 45 (the ulp
     // alone is wider), while in v-space it gives ~1e-14 relative on y.
     let u_est = (libm::log(p) + ln_gamma(shape + 1.0)) / shape;
+    if !u_est.is_finite() {
+        return Err(RootError::NotBracketed);
+    }
     let f = |v: f64| reg_inc_gamma_lower(shape, libm::exp(u_est + v)) - p;
-    // f(−745) = −p < 0 always (exp underflows past it, P → 0), so the
-    // lower bracket always exists unless the root itself underflows.
+    // Each expansion doubles so a huge |u_est| is still reached in
+    // ~1024 steps — linear steps could never terminate. f increases
+    // with v, so on a bound crossing the bound point itself decides
+    // whether a representable bracket exists.
     let mut lo = -4.0f64;
     while f(lo) >= 0.0 {
-        lo -= 8.0;
-        if u_est + lo < -745.0 {
-            return Err(RootError::NotBracketed);
+        let next = lo * 2.0;
+        if u_est + next < -745.0 {
+            let v_min = -745.0 - u_est;
+            if f(v_min) >= 0.0 {
+                return Err(RootError::NotBracketed);
+            }
+            lo = v_min;
+            break;
         }
+        lo = next;
     }
     let mut hi = 4.0f64;
     while f(hi) <= 0.0 {
-        hi += 4.0;
-        if u_est + hi > 709.0 {
-            return Err(RootError::NotBracketed);
+        let next = hi * 2.0;
+        if u_est + next > 709.0 {
+            let v_max = 709.0 - u_est;
+            if f(v_max) <= 0.0 {
+                return Err(RootError::NotBracketed);
+            }
+            hi = v_max;
+            break;
         }
+        hi = next;
     }
     brent_root(f, lo, hi).map(|v| libm::exp(u_est + v) * scale)
 }

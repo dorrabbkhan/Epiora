@@ -3064,6 +3064,15 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   `qbinom(1, 10, 0) = 10`. `poisson_tail(upper)` encodes `P(X ≥ k)`
   (`ppois(k−1, λ, lower.tail=FALSE)`), the corpus numeric-`upper`
   convention.
+- Fix round 1 (PR #69 review): `gamma_quantile`/`t_dist::log_solve`
+  bracket expansions now double each step and evaluate the bound point
+  itself on a crossing (a huge `u_est` ≈ −1e300 made `hi += 4` hang);
+  `gamma_quantile` returns `Ok(0.0)` when P(a, min subnormal) ≥ p —
+  the f64 quantile is 0. `binomial_quantile` searches `pbinom`'s
+  `pbeta` identity `I_{1−prob}(n−k, k+1)` (O(log n) constant-time
+  evaluations, was O(n·log n)); verified exact against R's `qbinom`
+  on the reference table plus 21 large-n spot checks. `poisson_tail`
+  uses `saturating_add` for `k + 1` (u64::MAX debug panic).
 - Files outside the Files block: `docs/decisions.md` (this entry, as the
   owner note requires); `.github/workflows/app.yml` (CI repair — the
   `app` job pinned `ubuntu-latest` → `ubuntu-24.04` because

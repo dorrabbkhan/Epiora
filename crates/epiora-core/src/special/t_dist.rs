@@ -82,22 +82,35 @@ fn log_solve(a: f64, b: f64, q: f64) -> Result<f64, RootError> {
     // gamma_quantile.rs: brent_root's absolute tolerance is
     // unreachable where |u| ≳ 45).
     let u_est = (libm::log(q) + ln_gamma(a + 1.0) + ln_gamma(b) - ln_gamma(a + b)) / a;
+    if !u_est.is_finite() {
+        return Err(RootError::NotBracketed);
+    }
     let f = |v: f64| reg_inc_beta(libm::exp(u_est + v), a, b) - q;
+    // Expansions double each step so a huge |u_est| (df → 0 gives
+    // u_est ≈ −1e300) is still reached in ~1024 steps — linear steps
+    // could never terminate (see gamma_quantile.rs).
     let mut lo = -4.0f64;
     while f(lo) >= 0.0 {
-        lo -= 8.0;
-        if u_est + lo < -745.0 {
-            return Err(RootError::NotBracketed);
+        let next = lo * 2.0;
+        if u_est + next < -745.0 {
+            let v_min = -745.0 - u_est;
+            if f(v_min) >= 0.0 {
+                return Err(RootError::NotBracketed);
+            }
+            lo = v_min;
+            break;
         }
+        lo = next;
     }
     let mut hi = 4.0f64;
     while f(hi) <= 0.0 {
-        hi += 4.0;
-        if u_est + hi > 0.0 {
+        let next = hi * 2.0;
+        if u_est + next > 0.0 {
             // u = 0 gives I_1(a, b) = 1 > q — always the upper bracket.
             hi = -u_est;
             break;
         }
+        hi = next;
     }
     brent_root(f, lo, hi).map(|v| libm::exp(u_est + v))
 }
