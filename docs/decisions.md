@@ -3202,3 +3202,41 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   $ node ei7_vs_r.mjs /tmp/ei7fix/oswego_new.json /tmp/ei7fix
   59 agree / 0 disagree of 59 mapped leaves (3 null-mapped)
   ```
+
+  The shortened script (fixture files extracted to `/tmp/ei7fix/` via
+  `git show origin/v1.0/task-2-means-quartiles-and-names:<path>`;
+  `oswego_new.json` is the committed `oswego.json` — verified
+  byte-identical to the green run's artifact):
+
+  ```js
+  import { readFileSync } from 'node:fs';
+  const oswego = JSON.parse(readFileSync(process.argv[2] ?? 'fixtures/ei7/oswego.json', 'utf8'));
+  const fxDir = process.argv[3] ?? 'fixtures/means';
+  const fx = {
+    'MEANS AGE': JSON.parse(readFileSync(`${fxDir}/means_oswego_age.json`, 'utf8')),
+    'MEANS AGE SEX': JSON.parse(readFileSync(`${fxDir}/means_oswego_age_sex.json`, 'utf8')),
+  };
+  function rValue(key, exp) {
+    const parts = key.replace(/^means\./, '').split('.');
+    let o = exp;
+    for (const p of parts) {
+      const m = /^groups\[(\d+)\]$/.exec(p);
+      o = m ? o?.groups?.[+m[1]] : o?.[p];
+    }
+    return o?.value;
+  }
+  let agree = 0, disagree = 0, unmapped = 0;
+  for (const out of oswego.outputs) {
+    if (!out.command.startsWith('MEANS')) continue;
+    const exp = fx[out.command].expected;
+    for (const v of out.values) {
+      if (!v.key) { unmapped++; continue; }
+      const r = rValue(v.key, exp);
+      const tol = 0.5 * 10 ** -v.decimals;
+      const d = Math.abs(v.value - r);
+      if (d <= tol) agree++;
+      else { disagree++; console.log(`DISAGREE ${v.key}: EI7 ${v.text} vs R ${r} (|d|=${d.toExponential(3)}, tol=${tol})`); }
+    }
+  }
+  console.log(`${agree} agree / ${disagree} disagree of ${agree + disagree} mapped leaves (${unmapped} null-mapped)`);
+  ```
