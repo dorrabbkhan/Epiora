@@ -120,8 +120,11 @@ test('parses_means_blocks', () => {
   check(outputs[1], `${tt} 95% CL Mean (2)`, '10.0504', 10.0504, 4, 'means.t_test.pooled.diff_ci_95.upper');
   check(outputs[1], `${tt} Std Dev`, '21.5982', 21.5982, 4, null);
   check(outputs[1], `${tt} Mean (2)`, '-0.0433', -0.0433, 4, 'means.t_test.welch.diff');
-  check(outputs[1], `${tt} 95% CL Mean (3)`, '-10.5528', -10.5528, 4, 'means.t_test.welch.diff_ci_95.lower');
-  check(outputs[1], `${tt} 95% CL Mean (4)`, '10.4663', 10.4663, 4, 'means.t_test.welch.diff_ci_95.upper');
+  // Owner decision (PR #67): EI7 interpolates the Welch t critical value
+  // between floor/ceil of the Satterthwaite df, so its CLs differ from the
+  // engine's exact Welch CI — the two labels stay parsed but unmapped.
+  check(outputs[1], `${tt} 95% CL Mean (3)`, '-10.5528', -10.5528, 4, null);
+  check(outputs[1], `${tt} 95% CL Mean (4)`, '10.4663', 10.4663, 4, null);
   check(outputs[1], 'T-Test: Pooled DF', '73', 73, 0, 'means.t_test.pooled.df');
   check(outputs[1], 'T-Test: Pooled t Value', '-0.01', -0.01, 2, 'means.t_test.pooled.t');
   check(outputs[1], 'T-Test: Pooled Pr > |t|', '0.9932', 0.9932, 4, 'means.t_test.pooled.p_value');
@@ -153,8 +156,8 @@ test('parses_means_blocks', () => {
   check(outputs[1], `${kw}: Degrees of freedom`, '1', 1, 0, 'means.kruskal_wallis.df');
   check(outputs[1], `${kw}: P value`, '0.9828', 0.9828, 4, 'means.kruskal_wallis.p_value');
 
-  // Nothing unmapped besides the pooled Std Dev line; no "colN" or
-  // caption-leaking labels.
+  // Nothing unmapped besides the pooled Std Dev line and the two Welch CL
+  // cells; no "colN" or caption-leaking labels.
   for (const out of outputs) {
     for (const v of out.values) {
       assert.ok(!/\bcol\d+$/.test(v.label), `fallback label ${v.label}`);
@@ -163,7 +166,7 @@ test('parses_means_blocks', () => {
     }
   }
   const unmapped = outputs[1].values.filter(v => v.key === null).map(v => v.label);
-  assert.deepEqual(unmapped, [`${tt} Std Dev`]);
+  assert.deepEqual(unmapped, [`${tt} Std Dev`, `${tt} 95% CL Mean (3)`, `${tt} 95% CL Mean (4)`]);
 });
 
 test('unmapped label keeps key null', () => {
