@@ -2707,7 +2707,9 @@ references read from the live site source and from
     `main` with the same `paths` filter as `pull_request`; nothing
     else in the workflow changed.
   - Fixtures workflow run (green on the round-3 head):
-    <to be linked once CI is green>
+    https://github.com/dorrabbkhan/Epiora/actions/runs/43412250457
+    (6m41s — regenerate fixtures, schema validation, Epi Info 7
+    parser tests, no drift after regeneration)
 
 ### G8 — Roadmap review from user signals (2026-11-13)
 Decision: owner accepted every proposed roadmap change, including v1.0. v1.0 gains Tasks 22 (engine assumption
