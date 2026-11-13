@@ -2768,7 +2768,11 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
 - Notes: `.github/workflows/openepi.yml` carried a temporary `push` trigger on this branch so the
   workflow can run before it existed on the default branch (v0.2 Task 3 precedent); it was removed
   in the final commit, leaving `workflow_dispatch` + a monthly schedule.
-- Producing run: https://github.com/dorrabbkhan/Epiora/actions/runs/43422756126 (green: capture, schema validation, drift check; output committed byte-for-byte from the run artifact).
+- Producing runs: https://github.com/dorrabbkhan/Epiora/actions/runs/43439924337 (round-1
+  regeneration — artifact committed byte-for-byte; the run itself stopped at schema validation,
+  which exposed and fixed the negative-decimals/`value` union schema gaps) and
+  https://github.com/dorrabbkhan/Epiora/actions/runs/43441647872 (green: capture, schema
+  validation, drift check — regenerated output byte-identical to the committed reference).
 - Files outside the Files block: `.github/workflows/fixtures.yml` (schema-validates the new family
   and excludes `fixtures/openepi` from the generate.R drift check — otherwise regeneration flags a
   family it does not own); `fixtures/openepi/drivers.mjs` (per-page input driving/validation —
