@@ -2554,3 +2554,16 @@ references read from the live site source and from
   with no drift (`git status --porcelain fixtures/` unchanged after the
   second and third runs, tracked files only).
 - Fixtures workflow run: PENDING (added on PR).
+
+### G8 — Roadmap review from user signals (2026-11-13)
+Decision: owner accepted every proposed roadmap change, including v1.0. v1.0 gains Tasks 22 (engine assumption
+notes, OWNER REVIEW of rules), 23 ("which calculator?" guide, notes on cards and in explain) and 24 (public
+validation page); Task 11 depends on 22; Task 21 on 23 and 24 and applies only v1.0 spec §14 items 3–4. Phase 1
+reordered: v1.1 Epi Info projects + data management; v1.2 regression, DAG helper (D11), read-only
+REDCap/Kobo/ODK bridge, SAS/Stata scripts (D10); v1.3 forms and entry with phone entry and file merge; v1.4
+dashboards and maps; v1.5 survival, complex samples, growth; v1.6 reports, R package, fr/es/pt, polish (parity).
+v2.2 full connectors; v3.3 adds causal and latent-variable methods; v4.4 audits the validation dossier (public
+from v1.0). First pilot: an FETP or health department with legacy Epi Info data. The open decisions on earlier
+phone collection and earlier fr/es/pt are answered by v1.3 and v1.6.
+Evidence: docs/research/d9-competitor-scan.md, "User signals" (r/epidemiology thread, pasted by the owner).
+Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 content.
