@@ -2484,3 +2484,73 @@ references read from the live site source and from
   ch. 5) and variable per-set ratios excluded (a 2×(M+1) set table cannot
   express mixed M; neither reference tool has it). Calculator counts are
   unchanged: 1:n adds outputs under the existing `matched_case_control` id.
+### v1.0 Task 2 — R corpus v3
+
+- Scope shipped: `fixtures/R/methods/*.R` (nine files, SPDX MIT header, plain
+  side-effect-free functions), `fixtures/R/means.R`, `fixtures/R/calc.R`,
+  MEANS datasets and fixtures, calculator fixtures, `generate.R` source
+  order, `renv.lock`, fixture schema. No `crates/`, `app/` or `spikes/`
+  file touched; `fixtures/R/special.R` and `fixtures/special/*` untouched.
+- Deferred: the seven special.* grids (owner decision 2026-11-13, conductor
+  escalation) — they land in a fixture-only PR sequenced with Task 5.
+- Fixture counts: `fixtures/means/` 10 fixtures (ungrouped, grouped,
+  include_missing, ties, one-obs group, constant, all-missing, dates,
+  Oswego AGE, Oswego AGE×SEX) over 6 new `means_*.dataset.json` datasets
+  plus `oswego`; `fixtures/calc/` 65 fixtures over 23 calculators (every
+  calculator in `docs/v1.0-calculators.md` except `random_numbers`, which
+  has no R reference — spec §5.2): proportion 5, two_by_two 5, two_by_n 3,
+  r_by_c 3, dose_response 2, matched_case_control 4, screening 3, smr 4,
+  binomial 3, poisson 3, rate_one 3, rate_compare 2, mean_ci 3, median_ci
+  2, t_test_summary 2, anova_summary 2, ss_proportion 2, ss_unmatched_cc 3,
+  ss_cohort 4, ss_mean_difference 1, power_unmatched_cc 2, power_cohort 3,
+  power_mean_difference 1. Each calculator carries at least a textbook,
+  boundary/zero-cell and large or option-variant case; every input-option
+  combination in the inventory is covered (`sd_or` ×3 for mean_ci, the
+  four ss_cohort alternates, the three power_cohort designs, conf-level
+  variants 90/95/97/99).
+- R versions (renv.lock): `exactci` 1.4-5, `exact2x2` 1.7.0, `PropCIs`
+  0.3-0, `epitools` 0.5-10.1, `epiR` 3.0.0, `DescTools` 0.99.60,
+  `survival` 3.8-12, R 4.6.2.
+- Methods files and literature (header comment in each): `proportion.R`
+  — Wilson score + FPC (Cochran 1977 §2.8), Fleiss score CC; `tables.R` —
+  Rothman & Greenland direct pooling, Breslow & Day 1980, OR/risk
+  etiologic fractions (Kahn/Sempos), stratified CMLE OR (Martin & Austin
+  1991/1996, `MartinStats.js` port); `dose_response.R` — extended MH trend
+  (Rosner 5th ed. p.606 CC; Schlesselman 1982 p.203 uncorrected);
+  `matched.R` — pair OR b/c Taylor CI; `screening.R` — diagnostic odds
+  (Simel et al. 1991 log method), entropy/bias/level LRs
+  (DiagnosticTest.js); `poisson.R` — Byar (Rothman & Boice 1979),
+  Rothman & Greenland, Ury–Wiggins 1985, Vandenbroucke 1982; `rates.R` —
+  RD Byar, CMLE RR (Martin & Austin 1996), PEPI etiologic fractions
+  (Abramson & Gahlinger), Breslow–Day rates 1987; `means.R` — mean CI
+  with FPC, Conover percentile-rank CI, ANOVA/Bartlett from summary;
+  `sample_size.R` — Kelsey et al. Table 12-15, Fleiss 3.18–3.19, Lwanga &
+  Lemeshow (OpenEpi + EI7 population-survey forms), power z ±CC.
+- MEANS conventions: quartiles are EI7's Tukey hinges (`fivenum()` — no
+  single `quantile(type)` reproduces hinges for all n); mode is the
+  smallest value among tied modes (EI7 `cDataSetHelper.cs`); dates are
+  days since 1970-01-01 including negatives; a one-observation group
+  emits undefined variance/std_dev (null leaves); "(missing)" is the last
+  group when `include_missing` is true.
+- API notes recorded for the engine tasks: `epiR` 3.0.0 emits no
+  prevented-fraction or per-group-risk outputs, so `etiologic.*` and
+  `etiologic_or.*` come from `fixtures/R/methods/tables.R` (OpenEpi
+  TwobyTwo.js formulas) and `risk.*` uses a Taylor proportion CI scaled
+  ×100, matching `epiR::epi.2by2`'s percent units; `risk_difference` is
+  `epi.2by2 ARisk.strata.wald` (percent). `epitools::rate2by2.test`
+  returns only wald/midp p-values; `zscore.{value,p_1t}` uses the same
+  z statistic it computes internally. Stock `mantelhaen.test` cannot run
+  on K = 1, so single-table MH uses the corpus's existing `mh_2x2xk`
+  port (bit-for-bit checked wherever the stock function runs).
+- Files outside the Files block: `.github/workflows/fixtures.yml` —
+  added `means` to the schema-validation family list and a `calc/<id>`
+  depth-2 loop so the new fixture families are actually validated.
+- `fixtures/import/ods_dates/input.ods` embeds host font lists in
+  styles.xml; its committed bytes are the CI environment's output, so the
+  locally regenerated copy (identical except fonts) was not committed.
+  Determinism verified: three consecutive `Rscript fixtures/generate.R`
+  runs produced byte-identical fixtures otherwise.
+- Generation: `Rscript fixtures/generate.R` run three times consecutively
+  with no drift (`git status --porcelain fixtures/` unchanged after the
+  second and third runs, tracked files only).
+- Fixtures workflow run: PENDING (added on PR).

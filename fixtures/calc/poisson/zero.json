@@ -1,0 +1,42 @@
+{
+  "id": "zero",
+  "procedure": "calc.poisson",
+  "inputs": {
+    "observed": 0,
+    "expected": 5
+  },
+  "expected": {
+    "tail": {
+      "lt": {
+        "value": 0,
+        "class": "closed_form"
+      },
+      "le": {
+        "value": 0.006737946999085467,
+        "class": "closed_form"
+      },
+      "ge": {
+        "value": 1,
+        "class": "closed_form"
+      },
+      "gt": {
+        "value": 0.99326205300091452,
+        "class": "closed_form"
+      },
+      "eq": {
+        "value": 0.006737946999085467,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

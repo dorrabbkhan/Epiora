@@ -1,0 +1,102 @@
+{
+  "id": "textbook",
+  "procedure": "calc.proportion",
+  "inputs": {
+    "numerator": 10,
+    "denominator": 45,
+    "conf_level": 95,
+    "multiplier": 100,
+    "population_size": 1000000,
+    "compare_with": 50
+  },
+  "expected": {
+    "estimate": {
+      "value": 0.22222222222222221,
+      "class": "closed_form"
+    },
+    "ci": {
+      "midp": {
+        "lower": {
+          "value": 0.1187942289623059,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": 0.36046834429037772,
+          "class": "iterative"
+        }
+      },
+      "clopper_pearson": {
+        "lower": {
+          "value": 0.11204593887713502,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": 0.37088755259948791,
+          "class": "iterative"
+        }
+      },
+      "wald": {
+        "lower": {
+          "value": 0.10075381338436194,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.34369063106008246,
+          "class": "closed_form"
+        }
+      },
+      "agresti_coull": {
+        "lower": {
+          "value": 0.12360743584222662,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.36453234123160022,
+          "class": "closed_form"
+        }
+      },
+      "wilson": {
+        "lower": {
+          "value": 0.12540000000000001,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.36270000000000002,
+          "class": "closed_form"
+        }
+      },
+      "score_cc": {
+        "lower": {
+          "value": 0.11714866806503677,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.3747637063507227,
+          "class": "closed_form"
+        }
+      }
+    },
+    "ztest": {
+      "z": {
+        "value": -3.7267799624996494,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.00019394162910371939,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "exactci": "1.4.5",
+      "PropCIs": "0.3.0"
+    }
+  }
+}

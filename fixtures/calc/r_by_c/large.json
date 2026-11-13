@@ -1,0 +1,52 @@
+{
+  "id": "large",
+  "procedure": "calc.r_by_c",
+  "inputs": {
+    "table": [
+      [200, 150, 400, 300],
+      [50, 350, 600, 100]
+    ]
+  },
+  "expected": {
+    "chisq": {
+      "value": {
+        "value": 309.00432900432895,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 3,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 1.1191377938631632e-66,
+        "class": "closed_form"
+      }
+    },
+    "expected_lt5": {
+      "count": {
+        "value": 0,
+        "class": "closed_form"
+      },
+      "percent": {
+        "value": 0,
+        "class": "closed_form"
+      }
+    },
+    "expected_lt1": {
+      "count": {
+        "value": 0,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

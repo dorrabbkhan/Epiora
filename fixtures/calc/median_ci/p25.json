@@ -1,0 +1,31 @@
+{
+  "id": "p25",
+  "procedure": "calc.median_ci",
+  "inputs": {
+    "n": 100,
+    "percentile": 25,
+    "conf_level": 90
+  },
+  "expected": {
+    "normal": {
+      "lower_rank": {
+        "value": 17.877574867765269,
+        "class": "closed_form"
+      },
+      "upper_rank": {
+        "value": 32.122425132234731,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

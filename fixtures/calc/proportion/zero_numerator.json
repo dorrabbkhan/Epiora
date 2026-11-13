@@ -1,0 +1,91 @@
+{
+  "id": "zero_numerator",
+  "procedure": "calc.proportion",
+  "inputs": {
+    "numerator": 0,
+    "denominator": 40,
+    "conf_level": 95,
+    "multiplier": 100,
+    "population_size": 1000000
+  },
+  "expected": {
+    "estimate": {
+      "value": 0,
+      "class": "closed_form"
+    },
+    "ci": {
+      "midp": {
+        "lower": {
+          "value": 0,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": 0.072130803572336713,
+          "class": "iterative"
+        }
+      },
+      "clopper_pearson": {
+        "lower": {
+          "value": 0,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": 0.088097302878802353,
+          "class": "iterative"
+        }
+      },
+      "wald": {
+        "lower": {
+          "value": 0,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0,
+          "class": "closed_form"
+        }
+      },
+      "agresti_coull": {
+        "lower": {
+          "value": 0,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.10439621800024657,
+          "class": "closed_form"
+        }
+      },
+      "wilson": {
+        "lower": {
+          "value": 0,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.087599999999999997,
+          "class": "closed_form"
+        }
+      },
+      "score_cc": {
+        "lower": {
+          "value": 0,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.10912467352644779,
+          "class": "closed_form"
+        }
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "exactci": "1.4.5",
+      "PropCIs": "0.3.0"
+    }
+  }
+}

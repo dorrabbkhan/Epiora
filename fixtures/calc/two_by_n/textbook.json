@@ -1,0 +1,262 @@
+{
+  "id": "textbook",
+  "procedure": "calc.two_by_n",
+  "inputs": {
+    "strata": [
+      [
+        [10, 11],
+        [4, 20]
+      ]
+    ],
+    "conf_level": 95
+  },
+  "expected": {
+    "strata": [
+      {
+        "odds_ratio": {
+          "est": {
+            "value": 4.5454545454545459,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 1.1512874401098563,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 17.94613256861544,
+            "class": "closed_form"
+          }
+        },
+        "odds_ratio_mle": {
+          "midp": {
+            "est": {
+              "value": 4.3844504276675327,
+              "class": "iterative"
+            },
+            "lower": {
+              "value": 1.1288228372696991,
+              "class": "iterative"
+            },
+            "upper": {
+              "value": 19.597105140350799,
+              "class": "iterative"
+            }
+          },
+          "fisher": {
+            "lower": {
+              "value": 0.97689056718195399,
+              "class": "iterative"
+            },
+            "upper": {
+              "value": 23.925125948670971,
+              "class": "iterative"
+            }
+          }
+        },
+        "risk_ratio": {
+          "est": {
+            "value": 2.8571428571428572,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 1.0502842250082249,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 7.7724344627365216,
+            "class": "closed_form"
+          }
+        },
+        "risk_difference": {
+          "est": {
+            "value": 30.952380952380953,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 4.9026943503618083,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 57.002067554400092,
+            "class": "closed_form"
+          }
+        },
+        "chisq": {
+          "uncorrected": {
+            "value": {
+              "value": 5.0065832784726787,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 0.025251096826807994,
+              "class": "closed_form"
+            }
+          },
+          "mantel": {
+            "value": {
+              "value": 4.8953258722843982,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 0.026929490641891211,
+              "class": "closed_form"
+            }
+          },
+          "yates": {
+            "value": {
+              "value": 3.6665260862409479,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 0.055515780967647137,
+              "class": "closed_form"
+            }
+          }
+        },
+        "exact": {
+          "midp_2t": {
+            "value": 0.032048668066818942,
+            "class": "iterative"
+          },
+          "fisher_1t": {
+            "value": 0.027254424021298629,
+            "class": "iterative"
+          },
+          "fisher_2t": {
+            "value": 0.050878161201473759,
+            "class": "iterative"
+          }
+        }
+      }
+    ],
+    "crude": {
+      "odds_ratio": {
+        "est": {
+          "value": 4.5454545454545459,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 1.1512874401098563,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 17.94613256861544,
+          "class": "closed_form"
+        }
+      },
+      "odds_ratio_mle": {
+        "midp": {
+          "est": {
+            "value": 4.3844504276675327,
+            "class": "iterative"
+          },
+          "lower": {
+            "value": 1.1288228372696991,
+            "class": "iterative"
+          },
+          "upper": {
+            "value": 19.597105140350799,
+            "class": "iterative"
+          }
+        },
+        "fisher": {
+          "lower": {
+            "value": 0.97689056718195399,
+            "class": "iterative"
+          },
+          "upper": {
+            "value": 23.925125948670971,
+            "class": "iterative"
+          }
+        }
+      },
+      "risk_ratio": {
+        "est": {
+          "value": 2.8571428571428572,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 1.0502842250082249,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 7.7724344627365216,
+          "class": "closed_form"
+        }
+      },
+      "risk_difference": {
+        "est": {
+          "value": 30.952380952380953,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 4.9026943503618083,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 57.002067554400092,
+          "class": "closed_form"
+        }
+      },
+      "chisq": {
+        "uncorrected": {
+          "value": {
+            "value": 5.0065832784726787,
+            "class": "closed_form"
+          },
+          "p_2t": {
+            "value": 0.025251096826807994,
+            "class": "closed_form"
+          }
+        },
+        "mantel": {
+          "value": {
+            "value": 4.8953258722843982,
+            "class": "closed_form"
+          },
+          "p_2t": {
+            "value": 0.026929490641891211,
+            "class": "closed_form"
+          }
+        },
+        "yates": {
+          "value": {
+            "value": 3.6665260862409479,
+            "class": "closed_form"
+          },
+          "p_2t": {
+            "value": 0.055515780967647137,
+            "class": "closed_form"
+          }
+        }
+      },
+      "exact": {
+        "midp_2t": {
+          "value": 0.032048668066818942,
+          "class": "iterative"
+        },
+        "fisher_1t": {
+          "value": 0.027254424021298629,
+          "class": "iterative"
+        },
+        "fisher_2t": {
+          "value": 0.050878161201473759,
+          "class": "iterative"
+        }
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "epitools": "0.5.10.1",
+      "exact2x2": "1.7.0",
+      "epiR": "3.0.0"
+    }
+  }
+}

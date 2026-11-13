@@ -1,0 +1,104 @@
+{
+  "id": "few_discordant",
+  "procedure": "calc.matched_case_control",
+  "inputs": {
+    "controls_per_case": 1,
+    "matched_sets": [
+      [15, 4],
+      [2, 20]
+    ],
+    "conf_level": 95
+  },
+  "expected": {
+    "mcnemar": {
+      "value": {
+        "value": 0.66666666666666663,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.4142161782425251,
+        "class": "closed_form"
+      }
+    },
+    "mcnemar_cc": {
+      "value": {
+        "value": 0.16666666666666666,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.68309139830960874,
+        "class": "closed_form"
+      }
+    },
+    "or": {
+      "est": {
+        "value": 2,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": 0.36632607732814543,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 10.919233566921045,
+        "class": "closed_form"
+      }
+    },
+    "cmle_or": {
+      "midp": {
+        "est": {
+          "value": 1.9999999999999998,
+          "class": "iterative"
+        },
+        "lower": {
+          "value": 0.35479193520727609,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": 15.605880551041858,
+          "class": "iterative"
+        }
+      },
+      "fisher": {
+        "lower": {
+          "value": 0.28663383547821625,
+          "class": "iterative"
+        },
+        "upper": {
+          "value": 22.109702433803527,
+          "class": "iterative"
+        }
+      }
+    },
+    "exact": {
+      "midp_p": {
+        "value": 0.45312500000000011,
+        "class": "iterative"
+      },
+      "fisher_p_1t": {
+        "value": 0.34374999999999994,
+        "class": "iterative"
+      },
+      "fisher_p_2t": {
+        "value": 0.68749999999999989,
+        "class": "iterative"
+      }
+    },
+    "discordant_pairs": {
+      "value": 6,
+      "class": "closed_form"
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "exact2x2": "1.7.0",
+      "survival": "3.8.12"
+    }
+  }
+}

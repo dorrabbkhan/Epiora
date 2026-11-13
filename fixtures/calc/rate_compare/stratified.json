@@ -1,0 +1,624 @@
+{
+  "id": "stratified",
+  "procedure": "calc.rate_compare",
+  "inputs": {
+    "strata": [
+      [
+        [30, 10],
+        [2000, 1500]
+      ],
+      [
+        [50, 40],
+        [3000, 5000]
+      ]
+    ],
+    "per_unit": 10000,
+    "conf_level": 90
+  },
+  "expected": {
+    "strata": [
+      {
+        "zscore": {
+          "value": {
+            "value": 2.2821773229381921,
+            "class": "closed_form"
+          },
+          "p_1t": {
+            "value": 0.01123943668306264,
+            "class": "closed_form"
+          },
+          "p_2t": {
+            "value": 0.022478873366125279,
+            "class": "closed_form"
+          }
+        },
+        "rate": {
+          "exposed": {
+            "est": {
+              "value": 150,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 104.95382823622457,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 195.04617176377542,
+              "class": "closed_form"
+            }
+          },
+          "unexposed": {
+            "est": {
+              "value": 66.666666666666671,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 31.990107474962862,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 101.34322585837049,
+              "class": "closed_form"
+            }
+          },
+          "overall": {
+            "est": {
+              "value": 114.28571428571429,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 84.562949264253874,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 144.0084793071747,
+              "class": "closed_form"
+            }
+          }
+        },
+        "rate_ratio": {
+          "est": {
+            "value": 0.44444444444444448,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 0.42016295144225696,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 0.47012918087966543,
+            "class": "closed_form"
+          }
+        },
+        "rate_difference": {
+          "est": {
+            "value": 83.333333333333314,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 26.485982049854012,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 140.18068461681261,
+            "class": "closed_form"
+          }
+        },
+        "cmle_rr": {
+          "est": {
+            "value": 2.2500000000000058,
+            "class": "iterative",
+            "r_default": 2.2499999999999996
+          },
+          "midp_lower": {
+            "value": 1.2480711926003609,
+            "class": "iterative",
+            "r_default": 1.2480736384184621
+          },
+          "midp_upper": {
+            "value": 4.2253182861394141,
+            "class": "iterative",
+            "r_default": 4.2253164544544433
+          },
+          "fisher_lower": {
+            "value": 1.1876828780494191,
+            "class": "iterative",
+            "r_default": 1.1876834410647306
+          },
+          "fisher_upper": {
+            "value": 4.5179680909283952,
+            "class": "iterative",
+            "r_default": 4.5179526376891328
+          }
+        },
+        "etiologic": {
+          "efp": {
+            "est": {
+              "value": 41.666666666666664,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 11.797299098294085,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 63.934569411478549,
+              "class": "closed_form"
+            }
+          },
+          "efe": {
+            "est": {
+              "value": 55.55555555555555,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 18.967071780880676,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 75.623383167964491,
+              "class": "closed_form"
+            }
+          },
+          "pfp": {
+            "est": {
+              "value": -71.428571428571416,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -177.27382806245217,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": -13.375212978388419,
+              "class": "closed_form"
+            }
+          },
+          "pfe": {
+            "est": {
+              "value": -124.99999999999996,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -310.22919910929136,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": -23.406622712179725,
+              "class": "closed_form"
+            }
+          }
+        }
+      },
+      {
+        "zscore": {
+          "value": {
+            "value": 3.5381518506868126,
+            "class": "closed_form"
+          },
+          "p_1t": {
+            "value": 0.00020146912963128064,
+            "class": "closed_form"
+          },
+          "p_2t": {
+            "value": 0.00040293825926256127,
+            "class": "closed_form"
+          }
+        },
+        "rate": {
+          "exposed": {
+            "est": {
+              "value": 166.66666666666666,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 127.89709487744423,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 205.43623845588911,
+              "class": "closed_form"
+            }
+          },
+          "unexposed": {
+            "est": {
+              "value": 80,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 59.194064484977716,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 100.80593551502228,
+              "class": "closed_form"
+            }
+          },
+          "overall": {
+            "est": {
+              "value": 112.5,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 92.994435454666601,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 132.00556454533339,
+              "class": "closed_form"
+            }
+          }
+        },
+        "rate_ratio": {
+          "est": {
+            "value": 0.47999999999999998,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 0.46210855754915664,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 0.49858414486403724,
+            "class": "closed_form"
+          }
+        },
+        "rate_difference": {
+          "est": {
+            "value": 86.666666666666657,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 42.667045652674524,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 130.6662876806588,
+            "class": "closed_form"
+          }
+        },
+        "cmle_rr": {
+          "est": {
+            "value": 2.0833333333333335,
+            "class": "iterative",
+            "r_default": 2.0833333333333335
+          },
+          "midp_lower": {
+            "value": 1.4690759403682572,
+            "class": "iterative",
+            "r_default": 1.4690759640532836
+          },
+          "midp_upper": {
+            "value": 2.9630578238861371,
+            "class": "iterative",
+            "r_default": 2.9630625820872853
+          },
+          "fisher_lower": {
+            "value": 1.4395750425629512,
+            "class": "iterative",
+            "r_default": 1.439575533959272
+          },
+          "fisher_upper": {
+            "value": 3.0262177853874954,
+            "class": "iterative",
+            "r_default": 3.0262196946134825
+          }
+        },
+        "etiologic": {
+          "efp": {
+            "est": {
+              "value": 28.888888888888886,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 14.975319194514769,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 42.278497558077881,
+              "class": "closed_form"
+            }
+          },
+          "efe": {
+            "est": {
+              "value": 52,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": 31.957864226040662,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": 66.138629045183905,
+              "class": "closed_form"
+            }
+          },
+          "pfp": {
+            "est": {
+              "value": -40.624999999999993,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -73.245663694595308,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": -17.612908455104325,
+              "class": "closed_form"
+            }
+          },
+          "pfe": {
+            "est": {
+              "value": -108.33333333333333,
+              "class": "closed_form"
+            },
+            "lower": {
+              "value": -195.32176985225411,
+              "class": "closed_form"
+            },
+            "upper": {
+              "value": -46.967755880278197,
+              "class": "closed_form"
+            }
+          }
+        }
+      }
+    ],
+    "crude": {
+      "zscore": {
+        "value": {
+          "value": 4.1538461538461542,
+          "class": "closed_form"
+        },
+        "p_1t": {
+          "value": 1.6346651367556876e-05,
+          "class": "closed_form"
+        },
+        "p_2t": {
+          "value": 3.2693302735113752e-05,
+          "class": "closed_form"
+        }
+      },
+      "rate": {
+        "exposed": {
+          "est": {
+            "value": 160,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 130.57596381679542,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 189.42403618320458,
+            "class": "closed_form"
+          }
+        },
+        "unexposed": {
+          "est": {
+            "value": 76.923076923076934,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 59.029428404974261,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 94.816725441179585,
+            "class": "closed_form"
+          }
+        },
+        "overall": {
+          "est": {
+            "value": 113.04347826086956,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 96.735463623171711,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 129.35149289856741,
+            "class": "closed_form"
+          }
+        }
+      },
+      "rate_ratio": {
+        "est": {
+          "value": 0.48076923076923078,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 0.46612152087232467,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.49587723995637867,
+          "class": "closed_form"
+        }
+      },
+      "rate_difference": {
+        "est": {
+          "value": 83.07692307692308,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 48.639203021728811,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 117.51464313211734,
+          "class": "closed_form"
+        }
+      },
+      "cmle_rr": {
+        "est": {
+          "value": 2.0800000000000001,
+          "class": "iterative",
+          "r_default": 2.0800000000000001
+        },
+        "midp_lower": {
+          "value": 1.54786396674089,
+          "class": "iterative",
+          "r_default": 1.5478421289157611
+        },
+        "midp_upper": {
+          "value": 2.8072470547503952,
+          "class": "iterative",
+          "r_default": 2.8072570082112676
+        },
+        "fisher_lower": {
+          "value": 1.525419100033754,
+          "class": "iterative",
+          "r_default": 1.5254140614329823
+        },
+        "fisher_upper": {
+          "value": 2.851518166069591,
+          "class": "iterative",
+          "r_default": 2.8515332013522645
+        }
+      },
+      "etiologic": {
+        "efp": {
+          "est": {
+            "value": 31.952662721893489,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 19.192140637642463,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 43.874801272258033,
+            "class": "closed_form"
+          }
+        },
+        "efe": {
+          "est": {
+            "value": 51.923076923076927,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 35.327731243047438,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": 64.259943605335579,
+            "class": "closed_form"
+          }
+        },
+        "pfp": {
+          "est": {
+            "value": -46.95652173913043,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": -78.173088500034595,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": -23.750339124293983,
+            "class": "closed_form"
+          }
+        },
+        "pfe": {
+          "est": {
+            "value": -107.99999999999999,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": -179.79810355007962,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": -54.625779985876164,
+            "class": "closed_form"
+          }
+        }
+      }
+    },
+    "adjusted": {
+      "zscore": {
+        "value": {
+          "value": 4.2089779036352724,
+          "class": "closed_form"
+        },
+        "p": {
+          "value": 2.5652847120236155e-05,
+          "class": "closed_form"
+        }
+      },
+      "direct_rr": {
+        "est": {
+          "value": 2.1241872335445402,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 1.5709513560591273,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 2.8722540553214806,
+          "class": "closed_form"
+        }
+      },
+      "mh_rr": {
+        "est": {
+          "value": 2.1293103448275863,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 1.573581953997728,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 2.8813005468645079,
+          "class": "closed_form"
+        }
+      },
+      "direct_rd": {
+        "est": {
+          "value": 0.0085417878611595884,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 0.0050623007705836044,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 0.012021274951735572,
+          "class": "closed_form"
+        }
+      },
+      "breslow_day": {
+        "rr_chisq": {
+          "value": 0.03321309450143993,
+          "class": "closed_form"
+        },
+        "rr_p": {
+          "value": 0.85539077268869979,
+          "class": "closed_form"
+        },
+        "rd_chisq": {
+          "value": 0.0058173356602676477,
+          "class": "closed_form"
+        },
+        "rd_p": {
+          "value": 0.93920313104802533,
+          "class": "closed_form"
+        }
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "epitools": "0.5.10.1"
+    }
+  }
+}

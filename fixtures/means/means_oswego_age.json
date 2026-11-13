@@ -1,0 +1,77 @@
+{
+  "id": "means_oswego_age",
+  "procedure": "means",
+  "inputs": {
+    "dataset": "oswego",
+    "variable": "AGE",
+    "include_missing": false
+  },
+  "expected": {
+    "total": {
+      "value": 75,
+      "class": "closed_form"
+    },
+    "missing": {
+      "value": 0,
+      "class": "closed_form"
+    },
+    "groups": [
+      {
+        "observations": {
+          "value": 75,
+          "class": "closed_form"
+        },
+        "total": {
+          "value": 2761,
+          "class": "closed_form"
+        },
+        "mean": {
+          "value": 36.813333333333333,
+          "class": "closed_form"
+        },
+        "variance": {
+          "value": 460.18090090090089,
+          "class": "closed_form"
+        },
+        "std_dev": {
+          "value": 21.451827448982076,
+          "class": "closed_form"
+        },
+        "minimum": {
+          "value": 3,
+          "class": "closed_form"
+        },
+        "p25": {
+          "value": 16.5,
+          "class": "closed_form"
+        },
+        "median": {
+          "value": 36,
+          "class": "closed_form"
+        },
+        "p75": {
+          "value": 57.5,
+          "class": "closed_form"
+        },
+        "maximum": {
+          "value": 77,
+          "class": "closed_form"
+        },
+        "mode": {
+          "value": 11,
+          "class": "closed_form"
+        }
+      }
+    ]
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

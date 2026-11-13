@@ -1,0 +1,16 @@
+{
+  "id": "means_constant",
+  "version": 1,
+  "columns": [
+    {
+      "name": "value",
+      "type": "real",
+      "values": [7.25, 7.25, 7.25, 7.25, 7.25, 7.25, 7.25, 7.25]
+    },
+    {
+      "name": "grp",
+      "type": "text",
+      "values": ["A", "A", "A", "A", "B", "B", "B", "B"]
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "id": "power_90",
+  "procedure": "calc.ss_unmatched_cc",
+  "inputs": {
+    "conf_level": 90,
+    "power": 90,
+    "ratio_controls_per_case": 1,
+    "percent_controls_exposed": 30,
+    "odds_ratio": 2.5
+  },
+  "expected": {
+    "kelsey": {
+      "cases": {
+        "value": 88,
+        "class": "closed_form"
+      },
+      "controls": {
+        "value": 88,
+        "class": "closed_form"
+      },
+      "total": {
+        "value": 176,
+        "class": "closed_form"
+      }
+    },
+    "fleiss": {
+      "cases": {
+        "value": 86,
+        "class": "closed_form"
+      },
+      "controls": {
+        "value": 86,
+        "class": "closed_form"
+      },
+      "total": {
+        "value": 172,
+        "class": "closed_form"
+      }
+    },
+    "fleiss_cc": {
+      "cases": {
+        "value": 95,
+        "class": "closed_form"
+      },
+      "controls": {
+        "value": 95,
+        "class": "closed_form"
+      },
+      "total": {
+        "value": 190,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

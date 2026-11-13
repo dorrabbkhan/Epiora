@@ -1,0 +1,122 @@
+{
+  "id": "two_groups",
+  "procedure": "calc.anova_summary",
+  "inputs": {
+    "table": [
+      [15, 50, 5],
+      [15, 55, 6]
+    ]
+  },
+  "expected": {
+    "anova": {
+      "ss_between": {
+        "value": 187.5,
+        "class": "closed_form"
+      },
+      "df_between": {
+        "value": 1,
+        "class": "closed_form"
+      },
+      "ms_between": {
+        "value": 187.5,
+        "class": "closed_form"
+      },
+      "ss_within": {
+        "value": 854,
+        "class": "closed_form"
+      },
+      "df_within": {
+        "value": 28,
+        "class": "closed_form"
+      },
+      "ms_within": {
+        "value": 30.5,
+        "class": "closed_form"
+      },
+      "f": {
+        "value": 6.1475409836065573,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.019446541826317294,
+        "class": "closed_form"
+      },
+      "ss_total": {
+        "value": 1041.5,
+        "class": "closed_form"
+      },
+      "df_total": {
+        "value": 29,
+        "class": "closed_form"
+      }
+    },
+    "bartlett": {
+      "chisq": {
+        "value": 0.44686112861202687,
+        "class": "closed_form"
+      },
+      "df": {
+        "value": 1,
+        "class": "closed_form"
+      },
+      "p": {
+        "value": 0.50382933568942578,
+        "class": "closed_form"
+      }
+    },
+    "group_ci": [
+      {
+        "lower": {
+          "value": 47.23109229217566,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 52.76890770782434,
+          "class": "closed_form"
+        }
+      },
+      {
+        "lower": {
+          "value": 51.677310750610793,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 58.322689249389207,
+          "class": "closed_form"
+        }
+      }
+    ],
+    "group_ci_pooled": [
+      {
+        "lower": {
+          "value": 47.079073885836756,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 52.920926114163244,
+          "class": "closed_form"
+        }
+      },
+      {
+        "lower": {
+          "value": 52.079073885836756,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": 57.920926114163244,
+          "class": "closed_form"
+        }
+      }
+    ]
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

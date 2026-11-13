@@ -1,0 +1,57 @@
+{
+  "id": "textbook",
+  "procedure": "calc.binomial",
+  "inputs": {
+    "numerator": 10,
+    "denominator": 50,
+    "expected_percent": 30
+  },
+  "expected": {
+    "tail": {
+      "lt": {
+        "value": 0.040231634139193992,
+        "class": "closed_form"
+      },
+      "le": {
+        "value": 0.078850624823056298,
+        "class": "closed_form"
+      },
+      "ge": {
+        "value": 0.95976836586080605,
+        "class": "closed_form"
+      },
+      "gt": {
+        "value": 0.92114937517694373,
+        "class": "closed_form"
+      },
+      "eq": {
+        "value": 0.038618990683862375,
+        "class": "closed_form"
+      }
+    },
+    "p_2t": {
+      "value": 0.1577012496461126,
+      "class": "closed_form"
+    },
+    "ci_95_count": {
+      "lower": {
+        "value": 5,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 17,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

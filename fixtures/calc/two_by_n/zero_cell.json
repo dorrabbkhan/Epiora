@@ -1,0 +1,262 @@
+{
+  "id": "zero_cell",
+  "procedure": "calc.two_by_n",
+  "inputs": {
+    "strata": [
+      [
+        [0, 15],
+        [8, 30]
+      ]
+    ],
+    "conf_level": 95
+  },
+  "expected": {
+    "strata": [
+      {
+        "odds_ratio": {
+          "est": {
+            "value": 0,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 0,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": null,
+            "class": "closed_form"
+          }
+        },
+        "odds_ratio_mle": {
+          "midp": {
+            "est": {
+              "value": 0,
+              "class": "iterative"
+            },
+            "lower": {
+              "value": 0,
+              "class": "iterative"
+            },
+            "upper": {
+              "value": 1.0438779279683756,
+              "class": "iterative"
+            }
+          },
+          "fisher": {
+            "lower": {
+              "value": 0,
+              "class": "iterative"
+            },
+            "upper": {
+              "value": 1.3735622431817773,
+              "class": "iterative"
+            }
+          }
+        },
+        "risk_ratio": {
+          "est": {
+            "value": 0,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": 0,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": null,
+            "class": "closed_form"
+          }
+        },
+        "risk_difference": {
+          "est": {
+            "value": null,
+            "class": "closed_form"
+          },
+          "lower": {
+            "value": null,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": null,
+            "class": "closed_form"
+          }
+        },
+        "chisq": {
+          "uncorrected": {
+            "value": {
+              "value": 3.7192982456140351,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 0.053786972236229559,
+              "class": "closed_form"
+            }
+          },
+          "mantel": {
+            "value": {
+              "value": 3.6491228070175432,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 0.056098750241134865,
+              "class": "closed_form"
+            }
+          },
+          "yates": {
+            "value": {
+              "value": 2.2579885477582846,
+              "class": "closed_form"
+            },
+            "p_2t": {
+              "value": 0.13292661615172996,
+              "class": "closed_form"
+            }
+          }
+        },
+        "exact": {
+          "midp_2t": {
+            "value": 0.055175718108362588,
+            "class": "iterative"
+          },
+          "fisher_1t": {
+            "value": 0.055175718108362588,
+            "class": "iterative"
+          },
+          "fisher_2t": {
+            "value": 0.088011148896320113,
+            "class": "iterative"
+          }
+        }
+      }
+    ],
+    "crude": {
+      "odds_ratio": {
+        "est": {
+          "value": 0,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 0,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": null,
+          "class": "closed_form"
+        }
+      },
+      "odds_ratio_mle": {
+        "midp": {
+          "est": {
+            "value": 0,
+            "class": "iterative"
+          },
+          "lower": {
+            "value": 0,
+            "class": "iterative"
+          },
+          "upper": {
+            "value": 1.0438779279683756,
+            "class": "iterative"
+          }
+        },
+        "fisher": {
+          "lower": {
+            "value": 0,
+            "class": "iterative"
+          },
+          "upper": {
+            "value": 1.3735622431817773,
+            "class": "iterative"
+          }
+        }
+      },
+      "risk_ratio": {
+        "est": {
+          "value": 0,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": 0,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": null,
+          "class": "closed_form"
+        }
+      },
+      "risk_difference": {
+        "est": {
+          "value": null,
+          "class": "closed_form"
+        },
+        "lower": {
+          "value": null,
+          "class": "closed_form"
+        },
+        "upper": {
+          "value": null,
+          "class": "closed_form"
+        }
+      },
+      "chisq": {
+        "uncorrected": {
+          "value": {
+            "value": 3.7192982456140351,
+            "class": "closed_form"
+          },
+          "p_2t": {
+            "value": 0.053786972236229559,
+            "class": "closed_form"
+          }
+        },
+        "mantel": {
+          "value": {
+            "value": 3.6491228070175432,
+            "class": "closed_form"
+          },
+          "p_2t": {
+            "value": 0.056098750241134865,
+            "class": "closed_form"
+          }
+        },
+        "yates": {
+          "value": {
+            "value": 2.2579885477582846,
+            "class": "closed_form"
+          },
+          "p_2t": {
+            "value": 0.13292661615172996,
+            "class": "closed_form"
+          }
+        }
+      },
+      "exact": {
+        "midp_2t": {
+          "value": 0.055175718108362588,
+          "class": "iterative"
+        },
+        "fisher_1t": {
+          "value": 0.055175718108362588,
+          "class": "iterative"
+        },
+        "fisher_2t": {
+          "value": 0.088011148896320113,
+          "class": "iterative"
+        }
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "epitools": "0.5.10.1",
+      "exact2x2": "1.7.0",
+      "epiR": "3.0.0"
+    }
+  }
+}

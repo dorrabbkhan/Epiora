@@ -1,0 +1,44 @@
+{
+  "id": "variance_input",
+  "procedure": "calc.mean_ci",
+  "inputs": {
+    "mean": 10.5,
+    "sd_or": "variance",
+    "sd_value": 6.25,
+    "n": 25,
+    "population_size": 250,
+    "conf_level": 90
+  },
+  "expected": {
+    "z": {
+      "lower": {
+        "value": 9.7182122760282823,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 11.281787723971718,
+        "class": "closed_form"
+      }
+    },
+    "t": {
+      "lower": {
+        "value": 9.6445589600452859,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 11.355441039954714,
+        "class": "closed_form"
+      }
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

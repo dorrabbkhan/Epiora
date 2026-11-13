@@ -1,0 +1,40 @@
+{
+  "id": "rct",
+  "procedure": "calc.power_cohort",
+  "inputs": {
+    "design": "rct",
+    "conf_level": 95,
+    "n_exposed": 150,
+    "n_unexposed": 150,
+    "percent_exposed_outcome": 30,
+    "percent_unexposed_outcome": 20
+  },
+  "expected": {
+    "normal": {
+      "value": 75.803763193249011,
+      "class": "closed_form"
+    },
+    "normal_cc": {
+      "value": 76.966098268213557,
+      "class": "closed_form"
+    },
+    "risk_ratio": {
+      "value": 1.4999999999999998,
+      "class": "closed_form"
+    },
+    "risk_difference": {
+      "value": 0.099999999999999978,
+      "class": "closed_form"
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2"
+    }
+  }
+}

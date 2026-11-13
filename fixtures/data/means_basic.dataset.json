@@ -1,0 +1,16 @@
+{
+  "id": "means_basic",
+  "version": 1,
+  "columns": [
+    {
+      "name": "value",
+      "type": "real",
+      "values": [2.5, 4, 3.5, 8, 7.5, 9, 15, 14.5, 16.5, null]
+    },
+    {
+      "name": "grp",
+      "type": "text",
+      "values": ["A", "A", "A", "B", "B", "B", "C", "C", "C", null]
+    }
+  ]
+}

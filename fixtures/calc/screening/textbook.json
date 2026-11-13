@@ -1,0 +1,165 @@
+{
+  "id": "textbook",
+  "procedure": "calc.screening",
+  "inputs": {
+    "table": [
+      [80, 40],
+      [20, 360]
+    ],
+    "conf_level": 95
+  },
+  "expected": {
+    "sensitivity": {
+      "est": {
+        "value": 0.80000000000000004,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": 0.71120000000000005,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 0.86660000000000004,
+        "class": "closed_form"
+      }
+    },
+    "specificity": {
+      "est": {
+        "value": 0.90000000000000002,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": 0.86670000000000003,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 0.92569999999999997,
+        "class": "closed_form"
+      }
+    },
+    "ppv": {
+      "est": {
+        "value": 0.66666666666666663,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": 0.57830000000000004,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 0.74470000000000003,
+        "class": "closed_form"
+      }
+    },
+    "npv": {
+      "est": {
+        "value": 0.94736842105263153,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": 0.92010000000000003,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 0.9657,
+        "class": "closed_form"
+      }
+    },
+    "accuracy": {
+      "est": {
+        "value": 0.88,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": 0.84860000000000002,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 0.90559999999999996,
+        "class": "closed_form"
+      }
+    },
+    "lr_pos": {
+      "est": {
+        "value": 8.0000000000000018,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": 5.8681770123381378,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 10.906283137921166,
+        "class": "closed_form"
+      }
+    },
+    "lr_neg": {
+      "est": {
+        "value": 0.22222222222222215,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": 0.14995366614683739,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 0.32931983137395404,
+        "class": "closed_form"
+      }
+    },
+    "diagnostic_odds": {
+      "est": {
+        "value": 36,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": 19.977827856695214,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 64.871917472532857,
+        "class": "closed_form"
+      }
+    },
+    "kappa": {
+      "est": {
+        "value": 0.65116279069767435,
+        "class": "closed_form"
+      },
+      "lower": {
+        "value": 0.56410511855436773,
+        "class": "closed_form"
+      },
+      "upper": {
+        "value": 0.73822046284098097,
+        "class": "closed_form"
+      }
+    },
+    "entropy": {
+      "positive": {
+        "value": -0.13611174475662491,
+        "class": "closed_form"
+      },
+      "negative": {
+        "value": 0.29421037290495589,
+        "class": "closed_form"
+      }
+    },
+    "bias_index": {
+      "value": 0.040000000000000001,
+      "class": "closed_form"
+    }
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "PropCIs": "0.3.0",
+      "epiR": "3.0.0"
+    }
+  }
+}
