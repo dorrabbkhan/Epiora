@@ -2637,6 +2637,10 @@ references read from the live site source and from
       Output: `2.7651727076105344 1.5446268009946793 5.0277823325556668`.
   - Fixtures workflow run (green on the round-1 head):
     https://github.com/dorrabbkhan/Epiora/actions/runs/43355570221
+  - Fixtures workflow run (green on the round-2 head, covering the
+    new `check_cmle_exact` generation-time check and a zero-drift
+    regeneration):
+    https://github.com/dorrabbkhan/Epiora/actions/runs/43358183499
 
 ### G8 — Roadmap review from user signals (2026-11-13)
 Decision: owner accepted every proposed roadmap change, including v1.0. v1.0 gains Tasks 22 (engine assumption
