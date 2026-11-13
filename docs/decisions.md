@@ -2971,3 +2971,272 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   pure functions — parsing, emissions, scaling, compare — required by the tests-ship-with-code
   rule); `fixtures/openepi/package.json` and `package-lock.json` (pin the required latest
   Playwright for this fixture tool only).
+
+### v1.0 Task 4 — Epi Info 7 MEANS reference
+
+- `oswego.pgm` gains `MEANS AGE` and `MEANS AGE SEX` before `CLOSEOUT`
+  (v1.0 spec §4.4). Provenance, verified byte-for-byte by SHA-256
+  against the downloaded `ei7-output` artifacts: the committed
+  `oswego.html` is byte-identical to the `ei7-output` artifact of both
+  runs https://github.com/dorrabbkhan/Epiora/actions/runs/43498896712
+  and https://github.com/dorrabbkhan/Epiora/actions/runs/43500418310
+  (sha256 `1a599aa29da4898177816ad7d02636d0df8ee73c3103695828019df45cc12820`
+  in all three); the committed `oswego.json` is byte-identical to the
+  artifact of run 43500418310 — dispatched at commit `d01030b`, the
+  final parser + labels (sha256
+  `6dbfcfc15e32d8c9c6f1602fe966b26100ec4a6c3daa8b16fffc3738cc8d1fea`).
+  Run 43498896712's `oswego.json` artifact (sha256
+  `923ec1e1aa7ed6768791296178bc32c1813a7e4de4338e3625c8012e15aeba05`)
+  differs: it predates the final labels. `ei7.schema.json` unchanged
+  (the oswego.json shape did not change). Superseded by the
+  owner-decision regeneration recorded in the resolution bullet below.
+  No file outside the task's Files block.
+- **Percentile definition: R `quantile(type = 2)`.** Verified by
+  computation, not assertion:
+  `quantile(x, c(.25,.5,.75), type = k)` for `k = 1..9` and `fivenum(x)`
+  were computed on Oswego AGE overall and per SEX
+  (`fixtures/data/oswego.csv`, same values as the bundled Sample.mdb —
+  totals match at 2761). EI7 prints 16/36/58 overall, 16.5/35.5/53.5
+  Female, 15/36/62 Male. Only `type = 2` reproduces all nine values at
+  display precision (type 2: `h = np + 1/2`; when `h` is an integer the
+  two bracketing order statistics are averaged, otherwise the single
+  nearest one). `fivenum()` gives 16.5/36/57.5, 16.5/35.5/53.5,
+  16/36/61 — it fails on the overall and Male quartiles.
+- **Mode rule: the smallest value among tied modes.** Overall AGE modes
+  tie {11, 17, 35, 62} at frequency 4 and EI7 prints 11; Female modes
+  tie {35, 62} at frequency 3 and EI7 prints 35; Male has a unique mode
+  17. Same rule as Task 2 recorded from `cDataSetHelper.cs`, now derived
+  from printed output.
+- **EI7–R fixture disagreement — six leaves beyond `ei7_display`, not
+  four (owner escalation, recorded per standing notes; no tolerance
+  change):** of the 61 mapped `means.*` leaves in `oswego.json`, 55
+  agree with the Task 2 R fixtures and six disagree. The count and the
+  per-leaf diffs come from comparing every `oswego.json` `means.*`
+  value against the matching R-fixture leaf at `ei7_display`
+  (`0.5 × 10^−d`, `d` = EI7's displayed decimals) — script and output:
+
+  ```text
+  $ node ei7_vs_r.mjs   # run from the repo root; script reproduced below
+  DISAGREE means.overall.p25: EI7 16.0000 vs R 16.5 (|d|=5.000e-1, tol=0.00005)
+  DISAGREE means.overall.p75: EI7 58.0000 vs R 57.5 (|d|=5.000e-1, tol=0.00005)
+  DISAGREE means.groups[1].p25: EI7 15.0000 vs R 16 (|d|=1.000e+0, tol=0.00005)
+  DISAGREE means.groups[1].p75: EI7 62.0000 vs R 61 (|d|=1.000e+0, tol=0.00005)
+  DISAGREE means.t_test.welch.diff_ci_95.lower: EI7 -10.5528 vs R -10.556442937780664 (|d|=3.643e-3, tol=0.00005)
+  DISAGREE means.t_test.welch.diff_ci_95.upper: EI7 10.4663 vs R 10.469932673851053 (|d|=3.633e-3, tol=0.00005)
+
+  55 agree / 6 disagree of 61 mapped leaves (1 null-mapped)
+  ```
+
+  | `means.*` leaf (`oswego.json`) | EI7 | R fixture |
+  |---|---|---|
+  | `means.overall.p25` | 16.0000 | `means_oswego_age.json` `groups[0].p25` = 16.5 |
+  | `means.overall.p75` | 58.0000 | `means_oswego_age.json` `groups[0].p75` = 57.5 |
+  | `means.groups[1].p25` (Male) | 15.0000 | `means_oswego_age_sex.json` `groups[1].p25` = 16 |
+  | `means.groups[1].p75` (Male) | 62.0000 | `means_oswego_age_sex.json` `groups[1].p75` = 61 |
+  | `means.t_test.welch.diff_ci_95.lower` | −10.5528 | `means_oswego_age_sex.json` `t_test.welch.lower` = −10.556442937780664 |
+  | `means.t_test.welch.diff_ci_95.upper` | 10.4663 | `means_oswego_age_sex.json` `t_test.welch.upper` = 10.469932673851053 |
+
+  The four quartile leaves are the known percentile-definition
+  difference: the Task 2 fixtures were generated with `fivenum()` while
+  EI7 computes R `quantile(type = 2)`; Female and all medians agree.
+  The two Welch CI leaves are a separate disagreement whose cause is
+  not established. Facts computed in R 4.6.2 — the Welch CI of
+  `mean(Female) − mean(Male)` with
+  `se = sqrt(var(Female)/44 + var(Male)/31)` evaluated at the
+  Satterthwaite df 56.047 and at df = 56, 57 and 73 (the exact command
+  and its output):
+
+  ```text
+  $ Rscript -e '
+    d <- read.csv("fixtures/data/oswego.csv")
+    x <- d$AGE[d$SEX == "Female"]; y <- d$AGE[d$SEX == "Male"]
+    diff <- mean(x) - mean(y)
+    se <- sqrt(var(x)/length(x) + var(y)/length(y))
+    df_s <- (var(x)/length(x) + var(y)/length(y))^2 /
+            ((var(x)/length(x))^2/(length(x)-1) + (var(y)/length(y))^2/(length(y)-1))
+    cat("diff =", format(diff, digits=17), " se =", format(se, digits=17),
+        " satterthwaite_df =", format(df_s, digits=17), "\n")
+    for (df in c(df_s, 56, 57, 73)) {
+      tc <- qt(0.975, df)
+      lo <- diff - tc*se; hi <- diff + tc*se
+      cat(sprintf("df = %-8s t crit = %.10f  CI = (%.10f, %.10f)  at 4dp: (%.4f, %.4f)\n",
+                  format(df, digits=10), tc, lo, hi, lo, hi))
+    }
+    cat("EI7 prints: (-10.5528, 10.4663)\n")'
+
+  diff = -0.043255131964805571  se = 5.248187959901089  satterthwaite_df = 56.047354306487847
+  df = 56.04735431 t crit = 2.0032033696  CI = (-10.5564429378, 10.4699326739)  at 4dp: (-10.5564, 10.4699)
+  df = 56       t crit = 2.0032407188  CI = (-10.5566389534, 10.4701286895)  at 4dp: (-10.5566, 10.4701)
+  df = 57       t crit = 2.0024654593  CI = (-10.5525702455, 10.4660599816)  at 4dp: (-10.5526, 10.4661)
+  df = 73       t crit = 1.9929971259  CI = (-10.5028786522, 10.4163683882)  at 4dp: (-10.5029, 10.4164)
+  EI7 prints: (-10.5528, 10.4663)
+  ```
+
+  None of df 56.047 (Satterthwaite), 56, 57 or 73 reproduces EI7's
+  (−10.5528, 10.4663) at `ei7_display` precision; df = 57 is closest at
+  (−10.5526, 10.4661) but still differs by ~2 × 10^−4, beyond the
+  5 × 10^−5 tolerance. What differs in EI7's Welch interval is
+  undetermined — no method is chosen here and no fixture changes. The
+  owner decides whether the R fixtures move to `quantile(type = 2)`
+  (they are the `closed_form` oracle Task 6 tests against) and which
+  Welch-CI convention the oracle records.
+
+  The comparison script (saved as `ei7_vs_r.mjs`, run from the repo
+  root):
+
+  ```js
+  import { readFileSync } from 'node:fs';
+  const oswego = JSON.parse(readFileSync('fixtures/ei7/oswego.json', 'utf8'));
+  const fx = {
+    'MEANS AGE': JSON.parse(readFileSync('fixtures/means/means_oswego_age.json', 'utf8')),
+    'MEANS AGE SEX': JSON.parse(readFileSync('fixtures/means/means_oswego_age_sex.json', 'utf8')),
+  };
+  const statRename = { min: 'minimum', max: 'maximum' };
+  const leaf = (exp, path) => path.reduce((o, k) => o?.[k], exp)?.value;
+  function rValue(command, key, exp) {
+    let p = key.replace(/^means\./, '').split('.');
+    if (p[0] === 'overall') {
+      const stat = statRename[p[1]] ?? p[1];
+      return leaf(exp, ['groups', 0, stat]);
+    }
+    if (p[0].startsWith('groups[')) {
+      const i = +p[0].slice(7, -1), stat = statRename[p[1]] ?? p[1];
+      return leaf(exp, ['groups', i, stat]);
+    }
+    if (p[0] === 't_test')
+      return leaf(exp, ['t_test', p[1], p[2] === 'diff_ci_95' ? p[3] : p[2] === 'p_value' ? 'p' : p[2]]);
+    if (p[0] === 'anova')
+      return leaf(exp, ['anova', p[1] === 'p_value' ? 'p' : p[1]]);
+    if (p[0] === 'bartlett')
+      return leaf(exp, ['bartlett', p[1] === 'statistic' ? 'chisq' : p[1] === 'p_value' ? 'p' : p[1]]);
+    if (p[0] === 'kruskal_wallis')
+      return leaf(exp, ['kruskal_wallis', p[1] === 'p_value' ? 'p' : p[1]]);
+    return undefined;
+  }
+  let agree = 0, disagree = 0, unmapped = 0;
+  for (const out of oswego.outputs) {
+    if (!out.command.startsWith('MEANS')) continue;
+    const exp = fx[out.command].expected;
+    for (const v of out.values) {
+      if (!v.key) { unmapped++; continue; }
+      const r = rValue(out.command, v.key, exp);
+      const tol = 0.5 * 10 ** -v.decimals;
+      const d = Math.abs(v.value - r);
+      if (d <= tol) agree++;
+      else { disagree++; console.log(`DISAGREE ${v.key}: EI7 ${v.text} vs R ${r} (|d|=${d.toExponential(3)}, tol=${tol})`); }
+    }
+  }
+  console.log(`${agree} agree / ${disagree} disagree of ${agree + disagree} mapped leaves (${unmapped} null-mapped)`);
+  ```
+- Other conventions observed: `Satterthwaite` is the Welch t-test
+  (`means.t_test.welch.*`), `Pooled` the Student t-test
+  (`means.t_test.pooled.*`); `Diff (Group 1 - Group 2)` is
+  first-minus-second category order (Female − Male); the ANOVA p-value
+  is a `<P>P-value = …</P>` paragraph, not a table cell;
+  `T-Test: Diff (Group 1 - Group 2) Std Dev` is the pooled SD of the
+  difference and maps to `null` (no Task 6 `TTest` field); the
+  `Variances`/`Equal`/`Unequal` cells carry no number and are not
+  emitted; a repeated label inside one block gets a ` (n)` suffix
+  (Pooled vs Satterthwaite rows, and the two cells under the spanning
+  `95% CL Mean` header).
+- **Follow-up for Task 6 (recorded only; nothing changed here):** the
+  Task 2 R fixtures `fixtures/means/means_oswego_age*.json` use field
+  names that differ from Task 6's Produces block and from this PR's
+  `labels.json` keys: `minimum`/`maximum` (vs `min`/`max`), `p` (vs
+  `p_value`), `t_test.*.lower`/`upper` (vs `diff_ci_95.lower`/`upper`),
+  `bartlett.chisq` (vs `statistic`), the ungrouped overall stored as
+  `groups[0]` (vs `overall`), and no `overall` block in the grouped
+  fixture. Task 6 must reconcile these; the owner decides which side
+  moves.
+- **Resolution (owner decision on PR #67, comments 6865307135 and
+  6865623756): option 1 — the engine keeps the exact Welch CI; the two
+  EI7 Welch CL labels are mapped to `null` here.** The cause is in the
+  Epi Info source (Epi-Info-Community-Edition @ 4cd353c — D2 covers
+  the source at that commit only, not CDC release binaries):
+  `Epi.Analysis.Statistics/Means.cs:1469-1478` computes the Welch CLs
+  (1464-1468 the p-value) through `StatLib.TfromP`
+  (`StatisticsRepository/StatLib.vb:518-565`; `PfromT` at 80-143),
+  which linearly interpolates the t critical value between floor and
+  ceil of the Satterthwaite df instead of evaluating the t quantile at
+  the fractional df: `t* = T(57) + 0.04735·(T(56) − T(57)) = 2.002502`
+  vs `qt(0.975, 56.0474) = 2.003203`. The interpolation reproduces
+  EI7's printed (−10.5528, 10.4663) exactly:
+
+  ```text
+  $ Rscript -e 'df<-56.04735430648786; f<-df-56; t<-qt(.975,57)+f*(qt(.975,56)-qt(.975,57)); d<-read.csv("fixtures/data/oswego.csv"); x<-d$AGE[d$SEX=="Female"]; y<-d$AGE[d$SEX=="Male"]; diff<-mean(x)-mean(y); se<-sqrt(var(x)/length(x)+var(y)/length(y)); cat(sprintf("interp t*=%.10f vs qt(.975,df)=%.10f\n",t,qt(.975,df))); cat(sprintf("interp CI=(%.10f, %.10f) -> (%.4f, %.4f); exact CI=(%.4f, %.4f); EI7 prints (-10.5528, 10.4663)\n",diff-t*se,diff+t*se,diff-t*se,diff+t*se,diff-qt(.975,df)*se,diff+qt(.975,df)*se))'
+  interp t*=2.0025021712 vs qt(.975,df)=2.0032033696
+  interp CI=(-10.5527629164, 10.4662526524) -> (-10.5528, 10.4663); exact CI=(-10.5564, 10.4699); EI7 prints (-10.5528, 10.4663)
+  ```
+
+  The EI7 Welch p-value and df still agree with R at display
+  precision and stay mapped (`means.t_test.welch.p_value`,
+  `means.t_test.welch.df`). `labels.json` maps the two CL labels to
+  `null`; `parse.test.mjs` asserts them parsed but unmapped.
+  `oswego.json` was regenerated only via the ei7 workflow: producing
+  run https://github.com/dorrabbkhan/Epiora/actions/runs/43513433527
+  (its drift step failed by construction — the committed json
+  predated the labels change; the `ei7-output` artifact was committed
+  byte-for-byte, `oswego.json` sha256
+  `7928845c3504dc9a172813e4f548ff2f7354f323baf008d08fdfc513b19b2e4c`,
+  `oswego.html` unchanged at sha256 `1a599aa2…`), and green
+  verification run
+  https://github.com/dorrabbkhan/Epiora/actions/runs/43513632984
+  whose `ei7-output` artifact is byte-identical to the committed
+  files (cmp + sha256). The only json change vs the previous commit
+  is the two leaves losing their key. The engine CI red on
+  `oswego_matches_epi_info_7` (`means.*` "actual missing") is known
+  and stays per owner decision 1.1.
+- **After PR #68 (owner decision 2.1), the EI7–R comparison is 59
+  agree / 0 disagree of 59 mapped leaves.** #68 resolves the four
+  quartile disagreements and the field-name mismatches recorded above
+  by regenerating `fixtures/means/means_oswego_age*.json` with R
+  `quantile(type = 2)` and the `labels.json` key names (`min`/`max`,
+  `p_value`, `diff_ci_95.lower`/`upper`, `bartlett.statistic`, a real
+  `overall` block); the two Welch CL labels are now unmapped.
+  Recomputed with the same comparison script (shortened — post-#68
+  fixtures share the labels.json key paths, so `rValue` walks
+  `key.split('.')` directly) against
+  `origin/v1.0/task-2-means-quartiles-and-names:fixtures/means/means_oswego_age*.json`:
+
+  ```text
+  $ node ei7_vs_r.mjs /tmp/ei7fix/oswego_new.json /tmp/ei7fix
+  59 agree / 0 disagree of 59 mapped leaves (3 null-mapped)
+  ```
+
+  The shortened script (fixture files extracted to `/tmp/ei7fix/` via
+  `git show origin/v1.0/task-2-means-quartiles-and-names:<path>`;
+  `oswego_new.json` is the committed `oswego.json` — verified
+  byte-identical to the green run's artifact):
+
+  ```js
+  import { readFileSync } from 'node:fs';
+  const oswego = JSON.parse(readFileSync(process.argv[2] ?? 'fixtures/ei7/oswego.json', 'utf8'));
+  const fxDir = process.argv[3] ?? 'fixtures/means';
+  const fx = {
+    'MEANS AGE': JSON.parse(readFileSync(`${fxDir}/means_oswego_age.json`, 'utf8')),
+    'MEANS AGE SEX': JSON.parse(readFileSync(`${fxDir}/means_oswego_age_sex.json`, 'utf8')),
+  };
+  function rValue(key, exp) {
+    const parts = key.replace(/^means\./, '').split('.');
+    let o = exp;
+    for (const p of parts) {
+      const m = /^groups\[(\d+)\]$/.exec(p);
+      o = m ? o?.groups?.[+m[1]] : o?.[p];
+    }
+    return o?.value;
+  }
+  let agree = 0, disagree = 0, unmapped = 0;
+  for (const out of oswego.outputs) {
+    if (!out.command.startsWith('MEANS')) continue;
+    const exp = fx[out.command].expected;
+    for (const v of out.values) {
+      if (!v.key) { unmapped++; continue; }
+      const r = rValue(v.key, exp);
+      const tol = 0.5 * 10 ** -v.decimals;
+      const d = Math.abs(v.value - r);
+      if (d <= tol) agree++;
+      else { disagree++; console.log(`DISAGREE ${v.key}: EI7 ${v.text} vs R ${r} (|d|=${d.toExponential(3)}, tol=${tol})`); }
+    }
+  }
+  console.log(`${agree} agree / ${disagree} disagree of ${agree + disagree} mapped leaves (${unmapped} null-mapped)`);
+  ```

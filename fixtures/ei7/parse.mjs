@@ -12,6 +12,15 @@
 // Label grammar (labels.json maps these strings to Task 2 key paths or null):
 //   stat table:  "<context>: <row label> <column header> (<method letter>)"
 //   crosstab:    "<context>: <ROWVAR>=<level> <COLVAR>=<level>[ Row%| Col%]"
+//   named cell:  "<context>: <name>" — a label cell ending in "=" names the
+//                numeric cells of its row itself (Kruskal-Wallis rows), and a
+//                data cell "name=value" (Bartlett's "df=1") is self-labelled
+//   paragraph:   "<context>: <name>" — a <P> element between tables whose
+//                stripped text is "name = number" (the ANOVA "P-value =")
+// When one header spans two data columns or a row label repeats inside a
+// block (the MEANS T-Test "95% CL Mean" column and Pooled/Satterthwaite
+// rows), the second and later occurrences of a label get a " (n)" suffix
+// so every emitted label is unique within its command block.
 // <context> joins two caption slots with a space and is omitted when both are
 // empty. A caption is the stripped text between two tables (Epi Info wraps
 // them in <b>, <h4> or <center><strong>): a "VAR=value" caption (e.g.
@@ -61,6 +70,18 @@ const PLACEHOLDER_RE = /^(Undefined|NaN)\b/i;
 // Method marker at the end of a cell, e.g. "(T)", "(M)", "(F)", "(R)".
 const MARKER_RE = /\(([A-Za-z]+)\)\s*$/;
 
+// A whole-percent cell like "25%" or "75%". MEANS percentile tables use
+// these as column headers; Epi Info's real percent values always carry
+// decimals ("58.67%"), so such a cell is never emitted as a value.
+const BARE_PCT_RE = /^[+-]?\d+%$/;
+
+// A self-labelled "name = value" cell or paragraph, e.g. "df=1",
+// "P value=0.22139", "P-value = 0.99321".
+const NAME_VALUE_RE = /^(.+?)\s*=\s*(.+)$/;
+// A label cell that ends in "=" and names its row's numeric cells
+// itself, e.g. "Bartlett's chi square=", "Degrees of freedom = ".
+const NAMED_ROW_RE = /^(.*?)\s*=\s*$/;
+
 // Split html into balanced <table>...</table> blocks (handles nesting).
 function tableBlocks(html) {
   const blocks = [];
@@ -95,7 +116,7 @@ function parseTable(block) {
     };
     while ((cm = cellRe.exec(body))) {
       flush(cm.index);
-      const span = /colspan\s*=\s*"?(\d+)/i.exec(cm[2]);
+      const span = /colspan\s*=\s*["']?(\d+)/i.exec(cm[2]);
       prev = { end: cellRe.lastIndex, span: span ? Number(span[1]) : 1 };
     }
     flush(body.length);
@@ -178,22 +199,46 @@ function parseStatTable(table, ctx, values) {
   let lastLabel = '';
   for (const row of rows) {
     const cols = rowColumns(row, width);
-    const parsed = cols.map(parseNumber);
+    const parsed = cols.map(c => (BARE_PCT_RE.test(c) ? null : parseNumber(c)));
     const numericIdx = parsed.map((p, i) => (p ? i : -1)).filter(i => i >= 0);
+    const namedCells = cols.map((c, i) => {
+      if (i === 0 || parsed[i] || !c) return null;
+      const kv = NAME_VALUE_RE.exec(c);
+      const num = kv ? parseNumber(kv[2]) : null;
+      return num ? { name: kv[1], num } : null;
+    });
     const hasPlaceholder = cols.some(c => PLACEHOLDER_RE.test(c));
-    if (numericIdx.length === 0 && !hasPlaceholder) {
+    if (numericIdx.length === 0 && !namedCells.some(Boolean) && !hasPlaceholder) {
       // header / group / footnote row: overwrite headers at non-empty cells
       cols.forEach((t, i) => { if (t) headers[i] = t; });
       continue;
     }
-    const rowLabel = cols[0] || lastLabel;
+    const named = NAMED_ROW_RE.exec(cols[0] || lastLabel);
+    const rowLabel = named ? named[1] : (cols[0] || lastLabel);
     if (cols[0]) lastLabel = cols[0];
     const markers = [...new Set(cols.slice(1).map(c => MARKER_RE.exec(c)?.[1]).filter(Boolean))];
     const suffix = markers.length ? ` (${markers.join(' ')})` : '';
-    for (const i of numericIdx) {
-      const colName = headers[i] || `col${i}`;
-      emit(values, ctx, `${rowLabel} ${colName}${suffix}`, parsed[i]);
+    for (let i = 1; i < width; i++) {
+      if (parsed[i]) {
+        const colName = headers[i] || `col${i}`;
+        emit(values, ctx, named ? rowLabel : `${rowLabel} ${colName}${suffix}`, parsed[i]);
+      } else if (namedCells[i]) {
+        emit(values, ctx, namedCells[i].name, namedCells[i].num);
+      }
     }
+  }
+}
+
+// Renames the second and later occurrences of a label inside one
+// command block to "<label> (n)" — Epi Info emits duplicate labels when
+// a header spans two data columns or a row label repeats (the MEANS
+// T-Test "95% CL Mean" cells and the Pooled/Satterthwaite rows).
+function dedupeLabels(values) {
+  const seen = new Map();
+  for (const v of values) {
+    const n = seen.get(v.label) ?? 0;
+    seen.set(v.label, n + 1);
+    if (n) v.label = `${v.label} (${n + 1})`;
   }
 }
 
@@ -211,12 +256,24 @@ export function parseHtml(html, labels = {}) {
     let pos = 0;
     let ctx = { stratum: '', block: '', caption: '' };
     for (const [ts, te] of tableBlocks(seg)) {
-      ctx = updateContext(ctx, stripTags(seg.slice(pos, ts)));
+      // <P> elements between tables carry either note prose ("(For
+      // normally distributed data only)", the small-p-value hint) or a
+      // displayed value as "name = number" ("P-value = 0.99321"). The
+      // value paragraphs emit under the block they follow; all <P> text
+      // stays out of the caption so notes cannot pollute later labels.
+      const gap = seg.slice(pos, ts).replace(/<p\b[^>]*>(.*?)<\/p\s*>/gi, (m, inner) => {
+        const kv = NAME_VALUE_RE.exec(stripTags(inner));
+        const num = kv ? parseNumber(kv[2]) : null;
+        if (num) emit(values, ctx, kv[1], num);
+        return ' ';
+      });
+      ctx = updateContext(ctx, stripTags(gap));
       const table = parseTable(seg.slice(ts, te));
       if (isCrosstab(table.rows)) parseCrosstab(table, ctx, values);
       else parseStatTable(table, ctx, values);
       pos = te;
     }
+    dedupeLabels(values);
     outputs.push({ command: marks[s].command, values: values.map(v => ({ ...v, key: labels[v.label] ?? null })) });
   }
   return { outputs };

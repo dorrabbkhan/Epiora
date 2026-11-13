@@ -4,6 +4,7 @@
 *** possible from CI binaries because the shipped .prj connection strings
 *** fail to decrypt (docs/spikes/ei7-windows.md) — then FREQ SEX,
 *** TABLES VANILLA ILL and TABLES VANILLA ILL STRATAVAR=SEX (spec §6.4),
+*** plus MEANS AGE and MEANS AGE SEX (v1.0 spec §4.4, v1.0 Task 4),
 *** routed to a single HTML file, then QUIT so Analysis.exe exits on its own
 *** (required for headless CI use). run.ps1 substitutes @SAMPLE_MDB@ and
 *** @OUTPUT_HTML@ with absolute forward-slash paths and saves the result as
@@ -13,5 +14,7 @@ ROUTEOUT "@OUTPUT_HTML@" REPLACE
 FREQ SEX
 TABLES VANILLA ILL
 TABLES VANILLA ILL STRATAVAR=SEX
+MEANS AGE
+MEANS AGE SEX
 CLOSEOUT
 QUIT
