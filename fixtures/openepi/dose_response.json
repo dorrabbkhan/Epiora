@@ -218,13 +218,13 @@
         },
         {
           "label": "Extended Mantel-Haenszel chi square for linear trend= [1]",
-          "statistic": "calc.dose_response.xmh.uncorrected.value",
+          "statistic": "calc.dose_response.xmh.cc.value",
           "value": 3.8,
           "decimals": 1
         },
         {
           "label": "p-value(1 degree of freedom)= [1]",
-          "statistic": "calc.dose_response.xmh.uncorrected.p",
+          "statistic": "calc.dose_response.xmh.cc.p",
           "value": 0.05139,
           "decimals": 5
         }
@@ -445,7 +445,7 @@
         },
         {
           "label": "Extended Mantel-Haenszel chi square for linear trend= [1]",
-          "statistic": "calc.dose_response.xmh.uncorrected.value",
+          "statistic": "calc.dose_response.xmh.cc.value",
           "value": 42.24,
           "decimals": 2
         },
@@ -726,13 +726,13 @@
         },
         {
           "label": "Extended Mantel-Haenszel chi square for linear trend= [1]",
-          "statistic": "calc.dose_response.xmh.uncorrected.value",
+          "statistic": "calc.dose_response.xmh.cc.value",
           "value": 7.32,
           "decimals": 2
         },
         {
           "label": "p-value(1 degree of freedom)= [1]",
-          "statistic": "calc.dose_response.xmh.uncorrected.p",
+          "statistic": "calc.dose_response.xmh.cc.p",
           "value": 0.006824,
           "decimals": 6
         }
@@ -953,7 +953,7 @@
         },
         {
           "label": "Extended Mantel-Haenszel chi square for linear trend= [1]",
-          "statistic": "calc.dose_response.xmh.uncorrected.value",
+          "statistic": "calc.dose_response.xmh.cc.value",
           "value": 869.91,
           "decimals": 2
         },

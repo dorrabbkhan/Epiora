@@ -122,25 +122,25 @@
         },
         {
           "label": "Test for equality of variance2 [1]",
-          "statistic": "calc.t_test_summary.f_variance.f",
+          "statistic": null,
           "value": 1.44,
           "decimals": 2
         },
         {
           "label": "Test for equality of variance2 [2]",
-          "statistic": "calc.t_test_summary.f_variance.df_num",
+          "statistic": null,
           "value": 29,
           "decimals": 0
         },
         {
           "label": "Test for equality of variance2 [3]",
-          "statistic": "calc.t_test_summary.f_variance.df_den",
+          "statistic": null,
           "value": 24,
           "decimals": 0
         },
         {
           "label": "Test for equality of variance2 [4]",
-          "statistic": "calc.t_test_summary.f_variance.p",
+          "statistic": null,
           "value": 0.3652,
           "decimals": 4
         }
@@ -265,25 +265,25 @@
         },
         {
           "label": "Test for equality of variance2 [1]",
-          "statistic": "calc.t_test_summary.f_variance.f",
+          "statistic": null,
           "value": 1.44,
           "decimals": 2
         },
         {
           "label": "Test for equality of variance2 [2]",
-          "statistic": "calc.t_test_summary.f_variance.df_num",
+          "statistic": null,
           "value": 19,
           "decimals": 0
         },
         {
           "label": "Test for equality of variance2 [3]",
-          "statistic": "calc.t_test_summary.f_variance.df_den",
+          "statistic": null,
           "value": 19,
           "decimals": 0
         },
         {
           "label": "Test for equality of variance2 [4]",
-          "statistic": "calc.t_test_summary.f_variance.p",
+          "statistic": null,
           "value": 0.4341,
           "decimals": 4
         }
@@ -408,25 +408,25 @@
         },
         {
           "label": "Test for equality of variance2 [1]",
-          "statistic": "calc.t_test_summary.f_variance.f",
+          "statistic": null,
           "value": 1.77778,
           "decimals": 5
         },
         {
           "label": "Test for equality of variance2 [2]",
-          "statistic": "calc.t_test_summary.f_variance.df_num",
+          "statistic": null,
           "value": 29,
           "decimals": 0
         },
         {
           "label": "Test for equality of variance2 [3]",
-          "statistic": "calc.t_test_summary.f_variance.df_den",
+          "statistic": null,
           "value": 1,
           "decimals": 0
         },
         {
           "label": "Test for equality of variance2 [4]",
-          "statistic": "calc.t_test_summary.f_variance.p",
+          "statistic": null,
           "value": 1.08,
           "decimals": 2
         }
@@ -551,19 +551,19 @@
         },
         {
           "label": "Test for equality of variance2 [1]",
-          "statistic": "calc.t_test_summary.f_variance.f",
+          "statistic": null,
           "value": 1.13778,
           "decimals": 5
         },
         {
           "label": "Test for equality of variance2 [2]",
-          "statistic": "calc.t_test_summary.f_variance.df_num",
+          "statistic": null,
           "value": 4499,
           "decimals": 0
         },
         {
           "label": "Test for equality of variance2 [3]",
-          "statistic": "calc.t_test_summary.f_variance.df_den",
+          "statistic": null,
           "value": 4999,
           "decimals": 0
         },

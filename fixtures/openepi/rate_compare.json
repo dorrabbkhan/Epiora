@@ -80,7 +80,7 @@
         },
         {
           "label": "z-score [1]",
-          "statistic": "calc.rate_compare.crude.zscore.value",
+          "statistic": null,
           "value": 1.732,
           "decimals": 3
         },
@@ -343,7 +343,7 @@
         },
         {
           "label": "z-score [1]",
-          "statistic": "calc.rate_compare.crude.zscore.value",
+          "statistic": null,
           "value": 0,
           "decimals": 1
         },
@@ -642,7 +642,7 @@
         },
         {
           "label": "z-score [1]",
-          "statistic": "calc.rate_compare.crude.zscore.value",
+          "statistic": null,
           "value": 3.162,
           "decimals": 3
         },
@@ -905,7 +905,7 @@
         },
         {
           "label": "z-score [1]",
-          "statistic": "calc.rate_compare.crude.zscore.value",
+          "statistic": null,
           "value": 6.325,
           "decimals": 3
         },
@@ -1144,7 +1144,7 @@
         },
         {
           "label": "z-score [1]",
-          "statistic": "calc.rate_compare.crude.zscore.value",
+          "statistic": null,
           "value": 2.777,
           "decimals": 3
         },
@@ -1551,7 +1551,7 @@
         },
         {
           "label": "1 / z-score [1]",
-          "statistic": "calc.rate_compare.strata.0.zscore.value",
+          "statistic": null,
           "value": 2.282,
           "decimals": 3
         },
@@ -1593,7 +1593,7 @@
         },
         {
           "label": "2 / z-score [1]",
-          "statistic": "calc.rate_compare.strata.1.zscore.value",
+          "statistic": null,
           "value": 3.538,
           "decimals": 3
         },
@@ -1635,7 +1635,7 @@
         },
         {
           "label": "Crude / z-score [1]",
-          "statistic": "calc.rate_compare.crude.zscore.value",
+          "statistic": null,
           "value": 4.154,
           "decimals": 3
         },
@@ -2252,7 +2252,7 @@
         },
         {
           "label": "z-score [1]",
-          "statistic": "calc.rate_compare.crude.zscore.value",
+          "statistic": null,
           "value": 9.623,
           "decimals": 3
         },
@@ -2515,7 +2515,7 @@
         },
         {
           "label": "z-score [1]",
-          "statistic": "calc.rate_compare.crude.zscore.value",
+          "statistic": null,
           "value": 91.29,
           "decimals": 2
         },
