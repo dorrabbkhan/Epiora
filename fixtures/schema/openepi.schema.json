@@ -45,7 +45,8 @@
                   "type": ["string", "null"]
                 },
                 "value": {
-                  "type": "number"
+                  "type": ["number", "string"],
+                  "description": "Displayed number, or the displayed text itself for bound/not-available displays such as '<0.0000001' — those always carry statistic null."
                 },
                 "decimals": {
                   "type": "integer",

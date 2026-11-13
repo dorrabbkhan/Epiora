@@ -5,10 +5,10 @@ name: openepi
 # >=2 s between cases), write fixtures/openepi/<calculator>.json and fail on
 # any drift of the committed reference output.
 #
-# The temporary `push` trigger on this branch exists only while the workflow
-# is introduced: a workflow that does not yet exist on the default branch
-# cannot be workflow_dispatch'ed. It is removed before the PR is final, per
-# the v0.2 Task 3 (ei7.yml) precedent in docs/decisions.md.
+# When this workflow is changed and a runner capture is needed before it
+# exists on the default branch, a temporary `push` trigger is added only for
+# the duration of that run and removed before the PR is final, per the v0.2
+# Task 3 (ei7.yml) precedent in docs/decisions.md.
 
 on:
   workflow_dispatch:
@@ -36,6 +36,10 @@ jobs:
       - name: Install Chromium for Playwright
         working-directory: fixtures/openepi
         run: npx playwright install --with-deps chromium
+
+      - name: Unit-test capture logic (parser, emissions, compare)
+        working-directory: fixtures/openepi
+        run: node --test capture.test.mjs
 
       - name: Validate cases.json offline
         working-directory: fixtures/openepi
@@ -78,4 +82,7 @@ jobs:
 
       - name: No drift in fixtures/openepi
         shell: bash
-        run: git diff --exit-code fixtures/openepi
+        run: |
+          git diff --exit-code fixtures/openepi
+          # New output files (untracked) are drift too.
+          test -z "$(git status --porcelain fixtures/openepi)"

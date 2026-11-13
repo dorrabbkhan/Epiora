@@ -3,15 +3,85 @@
 // verified against the live site on 2026-11-13.
 // Pages without a confidence-level cell read the global ConfLevel (ReadCookie.js /
 // DataStore.js); capture.mjs sets it whenever inputs.conf_level is present.
+//
+// OE_BASE is only for offline development against a local mirror; the workflow
+// never sets it.
 
-const OE = 'https://www.openepi.com';
+const OE = process.env.OE_BASE ?? 'https://www.openepi.com';
 
 // --- helpers passed to driver fills -------------------------------------
+//
+// myTable.insert stores values verbatim and OpenEpi's page code does `a + b`
+// arithmetic on them: interactive entry goes through evalEntry which
+// parseFloats, so a string "50" + "100" displays as "50100" (the concat defect
+// in the first capture). Numbers must be inserted as numbers. Every data cell
+// NOT in `writes` is cleared so leftover demo data cannot leak into a case
+// (e.g. the ANOVA/Proportion demo rows). Returns the verification result:
+// the number of data cells the table holds and any mismatches.
 
 export async function setCells(page, writes) {
-  await page.evaluate((ws) => {
-    for (const [r, c, v] of ws) window.myTable.insert(r, c, String(v));
+  return page.evaluate((ws) => {
+    const t = window.myTable;
+    const keep = new Set(ws.map(([r, c]) => `${r},${c}`));
+    t.row.forEach((row, r) => row.cell.forEach((cell, c) => {
+      if (cell.type === 'data' && !keep.has(`${r},${c}`)) t.insert(r, c, '');
+    }));
+    for (const [r, c, v] of ws) {
+      const n = Number(v);
+      t.insert(r, c, v === '' || !Number.isFinite(n) ? v : n);
+      if (typeof t.calcTotals === 'function') t.calcTotals(r, c);
+    }
+    let dataCells = 0;
+    const errors = [];
+    const written = new Map(ws.map(([r, c, v]) => [`${r},${c}`, v]));
+    const dataWrites = [];
+    t.row.forEach((row, r) => row.cell.forEach((cell, c) => {
+      if (cell.type !== 'data') return;
+      dataCells += 1;
+      const want = written.get(`${r},${c}`);
+      if (want === undefined) {
+        if (!(cell.value === '' || cell.value == null || Number(cell.value) === 0)) {
+          errors.push(`data cell ${r},${c} holds ${JSON.stringify(cell.value)} but no input was written`);
+        }
+      } else {
+        dataWrites.push([r, c, want]);
+        if (want === '') {
+          if (!(cell.value === '' || Number(cell.value) === 0)) {
+            errors.push(`data cell ${r},${c} holds ${JSON.stringify(cell.value)} expected empty`);
+          }
+        } else if (Number(cell.value) !== Number(want)) {
+          errors.push(`data cell ${r},${c} holds ${JSON.stringify(cell.value)} expected ${JSON.stringify(want)}`);
+        }
+      }
+    }));
+    // Writes aimed at non-data cells (e.g. the dose-response exposure-score
+    // column, which is not a 'data' cell) are legal but verified here.
+    const nonDataWrites = [];
+    ws.forEach(([r, c, v]) => {
+      const cell = t.row[r]?.cell[c];
+      if (cell && cell.type !== 'data') {
+        nonDataWrites.push([r, c, v]);
+        if (String(cell.value ?? '') !== String(v)) {
+          errors.push(`non-data cell ${r},${c} holds ${JSON.stringify(cell.value)} expected ${JSON.stringify(v)}`);
+        }
+      }
+    });
+    return { writes: ws, dataWrites, nonDataWrites, dataCells, errors };
   }, writes);
+}
+
+// After filling, point the input cursor at the last written data cell with its
+// own value in the entry field, so the evalEntry() that addStratum/Calculate
+// call is an idempotent rewrite of that same cell (as it is for a human whose
+// cursor sits on the last cell they typed).
+export async function syncEntry(page, r, c) {
+  await page.evaluate(([rr, cc]) => {
+    const t = window.myTable;
+    t.inputR = rr;
+    t.inputC = cc;
+    const box = document.inBox?.entryfield ?? document.querySelector('input[name="entryfield"]');
+    if (box) box.value = String(t.row[rr].cell[cc].value ?? '');
+  }, [r, c]);
 }
 
 export async function addStratum(page) {
@@ -21,12 +91,20 @@ export async function addStratum(page) {
 
 // Writes stratum tables one stratum at a time, clicking "Add Stratum" between
 // strata. cellsFor(stratumInputs) must return [row, col, value] writes for the
-// currently displayed stratum.
+// currently displayed stratum. Returns one {writes,dataCells,errors} per
+// stratum for the post-calculation dataMatrix guard.
 export async function fillStrata(page, strata, cellsFor) {
+  const out = [];
   for (let s = 0; s < strata.length; s++) {
     if (s > 0) await addStratum(page);
-    await setCells(page, cellsFor(strata[s]));
+    const res = await setCells(page, cellsFor(strata[s]));
+    out.push(res);
+    if (res.writes.length) {
+      const [r, c] = res.writes[res.writes.length - 1];
+      await syncEntry(page, r, c);
+    }
   }
+  return out;
 }
 
 const t22 = (m) => [[2, 2, m[0][0]], [2, 3, m[0][1]], [3, 2, m[1][0]], [3, 3, m[1][1]]];
@@ -43,7 +121,7 @@ export async function fillDataRowMajor(page, flat) {
   if (coords.length !== flat.length) {
     throw new Error(`data-cell count ${coords.length} != values ${flat.length}`);
   }
-  await setCells(page, coords.map(([r, c], i) => [r, c, flat[i]]));
+  return [await setCells(page, coords.map(([r, c], i) => [r, c, flat[i]]))];
 }
 
 // --- drivers -------------------------------------------------------------
