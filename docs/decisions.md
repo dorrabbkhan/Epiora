@@ -2605,6 +2605,8 @@ references read from the live site source and from
     rel) — the two root-finders converge to different endpoints
     inside the same loose envelope. The comparison form awaits the
     owner (STOP reported on PR #64).
+  - Fixtures workflow run (green on the round-1 head):
+    https://github.com/dorrabbkhan/Epiora/actions/runs/43355570221
 
 ### G8 — Roadmap review from user signals (2026-11-13)
 Decision: owner accepted every proposed roadmap change, including v1.0. v1.0 gains Tasks 22 (engine assumption
