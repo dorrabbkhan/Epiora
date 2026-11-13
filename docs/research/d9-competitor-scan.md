@@ -228,6 +228,39 @@ Community, self-hosted ODK.
   but note it.
 - **Watch, don't copy:** DHIS2 Chap-style prediction and climate-health work. This is outside Epiora's scope.
 
+## User signals: r/epidemiology thread (added 2026-11-13)
+
+**Source:** an r/epidemiology thread in which the OP (`swisscheesemodel`) asks whether Epi Info is used as much
+today as it was 10–15 years ago. The share link is `https://www.reddit.com/r/epidemiology/s/BonYXcy74k`; the
+conductor's fetcher is blocked by Reddit, so the owner pasted the text and screenshots on 2026-11-13. The
+comments are about **3 years old**, so they predate the 2025 sunset. This is anecdote from a handful of people,
+not a survey. It is used to sharpen the roadmap's priorities, not to measure the market.
+
+| Signal | Who said it | What it means for Epiora |
+|---|---|---|
+| "Epi Info has never really been widely adopted"; Excel does it; OpenEpi-style sites are textbook-related | US/UK academic epidemiologists (most-upvoted thread) | Outside some segments, "Epi Info users" is a smaller market than spec §1 implies. Treat stranded Epi Info users as the **first customers to win**, not the whole market. Lead with *validated* results rather than *built-in formulas*. A hand-rolled OR in Excel is easy; a correct Fisher, mid-p or Mantel–Haenszel CI is not. |
+| "It's definitely still in use by Ministries of Health, especially in LMICs. There is a push to move to R but EI is still widely used." | Public health, LMIC | Confirms the core segments in spec §4. After the 2025 sunset these users have no supported tool. |
+| Rural health department using Epi Info 7 as a programme database: "worst for large datasets… left with a mess", moving to REDCap; uses Excel and SAS most | US local health department | A stranded legacy user. Legacy import has to come early, and REDCap is where these users go next, so a REDCap bridge matters as much as the import. |
+| "Only 1 person can work with the data set at a time… We use REDCap… then export to SAS" | Research team | Multi-user work blocks adoption, and "REDCap for collection, a stats package for analysis" is the common pattern. That calls for an early read-only REDCap/Kobo/ODK pull and an interim way to merge between devices before v2.0 sync. |
+| "I mainly used it for power calculations" | Former user | StatCalc (v1.0 calculators) is a real way in. Calculators open from a link with no project (v1.0 G3), so they also cost nothing to try. |
+| "You need to know which stats calc to apply"; "tools do not know what confounders to control for"; "latent variable analysis"; "complex causal inference" | Academics | Method guidance is unmet everywhere (Excel, R and Epi Info all assume you know). This points to a "which calculator?" guide, engine-computed assumption notes, a confounder (DAG) helper beside regression, and causal and latent-variable methods through R. |
+| "R is the gold standard"; "most schools still teach SAS"; Stata in econometrics; "none of the MPH programs teach [Epi Info]" | Academics | Bridge to R rather than compete with it: the exported R script verified in CI (v1.0), plus SAS as well as Stata scripts, and an R package that reads Epiora exports. University courses are not the first pilot. |
+| "There is no one to sue" with open-source R; the NHS stays on SAS for accountability | UK/commercial users | Some buyers want a named, accountable vendor. Epiora can offer one: open (AGPL) code, a public validation dossier from v1.0, and a paid support agreement for validated releases. |
+| tidyverse is slow for real-time dashboards and maps | Analysts | Supports the Rust/wasm engine and DuckDB for interactive dashboards (no change needed). |
+
+**Roadmap changes the owner accepted (2026-11-13), applied to the platform spec §14 in the same PR:**
+1. Phase 1 reordered so the user who still has stranded Epi Info data is served first: legacy Epi Info import
+   with data management moves to v1.1. Regression ships with a read-only REDCap, KoboToolbox and ODK Central
+   import in v1.2. Forms and entry come in v1.3, with offline phone entry and merging between devices by file.
+2. v1.0 gains a "which calculator?" guide, engine-computed assumption notes and a public validation page.
+3. The first pilot is a field epidemiology training programme (FETP), or an LMIC or local health department
+   with legacy Epi Info data. University courses run in parallel.
+4. SAS script export joins Stata, verified the same way (open decision D10).
+5. A DAG adjustment-set helper beside regression (D11). Causal-inference and latent-variable methods come
+   through R in v3.3.
+6. French, Spanish and Portuguese UI move up to v1.6 (this scan's localisation gap). The validation dossier is
+   published from v1.0, and v4.4 adds an independent audit of it.
+
 ## Suggested rewording
 
 - **USP 1:** "Keep Kobo, ODK, REDCap or DHIS2 for collection. Epiora adds the epidemiology (2×2, stratified
