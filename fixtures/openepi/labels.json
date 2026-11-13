@@ -114,7 +114,17 @@
   "CMLE Odds Ratio* [2]": "calc.two_by_two.adjusted.cmle_or.midp.lower",
   "CMLE Odds Ratio* [3]": "calc.two_by_two.adjusted.cmle_or.midp.upper",
   "chi square= [1]": null,
-  "chi square= [2]": null
+  "chi square= [2]": null,
+  "Adjusted [3]": null,
+  "MH Adjusted RR [1]": "calc.two_by_two.adjusted.mh_rr.est",
+  "Prevented fraction in exposed(pfe) [1]": null,
+  "Prevented fraction in pop.(pfp) [1]": null,
+  "MH Adjusted RR [2]": "calc.two_by_two.adjusted.mh_rr.lower",
+  "Prevented fraction in exposed(pfe) [2]": null,
+  "Prevented fraction in pop.(pfp) [2]": null,
+  "MH Adjusted RR [3]": "calc.two_by_two.adjusted.mh_rr.upper",
+  "Prevented fraction in exposed(pfe) [3]": null,
+  "Prevented fraction in pop.(pfp) [3]": null
  },
  "dose_response": {
   "Exposure Level [1]": null,
@@ -152,7 +162,13 @@
   "Var 1 [6]": null,
   "Chi Square= [1]": "calc.r_by_c.chisq.value",
   "Degrees of Freedom= [1]": "calc.r_by_c.chisq.df",
-  "p-value= [1]": "calc.r_by_c.chisq.p"
+  "p-value= [1]": "calc.r_by_c.chisq.p",
+  "Var 2 [1]": null,
+  "Var 2 [2]": null,
+  "Var 2 [3]": null,
+  "Var 2 [4]": null,
+  "Var 2 [5]": null,
+  "Var 2 [6]": null
  },
  "matched_case_control": {
   "(+) [1]": null,
@@ -197,7 +213,21 @@
   "Level 1 [1]": "calc.screening.level_lr.0.est",
   "Level 2 [1]": "calc.screening.level_lr.1.est",
   "Level 3 [1]": "calc.screening.level_lr.2.est",
-  "Level 4 [1]": "calc.screening.level_lr.3.est"
+  "Level 4 [1]": "calc.screening.level_lr.3.est",
+  "Positive [1]": null,
+  "Negative [1]": null,
+  "Positive [2]": null,
+  "Negative [2]": null,
+  "Positive [3]": null,
+  "Negative [3]": null,
+  "Level 1 [2]": "calc.screening.level_lr.0.lower",
+  "Level 1 [3]": "calc.screening.level_lr.0.upper",
+  "Level 2 [2]": "calc.screening.level_lr.1.lower",
+  "Level 2 [3]": "calc.screening.level_lr.1.upper",
+  "Level 3 [2]": "calc.screening.level_lr.2.lower",
+  "Level 3 [3]": "calc.screening.level_lr.2.upper",
+  "Level 4 [2]": "calc.screening.level_lr.3.lower",
+  "Level 4 [3]": "calc.screening.level_lr.3.upper"
  },
  "smr": {
   " [1]": null,
@@ -216,7 +246,9 @@
   "Ury and Wiggins method [1]": "calc.smr.ci.ury_wiggins.lower",
   "Ury and Wiggins method [2]": "calc.smr.ci.ury_wiggins.upper",
   "Vandenbroucke method [1]": "calc.smr.ci.vandenbroucke.lower",
-  "Vandenbroucke method [2]": "calc.smr.ci.vandenbroucke.upper"
+  "Vandenbroucke method [2]": "calc.smr.ci.vandenbroucke.upper",
+  "Observed number of cases [1]": null,
+  "Expected number of cases [1]": null
  },
  "rate_one": {
   " [1]": "calc.rate_one.estimate",
@@ -230,7 +262,9 @@
   "Byar approx. Poisson [1]": "calc.rate_one.ci.byar.lower",
   "Byar approx. Poisson [2]": "calc.rate_one.ci.byar.upper",
   "Rothman/Greenland [1]": "calc.rate_one.ci.rothman_greenland.lower",
-  "Rothman/Greenland [2]": "calc.rate_one.ci.rothman_greenland.upper"
+  "Rothman/Greenland [2]": "calc.rate_one.ci.rothman_greenland.upper",
+  "Number of cases: [1]": null,
+  "Person-Time: [1]": null
  },
  "rate_compare": {
   "Cases [1]": null,
@@ -338,7 +372,8 @@
   "Unequal variance [6]": "calc.t_test_summary.welch.p_2t",
   "Test for equality of variance2 [1]": "calc.t_test_summary.f_variance.f",
   "Test for equality of variance2 [2]": null,
-  "Test for equality of variance2 [3]": "calc.t_test_summary.f_variance.p"
+  "Test for equality of variance2 [3]": "calc.t_test_summary.f_variance.p",
+  "Test for equality of variance2 [4]": null
  },
  "anova_summary": {
   "Group [1]": null,
@@ -365,7 +400,9 @@
   "Population size(for finite population correction factor or fpc)(N): [1]": null,
   "Confidence limits as % of 100(absolute +/- %)(d): [1]": null,
   "Design effect (for cluster surveys-DEFF): [1]": null,
-  "Design effect (for cluster surveys-DEFF): [2]": null
+  "Design effect (for cluster surveys-DEFF): [2]": null,
+  "Confidence [1]": null,
+  "Confidence [2]": null
  },
  "ss_unmatched_cc": {
   " [1]": null,
@@ -377,7 +414,13 @@
   "Sample Size - Controls [3]": "calc.ss_unmatched_cc.fleiss_cc.controls",
   "Total sample size: [1]": "calc.ss_unmatched_cc.kelsey.total",
   "Total sample size: [2]": "calc.ss_unmatched_cc.fleiss.total",
-  "Total sample size: [3]": "calc.ss_unmatched_cc.fleiss_cc.total"
+  "Total sample size: [3]": "calc.ss_unmatched_cc.fleiss_cc.total",
+  "Two-sided confidence level(1-alpha) [1]": null,
+  "Power(% chance of detecting) [1]": null,
+  "Ratio of Controls to Cases [1]": null,
+  "Hypothetical proportion of controls with exposure [1]": null,
+  "Hypothetical proportion of cases with exposure: [1]": null,
+  "Least extreme Odds Ratio to be detected: [1]": null
  },
  "ss_cohort": {
   "Two-sided significance level(1-alpha): [1]": null,
