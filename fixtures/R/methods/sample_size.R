@@ -112,11 +112,14 @@ ss_means <- function(conf, power, ratio, diff, s1, s2) {
 }
 
 # --- power -----------------------------------------------------------
-# OpenEpi convention: power % = (1 - Q(|z_pow|)/2) * 100 where Q is the
-# normal upper tail; i.e. 50 + 50*Phi(|z_pow|), with the absolute value
-# matching OE's Norm(|x|).
+# OpenEpi convention: power % = Phi(z_pow) * 100, the one-sided normal
+# power at the z-formula's power variate (the quantity the inventory
+# names). OpenEpi's Norm(z) returns the TWO-sided tail 2*Q(z), so its
+# (1 - Norm(powerz)/2) * 100 is Phi(powerz) * 100. For powerz <= 0
+# OpenEpi's own A&S polynomial mis-extrapolates; the correct value is
+# still Phi(powerz) * 100.
 
-power_norm <- function(powerz) (1 - pnorm(abs(powerz), lower.tail = FALSE) / 2) * 100
+power_norm <- function(powerz) pnorm(powerz) * 100
 
 # Unmatched case-control, normal approximation.
 power_cc <- function(n_cases, n_controls, pct_cases, pct_controls, conf) {

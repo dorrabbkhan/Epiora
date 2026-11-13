@@ -142,15 +142,15 @@
         },
         "risk_difference": {
           "est": {
-            "value": null,
+            "value": -20,
             "class": "closed_form"
           },
           "lower": {
-            "value": null,
+            "value": -35.679711876320432,
             "class": "closed_form"
           },
           "upper": {
-            "value": null,
+            "value": -4.320288123679572,
             "class": "closed_form"
           }
         },
@@ -171,15 +171,15 @@
         "cmle_or": {
           "midp": {
             "est": {
-              "value": null,
+              "value": 0,
               "class": "iterative"
             },
             "lower": {
-              "value": null,
+              "value": 0,
               "class": "iterative"
             },
             "upper": {
-              "value": null,
+              "value": 1.9671599346755453,
               "class": "iterative"
             }
           },
@@ -436,15 +436,15 @@
         },
         "risk_difference": {
           "est": {
-            "value": null,
+            "value": -21.052631578947366,
             "class": "closed_form"
           },
           "lower": {
-            "value": null,
+            "value": -34.014819605824719,
             "class": "closed_form"
           },
           "upper": {
-            "value": null,
+            "value": -8.0904435520700151,
             "class": "closed_form"
           }
         },
@@ -465,15 +465,15 @@
         "cmle_or": {
           "midp": {
             "est": {
-              "value": null,
+              "value": 0,
               "class": "iterative"
             },
             "lower": {
-              "value": null,
+              "value": 0,
               "class": "iterative"
             },
             "upper": {
-              "value": null,
+              "value": 1.0438779279683756,
               "class": "iterative"
             }
           },
@@ -731,15 +731,15 @@
       },
       "risk_difference": {
         "est": {
-          "value": null,
+          "value": -20.634920634920633,
           "class": "closed_form"
         },
         "lower": {
-          "value": null,
+          "value": -30.62787594437507,
           "class": "closed_form"
         },
         "upper": {
-          "value": null,
+          "value": -10.641965325466195,
           "class": "closed_form"
         }
       },
@@ -760,15 +760,15 @@
       "cmle_or": {
         "midp": {
           "est": {
-            "value": null,
+            "value": 0,
             "class": "iterative"
           },
           "lower": {
-            "value": null,
+            "value": 0,
             "class": "iterative"
           },
           "upper": {
-            "value": null,
+            "value": 0.5682247633236025,
             "class": "iterative"
           }
         },
@@ -913,15 +913,15 @@
       },
       "mh_or": {
         "est": {
-          "value": 0.1401068190286921,
+          "value": 0,
           "class": "closed_form"
         },
         "lower": {
-          "value": 0.017445063834279909,
+          "value": null,
           "class": "closed_form"
         },
         "upper": {
-          "value": 1.125242127217986,
+          "value": null,
           "class": "closed_form"
         }
       },
@@ -969,15 +969,15 @@
       },
       "mh_rr": {
         "est": {
-          "value": 0.17184042107781564,
+          "value": 0,
           "class": "closed_form"
         },
         "lower": {
-          "value": 0.023733133543634249,
+          "value": 0,
           "class": "closed_form"
         },
         "upper": {
-          "value": 1.2442154029896886,
+          "value": null,
           "class": "closed_form"
         }
       },
@@ -1050,7 +1050,8 @@
       "stats": "4.6.2",
       "epitools": "0.5.10.1",
       "exact2x2": "1.7.0",
-      "epiR": "3.0.0"
+      "epiR": "3.0.0",
+      "DescTools": "0.99.60"
     }
   }
 }

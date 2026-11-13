@@ -11,11 +11,11 @@
   },
   "expected": {
     "normal": {
-      "value": 86.472762781217725,
+      "value": 72.945525562435449,
       "class": "closed_form"
     },
     "normal_cc": {
-      "value": 84.98635288800287,
+      "value": 69.972705776005739,
       "class": "closed_form"
     },
     "risk_ratio": {

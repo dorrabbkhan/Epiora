@@ -175,7 +175,7 @@
               "class": "iterative"
             },
             "lower": {
-              "value": null,
+              "value": 7.7856919660778559,
               "class": "iterative"
             },
             "upper": {
@@ -469,7 +469,7 @@
               "class": "iterative"
             },
             "lower": {
-              "value": null,
+              "value": 12.924001064570518,
               "class": "iterative"
             },
             "upper": {
@@ -764,7 +764,7 @@
             "class": "iterative"
           },
           "lower": {
-            "value": null,
+            "value": 25.155417397102227,
             "class": "iterative"
           },
           "upper": {
@@ -913,15 +913,15 @@
       },
       "mh_or": {
         "est": {
-          "value": 95.07455429497567,
+          "value": null,
           "class": "closed_form"
         },
         "lower": {
-          "value": 11.802300769541784,
+          "value": null,
           "class": "closed_form"
         },
         "upper": {
-          "value": 765.88209798174933,
+          "value": null,
           "class": "closed_form"
         }
       },
@@ -969,15 +969,15 @@
       },
       "mh_rr": {
         "est": {
-          "value": 4.4717387403552848,
+          "value": 4.8467153284671536,
           "class": "closed_form"
         },
         "lower": {
-          "value": 2.7951672559579883,
+          "value": 2.9861333697155308,
           "class": "closed_form"
         },
         "upper": {
-          "value": 7.1539358939509636,
+          "value": 7.86657746550559,
           "class": "closed_form"
         }
       },
@@ -1047,7 +1047,8 @@
       "stats": "4.6.2",
       "epitools": "0.5.10.1",
       "exact2x2": "1.7.0",
-      "epiR": "3.0.0"
+      "epiR": "3.0.0",
+      "DescTools": "0.99.60"
     }
   }
 }

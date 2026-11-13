@@ -139,10 +139,35 @@ two_by_two_table <- function(tab, conf, id) {
   e22 <- tryCatch(
     epiR::epi.2by2(tab, outcome = "as.columns", conf.level = conf / 100),
     error = function(e) NULL)
-  rd_w <- if (is.null(e22)) rep(NA_real_, 3) else
+  # epi.2by2 errors on a zero cell; DescTools' Wald BinomDiffCI is the
+  # same ARisk.strata.wald computation (bit-identical where epi.2by2
+  # runs, checked on the corpus tables) and stays defined there.
+  rd_w <- if (!is.null(e22)) {
     unname(unlist(e22$massoc.detail$ARisk.strata.wald))
+  } else {
+    tryCatch(
+      as.numeric(DescTools::BinomDiffCI(
+        a, n1, cc, n0, conf.level = conf / 100,
+        method = "wald")) * 100,
+      error = function(e) rep(NA_real_, 3))
+  }
+  # The cmle_or.midp estimate is the conditional MLE:
+  # stats::fisher.test's $estimate (bit-identical to exact2x2's;
+  # 0 / Inf at the support boundaries, which leaf() records as
+  # defined 0 / undefined null). or.midp's own estimate is the
+  # median-unbiased estimator — wrong for this leaf — but its limits
+  # are the mid-p exact limits and stay; where or.midp fails (zero
+  # cells) exact2x2's mid-p CI supplies the same quantity.
+  cmle_est <- tryCatch(
+    unname(fisher.test(tab, conf.level = conf / 100)$estimate),
+    error = function(e) NA_real_)
   midp <- tryCatch(or.midp(tab, conf.level = conf / 100),
                    error = function(e) NULL)
+  if (is.null(midp)) {
+    midp <- tryCatch(
+      exact2x2::exact2x2(tab, midp = TRUE, conf.level = conf / 100),
+      error = function(e) NULL)
+  }
   fis <- tryCatch(exact2x2::exact2x2(tab, tsmethod = "central",
                                      conf.level = conf / 100),
                   error = function(e) NULL)
@@ -171,8 +196,7 @@ two_by_two_table <- function(tab, conf, id) {
     },
     cmle_or = list(
       midp = list(
-        est = leaf(if (is.null(midp)) NA else midp$estimate,
-                   "iterative"),
+        est = leaf(cmle_est, "iterative"),
         lower = leaf(if (is.null(midp)) NA else midp$conf.int[1],
                      "iterative"),
         upper = leaf(if (is.null(midp)) NA else midp$conf.int[2],
@@ -328,31 +352,32 @@ two_by_two_expected <- function(strata, conf, id) {
     # tight values).
     check_cmle_exact(arr, conf / 100, cmle$tight,
                      paste0(id, ".adjusted.cmle_or"))
-    ev_t <- vapply(strata, function(t) t[1, 1], numeric(1))
-    n_t <- vapply(strata, function(t) t[1, 1] + t[1, 2], numeric(1))
-    ev_c <- vapply(strata, function(t) t[2, 1], numeric(1))
-    n_c <- vapply(strata, function(t) t[2, 1] + t[2, 2], numeric(1))
-    mho <- epiR::epi.mh(ev_t, n_t, ev_c, n_c,
-                        names = paste0("s", seq_along(strata)),
-                        method = "odds.ratio", conf.level = conf / 100)
-    mhr <- epiR::epi.mh(ev_t, n_t, ev_c, n_c,
-                        names = paste0("s", seq_along(strata)),
-                        method = "risk.ratio", conf.level = conf / 100)
+    # Uncorrected Mantel-Haenszel OR: stats::mantelhaen.test's
+    # estimate and Robins-Breslow-Greenland CI (the mh handle above).
+    # epiR::epi.mh adds 0.5 to every cell of a zero-cell stratum,
+    # which changes the estimator — the MH estimator itself is
+    # uncorrected (stock estimate 0.2420575 on one_inside_boundary,
+    # OpenEpi's displayed 0.2421). The uncorrected MH RR port with
+    # the Greenland-Robins CI is checked bit for bit against epi.mh
+    # wherever no zero cell exists (check_mh_rr_port).
+    rr_mh <- mh_rr_2x2xk(strata, conf)
+    check_mh_rr_port(strata, conf, rr_mh,
+                     paste0(id, ".adjusted.mh_rr"))
     out$adjusted <- list(
       mh_chisq = list(
         value = leaf(unname(mh$statistic)),
         p = leaf(mh$p.value)),
       mh_or = list(
-        est = leaf(mho$OR.summary$est),
-        lower = leaf(mho$OR.summary$lower),
-        upper = leaf(mho$OR.summary$upper)),
+        est = leaf(unname(mh$estimate)),
+        lower = leaf(mh$conf.int[1]),
+        upper = leaf(mh$conf.int[2])),
       direct_or = lapply(da_or, leaf),
       direct_rr = lapply(da_rr, leaf),
       direct_rd = lapply(da_rd, leaf),
       mh_rr = list(
-        est = leaf(mhr$RR.summary$est),
-        lower = leaf(mhr$RR.summary$lower),
-        upper = leaf(mhr$RR.summary$upper)),
+        est = leaf(rr_mh["est"]),
+        lower = leaf(rr_mh["lower"]),
+        upper = leaf(rr_mh["upper"])),
       breslow_day = lapply(bd, leaf),
       cmle_or = list(
         est = leaf(cmle$tight$est, "iterative",
@@ -377,7 +402,7 @@ two_by_two_write <- function(id, strata, conf = 95,
                  conf_level = conf, study_type = study_type)
   calc_write("two_by_two", id, inputs,
              two_by_two_expected(strata, conf, id),
-             c("stats", "epitools", "exact2x2", "epiR"))
+             c("stats", "epitools", "exact2x2", "epiR", "DescTools"))
 }
 
 # --- two_by_n (EI7 StatCalc SingleTableResults set) --------------------
@@ -403,8 +428,18 @@ two_by_n_table <- function(tab, conf, id) {
   e22 <- tryCatch(
     epiR::epi.2by2(tab, outcome = "as.columns", conf.level = conf / 100),
     error = function(e) NULL)
-  rd_w <- if (is.null(e22)) rep(NA_real_, 3) else
+  # Same zero-cell fallback as two_by_two_table: DescTools' Wald
+  # BinomDiffCI is bit-identical to epi.2by2's ARisk.strata.wald and
+  # stays defined where epi.2by2 errors.
+  rd_w <- if (!is.null(e22)) {
     unname(unlist(e22$massoc.detail$ARisk.strata.wald))
+  } else {
+    tryCatch(
+      as.numeric(DescTools::BinomDiffCI(
+        a, n1, cc, n0, conf.level = conf / 100,
+        method = "wald")) * 100,
+      error = function(e) rep(NA_real_, 3))
+  }
   list(
     odds_ratio = if (is.null(orw)) stat_ci(c(NA, NA, NA)) else
       stat_ci(unname(orw$measure[2, ])),
@@ -446,7 +481,7 @@ two_by_n_write <- function(id, strata, conf = 95) {
     crude = two_by_n_table(crude_table(strata), conf,
                            paste0(id, ".crude")))
   calc_write("two_by_n", id, inputs, expected,
-             c("stats", "epitools", "exact2x2", "epiR"))
+             c("stats", "epitools", "exact2x2", "epiR", "DescTools"))
 }
 
 # --- r_by_c ---------------------------------------------------------------
@@ -947,7 +982,14 @@ mean_ci_write <- function(id, mean, sd_or, sd_value, n,
   zci <- mean_ci(mean, sd, n, conf,
                  if (pop_finite) population_size else Inf)
   tc <- qt((1 + conf / 100) / 2, df = n - 1)
-  half <- tc * sd / sqrt(n)
+  # The t-row applies the same finite-population correction the z-row
+  # gets inside mean_ci (OpenEpi CIMean.js:161 applies it to both).
+  se_t <- sd / sqrt(n)
+  if (pop_finite) {
+    se_t <- se_t *
+      sqrt((population_size - n) / (population_size - 1))
+  }
+  half <- tc * se_t
   expected <- list(
     z = list(lower = leaf(zci[1]), upper = leaf(zci[2])),
     t = list(lower = leaf(mean - half), upper = leaf(mean + half)))

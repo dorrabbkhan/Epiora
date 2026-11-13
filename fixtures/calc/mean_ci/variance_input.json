@@ -22,11 +22,11 @@
     },
     "t": {
       "lower": {
-        "value": 9.6445589600452859,
+        "value": 9.686829402130229,
         "class": "closed_form"
       },
       "upper": {
-        "value": 11.355441039954714,
+        "value": 11.313170597869771,
         "class": "closed_form"
       }
     }

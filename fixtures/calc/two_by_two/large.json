@@ -167,7 +167,7 @@
         "cmle_or": {
           "midp": {
             "est": {
-              "value": 1.9998814585363986,
+              "value": 1.999949848632351,
               "class": "iterative"
             },
             "lower": {
@@ -462,7 +462,7 @@
       "cmle_or": {
         "midp": {
           "est": {
-            "value": 1.9998814585363986,
+            "value": 1.999949848632351,
             "class": "iterative"
           },
           "lower": {
@@ -613,7 +613,8 @@
       "stats": "4.6.2",
       "epitools": "0.5.10.1",
       "exact2x2": "1.7.0",
-      "epiR": "3.0.0"
+      "epiR": "3.0.0",
+      "DescTools": "0.99.60"
     }
   }
 }

@@ -68,6 +68,32 @@ direct_adjust <- function(strata, conf, measure = c("or", "rr", "rd")) {
   }
 }
 
+# Uncorrected Mantel-Haenszel risk ratio over 2x2xK strata with the
+# Greenland & Robins (1985) log-variance CI: RR = sum(a n0 / n) /
+# sum(c n1 / n), var(ln RR) = P/(R*S) with
+# P = sum((n1 n0 (a+c) - a c n) / n^2). epiR::epi.mh computes the same
+# formulas but adds 0.5 to every cell of any stratum containing a
+# zero, which changes the estimator; this port omits the correction.
+# check_mh_rr_port verifies it bit for bit against epi.mh wherever no
+# stratum has a zero cell.
+mh_rr_2x2xk <- function(strata, conf) {
+  a <- vapply(strata, function(t) t[1, 1], numeric(1))
+  c_ <- vapply(strata, function(t) t[2, 1], numeric(1))
+  n1 <- vapply(strata, function(t) t[1, 1] + t[1, 2], numeric(1))
+  n0 <- vapply(strata, function(t) t[2, 1] + t[2, 2], numeric(1))
+  n <- n1 + n0
+  rr_i <- (a / n1) / (c_ / n0)
+  w <- c_ * n1 / n
+  est <- sum(w * rr_i) / sum(w)
+  ln <- log(est)
+  p <- sum(((n1 * n0 * (a + c_)) - (a * c_ * n)) / n^2)
+  r <- sum(a * n0 / n)
+  s <- sum(c_ * n1 / n)
+  se <- sqrt(p / (r * s))
+  z <- qnorm((1 + conf / 100) / 2)
+  c(est = est, lower = exp(ln - z * se), upper = exp(ln + z * se))
+}
+
 # Breslow-Day (Woolf) homogeneity statistics over strata: chi-square
 # and p (df = strata - 1) for OR, RR and RD around the directly
 # adjusted estimate.
