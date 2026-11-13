@@ -12,7 +12,9 @@ import {
   scaleToR,
   multisetEqual,
   resolveStatPath,
+  statForLabel,
 } from './capture.mjs';
+import { CALCULATORS } from './drivers.mjs';
 
 test('parseDisplayed: plain numbers and trailing zeros', () => {
   assert.deepEqual(parseDisplayed('12.55'), { value: 12.55, decimals: 2, percent: false, bound: null, text: '12.55' });
@@ -166,6 +168,36 @@ test('scaleToR: person-time rates restated on the case per_unit scale', () => {
   const z = { value: 2.282, decimals: 3, percent: false, bound: null, text: '2.282' };
   const s3 = scaleToR('rate_compare', 'calc.rate_compare.crude.zscore.value', { per_unit: 10000 }, z, 1000);
   assert.equal(s3.value, 2.282);
+});
+
+test('proportion fill: no compare_with leaves the shipped page default, not a blank', () => {
+  // Proportion.htm ships "Compare to %" as data:50.0 and has no off state; a
+  // user who did not request a comparison leaves that default in the cell.
+  // Writing '' is a state no user produces (parseFloat -> NaN -> garbage
+  // "Two-sided p-value=2").
+  const inputs = { numerator: 0, denominator: 40, multiplier: 100, population_size: 1000000 };
+  const writes = CALCULATORS.proportion.fill(inputs);
+  assert.deepEqual(writes.find(([r, c]) => r === 4 && c === 2), [4, 2, 50]);
+  const withCmp = CALCULATORS.proportion.fill({ ...inputs, compare_with: 35 });
+  assert.deepEqual(withCmp.find(([r, c]) => r === 4 && c === 2), [4, 2, 35]);
+});
+
+test('statForLabel: unrequested ztest emission maps to null, not NO-R-COUNTERPART', () => {
+  const labels = { proportion: { 'Two-sided p-value': 'calc.proportion.ztest.p', 'z-value': 'calc.proportion.ztest.z' } };
+  const noCmp = { numerator: 0, denominator: 40 };
+  // OpenEpi always computes the one-sample test against the compare cell, so
+  // a case without compare_with still emits these rows; they were not
+  // requested, so statistic is null and --compare-r skips them.
+  assert.deepEqual(statForLabel(CALCULATORS.proportion, labels, 'proportion', 'Two-sided p-value', noCmp),
+    { stat: null, missing: false });
+  assert.deepEqual(statForLabel(CALCULATORS.proportion, labels, 'proportion', 'z-value', noCmp),
+    { stat: null, missing: false });
+  // A case that did request the comparison keeps its mapping.
+  assert.deepEqual(statForLabel(CALCULATORS.proportion, labels, 'proportion', 'Two-sided p-value', { compare_with: 35 }),
+    { stat: 'calc.proportion.ztest.p', missing: false });
+  // A label absent from labels.json is reported missing, as before.
+  assert.deepEqual(statForLabel(CALCULATORS.proportion, labels, 'proportion', 'Unseen label', noCmp),
+    { stat: null, missing: true });
 });
 
 test('multisetEqual: guard comparison', () => {

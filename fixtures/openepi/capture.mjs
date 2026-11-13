@@ -244,6 +244,19 @@ export function scaleToR(calc, stat, inputs, parsed, ptunit) {
   return { value, decimals };
 }
 
+// Maps an emitted label to its fixture statistic. A label absent from
+// labels.json reports {missing: true}; an emission OpenEpi always produces
+// although the case did not request it (the driver marks it `unrequested`,
+// e.g. proportion's one-sample z-test when the case has no compare_with —
+// the page has no off state) is recorded with statistic null, so --compare-r
+// does not seek an R counterpart for it.
+export function statForLabel(drv, labels, calc, label, inputs) {
+  const mapped = labels?.[calc]?.[label];
+  if (mapped === undefined) return { stat: null, missing: true };
+  if (mapped && drv.unrequested?.(mapped, inputs)) return { stat: null, missing: false };
+  return { stat: mapped ?? null, missing: false };
+}
+
 // ---------- input guard ----------
 // Before results are trusted, the form model (myTable, verified at fill time
 // in setCells) and the array OpenEpi actually computed on (dataMatrix, stored
@@ -495,10 +508,10 @@ async function captureCase(browser, c, labels) {
       values.push({ label, statistic: null, value: parsed.text, decimals: parsed.decimals });
       continue;
     }
-    const stat = labels?.[c.calculator]?.[label];
-    if (stat === undefined) missingLabels.push(label);
+    const { stat, missing } = statForLabel(drv, labels, c.calculator, label, c.inputs);
+    if (missing) missingLabels.push(label);
     const scaled = stat ? scaleToR(c.calculator, stat, c.inputs, parsed, ptunit) : parsed;
-    values.push({ label, statistic: stat ?? null, value: scaled.value, decimals: scaled.decimals });
+    values.push({ label, statistic: stat, value: scaled.value, decimals: scaled.decimals });
   }
   await page.close();
   return { case: c.case, values, _meta: { url: pageUrl, dialogs, missingLabels, guardErrors } };

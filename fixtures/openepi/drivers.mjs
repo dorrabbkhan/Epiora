@@ -134,11 +134,21 @@ export const CALCULATORS = {
     // population_size 0 = infinite in our corpus; OpenEpi's infinite sentinel
     // is "leave as 1000000" (FPC applies only for 2 < N < 1e6). Same input
     // semantically; the fixture's 0 maps to OpenEpi's 1000000.
+    // The "Compare to %" cell ships with 50.0 (Proportion.htm `data:50.0`) and
+    // has no off state — Proportion.js always runs the one-sample z-test on
+    // whatever it holds. A user who did not request a comparison leaves the
+    // shipped default; writing '' is a state no user produces (parseFloat('')
+    // is NaN -> the page displayed "Two-sided p-value=2").
     fill: (i) => [
       [0, 2, i.numerator], [1, 2, i.denominator], [2, 2, i.multiplier],
       [3, 2, i.population_size === 0 ? 1000000 : i.population_size],
-      [4, 2, i.compare_with ?? ''],
+      [4, 2, i.compare_with ?? 50],
     ],
+    // Emissions OpenEpi always produces although the case did not request
+    // them: with no compare_with input the z-test rows are computed against
+    // the shipped cell default, so they are recorded with statistic null
+    // (docs/decisions.md, v1.0 Task 3 round 3).
+    unrequested: (stat, i) => i.compare_with === undefined && stat.startsWith('calc.proportion.ztest.'),
   },
   two_by_two: {
     url: `${OE}/TwobyTwo/TwobyTwo.htm`,

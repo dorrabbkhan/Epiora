@@ -2762,10 +2762,18 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
 - `--compare-r` resolves every mapped statistic path into `fixtures/calc/<id>/<case>.json` and
   reports |openepi − R| against 0.5×10^-decimals. A mapped path with no leaf in that case's
   fixture is listed as NO-R-COUNTERPART and does not fail the run (round 2 rule): it means the
-  case's fixture does not cover that statistic — e.g. `proportion/zero_numerator` enters no
-  `compare_with`, so its fixture has no `ztest` leaf while OpenEpi still prints a p-value row.
-  A missing fixture file still fails as UNRESOLVED (non-zero exit). Fixture leaves whose value
-  is null are listed as R-NULL, numeric disagreements are listed for the owner (spec G7).
+  case's fixture does not cover that statistic. A missing fixture file still fails as UNRESOLVED
+  (non-zero exit). Fixture leaves whose value is null are listed as R-NULL, numeric disagreements
+  are listed for the owner (spec G7).
+- Unrequested-emission rule (round 3): OpenEpi's Proportion page has no "no comparison" state —
+  the "Compare to %" cell ships with 50.0 (Proportion.htm `data:50.0`) and Proportion.js always
+  runs the one-sample z-test on whatever the cell holds. A case without `compare_with` now leaves
+  the cell in that shipped state (the `''` write was a state no user produces — `parseFloat('')`
+  is NaN and the page displayed "Two-sided p-value=2"), and a driver `unrequested(stat, inputs)`
+  predicate marks emissions OpenEpi always produces although the case did not request them —
+  `calc.proportion.ztest.*` when `compare_with` is absent — which are recorded with
+  `statistic: null`. This removed the corpus's only NO-R-COUNTERPART (`proportion/zero_numerator`
+  ztest).
 - Same-quantity audit (round 2): every mapped label was re-checked against OpenEpi's own
   JavaScript (local site mirror) and corrected where the display is a different quantity than
   the fixture leaf: `t_test_summary` "Test for equality of variance2 [1..4]" → `null`
