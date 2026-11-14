@@ -1,0 +1,1319 @@
+{
+  "id": "poisson_tail",
+  "procedure": "special.poisson_tail",
+  "inputs": {
+    "grid": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0
+      ],
+      [
+        2.5,
+        0,
+        0
+      ],
+      [
+        5,
+        0,
+        0
+      ],
+      [
+        50,
+        0,
+        0
+      ],
+      [
+        1000,
+        0,
+        0
+      ],
+      [
+        100000,
+        0,
+        0
+      ],
+      [
+        1.8446744073709552e+19,
+        0,
+        0
+      ],
+      [
+        0,
+        0.5,
+        0
+      ],
+      [
+        1,
+        0.5,
+        0
+      ],
+      [
+        2,
+        0.5,
+        0
+      ],
+      [
+        2.5,
+        0.5,
+        0
+      ],
+      [
+        5,
+        0.5,
+        0
+      ],
+      [
+        50,
+        0.5,
+        0
+      ],
+      [
+        1000,
+        0.5,
+        0
+      ],
+      [
+        100000,
+        0.5,
+        0
+      ],
+      [
+        1.8446744073709552e+19,
+        0.5,
+        0
+      ],
+      [
+        0,
+        3,
+        0
+      ],
+      [
+        1,
+        3,
+        0
+      ],
+      [
+        2,
+        3,
+        0
+      ],
+      [
+        2.5,
+        3,
+        0
+      ],
+      [
+        5,
+        3,
+        0
+      ],
+      [
+        50,
+        3,
+        0
+      ],
+      [
+        1000,
+        3,
+        0
+      ],
+      [
+        100000,
+        3,
+        0
+      ],
+      [
+        1.8446744073709552e+19,
+        3,
+        0
+      ],
+      [
+        0,
+        20,
+        0
+      ],
+      [
+        1,
+        20,
+        0
+      ],
+      [
+        2,
+        20,
+        0
+      ],
+      [
+        2.5,
+        20,
+        0
+      ],
+      [
+        5,
+        20,
+        0
+      ],
+      [
+        50,
+        20,
+        0
+      ],
+      [
+        1000,
+        20,
+        0
+      ],
+      [
+        100000,
+        20,
+        0
+      ],
+      [
+        1.8446744073709552e+19,
+        20,
+        0
+      ],
+      [
+        0,
+        100,
+        0
+      ],
+      [
+        1,
+        100,
+        0
+      ],
+      [
+        2,
+        100,
+        0
+      ],
+      [
+        2.5,
+        100,
+        0
+      ],
+      [
+        5,
+        100,
+        0
+      ],
+      [
+        50,
+        100,
+        0
+      ],
+      [
+        1000,
+        100,
+        0
+      ],
+      [
+        100000,
+        100,
+        0
+      ],
+      [
+        1.8446744073709552e+19,
+        100,
+        0
+      ],
+      [
+        0,
+        10000,
+        0
+      ],
+      [
+        1,
+        10000,
+        0
+      ],
+      [
+        2,
+        10000,
+        0
+      ],
+      [
+        2.5,
+        10000,
+        0
+      ],
+      [
+        5,
+        10000,
+        0
+      ],
+      [
+        50,
+        10000,
+        0
+      ],
+      [
+        1000,
+        10000,
+        0
+      ],
+      [
+        100000,
+        10000,
+        0
+      ],
+      [
+        1.8446744073709552e+19,
+        10000,
+        0
+      ],
+      [
+        0,
+        1000000,
+        0
+      ],
+      [
+        1,
+        1000000,
+        0
+      ],
+      [
+        2,
+        1000000,
+        0
+      ],
+      [
+        2.5,
+        1000000,
+        0
+      ],
+      [
+        5,
+        1000000,
+        0
+      ],
+      [
+        50,
+        1000000,
+        0
+      ],
+      [
+        1000,
+        1000000,
+        0
+      ],
+      [
+        100000,
+        1000000,
+        0
+      ],
+      [
+        1.8446744073709552e+19,
+        1000000,
+        0
+      ],
+      [
+        0,
+        1000000000,
+        0
+      ],
+      [
+        1,
+        1000000000,
+        0
+      ],
+      [
+        2,
+        1000000000,
+        0
+      ],
+      [
+        2.5,
+        1000000000,
+        0
+      ],
+      [
+        5,
+        1000000000,
+        0
+      ],
+      [
+        50,
+        1000000000,
+        0
+      ],
+      [
+        1000,
+        1000000000,
+        0
+      ],
+      [
+        100000,
+        1000000000,
+        0
+      ],
+      [
+        1.8446744073709552e+19,
+        1000000000,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        1
+      ],
+      [
+        2,
+        0,
+        1
+      ],
+      [
+        2.5,
+        0,
+        1
+      ],
+      [
+        5,
+        0,
+        1
+      ],
+      [
+        50,
+        0,
+        1
+      ],
+      [
+        1000,
+        0,
+        1
+      ],
+      [
+        100000,
+        0,
+        1
+      ],
+      [
+        1.8446744073709552e+19,
+        0,
+        1
+      ],
+      [
+        0,
+        0.5,
+        1
+      ],
+      [
+        1,
+        0.5,
+        1
+      ],
+      [
+        2,
+        0.5,
+        1
+      ],
+      [
+        2.5,
+        0.5,
+        1
+      ],
+      [
+        5,
+        0.5,
+        1
+      ],
+      [
+        50,
+        0.5,
+        1
+      ],
+      [
+        1000,
+        0.5,
+        1
+      ],
+      [
+        100000,
+        0.5,
+        1
+      ],
+      [
+        1.8446744073709552e+19,
+        0.5,
+        1
+      ],
+      [
+        0,
+        3,
+        1
+      ],
+      [
+        1,
+        3,
+        1
+      ],
+      [
+        2,
+        3,
+        1
+      ],
+      [
+        2.5,
+        3,
+        1
+      ],
+      [
+        5,
+        3,
+        1
+      ],
+      [
+        50,
+        3,
+        1
+      ],
+      [
+        1000,
+        3,
+        1
+      ],
+      [
+        100000,
+        3,
+        1
+      ],
+      [
+        1.8446744073709552e+19,
+        3,
+        1
+      ],
+      [
+        0,
+        20,
+        1
+      ],
+      [
+        1,
+        20,
+        1
+      ],
+      [
+        2,
+        20,
+        1
+      ],
+      [
+        2.5,
+        20,
+        1
+      ],
+      [
+        5,
+        20,
+        1
+      ],
+      [
+        50,
+        20,
+        1
+      ],
+      [
+        1000,
+        20,
+        1
+      ],
+      [
+        100000,
+        20,
+        1
+      ],
+      [
+        1.8446744073709552e+19,
+        20,
+        1
+      ],
+      [
+        0,
+        100,
+        1
+      ],
+      [
+        1,
+        100,
+        1
+      ],
+      [
+        2,
+        100,
+        1
+      ],
+      [
+        2.5,
+        100,
+        1
+      ],
+      [
+        5,
+        100,
+        1
+      ],
+      [
+        50,
+        100,
+        1
+      ],
+      [
+        1000,
+        100,
+        1
+      ],
+      [
+        100000,
+        100,
+        1
+      ],
+      [
+        1.8446744073709552e+19,
+        100,
+        1
+      ],
+      [
+        0,
+        10000,
+        1
+      ],
+      [
+        1,
+        10000,
+        1
+      ],
+      [
+        2,
+        10000,
+        1
+      ],
+      [
+        2.5,
+        10000,
+        1
+      ],
+      [
+        5,
+        10000,
+        1
+      ],
+      [
+        50,
+        10000,
+        1
+      ],
+      [
+        1000,
+        10000,
+        1
+      ],
+      [
+        100000,
+        10000,
+        1
+      ],
+      [
+        1.8446744073709552e+19,
+        10000,
+        1
+      ],
+      [
+        0,
+        1000000,
+        1
+      ],
+      [
+        1,
+        1000000,
+        1
+      ],
+      [
+        2,
+        1000000,
+        1
+      ],
+      [
+        2.5,
+        1000000,
+        1
+      ],
+      [
+        5,
+        1000000,
+        1
+      ],
+      [
+        50,
+        1000000,
+        1
+      ],
+      [
+        1000,
+        1000000,
+        1
+      ],
+      [
+        100000,
+        1000000,
+        1
+      ],
+      [
+        1.8446744073709552e+19,
+        1000000,
+        1
+      ],
+      [
+        0,
+        1000000000,
+        1
+      ],
+      [
+        1,
+        1000000000,
+        1
+      ],
+      [
+        2,
+        1000000000,
+        1
+      ],
+      [
+        2.5,
+        1000000000,
+        1
+      ],
+      [
+        5,
+        1000000000,
+        1
+      ],
+      [
+        50,
+        1000000000,
+        1
+      ],
+      [
+        1000,
+        1000000000,
+        1
+      ],
+      [
+        100000,
+        1000000000,
+        1
+      ],
+      [
+        1.8446744073709552e+19,
+        1000000000,
+        1
+      ]
+    ]
+  },
+  "expected": {
+    "values": [
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.60653065971263342,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.90979598956895014,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.98561232203302929,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.98561232203302929,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.99998583506267757,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.99999999999999989,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.049787068367863944,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.19914827347145581,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.42319008112684348,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.42319008112684348,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.91608205796869657,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 2.0611536224385579e-09,
+        "class": "closed_form"
+      },
+      {
+        "value": 4.3284226071209721e-08,
+        "class": "closed_form"
+      },
+      {
+        "value": 4.5551495055892125e-07,
+        "class": "closed_form"
+      },
+      {
+        "value": 4.5551495055892125e-07,
+        "class": "closed_form"
+      },
+      {
+        "value": 7.1908840528428925e-05,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.99999999517126248,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 3.7200759760208361e-44,
+        "class": "closed_form"
+      },
+      {
+        "value": 3.7572767357810449e-42,
+        "class": "closed_form"
+      },
+      {
+        "value": 1.8976107553682281e-40,
+        "class": "closed_form"
+      },
+      {
+        "value": 1.8976107553682281e-40,
+        "class": "closed_form"
+      },
+      {
+        "value": 3.2614563667204693e-36,
+        "class": "closed_form"
+      },
+      {
+        "value": 2.4015922356168156e-08,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.39346934028736658,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.090204010431049877,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.090204010431049877,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.00017211562995584072,
+        "class": "closed_form"
+      },
+      {
+        "value": 1.7887765104351365e-80,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.95021293163213605,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.80085172652854419,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.80085172652854419,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.18473675547622787,
+        "class": "closed_form"
+      },
+      {
+        "value": 1.248535487154193e-42,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.99999999793884642,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.99999995671577391,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.99999995671577391,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.9999830552560699,
+        "class": "closed_form"
+      },
+      {
+        "value": 1.2458926079719381e-08,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0.99999998821549929,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 1,
+        "class": "closed_form"
+      },
+      {
+        "value": 0,
+        "class": "closed_form"
+      }
+    ]
+  },
+  "tolerance_classes": {
+    "closed_form": 1.0000000000000001e-09,
+    "iterative": 9.9999999999999995e-07
+  },
+  "source": {
+    "r_version": "R version 4.6.2 (2026-10-29)",
+    "packages": {
+      "stats": "4.6.2",
+      "jsonlite": "2.0.0"
+    }
+  }
+}
