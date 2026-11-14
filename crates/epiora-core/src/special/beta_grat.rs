@@ -1,7 +1,7 @@
 //! The `bgrat` half of R's `bratio` (toms708.c): the
 //! Didonato–Morris asymptotic expansion `grat_accum`/`grat_r` plus the
 //! shared special-function helpers (`gam1`, `gamln1`, `rexpm1`,
-//! `digamma`, `erf__`) the `beta_small` series need. Ported verbatim
+//! `erf__`) the `beta_small` series need. Ported verbatim
 //! like the rest of the engine's R-derived special functions.
 
 use super::beta_math::{algdiv, erfcx};
@@ -137,23 +137,6 @@ fn rexpm1(x: f64) -> f64 {
     }
 }
 
-/// Digamma `ψ(x)` for `x > 0` — recurrence up to 10 then the
-/// asymptotic expansion; only called from `apser` (b ≤ 2e13).
-pub(crate) fn digamma(x: f64) -> f64 {
-    let mut x = x;
-    let mut s = 0.0;
-    while x < 10.0 {
-        s -= 1.0 / x;
-        x += 1.0;
-    }
-    let r = 1.0 / x;
-    let r2 = r * r;
-    // psi(x) ~ ln x − 1/(2x) − Σ B(2k)/(2k·x^{2k})
-    s + libm::log(x)
-        - 0.5 * r
-        - r2 * (1.0 / 12.0 - r2 * (1.0 / 120.0 - r2 * (1.0 / 252.0 - r2 / 240.0)))
-}
-
 /// `erf(x)` — `erf__` (same rational fits as `erfc1`).
 pub(crate) fn erf__(x: f64) -> f64 {
     const C: f64 = 0.564189583547756;
@@ -233,11 +216,33 @@ pub(crate) fn erf__(x: f64) -> f64 {
     }
 }
 
+/// `log(exp(logx) + exp(logy))` — R's `logspace_add` macro
+/// (dpq.h, used by `bgrat`'s log_w accumulation).
+fn logspace_add(logx: f64, logy: f64) -> f64 {
+    logx.max(logy) + libm::log1p(libm::exp(-libm::fabs(logx - logy)))
+}
+
 /// `w += I_x(a,b)` by the Didonato–Morris asymptotic expansion —
 /// `bgrat` for `a >= 15`, `b <= 1`, non-log `w`. `w_in` is the value
 /// accumulated so far (0 for a fresh sum, matching `*w = 0` in R's
 /// `w1 := 0` before `bgrat`).
 pub(crate) fn grat_accum(a: f64, b: f64, x: f64, y: f64, w_in: f64) -> f64 {
+    bgrat(a, b, x, y, w_in, false)
+}
+
+/// The `log_w = TRUE` form of `bgrat`: `w_log_in` is already
+/// `log(*w)` — `ML_NEGINF` for a fresh log-space sum — and the
+/// expansion is folded in by `logspace_add`, so `bgrat` recovers the
+/// digits `exp(log_u)·sum` underflows away. Used by `bratio`'s L131
+/// underflow redo only.
+pub(crate) fn grat_log(a: f64, b: f64, x: f64, y: f64, w_log_in: f64) -> f64 {
+    bgrat(a, b, x, y, w_log_in, true)
+}
+
+/// `bgrat(a, b, x, y, *w, log_w)` — the expansion is identical in both
+/// `log_w` modes; only the `l = w/u` convergence term and the final
+/// accumulation differ (toms708.c L1167-1171, L1226-1230).
+fn bgrat(a: f64, b: f64, x: f64, y: f64, w_in: f64, log_w: bool) -> f64 {
     const N_TERMS: usize = 30;
     let mut c = [0.0f64; N_TERMS];
     let mut d = [0.0f64; N_TERMS];
@@ -260,8 +265,15 @@ pub(crate) fn grat_accum(a: f64, b: f64, x: f64, y: f64, w_in: f64) -> f64 {
     }
     let u = libm::exp(log_u);
     let u_0 = u == 0.0;
-    // l := w/u, careful when u underflowed to 0
-    let l = if w_in == 0.0 {
+    // l := w/u, careful when u underflowed to 0 — and, in log_w mode,
+    // when *w is still -Inf.
+    let l = if log_w {
+        if w_in == ML_NEGINF {
+            0.0
+        } else {
+            libm::exp(w_in - log_u)
+        }
+    } else if w_in == 0.0 {
         0.0
     } else {
         libm::exp(libm::log(w_in) - log_u)
@@ -300,7 +312,9 @@ pub(crate) fn grat_accum(a: f64, b: f64, x: f64, y: f64, w_in: f64) -> f64 {
         // n == N_TERMS without convergence: R warns (ierr 4) and
         // still uses the partial sum.
     }
-    if u_0 {
+    if log_w {
+        logspace_add(w_in, log_u + libm::log(sum))
+    } else if u_0 {
         w_in + libm::exp(log_u + libm::log(sum))
     } else {
         w_in + u * sum

@@ -12,6 +12,7 @@
 
 use super::beta::{reg_inc_beta, reg_inc_beta_upper};
 use super::gamma::{ln_gamma, stirlerr};
+use super::normal::{normal_cdf, normal_sf};
 use super::qt;
 use super::root::RootError;
 
@@ -61,8 +62,11 @@ fn tail_val(t: f64, df: f64) -> f64 {
 /// the probability on the `|t|` side, `x <= 0` swaps the tail, and
 /// `0.5 − v + 0.5` returns `1 − v` without losing v's last bits.
 fn pt_body(t: f64, df: f64, lower_tail: bool) -> f64 {
-    if t.is_nan() || !(df > 0.0 && df.is_finite()) {
+    if t.is_nan() || df.is_nan() {
         return f64::NAN;
+    }
+    if df <= 0.0 {
+        return f64::NAN; // pt.c L37: n <= 0 (covers -Inf)
     }
     if t == 0.0 {
         return 0.5;
@@ -80,6 +84,15 @@ fn pt_body(t: f64, df: f64, lower_tail: bool) -> f64 {
             0.0
         };
     }
+    // pt.c L40: !R_FINITE(n) — +Inf only (-Inf is n <= 0 above) —
+    // is the normal limit pnorm(x, 0, 1, lower_tail).
+    if !df.is_finite() {
+        return if lower_tail {
+            normal_cdf(t)
+        } else {
+            normal_sf(t)
+        };
+    }
     let v = 0.5 * tail_val(t, df);
     let lt = if t <= 0.0 { !lower_tail } else { lower_tail };
     if lt {
@@ -89,8 +102,8 @@ fn pt_body(t: f64, df: f64, lower_tail: bool) -> f64 {
     }
 }
 
-/// `pt(t, df)`. `df` must be positive and finite; NaN inputs or a
-/// non-positive/infinite `df` give NaN.
+/// `pt(t, df)`. `df` must be positive; `+Inf` is the normal limit
+/// (pt.c L40), NaN or a non-positive/`−Inf` `df` gives NaN.
 pub fn t_cdf(t: f64, df: f64) -> f64 {
     pt_body(t, df, true)
 }

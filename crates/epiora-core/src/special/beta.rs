@@ -8,6 +8,7 @@
 //! R in mixed small/huge-parameter regions. `qbeta` is Brent on the
 //! same function (spec §3.4).
 
+use super::beta_grat::EPS;
 use super::beta_large;
 use super::beta_small;
 use super::root::brent_root;
@@ -67,6 +68,17 @@ fn inc_beta(x: f64, a: f64, b: f64, upper: bool) -> f64 {
     // L62: x1 = 0.5 − x + 0.5 — what bratio receives; the two-step
     // form stays exact where 1 − x would round twice.
     let y = 0.5 - x + 0.5;
+    // toms708.c L168-186: max(a,b) < eps·0.001 = 1e-18 — the
+    // x-independent ratios, returned before the parameter dispatch
+    // (the log_p forms it also defines are unreachable here — the
+    // engine only exposes log_p = FALSE).
+    if a.max(b) < EPS * 0.001 {
+        return if upper {
+            a / (a + b) // *w1 = a/(a+b)
+        } else {
+            b / (a + b) // *w  = b/(a+b)
+        };
+    }
     if a.min(b) <= 1.0 {
         // bratio's first block: swap so x0 <= 0.5, compute whichever
         // tail its series produce directly, un-swap at the end.

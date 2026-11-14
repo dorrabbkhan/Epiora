@@ -3271,3 +3271,75 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   (`t_quantile` all 187 cells, `gamma_quantile` 288, `chisq_quantile`
   120 — `/tmp/gen_full_grids.R` in the worktree, not committed): 0
   failures.
+
+### v1.0 Task 5 follow-up round 2 — bratio L131 redo, tiny a,b, and df = +Inf
+
+- Owner decision (in-session, fix round 2 on PR #70): close the
+  pre-existing R-parity gaps the reviewer found, in the same PR.
+- `bratio`'s `max(a,b) < eps·0.001` = 1e-18 block (toms708.c
+  L168-186) is now ported in `inc_beta`: non-log `w = b/(a+b)`,
+  `w1 = a/(a+b)` — the `log_p` ratio forms are unreachable (the
+  engine only exposes `log_p = FALSE`), documented at the site.
+- `bratio`'s L131 underflow redo (toms708.c L248-275) is now
+  complete: a `w1` of `0` or subnormal after `bup`/`bgrat` is
+  recomputed on the log scale — `bup(·, give_log = TRUE)` when
+  `did_bup`, else `ML_NEGINF` — folded by `bgrat`'s `log_w`
+  `logspace_add` accumulation and closed by `L_end_from_w1_log`'s
+  `w = -expm1(log_w1)`, `w1 = exp(log_w1)`. `n` is `20` on every
+  L131 call. `mu` in `bup` is provably `0` on both reachable
+  entries (`b > 1 + a/10` is needed for `mu > 0`; `b = a0 <= 1`),
+  so `d = 1` and `esum(0,·)` reduce correctly.
+- Two further parity gaps surfaced by the new reference points and
+  closed in the same round (outside the original fix list, recorded
+  here): toms708.c's own `psi` (L1842-2036, the Cody–Strecok–Thacher
+  rational fits) replaces the recurrence+asymptotic `digamma` `apser`
+  used — the two differ by ~3.1e-13 at `psi(0.9)`, which is visible
+  in `f_sf`'s subnormal `w1` results; and `dpois_raw`'s non-log form
+  is now R 4.6.2's `exp(-yl)·exp(-yh)/sqrt(2πx)` over the `ebd0`
+  double-double pair (dpois.c) instead of the pre-4.0
+  `exp(-bd0-stirlerr)/sqrt(2πx)` — a few-ulp difference reachable
+  through `pf(x, df1, +Inf) → pchisq` (e.g. `pchisq(12, 4, lo=F)`
+  was `0.017351265236664505` vs R's `0.017351265236664512`).
+- `pt(x, df = +Inf)` returns `pnorm(x)` (pt.c L40, checked after
+  the NaN/`n <= 0`/`!R_FINITE(x)` order); `t_sf` mirrors it and
+  `qt`'s `ndf > 1e20 → qnorm` arm already covers `ndf = +Inf`
+  (qt.c L100). `pf`'s infinite-df paths (pf.c L44-56): `df2 =
+  +Inf` → `pchisq(x·df1, df1, lo=F)`, `df1 = +Inf` → `pchisq(df2/x,
+  df2, lo=T)`, both infinite → the `x < 1` / `x = 1` / `x > 1`
+  piecewise — all before the `pbeta` call, R's check order kept.
+- Tests (`crates/epiora-core/tests/special.rs`, additions only):
+  `beta_tiny_ab_ratio_block`, `beta_l131_log_scale_redo`,
+  `t_cdf_sf_infinite_df_is_pnorm`,
+  `t_quantile_infinite_df_is_qnorm`,
+  `f_sf_infinite_df_pchisq_paths` — each row carries the R 4.6.2
+  `Rscript` command and output in the doc comment. All five failed
+  before the ports (wrong value, `NaN`, or subnormal last-bits) and
+  pass bit-for-bit after.
+- wasm `epiora_wasm` gzip -9 size: 151,414 bytes (`gzip -9 -c
+  crates/epiora-wasm/pkg/epiora_wasm_bg.wasm | wc -c`; budget
+  409,600).
+- Native/wasm parity: `corpus-runner /tmp/epiora-grid/fixtures`
+  (release, `--features corpus`) vs `node
+  crates/epiora-wasm/parity/run.mjs /tmp/epiora-grid/fixtures` —
+  37 parity lines, `diff` byte-identical.
+- Grid verification (detached worktree `/tmp/epiora-grid` at this
+  branch + the `v1.0/task-2-special-grids` WIP fixtures + the
+  `/tmp/gen_full_grids.R` full-coverage regeneration — `t_sf` 187,
+  `t_quantile` 187, `gamma_quantile` 288, `chisq_quantile` 120
+  cells): `cargo test -p epiora-core --all-features --test
+  procedures every_fixture_passes_via_run_case` — 0 failures across
+  3,066 `special` cells and the whole corpus.
+- `./scripts/check.sh` (the full local gate): ALL CHECKS PASSED.
+- Files outside the fix-round Files block: `docs/decisions.md`
+  (this entry);
+  `crates/epiora-core/src/special/beta_math.rs` (new `psi` port
+  plus the `brcmp1` give_log corrections — `log1p`-split `c`, the
+  `lx0 = -log1p(b/a)` centred form, and `log` of the truncated
+  `const__` literal which is not ln(1/√2π));
+  `crates/epiora-core/src/special/gamma.rs` and
+  `gamma_ebd0.rs` (the `dpois_raw` non-log `ebd0` switch; `ebd0`,
+  `M_SQRT_2PI`, `X_LRG` exported `pub(crate)`).
+- Same sandbox accommodations as the previous entry
+  (`CARGO_HOME=/tmp/cargo-home`, `PLAYWRIGHT_BROWSERS_PATH`,
+  `CI=1`, the `/tmp/check-bin/npx` `--workers=4` shim); no repo
+  file changed for them.

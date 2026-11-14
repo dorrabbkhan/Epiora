@@ -2545,3 +2545,290 @@ fn quantile_p0_p1_boundaries() {
     assert!(t_quantile(0.0, 4.0).is_err() && t_quantile(1.0, 4.0).is_err());
     assert!(t_quantile(0.5, 0.0).is_err() && t_quantile(f64::NAN, 4.0).is_err());
 }
+
+// ---------------------------------------------------------------------------
+// PR #70 fix round 2 — the remaining R 4.6.2 parity gaps the review
+// found (owner decision: close them in this PR). toms708.c's
+// `max(a, b) < eps·0.001` ratio block and the L131 underflow log-scale
+// redo, pt.c's `df = +Inf` → `pnorm` path (and qt.c's via `ndf > 1e20`),
+// and pf.c's infinite-df `pchisq` paths. Every table cites the exact
+// R 4.6.2 command and its verbatim output.
+
+/// `pbeta(x, a, b)` at `max(a, b) < eps·0.001` (= 1e-18) — toms708.c
+/// L168-186: `w = b/(a+b)`, `w1 = a/(a+b)`, independent of `x`. The
+/// last two rows sit at/just over the threshold: `9.99e-19 < 1e-18`
+/// still takes the ratio block, `1.01e-18` falls through to the
+/// ordinary series — R agrees either way. Command and output:
+///
+///   Rscript -e 'fmt <- function(t, v) cat(sprintf("%-46s %.17g\n", t, v))
+///   for (x in c(0.2, 0.5, 0.8, 0.99)) fmt(sprintf("pbeta(%g, 1e-19, 2e-19)", x), pbeta(x, 1e-19, 2e-19))
+///   fmt("pbeta(0.3, 4e-19, 1e-20)", pbeta(0.3, 4e-19, 1e-20))
+///   fmt("pbeta(0.9, 9e-19, 9e-19)", pbeta(0.9, 9e-19, 9e-19))
+///   fmt("pbeta(0.1, 1e-18, 1e-18)", pbeta(0.1, 1e-18, 1e-18))
+///   fmt("pbeta(0.3, 9.99e-19, 5e-19)", pbeta(0.3, 9.99e-19, 5e-19))
+///   fmt("pbeta(0.3, 1.01e-18, 5e-19)", pbeta(0.3, 1.01e-18, 5e-19))'
+///   # pbeta(0.2, 1e-19, 2e-19)                      0.66666666666666663
+///   # pbeta(0.5, 1e-19, 2e-19)                      0.66666666666666663
+///   # pbeta(0.8, 1e-19, 2e-19)                      0.66666666666666663
+///   # pbeta(0.99, 1e-19, 2e-19)                     0.66666666666666663
+///   # pbeta(0.3, 4e-19, 1e-20)                      0.024390243902439025
+///   # pbeta(0.9, 9e-19, 9e-19)                      0.5
+///   # pbeta(0.1, 1e-18, 1e-18)                      0.5
+///   # pbeta(0.3, 9.99e-19, 5e-19)                   0.33355570380253502
+///   # pbeta(0.3, 1.01e-18, 5e-19)                   0.33112582781456956
+///
+/// `pf` drives the same block through the `w` and `w1` sides:
+///
+///   Rscript -e 'fmt <- function(t, v) cat(sprintf("%-46s %.17g\n", t, v))
+///   fmt("pf(1, 4e-19, 2e-19, lo=F)", pf(1, 4e-19, 2e-19, lower.tail = FALSE))
+///   fmt("pf(0.25, 4e-19, 2e-19, lo=F)", pf(0.25, 4e-19, 2e-19, lower.tail = FALSE))
+///   fmt("pf(2, 2e-19, 4e-19, lo=F)", pf(2, 2e-19, 4e-19, lower.tail = FALSE))'
+///   # pf(1, 4e-19, 2e-19, lo=F)                     0.66666666666666663
+///   # pf(0.25, 4e-19, 2e-19, lo=F)                  0.66666666666666663
+///   # pf(2, 2e-19, 4e-19, lo=F)                     0.33333333333333331
+#[test]
+#[allow(clippy::excessive_precision)]
+fn beta_tiny_ab_ratio_block() {
+    for (x, a, b, expected) in [
+        (0.2, 1e-19, 2e-19, 0.66666666666666663),
+        (0.5, 1e-19, 2e-19, 0.66666666666666663),
+        (0.8, 1e-19, 2e-19, 0.66666666666666663),
+        (0.99, 1e-19, 2e-19, 0.66666666666666663),
+        (0.3, 4e-19, 1e-20, 0.024390243902439025),
+        (0.9, 9e-19, 9e-19, 0.5),
+        (0.1, 1e-18, 1e-18, 0.5),
+        (0.3, 9.99e-19, 5e-19, 0.33355570380253502),
+        (0.3, 1.01e-18, 5e-19, 0.33112582781456956),
+    ] {
+        assert_eq!(reg_inc_beta(x, a, b), expected, "pbeta({x}, {a}, {b})");
+    }
+    assert_eq!(f_sf(1.0, 4e-19, 2e-19), 0.66666666666666663);
+    assert_eq!(f_sf(0.25, 4e-19, 2e-19), 0.66666666666666663);
+    assert_eq!(f_sf(2.0, 2e-19, 4e-19), 0.33333333333333331);
+}
+
+/// The L131 underflow redo (toms708.c L255-269): when the non-log
+/// `bgrat` leaves `w1` at 0 or subnormal, R redoes the sum in log
+/// space — `bup(.., give_log = TRUE)` for the `did_bup` entries, `-Inf`
+/// for the `b0 > 15` direct entry — then `L_end_from_w1_log` gives
+/// `w = -expm1(log_w1)`, `w1 = exp(log_w1)`. `reg_inc_beta` shows it on
+/// the swapped `w` side; `f_sf`/`t_sf` show it on the `w1` side. The
+/// last four rows exercise `did_bup` (a0 ~ 1e-310 makes `w1 ~ a0·k`
+/// subnormal). Command and output:
+///
+///   Rscript -e 'fmt <- function(t, v) cat(sprintf("%-46s %.17g\n", t, v))
+///   fmt("pbeta(0.8, 3200, 0.5)", pbeta(0.8, 3200, 0.5))
+///   fmt("pbeta(0.8, 3300, 0.5)", pbeta(0.8, 3300, 0.5))
+///   fmt("pf(1600, 1, 6400, lo=F)", pf(1600, 1, 6400, lower.tail = FALSE))
+///   fmt("pf(1600, 1, 6600, lo=F)", pf(1600, 1, 6600, lower.tail = FALSE))
+///   fmt("pf(1.5e308, 3e-308, 20, lo=F)", pf(1.5e308, 3e-308, 20, lower.tail = FALSE))
+///   fmt("pf(1.5e308, 5e-308, 20, lo=F)", pf(1.5e308, 5e-308, 20, lower.tail = FALSE))
+///   fmt("pf(1.5e308, 2e-308, 20, lo=F)", pf(1.5e308, 2e-308, 20, lower.tail = FALSE))
+///   fmt("pf(1.7e308, 2e-310, 1.8, lo=F)", pf(1.7e308, 2e-310, 1.8, lower.tail = FALSE))
+///   fmt("pf(1.7e308, 2e-310, 20, lo=F)", pf(1.7e308, 2e-310, 20, lower.tail = FALSE))
+///   fmt("pf(1e308, 4e-310, 1.8, lo=F)", pf(1e308, 4e-310, 1.8, lower.tail = FALSE))
+///   fmt("pf(1e308, 4e-310, 20, lo=F)", pf(1e308, 4e-310, 20, lower.tail = FALSE))
+///   fmt("pt(40, 6000, lo=F)", pt(40, 6000, lower.tail = FALSE))
+///   fmt("pt(-40, 6000)", pt(-40, 6000))'
+///   # pbeta(0.8, 3200, 0.5)                         1.7218906167158363e-312
+///   # pbeta(0.8, 3300, 0.5)                         3.4584595208887258e-322
+///   # pf(1600, 1, 6400, lo=F)                       1.7218906167158363e-312
+///   # pf(1600, 1, 6600, lo=F)                       1.8030263368457211e-313
+///   # pf(1.5e308, 3e-308, 20, lo=F)                 8.0783108001628288e-310
+///   # pf(1.5e308, 5e-308, 20, lo=F)                 3.1364244978638328e-310
+///   # pf(1.5e308, 2e-308, 20, lo=F)                 1.2949181537023103e-309
+///   # pf(1.7e308, 2e-310, 1.8, lo=F)                4.1637420079603455e-310
+///   # pf(1.7e308, 2e-310, 20, lo=F)                 3.565079657751108e-310
+///   # pf(1e308, 4e-310, 1.8, lo=F)                  8.0083312774720683e-310
+///   # pf(1e308, 4e-310, 20, lo=F)                   6.8110608565467336e-310
+///   # pt(40, 6000, lo=F)                            1.1557570124398941e-310
+///   # pt(-40, 6000)                                 1.1557570124398941e-310
+#[test]
+#[allow(clippy::excessive_precision)]
+fn beta_l131_log_scale_redo() {
+    // b0 > 15, did_bup = FALSE — the swapped-lower and upper tails.
+    assert_eq!(reg_inc_beta(0.8, 3200.0, 0.5), 1.7218906167158363e-312);
+    assert_eq!(reg_inc_beta(0.8, 3300.0, 0.5), 3.4584595208887258e-322);
+    assert_eq!(f_sf(1600.0, 1.0, 6400.0), 1.7218906167158363e-312);
+    assert_eq!(f_sf(1600.0, 1.0, 6600.0), 1.8030263368457211e-313);
+    // did_bup = TRUE — L20's b0 in (1, 15] entry, reached through
+    // f_sf's `df1*x <= df2` arm when a0 ~ 1e-308 makes w1 subnormal
+    // while b0*x0 > 1 skips the apser check.
+    assert_eq!(f_sf(1.5e308, 3e-308, 20.0), 8.0783108001628288e-310);
+    assert_eq!(f_sf(1.5e308, 5e-308, 20.0), 3.1364244978638328e-310);
+    assert_eq!(f_sf(1.5e308, 2e-308, 20.0), 1.2949181537023103e-309);
+    // a0 < eps and b0*x0 <= 1 take apser instead — these assert the
+    // same subnormal w1 through toms708's `psi` (Cody–Strecok–Thacher
+    // fits), ported in beta_math.rs.
+    assert_eq!(f_sf(1.7e308, 2e-310, 1.8), 4.1637420079603455e-310);
+    assert_eq!(f_sf(1.7e308, 2e-310, 20.0), 3.565079657751108e-310);
+    assert_eq!(f_sf(1e308, 4e-310, 1.8), 8.0083312774720683e-310);
+    assert_eq!(f_sf(1e308, 4e-310, 20.0), 6.8110608565467336e-310);
+    // The t tail reaches the same path through reg_inc_beta_upper.
+    assert_eq!(t_sf(40.0, 6000.0), 1.1557570124398941e-310);
+    assert_eq!(t_cdf(-40.0, 6000.0), 1.1557570124398941e-310);
+}
+
+/// `pt(x, df = +Inf) = pnorm(x)` — pt.c L40 (`!R_FINITE(n)` after the
+/// `df <= 0` and `!R_FINITE(x)` checks, so `df = -Inf` is still NaN
+/// and `x = ±Inf` still bounds first). Command and output:
+///
+///   Rscript -e 'fmt <- function(t, v) cat(sprintf("%-46s %.17g\n", t, v))
+///   fmt("pt(-3, Inf)", pt(-3, Inf)); fmt("pt(-3, Inf, lo=F)", pt(-3, Inf, lower.tail = FALSE))
+///   fmt("pt(-1, Inf)", pt(-1, Inf)); fmt("pt(-1, Inf, lo=F)", pt(-1, Inf, lower.tail = FALSE))
+///   fmt("pt(0, Inf)", pt(0, Inf))
+///   fmt("pt(0.5, Inf)", pt(0.5, Inf)); fmt("pt(0.5, Inf, lo=F)", pt(0.5, Inf, lower.tail = FALSE))
+///   fmt("pt(2, Inf)", pt(2, Inf)); fmt("pt(2, Inf, lo=F)", pt(2, Inf, lower.tail = FALSE))
+///   fmt("pt(8, Inf, lo=F)", pt(8, Inf, lower.tail = FALSE))
+///   fmt("pt(-Inf, Inf)", pt(-Inf, Inf)); fmt("pt(Inf, Inf)", pt(Inf, Inf))'
+///   # pt(-3, Inf)                                   0.0013498980316300946
+///   # pt(-3, Inf, lo=F)                             0.9986501019683699
+///   # pt(-1, Inf)                                   0.15865525393145705
+///   # pt(-1, Inf, lo=F)                             0.84134474606854293
+///   # pt(0, Inf)                                    0.5
+///   # pt(0.5, Inf)                                  0.69146246127401301
+///   # pt(0.5, Inf, lo=F)                            0.30853753872598694
+///   # pt(2, Inf)                                    0.97724986805182079
+///   # pt(2, Inf, lo=F)                              0.022750131948179212
+///   # pt(8, Inf, lo=F)                              6.2209605742717849e-16
+///   # pt(-Inf, Inf)                                 0
+///   # pt(Inf, Inf)                                  1
+#[test]
+#[allow(clippy::excessive_precision)]
+fn t_cdf_sf_infinite_df_is_pnorm() {
+    for (t, expected) in [
+        (-3.0, 0.0013498980316300946),
+        (-1.0, 0.15865525393145705),
+        (0.0, 0.5),
+        (0.5, 0.69146246127401301),
+        (2.0, 0.97724986805182079),
+    ] {
+        assert_eq!(t_cdf(t, f64::INFINITY), expected, "pt({t}, Inf)");
+        assert_eq!(t_cdf(t, f64::INFINITY), normal_cdf(t));
+    }
+    for (t, expected) in [
+        (-3.0, 0.9986501019683699),
+        (-1.0, 0.84134474606854293),
+        (0.5, 0.30853753872598694),
+        (2.0, 0.022750131948179212),
+        (8.0, 6.2209605742717849e-16),
+    ] {
+        assert_eq!(t_sf(t, f64::INFINITY), expected, "pt({t}, Inf, lo=F)");
+        assert_eq!(t_sf(t, f64::INFINITY), normal_sf(t));
+    }
+    assert_eq!(t_cdf(f64::NEG_INFINITY, f64::INFINITY), 0.0);
+    assert_eq!(t_cdf(f64::INFINITY, f64::INFINITY), 1.0);
+    assert_eq!(t_sf(f64::NEG_INFINITY, f64::INFINITY), 1.0);
+    assert_eq!(t_sf(f64::INFINITY, f64::INFINITY), 0.0);
+    // df = -Inf is df <= 0 -> NaN (pt.c L37 runs before L40).
+    assert!(t_cdf(1.0, f64::NEG_INFINITY).is_nan());
+    assert!(t_sf(1.0, f64::NEG_INFINITY).is_nan());
+}
+
+/// `qt(p, df = +Inf) = qnorm(p)` — reached through qt.c L100's
+/// `ndf > 1e20` normal limit. Command and output:
+///
+///   Rscript -e 'fmt <- function(t, v) cat(sprintf("%-46s %.17g\n", t, v))
+///   fmt("qt(1e-6, Inf)", qt(1e-6, Inf))
+///   fmt("qt(0.025, Inf)", qt(0.025, Inf))
+///   fmt("qt(0.5, Inf)", qt(0.5, Inf))
+///   fmt("qt(0.975, Inf)", qt(0.975, Inf))
+///   fmt("qt(0.999999, Inf)", qt(0.999999, Inf))
+///   fmt("qt(1e-300, Inf)", qt(1e-300, Inf))
+///   fmt("qt(0.999999999999, Inf)", qt(0.999999999999, Inf))'
+///   # qt(1e-6, Inf)                                 -4.7534243088228987
+///   # qt(0.025, Inf)                                -1.9599639845400538
+///   # qt(0.5, Inf)                                  0
+///   # qt(0.975, Inf)                                1.9599639845400536
+///   # qt(0.999999, Inf)                             4.7534243088170891
+///   # qt(1e-300, Inf)                               -37.047096299361201
+///   # qt(0.999999999999, Inf)                       7.0344869100478356
+#[test]
+#[allow(clippy::excessive_precision)]
+fn t_quantile_infinite_df_is_qnorm() {
+    for (p, expected) in [
+        (1e-6, -4.7534243088228987),
+        (0.025, -1.9599639845400538),
+        (0.5, 0.0),
+        (0.975, 1.9599639845400536),
+        (0.999999, 4.7534243088170891),
+        (1e-300, -37.047096299361201),
+        (0.999999999999, 7.0344869100478356),
+    ] {
+        assert_eq!(t_quantile(p, f64::INFINITY), Ok(expected), "qt({p}, Inf)");
+    }
+    // df = -Inf is ndf <= 0 -> NaN -> the typed error.
+    assert!(t_quantile(0.5, f64::NEG_INFINITY).is_err());
+}
+
+/// `pf(x, df1, df2, lower.tail = FALSE)` at infinite df — pf.c L44-56:
+/// `df2 = Inf` delegates `pchisq(x·df1, df1, lo=F)`; `df1 = Inf`
+/// delegates `pchisq(df2/x, df2, lo=T)`; both infinite is the x < 1 /
+/// x = 1 / x > 1 piecewise. Command and output:
+///
+///   Rscript -e 'fmt <- function(t, v) cat(sprintf("%-46s %.17g\n", t, v))
+///   for (x in c(0.5, 1, 3, 10)) fmt(sprintf("pf(%g, 4, Inf, lo=F)", x), pf(x, 4, Inf, lower.tail = FALSE))
+///   for (x in c(0.5, 1, 3, 10)) fmt(sprintf("pf(%g, Inf, 10, lo=F)", x), pf(x, Inf, 10, lower.tail = FALSE))
+///   for (x in c(0.5, 1, 3)) fmt(sprintf("pf(%g, Inf, Inf, lo=F)", x), pf(x, Inf, Inf, lower.tail = FALSE))
+///   fmt("pf(1e-320, Inf, 10, lo=F)", pf(1e-320, Inf, 10, lower.tail = FALSE))
+///   fmt("pf(1e300, 4, Inf, lo=F)", pf(1e300, 4, Inf, lower.tail = FALSE))
+///   fmt("pf(Inf, 4, 10, lo=F)", pf(Inf, 4, 10, lower.tail = FALSE))'
+///   # pf(0.5, 4, Inf, lo=F)                         0.73575888234288467
+///   # pf(1, 4, Inf, lo=F)                           0.40600584970983811
+///   # pf(3, 4, Inf, lo=F)                           0.017351265236664512
+///   # pf(10, 4, Inf, lo=F)                          4.3284226071209721e-08
+///   # pf(0.5, Inf, 10, lo=F)                        0.97074731192303887
+///   # pf(1, Inf, 10, lo=F)                          0.55950671493478754
+///   # pf(3, Inf, 10, lo=F)                          0.027543256789528608
+///   # pf(10, Inf, 10, lo=F)                         0.00017211562995584072
+///   # pf(0.5, Inf, Inf, lo=F)                       1
+///   # pf(1, Inf, Inf, lo=F)                         0.5
+///   # pf(3, Inf, Inf, lo=F)                         0
+///   # pf(1e-320, Inf, 10, lo=F)                     1
+///   # pf(1e300, 4, Inf, lo=F)                       0
+///   # pf(Inf, 4, 10, lo=F)                          0
+#[test]
+#[allow(clippy::excessive_precision)]
+fn f_sf_infinite_df_pchisq_paths() {
+    // df2 = +Inf: pchisq(x*df1, df1, lower.tail = FALSE).
+    for (x, expected) in [
+        (0.5, 0.73575888234288467),
+        (1.0, 0.40600584970983811),
+        (3.0, 0.017351265236664512),
+        (10.0, 4.3284226071209721e-8),
+    ] {
+        assert_eq!(
+            f_sf(x, 4.0, f64::INFINITY),
+            expected,
+            "pf({x}, 4, Inf, lo=F)"
+        );
+        assert_eq!(f_sf(x, 4.0, f64::INFINITY), chisq_sf(x * 4.0, 4.0));
+    }
+    // df1 = +Inf: pchisq(df2/x, df2, lower.tail = TRUE).
+    for (x, expected) in [
+        (0.5, 0.97074731192303887),
+        (1.0, 0.55950671493478754),
+        (3.0, 0.027543256789528608),
+        (10.0, 0.00017211562995584072),
+    ] {
+        assert_eq!(
+            f_sf(x, f64::INFINITY, 10.0),
+            expected,
+            "pf({x}, Inf, 10, lo=F)"
+        );
+        assert_eq!(f_sf(x, f64::INFINITY, 10.0), chisq_cdf(10.0 / x, 10.0));
+    }
+    // Both infinite: x < 1 -> 1, x = 1 -> 0.5, x > 1 -> 0.
+    assert_eq!(f_sf(0.5, f64::INFINITY, f64::INFINITY), 1.0);
+    assert_eq!(f_sf(1.0, f64::INFINITY, f64::INFINITY), 0.5);
+    assert_eq!(f_sf(3.0, f64::INFINITY, f64::INFINITY), 0.0);
+    // x bounds run before the df checks (R_P_bounds_01): df2/x = +Inf
+    // gives pchisq(+Inf) = 1; x*df1 = +Inf gives pchisq(+Inf, lo=F) = 0;
+    // x = +Inf is itself the upper bound.
+    assert_eq!(f_sf(1e-320, f64::INFINITY, 10.0), 1.0);
+    assert_eq!(f_sf(1e300, 4.0, f64::INFINITY), 0.0);
+    assert_eq!(f_sf(f64::INFINITY, 4.0, 10.0), 0.0);
+    // df = -Inf is df <= 0 -> NaN.
+    assert!(f_sf(1.0, f64::NEG_INFINITY, 10.0).is_nan());
+    assert!(f_sf(1.0, 4.0, f64::NEG_INFINITY).is_nan());
+}

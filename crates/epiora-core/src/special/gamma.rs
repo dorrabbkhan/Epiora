@@ -9,6 +9,8 @@
 //! incomplete gamma `inc_gamma_lower`/`inc_gamma_upper` behind
 //! `chisq_cdf`/`chisq_sf` — is in `gamma_lower.rs` (spec §3.4).
 
+use super::gamma_ebd0::{ebd0, M_SQRT_2PI, X_LRG};
+
 /// `lgamma(x)` for x > 0 (spec §3.4); the sign Γ(x) takes is dropped.
 pub fn ln_gamma(x: f64) -> f64 {
     libm::lgamma_r(x).0
@@ -24,9 +26,10 @@ const SCALE_FACTOR: f64 = 1.157920892373162e77;
 
 /// `dpois_raw(x, lambda, give_log = FALSE)` — Poisson probability
 /// `lambda^x·e^-lambda / x!` for fractional `x` (R `dpois.c`). R ≥ 4.5
-/// splits the deviance via `ebd0` (double-double arithmetic); the plain
-/// `bd0 + stirlerr` form agrees to ~1e-13 relative in the worst case —
-/// inside the `closed_form` class.
+/// splits the deviance via `ebd0` (double-double arithmetic) and
+/// returns `exp(-yl)·exp(-yh)/sqrt(2π·x)`, which the pre-4.0
+/// `exp(-bd0 − stirlerr)/sqrt(2π·x)` form can differ from by a few
+/// ulps (e.g. `dpois(1, 6)` — the `pf(x, df1, +Inf)` path sees it).
 pub(crate) fn dpois_raw(x: f64, lambda: f64) -> f64 {
     if lambda == 0.0 {
         return if x == 0.0 { 1.0 } else { 0.0 };
@@ -43,7 +46,15 @@ pub(crate) fn dpois_raw(x: f64, lambda: f64) -> f64 {
         }
         return libm::exp(-lambda + x * libm::log(lambda) - ln_gamma(x + 1.0));
     }
-    libm::exp(-bd0(x, lambda) - stirlerr(x)) / libm::sqrt(M_2PI * x)
+    let (yh, yl) = ebd0(x, lambda);
+    let yl = yl + stirlerr(x);
+    let lrg_x = x >= X_LRG; // really large x  <==>  2·π·x overflows
+    let r = if lrg_x {
+        M_SQRT_2PI * libm::sqrt(x)
+    } else {
+        M_2PI * x
+    };
+    libm::exp(-yl) * libm::exp(-yh) / if lrg_x { r } else { libm::sqrt(r) }
 }
 
 /// `dpois_wrap(x_plus_1, lambda, give_log)` = `dpois(x_plus_1 − 1,
