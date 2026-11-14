@@ -3240,8 +3240,11 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   checks; `shape = 0 → Ok(0.0)` for interior p. `qt`'s `P_ok1` is
   qt.c L147 verbatim (`P > DBL_MIN || !log_p` = always true in the
   `log_p = FALSE` port).
-- wasm `epiora_wasm` gzip -9 size: 148,265 bytes (`./scripts/check.sh`,
-  wasm size gate step; budget 409,600).
+- wasm `epiora_wasm` size: 151,451 bytes gzip -9 (budget 409,600),
+  measured by CI run
+  https://github.com/dorrabbkhan/Epiora/actions/runs/43620791490
+  (validation-report job) at ac56a18. The exact size shifts by a few
+  bytes per commit because the build embeds the commit hash.
 - Local-gate environment accommodations (this sandbox; no repo file
   changed): `CARGO_HOME=/tmp/cargo-home` (the real cargo registry is
   read-only), `PLAYWRIGHT_BROWSERS_PATH=target/ms-playwright` (browsers
@@ -3315,9 +3318,11 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   `Rscript` command and output in the doc comment. All five failed
   before the ports (wrong value, `NaN`, or subnormal last-bits) and
   pass bit-for-bit after.
-- wasm `epiora_wasm` gzip -9 size: 151,414 bytes (`gzip -9 -c
-  crates/epiora-wasm/pkg/epiora_wasm_bg.wasm | wc -c`; budget
-  409,600).
+- wasm `epiora_wasm` size: 151,451 bytes gzip -9 (budget 409,600),
+  measured by CI run
+  https://github.com/dorrabbkhan/Epiora/actions/runs/43620791490
+  (validation-report job) at ac56a18. The exact size shifts by a few
+  bytes per commit because the build embeds the commit hash.
 - Native/wasm parity: `corpus-runner /tmp/epiora-grid/fixtures`
   (release, `--features corpus`) vs `node
   crates/epiora-wasm/parity/run.mjs /tmp/epiora-grid/fixtures` —
