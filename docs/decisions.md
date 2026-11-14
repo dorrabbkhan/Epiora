@@ -3405,17 +3405,8 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   sandbox denies `~/.cache/R/renv`); all 1,274 files under `fixtures/`
   were md5-identical between runs.
 - Files outside the task's Files block: `docs/decisions.md` (this
-  entry) and `fixtures/import/ods_dates/input.ods`, which
-  `generate.R` rewrote: one byte inside `styles.xml`
-  (`text:date-value` in the page-header field) because the LO
-  conversion leaks the wall-clock date despite
-  `SOURCE_DATE_EPOCH=0` — committed had 2026-11-13, the pinned-LO
-  regeneration emits the run date. The committed fixture must carry
-  the regeneration day's bytes or the `fixtures` workflow's
-  byte-identity check fails deterministically; the leak is a
-  pre-existing gap in `fixtures/R/import_zip.R`'s normalisation
-  (meta.xml is fixed, this styles.xml field is not) and its fix is
-  out of scope here.
+  entry). The `ods_dates` date leak was fixed separately in PR #72
+  and this PR no longer touches `input.ods`.
 - Platform-ulp note (found by the fixtures workflow, run
   43640700793): `qt(0.25, 1)` and `qt(0.75, 1)` — the Cauchy
   `tanpi` branch — produce `∓1.0000000000000002` under this
@@ -3424,4 +3415,43 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   workflow's bytes (blob `3282673`, quoted from the CI drift log);
   a regeneration on this machine drifts back by one ulp on those
   two leaves only. Both values pass `closed_form` against the
-  engine's result either way.
+  engine's result either way. Owner accepted the CI-generator bytes
+  for these two leaves (2026-11-14, PR #71 option B1).
+
+### fixtures: ods_dates styles.xml date pinned (2026-11-14)
+
+- Owner decision (PR #71, option A1, 2026-11-14): fix the drift at
+  the generator — pin the wall-clock date LibreOffice writes into
+  `styles.xml`, regenerate `fixtures/import/ods_dates/input.ods`.
+- Cause: `lo_convert` runs LibreOffice under `SOURCE_DATE_EPOCH=0`
+  and `TZ=UTC`, and `repack_zip(..., normalize_ods_meta)` pinned
+  meta.xml only. LO 26.2.6.3 still writes the conversion day's date
+  into styles.xml's default page header as
+  `<text:date text:date-value="YYYY-MM-DD">` — the one timestamp
+  `SOURCE_DATE_EPOCH` does not cover. The committed file carried
+  2026-11-13, so a regeneration on any other day differed by that
+  string and the `fixtures` workflow drift check failed daily.
+- Fields pinned: `normalize_ods` (new `repack_zip` patch, wired in
+  `fixtures/R/import.R`) runs `normalize_ods_meta` plus
+  `normalize_ods_styles`, which rewrites every
+  `text:date-value="..."` in styles.xml to `2026-01-01` (the date
+  part of `LO_META_DATETIME`); `stop_if` fires when the field is
+  missing so an LO layout change fails loudly at generation.
+- Other members inspected on a fresh pinned-LO conversion:
+  meta.xml's producer fields (already pinned), settings.xml,
+  manifest.rdf and META-INF/manifest.xml carry no date/time value;
+  `<text:time>` in the same header has no `text:time-value`
+  attribute and its element text is the fixed placeholder
+  `00:00:00`. content.xml's `office:date-value` cells are the data
+  under test and stay exactly as LO wrote them.
+- Proof (this sandbox has no faketime/libfaketime, so the fallback
+  applies): a raw `lo_convert` on 2026-11-14 produced
+  `text:date-value="2026-11-14"`; after `normalize_ods` the
+  regenerated `input.ods` carries `2026-01-01`; `grep -r
+  2026-11-14` over every extracted member and over the zip's raw
+  bytes → 0 matches; two consecutive `Rscript fixtures/generate.R`
+  runs produced sha256-identical `input.ods`
+  (45d2ae4a55eb2cb5a20294a6c2ae8a59034abc0bf0ab74e19ddcf651e093f762);
+  `git status --porcelain fixtures/` shows only `input.ods` and the
+  two R files.
+Supersedes: —
