@@ -9,7 +9,10 @@
 use super::beta_grat::{gam1, gamln1};
 use super::gamma::{ln_gamma, stirlerr};
 
-const LN_1_SQRT_2PI: f64 = -0.918938533204673; // log(1/sqrt(2*pi))
+/// brcmp1's `const__` — its 15-digit literal rounds above
+/// `M_1_SQRT_2PI`, and `log` of it is not ln(1/√2π).
+#[allow(clippy::approx_constant)]
+const B_CMP1_CONST: f64 = 0.398942280401433;
 
 /// `x^a · y^b / B(a, b)` — `brcmp1`'s non-log form.
 pub(crate) fn beta_prefactor(a: f64, b: f64, x: f64, y: f64) -> f64 {
@@ -55,15 +58,21 @@ pub(crate) fn beta_log_prefactor(a: f64, b: f64, x: f64, y: f64) -> f64 {
             return libm::log(a0) + z - u;
         }
         if b0 <= 1.0 {
-            // L40/L50: a0 < 1, b0 ≤ 1
+            // L40/L50: a0 < 1, b0 ≤ 1 — brcmp1's give_log form:
+            // `ans + log(a0) + c − log1p(a0/b0)` with `ans = z`
+            // (esum(0,·,TRUE)) and `c` built as the log1p difference,
+            // not a product logged once.
+            if z == f64::NEG_INFINITY {
+                return z;
+            }
             let apb = a + b;
             let z2 = if apb > 1.0 {
                 (gam1(apb - 1.0) + 1.0) / apb
             } else {
                 gam1(apb) + 1.0
             };
-            let c = (gam1(a) + 1.0) * (gam1(b) + 1.0) / z2;
-            return z + libm::log(a0 * c) - libm::log1p(a0 / b0);
+            let c = libm::log1p(gam1(a)) + libm::log1p(gam1(b)) - libm::log(z2);
+            return z + libm::log(a0) + c - libm::log1p(a0 / b0);
         }
         // L60/L70: a0 < 1 < b0 < 8 — peel b0's integer part.
         let mut u = gamln1(a0);
@@ -115,7 +124,12 @@ pub(crate) fn beta_log_prefactor(a: f64, b: f64, x: f64, y: f64) -> f64 {
     } else {
         e - libm::log(y / y0)
     };
-    LN_1_SQRT_2PI + 0.5 * libm::log(b * x0) - (a * u + b * v) - bcorr(a, b)
+    // give_log: log(const__) + (log(b) + lx0)/2 + z − bcorr where
+    // lx0 = −log1p(b/a) is R's exact form for log(x0) in both swap
+    // arms — `log(b·x0)` rounds differently in the last bits, and
+    // `log` of the truncated const__ literal is not ln(1/√2π).
+    let lx0 = -libm::log1p(b / a);
+    libm::log(B_CMP1_CONST) + (libm::log(b) + lx0) / 2.0 - (a * u + b * v) - bcorr(a, b)
 }
 
 /// `ln Γ(b)/Γ(a+b)` for b ≥ 8 — `algdiv` (Stirling form; `del(x)` is
@@ -263,4 +277,125 @@ pub(crate) fn erfcx(x: f64) -> f64 {
         ret_val = libm::exp(x * x) * 2.0 - ret_val;
     }
     ret_val
+}
+
+/// `psi(x)` — toms708.c's digamma (L1842-2036), the Cody–Strecok–
+/// Thacher rational Chebyshev fits (Math. Comp. 27, 123-127, 1973):
+/// reflection `ψ(1−x) = ψ(x) + π·cot(πx)` for `x < 0.5` (with `1/x`
+/// standing in for `π·cot(πx)` below `1e-9`), the `(x − x0)` form on
+/// `[0.5, 3]`, and `log x + p2/q2` above it. `apser` calls it for
+/// `b·eps <= 0.02`. The `L_err` exits return 0, as in R.
+pub(crate) fn psi(x: f64) -> f64 {
+    // R's literal rounds one ulp below FRAC_PI_4 — keep it.
+    #[allow(clippy::approx_constant)]
+    const PIOV4: f64 = 0.785398163397448; // == pi / 4
+                                          // dx0 = zero of psi() to extended precision
+    const DX0: f64 = 1.461632144968362341262659542325721325;
+    // psi(x)/(x − x0), 0.5 <= x <= 3
+    const P1: [f64; 7] = [
+        0.0089538502298197,
+        4.77762828042627,
+        142.441585084029,
+        1186.45200713425,
+        3633.51846806499,
+        4138.10161269013,
+        1305.60269827897,
+    ];
+    const Q1: [f64; 6] = [
+        44.8452573429826,
+        520.752771467162,
+        2210.0079924783,
+        3641.27349079381,
+        1908.310765963,
+        6.91091682714533e-6,
+    ];
+    // psi(x) − ln x + 1/(2x), x > 3
+    const P2: [f64; 4] = [
+        -2.12940445131011,
+        -7.01677227766759,
+        -4.48616543918019,
+        -0.648157123766197,
+    ];
+    const Q2: [f64; 4] = [
+        32.2703493791143,
+        89.2920700481861,
+        54.6117738103215,
+        7.77788548522962,
+    ];
+    let mut x = x;
+
+    // xmax1 = min((double)INT_MAX, 0.5/d1mach(3) = 1/DBL_EPSILON)
+    let xmax1 = (i32::MAX as f64).min(1.0 / f64::EPSILON);
+    let xsmall = 1e-9;
+    let mut aug = 0.0;
+    if x < 0.5 {
+        // reflection formula ψ(1−x) = ψ(x) + π·cot(πx)
+        if x.abs() <= xsmall {
+            if x == 0.0 {
+                return 0.0; // L_err
+            }
+            aug = -1.0 / x;
+        } else {
+            // reduction of the argument for cotan
+            let mut w = -x;
+            let mut sgn = PIOV4;
+            if w <= 0.0 {
+                w = -w;
+                sgn = -sgn;
+            }
+            if w >= xmax1 {
+                return 0.0; // L_err
+            }
+            let nq = w as i32;
+            w -= nq as f64;
+            let nq = (w * 4.0) as i32;
+            w = (w - nq as f64 * 0.25) * 4.0;
+            // w is the first-quadrant form of the fractional part of
+            // 4·x; adjust sign accordingly (R's comments)
+            let n = nq / 2;
+            if n + n != nq {
+                w = 1.0 - w;
+            }
+            let z = PIOV4 * w;
+            let m = n / 2;
+            if m + m != n {
+                sgn = -sgn;
+            }
+            // final value for −π·cot(πx): cos/sin for cotan, sin/cos
+            // for tan
+            let n = (nq + 1) / 2;
+            let m = n / 2;
+            if m + m == n {
+                if z == 0.0 {
+                    return 0.0; // L_err
+                }
+                aug = sgn * (libm::cos(z) / libm::sin(z) * 4.0);
+            } else {
+                aug = sgn * (libm::sin(z) / libm::cos(z) * 4.0);
+            }
+        }
+        x = 1.0 - x;
+    }
+    if x <= 3.0 {
+        let mut den = x;
+        let mut upper = P1[0] * x;
+        for i in 1..=5 {
+            den = (den + Q1[i - 1]) * x;
+            upper = (upper + P1[i]) * x;
+        }
+        den = (upper + P1[6]) / (den + Q1[5]);
+        let xmx0 = x - DX0;
+        return den * xmx0 + aug;
+    }
+    if x < xmax1 {
+        let w = 1.0 / (x * x);
+        let mut den = w;
+        let mut upper = P2[0] * w;
+        for i in 1..=3 {
+            den = (den + Q2[i - 1]) * w;
+            upper = (upper + P2[i]) * w;
+        }
+        aug += upper / (den + Q2[3]) - 0.5 / x;
+    }
+    aug + libm::log(x)
 }

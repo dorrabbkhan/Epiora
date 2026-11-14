@@ -17,10 +17,10 @@ const M_LN2: f64 = std::f64::consts::LN_2;
 /// `M_2PI` — `2·π`.
 const M_2PI: f64 = std::f64::consts::TAU;
 /// `M_SQRT_2PI` — `sqrt(2·π)` (`dpois.c`).
-const M_SQRT_2PI: f64 = 2.5066282746310007;
+pub(crate) const M_SQRT_2PI: f64 = 2.5066282746310007;
 /// `x_LRG` of `dpois.c` — `2^1023 / π`; at `x ≥ x_LRG` `M_2PI·x`
 /// overflows, so R divides `sqrt(2π·x)` differently.
-const X_LRG: f64 = 2.8611174857570283e307;
+pub(crate) const X_LRG: f64 = 2.8611174857570283e307;
 
 /// `log(p/q)` correction table of `bd0.c`, entry `i` for
 /// `r = 0.5 + i/256`, each row four `float` pieces of ~23 bits so a
@@ -163,7 +163,7 @@ const BD0_SCALE: [[f64; 4]; 129] = [
 /// `ebd0(x, M, &yh, &yl)` of `bd0.c` — `x·log(x/M) + M − x` delivered
 /// as a double-double pair `(yh, yl)`.
 #[allow(clippy::many_single_char_names)]
-fn ebd0(x: f64, m: f64) -> (f64, f64) {
+pub(crate) fn ebd0(x: f64, m: f64) -> (f64, f64) {
     const SB: i32 = 10;
     const S: f64 = 1024.0; // 1 << SB
     const N: f64 = 128.0;
@@ -223,8 +223,7 @@ fn add1(yh: &mut f64, yl: &mut f64, d: f64) {
 
 /// `dpois_raw(x, lambda, give_log = TRUE)` — `log(λ^x·e^−λ/x!)` for
 /// fractional `x`, R's `dpois.c` with the `ebd0` deviance split. The
-/// non-log half stays `gamma::dpois_raw` (its `bd0 + stirlerr` form is
-/// the established reference for the normal-size range).
+/// non-log half in `gamma::dpois_raw` uses the same `ebd0` pair.
 pub(crate) fn dpois_raw_log(x: f64, lambda: f64) -> f64 {
     if lambda == 0.0 {
         return if x == 0.0 { 0.0 } else { f64::NEG_INFINITY };

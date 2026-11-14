@@ -6,8 +6,8 @@
 //! tail at df = 4e5). Ported verbatim like the rest of the engine's
 //! R-derived special functions.
 
-use super::beta_grat::{digamma, gam1, gamln1, grat_accum, EPS};
-use super::beta_math::{algdiv, beta_log_prefactor};
+use super::beta_grat::{gam1, gamln1, grat_accum, grat_log, EPS};
+use super::beta_math::{algdiv, beta_log_prefactor, psi};
 use super::gamma::ln_gamma;
 
 /// `mu` scaling from `bup`: `min(int(exparg(1)), int(exparg(0)))` =
@@ -18,8 +18,10 @@ const BUP_MU: i32 = 708;
 /// `0 < x <= 0.5` — the first dispatch block of `bratio`. Whichever
 /// side is not produced directly is set by the `0.5 − v + 0.5`
 /// complement, exactly as R's `L_end_from_w`/`L_end_from_w1` do.
-pub(crate) fn bratio_small(x0: f64, a0: f64, b0: f64) -> (f64, f64) {
-    let y0 = 1.0 - x0;
+/// `y0` is the `x1 = 0.5 − x + 0.5` `pbeta_raw` computed for `x0`'s
+/// pre-swap argument (bratio's `y0` parameter) — passed in, not
+/// recomputed, so its rounding matches R's.
+pub(crate) fn bratio_small(x0: f64, y0: f64, a0: f64, b0: f64) -> (f64, f64) {
     if b0 < EPS.min(EPS * a0) {
         let w = fpser(a0, b0, x0);
         return (w, 0.5 - w + 0.5);
@@ -43,11 +45,11 @@ pub(crate) fn bratio_small(x0: f64, a0: f64, b0: f64) -> (f64, f64) {
             return (w, 0.5 - w + 0.5);
         }
         if b0 <= 15.0 {
-            let w1 = bup(b0, a0, y0, x0, 20) + grat_accum(b0 + 20.0, a0, y0, x0, 0.0);
-            return (0.5 - w1 + 0.5, w1);
+            // *w1 = bup(b0,·); b0 += 20 — the `did_bup` L131 entry.
+            return l131(b0 + 20.0, a0, y0, x0, Some(b0));
         }
-        let w1 = grat_accum(b0, a0, y0, x0, 0.0);
-        return (0.5 - w1 + 0.5, w1);
+        // b0 > 15: *w1 = 0 — the direct (did_bup = FALSE) L131 entry.
+        return l131(b0, a0, y0, x0, None);
     }
     // both a, b <= 1
     if a0 >= 0.2f64.min(b0) || libm::pow(x0, a0) <= 0.9 {
@@ -58,7 +60,31 @@ pub(crate) fn bratio_small(x0: f64, a0: f64, b0: f64) -> (f64, f64) {
         let w1 = bpser(b0, a0, y0);
         return (0.5 - w1 + 0.5, w1);
     }
-    let w1 = bup(b0, a0, y0, x0, 20) + grat_accum(b0 + 20.0, a0, y0, x0, 0.0);
+    l131(b0 + 20.0, a0, y0, x0, Some(b0))
+}
+
+/// `L131` (toms708.c L248-275): `bgrat(b0, a0, y0, x0, *w1)` onto the
+/// `bup` partial sum or `*w1 = 0`. `bup_origin` is `Some(b0)` of the
+/// pre-increment `b0` for the two `did_bup` entries, `None` for the
+/// direct `b0 > 15` entry. A `w1` left at `0` or subnormal
+/// (`< DBL_MIN`) is redone on the log scale — `bup(.., give_log =
+/// TRUE)` resp. `-Inf`, then `bgrat`'s `log_w` accumulation — ending
+/// at `L_end_from_w1_log`'s non-log form `w = -expm1(log_w1)`,
+/// `w1 = exp(log_w1)`, which recovers the digits `exp` underflows
+/// away in the direct sum. `n` is `20` on every L131 call.
+fn l131(b0: f64, a0: f64, y0: f64, x0: f64, bup_origin: Option<f64>) -> (f64, f64) {
+    let w1 = match bup_origin {
+        Some(pre) => grat_accum(b0, a0, y0, x0, bup(pre, a0, y0, x0, 20)),
+        None => grat_accum(b0, a0, y0, x0, 0.0),
+    };
+    if w1 == 0.0 || (w1 > 0.0 && w1 < f64::MIN_POSITIVE) {
+        let w1_log = match bup_origin {
+            Some(pre) => bup_log(pre, a0, y0, x0, 20),
+            None => f64::NEG_INFINITY,
+        };
+        let w1_log = grat_log(b0, a0, y0, x0, w1_log);
+        return (-libm::expm1(w1_log), libm::exp(w1_log));
+    }
     (0.5 - w1 + 0.5, w1)
 }
 
@@ -123,7 +149,7 @@ fn apser(a: f64, b: f64, x: f64) -> f64 {
     let bx = b * x;
     let t = x - bx;
     let c = if b * EPS <= 0.02 {
-        libm::log(x) + digamma(b) + G + t
+        libm::log(x) + psi(b) + G + t
     } else {
         // b > 2e13: psi(b) ~ log(b)
         libm::log(bx) + G + t
@@ -246,6 +272,31 @@ fn bup(a: f64, b: f64, x: f64, y: f64, n: i32) -> f64 {
     if n == 1 || ret_val == 0.0 {
         return ret_val;
     }
+    ret_val *= bup_sum(a, b, x, y, n, d);
+    ret_val
+}
+
+/// `log(I_x(a,b) − I_x(a+n,b))` — `bup`'s `give_log = TRUE` form
+/// (toms708.c L686-729): `brcmp1(·, TRUE) − log(a)` plus `log` of the
+/// same series sum. Reached only from the L131 redo, where `b = a0
+/// <= 1` makes the `mu > 0` `exparg` scaling unreachable (`mu > 0`
+/// needs `a + b >= 1.1·(a+1)`, i.e. `b > 1 + a/10`), so `mu = 0` and
+/// `d = 1` here.
+fn bup_log(a: f64, b: f64, x: f64, y: f64, n: i32) -> f64 {
+    let ret_val = beta_log_prefactor(a, b, x, y) - libm::log(a);
+    if n == 1 || ret_val == f64::NEG_INFINITY {
+        return ret_val;
+    }
+    ret_val + libm::log(bup_sum(a, b, x, y, n, 1.0))
+}
+
+/// The `w` term-sum shared by `bup`'s non-log and give_log forms
+/// (toms708.c L695-727): `k` = index of the maximum term, the
+/// increasing loop up to it, then the remaining terms with the
+/// `d <= eps·w` early exit. `d` is `exp(-mu)` — `1` when `mu = 0`.
+fn bup_sum(a: f64, b: f64, x: f64, y: f64, n: i32, d: f64) -> f64 {
+    let apb = a + b;
+    let ap1 = a + 1.0;
     let nm1 = (n - 1) as usize;
     let mut w = d;
     // k = index of the maximum term
@@ -274,6 +325,5 @@ fn bup(a: f64, b: f64, x: f64, y: f64, n: i32) -> f64 {
             break;
         }
     }
-    ret_val *= w;
-    ret_val
+    w
 }

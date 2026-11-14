@@ -8,6 +8,7 @@
 //! R in mixed small/huge-parameter regions. `qbeta` is Brent on the
 //! same function (spec §3.4).
 
+use super::beta_grat::EPS;
 use super::beta_large;
 use super::beta_small;
 use super::root::brent_root;
@@ -20,43 +21,77 @@ pub fn reg_inc_beta(x: f64, a: f64, b: f64) -> f64 {
 /// `1 − I_x(a, b)` computed as R's `pbeta(x, a, b, lower.tail =
 /// FALSE)` does — the tail is evaluated directly instead of
 /// subtracting a value ≈ 1, so probabilities near 1 keep full
-/// precision (needed by `f_sf` and `binomial_cdf`).
+/// precision (needed by `f_sf` and the `pbinom` inside `qbinom`).
 pub(crate) fn reg_inc_beta_upper(x: f64, a: f64, b: f64) -> f64 {
     inc_beta(x, a, b, true)
 }
 
+/// `pbeta(x, a, b, lower.tail)` — the `pbeta` wrapper + `pbeta_raw`
+/// entry checks (pbeta.c L41-58) restricted to `log_p = FALSE`.
 fn inc_beta(x: f64, a: f64, b: f64, upper: bool) -> f64 {
-    if x.is_nan() || a.is_nan() || b.is_nan() || a < 0.0 || b < 0.0 {
+    if x.is_nan() || a.is_nan() || b.is_nan() {
         return f64::NAN;
     }
-    if a == 0.0 && b == 0.0 {
-        return f64::NAN; // bratio's ierr 8
+    if a < 0.0 || b < 0.0 {
+        return f64::NAN;
     }
-    if !(x > 0.0 && x < 1.0) {
-        if x <= 0.0 {
-            return if upper { 1.0 } else { 0.0 };
+    if x >= 1.0 {
+        return if upper { 0.0 } else { 1.0 };
+    }
+    // pbeta_raw L46-56: the point-mass limit cases, in R's order.
+    if a == 0.0 || b == 0.0 || !a.is_finite() || !b.is_finite() {
+        if a == 0.0 && b == 0.0 {
+            return 0.5; // point mass 1/2 at each of {0, 1}
         }
-        return if upper { 0.0 } else { 1.0 };
+        if a == 0.0 || a / b == 0.0 {
+            return if upper { 0.0 } else { 1.0 }; // point mass at 0
+        }
+        if b == 0.0 || b / a == 0.0 {
+            return if upper { 1.0 } else { 0.0 }; // point mass at 1
+        }
+        // a = b = Inf: point mass at 1/2.
+        return if x < 0.5 {
+            if upper {
+                1.0
+            } else {
+                0.0
+            }
+        } else if upper {
+            0.0
+        } else {
+            1.0
+        };
     }
-    if a == 0.0 {
-        return if upper { 0.0 } else { 1.0 };
-    }
-    if b == 0.0 {
+    if x <= 0.0 {
         return if upper { 1.0 } else { 0.0 };
+    }
+    // L62: x1 = 0.5 − x + 0.5 — what bratio receives; the two-step
+    // form stays exact where 1 − x would round twice.
+    let y = 0.5 - x + 0.5;
+    // toms708.c L168-186: max(a,b) < eps·0.001 = 1e-18 — the
+    // x-independent ratios, returned before the parameter dispatch
+    // (the log_p forms it also defines are unreachable here — the
+    // engine only exposes log_p = FALSE).
+    if a.max(b) < EPS * 0.001 {
+        return if upper {
+            a / (a + b) // *w1 = a/(a+b)
+        } else {
+            b / (a + b) // *w  = b/(a+b)
+        };
     }
     if a.min(b) <= 1.0 {
         // bratio's first block: swap so x0 <= 0.5, compute whichever
         // tail its series produce directly, un-swap at the end.
         let (w, w1) = if x > 0.5 {
-            let (ws, w1s) = beta_small::bratio_small(1.0 - x, b, a);
+            let (ws, w1s) = beta_small::bratio_small(y, x, b, a);
             (w1s, ws)
         } else {
-            beta_small::bratio_small(x, a, b)
+            beta_small::bratio_small(x, y, a, b)
         };
         return if upper { w1 } else { w };
     }
     // a, b > 1: bratio's L30 lambda dispatch (beta_large).
-    beta_large::inc_beta_large(x, a, b, upper)
+    beta_large::inc_beta_large(x, y, a, b, upper)
 }
 
 /// `qbeta(p, a, b)` — Brent's method (abs tol 1e-14) on
