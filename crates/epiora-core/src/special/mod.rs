@@ -6,6 +6,10 @@
 //! are the v1.0 spec §4.1 additions on those building blocks.
 
 mod beta;
+mod beta_grat;
+mod beta_large;
+mod beta_math;
+mod beta_small;
 mod chisq;
 mod discrete;
 mod f_dist;

@@ -3073,8 +3073,39 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   evaluations, was O(n·log n)); verified exact against R's `qbinom`
   on the reference table plus 21 large-n spot checks. `poisson_tail`
   uses `saturating_add` for `k + 1` (u64::MAX debug panic).
+- Fix round 2 (PR #69 second review), method changes:
+  `binomial_cdf` uses `pbeta(prob, k+1, n−k, lower.tail = FALSE)`
+  through a new `reg_inc_beta_upper` — the upper incomplete-beta tail
+  computed directly, not `1 − I` (a ~1e-15 tail resolved); plus R
+  `qDiscrete_search`'s left-continuity fuzz `p *= 1 − 8ε`, giving
+  exact `qbinom` parity on a 210-point seeded R table.
+  `t_cdf`/`t_sf` follow modern `pt.c`: `nx = 1 + (t/df)·t`, the
+  small-argument `pbeta` tail in both directions, and the A&S 26.5.4
+  log form only when `nx > 1e100` — replacing the A&S 26.7.8 branch
+  (4.2e-8 relative error at df = 1e6 in the deep tail).
+  `t_quantile` for df > 4e5 solves `tail_val(t) = 2·min(p, 1−p)` on
+  `v = ln t` — inverting the same function `pt` evaluates — because
+  `x = df/(df+t²)` is then within ulps of 1 for every ordinary `t`.
+  `f_sf` picks R `pf.c`'s argument (`z` vs `w` side) so the beta
+  argument never rounds to 1. `gamma_quantile`/`chisq_quantile` for
+  `p > 0.5` solve `Q(a, y) = 1 − p` on `inc_gamma_upper` — `P − p`
+  cancels below ~1e-8. `reg_inc_beta`/`reg_inc_beta_upper` are now a
+  TOMS 708 port (R `toms708.c`: `beta_large.rs` L30 dispatch/
+  `bfrac`/`basym`, `beta_small.rs` `fpser`/`apser`/`bpser`/`bup`,
+  `beta_grat.rs` `bgrat`+`gam1`/`gamln1`/`rexpm1`/`erf__`/`digamma`,
+  `beta_math.rs` `brcmp1`/`algdiv`/`rlog1`/`bcorr`/`erfcx`) — the
+  plain continued fraction was wrong by ~7e-4 in mixed
+  small/huge-parameter regions; verified against R `pbeta` on a
+  9,261-point grid and on the 256-point pt/pf/qt audit at df up to
+  1e300.
 - Files outside the Files block: `docs/decisions.md` (this entry, as the
-  owner note requires); `.github/workflows/app.yml` (CI repair — the
+  owner note requires); `crates/epiora-core/src/special/beta_large.rs`,
+  `crates/epiora-core/src/special/beta_small.rs`,
+  `crates/epiora-core/src/special/beta_grat.rs` and
+  `crates/epiora-core/src/special/beta_math.rs` (new — the TOMS 708
+  incomplete-beta port could not fit in `beta.rs` under the ~400-line
+  file rule; `beta.rs` keeps the public API and dispatch);
+  `.github/workflows/app.yml` (CI repair — the
   `app` job pinned `ubuntu-latest` → `ubuntu-24.04` because
   ubuntu-latest moved to 26.04 resolute on 2026-11-13 and Playwright's
   WebKit build needs `libicudata.so.74`, absent on resolute; the
