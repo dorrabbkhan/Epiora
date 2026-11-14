@@ -125,7 +125,11 @@ jobs:
         working-directory: app
 
   app:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest moved to 26.04 (resolute) on 2026-11-13 and
+    # Playwright's WebKit build needs libicudata.so.74, which resolute does
+    # not ship — the store-opfs suite and e2e cannot launch WebKit there.
+    # Revert to ubuntu-latest once Playwright supports resolute.
+    runs-on: ubuntu-24.04
     steps:
       # Release runs the gate against the tagged tree, not main.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

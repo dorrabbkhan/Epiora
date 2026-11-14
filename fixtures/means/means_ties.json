@@ -38,7 +38,7 @@
           "value": 1.505545305418162,
           "class": "closed_form"
         },
-        "minimum": {
+        "min": {
           "value": 3,
           "class": "closed_form"
         },
@@ -54,7 +54,7 @@
           "value": 5,
           "class": "closed_form"
         },
-        "maximum": {
+        "max": {
           "value": 7,
           "class": "closed_form"
         },
@@ -84,7 +84,7 @@
           "value": 0.752772652709081,
           "class": "closed_form"
         },
-        "minimum": {
+        "min": {
           "value": 7,
           "class": "closed_form"
         },
@@ -100,7 +100,7 @@
           "value": 8,
           "class": "closed_form"
         },
-        "maximum": {
+        "max": {
           "value": 9,
           "class": "closed_form"
         },
@@ -110,6 +110,52 @@
         }
       }
     ],
+    "overall": {
+      "observations": {
+        "value": 12,
+        "class": "closed_form"
+      },
+      "total": {
+        "value": 73,
+        "class": "closed_form"
+      },
+      "mean": {
+        "value": 6.083333333333333,
+        "class": "closed_form"
+      },
+      "variance": {
+        "value": 4.6287878787878789,
+        "class": "closed_form"
+      },
+      "std_dev": {
+        "value": 2.151461800448216,
+        "class": "closed_form"
+      },
+      "min": {
+        "value": 3,
+        "class": "closed_form"
+      },
+      "p25": {
+        "value": 4,
+        "class": "closed_form"
+      },
+      "median": {
+        "value": 7,
+        "class": "closed_form"
+      },
+      "p75": {
+        "value": 8,
+        "class": "closed_form"
+      },
+      "max": {
+        "value": 9,
+        "class": "closed_form"
+      },
+      "mode": {
+        "value": 7,
+        "class": "closed_form"
+      }
+    },
     "t_test": {
       "pooled": {
         "t": {
@@ -120,7 +166,7 @@
           "value": 10,
           "class": "closed_form"
         },
-        "p": {
+        "p_value": {
           "value": 0.00046862397367824918,
           "class": "closed_form"
         },
@@ -128,13 +174,15 @@
           "value": -3.5,
           "class": "closed_form"
         },
-        "lower": {
-          "value": -5.0311419725469797,
-          "class": "closed_form"
-        },
-        "upper": {
-          "value": -1.9688580274530194,
-          "class": "closed_form"
+        "diff_ci_95": {
+          "lower": {
+            "value": -5.0311419725469797,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": -1.9688580274530194,
+            "class": "closed_form"
+          }
         }
       },
       "welch": {
@@ -146,7 +194,7 @@
           "value": 7.3529411764705905,
           "class": "closed_form"
         },
-        "p": {
+        "p_value": {
           "value": 0.0012142584200055442,
           "class": "closed_form"
         },
@@ -154,13 +202,15 @@
           "value": -3.5,
           "class": "closed_form"
         },
-        "lower": {
-          "value": -5.1092541356630718,
-          "class": "closed_form"
-        },
-        "upper": {
-          "value": -1.8907458643369277,
-          "class": "closed_form"
+        "diff_ci_95": {
+          "lower": {
+            "value": -5.1092541356630718,
+            "class": "closed_form"
+          },
+          "upper": {
+            "value": -1.8907458643369277,
+            "class": "closed_form"
+          }
         }
       }
     },
@@ -193,7 +243,7 @@
         "value": 25.941176470588239,
         "class": "closed_form"
       },
-      "p": {
+      "p_value": {
         "value": 0.00046862397367824869,
         "class": "closed_form"
       },
@@ -207,7 +257,7 @@
       }
     },
     "bartlett": {
-      "chisq": {
+      "statistic": {
         "value": 2.0285777392200877,
         "class": "closed_form"
       },
@@ -215,7 +265,7 @@
         "value": 1,
         "class": "closed_form"
       },
-      "p": {
+      "p_value": {
         "value": 0.15436500590301575,
         "class": "closed_form"
       }
@@ -229,7 +279,7 @@
         "value": 1,
         "class": "closed_form"
       },
-      "p": {
+      "p_value": {
         "value": 0.0055875045336175799,
         "class": "closed_form"
       }

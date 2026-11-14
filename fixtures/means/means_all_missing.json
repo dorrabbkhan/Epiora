@@ -16,7 +16,53 @@
       "value": 4,
       "class": "closed_form"
     },
-    "groups": []
+    "groups": [],
+    "overall": {
+      "observations": {
+        "value": 0,
+        "class": "closed_form"
+      },
+      "total": {
+        "value": 0,
+        "class": "closed_form"
+      },
+      "mean": {
+        "value": null,
+        "class": "closed_form"
+      },
+      "variance": {
+        "value": null,
+        "class": "closed_form"
+      },
+      "std_dev": {
+        "value": null,
+        "class": "closed_form"
+      },
+      "min": {
+        "value": null,
+        "class": "closed_form"
+      },
+      "p25": {
+        "value": null,
+        "class": "closed_form"
+      },
+      "median": {
+        "value": null,
+        "class": "closed_form"
+      },
+      "p75": {
+        "value": null,
+        "class": "closed_form"
+      },
+      "max": {
+        "value": null,
+        "class": "closed_form"
+      },
+      "mode": {
+        "value": null,
+        "class": "closed_form"
+      }
+    }
   },
   "tolerance_classes": {
     "closed_form": 1.0000000000000001e-09,

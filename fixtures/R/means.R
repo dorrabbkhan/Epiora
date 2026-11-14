@@ -1,12 +1,15 @@
 # fixtures/data/means_*.dataset.json and fixtures/means/*.json —
 # MEANS datasets and fixtures (v1.0 Task 2, spec §4.2).
 # inputs.{dataset, variable, group_by?, include_missing};
-# expected.{total, missing, groups[], t_test?, anova?, bartlett?,
-# kruskal_wallis?}. Groups are ordered by sorted group label;
+# expected.{total, missing, groups[], overall, t_test?, anova?,
+# bartlett?, kruskal_wallis?}. Groups are ordered by sorted group label;
 # "(missing)" rows form the last group when include_missing is true.
-# Percentiles are Epi Info 7's Tukey hinges — R's fivenum() (no single
-# quantile(type) reproduces hinges for every n; type 2 differs for
-# n %% 4 == 3). Mode is the smallest value attaining the maximum count.
+# Percentiles: Epi Info 7.2.7.0's printed MEANS output matches R
+# quantile(x, c(.25, .5, .75), type = 2) for all nine Oswego quartiles
+# (v1.0 Task 4 capture, PR #67, run
+# https://github.com/dorrabbkhan/Epiora/actions/runs/43500418310);
+# fivenum() disagrees (overall 16.5/57.5 vs EI7's 16/58; Male 16/61 vs
+# 15/62). Mode is the smallest value attaining the maximum count.
 # A group with one observation has undefined variance/std_dev (null
 # leaves, spec §4.2 "Undefined { too_few }").
 
@@ -54,7 +57,7 @@ write_dataset("means_dates", list(
 # data order; dates are passed as numeric days since 1970-01-01.
 means_group <- function(x) {
   n <- length(x)
-  fv <- fivenum(x)
+  q <- quantile(x, c(0.25, 0.5, 0.75), type = 2)
   tab <- table(x)
   mode_val <- min(as.numeric(names(tab)[tab == max(tab)]))
   list(
@@ -63,11 +66,11 @@ means_group <- function(x) {
     mean = leaf(mean(x)),
     variance = leaf(if (n >= 2) var(x) else NA),
     std_dev = leaf(if (n >= 2) sd(x) else NA),
-    minimum = leaf(fv[1]),
-    p25 = leaf(fv[2]),
-    median = leaf(fv[3]),
-    p75 = leaf(fv[4]),
-    maximum = leaf(fv[5]),
+    min = leaf(min(x)),
+    p25 = leaf(q[1]),
+    median = leaf(q[2]),
+    p75 = leaf(q[3]),
+    max = leaf(max(x)),
     mode = leaf(mode_val))
 }
 
@@ -79,10 +82,11 @@ means_ttest <- function(x1, x2) {
   tset <- function(tt) list(
     t = leaf(unname(tt$statistic)),
     df = leaf(unname(tt$parameter)),
-    p = leaf(tt$p.value),
+    p_value = leaf(tt$p.value),
     diff = leaf(diff),
-    lower = leaf(tt$conf.int[1]),
-    upper = leaf(tt$conf.int[2]))
+    diff_ci_95 = list(
+      lower = leaf(tt$conf.int[1]),
+      upper = leaf(tt$conf.int[2])))
   list(pooled = tset(pooled), welch = tset(welch))
 }
 
@@ -110,7 +114,8 @@ means_expected <- function(x, grp, include_missing) {
   expected <- list(
     total = leaf(total),
     missing = leaf(missing),
-    groups = lapply(group_values, means_group))
+    groups = lapply(group_values, means_group),
+    overall = means_group(xs))
 
   nonempty <- group_values[lengths(group_values) > 0]
   if (!is.null(gs) && length(nonempty) >= 2) {
@@ -135,21 +140,21 @@ means_expected <- function(x, grp, include_missing) {
       ms_between = leaf(ss_b / df_b),
       ss_within = leaf(ss_w), df_within = leaf(df_w),
       ms_within = leaf(ss_w / df_w),
-      f = leaf(f), p = leaf(pf(f, df_b, df_w, lower.tail = FALSE)),
+      f = leaf(f), p_value = leaf(pf(f, df_b, df_w, lower.tail = FALSE)),
       ss_total = leaf(ss_b + ss_w), df_total = leaf(n_tot - 1))
     bt <- tryCatch(bartlett.test(all_x, all_g), error = function(e) NULL)
     if (!is.null(bt)) {
       expected$bartlett <- list(
-        chisq = leaf(unname(bt$statistic)),
+        statistic = leaf(unname(bt$statistic)),
         df = leaf(unname(bt$parameter)),
-        p = leaf(bt$p.value))
+        p_value = leaf(bt$p.value))
     }
     kw <- tryCatch(kruskal.test(all_x, all_g), error = function(e) NULL)
     if (!is.null(kw)) {
       expected$kruskal_wallis <- list(
         h = leaf(unname(kw$statistic)),
         df = leaf(unname(kw$parameter)),
-        p = leaf(kw$p.value))
+        p_value = leaf(kw$p.value))
     }
   }
   expected
