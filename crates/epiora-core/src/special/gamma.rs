@@ -18,7 +18,7 @@ const M_LN_SQRT_2PI: f64 = -0.9189385332046728; // -log(sqrt(2*pi))
 pub(crate) const M_LN_2PI: f64 = 1.8378770664093456; // log(2*pi)
 const M_2PI: f64 = std::f64::consts::TAU; // 2*pi
 /// `M_cutoff` of R's `pgamma.c` — `ln(2)·DBL_MAX_EXP/DBL_EPSILON`.
-const M_CUTOFF: f64 = 3.196577180618028e18;
+const M_CUTOFF: f64 = 3.196577161300664e18;
 /// `scalefactor` of R's `pgamma.c` — `(2^32)^8 = 2^256`.
 const SCALE_FACTOR: f64 = 1.157920892373162e77;
 
@@ -347,5 +347,17 @@ pub(crate) fn bd0(x: f64, np: f64) -> f64 {
         x * (lg_x_n - 1.0) + np
     } else {
         x * lg_x_n + np - x
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::M_CUTOFF;
+
+    /// `M_CUTOFF` must be exactly R `pgamma.c`'s
+    /// `M_LN2 * DBL_MAX_EXP / DBL_EPSILON` (`ln(2)·1024/ε`).
+    #[test]
+    fn m_cutoff_equals_r_pgamma_expression() {
+        assert_eq!(M_CUTOFF, core::f64::consts::LN_2 * 1024.0 / f64::EPSILON);
     }
 }

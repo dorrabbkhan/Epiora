@@ -3157,6 +3157,18 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   `a ∈ [1e-300, 1e7]`, x ≥ 0: P, Q ∈ [0,1] and `P+Q` within 1e-12 of 1
   where both ≥ 1e-3). No fixture, golden, corpus or existing-test
   value changed.
+- Fix round 5 (PR #69 fifth review), constant corrections: `gamma.rs`
+  `M_CUTOFF` corrected to R `pgamma.c`'s `M_LN2*DBL_MAX_EXP/DBL_EPSILON`
+  = 3.196577161300664e18 (was 3.196577180618028e18), with a unit
+  assertion that the const equals `LN_2*1024/ε`; `gamma_ebd0.rs`
+  `X_LRG` set to the double nearest R `dpois.c`'s
+  2.86111748575702815380240589208115399625e+307,
+  i.e. 2.8611174857570283e307 (was 1 ULP low). The
+  `PGAMMA_DENORMAL_REF`/`CHISQ_SF_LARGE_DF_REF` literals were
+  machine-shortened to shortest round-trip form (342 of 1184 rewritten,
+  verified bit-identical by parse-compare) and their two
+  `#[allow(clippy::unreadable_literal, clippy::excessive_precision)]`
+  attributes removed.
 - Files outside the Files block: `docs/decisions.md` (this entry, as the
   owner note requires); `crates/epiora-core/src/special/beta_large.rs`,
   `crates/epiora-core/src/special/beta_small.rs`,

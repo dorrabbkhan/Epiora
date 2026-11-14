@@ -20,7 +20,7 @@ const M_2PI: f64 = std::f64::consts::TAU;
 const M_SQRT_2PI: f64 = 2.5066282746310007;
 /// `x_LRG` of `dpois.c` — `2^1023 / π`; at `x ≥ x_LRG` `M_2PI·x`
 /// overflows, so R divides `sqrt(2π·x)` differently.
-const X_LRG: f64 = 2.861117485757028e307;
+const X_LRG: f64 = 2.8611174857570283e307;
 
 /// `log(p/q)` correction table of `bd0.c`, entry `i` for
 /// `r = 0.5 + i/256`, each row four `float` pieces of ~23 bits so a
