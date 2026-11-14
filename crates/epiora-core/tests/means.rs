@@ -493,3 +493,88 @@ proptest! {
         }
     }
 }
+
+/// serde_json writes a non-finite `f64` as `null`; the `means_any`
+/// fuzz target treats any `null` in the serialized result as a crash
+/// (it was the CI failure of run 43651492371,
+/// `result.anova.ss_between: null`). Every leaf must therefore be
+/// finite — an extreme statistic becomes `Undefined { reason }`, never
+/// `Value(±∞)` or `Value(NaN)`.
+fn assert_no_null(value: &Value, path: &str) {
+    match value {
+        Value::Null => panic!("{path}: null in serialized output"),
+        Value::Array(items) => {
+            for (i, item) in items.iter().enumerate() {
+                assert_no_null(item, &format!("{path}[{i}]"));
+            }
+        }
+        Value::Object(map) => {
+            for (key, item) in map {
+                assert_no_null(item, &format!("{path}.{key}"));
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Extreme finite magnitudes (1e300-scale overflow, 1e-300-scale
+/// underflow) in one, two and three groups: no serialized leaf of the
+/// `MeansResult` may be `null` (a non-finite `Estimate`), and no run
+/// may panic or error.
+#[test]
+fn extreme_magnitudes_never_serialise_nonfinite() {
+    let run = |values: &[f64], groups: &[&str]| {
+        let ds = make_dataset(vec![
+            col(
+                "v",
+                ColumnData::Real(values.iter().map(|x| Some(*x)).collect()),
+            ),
+            col(
+                "g",
+                ColumnData::Text(groups.iter().map(|g| Some(g.to_string())).collect()),
+            ),
+        ]);
+        for group_by in [None, Some("g".to_string())] {
+            let out = means(
+                &ds,
+                &MeansOptions {
+                    variable: "v".to_string(),
+                    group_by,
+                    include_missing: true,
+                },
+                &ctx(),
+            )
+            .expect("means must not error on extreme input");
+            let json = serde_json::to_value(&out.result).expect("serialize MeansResult");
+            assert_no_null(&json, "result");
+        }
+    };
+    // One group: ±1e300 forces the total, mean, variance and
+    // quartile-averages out of f64 range.
+    run(
+        &[1e300, -1e300, 1e300, 1e-300, -1e300],
+        &["A", "A", "A", "A", "A"],
+    );
+    // Two groups: the t-tests, ANOVA, Bartlett and Kruskal–Wallis all
+    // run; group means of opposite sign push ss_between, diff and the
+    // Welch df past f64 range.
+    run(
+        &[1e300, -1e300, 1e-300, -1e300, 1e300, f64::MAX],
+        &["A", "A", "A", "B", "B", "B"],
+    );
+    // Three groups: ANOVA and Kruskal–Wallis without the t-test pair.
+    run(
+        &[
+            1e300,
+            -1e300,
+            5e-324,
+            -1e300,
+            1e300,
+            1e-300,
+            f64::MAX,
+            -f64::MAX,
+            42.0,
+        ],
+        &["A", "A", "A", "B", "B", "B", "C", "C", "C"],
+    );
+}

@@ -240,6 +240,7 @@ export const t = {
       unbounded: 'the estimate is unbounded',
       too_few: 'too few observations',
       zero_variance: 'the values carry no variance',
+      out_of_range: 'the value is out of range',
     },
   },
   lock: {

@@ -155,11 +155,13 @@ fn quantile_type2(sorted: &[f64], p: f64) -> f64 {
 /// `means_group(x)`: the descriptives of one group's values (or the
 /// overall block). An empty group reports `total = 0` and every other
 /// statistic `Undefined { too_few }`; n = 1 undefines the variance
-/// family only.
+/// family only. Extreme finite inputs whose statistic falls outside
+/// f64's range report `Undefined { out_of_range }` — never a NaN or
+/// infinite `Value`.
 pub(crate) fn group_stats(label: String, values: &[f64]) -> GroupStats {
     let n = values.len() as u64;
     let total = neumaier_sum(values.iter().copied());
-    let value = |x: f64| Estimate::from_f64(x, UndefinedReason::TooFew);
+    let value = |x: f64| Estimate::from_f64(x, UndefinedReason::OutOfRange);
     if n == 0 {
         return GroupStats {
             label,
@@ -197,12 +199,9 @@ pub(crate) fn group_stats(label: String, values: &[f64]) -> GroupStats {
     let mut sorted = values.to_vec();
     sorted.sort_by(f64::total_cmp);
     let s = summarize(values);
-    let variance = s
-        .variance
-        .map(Estimate::Value)
-        .unwrap_or(Estimate::Undefined {
-            reason: UndefinedReason::TooFew,
-        });
+    let variance = s.variance.map(value).unwrap_or(Estimate::Undefined {
+        reason: UndefinedReason::TooFew,
+    });
     let std_dev = match &variance {
         Estimate::Value(v) => value(libm::sqrt(*v)),
         Estimate::Undefined { reason } => Estimate::Undefined { reason: *reason },
@@ -225,7 +224,7 @@ pub(crate) fn group_stats(label: String, values: &[f64]) -> GroupStats {
     GroupStats {
         label,
         observations: n,
-        total: Estimate::Value(total),
+        total: value(total),
         mean: value(s.mean),
         variance,
         std_dev,
@@ -271,9 +270,9 @@ pub(crate) fn t_tests_from_summary(a: &GroupSummary, b: &GroupSummary) -> Option
         let crit = t_quantile(0.975, df).unwrap_or(f64::NAN);
         TTest {
             t: Estimate::from_f64(t, UndefinedReason::ZeroVariance),
-            df: Estimate::Value(df),
+            df: Estimate::from_f64(df, UndefinedReason::OutOfRange),
             p_value: Estimate::from_f64(p, UndefinedReason::ZeroVariance),
-            diff: Estimate::Value(diff),
+            diff: Estimate::from_f64(diff, UndefinedReason::OutOfRange),
             diff_ci_95: Ci {
                 lower: Estimate::from_f64(diff - crit * se, UndefinedReason::ZeroVariance),
                 upper: Estimate::from_f64(diff + crit * se, UndefinedReason::ZeroVariance),
@@ -289,38 +288,46 @@ pub(crate) fn t_tests_from_summary(a: &GroupSummary, b: &GroupSummary) -> Option
 /// One-way ANOVA from per-group summaries (spec §4.2). `ss_within`
 /// needs a variance from every group; one `too_few` group poisons it
 /// and everything downstream (`ms_within`, `f`, `p_value`,
-/// `ss_total`), exactly as R's NA propagation.
+/// `ss_total`), exactly as R's NA propagation. A sum of squares that
+/// overflows f64's range is `Undefined { out_of_range }`, propagated
+/// the same way.
 pub(crate) fn anova_from_summary(groups: &[GroupSummary]) -> Anova {
     let k = groups.len();
     let n_tot: u64 = groups.iter().map(|g| g.n).sum();
     let (k_f, n_f) = (k as f64, n_tot as f64);
     let grand = neumaier_sum(groups.iter().map(|g| g.n as f64 * g.mean)) / n_f;
-    let ss_b = neumaier_sum(
-        groups
-            .iter()
-            .map(|g| g.n as f64 * (g.mean - grand) * (g.mean - grand)),
-    );
-    let ss_w = if groups.iter().all(|g| g.variance.is_some()) {
-        Estimate::Value(neumaier_sum(
+    let ss_b = Estimate::from_f64(
+        neumaier_sum(
             groups
                 .iter()
-                .map(|g| (g.n - 1) as f64 * g.variance.unwrap_or(0.0)),
-        ))
+                .map(|g| g.n as f64 * (g.mean - grand) * (g.mean - grand)),
+        ),
+        UndefinedReason::OutOfRange,
+    );
+    let ss_w = if groups.iter().all(|g| g.variance.is_some()) {
+        Estimate::from_f64(
+            neumaier_sum(
+                groups
+                    .iter()
+                    .map(|g| (g.n - 1) as f64 * g.variance.unwrap_or(0.0)),
+            ),
+            UndefinedReason::OutOfRange,
+        )
     } else {
         Estimate::Undefined {
             reason: UndefinedReason::TooFew,
         }
     };
     let (df_b, df_w, df_t) = (k_f - 1.0, n_f - k_f, n_f - 1.0);
-    let ms_b = Estimate::from_f64(ss_b / df_b, UndefinedReason::ZeroVariance);
+    let ms_b = match ss_b {
+        Estimate::Value(b) => Estimate::from_f64(b / df_b, UndefinedReason::OutOfRange),
+        Estimate::Undefined { reason } => Estimate::Undefined { reason },
+    };
     let ms_w = match ss_w {
         Estimate::Value(w) => Estimate::from_f64(w / df_w, UndefinedReason::ZeroVariance),
         Estimate::Undefined { reason } => Estimate::Undefined { reason },
     };
     let f = match (&ms_b, &ms_w) {
-        (Estimate::Value(_), Estimate::Undefined { reason }) => {
-            Estimate::Undefined { reason: *reason }
-        }
         (Estimate::Value(b), Estimate::Value(w)) => {
             if *w == 0.0 {
                 Estimate::Undefined {
@@ -330,9 +337,10 @@ pub(crate) fn anova_from_summary(groups: &[GroupSummary]) -> Anova {
                 Estimate::from_f64(b / w, UndefinedReason::ZeroVariance)
             }
         }
-        _ => Estimate::Undefined {
-            reason: UndefinedReason::ZeroVariance,
-        },
+        // `f` follows whichever mean square is undefined.
+        (Estimate::Undefined { reason }, _) | (_, Estimate::Undefined { reason }) => {
+            Estimate::Undefined { reason: *reason }
+        }
     };
     let p = match f {
         Estimate::Value(v) => {
@@ -340,12 +348,18 @@ pub(crate) fn anova_from_summary(groups: &[GroupSummary]) -> Anova {
         }
         Estimate::Undefined { reason } => Estimate::Undefined { reason },
     };
-    let ss_total = match ss_w {
-        Estimate::Value(w) => Estimate::Value(ss_b + w),
-        Estimate::Undefined { reason } => Estimate::Undefined { reason },
+    // `df_*` are exact integer counts (k − 1, N − k, N − 1), always
+    // finite, so they stay `Estimate::Value`.
+    let ss_total = match (&ss_b, &ss_w) {
+        (Estimate::Value(b), Estimate::Value(w)) => {
+            Estimate::from_f64(b + w, UndefinedReason::OutOfRange)
+        }
+        (Estimate::Undefined { reason }, _) | (_, Estimate::Undefined { reason }) => {
+            Estimate::Undefined { reason: *reason }
+        }
     };
     Anova {
-        ss_between: Estimate::Value(ss_b),
+        ss_between: ss_b,
         ss_within: ss_w,
         ss_total,
         df_between: Estimate::Value(df_b),

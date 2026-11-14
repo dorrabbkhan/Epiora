@@ -3779,3 +3779,28 @@ Supersedes: —
   CI on the eventual PR compares against `main` — once PR #67
   merges, `git merge origin/main` (per the conductor note, never
   rebase) gives a fixtures-clean diff.
+- **`out_of_range` undefined reason (fix round 1, fuzz crash).** The
+  `means_any` fuzz target crashed in CI (run 43651492371,
+  `result.anova.ss_between: null`): computed `f64`s were wrapped in
+  `Estimate::Value(...)`, so ±∞/NaN from extreme-but-finite input
+  (1e300-scale) serialised as `null`. Every computed leaf now goes
+  through `Estimate::from_f64`; a non-finite result reports the new
+  `UndefinedReason::OutOfRange` (`out_of_range` — the spelling
+  `run_special.rs` already emits for out-of-domain quantile inputs).
+  Reasons were chosen so `too_few`/`zero_variance` stay reserved for
+  structural degeneracy (n below the statistic's minimum, an explicit
+  zero denominator or the "essentially constant" standard-error rule)
+  while `out_of_range` means "finite input, unrepresentable output";
+  undefined reasons propagate to the statistics derived from them
+  (`ms_between`, `ms_within`, `f`, `ss_total`). Remaining
+  `Estimate::Value` leaves are exact integer counts
+  (`observations`-like df leaves: `k − 1`, `N − k`, `N − 1`,
+  Bartlett/Kruskal–Wallis `k − 1`) or the literal `0.0` total of an
+  empty group — always finite. Mirrored as the round-0 reasons were:
+  `code()`, the ts-rs `type` union, regenerated `bindings/Estimate.ts`,
+  and `app/src/ui/strings.ts` (`'the value is out of range'`). Files
+  outside the Files block touched by the fix:
+  `crates/epiora-core/fuzz/regressions/means_any/crash-300469b405452edd2914bf057aa24260acdd5f75`
+  (the committed CI crash input, per the fuzz-nightly convention) and
+  `crates/epiora-core/tests/fuzz_regressions.rs` (`means_any` added to
+  the replay list so the convention actually covers it).
