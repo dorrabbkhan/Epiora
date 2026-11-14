@@ -3,8 +3,7 @@
 //! binary search on `pbinom`'s incomplete-beta form.
 
 use super::beta::reg_inc_beta_upper;
-use super::gamma::inc_gamma_upper;
-use super::gamma_lower::inc_gamma_lower;
+use super::gamma_lower::{inc_gamma_lower, inc_gamma_upper};
 
 /// `ppois(k, lambda, lower.tail)` for `upper = false` (`P(X ≤ k)`),
 /// `ppois(k − 1, lambda, lower.tail = FALSE)` for `upper = true`

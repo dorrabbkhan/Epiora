@@ -138,6 +138,79 @@ pub fn normal_sf(x: f64) -> f64 {
     pnorm(x, false)
 }
 
+/// `pnorm(x, 0, 1, lower, log_p = TRUE)` — `log` of the asked tail as
+/// `pnorm_both` computes it: `log(tail)` on the small side,
+/// `log1p(-tail)` on the near-1 side. Needed by `ppois_asymp`'s log
+/// form, where `pnorm(s2pt)` can be denormal in the non-log world but
+/// `log pnorm(s2pt)` stays exact (same redo `pgamma_raw` itself does).
+pub(crate) fn pnorm_log(x: f64, lower: bool) -> f64 {
+    if x.is_nan() {
+        return x;
+    }
+    let y = x.abs();
+    if y <= 0.67448975 {
+        let (mut xnum, mut xden) = (0.0, 0.0);
+        if y > HALF_EPS {
+            let xsq = x * x;
+            xnum = A[4] * xsq;
+            xden = xsq;
+            for i in 0..3 {
+                xnum = (xnum + A[i]) * xsq;
+                xden = (xden + B[i]) * xsq;
+            }
+        }
+        let temp = x * (xnum + A[3]) / (xden + B[3]);
+        return if lower {
+            libm::log(0.5 + temp)
+        } else {
+            libm::log(0.5 - temp)
+        };
+    }
+    if y <= M_SQRT_32 {
+        let mut xnum = C[8] * y;
+        let mut xden = y;
+        for i in 0..7 {
+            xnum = (xnum + C[i]) * y;
+            xden = (xden + D[i]) * y;
+        }
+        let temp = (xnum + C[7]) / (xden + D[7]);
+        return do_del_log(y, temp, x, lower);
+    }
+    // |x| > sqrt(32): in log space R still uses the rational tail —
+    // `log_p && y < 1e170` — else the log is 0 or −inf.
+    if y >= 1e170 {
+        return if (x > 0.0) == lower {
+            0.0
+        } else {
+            f64::NEG_INFINITY
+        };
+    }
+    let xsq = 1.0 / (x * x);
+    let mut xnum = P[5] * xsq;
+    let mut xden = xsq;
+    for i in 0..4 {
+        xnum = (xnum + P[i]) * xsq;
+        xden = (xden + Q[i]) * xsq;
+    }
+    let temp = (M_1_SQRT_2PI - xsq * (xnum + P[4]) / (xden + Q[4])) / y;
+    do_del_log(x, temp, x, lower)
+}
+
+/// `pnorm_both`'s `do_del` + `swap_tail`, log form: `*cum` is
+/// `log(tail)` = −xsq²/2 − del/2 + log(temp); the opposite side is
+/// `log1p(-exp(-xsq²/2)·exp(-del/2)·temp)` — exactly which side the
+/// asked-for tail is on after the x > 0 swap.
+fn do_del_log(v: f64, temp: f64, x: f64, lower: bool) -> f64 {
+    let xsq = libm::trunc(v * 16.0) / 16.0;
+    let del = (v - xsq) * (v + xsq);
+    if (x > 0.0) == lower {
+        // asked tail ≈ 1: log1p of the (negative) small tail value
+        libm::log1p(-libm::exp(-xsq * xsq * 0.5) * libm::exp(-del * 0.5) * temp)
+    } else {
+        -xsq * xsq * 0.5 - del * 0.5 + libm::log(temp)
+    }
+}
+
 /// `qnorm(p)` — Wichura AS 241 as R implements it, including the
 /// asymptotic tail refinement. `None` unless `0 < p < 1` (R returns
 /// ±inf at the boundaries; the engine keeps them out, spec §3.4).

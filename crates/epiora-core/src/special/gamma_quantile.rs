@@ -8,8 +8,8 @@
 //! comes from the small-`x` asymptote `P(a, x) ≈ x^a / Γ(a+1)` and is
 //! widened until `f` changes sign.
 
-use super::gamma::{inc_gamma_upper, ln_gamma};
-use super::gamma_lower::reg_inc_gamma_lower;
+use super::gamma::ln_gamma;
+use super::gamma_lower::{inc_gamma_upper, reg_inc_gamma_lower};
 use super::root::{brent_root, RootError};
 
 /// `qgamma(p, shape, scale = scale)` for `0 < p < 1`, positive finite
@@ -80,8 +80,9 @@ pub fn gamma_quantile(p: f64, shape: f64, scale: f64) -> Result<f64, RootError> 
 
 /// `Q(a, y) = q` for `0 < q ≤ 0.5`, on `v = ln y − u_est` with
 /// `u_est = ln(−ln q)` — the `Q ≈ y^{a−1}e^{−y}/Γ(a)` leading term.
-/// `inc_gamma_upper` takes its continued-fraction branch on this side
-/// of the median, so `Q` keeps full precision to q ~ 1e-300. The root
+/// `inc_gamma_upper` evaluates the small tail directly (R's `d·sum`
+/// and `ppois_asymp` branches, plus the denormal log-space redo), so
+/// `Q` keeps full precision to q ~ 1e-300. The root
 /// is monotone decreasing; the bracket expansion mirrors the lower
 /// solve's, doubling outward and clamping at the exp(-745)/exp(709)
 /// bounds.

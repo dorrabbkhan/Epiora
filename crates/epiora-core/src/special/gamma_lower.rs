@@ -1,74 +1,172 @@
-//! The `else` region of R 4.6.2 `pgamma.c`'s `pgamma_raw` — x ≥ 1
-//! "fairly near alph" — where R computes the lower tail by
-//! `ppois_asymp(alph − 1, x, !lower_tail)` rather than by a
-//! complement. The previous `1 − inc_gamma_upper` there formed a
-//! double complement (`inc_gamma_upper` itself is `1 − lower_series`
-//! for x < a + 1) and floored any P ≲ 2·DBL_EPSILON to multiples of
-//! `DBL_EPSILON` — `pgamma(9254, 1e4)` was off by 1e-14 in relative
-//! terms. `ppois_asymp` evaluates the small tail directly through
-//! `pnorm`/`dnorm`, so the deep lower tail keeps full precision.
+//! `pgamma_raw(x, alph, lower_tail, log_p)` — the complete R 4.6.2
+//! `pgamma.c` dispatch for the regularised incomplete gamma, both
+//! tails and both output modes. `inc_gamma_lower`/`inc_gamma_upper`
+//! are its two non-log entry points behind `chisq_cdf`/`chisq_sf`,
+//! `poisson_tail` and the §4.1 quantile solvers.
 //!
-//! Also ported: `log1pmx` and its `logcf` auxiliary (needed by
-//! `ppois_asymp`), and the non-log `dnorm(x, 0, 1)` with R's split-x
-//! tail form. R's `res < DBL_MIN/DBL_EPSILON` log-space redo is not
-//! ported: every branch below already yields the denormal or zero R
-//! would recover, so it can only change results inside the last
-//! denormal ulps.
+//! Branch for branch this is R's structure: `pgamma_smallx` for
+//! `x < 1`, `pd_upper_series·dpois_wrap` for `x ≤ alph−1` near alph,
+//! the `d·sum`/`1 − d·sum` branch for `alph−1 < x` near x, and
+//! `ppois_asymp(alph − 1, x, !lower_tail)` otherwise — including the
+//! `res < DBL_MIN/DBL_EPSILON` redo in log space, which is what makes
+//! denormal outputs (P or Q ≲ 1e-292, down to ~1e-320) come out
+//! bit-identical to R where the non-log path lost them. The lower tail
+//! for `x < 1` uses `pgamma_smallx`'s `f1·f2` form, which R keeps in
+//! [0, 1] where the convergent-series form could exceed 1 by ulps.
 //!
-//! Sources: `src/nmath/pgamma.c` (`pgamma_smallx`, `ppois_asymp`,
-//! `logcf`, `log1pmx`, `lgamma1p`), `src/nmath/dnorm.c` (`dnorm4`,
-//! non-log, σ = 1), `src/nmath/pnorm.c` via
-//! `normal::{normal_cdf, normal_sf}`.
+//! Sources: `src/nmath/pgamma.c` (`pgamma_raw`, `pgamma_smallx`,
+//! `logcf`, `log1pmx`, `lgamma1p`, `R_Log1_Exp` via `dpq.h`); the
+//! `pd_*`/`dpois_wrap` helpers live in `gamma.rs`, `ppois_asymp` and
+//! `dpnorm` in `gamma_asymp.rs`, `dpois_raw` log space in
+//! `gamma_ebd0.rs`.
 
 use super::gamma::{
-    dpois_wrap, ln_gamma, lower_series, pd_lower_cf, pd_lower_series, pd_upper_series,
+    dpois_raw, dpois_wrap, ln_gamma, pd_lower_cf, pd_lower_series, pd_upper_series,
 };
-use super::normal::{normal_cdf, normal_sf};
+use super::gamma_asymp::ppois_asymp;
+use super::gamma_ebd0::dpois_raw_log;
 
 /// `P(a, x)` for the §4.1 quantile solvers — `inc_gamma_lower` itself.
 pub(crate) fn reg_inc_gamma_lower(a: f64, x: f64) -> f64 {
     inc_gamma_lower(a, x)
 }
 
-/// `pgamma_raw(x, a, lower_tail = TRUE, log_p = FALSE)` — the lower
-/// tail as R's `pgamma` computes it (nmath `pgamma.c` branch for
-/// branch). The "x large" region is a verbatim port: it returns
-/// `1 − d·sum` directly, so `1 − chisq_cdf` reproduces `1 − pchisq`
-/// even in the deep upper tail where it differs from `chisq_sf`. The
-/// `x < 1` series is the same A&S 6.5.29 form R uses; the else region
-/// is `ppois_asymp`, as in R — a `1 −` complement there floored
-/// P ≲ 2·DBL_EPSILON.
+/// `P(a, x)` = `pgamma(x, a, lower_tail = TRUE)` — R's lower tail.
 pub(crate) fn inc_gamma_lower(a: f64, x: f64) -> f64 {
-    if x < 1.0 {
-        lower_series(a, x, ln_gamma(a))
+    pgamma_raw(x, a, true, false)
+}
+
+/// `Q(a, x)` = `pgamma(x, a, lower_tail = FALSE)` — R's upper tail.
+pub(crate) fn inc_gamma_upper(a: f64, x: f64) -> f64 {
+    pgamma_raw(x, a, false, false)
+}
+
+/// `DBL_MIN / DBL_EPSILON` — the `res <` bound of `pgamma_raw`'s
+/// log-space redo (`1.002084e-292`).
+const REDO_LIMIT: f64 = 1.0020841800044864e-292;
+
+/// `R_Log1_Exp(x)` = `log(1 − e^x)` for `x < 0` — `dpq.h`'s stable
+/// form.
+fn r_log1_exp(x: f64) -> f64 {
+    if x > -std::f64::consts::LN_2 {
+        libm::log(-libm::expm1(x))
+    } else {
+        libm::log1p(-libm::exp(x))
+    }
+}
+
+/// `pgamma_raw(x, alph, lower_tail, log_p)` — R's `pgamma.c` branch
+/// for branch, including the underflow redo: a non-log `res` below
+/// `DBL_MIN/DBL_EPSILON` is recomputed in log space and exponentiated,
+/// recovering the denormal digits the direct path underflows away.
+/// Assumes `(x, alph)` not-NaN and `alph > 0`, as R does.
+fn pgamma_raw(x: f64, a: f64, lower_tail: bool, log_p: bool) -> f64 {
+    // R_P_bounds_01(x, 0., ML_POSINF)
+    if x <= 0.0 {
+        // R_DT_0
+        return if lower_tail {
+            if log_p {
+                f64::NEG_INFINITY
+            } else {
+                0.0
+            }
+        } else if log_p {
+            0.0
+        } else {
+            1.0
+        };
+    }
+    if x >= f64::INFINITY {
+        // R_DT_1
+        return if lower_tail {
+            if log_p {
+                0.0
+            } else {
+                1.0
+            }
+        } else if log_p {
+            f64::NEG_INFINITY
+        } else {
+            0.0
+        };
+    }
+
+    let res = if x < 1.0 {
+        pgamma_smallx(x, a, lower_tail, log_p)
     } else if x <= a - 1.0 && x < 0.8 * (a + 50.0) {
-        pd_upper_series(x, a) * dpois_wrap(a, x)
+        // incl. large alph compared to x
+        let sum = pd_upper_series(x, a, log_p); // = x/alph + o(x/alph)
+        let d = dpois_wrap(a, x, log_p);
+        if lower_tail {
+            if log_p {
+                sum + d
+            } else {
+                sum * d
+            }
+        } else if log_p {
+            r_log1_exp(d + sum)
+        } else {
+            1.0 - d * sum
+        }
     } else if a - 1.0 < x && a < 0.8 * (x + 50.0) {
-        let d = dpois_wrap(a, x);
+        // incl. large x compared to alph
+        let d = dpois_wrap(a, x, log_p);
         let sum = if a < 1.0 {
             if x * f64::EPSILON > 1.0 - a {
-                1.0
+                if log_p {
+                    0.0
+                } else {
+                    1.0
+                }
             } else {
-                pd_lower_cf(a, x - (a - 1.0)) * x / a
+                let f = pd_lower_cf(a, x - (a - 1.0)) * x / a;
+                if log_p {
+                    libm::log(f)
+                } else {
+                    f
+                }
             }
         } else {
-            1.0 + pd_lower_series(x, a - 1.0)
+            // = (alph-1)/x + o((alph-1)/x)
+            let s = pd_lower_series(x, a - 1.0);
+            if log_p {
+                libm::log1p(s)
+            } else {
+                1.0 + s
+            }
         };
-        1.0 - d * sum
+        if lower_tail {
+            if log_p {
+                r_log1_exp(d + sum)
+            } else {
+                1.0 - d * sum
+            }
+        } else if log_p {
+            sum + d
+        } else {
+            sum * d
+        }
     } else {
-        ppois_asymp(a - 1.0, x, false)
+        // x >= 1 and x fairly near alph.
+        ppois_asymp(a - 1.0, x, !lower_tail, log_p)
+    };
+
+    // We lose a fair amount of accuracy to underflow in the cases
+    // where the final result is very close to DBL_MIN. In those
+    // cases, simply redo via log space. (R's comment.)
+    if !log_p && res < REDO_LIMIT {
+        libm::exp(pgamma_raw(x, a, lower_tail, true))
+    } else {
+        res
     }
 }
 
 /// `scalefactor` of R's `pgamma.c` — `(2^32)^8 = 2^256`.
 const SCALE_FACTOR: f64 = 1.157920892373162e77;
-/// `M_1_SQRT_2PI` — `1/sqrt(2π)` as in R's `dnorm.c`.
-const M_1_SQRT_2PI: f64 = 0.3989422804014327;
-/// `M_LN2` — `log(2)`.
-const M_LN2: f64 = std::f64::consts::LN_2;
 
 /// `logcf(x, i, d, eps)` of R's `pgamma.c` — continued fraction for
-/// `1/i + x/(i+d) + x^2/(i+2d) + …`, auxiliary in `log1pmx`.
+/// `1/i + x/(i+d) + x^2/(i+2d) + x^3/(i+3d) + …`, auxiliary in
+/// `log1pmx`.
 fn logcf(x: f64, i: f64, d: f64, eps: f64) -> f64 {
     let mut c1 = 2.0 * d;
     let mut c2 = i + d;
@@ -117,14 +215,14 @@ fn logcf(x: f64, i: f64, d: f64, eps: f64) -> f64 {
 
 /// `log1pmx(x)` = `log(1+x) − x`, accurate for small x — R's
 /// `pgamma.c` (logcf expansion on `[−0.791, 1]`).
-fn log1pmx(x: f64) -> f64 {
+pub(crate) fn log1pmx(x: f64) -> f64 {
     const MIN_LOG1_VALUE: f64 = -0.79149064;
 
     if x > 1.0 || x < MIN_LOG1_VALUE {
         libm::log1p(x) - x
     } else {
         // expand in y = [x/(2+x)]^2:
-        // log(1+x) - x = x/(2+x) * (2*y*S(y) - x),
+        // log(1+x) - x =  x/(2+x) * (2*y*S(y) - x),
         // S(y) = sum_{k>=0} y^k/(2k+3)
         let r = x / (2.0 + x);
         let y = r * r;
@@ -217,131 +315,44 @@ fn smallx_series(a: f64, x: f64) -> f64 {
     sum
 }
 
-/// `pgamma_smallx(x, alph, lower_tail = FALSE, log_p = FALSE)` —
-/// `−(f1m1 + f2m1 + f1m1·f2m1)`, the upper tail computed without
-/// forming `1 − P` (R's `pgamma.c`). This is the only place
-/// `inc_gamma_upper`'s `1 − lower_series` could floor: Q < ~2e-7 with
-/// x < a+1 requires a ≲ 1e-5 — for a ≥ 1, x < a+1 keeps Q ≳ 0.4.
-fn pgamma_smallx_upper(a: f64, x: f64) -> f64 {
-    let f1m1 = smallx_series(a, x);
-    let f2m1 = libm::expm1(a * libm::log(x) - lgamma1p(a));
-    -(f1m1 + f2m1 + f1m1 * f2m1)
-}
-
-/// The `pgamma_raw` upper tail for `a < 1` and `x < a + 1` — where
-/// `inc_gamma_upper`'s former `1 − lower_series` lost every digit
-/// below Q ~ a (and could go negative at a ≲ 1e-13). For `x < 1` it
-/// is `pgamma_smallx`'s `!lower_tail` form; for `x ≥ 1` (always the
-/// "x large" branch when a < 1) it is `d·sum` without the `1 −`
-/// complement.
-pub(crate) fn inc_gamma_upper_lt1(a: f64, x: f64) -> f64 {
-    if x < 1.0 {
-        pgamma_smallx_upper(a, x)
-    } else {
-        let d = dpois_wrap(a, x);
-        let sum = if x * f64::EPSILON > 1.0 - a {
-            1.0
+/// `pgamma_smallx(x, alph, lower_tail, log_p)` — all four output
+/// modes (R's `pgamma.c`). The lower tail returns `f1·f2` —
+/// `f2 = dpois_raw(alph, x)·e^x` for `alph > 1` — which R keeps
+/// within [0, 1]; the upper tail is `−(f1m1 + f2m1 + f1m1·f2m1)`,
+/// computed without forming `1 − P`.
+fn pgamma_smallx(x: f64, a: f64, lower_tail: bool, log_p: bool) -> f64 {
+    let sum = smallx_series(a, x);
+    if lower_tail {
+        let f1 = if log_p { libm::log1p(sum) } else { 1.0 + sum };
+        let f2 = if a > 1.0 {
+            let f2 = if log_p {
+                dpois_raw_log(a, x)
+            } else {
+                dpois_raw(a, x)
+            };
+            if log_p {
+                f2 + x
+            } else {
+                f2 * libm::exp(x)
+            }
+        } else if log_p {
+            a * libm::log(x) - lgamma1p(a)
         } else {
-            pd_lower_cf(a, x - (a - 1.0)) * x / a
+            libm::pow(x, a) / libm::exp(lgamma1p(a))
         };
-        sum * d
-    }
-}
-
-/// `dnorm(x, 0, 1, give_log = FALSE)` — the standard-normal density as
-/// R's `dnorm4` computes it, including the `x ≥ 5` split that keeps
-/// `exp(-x²/2)` accurate to the underflow boundary (`dnorm.c`, the
-/// non-`MATHLIB_FAST_dnorm` default build).
-fn dnorm_std(x: f64) -> f64 {
-    let x = x.abs();
-    if !x.is_finite() || x >= 2.0 * libm::sqrt(f64::MAX) {
-        return 0.0;
-    }
-    if x < 5.0 {
-        return M_1_SQRT_2PI * libm::exp(-0.5 * x * x);
-    }
-    // -x^2/2 < log(2)·(.Machine$double.min.exp + .Machine$double.ulp.digits):
-    // underflows to zero anyway (DBL_MIN_EXP = -1022, DBL_MANT_DIG = 53).
-    if x > libm::sqrt(-2.0 * M_LN2 * (-1022.0 + 1.0 - 53.0)) {
-        return 0.0;
-    }
-    // Split x = x1 + x2 with |x2| ≤ 2^-16 so x1² is exact.
-    let x1 = libm::ldexp(libm::rint(libm::ldexp(x, 16)), -16);
-    let x2 = x - x1;
-    M_1_SQRT_2PI * (libm::exp(-0.5 * x1 * x1) * libm::exp((-0.5 * x2 - x1) * x2))
-}
-
-/// `ppois_asymp(x, lambda, lower_tail)` of R's `pgamma.c` — the
-/// asymptotic expansion for `P(Poisson(lambda) ≤ x)` (or its
-/// complement), non-log form only. `pgamma_raw` calls it with
-/// `(alph − 1, x, !lower_tail)` in the region where x is fairly near
-/// alph and neither `pd_*` series applies.
-pub(crate) fn ppois_asymp(x: f64, lambda: f64, lower_tail: bool) -> f64 {
-    const COEFS_A: [f64; 8] = [
-        -1e99, // placeholder used for 1-indexing
-        2.0 / 3.0,
-        -4.0 / 135.0,
-        8.0 / 2835.0,
-        16.0 / 8505.0,
-        -8992.0 / 12629925.0,
-        -334144.0 / 492567075.0,
-        698752.0 / 1477701225.0,
-    ];
-    const COEFS_B: [f64; 8] = [
-        -1e99, // placeholder
-        1.0 / 12.0,
-        1.0 / 288.0,
-        -139.0 / 51840.0,
-        -571.0 / 2488320.0,
-        163879.0 / 209018880.0,
-        5246819.0 / 75246796800.0,
-        -534703531.0 / 902961561600.0,
-    ];
-
-    let dfm = lambda - x;
-    // If lambda is large, the distribution is highly concentrated
-    // about lambda.  So representation error in x or lambda can lead
-    // to arbitrarily large values of pt_ and hence divergence of the
-    // coefficients of this approximation.  (R's comment.)
-    let pt_ = -log1pmx(dfm / x);
-    let mut s2pt = libm::sqrt(2.0 * x * pt_);
-    if dfm < 0.0 {
-        s2pt = -s2pt;
-    }
-
-    let mut res12 = 0.0;
-    let mut res1_term = libm::sqrt(x);
-    let mut res1_ig = res1_term;
-    let mut res2_term = s2pt;
-    let mut res2_ig = res2_term;
-    for i in 1..8usize {
-        let i = i as f64;
-        res12 += res1_ig * COEFS_A[i as usize];
-        res12 += res2_ig * COEFS_B[i as usize];
-        res1_term *= pt_ / i;
-        res2_term *= 2.0 * pt_ / (2.0 * i + 1.0);
-        res1_ig = res1_ig / x + res1_term;
-        res2_ig = res2_ig / x + res2_term;
-    }
-
-    let mut elfb = x;
-    let mut elfb_term = 1.0;
-    for &cb in &COEFS_B[1..] {
-        elfb += elfb_term * cb;
-        elfb_term /= x;
-    }
-    if !lower_tail {
-        elfb = -elfb;
-    }
-
-    let f = res12 / elfb;
-    // np = pnorm(s2pt, 0, 1, !lower_tail): the normal tail opposite
-    // the Poisson one — for pgamma's lower tail this is Φ(s2pt).
-    let np = if lower_tail {
-        normal_sf(s2pt)
+        if log_p {
+            f1 + f2
+        } else {
+            f1 * f2
+        }
     } else {
-        normal_cdf(s2pt)
-    };
-    let nd = dnorm_std(s2pt);
-    np + f * nd
+        let lf2 = a * libm::log(x) - lgamma1p(a);
+        if log_p {
+            r_log1_exp(libm::log1p(sum) + lf2)
+        } else {
+            let f1m1 = sum;
+            let f2m1 = libm::expm1(lf2);
+            -(f1m1 + f2m1 + f1m1 * f2m1)
+        }
+    }
 }

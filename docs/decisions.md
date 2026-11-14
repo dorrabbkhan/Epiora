@@ -3123,6 +3123,40 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   `gamma_lower_tail_matches_reference` (30 `pgamma` + 20 `qgamma` +
   20 `qchisq` rows, one `Rscript -e`, verbatim output quoted in the
   test; classes 1e-9/1e-6 per the plan).
+- Fix round 4 (PR #69 fourth review, owner-authorized option 1), method
+  change: `inc_gamma_lower`/`inc_gamma_upper` are now R 4.6.2
+  `pgamma_raw` end to end — both tails and both output modes through
+  one dispatcher, like `reg_inc_beta` = TOMS 708. `pgamma_raw`
+  (rewritten `special/gamma_lower.rs`) runs R's branches verbatim in
+  `log_p` and non-log form — `pgamma_smallx` (`f1·f2` lower form,
+  `−(f1m1 + f2m1 + f1m1·f2m1)` upper), `pd_upper_series·dpois_wrap`,
+  the `d·sum`/`1 − d·sum` branch, `ppois_asymp(a−1, x, !lower_tail)` —
+  then applies R's `res < DBL_MIN/DBL_EPSILON` redo: recompute in log
+  space and exponentiate, which recovers the denormal digits the
+  direct path underflows away (all five review denormal points now
+  bit-identical to R, verified by `git show e8f6f97`-era vs NEW probe:
+  0 ulps). `inc_gamma_upper` for `a ≥ 1` now routes through those same
+  branches instead of `upper_cf` (deleted with `lower_series`,
+  dead) — `chisq_sf` at df = 1e6, x = 1.002e6 is now bit-identical to
+  R and x = 1.005e6 is 3.1e-13 relative (were 1.7e-9/2.3e-9). New
+  files: `special/gamma_ebd0.rs`
+  (R `ebd0.c`/`dpois.c` `ebd0` + `bd0_scale` table — the log-space
+  Poisson density `dpois_wrap` calls when `log_p`), and
+  `special/gamma_asymp.rs` (`ppois_asymp` both modes, `dpnorm`,
+  `dnorm_std` split-form density; `normal.rs` gains `pnorm_log` +
+  `do_del_log`, R `pnorm.c` `pnorm_both` log branch). OLD-vs-NEW on an
+  ordinary grid (a ∈ {0.05..1e4}, x = a·r and fixed points, 1456
+  points, `/tmp/task5fix/probe`): max rel diff P 1.03e-13 (deep-tail
+  redo band), Q 2.45e-11 at a=1e4 x=10500 — the intended
+  `ppois_asymp` correction toward R. New tests:
+  `gamma_denormal_matches_reference` (212 rows: the 5 review points +
+  `a` 1e-15..1e6 both tails down to 1e-321, one `Rscript -e`,
+  verbatim + machine-converted), `gamma_upper_large_df_matches_reference`
+  (112 `pchisq(·, lower.tail=FALSE)` rows, df 2..1e6, one
+  `Rscript -e`), `inc_gamma_stays_in_unit_interval` (proptest:
+  `a ∈ [1e-300, 1e7]`, x ≥ 0: P, Q ∈ [0,1] and `P+Q` within 1e-12 of 1
+  where both ≥ 1e-3). No fixture, golden, corpus or existing-test
+  value changed.
 - Files outside the Files block: `docs/decisions.md` (this entry, as the
   owner note requires); `crates/epiora-core/src/special/beta_large.rs`,
   `crates/epiora-core/src/special/beta_small.rs`,
@@ -3135,6 +3169,10 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   direct upper tail could not fit in `gamma.rs` under the ~400-line
   file rule; `gamma.rs` keeps `ln_gamma`, the shared series/CF helpers
   and the `inc_gamma_upper` dispatch);
+  `crates/epiora-core/src/special/gamma_asymp.rs` (new — round 4:
+  `ppois_asymp` log/non-log, `dpnorm`, `dnorm_std`) and
+  `crates/epiora-core/src/special/gamma_ebd0.rs` (new — round 4: R
+  `ebd0`/`bd0_scale` log-space Poisson density);
   `.github/workflows/app.yml` (CI repair — the
   `app` job pinned `ubuntu-latest` → `ubuntu-24.04` because
   ubuntu-latest moved to 26.04 resolute on 2026-11-13 and Playwright's
