@@ -3098,6 +3098,31 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   small/huge-parameter regions; verified against R `pbeta` on a
   9,261-point grid and on the 256-point pt/pf/qt audit at df up to
   1e300.
+- Fix round 3 (PR #69 third review, owner-authorized option 1), method
+  change: `inc_gamma_lower` no longer forms `1 − inc_gamma_upper` in
+  the region `x ∈ (0.8(a+50), a−1]` — that double-complemented through
+  `1 − lower_series` and floored P ≲ 2·DBL_EPSILON
+  (`gamma_quantile(1e-16, 1e4, 1)` 7.2e-4 off R, `chisq_quantile`
+  1.0e-3 off). The lower tail is now computed directly as R 4.6.2
+  `pgamma_raw` does, branch for branch, in the new
+  `special/gamma_lower.rs`: `lower_series` for `x < 1`,
+  `pd_upper_series × dpois_wrap` for `x ≤ a−1 && x < 0.8(a+50)`, the
+  `1 − d·sum` branch (`dpois_wrap` + `pd_lower_cf`/`pd_lower_series`)
+  for `a−1 < x && a < 0.8(x+50)`, and `ppois_asymp` (Temme expansion
+  with `logcf`/`log1pmx`/`lgamma1p`/`dnorm4`, pnorm via `normal.rs`)
+  otherwise — never a complement of a value near 1. Symmetric audit:
+  `inc_gamma_upper` for `a < 1 && x < a+1` floored Q (negative values
+  at a ≲ 1e-13, e.g. −2.2e-16 vs R's +2.19e-16 at a=1e-15, x=1); it
+  now delegates to `inc_gamma_upper_lt1` (`pgamma_smallx` `!lower_tail`
+  for `x < 1`, R's `d·sum` form otherwise) — post-fix audit vs R:
+  0 negatives, worst rel diff 1.1e-14. OLD-vs-NEW `inc_gamma_lower` on
+  an ordinary grid (a 0.1..1e4, x around the bulk): max bulk rel diff
+  1.28e-9 at a=1e6, x=997500 where NEW matches R to ~1e-18 (the diff
+  is OLD's error); deep-tail max 1.0 where OLD returned 0 and NEW
+  returns ~9e-18 matching R; 0 outside the delegated region. New test
+  `gamma_lower_tail_matches_reference` (30 `pgamma` + 20 `qgamma` +
+  20 `qchisq` rows, one `Rscript -e`, verbatim output quoted in the
+  test; classes 1e-9/1e-6 per the plan).
 - Files outside the Files block: `docs/decisions.md` (this entry, as the
   owner note requires); `crates/epiora-core/src/special/beta_large.rs`,
   `crates/epiora-core/src/special/beta_small.rs`,
@@ -3105,6 +3130,11 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   `crates/epiora-core/src/special/beta_math.rs` (new — the TOMS 708
   incomplete-beta port could not fit in `beta.rs` under the ~400-line
   file rule; `beta.rs` keeps the public API and dispatch);
+  `crates/epiora-core/src/special/gamma_lower.rs` (new — the R
+  `pgamma_raw` lower-tail port plus `ppois_asymp` and the small-`a`
+  direct upper tail could not fit in `gamma.rs` under the ~400-line
+  file rule; `gamma.rs` keeps `ln_gamma`, the shared series/CF helpers
+  and the `inc_gamma_upper` dispatch);
   `.github/workflows/app.yml` (CI repair — the
   `app` job pinned `ubuntu-latest` → `ubuntu-24.04` because
   ubuntu-latest moved to 26.04 resolute on 2026-11-13 and Playwright's

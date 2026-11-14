@@ -14,6 +14,7 @@ mod chisq;
 mod discrete;
 mod f_dist;
 mod gamma;
+mod gamma_lower;
 mod gamma_quantile;
 mod hypergeom;
 mod normal;

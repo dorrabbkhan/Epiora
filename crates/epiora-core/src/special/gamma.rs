@@ -15,18 +15,24 @@ pub fn ln_gamma(x: f64) -> f64 {
 
 /// Regularised upper incomplete gamma Q(a, x) = Γ(a, x)/Γ(a): series
 /// for x < a + 1 (as P, then 1 − P), Lentz continued fraction
-/// otherwise (spec §3.4).
+/// otherwise (spec §3.4). For `a < 1` the `1 − P` form loses Q ≲ a to
+/// the complement; R's own upper-tail branches for that region live
+/// in `gamma_lower::inc_gamma_upper_lt1`.
 pub(crate) fn inc_gamma_upper(a: f64, x: f64) -> f64 {
     let gln = ln_gamma(a);
     if x < a + 1.0 {
-        1.0 - lower_series(a, x, gln)
+        if a < 1.0 {
+            super::gamma_lower::inc_gamma_upper_lt1(a, x)
+        } else {
+            1.0 - lower_series(a, x, gln)
+        }
     } else {
         upper_cf(a, x, gln)
     }
 }
 
 /// P(a, x) by its convergent series.
-fn lower_series(a: f64, x: f64, gln: f64) -> f64 {
+pub(crate) fn lower_series(a: f64, x: f64, gln: f64) -> f64 {
     let mut ap = a;
     let mut sum = 1.0 / a;
     let mut del = sum;
@@ -102,7 +108,7 @@ fn dpois_raw(x: f64, lambda: f64) -> f64 {
 
 /// `dpois_wrap(x_plus_1, lambda)` = `dpois(x_plus_1 − 1, lambda)`, the
 /// form `pgamma` needs for fractional `x` (R `pgamma.c`, non-log only).
-fn dpois_wrap(x_plus_1: f64, lambda: f64) -> f64 {
+pub(crate) fn dpois_wrap(x_plus_1: f64, lambda: f64) -> f64 {
     if !lambda.is_finite() {
         return 0.0;
     }
@@ -118,7 +124,7 @@ fn dpois_wrap(x_plus_1: f64, lambda: f64) -> f64 {
 
 /// `pd_upper_series(x, y)` of R's `pgamma.c`:
 /// `sum_{n>=0} x^(n+1) / (y·(y+1)·…·(y+n))`, non-log only.
-fn pd_upper_series(x: f64, mut y: f64) -> f64 {
+pub(crate) fn pd_upper_series(x: f64, mut y: f64) -> f64 {
     let mut term = x / y;
     let mut sum = term;
     // R's do/while: the first check `x/y > (x/y)·eps` always passes
@@ -133,7 +139,7 @@ fn pd_upper_series(x: f64, mut y: f64) -> f64 {
 
 /// `pd_lower_cf(y, d)` of R's `pgamma.c` — the continued fraction for
 /// the scaled upper tail.
-fn pd_lower_cf(y: f64, d: f64) -> f64 {
+pub(crate) fn pd_lower_cf(y: f64, d: f64) -> f64 {
     if y == 0.0 {
         return 0.0;
     }
@@ -187,7 +193,7 @@ fn pd_lower_cf(y: f64, d: f64) -> f64 {
 }
 
 /// `pd_lower_series(lambda, y)` of R's `pgamma.c`.
-fn pd_lower_series(lambda: f64, mut y: f64) -> f64 {
+pub(crate) fn pd_lower_series(lambda: f64, mut y: f64) -> f64 {
     let mut term = 1.0;
     let mut sum = 0.0;
     while y >= 1.0 && term > sum * f64::EPSILON {
@@ -200,41 +206,6 @@ fn pd_lower_series(lambda: f64, mut y: f64) -> f64 {
         sum += term * f;
     }
     sum
-}
-
-/// `P(a, x)` for the §4.1 quantile solvers — `inc_gamma_lower` itself.
-pub(crate) fn reg_inc_gamma_lower(a: f64, x: f64) -> f64 {
-    inc_gamma_lower(a, x)
-}
-
-/// `pgamma_raw(x, a, lower_tail = TRUE, log_p = FALSE)` — the lower
-/// tail as R's `pgamma` computes it (nmath `pgamma.c` branch for
-/// branch). The "x large" region is a verbatim port: it returns
-/// `1 − d·sum` directly, so `1 − chisq_cdf` reproduces `1 − pchisq`
-/// even in the deep upper tail where it differs from `chisq_sf`. The
-/// `x < 1` series is the same A&S 6.5.29 form R uses; the
-/// `ppois_asymp` middle region produces a moderate lower-tail value
-/// where the complement of the upper tail agrees within tolerance.
-pub(crate) fn inc_gamma_lower(a: f64, x: f64) -> f64 {
-    if x < 1.0 {
-        lower_series(a, x, ln_gamma(a))
-    } else if x <= a - 1.0 && x < 0.8 * (a + 50.0) {
-        pd_upper_series(x, a) * dpois_wrap(a, x)
-    } else if a - 1.0 < x && a < 0.8 * (x + 50.0) {
-        let d = dpois_wrap(a, x);
-        let sum = if a < 1.0 {
-            if x * f64::EPSILON > 1.0 - a {
-                1.0
-            } else {
-                pd_lower_cf(a, x - (a - 1.0)) * x / a
-            }
-        } else {
-            1.0 + pd_lower_series(x, a - 1.0)
-        };
-        1.0 - d * sum
-    } else {
-        1.0 - inc_gamma_upper(a, x)
-    }
 }
 
 /// `(S0 − (S1 − (S2 − … − Sk/nn)/nn …)/nn)/n` — the nested form every

@@ -8,7 +8,8 @@
 //! comes from the small-`x` asymptote `P(a, x) ≈ x^a / Γ(a+1)` and is
 //! widened until `f` changes sign.
 
-use super::gamma::{inc_gamma_upper, ln_gamma, reg_inc_gamma_lower};
+use super::gamma::{inc_gamma_upper, ln_gamma};
+use super::gamma_lower::reg_inc_gamma_lower;
 use super::root::{brent_root, RootError};
 
 /// `qgamma(p, shape, scale = scale)` for `0 < p < 1`, positive finite

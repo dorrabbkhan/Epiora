@@ -4,7 +4,8 @@
 //! reproduces `1 - pchisq` — the form `DescTools::BreslowDayTest` and
 //! R code returning tail probabilities by complement use.
 
-use super::gamma::{inc_gamma_lower, inc_gamma_upper};
+use super::gamma::inc_gamma_upper;
+use super::gamma_lower::inc_gamma_lower;
 
 /// Chi-squared survival function: `pchisq(x, df, lower.tail=FALSE)`.
 pub fn chisq_sf(x: f64, df: f64) -> f64 {
