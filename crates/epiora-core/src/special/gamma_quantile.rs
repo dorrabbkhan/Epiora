@@ -12,15 +12,20 @@ use super::gamma::ln_gamma;
 use super::gamma_lower::{inc_gamma_upper, reg_inc_gamma_lower};
 use super::root::{brent_root, RootError};
 
-/// `qgamma(p, shape, scale = scale)`: `R_Q_P01_boundaries` runs first
-/// (qgamma.c L144-145), so `p = 0` returns 0 and `p = 1` returns +Inf
-/// — mapped to `Err(NotBracketed)` — before the argument checks;
-/// `alpha = 0` is the point mass at 0 and returns 0 for every
-/// interior `p` (L148). `Err(NotBracketed)` outside the domain or
-/// when no representable bracket exists, `Err(NoConvergence)` if
-/// Brent does not converge.
+/// `qgamma(p, shape, scale = scale)`: the IEEE `ISNAN` checks run
+/// first (qgamma.c L141-143) — `qgamma(0, NaN)` is NaN, not 0 — then
+/// `R_Q_P01_boundaries` (L144) gives `p = 0` → 0 and `p = 1` → +Inf
+/// (mapped to `Err(NotBracketed)`) before the `alpha < 0`/`scale <= 0`
+/// argument checks (L146); `alpha = 0` is the point mass at 0 and
+/// returns 0 for every interior `p` (L148). `Err(NotBracketed)`
+/// outside the domain or when no representable bracket exists,
+/// `Err(NoConvergence)` if Brent does not converge.
 pub fn gamma_quantile(p: f64, shape: f64, scale: f64) -> Result<f64, RootError> {
-    if p.is_nan() || p < 0.0 || p > 1.0 {
+    // qgamma.c L141-143: ISNAN runs before R_Q_P01_boundaries.
+    if p.is_nan() || shape.is_nan() || scale.is_nan() {
+        return Err(RootError::NotBracketed);
+    }
+    if !(0.0..=1.0).contains(&p) {
         return Err(RootError::NotBracketed);
     }
     if p == 0.0 {
@@ -29,7 +34,7 @@ pub fn gamma_quantile(p: f64, shape: f64, scale: f64) -> Result<f64, RootError> 
     if p == 1.0 {
         return Err(RootError::NotBracketed); // ML_POSINF
     }
-    if shape < 0.0 || scale <= 0.0 || shape.is_nan() || scale.is_nan() {
+    if shape < 0.0 || scale <= 0.0 {
         return Err(RootError::NotBracketed);
     }
     if shape == 0.0 {

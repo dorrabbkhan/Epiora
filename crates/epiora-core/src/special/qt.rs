@@ -143,9 +143,10 @@ fn usual_case(p: f64, ndf: f64, big_p: f64, neg: bool) -> f64 {
     let b = 48.0 / (a * a);
     let mut c = ((20700.0 * a / b - 98.0) * a - 16.0) * a + 96.36;
     let d = ((94.5 / (b + c) - 3.0) / b + 1.0) * libm::sqrt(a * M_PI_2) * ndf;
-    // L146-157: P_ok1 — P is representable (always true when
-    // log_p = FALSE); P_ok — `(d·P)^(2/df)` did not underflow.
-    let p_ok1 = big_p > f64::MIN_POSITIVE;
+    // L146-157: P_ok1 — qt.c L147 `P > DBL_MIN || !log_p`, always
+    // true in this log_p = FALSE port; P_ok — `(d·P)^(2/df)` did
+    // not underflow.
+    let p_ok1 = true;
     let mut p_ok = p_ok1;
     let mut y = 0.0;
     if p_ok1 {

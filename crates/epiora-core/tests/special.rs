@@ -2203,8 +2203,9 @@ proptest! {
 // v1.0 Task 5 follow-up — exact R 4.6.2 nmath parity (owner decision
 // 2026-11-14, option 1). `t_quantile` ports `nmath/qt.c`, `binomial_quantile`
 // ports `nmath/qbinom.c` + `nmath/qDiscrete_search.h`, and
-// `qgamma`/`qchisq` keep `R_Q_P01_boundaries` first (p = 0 -> 0; p = 1
-// -> +Inf, mapped to `Err`). Every table below was produced by ONE
+// `qgamma`/`qchisq` keep R's check order — `ISNAN` first, then
+// `R_Q_P01_boundaries` (p = 0 -> 0; p = 1 -> +Inf, mapped to `Err`),
+// then the argument checks. Every table below was produced by ONE
 // Rscript command (R 4.6.2), shown in the doc comment, and its output
 // machine-converted — nothing hand-typed.
 
@@ -2493,14 +2494,17 @@ fn binomial_quantile_r_4_6_2_parity() {
     }
 }
 
-/// `qgamma`/`qchisq` boundary behaviour — `R_Q_P01_boundaries` runs
-/// before the argument checks, so p = 0 returns 0 even at invalid
-/// shape, p = 1 returns +Inf (-> `Err`), and `alpha = 0` (a point mass
-/// at 0) returns 0 for every interior p. Command and output:
+/// `qgamma`/`qchisq` boundary behaviour — the IEEE `ISNAN` checks run
+/// first (a NaN argument is NaN even at p = 0), then
+/// `R_Q_P01_boundaries` runs before the `alpha < 0`/`scale <= 0`
+/// argument checks, so p = 0 returns 0 even at invalid shape, p = 1
+/// returns +Inf (-> `Err`), and `alpha = 0` (a point mass at 0)
+/// returns 0 for every interior p. Command and output:
 ///
 ///   Rscript -e 'for (a in c(0.5, 1, 0)) cat(sprintf("qgamma(0, %g, 1)=%g qgamma(1, %g, 1)=%g\n", a, qgamma(0, a, 1), a, qgamma(1, a, 1)))
 ///   for (d in c(0, 4, 1e-300)) cat(sprintf("qchisq(0, %g)=%g qchisq(1, %g)=%g qchisq(0.5, %g)=%g\n", d, qchisq(0, d), d, qchisq(1, d), d, qchisq(0.5, d)))
-///   cat(sprintf("qgamma(0.5, 0, 1)=%g qgamma(0, -1, 1)=%g\n", qgamma(0.5, 0, 1), qgamma(0, -1, 1)))'
+///   cat(sprintf("qgamma(0.5, 0, 1)=%g qgamma(0, -1, 1)=%g\n", qgamma(0.5, 0, 1), qgamma(0, -1, 1)))
+///   cat(sprintf("qgamma(0, NaN, 1)=%g qgamma(0, 1, NaN)=%g qchisq(0, NaN)=%g\n", qgamma(0, NaN, 1), qgamma(0, 1, NaN), qchisq(0, NaN)))'
 ///   # qgamma(0, 0.5, 1)=0 qgamma(1, 0.5, 1)=Inf
 ///   # qgamma(0, 1, 1)=0 qgamma(1, 1, 1)=Inf
 ///   # qgamma(0, 0, 1)=0 qgamma(1, 0, 1)=Inf
@@ -2508,6 +2512,7 @@ fn binomial_quantile_r_4_6_2_parity() {
 ///   # qchisq(0, 4)=0 qchisq(1, 4)=Inf qchisq(0.5, 4)=3.356694
 ///   # qchisq(0, 1e-300)=0 qchisq(1, 1e-300)=Inf qchisq(0.5, 1e-300)=2.405902e-299
 ///   # qgamma(0.5, 0, 1)=0 qgamma(0, -1, 1)=0
+///   # qgamma(0, NaN, 1)=NaN qgamma(0, 1, NaN)=NaN qchisq(0, NaN)=NaN
 #[test]
 fn quantile_p0_p1_boundaries() {
     for shape in [0.5, 1.0, 0.0] {
@@ -2532,6 +2537,11 @@ fn quantile_p0_p1_boundaries() {
     assert!(gamma_quantile(0.5, -1.0, 1.0).is_err());
     assert!(gamma_quantile(0.5, 1.0, 0.0).is_err());
     assert!(gamma_quantile(f64::NAN, 1.0, 1.0).is_err());
+    // ISNAN runs before R_Q_P01_boundaries: NaN at p = 0 is NaN, not 0.
+    assert!(gamma_quantile(0.0, f64::NAN, 1.0).is_err());
+    assert!(gamma_quantile(0.0, 1.0, f64::NAN).is_err());
+    assert!(gamma_quantile(1.0, f64::NAN, 1.0).is_err());
+    assert!(chisq_quantile(0.0, f64::NAN).is_err());
     assert!(t_quantile(0.0, 4.0).is_err() && t_quantile(1.0, 4.0).is_err());
     assert!(t_quantile(0.5, 0.0).is_err() && t_quantile(f64::NAN, 4.0).is_err());
 }

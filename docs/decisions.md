@@ -3232,10 +3232,14 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   quantiles at `p = 1 − 1e-16` were missing (engine was 1-28 below R).
   `beta.rs` also gained `pbeta_raw`'s point-mass limit cases
   (a = 0 / b = 0 / non-finite) in R's order.
-- `gamma_quantile`/`chisq_quantile` keep `R_Q_P01_boundaries` first
-  (qgamma.c L144-148, qchisq.c L28-31 delegates `qgamma(p, df/2, 2)`):
-  `p = 0 → Ok(0.0)` even for invalid shape, `p = 1 →
-  Err(NotBracketed)` (R's +Inf), `shape = 0 → Ok(0.0)` for interior p.
+- `gamma_quantile`/`chisq_quantile` keep R's check order (qgamma.c
+  L141-148, qchisq.c L28-31 delegates `qgamma(p, df/2, 2)`): the IEEE
+  `ISNAN` checks run first (a NaN argument is NaN even at `p = 0`),
+  then `R_Q_P01_boundaries` — `p = 0 → Ok(0.0)` even for invalid
+  shape, `p = 1 → Err(NotBracketed)` (R's +Inf) — then the argument
+  checks; `shape = 0 → Ok(0.0)` for interior p. `qt`'s `P_ok1` is
+  qt.c L147 verbatim (`P > DBL_MIN || !log_p` = always true in the
+  `log_p = FALSE` port).
 - wasm `epiora_wasm` gzip -9 size: 148,265 bytes (`./scripts/check.sh`,
   wasm size gate step; budget 409,600).
 - Local-gate environment accommodations (this sandbox; no repo file
