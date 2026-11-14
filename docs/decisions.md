@@ -3191,3 +3191,79 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   WebKit build needs `libicudata.so.74`, absent on resolute; the
   store-opfs suite and Playwright e2e fail at browser launch on every
   PR until reverted or Playwright supports resolute).
+
+### v1.0 Task 5 follow-up — R qt/qbinom parity
+
+- Owner decision 2026-11-14, option 1: exact R 4.6.2 nmath parity for
+  the `special.*` quantiles before the deferred grid fixtures land
+  (crates-only PR; `fixtures/`, `app/`, `spikes/` untouched). The
+  fixtures-only WIP grid PR (`v1.0/task-2-special-grids`) had exposed
+  `closed_form` mismatches in `t_quantile`, `binomial_quantile` and
+  the `p = 0` gamma/chi-square boundaries.
+- `t_quantile` is now `nmath/qt.c` L44-215 verbatim for
+  `lower_tail = TRUE, log_p = FALSE` (new `special/qt.rs`): the
+  `df < 1` `pt`-inversion bisection (L59-88, `p > 1 − DBL_EPSILON →
+  +Inf`), the df ≈ 2 and df ≈ 1/Cauchy branches (L112-139), the
+  `P_ok`/`P_ok1` small-probability log-space initial estimate
+  (L146-157), Hill's AS 396 asymptotic and "y"-form estimates
+  (L159-183) and the two-term Taylor/Newton refinement driven by
+  `dt`/`pt` (L186-213). `dt` is `nmath/dt.c` L38-82 non-log form;
+  `tanpi` is `cospi.c` L73-88 `Rtanpi`; the `!P_ok` `qnorm` log arm
+  reuses `normal.rs`'s `qnorm_tail_val` (unreachable for non-log `p`
+  but kept for parity). Signed-infinity results map to
+  `Err(NotBracketed)`: `p ∈ {0, 1}`, `p > 1 − DBL_EPSILON` for
+  `df < 1`, the `P ≤ DBL_MIN` arms, and the underflowed `df < 1`
+  bisection (`qt(1e-300, 0.5) = −Inf` in R). The old
+  `beta_quantile`/log-space Brent inversion is deleted; `t_cdf`/`t_sf`
+  unchanged.
+- `binomial_quantile` is `nmath/qbinom.c` L53-87 +
+  `qDiscrete_search.h` L61-126, L165-224 verbatim
+  (`lower_tail = TRUE, log_p = FALSE`, new `special/qbinom.rs`):
+  Cornish–Fisher start `floor`-to-nearest via `libm::rint`
+  (`R_forceint` = `nearbyint`), the `p * (1 − 8·DBL_EPSILON)`
+  left-continuity fuzz, the unit-step search for `y < 4096` and the
+  `_iShrink_ = 8` shrinking-increment loop above it. `pbinom` is
+  `pbinom.c` L44-47 with the `floor(x + 1e-7)` integer rounding,
+  evaluated as `reg_inc_beta_upper` — which required `bratio`'s real
+  complement rule: `pbeta`/`pbeta_raw` now pass `x1 = 0.5 − x + 0.5`
+  to `bratio` (pbeta.c L62) and the un-computed tail is formed as
+  `0.5 − w + 0.5` before `do_swap`'s un-swap (toms708.c `L_end`),
+  never `1 − w`. That last-ulp form is what the 1e5/1e9-n boundary
+  quantiles at `p = 1 − 1e-16` were missing (engine was 1-28 below R).
+  `beta.rs` also gained `pbeta_raw`'s point-mass limit cases
+  (a = 0 / b = 0 / non-finite) in R's order.
+- `gamma_quantile`/`chisq_quantile` keep `R_Q_P01_boundaries` first
+  (qgamma.c L144-148, qchisq.c L28-31 delegates `qgamma(p, df/2, 2)`):
+  `p = 0 → Ok(0.0)` even for invalid shape, `p = 1 →
+  Err(NotBracketed)` (R's +Inf), `shape = 0 → Ok(0.0)` for interior p.
+- wasm `epiora_wasm` gzip -9 size: 148,265 bytes (`./scripts/check.sh`,
+  wasm size gate step; budget 409,600).
+- Local-gate environment accommodations (this sandbox; no repo file
+  changed): `CARGO_HOME=/tmp/cargo-home` (the real cargo registry is
+  read-only), `PLAYWRIGHT_BROWSERS_PATH=target/ms-playwright` (browsers
+  are vendored there, not in `~/.cache`), `CI=1` (Playwright
+  `retries: 1`), and a `/tmp/check-bin/npx` shim that injects
+  `--workers=4` into `npx playwright test` — Firefox's OPFS/SQLite
+  layer returns `SQLITE_IOERR`/`Could not create actor` under the
+  default 11 parallel profiles on this tmpfs (3 runs: 14/13/6 varying
+  failures, all storage-layer; 57/57 firefox tests pass at
+  `--workers=4`, and the gate's 171 e2e tests then pass with
+  5 flaky-retried, 0 failed).
+- Files outside Task 5's Files block: `docs/decisions.md` (this
+  entry); `crates/epiora-core/src/special/qt.rs` (new — the qt.c port
+  plus `dt`/`tanpi`/`qnorm-log` helpers; `t_dist.rs` could not hold it
+  under the ~400-line rule), `crates/epiora-core/src/special/qbinom.rs`
+  (new — the qbinom.c + qDiscrete_search.h port plus `pbinom`;
+  `discrete.rs` keeps `poisson_tail`),
+  `crates/epiora-core/src/special/beta.rs`,
+  `beta_large.rs`, `beta_small.rs` (the `x1`/complement pass-through
+  and point-mass limits — already recorded as outside-block files in
+  the Task 5 entry), and `crates/epiora-core/src/special/normal.rs`
+  (the qnorm tail extracted as `qnorm_tail_val` for `qt`'s log arm).
+- Verification: `cargo test -p epiora-core --all-features --test
+  procedures every_fixture_passes_via_run_case` on a detached
+  worktree = my crates + the WIP fixtures plus a full-coverage
+  regeneration of the three grids the WIP generator truncated
+  (`t_quantile` all 187 cells, `gamma_quantile` 288, `chisq_quantile`
+  120 — `/tmp/gen_full_grids.R` in the worktree, not committed): 0
+  failures.

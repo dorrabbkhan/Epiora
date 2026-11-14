@@ -20,9 +20,9 @@ const EPS: f64 = 1e-15; // R sets eps = max(DBL_EPSILON, 1e-15) in bratio
 /// I_x`) for a, b > 1 — `bratio`'s L30 dispatch: swap by
 /// `lambda = a·y − b·x` so the computed tail is the one at/below the
 /// mean, then `bpser`/`bup`/`bgrat` for `b0 < 40`, else `bfrac` far
-/// from the mean or `basym` near it.
-pub(crate) fn inc_beta_large(x: f64, a: f64, b: f64, upper: bool) -> f64 {
-    let y = 1.0 - x;
+/// from the mean or `basym` near it. `y` is R's `x1 = 0.5 − x + 0.5`
+/// from `pbeta_raw`, passed in so the caller's rounding survives.
+pub(crate) fn inc_beta_large(x: f64, y: f64, a: f64, b: f64, upper: bool) -> f64 {
     // lambda := a·y − b·x, in the numerically best version (bratio).
     let lambda = if (a + b).is_finite() {
         if a > b {
@@ -33,6 +33,7 @@ pub(crate) fn inc_beta_large(x: f64, a: f64, b: f64, upper: bool) -> f64 {
     } else {
         a * y - b * x
     };
+    // L30's do_swap: lambda < 0 mirrors (a, x) <-> (b, y).
     let (x0, y0, a0, b0, lam) = if lambda < 0.0 {
         (y, x, b, a, -lambda)
     } else {
@@ -53,13 +54,20 @@ pub(crate) fn inc_beta_large(x: f64, a: f64, b: f64, upper: bool) -> f64 {
     } else {
         basym(a0, b0, lam, EPS * 100.0)
     };
-    // w = I_{x0}(a0, b0) with x0 ≤ a0/(a0+b0), so w ≲ 0.5 and 1 − w is
-    // safe. lambda < 0 means the swap put the computed tail on y.
-    match (lambda < 0.0, upper) {
-        (false, false) => w,
-        (false, true) => 1.0 - w,
-        (true, false) => 1.0 - w,
-        (true, true) => w,
+    // bratio's L_end: the computed side is `w`; the other tail is
+    // `0.5 − w + 0.5` (never `1 − w`: the two-step form preserves the
+    // last bits of the computed tail — the difference is visible in
+    // pbinom's upper tail at CDF ~ 1e-15), then do_swap's un-swap
+    // restores the (I_x, 1 − I_x) order.
+    let (w, w1) = if lambda < 0.0 {
+        (0.5 - w + 0.5, w)
+    } else {
+        (w, 0.5 - w + 0.5)
+    };
+    if upper {
+        w1
+    } else {
+        w
     }
 }
 

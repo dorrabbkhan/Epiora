@@ -18,8 +18,10 @@ const BUP_MU: i32 = 708;
 /// `0 < x <= 0.5` — the first dispatch block of `bratio`. Whichever
 /// side is not produced directly is set by the `0.5 − v + 0.5`
 /// complement, exactly as R's `L_end_from_w`/`L_end_from_w1` do.
-pub(crate) fn bratio_small(x0: f64, a0: f64, b0: f64) -> (f64, f64) {
-    let y0 = 1.0 - x0;
+/// `y0` is the `x1 = 0.5 − x + 0.5` `pbeta_raw` computed for `x0`'s
+/// pre-swap argument (bratio's `y0` parameter) — passed in, not
+/// recomputed, so its rounding matches R's.
+pub(crate) fn bratio_small(x0: f64, y0: f64, a0: f64, b0: f64) -> (f64, f64) {
     if b0 < EPS.min(EPS * a0) {
         let w = fpser(a0, b0, x0);
         return (w, 0.5 - w + 0.5);

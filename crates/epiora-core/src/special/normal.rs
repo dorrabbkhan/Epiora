@@ -250,101 +250,119 @@ pub fn normal_quantile(p: f64) -> Option<f64> {
     } else {
         // r = sqrt(-log(min(p, 1-p)))
         let lp = libm::log(if q > 0.0 { 1.0 - p } else { p });
-        let mut r = libm::sqrt(-lp);
-        let mut val = if r <= 5.0 {
-            // min(p,1-p) >= exp(-25) ~= 1.3888e-11
-            r -= 1.6;
-            horner(
-                r,
-                &[
-                    0.0007745450142783414,
-                    0.022723844989269184,
-                    0.2417807251774506,
-                    1.2704582524523684,
-                    3.6478483247632045,
-                    5.769497221460691,
-                    4.630337846156546,
-                    1.4234371107496835,
-                ],
-            ) / horner(
-                r,
-                &[
-                    1.0507500716444169e-09,
-                    0.0005475938084995345,
-                    0.015198666563616457,
-                    0.14810397642748008,
-                    0.6897673349851,
-                    1.6763848301838038,
-                    2.053191626637759,
-                    1.0,
-                ],
-            )
-        } else if r <= 27.0 {
-            // min(p,1-p) >= exp(-729) ~= 2.5e-317
-            r -= 5.0;
-            horner(
-                r,
-                &[
-                    2.0103343992922881e-07,
-                    2.7115555687434876e-05,
-                    0.0012426609473880784,
-                    0.026532189526576124,
-                    0.29656057182850487,
-                    1.7848265399172913,
-                    5.463784911164114,
-                    6.657904643501103,
-                ],
-            ) / horner(
-                r,
-                &[
-                    2.0442631033899397e-15,
-                    1.421511758316446e-07,
-                    1.8463183175100548e-05,
-                    0.0007868691311456133,
-                    0.014875361290850615,
-                    0.1369298809227358,
-                    0.599832206555888,
-                    1.0,
-                ],
-            )
-        } else if r >= 640000000.0 {
-            r * M_SQRT2
-        } else {
-            // asymptotic tail: x2 iterates toward -log(phi(x)/x)
-            let s2 = -2.0 * lp;
-            let mut x2 = s2 - libm::log(M_2PI * s2);
-            if r < 36000.0 {
-                x2 = s2 - libm::log(M_2PI * x2) - 2.0 / (2.0 + x2);
-                if r < 840.0 {
-                    x2 = s2 - libm::log(M_2PI * x2)
-                        + 2.0 * libm::log1p(-(1.0 - 1.0 / (4.0 + x2)) / (2.0 + x2));
-                    if r < 109.0 {
-                        x2 = s2 - libm::log(M_2PI * x2)
-                            + 2.0
-                                * libm::log1p(
-                                    -(1.0 - (1.0 - 5.0 / (6.0 + x2)) / (4.0 + x2)) / (2.0 + x2),
-                                );
-                        if r < 55.0 {
-                            x2 = s2 - libm::log(M_2PI * x2)
-                                + 2.0
-                                    * libm::log1p(
-                                        -(1.0
-                                            - (1.0 - (5.0 - 9.0 / (8.0 + x2)) / (6.0 + x2))
-                                                / (4.0 + x2))
-                                            / (2.0 + x2),
-                                    );
-                        }
-                    }
-                }
-            }
-            libm::sqrt(x2)
-        };
+        let mut val = qnorm_tail_val(lp);
         if q < 0.0 {
             val = -val;
         }
         val
     };
     Some(val)
+}
+
+/// `qnorm(lp, lower_tail = TRUE, log_p = TRUE)` for `lp <= log(0.5)`:
+/// the same tail evaluation `normal_quantile` performs, but taking
+/// the log-probability directly — the form `qt`'s `!P_ok` arm calls
+/// `qnorm` in (qt.c L163-164). Unreachable from `t_quantile` for
+/// non-log `p` (a `P` that small gives `y < eps`, which selects the
+/// log-space initial estimate instead) but kept so the port covers
+/// every branch qt.c can take.
+pub(crate) fn qnorm_log_lower(lp: f64) -> f64 {
+    -qnorm_tail_val(lp)
+}
+
+/// The Wichura tail of `normal_quantile` as a function of
+/// `lp = log(min(p, 1-p))` — the unsigned value `|z|`; the caller
+/// negates it on the `q < 0` side.
+fn qnorm_tail_val(lp: f64) -> f64 {
+    let mut r = libm::sqrt(-lp);
+    if r <= 5.0 {
+        // min(p,1-p) >= exp(-25) ~= 1.3888e-11
+        r -= 1.6;
+        horner(
+            r,
+            &[
+                0.0007745450142783414,
+                0.022723844989269184,
+                0.2417807251774506,
+                1.2704582524523684,
+                3.6478483247632045,
+                5.769497221460691,
+                4.630337846156546,
+                1.4234371107496835,
+            ],
+        ) / horner(
+            r,
+            &[
+                1.0507500716444169e-09,
+                0.0005475938084995345,
+                0.015198666563616457,
+                0.14810397642748008,
+                0.6897673349851,
+                1.6763848301838038,
+                2.053191626637759,
+                1.0,
+            ],
+        )
+    } else if r <= 27.0 {
+        // min(p,1-p) >= exp(-729) ~= 2.5e-317
+        r -= 5.0;
+        horner(
+            r,
+            &[
+                2.0103343992922881e-07,
+                2.7115555687434876e-05,
+                0.0012426609473880784,
+                0.026532189526576124,
+                0.29656057182850487,
+                1.7848265399172913,
+                5.463784911164114,
+                6.657904643501103,
+            ],
+        ) / horner(
+            r,
+            &[
+                2.0442631033899397e-15,
+                1.421511758316446e-07,
+                1.8463183175100548e-05,
+                0.0007868691311456133,
+                0.014875361290850615,
+                0.1369298809227358,
+                0.599832206555888,
+                1.0,
+            ],
+        )
+    } else if r >= 640000000.0 {
+        r * M_SQRT2
+    } else {
+        // asymptotic tail: x2 iterates toward -log(phi(x)/x)
+        let s2 = -2.0 * lp;
+        let mut x2 = s2 - libm::log(M_2PI * s2);
+        if r < 36000.0 {
+            x2 = s2 - libm::log(M_2PI * x2) - 2.0 / (2.0 + x2);
+            if r < 840.0 {
+                x2 = s2 - libm::log(M_2PI * x2)
+                    + 2.0 * libm::log1p(-(1.0 - 1.0 / (4.0 + x2)) / (2.0 + x2));
+                if r < 109.0 {
+                    x2 = s2 - libm::log(M_2PI * x2)
+                        + 2.0
+                            * libm::log1p(
+                                -(1.0 - (1.0 - 5.0 / (6.0 + x2)) / (4.0 + x2)) / (2.0 + x2),
+                            );
+                    if r < 55.0 {
+                        x2 = s2 - libm::log(M_2PI * x2)
+                            + 2.0
+                                * libm::log1p(
+                                    -(1.0
+                                        - (1.0 - (5.0 - 9.0 / (8.0 + x2)) / (6.0 + x2))
+                                            / (4.0 + x2))
+                                        / (2.0 + x2),
+                                );
+                    }
+                }
+            }
+        }
+        libm::sqrt(x2)
+    }
 }
 
 /// `c[0]·r^k + c[1]·r^(k-1) + … + c[k]` by Horner — the exact order

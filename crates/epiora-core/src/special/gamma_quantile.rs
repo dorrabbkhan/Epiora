@@ -12,15 +12,33 @@ use super::gamma::ln_gamma;
 use super::gamma_lower::{inc_gamma_upper, reg_inc_gamma_lower};
 use super::root::{brent_root, RootError};
 
-/// `qgamma(p, shape, scale = scale)` for `0 < p < 1`, positive finite
-/// shape and scale. `Err(NotBracketed)` outside the domain or when no
-/// representable bracket exists, `Err(NoConvergence)` if Brent does not
-/// converge.
+/// `qgamma(p, shape, scale = scale)`: `R_Q_P01_boundaries` runs first
+/// (qgamma.c L144-145), so `p = 0` returns 0 and `p = 1` returns +Inf
+/// — mapped to `Err(NotBracketed)` — before the argument checks;
+/// `alpha = 0` is the point mass at 0 and returns 0 for every
+/// interior `p` (L148). `Err(NotBracketed)` outside the domain or
+/// when no representable bracket exists, `Err(NoConvergence)` if
+/// Brent does not converge.
 pub fn gamma_quantile(p: f64, shape: f64, scale: f64) -> Result<f64, RootError> {
-    if !(p > 0.0 && p < 1.0)
-        || !(shape > 0.0 && shape.is_finite())
-        || !(scale > 0.0 && scale.is_finite())
-    {
+    if p.is_nan() || p < 0.0 || p > 1.0 {
+        return Err(RootError::NotBracketed);
+    }
+    if p == 0.0 {
+        return Ok(0.0);
+    }
+    if p == 1.0 {
+        return Err(RootError::NotBracketed); // ML_POSINF
+    }
+    if shape < 0.0 || scale <= 0.0 || shape.is_nan() || scale.is_nan() {
+        return Err(RootError::NotBracketed);
+    }
+    if shape == 0.0 {
+        return Ok(0.0); // qgamma.c L148: all mass at 0
+    }
+    if !shape.is_finite() || !scale.is_finite() {
+        // alpha = +Inf degrades to NaN inside qgamma's g/iteration
+        // setup; scale = +Inf overflows the answer — both are NaN
+        // results in R, i.e. not representable here.
         return Err(RootError::NotBracketed);
     }
     // For shape ≲ 1e-300, P(a, x) ≈ x^a ≈ 1 on every positive f64
@@ -121,14 +139,9 @@ fn upper_tail_quantile(q: f64, shape: f64, scale: f64) -> Result<f64, RootError>
     brent_root(f, lo, hi).map(|v| libm::exp(u_est + v) * scale)
 }
 
-/// `qchisq(p, df)` = `qgamma(p, df/2, scale = 2)` (R's identity). As
-/// in R, `df = 0` is the point mass at 0 and quantiles are 0.
+/// `qchisq(p, df)` — qchisq.c L28-31 delegates verbatim:
+/// `qgamma(p, 0.5·df, 2.0)`, so the `p = 0`/`p = 1` boundaries and
+/// the `df = 0` point mass are handled inside `gamma_quantile`.
 pub fn chisq_quantile(p: f64, df: f64) -> Result<f64, RootError> {
-    if !(p > 0.0 && p < 1.0) || !(df >= 0.0 && df.is_finite()) {
-        return Err(RootError::NotBracketed);
-    }
-    if df == 0.0 {
-        return Ok(0.0);
-    }
     gamma_quantile(p, df * 0.5, 2.0)
 }
