@@ -17,8 +17,11 @@
 #   / WriteAccess records), and a fontconfig confined to the build's
 #   bundled fonts (document font tables, column widths and the
 #   rendered thumbnail otherwise follow the host's installed fonts).
-# - normalize_ods_meta() fixes the meta.xml producer fields so the
-#   file carries no LO-build or user identity.
+# - normalize_ods() pins every wall-clock or identity value LO writes
+#   into an ODS: meta.xml's producer fields (no LO-build or user
+#   identity) and styles.xml's page-header text:date field, whose
+#   text:date-value is the conversion day's date even under
+#   SOURCE_DATE_EPOCH (owner decision 2026-11-14, PR #71 option A1).
 #
 # LO output still differs between releases, so the pinned TDF build is
 # required: EPIORA_SOFFICE points at its program/soffice (the
@@ -269,9 +272,18 @@ xlsx_case <- function(case, wb, columns, settings = NO_SETTINGS,
   invisible(path)
 }
 
-# repack_zip patch: rewrite meta.xml's producer fields (generator,
-# creators, dates) to fixed values so an LO-produced ODS carries no
-# build or user identity.
+# repack_zip patch for an LO-produced ODS: pin every wall-clock or
+# identity value LO writes so regeneration is byte-identical on any
+# day. Runs the per-member normalizers below; each stop_if()s when an
+# expected field is missing, so an LO layout change fails loudly at
+# generation instead of passing a new drift source through.
+normalize_ods <- function(ex) {
+  normalize_ods_meta(ex)
+  normalize_ods_styles(ex)
+}
+
+# Rewrite meta.xml's producer fields (generator, creators, dates) to
+# fixed values so the file carries no build or user identity.
 normalize_ods_meta <- function(ex) {
   f <- file.path(ex, "meta.xml")
   x <- paste(readLines(f, warn = FALSE), collapse = "")
@@ -286,5 +298,25 @@ normalize_ods_meta <- function(ex) {
             sprintf("normalize_ods_meta: <%s> missing in meta.xml", tag))
     x <- sub(pat, sprintf("<%s>%s</%s>", tag, fixed[[tag]], tag), x)
   }
+  writeLines(x, f)
+}
+
+# styles.xml's default page header carries a <text:date> field whose
+# text:date-value is the conversion day's date — the one LO timestamp
+# SOURCE_DATE_EPOCH does not cover. Pin every occurrence to
+# LO_META_DATETIME's date part. The field's element text and the
+# sibling <text:time> are already fixed placeholders ("00/00/0000",
+# "00:00:00") and settings.xml writes no date or time value, so
+# text:date-value is the only wall-clock-derived value in the member.
+# content.xml's office:date-value cells are the data under test and
+# stay exactly as LO wrote them.
+normalize_ods_styles <- function(ex) {
+  f <- file.path(ex, "styles.xml")
+  x <- paste(readLines(f, warn = FALSE), collapse = "")
+  pat <- 'text:date-value="[^"]*"'
+  stop_if(!grepl(pat, x),
+          "normalize_ods_styles: text:date-value missing in styles.xml")
+  x <- gsub(pat, sprintf('text:date-value="%s"',
+                         sub("T.*", "", LO_META_DATETIME)), x)
   writeLines(x, f)
 }

@@ -370,7 +370,7 @@ wb$add_data(x = data.frame(D = as.Date(c("2020-01-02", "2021-03-04")),
                            N = c(1L, 2L), check.names = FALSE))
 wb$save(src)
 ods_out <- lo_convert(src, "ods", tempfile("odsout"))
-repack_zip(ods_out, "mimetype", normalize_ods_meta)
+repack_zip(ods_out, "mimetype", normalize_ods)
 stop_if(!file.copy(ods_out, file.path(od_dir, "input.ods"),
                    overwrite = TRUE),
         "ods_dates: copying converted input.ods failed")
