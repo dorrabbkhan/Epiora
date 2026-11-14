@@ -2436,7 +2436,7 @@
         "class": "closed_form"
       },
       {
-        "value": -1.0000000000000002,
+        "value": -1,
         "class": "closed_form"
       },
       {
@@ -2444,7 +2444,7 @@
         "class": "closed_form"
       },
       {
-        "value": 1.0000000000000002,
+        "value": 1,
         "class": "closed_form"
       },
       {

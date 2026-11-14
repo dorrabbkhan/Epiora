@@ -3416,3 +3416,12 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   pre-existing gap in `fixtures/R/import_zip.R`'s normalisation
   (meta.xml is fixed, this styles.xml field is not) and its fix is
   out of scope here.
+- Platform-ulp note (found by the fixtures workflow, run
+  43640700793): `qt(0.25, 1)` and `qt(0.75, 1)` — the Cauchy
+  `tanpi` branch — produce `∓1.0000000000000002` under this
+  machine's R 4.6.2 build and exactly `∓1` under the workflow's
+  ubuntu build. The two leaves in `t_quantile.json` carry the
+  workflow's bytes (blob `3282673`, quoted from the CI drift log);
+  a regeneration on this machine drifts back by one ulp on those
+  two leaves only. Both values pass `closed_form` against the
+  engine's result either way.
