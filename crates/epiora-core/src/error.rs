@@ -27,6 +27,12 @@ pub enum EngineError {
     /// The options passed to a procedure are inconsistent.
     #[error("invalid options: {reason}")]
     InvalidOptions { reason: String },
+    /// A MEANS variable is not Integer, Real or Date.
+    #[error("not a numeric variable: {name}")]
+    NotNumericVariable { name: String },
+    /// A MEANS cross-tabulation has more than `levels` categories.
+    #[error("too many groups for {name}: {levels}")]
+    TooManyGroups { name: String, levels: u64 },
     /// A fixture does not follow the corpus format (spec §6.2).
     #[error("corpus format: {reason}")]
     CorpusFormat { reason: String },
@@ -45,6 +51,8 @@ impl EngineError {
             Self::InvalidColumn { .. } => "invalid_column",
             Self::TypeMismatch { .. } => "type_mismatch",
             Self::InvalidOptions { .. } => "invalid_options",
+            Self::NotNumericVariable { .. } => "not_numeric_variable",
+            Self::TooManyGroups { .. } => "too_many_groups",
             Self::CorpusFormat { .. } => "corpus_format",
             Self::SnapshotDecode { .. } => "snapshot_decode",
         }

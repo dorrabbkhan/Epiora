@@ -8,8 +8,11 @@
 
 mod breslow_day;
 mod exact;
+mod means;
+mod rank;
 mod rxc;
 mod stratified;
+mod summation;
 mod two_by_two;
 
 pub mod estimate;
@@ -17,7 +20,15 @@ pub mod proportion;
 
 pub use breslow_day::BreslowDayTarone;
 pub use estimate::{Ci, Estimate, UndefinedReason};
+pub(crate) use means::{
+    anova_from_summary, bartlett_from_summary, group_stats, summarize, t_tests_from_summary,
+    GroupSummary,
+};
+pub use means::{Anova, Bartlett, GroupStats, TTest, TwoGroupTests};
 pub use proportion::{proportions, CategoryStats};
+pub(crate) use rank::kruskal_wallis;
+pub use rank::KruskalWallis;
 pub use rxc::{rxc, RxcStats};
 pub use stratified::{stratified, MantelHaenszel, MhChiSquare, MhEstimate, StratifiedStats};
+pub use summation::neumaier_sum;
 pub use two_by_two::{two_by_two, ChiSquare, Table2x2, TwoByTwoStats};

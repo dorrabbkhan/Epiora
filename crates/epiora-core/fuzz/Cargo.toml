@@ -48,6 +48,13 @@ doc = false
 bench = false
 
 [[bin]]
+name = "means_any"
+path = "fuzz_targets/means_any.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
 name = "snapshot_decode"
 path = "fuzz_targets/snapshot_decode.rs"
 test = false

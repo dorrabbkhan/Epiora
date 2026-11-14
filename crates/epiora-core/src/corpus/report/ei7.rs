@@ -1,14 +1,16 @@
 //! The Epi Info 7 leg of the validation report: which registry
 //! statistics `ei7/oswego.json` maps labels onto (for the Reference
 //! column) and the `## Epi Info 7 check` section, which reruns the
-//! three `oswego.pgm` commands (FREQ SEX, TABLES VANILLA ILL, TABLES
-//! VANILLA ILL STRATAVAR=SEX — the same construction as
-//! `tests/ei7.rs`) and reports `compare_ei7`'s outcome.
+//! `oswego.pgm` commands (FREQ SEX, TABLES VANILLA ILL, TABLES
+//! VANILLA ILL STRATAVAR=SEX, MEANS AGE, MEANS AGE SEX — the same
+//! construction as `tests/ei7.rs`) and reports `compare_ei7`'s
+//! outcome.
 
 use crate::corpus::ei7::compare_ei7;
 use crate::corpus::load_dataset;
 use crate::procedures::{
-    freq, tables, FreqOptions, ProportionCi, RunContext, TablesOptions, TablesResult, VarSpec,
+    freq, means, tables, FreqOptions, MeansOptions, ProportionCi, RunContext, TablesOptions,
+    TablesResult, VarSpec,
 };
 use crate::EngineError;
 use serde_json::Value;
@@ -104,8 +106,10 @@ pub(super) fn section(fixtures_dir: &Path) -> Result<String, EngineError> {
     Ok(out)
 }
 
-/// The engine outputs for the three `oswego.pgm` commands, keyed by
-/// the family names the ei7 keys use.
+/// The engine outputs for the `oswego.pgm` commands, keyed by the
+/// family names the ei7 keys use. `MEANS AGE SEX`'s serialized result
+/// covers `MEANS AGE`'s `means.overall.*` keys as well — the two runs'
+/// overalls are the same 75 records.
 fn actual_by_family(ds: &crate::dataset::Dataset) -> Result<BTreeMap<String, Value>, EngineError> {
     let ctx = || RunContext {
         timestamp: "2026-10-30T12:00:00Z".to_string(),
@@ -155,6 +159,15 @@ fn actual_by_family(ds: &crate::dataset::Dataset) -> Result<BTreeMap<String, Val
     else {
         return Err(corpus("stratified run produced no strata"));
     };
+    let means_out = means(
+        ds,
+        &MeansOptions {
+            variable: "AGE".to_string(),
+            group_by: Some("SEX".to_string()),
+            include_missing: false,
+        },
+        &ctx(),
+    )?;
     let first = freq_out
         .result
         .tables
@@ -165,6 +178,7 @@ fn actual_by_family(ds: &crate::dataset::Dataset) -> Result<BTreeMap<String, Val
         ("freq", serde_json::to_value(first)),
         ("two_by_two", serde_json::to_value(crude)),
         ("stratified_two_by_two", serde_json::to_value(&strat.stats)),
+        ("means", serde_json::to_value(&means_out.result)),
     ] {
         actual.insert(
             family.to_string(),

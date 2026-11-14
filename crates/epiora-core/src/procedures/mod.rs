@@ -1,16 +1,23 @@
-//! `procedures` — `freq` and `tables`: tabulate → stats → receipt
-//! (spec §4.1). Every result carries a [`Receipt`] and every emitted
-//! statistic is registered in `validation::REGISTRY`.
+//! `procedures` — `freq`, `tables` and `means`: tabulate → stats →
+//! receipt (spec §4.1–4.2). Every result carries a [`Receipt`] and
+//! every emitted statistic is registered in `validation::REGISTRY`.
 
 mod freq;
+mod means;
 mod tables;
 
 pub use freq::freq;
+pub use means::means;
+#[cfg(feature = "corpus")]
+pub(crate) use means::stats_json;
 pub use tables::tables;
 
 use crate::dataset::{Dataset, Value};
 use crate::receipt::{ProjectStamp, Receipt, ValidationEntry};
-use crate::stats::{CategoryStats, RxcStats, StratifiedStats, TwoByTwoStats};
+use crate::stats::{
+    Anova, Bartlett, CategoryStats, GroupStats, KruskalWallis, RxcStats, StratifiedStats,
+    TwoByTwoStats, TwoGroupTests,
+};
 use crate::validation::{statistic_ids, REGISTRY};
 use crate::EngineError;
 use serde::{Deserialize, Serialize};
@@ -95,6 +102,55 @@ pub struct TablesOptions {
     #[serde(default)]
     pub include_missing: bool,
 }
+
+/// Options of `means` (spec §4.2).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
+pub struct MeansOptions {
+    /// The analysis variable (Integer, Real or Date).
+    pub variable: String,
+    /// The categorical cross-tabulation variable, or `None`.
+    pub group_by: Option<String>,
+    /// Adds a `"(missing)"` group for missing grouping values.
+    #[serde(default)]
+    pub include_missing: bool,
+}
+
+/// `means` result (spec §4.2): per-group and overall descriptives, and
+/// — for grouped runs only — the t-tests, ANOVA, Bartlett and
+/// Kruskal–Wallis blocks (`None` when the corresponding R call would
+/// error, mirroring the generator's `tryCatch`).
+#[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
+pub struct MeansResult {
+    /// The analysed variable.
+    pub variable: String,
+    /// The grouping variable, or `None`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub group_by: Option<String>,
+    /// One entry per non-empty group in category order.
+    pub groups: Vec<GroupStats>,
+    /// Descriptives over every kept record.
+    pub overall: GroupStats,
+    /// Pooled and Welch t-tests — exactly two non-empty groups only.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub t_test: Option<TwoGroupTests>,
+    /// One-way ANOVA — grouped runs with ≥ 2 non-empty groups.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub anova: Option<Anova>,
+    /// Bartlett's test — absent when a group has one observation.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bartlett: Option<Bartlett>,
+    /// Tie-corrected Kruskal–Wallis — grouped runs with ≥ 2 groups.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kruskal_wallis: Option<KruskalWallis>,
+    /// Excluded records per used variable.
+    pub exclusions: BTreeMap<String, u64>,
+}
+
+/// The grouping ceiling of `means` (spec §4.2): more distinct
+/// categories is `TooManyGroups`.
+pub const MAX_MEANS_GROUPS: usize = 100;
 
 /// `freq` result (spec §4.1).
 #[derive(Debug, Clone, PartialEq, Serialize)]

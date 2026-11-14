@@ -48,6 +48,8 @@ export const ENGINE_ERROR_CODES = [
   'invalid_options',
   'corpus_format',
   'snapshot_decode',
+  'not_numeric_variable',
+  'too_many_groups',
 ] as const;
 
 /** `StoreError['code']` (app/src/store/types.ts). */
