@@ -1,72 +1,62 @@
-//! The regularised incomplete beta I_x(a, b) — Numerical Recipes'
-//! continued-fraction form — and `qbeta` as Brent on it (spec §3.4).
+//! The regularised incomplete beta I_x(a, b) — R's `pbeta`
+//! (toms708.c `bratio` dispatch): `beta_small` for `min(a,b) <= 1`,
+//! the L30 lambda dispatch (`bup`/`bgrat`/`bfrac`/`basym`) in
+//! `beta_large` for `a, b > 1`. This replaces the Numerical Recipes
+//! continued fraction, whose `exp(lgamma(a+b) − lgamma(·))` prefactor
+//! cancels every significant digit once a or b ≳ 1e7 (NaN, >1 and
+//! negative tail values at df ~ 1e15+) and whose CF drifts ~1e-4 off
+//! R in mixed small/huge-parameter regions. `qbeta` is Brent on the
+//! same function (spec §3.4).
 
-use super::gamma::ln_gamma;
+use super::beta_large;
+use super::beta_small;
 use super::root::brent_root;
-
-const FPMIN: f64 = 1e-300;
-const ITMAX: usize = 100_000;
 
 /// Regularised incomplete beta I_x(a, b) = B_x(a,b)/B(a,b).
 pub fn reg_inc_beta(x: f64, a: f64, b: f64) -> f64 {
-    if x.is_nan() {
-        return f64::NAN;
-    }
-    if !(x > 0.0 && x < 1.0) {
-        return if x <= 0.0 { 0.0 } else { 1.0 };
-    }
-    let bt = libm::exp(
-        ln_gamma(a + b) - ln_gamma(a) - ln_gamma(b) + a * libm::log(x) + b * libm::log(1.0 - x),
-    );
-    if x < (a + 1.0) / (a + b + 2.0) {
-        bt * betacf(a, b, x) / a
-    } else {
-        1.0 - bt * betacf(b, a, 1.0 - x) / b
-    }
+    inc_beta(x, a, b, false)
 }
 
-/// Lentz continued fraction for the incomplete beta (NR `betacf`).
-fn betacf(a: f64, b: f64, x: f64) -> f64 {
-    let qab = a + b;
-    let qap = a + 1.0;
-    let qam = a - 1.0;
-    let mut c = 1.0;
-    let mut d = 1.0 - qab * x / qap;
-    if d.abs() < FPMIN {
-        d = FPMIN;
+/// `1 − I_x(a, b)` computed as R's `pbeta(x, a, b, lower.tail =
+/// FALSE)` does — the tail is evaluated directly instead of
+/// subtracting a value ≈ 1, so probabilities near 1 keep full
+/// precision (needed by `f_sf` and `binomial_cdf`).
+pub(crate) fn reg_inc_beta_upper(x: f64, a: f64, b: f64) -> f64 {
+    inc_beta(x, a, b, true)
+}
+
+fn inc_beta(x: f64, a: f64, b: f64, upper: bool) -> f64 {
+    if x.is_nan() || a.is_nan() || b.is_nan() || a < 0.0 || b < 0.0 {
+        return f64::NAN;
     }
-    d = 1.0 / d;
-    let mut h = d;
-    for m in 1..=ITMAX {
-        let m2 = 2 * m;
-        let mut aa = m as f64 * (b - m as f64) * x / ((qam + m2 as f64) * (a + m2 as f64));
-        d = 1.0 + aa * d;
-        if d.abs() < FPMIN {
-            d = FPMIN;
-        }
-        c = 1.0 + aa / c;
-        if c.abs() < FPMIN {
-            c = FPMIN;
-        }
-        d = 1.0 / d;
-        h *= d * c;
-        aa = -(a + m as f64) * (qab + m as f64) * x / ((a + m2 as f64) * (qap + m2 as f64));
-        d = 1.0 + aa * d;
-        if d.abs() < FPMIN {
-            d = FPMIN;
-        }
-        c = 1.0 + aa / c;
-        if c.abs() < FPMIN {
-            c = FPMIN;
-        }
-        d = 1.0 / d;
-        let del = d * c;
-        h *= del;
-        if (del - 1.0).abs() <= f64::EPSILON {
-            break;
-        }
+    if a == 0.0 && b == 0.0 {
+        return f64::NAN; // bratio's ierr 8
     }
-    h
+    if !(x > 0.0 && x < 1.0) {
+        if x <= 0.0 {
+            return if upper { 1.0 } else { 0.0 };
+        }
+        return if upper { 0.0 } else { 1.0 };
+    }
+    if a == 0.0 {
+        return if upper { 0.0 } else { 1.0 };
+    }
+    if b == 0.0 {
+        return if upper { 1.0 } else { 0.0 };
+    }
+    if a.min(b) <= 1.0 {
+        // bratio's first block: swap so x0 <= 0.5, compute whichever
+        // tail its series produce directly, un-swap at the end.
+        let (w, w1) = if x > 0.5 {
+            let (ws, w1s) = beta_small::bratio_small(1.0 - x, b, a);
+            (w1s, ws)
+        } else {
+            beta_small::bratio_small(x, a, b)
+        };
+        return if upper { w1 } else { w };
+    }
+    // a, b > 1: bratio's L30 lambda dispatch (beta_large).
+    beta_large::inc_beta_large(x, a, b, upper)
 }
 
 /// `qbeta(p, a, b)` — Brent's method (abs tol 1e-14) on

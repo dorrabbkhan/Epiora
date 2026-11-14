@@ -1,78 +1,24 @@
-//! `ln_gamma`, the regularised incomplete gamma used by `chisq_sf`,
-//! and the two building blocks R uses for its discrete densities:
-//! `stirlerr` (Stirling error of `log n!`) and `bd0` (the binomial
-//! deviance), ported from R's `src/nmath/stirlerr.c` and `bd0.c` —
-//! `dhyper`'s accuracy at `m = n = 2e6` depends on them (spec §3.4,
-//! fixture `hypergeom_pmf`).
-
-const FPMIN: f64 = 1e-300;
-const ITMAX: usize = 100_000;
+//! `ln_gamma` and the two building blocks R uses for its discrete
+//! densities: `stirlerr` (Stirling error of `log n!`) and `bd0` (the
+//! binomial deviance), ported from R's `src/nmath/stirlerr.c` and
+//! `bd0.c` — `dhyper`'s accuracy at `m = n = 2e6` depends on them
+//! (spec §3.4, fixture `hypergeom_pmf`). Also the non-log halves of
+//! the `pgamma.c`/`dpois.c` helpers `pgamma_raw` calls:
+//! `dpois_raw`, `dpois_wrap`, `pd_upper_series`, `pd_lower_cf` and
+//! `pd_lower_series`. `pgamma_raw` itself — the regularised
+//! incomplete gamma `inc_gamma_lower`/`inc_gamma_upper` behind
+//! `chisq_cdf`/`chisq_sf` — is in `gamma_lower.rs` (spec §3.4).
 
 /// `lgamma(x)` for x > 0 (spec §3.4); the sign Γ(x) takes is dropped.
 pub fn ln_gamma(x: f64) -> f64 {
     libm::lgamma_r(x).0
 }
 
-/// Regularised upper incomplete gamma Q(a, x) = Γ(a, x)/Γ(a): series
-/// for x < a + 1 (as P, then 1 − P), Lentz continued fraction
-/// otherwise (spec §3.4).
-pub(crate) fn inc_gamma_upper(a: f64, x: f64) -> f64 {
-    let gln = ln_gamma(a);
-    if x < a + 1.0 {
-        1.0 - lower_series(a, x, gln)
-    } else {
-        upper_cf(a, x, gln)
-    }
-}
-
-/// P(a, x) by its convergent series.
-fn lower_series(a: f64, x: f64, gln: f64) -> f64 {
-    let mut ap = a;
-    let mut sum = 1.0 / a;
-    let mut del = sum;
-    for _ in 0..ITMAX {
-        ap += 1.0;
-        del *= x / ap;
-        sum += del;
-        if del.abs() <= sum.abs() * f64::EPSILON {
-            break;
-        }
-    }
-    sum * libm::exp(-x + a * libm::log(x) - gln)
-}
-
-/// Q(a, x) by Lentz's continued fraction.
-fn upper_cf(a: f64, x: f64, gln: f64) -> f64 {
-    let mut b = x + 1.0 - a;
-    let mut c = 1.0 / FPMIN;
-    let mut d = 1.0 / b;
-    let mut h = d;
-    for i in 1..=ITMAX {
-        let an = -(i as f64) * (i as f64 - a);
-        b += 2.0;
-        d = an * d + b;
-        if d.abs() < FPMIN {
-            d = FPMIN;
-        }
-        c = b + an / c;
-        if c.abs() < FPMIN {
-            c = FPMIN;
-        }
-        d = 1.0 / d;
-        let del = d * c;
-        h *= del;
-        if (del - 1.0).abs() <= f64::EPSILON {
-            break;
-        }
-    }
-    libm::exp(-x + a * libm::log(x) - gln) * h
-}
-
 const M_LN_SQRT_2PI: f64 = -0.9189385332046728; // -log(sqrt(2*pi))
 pub(crate) const M_LN_2PI: f64 = 1.8378770664093456; // log(2*pi)
 const M_2PI: f64 = std::f64::consts::TAU; // 2*pi
 /// `M_cutoff` of R's `pgamma.c` — `ln(2)·DBL_MAX_EXP/DBL_EPSILON`.
-const M_CUTOFF: f64 = 3.196577180618028e18;
+const M_CUTOFF: f64 = 3.196577161300664e18;
 /// `scalefactor` of R's `pgamma.c` — `(2^32)^8 = 2^256`.
 const SCALE_FACTOR: f64 = 1.157920892373162e77;
 
@@ -81,7 +27,7 @@ const SCALE_FACTOR: f64 = 1.157920892373162e77;
 /// splits the deviance via `ebd0` (double-double arithmetic); the plain
 /// `bd0 + stirlerr` form agrees to ~1e-13 relative in the worst case —
 /// inside the `closed_form` class.
-fn dpois_raw(x: f64, lambda: f64) -> f64 {
+pub(crate) fn dpois_raw(x: f64, lambda: f64) -> f64 {
     if lambda == 0.0 {
         return if x == 0.0 { 1.0 } else { 0.0 };
     }
@@ -100,40 +46,69 @@ fn dpois_raw(x: f64, lambda: f64) -> f64 {
     libm::exp(-bd0(x, lambda) - stirlerr(x)) / libm::sqrt(M_2PI * x)
 }
 
-/// `dpois_wrap(x_plus_1, lambda)` = `dpois(x_plus_1 − 1, lambda)`, the
-/// form `pgamma` needs for fractional `x` (R `pgamma.c`, non-log only).
-fn dpois_wrap(x_plus_1: f64, lambda: f64) -> f64 {
+/// `dpois_wrap(x_plus_1, lambda, give_log)` = `dpois(x_plus_1 − 1,
+/// lambda)` (or its log), the form `pgamma` needs for fractional `x`
+/// (R `pgamma.c`). The log form goes through
+/// `gamma_ebd0::dpois_raw_log`, R's `ebd0`-based path.
+pub(crate) fn dpois_wrap(x_plus_1: f64, lambda: f64, log_p: bool) -> f64 {
     if !lambda.is_finite() {
-        return 0.0;
+        return if log_p { f64::NEG_INFINITY } else { 0.0 };
     }
     if x_plus_1 > 1.0 {
-        return dpois_raw(x_plus_1 - 1.0, lambda);
+        return if log_p {
+            super::gamma_ebd0::dpois_raw_log(x_plus_1 - 1.0, lambda)
+        } else {
+            dpois_raw(x_plus_1 - 1.0, lambda)
+        };
     }
     if lambda > (x_plus_1 - 1.0).abs() * M_CUTOFF {
-        libm::exp(-lambda - ln_gamma(x_plus_1))
+        // R_D_exp(-lambda - lgammafn(x_plus_1))
+        let log_e = -lambda - ln_gamma(x_plus_1);
+        if log_p {
+            log_e
+        } else {
+            libm::exp(log_e)
+        }
     } else {
-        dpois_raw(x_plus_1, lambda) * (x_plus_1 / lambda)
+        let d = if log_p {
+            super::gamma_ebd0::dpois_raw_log(x_plus_1, lambda)
+        } else {
+            dpois_raw(x_plus_1, lambda)
+        };
+        if log_p {
+            d + libm::log(x_plus_1 / lambda)
+        } else {
+            d * (x_plus_1 / lambda)
+        }
     }
 }
 
-/// `pd_upper_series(x, y)` of R's `pgamma.c`:
-/// `sum_{n>=0} x^(n+1) / (y·(y+1)·…·(y+n))`, non-log only.
-fn pd_upper_series(x: f64, mut y: f64) -> f64 {
+/// `pd_upper_series(x, y, log_p)` of R's `pgamma.c`:
+/// `sum_{n>=0} x^(n+1) / (y·(y+1)·…·(y+n))` (or its log).
+pub(crate) fn pd_upper_series(x: f64, mut y: f64, log_p: bool) -> f64 {
     let mut term = x / y;
     let mut sum = term;
-    // R's do/while: the first check `x/y > (x/y)·eps` always passes
-    // for positive term, so the while form is identical.
-    while term > sum * f64::EPSILON {
+    // R's do/while is uncapped; terms shrink geometrically once
+    // y > x — the cap matches `pd_lower_cf`'s max_it and is never
+    // reached.
+    for _ in 0..200_000 {
+        if term <= sum * f64::EPSILON {
+            break;
+        }
         y += 1.0;
         term *= x / y;
         sum += term;
     }
-    sum
+    if log_p {
+        libm::log(sum)
+    } else {
+        sum
+    }
 }
 
 /// `pd_lower_cf(y, d)` of R's `pgamma.c` — the continued fraction for
 /// the scaled upper tail.
-fn pd_lower_cf(y: f64, d: f64) -> f64 {
+pub(crate) fn pd_lower_cf(y: f64, d: f64) -> f64 {
     if y == 0.0 {
         return 0.0;
     }
@@ -147,7 +122,12 @@ fn pd_lower_cf(y: f64, d: f64) -> f64 {
     let mut c2 = y;
     let mut c4 = d;
     let (mut a1, mut b1, mut a2, mut b2) = (0.0, 1.0, y, d);
-    while b2 > SCALE_FACTOR {
+    // R's `while(b2 > scalefactor)` — each pass divides by 2^256, so
+    // 2 passes suffice from f64::MAX; the cap is a formality.
+    for _ in 0..8 {
+        if b2 <= SCALE_FACTOR {
+            break;
+        }
         a1 /= SCALE_FACTOR;
         b1 /= SCALE_FACTOR;
         a2 /= SCALE_FACTOR;
@@ -187,10 +167,16 @@ fn pd_lower_cf(y: f64, d: f64) -> f64 {
 }
 
 /// `pd_lower_series(lambda, y)` of R's `pgamma.c`.
-fn pd_lower_series(lambda: f64, mut y: f64) -> f64 {
+pub(crate) fn pd_lower_series(lambda: f64, mut y: f64) -> f64 {
     let mut term = 1.0;
     let mut sum = 0.0;
-    while y >= 1.0 && term > sum * f64::EPSILON {
+    // R's `while(y >= 1 && term > sum*eps)` — y decrements, so the
+    // loop ends at y < 1 at the latest; the cap matches the other
+    // series and is only hit when y > 2e5.
+    for _ in 0..200_000 {
+        if !(y >= 1.0 && term > sum * f64::EPSILON) {
+            break;
+        }
         term *= y / lambda;
         sum += term;
         y -= 1.0;
@@ -200,36 +186,6 @@ fn pd_lower_series(lambda: f64, mut y: f64) -> f64 {
         sum += term * f;
     }
     sum
-}
-
-/// `pgamma_raw(x, a, lower_tail = TRUE, log_p = FALSE)` — the lower
-/// tail as R's `pgamma` computes it (nmath `pgamma.c` branch for
-/// branch). The "x large" region is a verbatim port: it returns
-/// `1 − d·sum` directly, so `1 − chisq_cdf` reproduces `1 − pchisq`
-/// even in the deep upper tail where it differs from `chisq_sf`. The
-/// `x < 1` series is the same A&S 6.5.29 form R uses; the
-/// `ppois_asymp` middle region produces a moderate lower-tail value
-/// where the complement of the upper tail agrees within tolerance.
-pub(crate) fn inc_gamma_lower(a: f64, x: f64) -> f64 {
-    if x < 1.0 {
-        lower_series(a, x, ln_gamma(a))
-    } else if x <= a - 1.0 && x < 0.8 * (a + 50.0) {
-        pd_upper_series(x, a) * dpois_wrap(a, x)
-    } else if a - 1.0 < x && a < 0.8 * (x + 50.0) {
-        let d = dpois_wrap(a, x);
-        let sum = if a < 1.0 {
-            if x * f64::EPSILON > 1.0 - a {
-                1.0
-            } else {
-                pd_lower_cf(a, x - (a - 1.0)) * x / a
-            }
-        } else {
-            1.0 + pd_lower_series(x, a - 1.0)
-        };
-        1.0 - d * sum
-    } else {
-        1.0 - inc_gamma_upper(a, x)
-    }
 }
 
 /// `(S0 − (S1 − (S2 − … − Sk/nn)/nn …)/nn)/n` — the nested form every
@@ -391,5 +347,17 @@ pub(crate) fn bd0(x: f64, np: f64) -> f64 {
         x * (lg_x_n - 1.0) + np
     } else {
         x * lg_x_n + np - x
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::M_CUTOFF;
+
+    /// `M_CUTOFF` must be exactly R `pgamma.c`'s
+    /// `M_LN2 * DBL_MAX_EXP / DBL_EPSILON` (`ln(2)·1024/ε`).
+    #[test]
+    fn m_cutoff_equals_r_pgamma_expression() {
+        assert_eq!(M_CUTOFF, core::f64::consts::LN_2 * 1024.0 / f64::EPSILON);
     }
 }

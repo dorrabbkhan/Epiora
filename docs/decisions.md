@@ -3030,3 +3030,164 @@ Supersedes: platform spec §14 Phase 1 order (2026-10-28); v1.0 spec G2's v1.1 c
   pure functions — parsing, emissions, scaling, compare — required by the tests-ship-with-code
   rule); `fixtures/openepi/package.json` and `package-lock.json` (pin the required latest
   Playwright for this fixture tool only).
+
+### v1.0 Task 5 — special functions (t, F, gamma/chi-square quantiles, Poisson tails, binomial quantile)
+
+- Grid tests replaced (owner decision 2026-11-13, option a): the seven
+  `special.*` grids were deferred out of Task 2 because they break the
+  corpus gate before the runner knows the names, and the fixture guard
+  forbids `fixtures/` in a `crates/` PR. This PR therefore replaces the
+  plan's `*_matches_grid` tests with `*_matches_reference` tests whose
+  values come from a single `Rscript -e` command (R 4.6.2 `pt`, `qt`,
+  `pf(lower.tail=FALSE)`, `qgamma`, `qchisq`, `ppois`, `qbinom`), quoted
+  verbatim in a comment block at the top of the section in
+  `crates/epiora-core/tests/special.rs`. Tolerances are the plan's
+  classes only: closed-form 1e-9 relative, root-found quantiles 1e-6
+  (rule E7), `binomial_quantile` exact; plus the plan's proptests
+  `t_quantile_symmetry` (1e-9 relative) and `poisson_tail_complements`
+  (1e-12 absolute). The follow-up fixtures-only PR adds
+  `fixtures/R/special.R` and the generated `fixtures/special/*.json`
+  grids (OWNER REVIEW); `run_special.rs` already accepts all eight new
+  names (`t_cdf`, `t_sf`, `t_quantile`, `f_sf`, `gamma_quantile`,
+  `chisq_quantile`, `poisson_tail`, `binomial_quantile`) in the
+  `inputs.grid` shape that script emits, verified by an in-memory
+  dispatch test, so that PR needs no `crates/` change.
+- Implementation notes: quantile solvers run Brent in shifted log
+  coordinates (`v = ln x − u_est`); the root then sits near 0 where
+  `brent_root`'s absolute 1e-14 tolerance is reachable — at |ln x| ≳ 45
+  the ulp alone exceeds it. `t_quantile` inverts the beta relation via
+  `beta_quantile` with a residual check and log-space fallback.
+  `t_quantile(0.5, df)` returns the exact median 0; the reference table
+  uses 0 rather than R's printed Newton residual 2.57e-16 for
+  `qt(0.5, 0.5)` (noted in the test table). `binomial_quantile` resolves
+  `p ≤ 0`/`p ≥ 1` before the degenerate `prob` cases, matching
+  `qbinom(1, 10, 0) = 10`. `poisson_tail(upper)` encodes `P(X ≥ k)`
+  (`ppois(k−1, λ, lower.tail=FALSE)`), the corpus numeric-`upper`
+  convention.
+- Fix round 1 (PR #69 review): `gamma_quantile`/`t_dist::log_solve`
+  bracket expansions now double each step and evaluate the bound point
+  itself on a crossing (a huge `u_est` ≈ −1e300 made `hi += 4` hang);
+  `gamma_quantile` returns `Ok(0.0)` when P(a, min subnormal) ≥ p —
+  the f64 quantile is 0. `binomial_quantile` searches `pbinom`'s
+  `pbeta` identity `I_{1−prob}(n−k, k+1)` (O(log n) constant-time
+  evaluations, was O(n·log n)); verified exact against R's `qbinom`
+  on the reference table plus 21 large-n spot checks. `poisson_tail`
+  uses `saturating_add` for `k + 1` (u64::MAX debug panic).
+- Fix round 2 (PR #69 second review), method changes:
+  `binomial_cdf` uses `pbeta(prob, k+1, n−k, lower.tail = FALSE)`
+  through a new `reg_inc_beta_upper` — the upper incomplete-beta tail
+  computed directly, not `1 − I` (a ~1e-15 tail resolved); plus R
+  `qDiscrete_search`'s left-continuity fuzz `p *= 1 − 8ε`, giving
+  exact `qbinom` parity on a 210-point seeded R table.
+  `t_cdf`/`t_sf` follow modern `pt.c`: `nx = 1 + (t/df)·t`, the
+  small-argument `pbeta` tail in both directions, and the A&S 26.5.4
+  log form only when `nx > 1e100` — replacing the A&S 26.7.8 branch
+  (4.2e-8 relative error at df = 1e6 in the deep tail).
+  `t_quantile` for df > 4e5 solves `tail_val(t) = 2·min(p, 1−p)` on
+  `v = ln t` — inverting the same function `pt` evaluates — because
+  `x = df/(df+t²)` is then within ulps of 1 for every ordinary `t`.
+  `f_sf` picks R `pf.c`'s argument (`z` vs `w` side) so the beta
+  argument never rounds to 1. `gamma_quantile`/`chisq_quantile` for
+  `p > 0.5` solve `Q(a, y) = 1 − p` on `inc_gamma_upper` — `P − p`
+  cancels below ~1e-8. `reg_inc_beta`/`reg_inc_beta_upper` are now a
+  TOMS 708 port (R `toms708.c`: `beta_large.rs` L30 dispatch/
+  `bfrac`/`basym`, `beta_small.rs` `fpser`/`apser`/`bpser`/`bup`,
+  `beta_grat.rs` `bgrat`+`gam1`/`gamln1`/`rexpm1`/`erf__`/`digamma`,
+  `beta_math.rs` `brcmp1`/`algdiv`/`rlog1`/`bcorr`/`erfcx`) — the
+  plain continued fraction was wrong by ~7e-4 in mixed
+  small/huge-parameter regions; verified against R `pbeta` on a
+  9,261-point grid and on the 256-point pt/pf/qt audit at df up to
+  1e300.
+- Fix round 3 (PR #69 third review, owner-authorized option 1), method
+  change: `inc_gamma_lower` no longer forms `1 − inc_gamma_upper` in
+  the region `x ∈ (0.8(a+50), a−1]` — that double-complemented through
+  `1 − lower_series` and floored P ≲ 2·DBL_EPSILON
+  (`gamma_quantile(1e-16, 1e4, 1)` 7.2e-4 off R, `chisq_quantile`
+  1.0e-3 off). The lower tail is now computed directly as R 4.6.2
+  `pgamma_raw` does, branch for branch, in the new
+  `special/gamma_lower.rs`: `lower_series` for `x < 1`,
+  `pd_upper_series × dpois_wrap` for `x ≤ a−1 && x < 0.8(a+50)`, the
+  `1 − d·sum` branch (`dpois_wrap` + `pd_lower_cf`/`pd_lower_series`)
+  for `a−1 < x && a < 0.8(x+50)`, and `ppois_asymp` (Temme expansion
+  with `logcf`/`log1pmx`/`lgamma1p`/`dnorm4`, pnorm via `normal.rs`)
+  otherwise — never a complement of a value near 1. Symmetric audit:
+  `inc_gamma_upper` for `a < 1 && x < a+1` floored Q (negative values
+  at a ≲ 1e-13, e.g. −2.2e-16 vs R's +2.19e-16 at a=1e-15, x=1); it
+  now delegates to `inc_gamma_upper_lt1` (`pgamma_smallx` `!lower_tail`
+  for `x < 1`, R's `d·sum` form otherwise) — post-fix audit vs R:
+  0 negatives, worst rel diff 1.1e-14. OLD-vs-NEW `inc_gamma_lower` on
+  an ordinary grid (a 0.1..1e4, x around the bulk): max bulk rel diff
+  1.28e-9 at a=1e6, x=997500 where NEW matches R to ~1e-18 (the diff
+  is OLD's error); deep-tail max 1.0 where OLD returned 0 and NEW
+  returns ~9e-18 matching R; 0 outside the delegated region. New test
+  `gamma_lower_tail_matches_reference` (30 `pgamma` + 20 `qgamma` +
+  20 `qchisq` rows, one `Rscript -e`, verbatim output quoted in the
+  test; classes 1e-9/1e-6 per the plan).
+- Fix round 4 (PR #69 fourth review, owner-authorized option 1), method
+  change: `inc_gamma_lower`/`inc_gamma_upper` are now R 4.6.2
+  `pgamma_raw` end to end — both tails and both output modes through
+  one dispatcher, like `reg_inc_beta` = TOMS 708. `pgamma_raw`
+  (rewritten `special/gamma_lower.rs`) runs R's branches verbatim in
+  `log_p` and non-log form — `pgamma_smallx` (`f1·f2` lower form,
+  `−(f1m1 + f2m1 + f1m1·f2m1)` upper), `pd_upper_series·dpois_wrap`,
+  the `d·sum`/`1 − d·sum` branch, `ppois_asymp(a−1, x, !lower_tail)` —
+  then applies R's `res < DBL_MIN/DBL_EPSILON` redo: recompute in log
+  space and exponentiate, which recovers the denormal digits the
+  direct path underflows away (all five review denormal points now
+  bit-identical to R, verified by `git show e8f6f97`-era vs NEW probe:
+  0 ulps). `inc_gamma_upper` for `a ≥ 1` now routes through those same
+  branches instead of `upper_cf` (deleted with `lower_series`,
+  dead) — `chisq_sf` at df = 1e6, x = 1.002e6 is now bit-identical to
+  R and x = 1.005e6 is 3.1e-13 relative (were 1.7e-9/2.3e-9). New
+  files: `special/gamma_ebd0.rs`
+  (R `ebd0.c`/`dpois.c` `ebd0` + `bd0_scale` table — the log-space
+  Poisson density `dpois_wrap` calls when `log_p`), and
+  `special/gamma_asymp.rs` (`ppois_asymp` both modes, `dpnorm`,
+  `dnorm_std` split-form density; `normal.rs` gains `pnorm_log` +
+  `do_del_log`, R `pnorm.c` `pnorm_both` log branch). OLD-vs-NEW on an
+  ordinary grid (a ∈ {0.05..1e4}, x = a·r and fixed points, 1456
+  points, `/tmp/task5fix/probe`): max rel diff P 1.03e-13 (deep-tail
+  redo band), Q 2.45e-11 at a=1e4 x=10500 — the intended
+  `ppois_asymp` correction toward R. New tests:
+  `gamma_denormal_matches_reference` (212 rows: the 5 review points +
+  `a` 1e-15..1e6 both tails down to 1e-321, one `Rscript -e`,
+  verbatim + machine-converted), `gamma_upper_large_df_matches_reference`
+  (112 `pchisq(·, lower.tail=FALSE)` rows, df 2..1e6, one
+  `Rscript -e`), `inc_gamma_stays_in_unit_interval` (proptest:
+  `a ∈ [1e-300, 1e7]`, x ≥ 0: P, Q ∈ [0,1] and `P+Q` within 1e-12 of 1
+  where both ≥ 1e-3). No fixture, golden, corpus or existing-test
+  value changed.
+- Fix round 5 (PR #69 fifth review), constant corrections: `gamma.rs`
+  `M_CUTOFF` corrected to R `pgamma.c`'s `M_LN2*DBL_MAX_EXP/DBL_EPSILON`
+  = 3.196577161300664e18 (was 3.196577180618028e18), with a unit
+  assertion that the const equals `LN_2*1024/ε`; `gamma_ebd0.rs`
+  `X_LRG` set to the double nearest R `dpois.c`'s
+  2.86111748575702815380240589208115399625e+307,
+  i.e. 2.8611174857570283e307 (was 1 ULP low). The
+  `PGAMMA_DENORMAL_REF`/`CHISQ_SF_LARGE_DF_REF` literals were
+  machine-shortened to shortest round-trip form (342 of 1184 rewritten,
+  verified bit-identical by parse-compare) and their two
+  `#[allow(clippy::unreadable_literal, clippy::excessive_precision)]`
+  attributes removed.
+- Files outside the Files block: `docs/decisions.md` (this entry, as the
+  owner note requires); `crates/epiora-core/src/special/beta_large.rs`,
+  `crates/epiora-core/src/special/beta_small.rs`,
+  `crates/epiora-core/src/special/beta_grat.rs` and
+  `crates/epiora-core/src/special/beta_math.rs` (new — the TOMS 708
+  incomplete-beta port could not fit in `beta.rs` under the ~400-line
+  file rule; `beta.rs` keeps the public API and dispatch);
+  `crates/epiora-core/src/special/gamma_lower.rs` (new — the R
+  `pgamma_raw` lower-tail port plus `ppois_asymp` and the small-`a`
+  direct upper tail could not fit in `gamma.rs` under the ~400-line
+  file rule; `gamma.rs` keeps `ln_gamma`, the shared series/CF helpers
+  and the `inc_gamma_upper` dispatch);
+  `crates/epiora-core/src/special/gamma_asymp.rs` (new — round 4:
+  `ppois_asymp` log/non-log, `dpnorm`, `dnorm_std`) and
+  `crates/epiora-core/src/special/gamma_ebd0.rs` (new — round 4: R
+  `ebd0`/`bd0_scale` log-space Poisson density);
+  `.github/workflows/app.yml` (CI repair — the
+  `app` job pinned `ubuntu-latest` → `ubuntu-24.04` because
+  ubuntu-latest moved to 26.04 resolute on 2026-11-13 and Playwright's
+  WebKit build needs `libicudata.so.74`, absent on resolute; the
+  store-opfs suite and Playwright e2e fail at browser launch on every
+  PR until reverted or Playwright supports resolute).
