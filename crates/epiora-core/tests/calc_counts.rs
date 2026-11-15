@@ -143,14 +143,46 @@ fn leaf_number(v: &Value) -> Option<f64> {
     v.as_f64()
 }
 
-/// Every leaf is a finite number or an `{"undefined"}` object — a
-/// bare `null` means a NaN escaped into `Value::from`.
-fn assert_finite_tree(v: &Value, id: &str) {
+/// The leaf keys that carry a probability or a p-value: `p`,
+/// `*_p`, `*p_1t`/`*p_2t` (covers `p_1t`, `midp_2t`,
+/// `fisher_p_1t`, …) and the binomial/Poisson `tail` masses.
+fn is_probability_key(key: &str) -> bool {
+    key == "p"
+        || key.ends_with("_p")
+        || key.ends_with("p_1t")
+        || key.ends_with("p_2t")
+        || matches!(key, "lt" | "le" | "ge" | "gt" | "eq")
+}
+
+/// Every leaf is a finite number or an `{"undefined"}` object (a
+/// bare `null` means a NaN escaped into `Value::from`), every
+/// probability/p-value leaf lands in `[0, 1]`, and every
+/// `lower`/`upper` pair is ordered — Review Focus 3 (fix round 2):
+/// the `ln_gamma`-composed masses once emitted 3e21 and −6.6e7.
+fn assert_value_tree(v: &Value, id: &str) {
     match v {
         Value::Null => panic!("{id}: null leaf — a NaN reached the result tree"),
         Value::Number(n) => assert!(n.as_f64().is_some_and(f64::is_finite)),
-        Value::Array(items) => items.iter().for_each(|i| assert_finite_tree(i, id)),
-        Value::Object(map) => map.values().for_each(|i| assert_finite_tree(i, id)),
+        Value::Array(items) => items.iter().for_each(|i| assert_value_tree(i, id)),
+        Value::Object(map) => {
+            for (k, i) in map {
+                if is_probability_key(k) {
+                    if let Some(x) = i.as_f64() {
+                        assert!(
+                            (0.0..=1.0).contains(&x),
+                            "{id}: probability leaf {k} = {x} outside [0, 1]"
+                        );
+                    }
+                }
+                assert_value_tree(i, id);
+            }
+            if let (Some(l), Some(u)) = (
+                map.get("lower").and_then(Value::as_f64),
+                map.get("upper").and_then(Value::as_f64),
+            ) {
+                assert!(l <= u, "{id}: CI lower {l} > upper {u}");
+            }
+        }
         Value::String(_) | Value::Bool(_) => {}
     }
 }
@@ -173,7 +205,7 @@ fn large_counts_terminate() {
         let res = run(id, &inputs, &ctx());
         eprintln!("{id} {:?} in {:?}", inputs, t.elapsed());
         if let Ok(out) = res {
-            assert_finite_tree(&out.result, id);
+            assert_value_tree(&out.result, id);
         }
     };
     for &s in &sizes {
@@ -215,8 +247,8 @@ fn large_counts_terminate() {
         );
     }
     // Hypergeometric-support paths — 1e6 is the largest size that
-    // still finishes (1e9 exceeds 60 s; 2^53−1 aborts on the support
-    // allocation), so only it is exercised here.
+    // still finishes single-stratum (1e9 exceeds 60 s; 2^53−1 aborts
+    // on the support allocation), so only it is exercised there.
     let s = 1_000_000u64;
     check(
         "two_by_two",
@@ -225,6 +257,20 @@ fn large_counts_terminate() {
     check(
         "two_by_n",
         json!({"strata": [[[s / 2, s / 2], [s / 2, s / 2]]], "conf_level": 95}),
+    );
+    // Multi-stratum `two_by_two` additionally runs `martin`'s
+    // O(support²) log-space convolution for the `adjusted` block, so
+    // its bound is far lower than the single-stratum 1e6: measured
+    // (release probe, `target/release/probe`) 40,000 counts per cell
+    // finishes in 67 s and 50,000 per cell exceeds a 90 s cap; the
+    // review's 60 s frame cuts between 30,000 (37 s) and 40,000.
+    // The assertions below run 2 strata of 2,000 per cell so the
+    // path's leaves are range-checked in debug-build time.
+    let s2 = 2_000u64;
+    check(
+        "two_by_two",
+        json!({"strata": [[[s2, s2], [s2, s2]], [[s2, s2], [s2, s2]]],
+               "conf_level": 95}),
     );
     // `matched_n` at ~1e12 sets — the shapes carry multiplicities, so
     // this returns in O(M) memory where per-set strata needed O(N).
@@ -266,6 +312,25 @@ fn large_counts_terminate() {
         }
         _ => assert_eq!(a, b),
     }
+}
+
+/// R's `mcnemar.test(correct=TRUE)` subtracts the continuity 1 only
+/// when the table differs from its transpose (`any(x - t(x) != 0)`):
+/// `matrix(c(10, 5, 5, 10), 2)` — equal discordant counts — gives
+/// statistic 0 and p = 1, not (0−1)²/n = 1/10 (verified against
+/// R 4.6.2; fix round 2).
+#[test]
+fn mcnemar_cc_balanced_discordance_is_zero() {
+    let out = run(
+        "matched_case_control",
+        &json!({"controls_per_case": 1,
+                "matched_sets": [[10, 5], [5, 10]],
+                "conf_level": 95}),
+        &ctx(),
+    )
+    .expect("matched_case_control run");
+    assert_eq!(out.result["mcnemar_cc"]["value"].as_f64(), Some(0.0));
+    assert_eq!(out.result["mcnemar_cc"]["p"].as_f64(), Some(1.0));
 }
 
 proptest! {

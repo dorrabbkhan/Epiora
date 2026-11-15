@@ -5,7 +5,9 @@
 //! family). Iterative reference values are in `exact_or.rs` and
 //! `martin.rs`.
 
-use crate::special::{chisq_sf, ln_gamma, normal_quantile, reg_inc_beta, reg_inc_beta_upper};
+use crate::special::{
+    chisq_sf, dbinom_raw, dpois_raw, normal_quantile, reg_inc_beta, reg_inc_beta_upper,
+};
 use crate::stats::estimate::UndefinedReason;
 use serde_json::{json, Value};
 
@@ -109,8 +111,11 @@ pub fn z(conf: f64) -> f64 {
 
 // --- distribution leaves ----------------------------------------------------
 
-/// `dbinom(x, n, p)` — the binomial point mass, from `ln_gamma` so
-/// the zeroin step functions see the same smooth values R does.
+/// `dbinom(x, n, p)` — the binomial point mass, through the ported
+/// `dbinom_raw` (Loader's `stirlerr`/`bd0` saddle-point, as R's
+/// `dbinom`): composing `ln_gamma` differences lost all accuracy once
+/// `n` swamped the result (rel. err ~1.7e-6 at n = 1e9, garbage by
+/// 1e15 — Review Focus 3, fix round 2).
 pub fn dbinom(x: u64, n: u64, p: f64) -> f64 {
     if p <= 0.0 {
         return f64::from(x == 0);
@@ -121,21 +126,19 @@ pub fn dbinom(x: u64, n: u64, p: f64) -> f64 {
     if x > n {
         return 0.0;
     }
-    let (x, n) = (x as f64, n as f64);
-    libm::exp(
-        ln_gamma(n + 1.0) - ln_gamma(x + 1.0) - ln_gamma(n - x + 1.0)
-            + x * libm::log(p)
-            + (n - x) * libm::log(1.0 - p),
-    )
+    dbinom_raw(x as f64, n as f64, p, 1.0 - p, false)
 }
 
-/// `dpois(x, lambda)`.
+/// `dpois(x, lambda)` — `dpois_raw`, R `dpois.c`'s `ebd0`-accurate
+/// port, for the same reason (`ln_gamma` cancellation at large `x`).
 pub fn dpois(x: u64, lambda: f64) -> f64 {
     if lambda <= 0.0 {
         return f64::from(x == 0);
     }
-    let x = x as f64;
-    libm::exp(x * libm::log(lambda) - lambda - ln_gamma(x + 1.0))
+    if !lambda.is_finite() {
+        return f64::NAN;
+    }
+    dpois_raw(x as f64, lambda)
 }
 
 /// `pchisq(x, 1, lower.tail = FALSE)` clamped to [0, 1].

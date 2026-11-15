@@ -25,7 +25,14 @@ fn pair(inputs: &Value, conf: f64) -> Value {
     let chi_cc = if n == 0 {
         f64::NAN
     } else {
-        let d = (db as f64 - dc as f64).abs() - 1.0;
+        // `mcnemar.test(correct=TRUE)` subtracts the 1 only when the
+        // table differs from its transpose (`any(x - t(x) != 0)`);
+        // `db == dc` therefore gives statistic 0 (p = 1), not 1/n.
+        let d = if db == dc {
+            0.0
+        } else {
+            (db as f64 - dc as f64).abs() - 1.0
+        };
         d * d / n as f64
     };
     let or = db as f64 / dc as f64;

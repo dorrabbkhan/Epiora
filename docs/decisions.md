@@ -3859,9 +3859,29 @@ Supersedes: —
   noncentral-hypergeometric support sums and OR roots, which have no
   closed form — reported on the PR under "Still unbounded (owner
   decision)", not capped.
+- **Point masses use R's own `dbinom_raw`/`dpois_raw` (PR #74 review
+  fix round 2).** The calc-layer `dbinom`/`dpois` composed
+  `ln_gamma` differences, which cancel ~17 digits once `n` swamps
+  the result — `binomial.tail.eq` returned 3.1e21 at n = 2^53−1 and
+  `pair()`'s `midp_p` −6.6e7 for valid counts. Both now call the
+  already-ported Loader saddle-point routines (`dbinom_raw` in
+  `special/hypergeom.rs`, `dpois_raw` in `special/gamma.rs`,
+  re-exported `pub(crate)`), exactly what R's `dbinom`/`dpois`
+  compute; edge semantics are unchanged. The same audit replaced
+  `martin`'s `lchoose`-composed polynomial with `dhyper`'s log mass
+  (the dropped `1/C(m+n,k)` factor is constant per stratum and
+  cancels in its max-normalisation).
+- **`pair()` `mcnemar_cc` applies the continuity 1 only when
+  `db != dc` (PR #74 review fix round 2).** That is
+  `mcnemar.test(correct=TRUE)`'s `any(x - t(x) != 0)` condition
+  verbatim: equal discordant counts give statistic 0 (p = 1), not
+  1/n. No fixture covers `db == dc`; `mcnemar_cc_balanced_discordance
+  _is_zero` asserts R's `matrix(c(10,5,5,10),2)` result.
 - **Files outside the Files block:**
   - `crates/epiora-core/src/special/zeroin.rs` + `special/mod.rs` —
-    the `uniroot` port above.
+    the `uniroot` port above. `special/{hypergeom,gamma}.rs` joined
+    `mod.rs` in fix round 2: `dbinom_raw`/`dhyper`/`dpois_raw`
+    visibility only, no behaviour change to the exported routines.
   - `crates/epiora-core/src/calc/registry*.rs`,
     `crates/epiora-core/src/calc/counts/defs*.rs`,
     `crates/epiora-core/src/calc/counts/{shared,shared_exact,exact_or,martin}.rs`,

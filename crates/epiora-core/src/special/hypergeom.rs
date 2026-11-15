@@ -61,7 +61,9 @@ fn pow1p(x: f64, y: f64) -> f64 {
 
 /// `dbinom_raw(x, n, p, q, give_log)` — R `src/nmath/dbinom.c`
 /// verbatim (`stirlerr` + `bd0`; `n` is integral in every call here).
-fn dbinom_raw(x: f64, n: f64, p: f64, q: f64, give_log: bool) -> f64 {
+/// `pub(crate)` for the calc counts family, whose `ln_gamma`
+/// composition lost all accuracy once `n` swamped the result.
+pub(crate) fn dbinom_raw(x: f64, n: f64, p: f64, q: f64, give_log: bool) -> f64 {
     if p == 0.0 {
         return rd(x == 0.0, give_log);
     }
@@ -112,7 +114,10 @@ fn dbinom_raw(x: f64, n: f64, p: f64, q: f64, give_log: bool) -> f64 {
 
 /// `dhyper(x, m, n, k)` — R's `dhyper` layout: `p = k/(m+n)`,
 /// `pmf = dbinom_raw(x,m,·)·dbinom_raw(k−x,n,·)/dbinom_raw(k,m+n,·)`.
-fn dhyper(x: f64, m: f64, n: f64, k: f64, give_log: bool) -> f64 {
+/// The `give_log` form is `martin`'s per-stratum polynomial source
+/// (the `1/C(m+n,k)` factor is constant per stratum and cancels in
+/// its max-normalisation).
+pub(crate) fn dhyper(x: f64, m: f64, n: f64, k: f64, give_log: bool) -> f64 {
     let p = k / (m + n);
     let q = (m + n - k) / (m + n);
     let p1 = dbinom_raw(x, m, p, q, give_log);

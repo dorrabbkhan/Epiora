@@ -6,21 +6,17 @@
 //! are roots of that distribution's tails; the corpus records
 //! `uniroot(tol = 1e-14)` roots, so `brent_root` suffices.
 
-use crate::special::{brent_root, ln_gamma};
+use crate::special::{brent_root, dhyper};
 use crate::stats::Table2x2;
 
-/// `lchoose(n, k)` via `ln_gamma`.
-fn lchoose(n: f64, k: f64) -> f64 {
-    if k < 0.0 || k > n {
-        return f64::NEG_INFINITY;
-    }
-    ln_gamma(n + 1.0) - ln_gamma(k + 1.0) - ln_gamma(n - k + 1.0)
-}
-
 /// Per-stratum polynomial: log coefficients `lchoose(n1,k) +
-/// lchoose(n0, m1-k)` over `k in min_a..=max_a`, max-normalised;
-/// non-informative strata (`ad == 0 && bc == 0`) carry a unit
-/// polynomial and no support.
+/// lchoose(n0, m1-k)` over `k in min_a..=max_a`, max-normalised —
+/// computed as `dhyper`'s log mass (`dbinom_raw`'s `stirlerr`/`bd0`
+/// composition), which differs from the `lchoose` sum only by the
+/// constant `−lchoose(n1+n0, m1)` the max-normalisation absorbs; the
+/// `ln_gamma` difference form loses all accuracy once the margins
+/// swamp it (fix round 2). Non-informative strata (`ad == 0 &&
+/// bc == 0`) carry a unit polynomial and no support.
 struct Poly {
     lp: Vec<f64>,
     min_a: u64,
@@ -38,7 +34,7 @@ fn poly_strat_cc(t: &Table2x2) -> Option<Poly> {
     let min_a = m1.saturating_sub(n0);
     let max_a = m1.min(n1);
     let mut lp: Vec<f64> = (min_a..=max_a)
-        .map(|k| lchoose(n1 as f64, k as f64) + lchoose(n0 as f64, (m1 - k) as f64))
+        .map(|k| dhyper(k as f64, n1 as f64, n0 as f64, m1 as f64, true))
         .collect();
     let mx = lp.iter().copied().fold(f64::NEG_INFINITY, f64::max);
     for v in &mut lp {
