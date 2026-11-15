@@ -93,11 +93,21 @@ fn every_emitted_statistic_is_registered() {
 fn every_registry_fixture_exists_and_contains_the_statistic() {
     let mut problems = Vec::new();
     for coverage in REGISTRY {
-        let rel = coverage
-            .statistic
-            .split_once('.')
-            .map(|(_, rel)| rel)
-            .expect("statistic is family-prefixed");
+        // `calc.<id>.<path>` carries a two-segment prefix; every other
+        // family is one segment.
+        let rel = if coverage.statistic.starts_with("calc.") {
+            coverage
+                .statistic
+                .splitn(3, '.')
+                .nth(2)
+                .expect("calc statistic is calc.<id>.<path>")
+        } else {
+            coverage
+                .statistic
+                .split_once('.')
+                .map(|(_, rel)| rel)
+                .expect("statistic is family-prefixed")
+        };
         for fixture_id in coverage.fixtures {
             let path = fixtures_root().join(format!("{fixture_id}.json"));
             if !path.exists() {

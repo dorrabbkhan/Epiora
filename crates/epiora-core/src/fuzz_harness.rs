@@ -397,3 +397,27 @@ pub fn means_any(data: &[u8]) {
         check_result(&out.result);
     }
 }
+
+/// Arbitrary registry index + arbitrary JSON inputs into `calc::run`
+/// (v1.0 Task 7): `Ok` or `Err` — never a panic, and an `Ok` result
+/// or receipt never serializes a `null` (no NaN/Inf leaves).
+pub fn calc_any(data: &[u8]) {
+    let mut u = Unstructured::new(data);
+    let Ok(sel) = u.arbitrary::<u8>() else {
+        return;
+    };
+    let Ok(text) = u.arbitrary::<String>() else {
+        return;
+    };
+    let Ok(inputs) = serde_json::from_str::<Json>(&text) else {
+        return;
+    };
+    let registry = crate::calc::REGISTRY;
+    let def = &registry[usize::from(sel) % registry.len()];
+    if let Ok(out) = crate::calc::run(def.id, &inputs, &ctx()) {
+        assert_no_null(&out.result, "result");
+        if let Ok(json) = serde_json::to_value(&out.receipt) {
+            assert_no_null(&json, "receipt");
+        }
+    }
+}

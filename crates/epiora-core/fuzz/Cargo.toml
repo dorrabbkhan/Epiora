@@ -60,3 +60,10 @@ path = "fuzz_targets/snapshot_decode.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "calc_any"
+path = "fuzz_targets/calc_any.rs"
+test = false
+doc = false
+bench = false

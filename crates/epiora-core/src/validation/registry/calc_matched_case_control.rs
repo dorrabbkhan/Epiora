@@ -1,0 +1,149 @@
+//! `calc` registry coverage for `matched_case_control` (v1.0 Task 7): every
+//! leaf the calculator emits, mapped to the Task 2 fixtures that
+//! cover it. Rows name only the fixtures that actually contain the
+//! leaf.
+
+use super::super::ToleranceClass::{ClosedForm as CF, Iterative as IT};
+use super::super::{cov, Coverage};
+
+const MATCHED_CASE_CONTROL_0: &[&str] = &[
+    "calc/matched_case_control/few_discordant",
+    "calc/matched_case_control/textbook",
+];
+const MATCHED_CASE_CONTROL_1: &[&str] = &[
+    "calc/matched_case_control/matched_1to2",
+    "calc/matched_case_control/matched_1to4",
+];
+
+pub(super) static ENTRIES: &[Coverage] = &[
+    cov(
+        "calc.matched_case_control.cmle_or.fisher.lower",
+        MATCHED_CASE_CONTROL_0,
+        IT,
+    ),
+    cov(
+        "calc.matched_case_control.cmle_or.fisher.upper",
+        MATCHED_CASE_CONTROL_0,
+        IT,
+    ),
+    cov(
+        "calc.matched_case_control.cmle_or.midp.est",
+        MATCHED_CASE_CONTROL_0,
+        IT,
+    ),
+    cov(
+        "calc.matched_case_control.cmle_or.midp.lower",
+        MATCHED_CASE_CONTROL_0,
+        IT,
+    ),
+    cov(
+        "calc.matched_case_control.cmle_or.midp.upper",
+        MATCHED_CASE_CONTROL_0,
+        IT,
+    ),
+    cov(
+        "calc.matched_case_control.discordant_pairs",
+        MATCHED_CASE_CONTROL_0,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.exact.fisher_p_1t",
+        MATCHED_CASE_CONTROL_0,
+        IT,
+    ),
+    cov(
+        "calc.matched_case_control.exact.fisher_p_2t",
+        MATCHED_CASE_CONTROL_0,
+        IT,
+    ),
+    cov(
+        "calc.matched_case_control.exact.midp_p",
+        MATCHED_CASE_CONTROL_0,
+        IT,
+    ),
+    cov(
+        "calc.matched_case_control.matched_n.cmle_or.est",
+        MATCHED_CASE_CONTROL_1,
+        IT,
+    ),
+    cov(
+        "calc.matched_case_control.matched_n.cmle_or.lower",
+        MATCHED_CASE_CONTROL_1,
+        IT,
+    ),
+    cov(
+        "calc.matched_case_control.matched_n.cmle_or.upper",
+        MATCHED_CASE_CONTROL_1,
+        IT,
+    ),
+    cov(
+        "calc.matched_case_control.matched_n.mh_chisq.p",
+        MATCHED_CASE_CONTROL_1,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.matched_n.mh_chisq.value",
+        MATCHED_CASE_CONTROL_1,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.matched_n.mh_chisq_cc.p",
+        MATCHED_CASE_CONTROL_1,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.matched_n.mh_chisq_cc.value",
+        MATCHED_CASE_CONTROL_1,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.matched_n.mh_or.est",
+        MATCHED_CASE_CONTROL_1,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.matched_n.mh_or.lower",
+        MATCHED_CASE_CONTROL_1,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.matched_n.mh_or.upper",
+        MATCHED_CASE_CONTROL_1,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.mcnemar.p",
+        MATCHED_CASE_CONTROL_0,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.mcnemar.value",
+        MATCHED_CASE_CONTROL_0,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.mcnemar_cc.p",
+        MATCHED_CASE_CONTROL_0,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.mcnemar_cc.value",
+        MATCHED_CASE_CONTROL_0,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.or.est",
+        MATCHED_CASE_CONTROL_0,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.or.lower",
+        MATCHED_CASE_CONTROL_0,
+        CF,
+    ),
+    cov(
+        "calc.matched_case_control.or.upper",
+        MATCHED_CASE_CONTROL_0,
+        CF,
+    ),
+];

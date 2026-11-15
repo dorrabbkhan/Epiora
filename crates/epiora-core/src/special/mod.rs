@@ -24,6 +24,7 @@ mod qbinom;
 mod qt;
 mod root;
 mod t_dist;
+mod zeroin;
 
 pub use beta::{beta_quantile, reg_inc_beta};
 pub use chisq::{chisq_cdf, chisq_sf};
@@ -36,3 +37,4 @@ pub use normal::{normal_cdf, normal_quantile, normal_sf};
 pub use qbinom::binomial_quantile;
 pub use root::{brent_root, RootError};
 pub use t_dist::{t_cdf, t_quantile, t_sf};
+pub use zeroin::{zeroin, UNIROOT_TOL};

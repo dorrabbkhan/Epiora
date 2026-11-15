@@ -19,6 +19,9 @@ pub const RECEIPT_VERSION: u64 = 1;
 /// Receipt schema version when a project stamp is present (v0.3 spec
 /// §8.2).
 pub const RECEIPT_VERSION_WITH_PROJECT: u64 = 2;
+/// Receipt schema version for calculator runs (v1.0 spec §5.4): no
+/// dataset, a `calculator` stamp instead.
+pub const RECEIPT_VERSION_CALCULATOR: u64 = 3;
 
 /// `project` — which project the run belongs to (v0.3 spec §8.2).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -40,6 +43,17 @@ pub struct DatasetStamp {
     pub version: u64,
     /// `Dataset::content_hash_hex`.
     pub sha256: String,
+}
+
+/// `calculator` — which calculator produced the result (v1.0 spec
+/// §5.4): its registry id and canonical inputs.
+#[derive(Debug, Clone, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
+pub struct CalculatorStamp {
+    /// Registry id of the calculator (e.g. `proportion`).
+    pub id: String,
+    /// Canonical inputs, every default filled in.
+    pub inputs: Value,
 }
 
 /// `engine` — fixed at build time; the engine reads no environment at
@@ -92,8 +106,12 @@ pub struct Receipt {
     /// (corpus, parity, goldens), which stay exact receipt v1.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub project: Option<ProjectStamp>,
-    /// The input dataset stamp.
-    pub dataset: DatasetStamp,
+    /// The input dataset stamp; omitted for calculator runs (v3).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub dataset: Option<DatasetStamp>,
+    /// The calculator stamp; present only on v3 receipts.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub calculator: Option<CalculatorStamp>,
     /// `"freq"` or `"tables"`.
     pub procedure: String,
     /// Canonical options, every default filled in.
@@ -132,12 +150,41 @@ impl Receipt {
                 RECEIPT_VERSION
             },
             project,
-            dataset,
+            dataset: Some(dataset),
+            calculator: None,
             procedure,
             options,
             engine,
             validation,
             exclusions,
+            timestamp,
+            receipt_sha256: String::new(),
+        };
+        receipt.receipt_sha256 = receipt.sha256_hex();
+        receipt
+    }
+
+    /// Assembles a calculator receipt (v3): `dataset` is absent, the
+    /// `calculator` stamp carries the registry id and canonical inputs.
+    /// `options` are the same canonical inputs (spec §5.4).
+    pub fn for_calculator(
+        stamp: CalculatorStamp,
+        procedure: String,
+        options: Value,
+        validation: Vec<ValidationEntry>,
+        timestamp: String,
+        engine: EngineStamp,
+    ) -> Receipt {
+        let mut receipt = Receipt {
+            receipt_version: RECEIPT_VERSION_CALCULATOR,
+            project: None,
+            dataset: None,
+            calculator: Some(stamp),
+            procedure,
+            options,
+            engine,
+            validation,
+            exclusions: BTreeMap::new(),
             timestamp,
             receipt_sha256: String::new(),
         };

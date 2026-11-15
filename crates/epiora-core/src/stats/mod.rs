@@ -20,6 +20,7 @@ pub mod proportion;
 
 pub use breslow_day::BreslowDayTarone;
 pub use estimate::{Ci, Estimate, UndefinedReason};
+pub use exact::fisher_p_two_sided;
 pub(crate) use means::{
     anova_from_summary, bartlett_from_summary, group_stats, summarize, t_tests_from_summary,
     GroupSummary,

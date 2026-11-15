@@ -14,7 +14,25 @@ import { join } from "node:path";
 const require = createRequire(import.meta.url);
 const wasm = require("../pkg-parity/epiora_wasm.js");
 
-const FAMILIES = ["special", "2x2", "stratified", "rxc", "freq"];
+// Must match `corpus-runner`'s FAMILIES exactly — counts `calc`
+// families are per calculator; the rest belong to Tasks 8/9.
+const FAMILIES = [
+  "special",
+  "2x2",
+  "stratified",
+  "rxc",
+  "freq",
+  "calc/proportion",
+  "calc/two_by_two",
+  "calc/two_by_n",
+  "calc/r_by_c",
+  "calc/dose_response",
+  "calc/matched_case_control",
+  "calc/screening",
+  "calc/smr",
+  "calc/binomial",
+  "calc/poisson",
+];
 
 const root = process.argv[2];
 if (!root) {

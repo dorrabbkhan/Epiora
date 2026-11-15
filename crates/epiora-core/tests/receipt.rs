@@ -139,6 +139,7 @@ fn receipt_lists_exclusions() {
     assert_eq!(receipt.receipt_version, 1);
     assert_eq!(receipt.procedure, "tables");
     assert_eq!(receipt.timestamp, "2026-10-30T12:00:00Z");
-    assert_eq!(receipt.dataset.id, "missing");
-    assert_eq!(receipt.dataset.sha256, ds.content_hash_hex());
+    let dataset = receipt.dataset.as_ref().expect("v1 has a dataset");
+    assert_eq!(dataset.id, "missing");
+    assert_eq!(dataset.sha256, ds.content_hash_hex());
 }
