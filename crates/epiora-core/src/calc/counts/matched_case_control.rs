@@ -88,6 +88,100 @@ fn pair(inputs: &Value, conf: f64) -> Value {
     })
 }
 
+/// `matched_n.cmle_or` — the `survival::clogit` conditional MLE: one
+/// stratum per matched set, Wald CI on the coefficient. A set with
+/// case exposure `e` and `k` of `M` controls exposed has `t = e + k`
+/// exposed members and contributes `e − p` to the score and `p(1−p)`
+/// to the observed information, `p = t·ψ/(t·ψ + M+1−t)`, `ψ = e^β` —
+/// the set's conditional probability that the case is exposed. The
+/// shapes carry multiplicities, so the fit is O(M) in memory (Review
+/// Focus 1/3). Boundary inputs mirror `matched_cmle_direct`: sets
+/// pushing only up (`e = 1, k < M`), only down (`e = 0, k > 0`) or
+/// none at all put the MLE on the boundary or leave it unidentified —
+/// `unbounded`, the reason `stats::exact` uses for an MLE at the
+/// support edge (clogit itself reports NA coef/se 0 on a flat
+/// likelihood and diverges with "beta may be infinite" on one-way
+/// discordance).
+fn matched_n_cmle(t: &[Vec<u64>], m: u64, conf: f64) -> [f64; 3] {
+    // `p(β)` for one shape without overflow: ψ = e^β over/underflows
+    // at |β| ≈ 709/745, so the two one-sided forms avoid 0/0 and ∞/∞.
+    let p_of = |e: u64, k: u64, beta: f64| -> f64 {
+        let t = (e + k) as f64;
+        let c = (m + 1 - e - k) as f64;
+        if beta <= 0.0 {
+            let w = t * libm::exp(beta);
+            w / (w + c)
+        } else {
+            t / (t + c * libm::exp(-beta))
+        }
+    };
+    // `matched_sets` rows: row 0 = exposed case (e = 1), row 1 =
+    // unexposed (e = 0) — the same orientation `matched_n`'s MH sums
+    // use (`case_exp == 0` → `a = 1` there).
+    let mut up = 0u64;
+    let mut down = 0u64;
+    for &mult in t[0].iter().take(m as usize) {
+        up += mult;
+    }
+    for &mult in t[1].iter().skip(1) {
+        down += mult;
+    }
+    if up == 0 || down == 0 {
+        return [f64::NAN; 3];
+    }
+    // Score and observed information over the informative shapes only
+    // (t = 0 and c = 0 sets contribute e − p ≡ 0 and p(1−p) ≡ 0).
+    let score_info = |beta: f64| -> (f64, f64) {
+        let (mut s, mut info) = (0.0, 0.0);
+        for (row, cells) in t.iter().enumerate().take(2) {
+            let e = 1u64 - row as u64;
+            for (k, &mult) in cells.iter().enumerate() {
+                if mult == 0 || (e == 0 && k == 0) || (e == 1 && k == m as usize) {
+                    continue;
+                }
+                let p = p_of(e, k as u64, beta);
+                s += mult as f64 * (e as f64 - p);
+                info += mult as f64 * p * (1.0 - p);
+            }
+        }
+        (s, info)
+    };
+    // The score is non-increasing in β (∂/∂β = −info ≤ 0), so a sign
+    // change bounds the unique root; β = 0 is bracketed to start.
+    let (mut lo, mut hi) = (-1.0, 1.0);
+    while score_info(lo).0 <= 0.0 {
+        lo *= 2.0;
+    }
+    while score_info(hi).0 >= 0.0 {
+        hi *= 2.0;
+    }
+    // Safeguarded Newton: β + score/info (Newton on the score root,
+    // whose slope is −info), bisection when the step leaves the
+    // bracket — the same observed information clogit's var comes from.
+    let mut beta = 0.0;
+    for _ in 0..200 {
+        let (s, info) = score_info(beta);
+        if s > 0.0 {
+            lo = beta;
+        } else {
+            hi = beta;
+        }
+        let newton = beta + s / info;
+        beta = if newton.is_finite() && newton > lo && newton < hi {
+            newton
+        } else {
+            0.5 * (lo + hi)
+        };
+        if hi - lo <= 1e-13 * beta.abs().max(1.0) {
+            break;
+        }
+    }
+    let (_, info) = score_info(beta);
+    let se = 1.0 / libm::sqrt(info);
+    let h = z(conf) * se;
+    [libm::exp(beta), libm::exp(beta - h), libm::exp(beta + h)]
+}
+
 /// The 1:n block: each matched set is one 2×2 stratum
 /// `[[case_exp, k], [case_unexp, M-k]]` under `mantelhaen.test`. The
 /// sums are linear over identical strata, so the 2·(M+1) ≤ 10
@@ -130,15 +224,25 @@ fn matched_n(inputs: &Value, conf: f64) -> Value {
     let or = sd_ / so_;
     let sd =
         libm::sqrt(rg_a / (2.0 * sd_ * sd_) + rg_b / (2.0 * sd_ * so_) + rg_c / (2.0 * so_ * so_));
+    let [ce, cl, cu] = matched_n_cmle(&t, m, conf);
+    // A boundary MLE (NaN from the guard) is `unbounded`, not the
+    // generic non-finite fallback.
+    let cmle = |v: f64| {
+        if v.is_nan() {
+            undefined("unbounded")
+        } else {
+            leaf(v)
+        }
+    };
     json!({
         "matched_n": {
             "mh_or": stat_ci([or, or * libm::exp(-zz * sd), or * libm::exp(zz * sd)]),
             "mh_chisq": { "value": leaf(chi), "p": leaf(chi_p(chi, 1.0)) },
             "mh_chisq_cc": { "value": leaf(chi_cc), "p": leaf(chi_p(chi_cc, 1.0)) },
             "cmle_or": {
-                "est": undefined("no_convergence"),
-                "lower": undefined("no_convergence"),
-                "upper": undefined("no_convergence"),
+                "est": cmle(ce),
+                "lower": cmle(cl),
+                "upper": cmle(cu),
             },
         },
     })

@@ -191,12 +191,12 @@ fn assert_value_tree(v: &Value, id: &str) {
 /// return `Ok` or a typed `Err`, never hang — the O(n) literal
 /// binomial sums now go through `pbinom` (R's `pbeta` identity on
 /// the regularised incomplete beta) and `matched_n` aggregates per
-/// stratum shape. Sizes 1e6, 1e9 and 2^53−1 for every calculator
-/// whose paths closed-form after the rewrite. `two_by_two` and
-/// `two_by_n` keep the noncentral-hypergeometric support sums and
-/// root-finding that have no closed form ("Still unbounded (owner
-/// decision)" on the PR), so they are checked at 1e6 only — the
-/// largest size that finishes.
+/// stratum shape. Sizes 1e6, 1e9 and 2^53−1 for every calculator.
+/// `two_by_two` and `two_by_n` now finish at every size too: the
+/// owner-decision `too_large` guards (PR #74 comment) keep the
+/// noncentral-hypergeometric support sums and convolutions under
+/// their caps, so the exact-path leaves go Undefined while the
+/// closed-form leaves still compute.
 #[test]
 fn large_counts_terminate() {
     let sizes = [1_000_000u64, 1_000_000_000, (1u64 << 53) - 1];
@@ -245,27 +245,22 @@ fn large_counts_terminate() {
                    "matched_sets": [[s, s, s, s, s], [s, s, s, s, s]],
                    "conf_level": 95}),
         );
+        // Hypergeometric-support paths: support 1e6 computes, above
+        // the owner caps the exact-path leaves turn `too_large` and
+        // everything else still computes — so 1e9 and 2^53−1 finish.
+        check(
+            "two_by_two",
+            json!({"strata": [[[s / 2, s / 2], [s / 2, s / 2]]], "conf_level": 95}),
+        );
+        check(
+            "two_by_n",
+            json!({"strata": [[[s / 2, s / 2], [s / 2, s / 2]]], "conf_level": 95}),
+        );
     }
-    // Hypergeometric-support paths — 1e6 is the largest size that
-    // still finishes single-stratum (1e9 exceeds 60 s; 2^53−1 aborts
-    // on the support allocation), so only it is exercised there.
-    let s = 1_000_000u64;
-    check(
-        "two_by_two",
-        json!({"strata": [[[s / 2, s / 2], [s / 2, s / 2]]], "conf_level": 95}),
-    );
-    check(
-        "two_by_n",
-        json!({"strata": [[[s / 2, s / 2], [s / 2, s / 2]]], "conf_level": 95}),
-    );
     // Multi-stratum `two_by_two` additionally runs `martin`'s
-    // O(support²) log-space convolution for the `adjusted` block, so
-    // its bound is far lower than the single-stratum 1e6: measured
-    // (release probe, `target/release/probe`) 40,000 counts per cell
-    // finishes in 67 s and 50,000 per cell exceeds a 90 s cap; the
-    // review's 60 s frame cuts between 30,000 (37 s) and 40,000.
-    // The assertions below run 2 strata of 2,000 per cell so the
-    // path's leaves are range-checked in debug-build time.
+    // O(support₁·support₂) log-space convolution for the `adjusted`
+    // block; the work cap is 1e8, so two strata of 2,000 per cell
+    // (support 4,001 each, work 1.6e7) run the path end to end.
     let s2 = 2_000u64;
     check(
         "two_by_two",
@@ -311,6 +306,234 @@ fn large_counts_terminate() {
             assert!((a - b).abs() <= 1e-12 * b.abs().max(1.0), "{a} vs {b}")
         }
         _ => assert_eq!(a, b),
+    }
+}
+
+/// A `{"undefined": code}` leaf's reason code, or `None` for a number.
+fn undefined_code(v: &Value) -> Option<String> {
+    v.get("undefined")
+        .and_then(Value::as_str)
+        .map(str::to_string)
+}
+
+/// v1.0 Task 7 follow-up (owner decision, PR #74 comment): the
+/// exact-path leaves of `two_by_two`/`two_by_n` are
+/// `{"undefined": "too_large"}` when the per-stratum hypergeometric
+/// support exceeds 1_000_000 or the martin convolution work exceeds
+/// 1e8; every closed-form leaf still computes.
+#[test]
+fn exact_paths_too_large_above_owner_limits() {
+    // Support of cell a = min(n1, m1) − max(0, n1−m0) + 1.
+    // a=0, b=c=999_999, d=1 → n1=m1=999_999, m0=1e6 → support
+    // exactly 1_000_000 → computes.
+    let at_cap = json!({"strata": [[[0, 999_999], [999_999, 1]]], "conf_level": 95});
+    // a=0, b=c=1_000_000, d=1 → support 1_000_001 → too_large.
+    let over_cap = json!({"strata": [[[0, 1_000_000], [1_000_000, 1]]], "conf_level": 95});
+
+    let out = run("two_by_two", &at_cap, &ctx()).expect("two_by_two at cap");
+    let block = &out.result["strata"][0];
+    assert!(block["fisher_exact"]["p_1t"].is_number());
+    assert!(block["fisher_exact"]["p_2t"].is_number());
+    assert!(block["midp_exact"]["p_1t"].is_number());
+    assert!(block["midp_exact"]["p_2t"].is_number());
+    assert!(block["cmle_or"]["midp"]["est"].is_number());
+    assert!(block["cmle_or"]["midp"]["lower"].is_number());
+    assert!(block["cmle_or"]["midp"]["upper"].is_number());
+    assert!(block["cmle_or"]["fisher"]["lower"].is_number());
+    assert!(block["cmle_or"]["fisher"]["upper"].is_number());
+
+    // two_by_n at the cap.
+    let out = run("two_by_n", &at_cap, &ctx()).expect("two_by_n at cap");
+    let block = &out.result["strata"][0];
+    assert!(block["exact"]["midp_2t"].is_number());
+    assert!(block["exact"]["fisher_1t"].is_number());
+    assert!(block["exact"]["fisher_2t"].is_number());
+    assert!(block["odds_ratio_mle"]["midp"]["est"].is_number());
+    assert!(block["odds_ratio_mle"]["midp"]["lower"].is_number());
+    assert!(block["odds_ratio_mle"]["midp"]["upper"].is_number());
+    assert!(block["odds_ratio_mle"]["fisher"]["lower"].is_number());
+    assert!(block["odds_ratio_mle"]["fisher"]["upper"].is_number());
+
+    // Over the cap: exactly the exact-path leaves are too_large; the
+    // chi-square, Wald, risk and etiologic leaves stay finite.
+    let out = run("two_by_two", &over_cap, &ctx()).expect("two_by_two over cap");
+    for path in [&out.result["strata"][0], &out.result["crude"]] {
+        let exact_leaves = [
+            &path["fisher_exact"]["p_1t"],
+            &path["fisher_exact"]["p_2t"],
+            &path["midp_exact"]["p_1t"],
+            &path["midp_exact"]["p_2t"],
+            &path["cmle_or"]["midp"]["est"],
+            &path["cmle_or"]["midp"]["lower"],
+            &path["cmle_or"]["midp"]["upper"],
+            &path["cmle_or"]["fisher"]["lower"],
+            &path["cmle_or"]["fisher"]["upper"],
+        ];
+        for leaf_v in exact_leaves {
+            assert_eq!(
+                undefined_code(leaf_v).as_deref(),
+                Some("too_large"),
+                "expected too_large, got {leaf_v}"
+            );
+        }
+        for leaf_v in [
+            &path["chisq"]["uncorrected"]["value"],
+            &path["chisq"]["yates"]["p_2t"],
+            &path["chisq"]["mantel_haenszel"]["p_1t"],
+            &path["risk"]["exposed"]["est"],
+            &path["risk_ratio"]["est"],
+            &path["risk_difference"]["est"],
+            &path["odds_ratio"]["est"],
+        ] {
+            assert!(leaf_v.is_number(), "expected finite, got {leaf_v}");
+        }
+    }
+
+    // two_by_n over the cap: `exact` and `odds_ratio_mle` too_large.
+    let out = run("two_by_n", &over_cap, &ctx()).expect("two_by_n over cap");
+    for block in [&out.result["strata"][0], &out.result["crude"]] {
+        for leaf_v in [
+            &block["exact"]["midp_2t"],
+            &block["exact"]["fisher_1t"],
+            &block["exact"]["fisher_2t"],
+            &block["odds_ratio_mle"]["midp"]["est"],
+            &block["odds_ratio_mle"]["midp"]["lower"],
+            &block["odds_ratio_mle"]["midp"]["upper"],
+            &block["odds_ratio_mle"]["fisher"]["lower"],
+            &block["odds_ratio_mle"]["fisher"]["upper"],
+        ] {
+            assert_eq!(
+                undefined_code(leaf_v).as_deref(),
+                Some("too_large"),
+                "expected too_large, got {leaf_v}"
+            );
+        }
+        assert!(block["odds_ratio"]["est"].is_number());
+        assert!(block["risk_ratio"]["est"].is_number());
+        assert!(block["chisq"]["uncorrected"]["value"].is_number());
+    }
+
+    // Stratified martin path: support₁·support₂ work cap 1e8.
+    // a=1, b=c=n−2, d=2 → support n; 10_000·10_000 = 1e8 computes,
+    // 10_000·10_001 = 100_010_000 is too_large on the adjusted
+    // cmle_or leaves only.
+    let strat = |n: u64| [[1, n - 2], [n - 2, 2]];
+    let at_conv = json!({"strata": [strat(10_000), strat(10_000)], "conf_level": 95});
+    let over_conv = json!({"strata": [strat(10_000), strat(10_001)], "conf_level": 95});
+    let out = run("two_by_two", &at_conv, &ctx()).expect("two_by_two at conv cap");
+    assert!(
+        out.result["adjusted"]["cmle_or"]["est"].is_number(),
+        "adjusted.cmle_or.est should compute at 1e8 work"
+    );
+    assert!(out.result["adjusted"]["cmle_or"]["midp"]["lower"].is_number());
+    assert!(out.result["adjusted"]["cmle_or"]["midp"]["upper"].is_number());
+    assert!(out.result["adjusted"]["cmle_or"]["fisher"]["lower"].is_number());
+    assert!(out.result["adjusted"]["cmle_or"]["fisher"]["upper"].is_number());
+
+    let out = run("two_by_two", &over_conv, &ctx()).expect("two_by_two over conv cap");
+    for leaf_v in [
+        &out.result["adjusted"]["cmle_or"]["est"],
+        &out.result["adjusted"]["cmle_or"]["midp"]["lower"],
+        &out.result["adjusted"]["cmle_or"]["midp"]["upper"],
+        &out.result["adjusted"]["cmle_or"]["fisher"]["lower"],
+        &out.result["adjusted"]["cmle_or"]["fisher"]["upper"],
+    ] {
+        assert_eq!(
+            undefined_code(leaf_v).as_deref(),
+            Some("too_large"),
+            "expected too_large, got {leaf_v}"
+        );
+    }
+    // The rest of the adjusted block and each stratum's own exact
+    // leaves still compute — neither support exceeds 1e6.
+    assert!(out.result["adjusted"]["mh_or"]["est"].is_number());
+    assert!(out.result["adjusted"]["mh_chisq"]["value"].is_number());
+    assert!(out.result["adjusted"]["breslow_day"]["or_chisq"].is_number());
+    assert!(out.result["strata"][1]["fisher_exact"]["p_1t"].is_number());
+
+    // Counts at 2^53−1 return quickly: the support check precedes
+    // the NcHypergeom allocation that used to abort.
+    let s = (1u64 << 53) - 1;
+    let huge = json!({"strata": [[[s, s], [s, s]]], "conf_level": 95});
+    let t = std::time::Instant::now();
+    let out = run("two_by_two", &huge, &ctx()).expect("two_by_two 2^53-1");
+    assert_eq!(
+        undefined_code(&out.result["crude"]["fisher_exact"]["p_1t"]).as_deref(),
+        Some("too_large")
+    );
+    assert_eq!(
+        undefined_code(&out.result["crude"]["cmle_or"]["midp"]["est"]).as_deref(),
+        Some("too_large")
+    );
+    assert!(out.result["crude"]["odds_ratio"]["est"].is_number());
+    eprintln!("two_by_two 2^53-1 in {:?}", t.elapsed());
+    assert_value_tree(&out.result, "two_by_two");
+}
+
+/// v1.0 Task 7 follow-up (D3): `matched_n.cmle_or` is the conditional
+/// MLE of `survival::clogit` — one stratum per matched set, Wald CI
+/// on the coefficient with the observed-information SE. The expected
+/// numbers are the PR #75 regenerated corpus fixtures.
+#[test]
+fn matched_n_cmle_matches_clogit() {
+    let cases: [(u64, [[u64; 5]; 2], [f64; 3]); 2] = [
+        (
+            2,
+            [[20, 10, 4, 0, 0], [10, 8, 12, 0, 0]],
+            [1.7213892162463522, 0.9480759477623332, 3.125467786418363],
+        ),
+        (
+            4,
+            [[12, 8, 5, 3, 2], [15, 10, 7, 4, 2]],
+            [
+                2.1750734364802318,
+                1.195_404_057_780_931,
+                3.9576111719615006,
+            ],
+        ),
+    ];
+    for (m, sets, want) in cases {
+        let trimmed: Vec<Vec<u64>> = sets.iter().map(|r| r[..=(m as usize)].to_vec()).collect();
+        let out = run(
+            "matched_case_control",
+            &json!({"controls_per_case": m, "matched_sets": trimmed,
+                    "conf_level": 95}),
+            &ctx(),
+        )
+        .expect("matched_case_control run");
+        for (key, w) in ["est", "lower", "upper"].iter().zip(want) {
+            let got = out.result["matched_n"]["cmle_or"][key].as_f64();
+            assert!(
+                got.is_some_and(|g| (g - w).abs() <= 1e-6 * w.abs()),
+                "m={m} cmle_or.{key}: {got:?} vs {w}"
+            );
+        }
+    }
+
+    // Boundary cases — the reason the engine uses for an unbounded or
+    // undefined MLE is `unbounded` (stats::exact's reason at the
+    // support edge). clogit on these inputs returns NA coef for a
+    // flat likelihood and a diverging coefficient ("beta may be
+    // infinite") for one-way discordance; both are Undefined here.
+    for (name, sets) in [
+        ("flat", json!([[0, 0, 3], [4, 0, 0]])), // no informative sets
+        ("up only", json!([[0, 5, 0], [0, 0, 0]])), // all discordance up
+        ("down only", json!([[0, 0, 0], [0, 0, 7]])), // all discordance down
+    ] {
+        let out = run(
+            "matched_case_control",
+            &json!({"controls_per_case": 2, "matched_sets": sets,
+                    "conf_level": 95}),
+            &ctx(),
+        )
+        .unwrap_or_else(|e| panic!("{name}: {e}"));
+        for key in ["est", "lower", "upper"] {
+            assert_eq!(
+                undefined_code(&out.result["matched_n"]["cmle_or"][key]).as_deref(),
+                Some("unbounded"),
+                "{name} cmle_or.{key}"
+            );
+        }
     }
 }
 

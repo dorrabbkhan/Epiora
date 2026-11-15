@@ -28,6 +28,10 @@ pub enum UndefinedReason {
     /// The statistic is not representable — a finite input whose
     /// computed value overflowed or cancelled outside f64's range.
     OutOfRange,
+    /// The exact path would enumerate a support above the owner-set
+    /// size limits (v1.0 Task 7 follow-up, PR #74): the work is
+    /// refused before any allocation.
+    TooLarge,
 }
 
 impl UndefinedReason {
@@ -43,6 +47,7 @@ impl UndefinedReason {
             UndefinedReason::TooFew => "too_few",
             UndefinedReason::ZeroVariance => "zero_variance",
             UndefinedReason::OutOfRange => "out_of_range",
+            UndefinedReason::TooLarge => "too_large",
         }
     }
 }
@@ -54,7 +59,7 @@ impl UndefinedReason {
     derive(ts_rs::TS),
     ts(
         export,
-        type = "number | { \"undefined\": \"zero_cell\" | \"zero_margin\" | \"empty_table\" | \"not_bracketed\" | \"no_convergence\" | \"unbounded\" | \"too_few\" | \"zero_variance\" | \"out_of_range\" }"
+        type = "number | { \"undefined\": \"zero_cell\" | \"zero_margin\" | \"empty_table\" | \"not_bracketed\" | \"no_convergence\" | \"unbounded\" | \"too_few\" | \"zero_variance\" | \"out_of_range\" | \"too_large\" }"
     )
 )]
 pub enum Estimate {

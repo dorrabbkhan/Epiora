@@ -6,6 +6,9 @@
 //! are roots of that distribution's tails; the corpus records
 //! `uniroot(tol = 1e-14)` roots, so `brent_root` suffices.
 
+use super::shared::{
+    hypergeom_support, informative, MAX_EXACT_CONVOLUTION_WORK, MAX_EXACT_SUPPORT,
+};
 use crate::special::{brent_root, dhyper};
 use crate::stats::Table2x2;
 
@@ -24,8 +27,7 @@ struct Poly {
 }
 
 fn poly_strat_cc(t: &Table2x2) -> Option<Poly> {
-    let informative = (t.a * t.d != 0) || (t.b * t.c != 0);
-    if !informative {
+    if !informative(t) {
         return None;
     }
     let m1 = t.a + t.c;
@@ -156,6 +158,37 @@ fn martin_root(lp_n: &[f64], lp_d: &[f64], value: f64, approx: f64) -> f64 {
         return f64::NAN;
     }
     brent_root(f, x0, x1).unwrap_or(f64::NAN)
+}
+
+/// The owner-decision size guard (v1.0 Task 7 follow-up, PR #74):
+/// `true` when this stratified fit must not run — any informative
+/// stratum's hypergeometric support above `MAX_EXACT_SUPPORT`, or the
+/// convolution work above `MAX_EXACT_CONVOLUTION_WORK`. Work counts
+/// `logmult_poly`'s multiply pairs: `support₁ · support₂` for two
+/// informative strata, and for `k > 2` `Σ_{i≥2} s_{<i} · s_i` where
+/// `s_{<i}` is the support of the polynomial convolved so far
+/// (`s₁ + s₂ − 1` after one merge). Pure arithmetic on the margins —
+/// it runs before `martin_setup` allocates any polynomial.
+pub fn too_large(strata: &[Table2x2]) -> bool {
+    let mut work: u128 = 0;
+    let mut convolved: Option<u64> = None;
+    for t in strata {
+        if !informative(t) {
+            continue;
+        }
+        let s = hypergeom_support(t);
+        if s > MAX_EXACT_SUPPORT {
+            return true;
+        }
+        convolved = Some(match convolved {
+            None => s,
+            Some(c) => {
+                work += c as u128 * s as u128;
+                c + s - 1
+            }
+        });
+    }
+    work > MAX_EXACT_CONVOLUTION_WORK as u128
 }
 
 /// `stratified_cmle_one` — est plus mid-p and Fisher limits at `conf`

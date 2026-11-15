@@ -164,7 +164,19 @@ fn table_block(t: &Table2x2, conf: f64) -> Value {
     let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
     let (n1, n0) = (a + b, c + d);
     let n = n1 + n0;
-    let (fisher, midp) = exacts(t);
+    // Owner-decision size guard (PR #74): the exact-path leaves go
+    // `too_large` before `NcHypergeom`'s support allocation when this
+    // table's support exceeds `MAX_EXACT_SUPPORT`.
+    let too_large = hypergeom_support(t) > MAX_EXACT_SUPPORT;
+    let u = || undefined("too_large");
+    let (fisher, midp) = if too_large {
+        (
+            json!({ "p_1t": u(), "p_2t": u() }),
+            json!({ "p_1t": u(), "p_2t": u() }),
+        )
+    } else {
+        exacts(t)
+    };
     let zz = z(conf);
 
     let pc = |x: u64, nn: u64| {
@@ -183,16 +195,21 @@ fn table_block(t: &Table2x2, conf: f64) -> Value {
     let or_ = (a * d) / (b * c);
     let or_se = libm::sqrt(1.0 / a + 1.0 / b + 1.0 / c + 1.0 / d);
 
-    let h = NcHypergeom::new(t.a + t.c, t.b + t.d, n1 as u64);
-    let cmle = exact_or::cmle_or(&h, t.a);
-    // `or.midp` first; where it fails (support boundaries, zero
-    // cells) `exact2x2(midp = TRUE)` supplies the same leaves.
-    let mut mid = exact_or::or_midp_ci(&h, t.a, conf);
-    if mid.iter().any(|v| v.is_nan()) {
-        mid = exact_or::midp_ci(&h, t.a, conf);
-    }
-    let [ml, mu] = mid;
-    let [fl, fu] = exact_or::fisher_ci(&h, t.a, conf);
+    let (cmle, ml, mu, fl, fu) = if too_large {
+        (u(), u(), u(), u(), u())
+    } else {
+        let h = NcHypergeom::new(t.a + t.c, t.b + t.d, n1 as u64);
+        let cmle = exact_or::cmle_or(&h, t.a);
+        // `or.midp` first; where it fails (support boundaries, zero
+        // cells) `exact2x2(midp = TRUE)` supplies the same leaves.
+        let mut mid = exact_or::or_midp_ci(&h, t.a, conf);
+        if mid.iter().any(|v| v.is_nan()) {
+            mid = exact_or::midp_ci(&h, t.a, conf);
+        }
+        let [ml, mu] = mid;
+        let [fl, fu] = exact_or::fisher_ci(&h, t.a, conf);
+        (leaf(cmle), leaf(ml), leaf(mu), leaf(fl), leaf(fu))
+    };
 
     let efr = ef_risk(t, conf);
     let efo = ef_or(t, conf);
@@ -212,8 +229,8 @@ fn table_block(t: &Table2x2, conf: f64) -> Value {
         "risk_difference": stat_ci([rd * 100.0, (rd - zz * rd_se) * 100.0, (rd + zz * rd_se) * 100.0]),
         "odds_ratio": stat_ci([or_, or_ * libm::exp(-zz * or_se), or_ * libm::exp(zz * or_se)]),
         "cmle_or": {
-            "midp": { "est": leaf(cmle), "lower": leaf(ml), "upper": leaf(mu) },
-            "fisher": { "lower": leaf(fl), "upper": leaf(fu) },
+            "midp": { "est": cmle, "lower": ml, "upper": mu },
+            "fisher": { "lower": fl, "upper": fu },
         },
         "etiologic": {
             "efp": ef_map(efr[0]), "efe": ef_map(efr[1]),
@@ -332,7 +349,23 @@ fn adjusted(strata: &[Table2x2], conf: f64) -> Value {
         libm::sqrt(rg_a / (2.0 * sd_ * sd_) + rg_b / (2.0 * sd_ * so_) + rg_c / (2.0 * so_ * so_));
     let rr = rr_num / rr_den;
     let gr_se = libm::sqrt(gr_num / (rr_num * rr_den));
-    let cmle = martin::stratified_cmle(strata, conf);
+    // Owner-decision work guard (PR #74): the stratified CMLE leaves
+    // go `too_large` before any polynomial is allocated.
+    let cmle_or = if martin::too_large(strata) {
+        let u = || undefined("too_large");
+        json!({
+            "est": u(),
+            "midp": { "lower": u(), "upper": u() },
+            "fisher": { "lower": u(), "upper": u() },
+        })
+    } else {
+        let cmle = martin::stratified_cmle(strata, conf);
+        json!({
+            "est": leaf(cmle[0]),
+            "midp": { "lower": leaf(cmle[1]), "upper": leaf(cmle[2]) },
+            "fisher": { "lower": leaf(cmle[3]), "upper": leaf(cmle[4]) },
+        })
+    };
     json!({
         "mh_chisq": { "value": leaf(mh_chi), "p": leaf(chi_p(mh_chi, 1.0)) },
         "mh_or": stat_ci([or, or * libm::exp(-zz * sd), or * libm::exp(zz * sd)]),
@@ -341,11 +374,7 @@ fn adjusted(strata: &[Table2x2], conf: f64) -> Value {
         "direct_rr": stat_ci(direct_adjust(strata, conf, "rr")),
         "direct_rd": stat_ci(direct_adjust(strata, conf, "rd")),
         "breslow_day": breslow_day(strata),
-        "cmle_or": {
-            "est": leaf(cmle[0]),
-            "midp": { "lower": leaf(cmle[1]), "upper": leaf(cmle[2]) },
-            "fisher": { "lower": leaf(cmle[3]), "upper": leaf(cmle[4]) },
-        },
+        "cmle_or": cmle_or,
     })
 }
 

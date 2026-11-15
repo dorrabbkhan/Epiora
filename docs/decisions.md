@@ -4006,3 +4006,53 @@ only via `Rscript fixtures/generate.R`.
   six leaves by design in this PR; no `crates/` code is changed.
 - Files outside the follow-up's scope list: `docs/decisions.md` (this
   entry).
+
+### v1.0 Task 7 follow-up — exact-path size limits (`too_large`), 1:n matched `cmle_or` (2026-11-15)
+
+Decision: Implement the owner-approved Task 7 follow-up (PR #74 comment
+6898203468, stacked on `v1.0/task-2-clogit-strata` / PR #75).
+
+- **Exact-path size guards (D1).** New `UndefinedReason::TooLarge`
+  (wire `too_large`). In `two_by_two`/`two_by_n`, leaves computed by
+  enumerating a stratum's hypergeometric support (Fisher exact and
+  mid-p p-values, the exact conditional OR `cmle_or.*`, its mid-p and
+  Fisher limits) return `{"undefined":"too_large"}` when that stratum's
+  support (`max − min + 1` of cell `a` given the margins, computed
+  arithmetically, before any allocation) exceeds
+  `MAX_EXACT_SUPPORT = 1_000_000`. The stratified `martin`
+  `adjusted.cmle_or.*` leaves return `too_large` when the convolution
+  work exceeds `MAX_EXACT_CONVOLUTION_WORK = 100_000_000`. Every
+  non-exact leaf still computes.
+- **k > 2 convolution-work generalisation — for owner review.** The
+  owner's rule defines work for two strata as `support₁ · support₂`.
+  For k > 2 strata `martin` convolves one distribution at a time, so
+  the actual work is `Σ_{i≥2} (support of the polynomial convolved so
+  far) × support_i`, where the running support is
+  `cum + support_i − 1`; this equals `support₁ · support₂` at k = 2.
+  Only informative strata enter the convolution.
+- **1:n matched conditional MLE (D3).**
+  `calc.matched_case_control.matched_n.cmle_or.{est,lower,upper}` is
+  now a real conditional MLE matching `survival::clogit` (one stratum
+  per matched set, Wald CI on the coefficient): the score is aggregated
+  over the ≤ 2·(M+1) stratum shapes `(e, k)` with multiplicities —
+  O(M) memory — `p = t·ψ / (t·ψ + M + 1 − t)`, `t = e + k`,
+  `ψ = exp(β)`; a safeguarded Newton solve on the bracketed score root;
+  `SE = 1/√I(β̂)` from the observed information. Verified against
+  `clogit`: `matched_1to2` β 0.5431316487 → OR 1.7213892162463522;
+  `matched_1to4` β 0.7770624279 → OR 2.1750734364802318. Boundary
+  inputs (no informative sets, discordance in one direction only) are
+  `Undefined{unbounded}`: `survival::clogit` reports a flat likelihood
+  (`NA` coefficient) or a diverging coefficient ("beta may be
+  infinite") respectively — the existing unbounded/undefined-MLE
+  reason.
+- **Files outside Task 7's Files block:**
+  `crates/epiora-core/src/stats/estimate.rs` (new
+  `UndefinedReason::TooLarge`), `crates/epiora-wasm/bindings/
+  Estimate.ts` (regenerated union), `app/src/ui/strings.ts` (new
+  `undefined.too_large` copy), `docs/decisions.md` (this entry).
+  `app/src/worker/errors.ts` mirrors `EngineError` codes, not
+  `Estimate` reasons — unchanged.
+Evidence: PR opened against `v1.0/task-2-clogit-strata`;
+`cargo test --test calc_counts` (owner-limit and clogit-parity tests);
+wall times measured release-native (commands in the PR body).
+Supersedes: —
