@@ -4056,3 +4056,78 @@ Evidence: PR opened against `v1.0/task-2-clogit-strata`;
 `cargo test --test calc_counts` (owner-limit and clogit-parity tests);
 wall times measured release-native (commands in the PR body).
 Supersedes: —
+
+### v1.0 Task 8 — Person-time and continuous-summary calculators (2026-11-16)
+
+Decision: Implement `rate_one`, `rate_compare`, `mean_ci`, `median_ci`,
+`t_test_summary`, `anova_summary` to the Task 2 corpus, sharing the
+MEANS summary builders and the `martin` polynomial machinery.
+
+- **Shared summary builders.** `GroupSummary`, `summarize`,
+  `t_tests_from_summary`, `anova_from_summary` and
+  `bartlett_from_summary` moved verbatim from `stats/means.rs` (was at
+  the ~400-line limit) into the new `stats/means_summary.rs`;
+  `stats/means.rs` re-exports them so `stats::means::*` paths and all
+  MEANS fixture outputs are unchanged. Added
+  `t_tests_from_summary_at(a, b, conf)` — the same builder with the CI
+  level parameterised (`t_tests_from_summary` = `…_at(…, 95.0)`); the
+  `t_test_summary` calculator calls it so MEANS and the calculator
+  share one code path (`t`, `df`, `p`, `diff`, `lower`, `upper`).
+- **Person-time CMLE rate ratio.** `counts/martin.rs` generalized:
+  `Setup`/`Poly` are crate-visible, `convolve` takes `(a, poly)` pairs
+  and `cmle(&Setup, approx, conf)` holds the shared root logic;
+  `stratified_cmle` is a thin case-control wrapper (identical
+  behaviour). `person_time/martin_pt.rs` adds `poly_strat_pt`
+  (`C(m1,k)·(n0/n1)^(m1−k)`, `m1 = rint(a+b)`, zero-PT arms →
+  single-point mass) per `tables.R`.
+- **Bounded work (D1 applied to the binomial path).** The corpus's
+  `large_counts` fixture (m1 = 1.2e6) must compute, so the 1e6
+  *hypergeometric*-support cap — which is defined for the 2×2
+  polynomial — cannot apply. `martin_pt::too_large` instead bounds the
+  same `MAX_EXACT_CONVOLUTION_WORK` (1e8) over total work: `m1+1`
+  coefficient evaluations per informative stratum plus the
+  `logmult_poly` multiply pairs `Σ_{i≥2} s_{<i}·s_i`. Checked
+  arithmetically before any allocation; all five `cmle_rr.*` leaves
+  return `{"undefined":"too_large"}` when exceeded.
+- **Zero-event rate CIs (Review Focus 3).** `cases = 0` → every
+  method's lower limit is exactly `0` and every upper is finite:
+  mid-p/Fisher come from the count-scale helpers (`[0, finite]`),
+  normal/Byar lowers are clamped to `0`, and `rg_ci` collapses to the
+  point interval `[0, 0]` (the log formula produces NaN at `o = 0`).
+- **`median_ci` method minimum.** The normal-approximation rank CI
+  needs an expected observation on each side of the percentile:
+  `n·p < 1` or `n·(1−p) < 1` → `Undefined { too_few }` on both ranks
+  (covers the degenerate endpoints percentile 0/100 where `npq = 0`,
+  matching OpenEpi `CIMedian.js` refusing `percentile ≤ 0`). All four
+  corpus fixtures (np ≥ 1.5) stay defined; raw unrounded ranks are
+  emitted per the fixture oracle, not OpenEpi's rounded display.
+- **`rate_one` `per_unit` when omitted** (`DefaultValue::Omit`):
+  OpenEpi `PersonTime1.js` auto-scales — smallest power of 10 making
+  the raw rate ≥ 1; a zero rate keeps `1` (OpenEpi's loop never exits
+  there).
+- **`ef_person_time` clamp** uses `f64::clamp`, which propagates NaN
+  like R's `max(-1, min(1, x))` — Rust's `min`/`max` would swallow it.
+- **`t_test_summary_equals_means_on_same_data`** uses `means_ties`
+  (the two-group corpus dataset): `means_basic` has three groups so
+  its MEANS output contains no t-test to compare against — the plan's
+  intent (same summaries → same t/df/p within 1e-12) is preserved.
+- **Files outside the Files block:** `stats/means_summary.rs` (new;
+  the conductor note mandates the split since `stats/means.rs` was at
+  the ~400-line limit), `stats/means.rs` and `stats/mod.rs` (re-export
+  + module decls), `calc/counts/martin.rs` and `calc/counts/mod.rs`
+  (poly-generic core + `pub(crate)` visibility so person_time reuses
+  `shared`/`martin`), `crates/epiora-core/src/bin/corpus-runner.rs`
+  and `crates/epiora-wasm/parity/run.mjs` (conductor note requires the
+  six family paths in both FAMILIES lists), and the validation
+  registry `mod.rs` + `calc_rate_one.rs` / `calc_rate_compare.rs` /
+  `calc_continuous.rs` (the registry is split one file per statistic
+  family — no single `registry/calc.rs` exists to modify).
+Evidence: `cargo test -p epiora-core --all-features` all green —
+`every_person_time_fixture_matches` (11 fixtures incl. `zero_event`,
+`support_max`, `large_counts`), `every_continuous_fixture_matches`
+(15 fixtures), `zero_events_rate_ci_defined_lower_zero`,
+`rate_compare_too_large_is_bounded`,
+`t_test_summary_equals_means_on_same_data`,
+`median_ci_needs_minimum_n`, `every_output_has_registry_coverage`,
+`every_means_fixture_matches`, `golden_v1_unchanged`.
+Supersedes: —

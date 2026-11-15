@@ -32,6 +32,12 @@ const FAMILIES = [
   "calc/smr",
   "calc/binomial",
   "calc/poisson",
+  "calc/rate_one",
+  "calc/rate_compare",
+  "calc/mean_ci",
+  "calc/median_ci",
+  "calc/t_test_summary",
+  "calc/anova_summary",
 ];
 
 const root = process.argv[2];

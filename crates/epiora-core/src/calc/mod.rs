@@ -5,8 +5,10 @@
 //! Only the counts family is implemented in Task 7; the other families
 //! carry their inventory metadata and are added by Tasks 8 and 9.
 
+pub mod continuous;
 pub mod counts;
 pub mod input;
+pub mod person_time;
 mod registry;
 mod registry_continuous;
 mod registry_power;
@@ -201,13 +203,21 @@ pub fn run(
         });
     }
     let def = definition(id)?;
-    if def.family != Family::Counts {
+    if !matches!(
+        def.family,
+        Family::Counts | Family::PersonTime | Family::Continuous
+    ) {
         return Err(EngineError::InvalidOptions {
             reason: format!("calculator {id} is registered but its family is not implemented yet"),
         });
     }
     let canonical = input::validate(def, inputs)?;
-    let result = counts::run(def.id, &canonical)?;
+    let result = match def.family {
+        Family::Counts => counts::run(def.id, &canonical)?,
+        Family::PersonTime => person_time::run(def.id, &canonical)?,
+        Family::Continuous => continuous::run(def.id, &canonical)?,
+        _ => unreachable!("family gate above"),
+    };
 
     let mut entries = BTreeMap::new();
     for path in statistic_ids(&result) {
