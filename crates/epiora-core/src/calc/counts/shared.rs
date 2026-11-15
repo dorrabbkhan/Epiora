@@ -29,6 +29,42 @@ pub fn undefined(code: &str) -> Value {
     json!({ "undefined": code })
 }
 
+/// Owner decision (v1.0 Task 7 follow-up, recorded on PR #74): an
+/// exact-path leaf turns `{"undefined": "too_large"}` when its
+/// stratum's hypergeometric support — `max − min + 1` of cell `a`
+/// given the margins — exceeds this. Checked before any allocation
+/// or enumeration.
+pub const MAX_EXACT_SUPPORT: u64 = 1_000_000;
+
+/// Same owner decision: `two_by_two`'s `adjusted.cmle_or.*` turns
+/// `too_large` when `martin`'s convolution work exceeds this. For two
+/// informative strata the work is `support₁ · support₂`; for `k > 2`
+/// it is `Σ_{i≥2} (support of the polynomial convolved so far) ×
+/// support_i`, which reduces to `support₁ · support₂` at `k = 2`.
+pub const MAX_EXACT_CONVOLUTION_WORK: u64 = 100_000_000;
+
+/// The hypergeometric support size of a 2×2's `a` cell given its
+/// margins — `min(n1, m1) − max(0, n1−m0) + 1` (with `n1` the first
+/// row total, `m1`/`m0` the column totals; `n1 − m0 = n1 + m1 − N`),
+/// or 0 when no value of `a` is consistent with the margins. Pure
+/// arithmetic: the point of the cap is to decide this *without* the
+/// `O(support)` allocation.
+pub fn hypergeom_support(t: &crate::stats::Table2x2) -> u64 {
+    let n1 = t.a.saturating_add(t.b);
+    let m0 = t.b.saturating_add(t.d);
+    let m1 = t.a.saturating_add(t.c);
+    let lo = n1.saturating_sub(m0);
+    let hi = n1.min(m1);
+    hi.checked_sub(lo).map_or(0, |d| d.saturating_add(1))
+}
+
+/// `martin`'s per-stratum informativeness: a stratum carries no
+/// conditional-likelihood term when both `a·d` and `b·c` are 0.
+/// Written cell-wise — `a * d` overflows u64 at counts near 2^53.
+pub fn informative(t: &crate::stats::Table2x2) -> bool {
+    (t.a != 0 && t.d != 0) || (t.b != 0 && t.c != 0)
+}
+
 /// `{est, lower, upper}` from a `[f64; 3]`.
 pub fn stat_ci(t: [f64; 3]) -> Value {
     json!({ "est": leaf(t[0]), "lower": leaf(t[1]), "upper": leaf(t[2]) })
