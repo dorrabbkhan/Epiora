@@ -33,8 +33,9 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let pu = per_unit(inputs, cases, pt);
     let scale = pu / pt;
     // Review Focus 3: at zero events every method's lower limit is
-    // exactly 0 and every upper is finite (the normal/Byar/RG
-    // formulas degenerate below 0 or to NaN without it).
+    // exactly 0 and every upper is finite — except Rothman–Greenland,
+    // whose log formula degenerates to R's `exp(-Inf)=0` / `NaN`, so
+    // its upper is `{"undefined": "out_of_range"}` like `smr`'s.
     let zero = cases == 0;
     let ci = |pair: [f64; 2]| {
         let [lo, hi] = pair;

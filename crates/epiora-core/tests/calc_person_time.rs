@@ -65,7 +65,9 @@ fn every_person_time_fixture_matches() {
 
 /// Review Focus 3: zero observed events gives a lower confidence
 /// limit of exactly 0 and a finite upper limit for every rate CI
-/// method — no NaN or infinity anywhere.
+/// method — except Rothman–Greenland, where R's `rg_ci` degenerates
+/// to `exp(-Inf) = 0` / `NaN`, so the upper is `undefined` rather
+/// than an invented point bound (`smr` behaves the same way).
 #[test]
 fn zero_events_rate_ci_defined_lower_zero() {
     let out = run(
@@ -80,7 +82,7 @@ fn zero_events_rate_ci_defined_lower_zero() {
     )
     .expect("rate_one on zero events");
     assert_eq!(out.result["estimate"], json!(0.0));
-    for method in ["midp", "fisher", "normal", "byar", "rothman_greenland"] {
+    for method in ["midp", "fisher", "normal", "byar"] {
         let ci = &out.result["ci"][method];
         assert_eq!(ci["lower"], json!(0.0), "{method}.lower must be exactly 0");
         assert!(
@@ -88,6 +90,43 @@ fn zero_events_rate_ci_defined_lower_zero() {
             "{method}.upper must be a finite value, got {}",
             ci["upper"]
         );
+    }
+    let rg = &out.result["ci"]["rothman_greenland"];
+    assert_eq!(rg["lower"], json!(0.0), "rg.lower must be exactly 0");
+    assert_eq!(
+        rg["upper"],
+        json!({ "undefined": "out_of_range" }),
+        "rg.upper must be undefined at zero events, got {}",
+        rg["upper"]
+    );
+}
+
+/// Spec §5.3 / inventory `## rate_compare` inputs: strata cells are
+/// typed — case counts are integers `0 ≤ n < 2^53`, person-time is
+/// finite `> 0`, and the strata count stays within 1..9 — enforced as
+/// `calc_input_out_of_range` errors, not computed on.
+#[test]
+fn rate_compare_rejects_bad_strata() {
+    let stratum = json!([[10, 20], [1000, 2000]]);
+    let cases: Vec<serde_json::Value> = vec![
+        json!([[[-1, 20], [1000, 2000]]]),   // negative case count
+        json!([[[10.5, 20], [1000, 2000]]]), // non-integer case count
+        json!([[[10, 20], [0, 2000]]]),      // zero person-time
+        json!([[[10, 20], [-100, 2000]]]),   // negative person-time
+        json!(vec![stratum; 10]),            // 10 strata exceeds the cap
+    ];
+    for strata in cases {
+        let err = run(
+            "rate_compare",
+            &json!({
+                "strata": strata,
+                "per_unit": 1000.0,
+                "conf_level": 95,
+            }),
+            &ctx(),
+        )
+        .expect_err(&format!("{strata} must be rejected"));
+        assert_eq!(err.code(), "calc_input_out_of_range");
     }
 }
 

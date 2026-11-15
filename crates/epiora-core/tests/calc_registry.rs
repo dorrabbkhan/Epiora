@@ -138,3 +138,16 @@ fn table_shape_enforced() {
     let err = validate(def, &json!({"strata": [[1, 2], [3, -1]]})).expect_err("negative cell");
     assert_eq!(err.code(), "calc_input_out_of_range");
 }
+
+#[test]
+fn nested_strata_count_enforced() {
+    let def = definition("two_by_two").expect("two_by_two def");
+    let stratum = json!([[1, 2], [3, 4]]);
+    // Nine nested strata is the inventory cap.
+    validate(def, &json!({"strata": vec![stratum.clone(); 9]})).expect("9 strata");
+    // Ten nested strata exceeds it — the outer count is bounded too,
+    // not just a flat table's rows.
+    let err = validate(def, &json!({"strata": vec![stratum; 10]}))
+        .expect_err("10 nested strata must be rejected");
+    assert_eq!(err.code(), "calc_input_out_of_range");
+}

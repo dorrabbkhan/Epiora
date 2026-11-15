@@ -8,9 +8,62 @@
 
 use super::super::counts::shared::{leaf, stat_ci, undefined};
 use super::martin_pt::{cmle_rr, PtStratum};
+use crate::calc::input::MAX_COUNT;
 use crate::stats::{self as rates};
 use crate::EngineError;
 use serde_json::{json, Value};
+
+/// Spec §5.3 / inventory `## rate_compare`: each `strata` element is
+/// one 2×2 — row 0 case counts (non-negative integers `< 2^53`; an
+/// integral real like `4e15` counts, since JSON writes it with an
+/// exponent) and row 1 person-time (finite, `> 0`) — a per-row
+/// contract the uniform `CellKind::Real` table cannot express, so it
+/// is checked here as typed `calc_input_out_of_range` errors.
+fn check_strata(inputs: &Value) -> Result<(), EngineError> {
+    let err = |reason: &str| EngineError::CalcInputOutOfRange {
+        input: "strata".into(),
+        reason: reason.into(),
+    };
+    let items = inputs
+        .get("strata")
+        .and_then(Value::as_array)
+        .ok_or_else(|| err("bad_table_shape"))?;
+    let nested = !items.is_empty()
+        && items
+            .iter()
+            .all(|e| e.as_array().is_some_and(|r| r.iter().all(Value::is_array)));
+    let tables: Vec<&[Value]> = if nested {
+        items
+            .iter()
+            .map(|t| t.as_array().map(Vec::as_slice).unwrap_or(&[]))
+            .collect()
+    } else {
+        vec![items.as_slice()]
+    };
+    for rows in tables {
+        let cells: Vec<&[Value]> = rows
+            .iter()
+            .map(|r| r.as_array().map(Vec::as_slice).unwrap_or(&[]))
+            .collect();
+        if rows.len() != 2 || cells.iter().any(|r| r.len() != 2) {
+            return Err(err("bad_table_shape"));
+        }
+        let is_count = |c: &Value| {
+            c.as_f64()
+                .is_some_and(|x| x >= 0.0 && x.fract() == 0.0 && x < MAX_COUNT as f64)
+        };
+        if !cells[0].iter().all(is_count) {
+            return Err(err("not_a_count"));
+        }
+        if !cells[1]
+            .iter()
+            .all(|c| c.as_f64().is_some_and(|x| x.is_finite() && x > 0.0))
+        {
+            return Err(err("below_min"));
+        }
+    }
+    Ok(())
+}
 
 /// The `strata` input — `[[a,b],[n1,n0]]` or a list of those — as
 /// `PtStratum`s (the same shape rule as `counts::shared::strata2x2`).
@@ -107,6 +160,7 @@ fn table_block(t: &PtStratum, pu: f64, conf: f64) -> Value {
 }
 
 pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
+    check_strata(inputs)?;
     let strata = strata(inputs);
     let pu = super::super::counts::shared::num(inputs, "per_unit");
     let conf = super::super::counts::shared::conf(inputs);

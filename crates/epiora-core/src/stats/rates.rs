@@ -27,12 +27,13 @@ pub(crate) fn pois_approx(cases: u64, pt: f64, conf: f64) -> [f64; 3] {
 }
 
 /// `poisson.R::rg_ci` — Rothman–Greenland (Boice–Monson) log-method
-/// rate CI `[lower, upper]`. At `o = 0` the log method degenerates:
-/// the corpus's zero-event contract is a defined lower of exactly 0
-/// and a finite upper, so the interval collapses to `[0, 0]`.
+/// rate CI `[lower, upper]`. At `o = 0` the formula degenerates
+/// exactly as in R — lower `exp(-Inf) = 0`, upper `exp(NaN) = NaN`;
+/// the caller's `leaf` renders the NaN `{"undefined": "out_of_range"}`
+/// rather than inventing a point upper bound.
 pub(crate) fn rg_ci(o: u64, pt: f64, conf: f64) -> [f64; 2] {
     if o == 0 {
-        return [0.0, 0.0];
+        return [0.0, f64::NAN];
     }
     let (o, z) = (o as f64, z(conf));
     let lo = libm::log(o / pt);

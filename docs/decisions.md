@@ -4090,10 +4090,26 @@ MEANS summary builders and the `martin` polynomial machinery.
   arithmetically before any allocation; all five `cmle_rr.*` leaves
   return `{"undefined":"too_large"}` when exceeded.
 - **Zero-event rate CIs (Review Focus 3).** `cases = 0` → every
-  method's lower limit is exactly `0` and every upper is finite:
-  mid-p/Fisher come from the count-scale helpers (`[0, finite]`),
-  normal/Byar lowers are clamped to `0`, and `rg_ci` collapses to the
-  point interval `[0, 0]` (the log formula produces NaN at `o = 0`).
+  method's lower limit is exactly `0`; mid-p/Fisher/normal/Byar
+  uppers are finite: mid-p/Fisher come from the count-scale helpers
+  (`[0, finite]`), normal/Byar lowers are clamped to `0`.
+  Fix round 1 (review, PR #77):
+  `rg_ci` no longer collapses to the fabricated point interval
+  `[0, 0]` — it returns R's own degenerate values `[0, NaN]`
+  (`exp(-Inf) = 0`, `exp(NaN) = NaN`), so `rate_one`'s
+  `rothman_greenland.upper` is `{"undefined": "out_of_range"}`, the
+  same leaf `smr` emits for the identical formula at `o = 0`.
+- **`rate_compare` strata input contract (fix round 1, PR #77).** The
+  `strata` table's uniform `CellKind::Real` let negative/non-integer
+  case counts, non-positive person-time and >9 nested strata compute.
+  Each stratum is now checked as one 2×2 — row 0 integers
+  `0 ≤ n < 2^53` (integral reals like `4e15` count, since JSON writes
+  them with an exponent), row 1 finite `> 0` — as typed
+  `calc_input_out_of_range` errors on `strata`, and `input::table`'s
+  nested branch bounds the outer list at `max_rows` (the Task 7 gap
+  also affected `two_by_two`/`two_by_n`; only the upper bound applies
+  to the outer list — `dose_response` fixtures carry single-stratum
+  outer lists below `min_rows`).
 - **`median_ci` method minimum.** The normal-approximation rank CI
   needs an expected observation on each side of the percentile:
   `n·p < 1` or `n·(1−p) < 1` → `Undefined { too_few }` on both ranks

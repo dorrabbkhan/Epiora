@@ -9,7 +9,7 @@ use crate::error::EngineError;
 use serde_json::{Map, Value};
 
 /// `2^53` — counts are integers strictly below it (Review Focus 3).
-const MAX_COUNT: u64 = 1u64 << 53;
+pub(crate) const MAX_COUNT: u64 = 1u64 << 53;
 
 fn out_of_range(input: &str, reason: &str) -> EngineError {
     EngineError::CalcInputOutOfRange {
@@ -62,8 +62,10 @@ fn cell(name: &str, kind: CellKind, v: &Value) -> Result<Value, EngineError> {
 
 /// A 2-D table of `cols`-wide rows (or calculator-defined columns when
 /// `cols == 0`), `min_rows..=max_rows` rows. When every element is
-/// itself a 2-D array the input is a list of tables (dose-response
-/// strata) and each element is validated on the same spec.
+/// itself a 2-D array the input is a list of tables (dose-response or
+/// 2×2 strata): each element is validated on the same spec and the
+/// outer list is capped at `max_rows`, the inventory's strata bound —
+/// a Task 7 gap that left 10+ nested strata accepted.
 fn table(
     name: &str,
     v: &Value,
@@ -80,6 +82,9 @@ fn table(
             .iter()
             .all(|e| e.as_array().is_some_and(|r| r.iter().all(Value::is_array)));
     if nested {
+        if items.len() > usize::from(max_rows) {
+            return Err(out_of_range(name, "bad_table_shape"));
+        }
         for e in items {
             table(name, e, cols, min_rows, max_rows, kind)?;
         }
