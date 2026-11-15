@@ -7,7 +7,25 @@ use epiora_core::corpus::{load_dataset_dir, run_case};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
-const FAMILIES: &[&str] = &["special", "2x2", "stratified", "rxc", "freq"];
+// The counts `calc` families are listed per calculator: every other
+// `fixtures/calc/<id>` belongs to a family Tasks 8/9 implement.
+const FAMILIES: &[&str] = &[
+    "special",
+    "2x2",
+    "stratified",
+    "rxc",
+    "freq",
+    "calc/proportion",
+    "calc/two_by_two",
+    "calc/two_by_n",
+    "calc/r_by_c",
+    "calc/dose_response",
+    "calc/matched_case_control",
+    "calc/screening",
+    "calc/smr",
+    "calc/binomial",
+    "calc/poisson",
+];
 
 fn main() -> ExitCode {
     match run() {

@@ -312,6 +312,13 @@ pub fn run_case(
             )
         }
         name if name.starts_with("special.") => run_special(fixture).and_then(|v| out(v, None)),
+        name if name.starts_with("calc.") => {
+            let output = crate::calc::run(&name[5..], &fixture["inputs"], &ctx())?;
+            let receipt = serde_json::to_value(&output.receipt)
+                .map(|v| canonical_json(&v))
+                .map_err(|e| corpus(format!("receipt does not serialize: {e}")))?;
+            out(output.result, Some(receipt))
+        }
         other => Err(corpus(format!("{id}: unknown procedure {other:?}"))),
     }
 }

@@ -39,6 +39,20 @@ pub enum EngineError {
     /// Snapshot bytes are malformed or non-canonical (v0.3 spec §5.1).
     #[error("snapshot decode: {reason}")]
     SnapshotDecode { reason: String },
+    /// A calculator id is not in the calculator registry (v1.0 spec
+    /// §5.3).
+    #[error("unknown calculator: {id}")]
+    CalcUnknown { id: String },
+    /// A required calculator input is missing (v1.0 spec §5.3).
+    #[error("calculator input missing: {input}")]
+    CalcInputMissing { input: String },
+    /// A calculator input fails its declared kind, range or table
+    /// shape — `reason` is the stable sub-code (`unknown_input`,
+    /// `not_an_integer`, `below_min`, `above_max`, `bad_choice`,
+    /// `bad_table_shape`, `bad_table_cell`, `not_finite`,
+    /// `bad_conf_level`; v1.0 spec §5.3).
+    #[error("calculator input out of range: {input} ({reason})")]
+    CalcInputOutOfRange { input: String, reason: String },
 }
 
 impl EngineError {
@@ -55,6 +69,9 @@ impl EngineError {
             Self::TooManyGroups { .. } => "too_many_groups",
             Self::CorpusFormat { .. } => "corpus_format",
             Self::SnapshotDecode { .. } => "snapshot_decode",
+            Self::CalcUnknown { .. } => "calc_unknown",
+            Self::CalcInputMissing { .. } => "calc_input_missing",
+            Self::CalcInputOutOfRange { .. } => "calc_input_out_of_range",
         }
     }
 }

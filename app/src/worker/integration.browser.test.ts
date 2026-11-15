@@ -53,8 +53,8 @@ describe('data worker integration', () => {
       variables: ['AGE', 'NAME'],
     });
     // The stored content hash is the engine's dataset hash.
-    expect(run.receipt.dataset.sha256).toBe(vs[0]!.contentHash);
-    expect(run.receipt.dataset.version).toBe(1);
+    expect(run.receipt.dataset!.sha256).toBe(vs[0]!.contentHash);
+    expect(run.receipt.dataset!.version).toBe(1);
 
     const page = await api.getVersionPage(commit.datasetId, 1, 0, 10);
     expect(page.total).toBe(2);
@@ -206,7 +206,7 @@ describe('data worker integration', () => {
     expect(run.version).toBe(1);
     expect(run.receipt.receipt_version).toBe(2);
     expect(run.receipt.project).toEqual({ id: project.id, name: 'Oswego' });
-    expect(run.receipt.dataset.sha256).toBe(
+    expect(run.receipt.dataset!.sha256).toBe(
       (await api.listVersions(commit.datasetId))[0]!.contentHash,
     );
     expect(run.receiptSha256).toMatch(/^[0-9a-f]{64}$/);
@@ -243,7 +243,7 @@ describe('data worker integration', () => {
     const run = await untilStore(() =>
       api2.runFreq(project.id, commit.datasetId, 1, { ...FREQ_OPTIONS, variables: ['E'] }),
     );
-    expect(run.receipt.dataset.sha256).toBe(wanted);
+    expect(run.receipt.dataset!.sha256).toBe(wanted);
 
     terminateSpawned();
     store = await openHarness(db);

@@ -306,6 +306,9 @@ export const t = {
     snapshot_decode: 'The stored dataset snapshot cannot be read.',
     not_numeric_variable: 'That variable is not numeric.',
     too_many_groups: 'That variable has too many groups.',
+    calc_unknown: 'That calculator is not known.',
+    calc_input_missing: 'A required calculator input is missing.',
+    calc_input_out_of_range: 'A calculator input is out of range.',
     // StoreError codes
     migration_failed: 'The local database could not be upgraded.',
     tx_aborted: 'The database transaction was aborted.',

@@ -3804,3 +3804,126 @@ Supersedes: —
   (the committed CI crash input, per the fuzz-nightly convention) and
   `crates/epiora-core/tests/fuzz_regressions.rs` (`means_any` added to
   the replay list so the convention actually covers it).
+
+### v1.0 Task 7 — Calculator registry, receipt v3, counts family
+
+- **Non-counts calculators fail closed, not skipped.** The corpus's
+  existing mechanism for unimplemented `calc.<id>` procedures is that
+  `run_case` errors — fixtures for families without a `run` are simply
+  not listed in the `FAMILIES` walk (same as `means` before Task 6).
+  Task 7 follows it: `calc::run` returns `InvalidOptions` ("registered
+  but its family is not implemented yet") for the 14 non-counts ids —
+  a defined engine error, no new code, no skipped fixture. The ten
+  counts directories are listed per-calculator in both
+  `corpus-runner`'s `FAMILIES` and `parity/run.mjs`; the other 14 join
+  when Tasks 8/9 implement them.
+- **`every_output_has_registry_coverage` measures emittable output.**
+  Validation-`REGISTRY` rows exist for every statistic the ten counts
+  calculators can emit (pointed at the Task 2 fixtures that actually
+  contain the leaf); the other 14 calculators' `OutputDef` metadata is
+  complete in `calc::REGISTRY` but adds no validation rows — a row for
+  output nothing can emit would be unmeasurable coverage. Tasks 8/9
+  add their rows with their implementations.
+- **Iterative roots use a port of R's `zeroin`, not `brent_root`.**
+  Fixture leaves that come out of R `uniroot` (`exactci` mid-p,
+  `epitools::or.midp`, `exact2x2` limits) are recorded at uniroot's
+  default tolerance, not a tight root; `special/zeroin.rs` is a
+  bit-faithful port of R's `src/library/stats/src/zeroin.c` run at
+  `UNIROOT_TOL = .Machine$double.eps^0.25`. `brent_root` stays for the
+  tighter v0.2 corpus semantics. New file outside the Files block.
+- **`matched_n.cmle_or` is always `{"undefined": ...}` in Task 7.** The
+  generator's `clogit` call fails ("could not find function `strata`"),
+  so every `matched_n` fixture records the leaf as `null`; emitting
+  `Undefined` reproduces the oracle exactly.
+- **`smr.conf_level` is `Percent`, not `ConfLevel`.** The inventory
+  names 90/95/99 "everywhere", but the authoritative
+  `calc/smr/conf_97` fixture exercises `conf_level: 97` for the
+  conditional Ury–Wiggins/Vandenbroucke blocks; the input therefore
+  accepts any percentage in `[0, 100]`.
+- **Canonical defaults serialize integral values as JSON integers** —
+  `conf_level: 95`, never `95.0` — so the canonical-input hash is
+  stable across engines that distinguish the two.
+- **Large counts take the mathematically exact path (PR #74 review
+  fix).** Valid counts `< 2^53` no longer drive O(n) work: counts
+  calculators call a calc-only `pbinom` — R `pbinom`'s own
+  `pbeta(p, x+1, n−x, !lower.tail)` identity on the Task 5
+  `reg_inc_beta`/`reg_inc_beta_upper` — instead of
+  `special::binomial_tail`'s literal sum (untouched; the non-calc
+  corpus and the native/wasm parity output are bound to it);
+  `pair()`'s `fisher_2t` binary-searches the `1+1e-7` tie band on the
+  symmetric `Binom(n, 0.5)` and sums the two equal tails with
+  `pbinom`; `matched_n` accumulates the ≤ `2·(M+1)` stratum shapes
+  times their multiplicities instead of allocating one `Table2x2`
+  per set (O(M) memory at ~1e12 sets). No input cap, work limit or
+  new `Undefined` reason was added. `two_by_two`/`two_by_n` keep the
+  noncentral-hypergeometric support sums and OR roots, which have no
+  closed form — reported on the PR under "Still unbounded (owner
+  decision)", not capped.
+- **Point masses use R's own `dbinom_raw`/`dpois_raw` (PR #74 review
+  fix round 2).** The calc-layer `dbinom`/`dpois` composed
+  `ln_gamma` differences, which cancel ~17 digits once `n` swamps
+  the result — `binomial.tail.eq` returned 3.1e21 at n = 2^53−1 and
+  `pair()`'s `midp_p` −6.6e7 for valid counts. Both now call the
+  already-ported Loader saddle-point routines (`dbinom_raw` in
+  `special/hypergeom.rs`, `dpois_raw` in `special/gamma.rs`,
+  re-exported `pub(crate)`), exactly what R's `dbinom`/`dpois`
+  compute; edge semantics are unchanged. The same audit replaced
+  `martin`'s `lchoose`-composed polynomial with `dhyper`'s log mass
+  (the dropped `1/C(m+n,k)` factor is constant per stratum and
+  cancels in its max-normalisation).
+- **`pair()` `mcnemar_cc` applies the continuity 1 only when
+  `db != dc` (PR #74 review fix round 2).** That is
+  `mcnemar.test(correct=TRUE)`'s `any(x - t(x) != 0)` condition
+  verbatim: equal discordant counts give statistic 0 (p = 1), not
+  1/n. No fixture covers `db == dc`; `mcnemar_cc_balanced_discordance
+  _is_zero` asserts R's `matrix(c(10,5,5,10),2)` result.
+- **Files outside the Files block:**
+  - `crates/epiora-core/src/special/zeroin.rs` + `special/mod.rs` —
+    the `uniroot` port above. `special/{hypergeom,gamma}.rs` joined
+    `mod.rs` in fix round 2: `dbinom_raw`/`dhyper`/`dpois_raw`
+    visibility only, no behaviour change to the exported routines.
+  - `crates/epiora-core/src/calc/registry*.rs`,
+    `crates/epiora-core/src/calc/counts/defs*.rs`,
+    `crates/epiora-core/src/calc/counts/{shared,shared_exact,exact_or,martin}.rs`,
+    `crates/epiora-core/src/validation/registry/calc_*.rs` — the
+    registry/coverage data and shared helpers, split per the ~400-line
+    file rule (the Files block's `counts/*.rs` and `calc/*.rs` globs
+    cover the pattern; named here for completeness).
+  - `crates/epiora-core/src/corpus/compare.rs` — leaf detection now
+    requires `{value, class}`: calc fixtures nest groups whose own
+    key is `"value"`.
+  - `crates/epiora-core/src/corpus/report/mod.rs` — strips the
+    two-segment `calc.<id>.` prefix when resolving validation paths
+    (other families keep one-segment stripping).
+  - `crates/epiora-core/src/bin/corpus-runner.rs` and
+    `crates/epiora-wasm/parity/run.mjs` — the ten counts `calc/<id>`
+    families added to both parity walks (kept identical).
+  - `crates/epiora-core/src/corpus/run_case.rs` — beyond the `calc.*`
+    delegation line, the run emits the calculator's canonical-JSON v3
+    receipt so the parity line covers it.
+  - `crates/epiora-core/tests/{registry,receipt,fuzz_regressions}.rs`
+    — `registry.rs` strips the `calc.<id>.` prefix for calc rows;
+    `receipt.rs` unwraps the now-`Option` `dataset`;
+    `fuzz_regressions.rs` registers `calc_any`.
+  - `crates/epiora-core/fuzz/regressions/calc_any/.gitkeep` —
+    convention for a new target's replay directory.
+  - `crates/epiora-wasm/bindings/{CalculatorDef,CalculatorStamp,CellKind,
+    DefaultValue,Family,InputDef,InputKind,OutputDef}.ts` and
+    `bindings/Receipt.ts` — ts-rs generated output for the new public
+    types and the v3 receipt fields (regenerated, not hand-edited).
+  - `app/src/worker/errors.ts` and `app/src/ui/strings.ts` — the three
+    new engine codes (`calc_unknown`, `calc_input_missing`,
+    `calc_input_out_of_range`) mirrored into the app's code union and
+    user strings.
+  - `app/src/ui/screens/analysis/ReceiptPanel.tsx` — guards the
+    dataset-hash row: `Receipt.dataset` is `null` on v3 calculator
+    receipts.
+  - `app/src/worker/integration.browser.test.ts` — `dataset` is now
+    optional on `Receipt`; the runs it stores are procedure receipts,
+    so the assertions assert presence.
+  - The Files block's `stats/{matched,trend,screening}.rs` and
+    `corpus/run_calc.rs` were not created: the matched/trend/screening
+    maths is package-specific (`epiR`/`epitools`/`exactci` semantics,
+    not generic stats APIs) and lives in `calc/counts/*`; the `calc.*`
+    delegation is the single run_case branch the conductor note asked
+    for.

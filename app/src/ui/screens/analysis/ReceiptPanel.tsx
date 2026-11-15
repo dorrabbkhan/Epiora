@@ -20,8 +20,12 @@ export function ReceiptPanel({ receipt }: { receipt: Receipt }) {
             {receipt.engine.name} {receipt.engine.version} (
             {receipt.engine.git_sha})
           </dd>
-          <dt>{t.analysis.receiptHash}</dt>
-          <dd>{receipt.dataset.sha256}</dd>
+          {receipt.dataset && (
+            <>
+              <dt>{t.analysis.receiptHash}</dt>
+              <dd>{receipt.dataset.sha256}</dd>
+            </>
+          )}
           <dt>{t.analysis.receiptOptions}</dt>
           <dd>
             <code>{JSON.stringify(receipt.options)}</code>

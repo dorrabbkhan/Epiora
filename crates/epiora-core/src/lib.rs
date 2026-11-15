@@ -9,6 +9,7 @@
     deny(clippy::unwrap_used, clippy::expect_used, clippy::panic)
 )]
 
+pub mod calc;
 pub mod dataset;
 pub mod error;
 pub mod procedures;

@@ -25,6 +25,7 @@ fn harness(target: &str) -> fn(&[u8]) {
         "freq_any" => fuzz_harness::freq_any,
         "tables_any" => fuzz_harness::tables_any,
         "means_any" => fuzz_harness::means_any,
+        "calc_any" => fuzz_harness::calc_any,
         other => panic!("unknown fuzz target {other}"),
     }
 }
@@ -37,6 +38,7 @@ fn replays_regressions() {
         "freq_any",
         "tables_any",
         "means_any",
+        "calc_any",
     ] {
         let dir = regressions_dir().join(target);
         if !dir.is_dir() {
@@ -70,5 +72,6 @@ fn harness_handles_empty_and_garbage() {
         fuzz_harness::freq_any(data);
         fuzz_harness::tables_any(data);
         fuzz_harness::means_any(data);
+        fuzz_harness::calc_any(data);
     }
 }

@@ -86,7 +86,9 @@ fn walk(
 ) -> Result<(), EngineError> {
     match expected {
         Value::Object(map) => {
-            if map.contains_key("value") {
+            // Calc fixtures nest statistic groups whose own key is
+            // "value" — a leaf is `{value, class}`, so require both.
+            if map.contains_key("value") && map.contains_key("class") {
                 leaf(map, actual, path, out)
             } else {
                 for (key, value) in map {

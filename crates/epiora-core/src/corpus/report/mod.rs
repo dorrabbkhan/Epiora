@@ -161,10 +161,20 @@ fn row(
     cache: &mut BTreeMap<String, Ran>,
     ei7_stats: &BTreeSet<String>,
 ) -> Result<Row, EngineError> {
-    let rel = coverage
-        .statistic
-        .split_once('.')
-        .map_or(coverage.statistic, |(_, r)| r);
+    // `calc.<id>.<path>` carries a two-segment prefix; every other
+    // family is one segment.
+    let rel = if coverage.statistic.starts_with("calc.") {
+        coverage
+            .statistic
+            .splitn(3, '.')
+            .nth(2)
+            .map_or(coverage.statistic, |r| r)
+    } else {
+        coverage
+            .statistic
+            .split_once('.')
+            .map_or(coverage.statistic, |(_, r)| r)
+    };
     let segs: Vec<&str> = rel.split('.').collect();
     let mut errors = Vec::new();
     let mut r_versions = BTreeSet::new();
