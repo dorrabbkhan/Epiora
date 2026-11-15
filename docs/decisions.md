@@ -3927,3 +3927,59 @@ Supersedes: —
     not generic stats APIs) and lives in `calc/counts/*`; the `calc.*`
     delegation is the single run_case branch the conductor note asked
     for.
+
+### v1.0 Task 2 follow-up — clogit strata (1:n cmle_or) and smr conf_level kind (2026-11-15)
+
+Owner-approved fixtures follow-up (owner decision:
+<https://github.com/dorrabbkhan/Epiora/pull/74#issuecomment-6898203468>),
+same class as the earlier #66/#68/#71 follow-ups; fixtures still change
+only via `Rscript fixtures/generate.R`.
+
+- **Cause.** `matched_expected`'s 1:n branch in `fixtures/R/calc.R`
+  called `survival::clogit(case ~ exposed + strata(stratum), data = …)`
+  with `strata` not in scope (survival is used qualified and never
+  attached), so the call raised `could not find function "strata"`. A
+  `tryCatch(…, error = function(e) NULL)` swallowed it and wrote all six
+  `calc.matched_case_control.matched_n.cmle_or.{est,lower,upper}` leaves
+  as Undefined (`leaf(NA)`).
+- **Fix (`fixtures/R/calc.R` only).** `survival::clogit` re-evaluates a
+  literal `coxph` call in its caller's frame and resolves `Surv()` and
+  `strata()` through the formula's environment, so `coxph`/`Surv` are
+  bound in a `local({…})` scope and the strata term is the namespaced
+  `survival::strata(stratum)` (namespaced specials are detected under
+  R 4.6.2). The method is unchanged: conditional logistic regression,
+  one stratum per matched set, Wald CI on the coefficient,
+  `survival::clogit`. The `tryCatch`/NULL branch is removed — a real
+  clogit failure now stops generation instead of writing Undefined.
+- **Changed-leaf census** (`git diff` plus a leaf-level walk of every
+  JSON under `fixtures/`, before vs after regeneration): exactly six
+  leaves — `matched_1to2` and `matched_1to4`
+  `expected.matched_n.cmle_or.{est,lower,upper}`, null → numbers. Every
+  other fixture file is byte-identical, including the LO-regenerated
+  `import/xls_basic/input.xls`. The only other local drift is the known
+  platform-ulp pair in `t_quantile.json` (`qt(0.25, 1)`/`qt(0.75, 1)` →
+  ∓1.0000000000000002 on this machine's R build, exactly ∓1 on the
+  workflow build — owner-accepted CI-generator bytes, PR #71 option B1);
+  that file was restored and is unchanged in this PR.
+- **Independent check** (fresh `Rscript`, code + output pasted in the
+  PR): the expanded stratum data was rebuilt from each fixture's
+  `inputs.matched_sets` and `survival::clogit` re-run — all six leaves
+  bit-identical to the committed fixture values;
+  `survival::coxph(…, method = "exact")` returns the same coefficient,
+  and a hand-rolled per-stratum conditional log-likelihood MLE agrees
+  (to ~1e-5, `optimize` tolerance). Fixture values: `matched_1to2`
+  est 1.5928784011722343, CI [0.7640663449989405, 3.320734668564065];
+  `matched_1to4` est 3.764806602493105, CI
+  [2.051946370163086, 6.907475244125977].
+- **`smr` `conf_level` kind → `percent`.** One line in
+  `docs/v1.0-calculators.md`: the committed
+  `fixtures/calc/smr/conf_97` case (conf_level 97) is authoritative —
+  any level is allowed. Ury–Wiggins (90/95/99 only) and Vandenbroucke
+  (95 only) stay `Undefined{reason}` elsewhere, as the inventory line
+  already states.
+- **Known CI consequence.** The engine still emits
+  `Undefined{reason}` for `matched_n.cmle_or` (the stacked engine
+  follow-up implements it), so the engine corpus check fails on these
+  six leaves by design in this PR; no `crates/` code is changed.
+- Files outside the follow-up's scope list: `docs/decisions.md` (this
+  entry).

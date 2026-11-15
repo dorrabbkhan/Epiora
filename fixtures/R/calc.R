@@ -734,10 +734,18 @@ matched_expected <- function(matched_sets, controls_per_case, conf, id) {
       }
     }
     sets_df <- do.call(rbind, rows)
-    cl <- tryCatch(
-      survival::clogit(case ~ exposed + strata(stratum),
-                       data = sets_df),
-      error = function(e) NULL)
+    # clogit re-evaluates a literal `coxph` call in its caller's
+    # frame and resolves Surv()/strata() through the formula's
+    # environment, so coxph/Surv are bound in a local scope and the
+    # strata term is namespaced. No tryCatch: a real failure here
+    # stops generation instead of writing Undefined.
+    co <- local({
+      coxph <- survival::coxph
+      Surv <- survival::Surv
+      summary(survival::clogit(
+        case ~ exposed + survival::strata(stratum),
+        data = sets_df))$coefficients
+    })
     z <- qnorm((1 + conf / 100) / 2)
     expected$matched_n <- list(
       mh_or = list(
@@ -750,19 +758,12 @@ matched_expected <- function(matched_sets, controls_per_case, conf, id) {
       mh_chisq_cc = list(
         value = leaf(unname(mhc$statistic)),
         p = leaf(mhc$p.value)),
-      cmle_or = if (is.null(cl)) {
-        list(est = leaf(NA, "iterative"),
-             lower = leaf(NA, "iterative"),
-             upper = leaf(NA, "iterative"))
-      } else {
-        co <- summary(cl)$coefficients
-        list(
-          est = leaf(exp(co[1, "coef"]), "iterative"),
-          lower = leaf(exp(co[1, "coef"] - z * co[1, "se(coef)"]),
-                       "iterative"),
-          upper = leaf(exp(co[1, "coef"] + z * co[1, "se(coef)"]),
-                       "iterative"))
-      })
+      cmle_or = list(
+        est = leaf(exp(co[1, "coef"]), "iterative"),
+        lower = leaf(exp(co[1, "coef"] - z * co[1, "se(coef)"]),
+                     "iterative"),
+        upper = leaf(exp(co[1, "coef"] + z * co[1, "se(coef)"]),
+                     "iterative")))
   }
   expected
 }
