@@ -11,6 +11,14 @@
 //!   z = 1.96 *here, in the comparison only*, before the display rule.
 //! - Epi Info prints Risk Difference as `RD%`; the engine's
 //!   `risk.difference` leaves are 0–1, so they are compared × 100.
+//!
+//! The `means.*` keys `labels.json` (v1.0 Task 4) maps from `MEANS
+//! AGE`/`MEANS AGE SEX` resolve against the grouped run's serialized
+//! result — `means.overall.*`, `means.groups[i].*`, `means.t_test.*`,
+//! `means.anova.*`, `means.bartlett.*` and `means.kruskal_wallis.*`.
+//! Epi Info's interpolated-t Welch confidence limits are unmapped
+//! (`key: null`) because the engine uses the exact t quantile at the
+//! fractional Welch df (owner decision, v1.0 Task 4).
 
 use super::compare::Mismatch;
 use crate::EngineError;

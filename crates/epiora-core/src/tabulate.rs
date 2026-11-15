@@ -14,12 +14,15 @@
 //! `levels` is `AmbiguousLevels`, never a guess).
 
 mod categories;
+mod groups;
 
 use crate::dataset::{ColumnData, Dataset};
 use crate::procedures::VarSpec;
 use crate::EngineError;
 use categories::{collect, orient, resolved, Cats};
 use std::collections::BTreeMap;
+
+pub use groups::{group_numeric, Groups};
 
 /// Sparse-stratum fallback bound: a dense `strata × rows × cols` cell
 /// vector is allocated only below this many cells.

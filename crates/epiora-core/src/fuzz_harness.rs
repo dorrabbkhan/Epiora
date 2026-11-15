@@ -12,7 +12,8 @@
 use crate::corpus::load_dataset;
 use crate::dataset::{Column, ColumnData, Dataset, Value};
 use crate::procedures::{
-    freq, tables, FreqOptions, ProportionCi, RunContext, TablesOptions, VarSpec,
+    freq, means, tables, FreqOptions, MeansOptions, ProportionCi, RunContext, TablesOptions,
+    VarSpec,
 };
 use crate::EngineError;
 use arbitrary::{Arbitrary, Result, Unstructured};
@@ -352,6 +353,47 @@ pub fn tables_any(data: &[u8]) {
         include_missing: input.include_missing,
     };
     if let Ok(out) = tables(&ds, &opts, &ctx()) {
+        check_result(&out.result);
+    }
+}
+
+struct FuzzMeans {
+    dataset: FuzzDataset,
+    variable: u8,
+    group_by: Option<u8>,
+    include_missing: bool,
+}
+
+impl<'a> Arbitrary<'a> for FuzzMeans {
+    fn arbitrary(u: &mut Unstructured<'a>) -> Result<Self> {
+        Ok(Self {
+            dataset: u.arbitrary()?,
+            variable: u.arbitrary()?,
+            group_by: u.arbitrary()?,
+            include_missing: u.arbitrary()?,
+        })
+    }
+}
+
+/// Arbitrary dataset and `MeansOptions` into `means` (spec §6.5):
+/// `Ok` or `Err`, never a panic and no `null` in the serialized
+/// result — every statistic is a finite `Estimate` or typed
+/// `Undefined`.
+pub fn means_any(data: &[u8]) {
+    let mut u = Unstructured::new(data);
+    let Ok(input) = FuzzMeans::arbitrary(&mut u) else {
+        return;
+    };
+    let Ok(ds) = build_dataset(input.dataset) else {
+        return;
+    };
+    let names = names_of(&ds);
+    let opts = MeansOptions {
+        variable: pick(input.variable, &names),
+        group_by: input.group_by.map(|sel| pick(sel, &names)),
+        include_missing: input.include_missing,
+    };
+    if let Ok(out) = means(&ds, &opts, &ctx()) {
         check_result(&out.result);
     }
 }

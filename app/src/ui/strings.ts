@@ -238,6 +238,9 @@ export const t = {
       not_bracketed: 'the interval could not be bracketed',
       no_convergence: 'the estimate did not converge',
       unbounded: 'the estimate is unbounded',
+      too_few: 'too few observations',
+      zero_variance: 'the values carry no variance',
+      out_of_range: 'the value is out of range',
     },
   },
   lock: {
@@ -301,6 +304,8 @@ export const t = {
     invalid_options: 'The analysis options are not valid.',
     corpus_format: 'The corpus file is not valid.',
     snapshot_decode: 'The stored dataset snapshot cannot be read.',
+    not_numeric_variable: 'That variable is not numeric.',
+    too_many_groups: 'That variable has too many groups.',
     // StoreError codes
     migration_failed: 'The local database could not be upgraded.',
     tx_aborted: 'The database transaction was aborted.',

@@ -3,6 +3,7 @@
 //! flattens the per-family slices into one ordered array.
 
 mod freq;
+mod means;
 mod rxc;
 mod stratified_two_by_two;
 mod two_by_two;
@@ -10,6 +11,7 @@ mod two_by_two;
 use super::{Coverage, ToleranceClass};
 
 const LEN: usize = freq::ENTRIES.len()
+    + means::ENTRIES.len()
     + rxc::ENTRIES.len()
     + stratified_two_by_two::ENTRIES.len()
     + two_by_two::ENTRIES.len();
@@ -38,6 +40,7 @@ const fn flatten<const N: usize>(families: &[&'static [Coverage]]) -> [Coverage;
 
 pub(super) static ALL: [Coverage; LEN] = flatten(&[
     freq::ENTRIES,
+    means::ENTRIES,
     rxc::ENTRIES,
     stratified_two_by_two::ENTRIES,
     two_by_two::ENTRIES,

@@ -2,8 +2,10 @@
 //! `fuzz/regressions/<target>/` goes back through the same
 //! `fuzz_harness` function the cargo-fuzz target calls, so a crash
 //! input that still fails makes this test fail. `.gitkeep` is ignored;
-//! an empty folder is a pass. Also smokes the four harnesses on empty
-//! input, garbage bytes and a real corpus dataset.
+//! an empty folder is a pass. Also smokes the five harnesses on empty
+//! input, garbage bytes and a real corpus dataset. `snapshot_decode`
+//! is a standalone target (it does not go through `fuzz_harness`), so
+//! it is not replayed here.
 
 #![cfg(feature = "fuzzing")]
 
@@ -22,13 +24,20 @@ fn harness(target: &str) -> fn(&[u8]) {
         "dataset_columns" => fuzz_harness::dataset_columns,
         "freq_any" => fuzz_harness::freq_any,
         "tables_any" => fuzz_harness::tables_any,
+        "means_any" => fuzz_harness::means_any,
         other => panic!("unknown fuzz target {other}"),
     }
 }
 
 #[test]
 fn replays_regressions() {
-    for target in ["dataset_json", "dataset_columns", "freq_any", "tables_any"] {
+    for target in [
+        "dataset_json",
+        "dataset_columns",
+        "freq_any",
+        "tables_any",
+        "means_any",
+    ] {
         let dir = regressions_dir().join(target);
         if !dir.is_dir() {
             continue;
@@ -60,5 +69,6 @@ fn harness_handles_empty_and_garbage() {
         fuzz_harness::dataset_columns(data);
         fuzz_harness::freq_any(data);
         fuzz_harness::tables_any(data);
+        fuzz_harness::means_any(data);
     }
 }

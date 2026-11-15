@@ -278,6 +278,12 @@ pub fn run_case(
                 None,
             )
         }
+        "means" => {
+            let ds = dataset(fixture, datasets)?
+                .ok_or_else(|| corpus(format!("{id}: means fixture needs inputs.dataset")))?;
+            let (actual, output) = super::run_means::run_means(fixture, ds, &ctx())?;
+            out(actual, Some(receipt_of(&output)?))
+        }
         "freq" => {
             let ds = dataset(fixture, datasets)?
                 .ok_or_else(|| corpus(format!("{id}: freq fixture needs inputs.dataset")))?;

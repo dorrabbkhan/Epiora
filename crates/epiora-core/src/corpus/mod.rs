@@ -7,6 +7,7 @@ pub mod dataset_json;
 pub mod ei7;
 pub mod report;
 pub mod run_case;
+pub mod run_means;
 pub mod run_special;
 
 pub use dataset_json::{load_dataset, load_dataset_dir};

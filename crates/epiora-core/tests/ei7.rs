@@ -2,8 +2,10 @@
 
 use epiora_core::corpus::ei7::compare_ei7;
 use epiora_core::corpus::load_dataset;
+use epiora_core::dataset::Dataset;
 use epiora_core::procedures::{
-    freq, tables, FreqOptions, ProportionCi, RunContext, TablesOptions, TablesResult, VarSpec,
+    freq, means, tables, FreqOptions, MeansOptions, ProportionCi, RunContext, TablesOptions,
+    TablesResult, VarSpec,
 };
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
@@ -25,6 +27,23 @@ fn var(name: &str) -> VarSpec {
         name: name.to_string(),
         levels: None,
     }
+}
+
+/// `MEANS AGE SEX` on oswego, serialized for the `means` family of the
+/// ei7 map: its `overall` covers the `MEANS AGE` keys as well (the two
+/// runs' overalls are the same 75 records).
+fn means_age_sex_json(ds: &Dataset) -> Value {
+    let out = means(
+        ds,
+        &MeansOptions {
+            variable: "AGE".to_string(),
+            group_by: Some("SEX".to_string()),
+            include_missing: false,
+        },
+        &ctx(),
+    )
+    .expect("means AGE SEX");
+    serde_json::to_value(&out.result).expect("serialize means")
 }
 
 #[test]
@@ -98,9 +117,50 @@ fn oswego_matches_epi_info_7() {
         "stratified_two_by_two".to_string(),
         serde_json::to_value(&s.stats).expect("serialize stratified"),
     );
+    actual.insert("means".to_string(), means_age_sex_json(&ds));
 
     let report = compare_ei7(&ei7, &actual).expect("compare_ei7");
     assert!(report.checked >= 20, "checked {}", report.checked);
+    assert!(
+        report.mismatches.is_empty(),
+        "mismatches:\n{}",
+        report
+            .mismatches
+            .iter()
+            .map(|m| m.to_string())
+            .collect::<Vec<_>>()
+            .join("\n")
+    );
+}
+
+/// The `means.*` keys `labels.json` maps from the two MEANS commands,
+/// compared at `ei7_display` (v1.0 Task 6): the grouped run's
+/// serialized result carries the overall block the `MEANS AGE` keys
+/// name.
+#[test]
+fn ei7_means_matches_at_display() {
+    let ds = load_dataset(
+        &std::fs::read_to_string(fixtures_root().join("data/oswego.dataset.json"))
+            .expect("read oswego dataset"),
+    )
+    .expect("load oswego dataset");
+    let mut ei7: Value = serde_json::from_str(
+        &std::fs::read_to_string(fixtures_root().join("ei7/oswego.json")).expect("read ei7"),
+    )
+    .expect("parse ei7");
+    let outputs = ei7["outputs"].as_array_mut().expect("ei7 outputs");
+    outputs.retain(|o| {
+        o.get("command")
+            .and_then(Value::as_str)
+            .is_some_and(|c| c.starts_with("MEANS"))
+    });
+    assert_eq!(outputs.len(), 2, "MEANS AGE and MEANS AGE SEX");
+
+    let mut actual: BTreeMap<String, Value> = BTreeMap::new();
+    actual.insert("means".to_string(), means_age_sex_json(&ds));
+
+    let report = compare_ei7(&ei7, &actual).expect("compare_ei7");
+    assert!(report.checked >= 59, "checked {}", report.checked);
     assert!(
         report.mismatches.is_empty(),
         "mismatches:\n{}",

@@ -20,6 +20,14 @@ pub enum UndefinedReason {
     NoConvergence,
     /// The limit lies at the boundary of the conditional support.
     Unbounded,
+    /// Too few observations for the statistic (variance needs ≥ 2,
+    /// a mean needs ≥ 1).
+    TooFew,
+    /// The values carry no variance (a zero denominator).
+    ZeroVariance,
+    /// The statistic is not representable — a finite input whose
+    /// computed value overflowed or cancelled outside f64's range.
+    OutOfRange,
 }
 
 impl UndefinedReason {
@@ -32,6 +40,9 @@ impl UndefinedReason {
             UndefinedReason::NotBracketed => "not_bracketed",
             UndefinedReason::NoConvergence => "no_convergence",
             UndefinedReason::Unbounded => "unbounded",
+            UndefinedReason::TooFew => "too_few",
+            UndefinedReason::ZeroVariance => "zero_variance",
+            UndefinedReason::OutOfRange => "out_of_range",
         }
     }
 }
@@ -43,7 +54,7 @@ impl UndefinedReason {
     derive(ts_rs::TS),
     ts(
         export,
-        type = "number | { \"undefined\": \"zero_cell\" | \"zero_margin\" | \"empty_table\" | \"not_bracketed\" | \"no_convergence\" | \"unbounded\" }"
+        type = "number | { \"undefined\": \"zero_cell\" | \"zero_margin\" | \"empty_table\" | \"not_bracketed\" | \"no_convergence\" | \"unbounded\" | \"too_few\" | \"zero_variance\" | \"out_of_range\" }"
     )
 )]
 pub enum Estimate {
