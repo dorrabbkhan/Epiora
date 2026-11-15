@@ -50,6 +50,9 @@ export const ENGINE_ERROR_CODES = [
   'snapshot_decode',
   'not_numeric_variable',
   'too_many_groups',
+  'calc_unknown',
+  'calc_input_missing',
+  'calc_input_out_of_range',
 ] as const;
 
 /** `StoreError['code']` (app/src/store/types.ts). */

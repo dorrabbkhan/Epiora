@@ -3875,6 +3875,16 @@ Supersedes: —
     DefaultValue,Family,InputDef,InputKind,OutputDef}.ts` and
     `bindings/Receipt.ts` — ts-rs generated output for the new public
     types and the v3 receipt fields (regenerated, not hand-edited).
+  - `app/src/worker/errors.ts` and `app/src/ui/strings.ts` — the three
+    new engine codes (`calc_unknown`, `calc_input_missing`,
+    `calc_input_out_of_range`) mirrored into the app's code union and
+    user strings.
+  - `app/src/ui/screens/analysis/ReceiptPanel.tsx` — guards the
+    dataset-hash row: `Receipt.dataset` is `null` on v3 calculator
+    receipts.
+  - `app/src/worker/integration.browser.test.ts` — `dataset` is now
+    optional on `Receipt`; the runs it stores are procedure receipts,
+    so the assertions assert presence.
   - The Files block's `stats/{matched,trend,screening}.rs` and
     `corpus/run_calc.rs` were not created: the matched/trend/screening
     maths is package-specific (`epiR`/`epitools`/`exactci` semantics,
