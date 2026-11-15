@@ -4,4 +4,4 @@ import type { CellKind } from "./CellKind";
 /**
  * The declared shape of one calculator input (spec §5.3).
  */
-export type InputKind = "count" | { "integer": { min: number, max: number, } } | { "real": { min: number, max: number, } } | "proportion" | "percent" | "conf_level" | { "choice": { options: Array<string>, } } | { "table": { cols: number, min_rows: number, max_rows: number, cell: CellKind, } };
+export type InputKind = "count" | { "integer": { min: number, max: number, } } | { "real": { min: number, max: number, } } | "proportion" | "percent" | "conf_level" | { "choice": { options: Array<string>, } } | { "table": { cols: number, min_rows: number, max_rows: number, cell: CellKind, strata: number | null, } };

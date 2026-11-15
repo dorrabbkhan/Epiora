@@ -263,6 +263,7 @@ const ANOVA_SUMMARY_INPUTS: &[InputDef] = &[idf(
         min_rows: 2,
         max_rows: 10,
         cell: CellKind::Real,
+        strata: None,
     },
     None,
     None,

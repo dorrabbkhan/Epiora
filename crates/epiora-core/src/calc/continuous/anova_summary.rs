@@ -6,12 +6,56 @@
 
 use super::super::counts::shared::{leaf, table, undefined};
 use super::est_leaf;
+use crate::calc::input::MAX_COUNT;
 use crate::special::t_quantile;
 use crate::stats::{anova_from_summary, bartlett_from_summary, Estimate, GroupSummary};
 use crate::EngineError;
 use serde_json::{json, Value};
 
+/// Inventory `## anova_summary` row contract, which the uniform
+/// `CellKind::Real` table cannot express (the
+/// `rate_compare::check_strata` pattern): each row is one group's
+/// `[n, mean, sd]` — `n` an integer `≥ 2` and `< 2^53`, `mean` finite,
+/// `sd` finite `> 0`. Typed `calc_input_out_of_range` on `table`;
+/// without it `n = 0` underflows `g.n − 1` in
+/// `stats::means_summary` and `n` near `u64::MAX` overflows `n_tot`.
+fn check_rows(inputs: &Value) -> Result<(), EngineError> {
+    let err = |reason: &str| EngineError::CalcInputOutOfRange {
+        input: "table".into(),
+        reason: reason.into(),
+    };
+    let rows = inputs
+        .get("table")
+        .and_then(Value::as_array)
+        .ok_or_else(|| err("bad_table_shape"))?;
+    for r in rows {
+        let cells = r
+            .as_array()
+            .filter(|c| c.len() == 3)
+            .ok_or_else(|| err("bad_table_shape"))?;
+        let at = |i: usize| cells[i].as_f64().unwrap_or(f64::NAN);
+        let (n, mean, sd) = (at(0), at(1), at(2));
+        if !n.is_finite() || n.fract() != 0.0 {
+            return Err(err("not_an_integer"));
+        }
+        if n < 2.0 {
+            return Err(err("below_min"));
+        }
+        if n >= MAX_COUNT as f64 {
+            return Err(err("above_max"));
+        }
+        if !mean.is_finite() || !sd.is_finite() {
+            return Err(err("not_finite"));
+        }
+        if sd <= 0.0 {
+            return Err(err("below_min"));
+        }
+    }
+    Ok(())
+}
+
 pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
+    check_rows(inputs)?;
     let rows = table(inputs, "table");
     let groups: Vec<GroupSummary> = rows
         .iter()

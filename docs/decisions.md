@@ -4138,6 +4138,44 @@ MEANS summary builders and the `martin` polynomial machinery.
   registry `mod.rs` + `calc_rate_one.rs` / `calc_rate_compare.rs` /
   `calc_continuous.rs` (the registry is split one file per statistic
   family — no single `registry/calc.rs` exists to modify).
+- **Strata-list input contract (fix round 2, PR #77).** The strata
+  bound is now registry data — `InputKind::Table` carries
+  `strata: Option<u8>`: `Some(bound)` means the input is a strata
+  list (the flat single-stratum form or `1..=bound` nested tables),
+  `None` rejects a list-of-tables as `bad_table_shape`
+  (`screening`/`r_by_c`/`matched_case_control`/`anova_summary`
+  previously accepted and then panicked or silently misread nested
+  input). The outer cap is the inventory strata bound, not
+  `max_rows` — `dose_response` keeps 2..10 level rows per stratum but
+  caps at 9 strata. A 2×2-stratum input (`two_by_two`, `two_by_n`,
+  `rate_compare`) is now `min_rows = max_rows = 2`: a 3-row stratum
+  was silently truncated and a 1-row stratum silently padded; both
+  are `bad_table_shape` flat or nested. `dose_response`'s `strata`
+  integer is cross-checked against the list length and all strata
+  must carry the same level count (the crude table and the MH loop
+  index levels by position) — mismatches are `bad_table_shape` on
+  `strata`. `anova_summary` gains the `rate_compare::check_strata`
+  pattern: each `[n, mean, sd]` row needs `n` integer `≥ 2` and
+  `< 2^53`, `mean` finite, `sd` finite `> 0` — `n = 0` underflowed
+  `g.n − 1` and near-`u64::MAX` overflowed `n_tot` in
+  `stats::means_summary`. `mean_ci` rejects a finite
+  `population_size < n` (`below_min`); inventory requires `≥ n` or
+  `0` = infinite. `t_test_summary`/`median_ci` audit clean — their
+  declared bounds already match the inventory (n ≥ 2, sd > 0,
+  percentile 0–100). `cols == 0` tables must be uniform-width: a
+  ragged `r_by_c` rows array indexed out of bounds.
+- **Files outside the Files block (fix round 2):**
+  `calc/input.rs` (strata-bound split into `flat_table`/`table`,
+  uniform `cols == 0` width), `calc/mod.rs` (the `strata` registry
+  field — inside the block's "registry entries" but noted),
+  `calc/counts/defs.rs`, `calc/counts/defs_rest.rs`,
+  `calc/registry_rate.rs`, `calc/registry_continuous.rs` (registry
+  `strata` values), `calc/counts/dose_response.rs` (strata
+  cross-check), `calc/continuous/anova_summary.rs` (row contract),
+  `calc/continuous/mean_ci.rs` (population check),
+  `crates/epiora-wasm/bindings/InputKind.ts` (regenerated for the new
+  field), `crates/epiora-core/tests/calc_registry.rs` (the round-2
+  tests).
 Evidence: `cargo test -p epiora-core --all-features` all green —
 `every_person_time_fixture_matches` (11 fixtures incl. `zero_event`,
 `support_max`, `large_counts`), `every_continuous_fixture_matches`

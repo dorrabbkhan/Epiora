@@ -27,6 +27,15 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
         _ => sd_value,
     };
     let pop = num(inputs, "population_size");
+    // Inventory: `population_size` is `≥ n` or `0` = infinite — a
+    // finite population below the sample size is outside the
+    // contract (it would take √ of a negative FPC factor).
+    if pop != 0.0 && pop < n {
+        return Err(EngineError::CalcInputOutOfRange {
+            input: "population_size".into(),
+            reason: "below_min".into(),
+        });
+    }
     let c = conf(inputs);
     let fpc = if pop > 0.0 && pop < POP_SENTINEL {
         libm::sqrt((pop - n) / (pop - 1.0))

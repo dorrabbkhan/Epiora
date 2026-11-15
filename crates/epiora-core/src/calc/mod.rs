@@ -74,12 +74,17 @@ pub enum InputKind {
     Choice { options: &'static [&'static str] },
     /// A table: `min_rows..=max_rows` rows; each row `cols` cells of
     /// `cell` kind — or `cols == 0` for a calculator-defined column
-    /// count (validated inside the calculator).
+    /// count (uniform across rows, 2..=10 wide). `strata` is the
+    /// inventory's strata bound: `Some(bound)` means the input is a
+    /// strata list — the flat single-stratum form or a list of
+    /// `1..=bound` tables of this spec; `None` rejects a nested
+    /// list-of-tables as `bad_table_shape`.
     Table {
         cols: u8,
         min_rows: u8,
         max_rows: u8,
         cell: CellKind,
+        strata: Option<u8>,
     },
 }
 

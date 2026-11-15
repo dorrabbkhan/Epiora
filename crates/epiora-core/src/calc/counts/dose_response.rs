@@ -79,10 +79,32 @@ fn xmh(strata: &[Vec<[f64; 3]>], correct: bool) -> [f64; 2] {
 }
 
 pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
-    let strata: Vec<Vec<[f64; 3]>> = inputs["table"]
-        .as_array()
-        .map(|s| s.iter().map(stratum_table).collect())
-        .unwrap_or_default();
+    let err = |reason: &str| EngineError::CalcInputOutOfRange {
+        input: "strata".into(),
+        reason: reason.into(),
+    };
+    let items = inputs["table"].as_array().cloned().unwrap_or_default();
+    let nested = !items.is_empty()
+        && items
+            .iter()
+            .all(|e| e.as_array().is_some_and(|r| r.iter().all(Value::is_array)));
+    // The flat form is the single stratum; the nested form a list of
+    // strata tables — `validate` has already shaped each element.
+    let strata: Vec<Vec<[f64; 3]>> = if nested {
+        items.iter().map(stratum_table).collect()
+    } else {
+        vec![stratum_table(&inputs["table"])]
+    };
+    // The `strata` input declares the stratum count — a list that
+    // disagrees with it is outside the contract, as is a stratum set
+    // whose level counts differ (the crude table and the MH loop
+    // index levels by position).
+    if strata.len() as u64 != cnt(inputs, "strata") {
+        return Err(err("bad_table_shape"));
+    }
+    if strata.iter().any(|s| s.len() != strata[0].len()) {
+        return Err(err("bad_table_shape"));
+    }
     let crude: Vec<[f64; 3]> = strata
         .first()
         .map(|s| {
