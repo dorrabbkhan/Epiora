@@ -5,7 +5,7 @@
 //! family). Iterative reference values are in `exact_or.rs` and
 //! `martin.rs`.
 
-use crate::special::{binomial_tail, chisq_sf, ln_gamma, normal_quantile};
+use crate::special::{chisq_sf, ln_gamma, normal_quantile, reg_inc_beta, reg_inc_beta_upper};
 use crate::stats::estimate::UndefinedReason;
 use serde_json::{json, Value};
 
@@ -146,6 +146,40 @@ pub fn chi_p(x: f64, df: f64) -> f64 {
     chisq_sf(x, df).clamp(0.0, 1.0)
 }
 
+/// `pbinom(x, n, p, lower.tail)` — the calc-only O(1) binomial tail,
+/// R's own `pbeta(p, x + 1, n − x, lower.tail = !lower.tail)`
+/// identity (pbinom.c L44-47) on the regularised incomplete beta.
+/// `special::binomial_tail`'s literal log-space sum is O(n) — it
+/// stays untouched for the non-calc corpus and the native/wasm
+/// parity output it is bound to; the calculators take this path so
+/// valid counts below 2^53 terminate (Review Focus 1/3). The edge
+/// semantics are `binomial_tail`'s: mass at 0 for `p <= 0`, at `n`
+/// for `p >= 1`, full/empty range for `x >= n`.
+pub fn pbinom(x: u64, n: u64, p: f64, lower: bool) -> f64 {
+    if p.is_nan() {
+        return f64::NAN;
+    }
+    if p <= 0.0 {
+        return if lower { 1.0 } else { 0.0 };
+    }
+    if p >= 1.0 {
+        return if lower {
+            f64::from(x >= n)
+        } else {
+            f64::from(x < n)
+        };
+    }
+    if x >= n {
+        return if lower { 1.0 } else { 0.0 };
+    }
+    let (a, b) = ((x + 1) as f64, (n - x) as f64);
+    if lower {
+        reg_inc_beta_upper(p, a, b)
+    } else {
+        reg_inc_beta(p, a, b)
+    }
+}
+
 /// `pbinom` tails in the R spellings used by the corpus.
 pub struct BinomTails {
     /// `P(X < x)`.
@@ -164,15 +198,15 @@ pub fn binom_tails(x: u64, n: u64, p: f64) -> BinomTails {
         lt: if x == 0 {
             0.0
         } else {
-            binomial_tail(x - 1, n, p, true)
+            pbinom(x - 1, n, p, true)
         },
-        le: binomial_tail(x, n, p, true),
+        le: pbinom(x, n, p, true),
         ge: if x == 0 {
             1.0
         } else {
-            binomial_tail(x - 1, n, p, false)
+            pbinom(x - 1, n, p, false)
         },
-        gt: binomial_tail(x, n, p, false),
+        gt: pbinom(x, n, p, false),
     }
 }
 

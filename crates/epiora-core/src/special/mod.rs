@@ -26,6 +26,7 @@ mod root;
 mod t_dist;
 mod zeroin;
 
+pub(crate) use beta::reg_inc_beta_upper;
 pub use beta::{beta_quantile, reg_inc_beta};
 pub use chisq::{chisq_cdf, chisq_sf};
 pub use discrete::poisson_tail;

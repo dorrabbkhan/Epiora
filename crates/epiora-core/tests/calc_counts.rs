@@ -143,6 +143,131 @@ fn leaf_number(v: &Value) -> Option<f64> {
     v.as_f64()
 }
 
+/// Every leaf is a finite number or an `{"undefined"}` object — a
+/// bare `null` means a NaN escaped into `Value::from`.
+fn assert_finite_tree(v: &Value, id: &str) {
+    match v {
+        Value::Null => panic!("{id}: null leaf — a NaN reached the result tree"),
+        Value::Number(n) => assert!(n.as_f64().is_some_and(f64::is_finite)),
+        Value::Array(items) => items.iter().for_each(|i| assert_finite_tree(i, id)),
+        Value::Object(map) => map.values().for_each(|i| assert_finite_tree(i, id)),
+        Value::String(_) | Value::Bool(_) => {}
+    }
+}
+
+/// Review Focus 1/3 (PR #74 fix): valid counts below 2^53 must
+/// return `Ok` or a typed `Err`, never hang — the O(n) literal
+/// binomial sums now go through `pbinom` (R's `pbeta` identity on
+/// the regularised incomplete beta) and `matched_n` aggregates per
+/// stratum shape. Sizes 1e6, 1e9 and 2^53−1 for every calculator
+/// whose paths closed-form after the rewrite. `two_by_two` and
+/// `two_by_n` keep the noncentral-hypergeometric support sums and
+/// root-finding that have no closed form ("Still unbounded (owner
+/// decision)" on the PR), so they are checked at 1e6 only — the
+/// largest size that finishes.
+#[test]
+fn large_counts_terminate() {
+    let sizes = [1_000_000u64, 1_000_000_000, (1u64 << 53) - 1];
+    let check = |id: &str, inputs: Value| {
+        let t = std::time::Instant::now();
+        let res = run(id, &inputs, &ctx());
+        eprintln!("{id} {:?} in {:?}", inputs, t.elapsed());
+        if let Ok(out) = res {
+            assert_finite_tree(&out.result, id);
+        }
+    };
+    for &s in &sizes {
+        check(
+            "proportion",
+            json!({"numerator": s - 1, "denominator": s, "conf_level": 95,
+                   "population_size": 0}),
+        );
+        check(
+            "binomial",
+            json!({"numerator": s / 2, "denominator": s, "expected_percent": 50}),
+        );
+        check("poisson", json!({"observed": s, "expected": 42.5}));
+        check(
+            "smr",
+            json!({"observed": s, "expected": 42.5, "conf_level": 95}),
+        );
+        check("r_by_c", json!({"table": [[s, s], [s, s]]}));
+        check(
+            "dose_response",
+            json!({"table": [[[1.0, s, s], [2.0, s, s]],
+                            [[1.0, s, s], [3.0, s, s]]], "strata": 2}),
+        );
+        check(
+            "screening",
+            json!({"table": [[s, s], [s, s]], "conf_level": 95}),
+        );
+        check(
+            "matched_case_control",
+            json!({"controls_per_case": 1,
+                   "matched_sets": [[s, s / 2], [s / 3, s]],
+                   "conf_level": 95}),
+        );
+        check(
+            "matched_case_control",
+            json!({"controls_per_case": 4,
+                   "matched_sets": [[s, s, s, s, s], [s, s, s, s, s]],
+                   "conf_level": 95}),
+        );
+    }
+    // Hypergeometric-support paths — 1e6 is the largest size that
+    // still finishes (1e9 exceeds 60 s; 2^53−1 aborts on the support
+    // allocation), so only it is exercised here.
+    let s = 1_000_000u64;
+    check(
+        "two_by_two",
+        json!({"strata": [[[s / 2, s / 2], [s / 2, s / 2]]], "conf_level": 95}),
+    );
+    check(
+        "two_by_n",
+        json!({"strata": [[[s / 2, s / 2], [s / 2, s / 2]]], "conf_level": 95}),
+    );
+    // `matched_n` at ~1e12 sets — the shapes carry multiplicities, so
+    // this returns in O(M) memory where per-set strata needed O(N).
+    let e11 = 100_000_000_000u64;
+    check(
+        "matched_case_control",
+        json!({"controls_per_case": 4,
+               "matched_sets": [[4 * e11, 3 * e11, 2 * e11, e11, 0],
+                                [0, e11, 2 * e11, 3 * e11, 3 * e11]],
+               "conf_level": 95}),
+    );
+    // The aggregated sums are the same quantities: the MH OR is
+    // scale-invariant, so the 1e12-set table's estimate matches the
+    // identical shape at unit multiplicity.
+    let small = run(
+        "matched_case_control",
+        &json!({"controls_per_case": 4,
+                "matched_sets": [[4, 3, 2, 1, 0], [0, 1, 2, 3, 3]],
+                "conf_level": 95}),
+        &ctx(),
+    )
+    .expect("matched_n unit");
+    let big = run(
+        "matched_case_control",
+        &json!({"controls_per_case": 4,
+                "matched_sets": [[4 * e11, 3 * e11, 2 * e11, e11, 0],
+                                 [0, e11, 2 * e11, 3 * e11, 3 * e11]],
+                "conf_level": 95}),
+        &ctx(),
+    )
+    .expect("matched_n 1e12");
+    let (a, b) = (
+        small.result["matched_n"]["mh_or"]["est"].as_f64(),
+        big.result["matched_n"]["mh_or"]["est"].as_f64(),
+    );
+    match (a, b) {
+        (Some(a), Some(b)) => {
+            assert!((a - b).abs() <= 1e-12 * b.abs().max(1.0), "{a} vs {b}")
+        }
+        _ => assert_eq!(a, b),
+    }
+}
+
 proptest! {
     /// PPV and NPV estimates always land in [0, 1] — or are typed
     /// Undefined when the margins make them incalculable (spec §5.3).

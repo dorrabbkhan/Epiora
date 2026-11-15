@@ -3843,6 +3843,22 @@ Supersedes: —
 - **Canonical defaults serialize integral values as JSON integers** —
   `conf_level: 95`, never `95.0` — so the canonical-input hash is
   stable across engines that distinguish the two.
+- **Large counts take the mathematically exact path (PR #74 review
+  fix).** Valid counts `< 2^53` no longer drive O(n) work: counts
+  calculators call a calc-only `pbinom` — R `pbinom`'s own
+  `pbeta(p, x+1, n−x, !lower.tail)` identity on the Task 5
+  `reg_inc_beta`/`reg_inc_beta_upper` — instead of
+  `special::binomial_tail`'s literal sum (untouched; the non-calc
+  corpus and the native/wasm parity output are bound to it);
+  `pair()`'s `fisher_2t` binary-searches the `1+1e-7` tie band on the
+  symmetric `Binom(n, 0.5)` and sums the two equal tails with
+  `pbinom`; `matched_n` accumulates the ≤ `2·(M+1)` stratum shapes
+  times their multiplicities instead of allocating one `Table2x2`
+  per set (O(M) memory at ~1e12 sets). No input cap, work limit or
+  new `Undefined` reason was added. `two_by_two`/`two_by_n` keep the
+  noncentral-hypergeometric support sums and OR roots, which have no
+  closed form — reported on the PR under "Still unbounded (owner
+  decision)", not capped.
 - **Files outside the Files block:**
   - `crates/epiora-core/src/special/zeroin.rs` + `special/mod.rs` —
     the `uniroot` port above.

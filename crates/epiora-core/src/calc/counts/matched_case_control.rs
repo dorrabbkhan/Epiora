@@ -7,7 +7,6 @@
 
 use super::shared::*;
 use crate::error::EngineError;
-use crate::stats::Table2x2;
 use serde_json::{json, Value};
 
 /// The 1:1 block: `matched_expected` with `controls_per_case == 1`.
@@ -43,12 +42,27 @@ fn pair(inputs: &Value, conf: f64) -> Value {
     let pm = 0.5 * dbinom(db, n, 0.5);
     let fisher_1t = tails.le.min(tails.ge);
     // binom.test's two-sided p: mass at most 1+1e-7 times observed.
+    // Binom(n, 0.5) is symmetric and unimodal, so the qualifying set
+    // is [0, L] ∪ [n−L, n] — two equal tails. L is the largest index
+    // in the lower half whose mass passes the same `1 + 1e-7` band
+    // the literal pass used; binary search finds it in O(log n)
+    // `dbinom` calls and `pbinom` sums both tails exactly.
     let d_obs = dbinom(db, n, 0.5);
-    let fisher_2t = (0..=n)
-        .map(|i| dbinom(i, n, 0.5))
-        .filter(|&p| p <= d_obs * (1.0 + 1e-7))
-        .sum::<f64>()
-        .min(1.0);
+    let threshold = d_obs * (1.0 + 1e-7);
+    let fisher_2t = if dbinom(0, n, 0.5) > threshold {
+        0.0
+    } else {
+        let (mut lo, mut hi) = (0u64, n / 2);
+        while lo < hi {
+            let mid = lo + (hi - lo).div_ceil(2);
+            if dbinom(mid, n, 0.5) <= threshold {
+                lo = mid;
+            } else {
+                hi = mid - 1;
+            }
+        }
+        (2.0 * pbinom(lo, n, 0.5, true)).min(1.0)
+    };
     let midp_p = (2.0 * (tails.le - pm).min(tails.ge - pm)).min(1.0);
     json!({
         "mcnemar": { "value": leaf(chi), "p": leaf(chi_p(chi, 1.0)) },
@@ -68,45 +82,38 @@ fn pair(inputs: &Value, conf: f64) -> Value {
 }
 
 /// The 1:n block: each matched set is one 2×2 stratum
-/// `[[case_exp, k], [case_unexp, M-k]]` under `mantelhaen.test`.
+/// `[[case_exp, k], [case_unexp, M-k]]` under `mantelhaen.test`. The
+/// sums are linear over identical strata, so the 2·(M+1) ≤ 10
+/// distinct (case_exp, k) shapes carry each accumulated term times
+/// its multiplicity — O(M) work and memory for any valid counts,
+/// where enumerating one stratum per set was O(Σ cells) (Review
+/// Focus 1/3).
 fn matched_n(inputs: &Value, conf: f64) -> Value {
     let m = cnt(inputs, "controls_per_case");
     let t = count_table(inputs, "matched_sets");
     let zz = z(conf);
-    let mut strata: Vec<Table2x2> = Vec::new();
-    for (case_exp, row) in t.iter().enumerate().take(2) {
-        for (k, &cnt_) in row.iter().enumerate() {
-            for _ in 0..cnt_ {
-                strata.push(if case_exp == 0 {
-                    Table2x2 {
-                        a: 1,
-                        b: k as u64,
-                        c: 0,
-                        d: m - k as u64,
-                    }
-                } else {
-                    Table2x2 {
-                        a: 0,
-                        b: k as u64,
-                        c: 1,
-                        d: m - k as u64,
-                    }
-                });
-            }
-        }
-    }
     let (mut delta, mut var, mut sd_, mut so_): (f64, f64, f64, f64) = (0.0, 0.0, 0.0, 0.0);
     let (mut rg_a, mut rg_b, mut rg_c) = (0.0, 0.0, 0.0);
-    for t in &strata {
-        let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
-        let (n1, n0, m1, m0, n) = (a + b, c + d, a + c, b + d, a + b + c + d);
-        delta += a - n1 * m1 / n;
-        var += n1 * n0 * m1 * m0 / (n * n * (n - 1.0));
-        sd_ += a * d / n;
-        so_ += b * c / n;
-        rg_a += (a + d) * a * d / (n * n);
-        rg_b += ((a + d) * b * c + (b + c) * a * d) / (n * n);
-        rg_c += (b + c) * b * c / (n * n);
+    for (case_exp, row) in t.iter().enumerate().take(2) {
+        for (k, &mult) in row.iter().enumerate() {
+            if mult == 0 {
+                continue;
+            }
+            let (a, b, c, d) = if case_exp == 0 {
+                (1.0, k as f64, 0.0, (m - k as u64) as f64)
+            } else {
+                (0.0, k as f64, 1.0, (m - k as u64) as f64)
+            };
+            let mult = mult as f64;
+            let (n1, n0, m1, m0, n) = (a + b, c + d, a + c, b + d, a + b + c + d);
+            delta += mult * (a - n1 * m1 / n);
+            var += mult * (n1 * n0 * m1 * m0 / (n * n * (n - 1.0)));
+            sd_ += mult * (a * d / n);
+            so_ += mult * (b * c / n);
+            rg_a += mult * ((a + d) * a * d / (n * n));
+            rg_b += mult * (((a + d) * b * c + (b + c) * a * d) / (n * n));
+            rg_c += mult * ((b + c) * b * c / (n * n));
+        }
     }
     let chi = delta * delta / var;
     let chi_cc = {

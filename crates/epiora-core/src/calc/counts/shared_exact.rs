@@ -3,8 +3,8 @@
 //! intervals, which `zeroin` at R `uniroot`'s default tolerance
 //! reproduces bit for bit.
 
-use super::shared::{dbinom, dpois};
-use crate::special::{binomial_tail, gamma_quantile};
+use super::shared::{dbinom, dpois, pbinom};
+use crate::special::gamma_quantile;
 
 /// `exactci::binom.exact`'s mid-p `p.L(x, alpha)`: the uniroot
 /// (default tolerance) of `P(X >= x) - dbinom(x)/2 - alpha` on
@@ -17,7 +17,7 @@ fn binom_midp_lower(x: u64, n: u64, alpha: f64) -> f64 {
         return 1.0;
     }
     crate::special::zeroin(
-        |p| binomial_tail(x - 1, n, p, false) - 0.5 * dbinom(x, n, p) - alpha,
+        |p| pbinom(x - 1, n, p, false) - 0.5 * dbinom(x, n, p) - alpha,
         0.0,
         1.0,
         crate::special::UNIROOT_TOL,
@@ -34,7 +34,7 @@ fn binom_midp_upper(x: u64, n: u64, alpha: f64) -> f64 {
         return 0.0;
     }
     crate::special::zeroin(
-        |p| binomial_tail(x, n, p, true) - 0.5 * dbinom(x, n, p) - alpha,
+        |p| pbinom(x, n, p, true) - 0.5 * dbinom(x, n, p) - alpha,
         0.0,
         1.0,
         crate::special::UNIROOT_TOL,
