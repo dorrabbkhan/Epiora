@@ -47,15 +47,15 @@
       },
       "cmle_or": {
         "est": {
-          "value": null,
+          "value": 2.1750734364802318,
           "class": "iterative"
         },
         "lower": {
-          "value": null,
+          "value": 1.1954040577809311,
           "class": "iterative"
         },
         "upper": {
-          "value": null,
+          "value": 3.9576111719615006,
           "class": "iterative"
         }
       }

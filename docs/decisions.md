@@ -3927,3 +3927,82 @@ Supersedes: —
     not generic stats APIs) and lives in `calc/counts/*`; the `calc.*`
     delegation is the single run_case branch the conductor note asked
     for.
+
+### v1.0 Task 2 follow-up — clogit strata (1:n cmle_or) and smr conf_level kind (2026-11-15)
+
+Owner-approved fixtures follow-up (owner decision:
+<https://github.com/dorrabbkhan/Epiora/pull/74#issuecomment-6898203468>),
+same class as the earlier #66/#68/#71 follow-ups; fixtures still change
+only via `Rscript fixtures/generate.R`.
+
+- **Cause.** Two bugs, found in sequence. (a)
+  `matched_expected`'s 1:n branch in `fixtures/R/calc.R`
+  called `survival::clogit(case ~ exposed + strata(stratum), data = …)`
+  with `strata` not in scope (survival is used qualified and never
+  attached), so the call raised `could not find function "strata"`. A
+  `tryCatch(…, error = function(e) NULL)` swallowed it and wrote all six
+  `calc.matched_case_control.matched_n.cmle_or.{est,lower,upper}` leaves
+  as Undefined (`leaf(NA)`). (b) Once `strata` resolved, the same
+  expansion inverted the case's exposure flag: `exposed = case_exp - 1`
+  writes the row-1 (exposed) case as 0 and the row-2 (unexposed) case
+  as 1 — the Mantel–Haenszel block above it uses the correct
+  orientation (`case_exp == 1` → exposed), so `matched_n.mh_or` was
+  right while `matched_n.cmle_or` carried the flipped estimate. A
+  hand-written conditional likelihood from `matched_sets` gives
+  est 1.721389 (1:2) / 2.175073 (1:4) with the correct orientation and
+  exactly the first cut's 1.592878 / 3.764807 with the case flipped.
+- **Fix (`fixtures/R/calc.R` only).** `survival::clogit` re-evaluates a
+  literal `coxph` call in its caller's frame and resolves `Surv()` and
+  `strata()` through the formula's environment, so `coxph`/`Surv` are
+  bound in a `local({…})` scope and the strata term is the namespaced
+  `survival::strata(stratum)` (namespaced specials are detected under
+  R 4.6.2); the case's exposure flag is `2 - case_exp` (row 1 =
+  exposed). The method is unchanged: conditional logistic regression,
+  one stratum per matched set, Wald CI on the coefficient,
+  `survival::clogit`. The `tryCatch`/NULL branch is removed — a real
+  clogit failure now stops generation instead of writing Undefined.
+- **Generation-time guard (fix round 1).** `matched_cmle_direct`
+  refits the conditional likelihood straight from `matched_sets` —
+  set contribution `psi^e / (t*psi + M + 1 - t)`, `t = e + k` — and
+  `check_clogit_direct` asserts the clogit estimate agrees to 1e-6
+  relative; `check_pair_cmle` asserts the M = 1 direct fit equals the
+  classic pair-matched CMLE `b/c` when `b, c > 0`. Demonstrated: with
+  the guard in place and the inverted flag still present,
+  `Rscript fixtures/generate.R` stops with `clogit direct-fit check
+  failed for matched_1to2.matched_n.cmle_or: direct=1.721389216246425
+  clogit=1.5928784011722343`; after the fix generation completes.
+- **Changed-leaf census** (`git diff` plus a leaf-level walk of every
+  JSON under `fixtures/`, before vs after regeneration): exactly six
+  leaves — `matched_1to2` and `matched_1to4`
+  `expected.matched_n.cmle_or.{est,lower,upper}`, null → numbers. Every
+  other fixture file is byte-identical, including the LO-regenerated
+  `import/xls_basic/input.xls`. The only other local drift is the known
+  platform-ulp pair in `t_quantile.json` (`qt(0.25, 1)`/`qt(0.75, 1)` →
+  ∓1.0000000000000002 on this machine's R build, exactly ∓1 on the
+  workflow build — owner-accepted CI-generator bytes, PR #71 option B1);
+  that file was restored and is unchanged in this PR.
+- **Independent check** (fresh `Rscript`, code + output pasted in the
+  PR): the expansion and the fit were rebuilt from each fixture's
+  `inputs.matched_sets` — `survival::coxph(…, method = "exact")` on a
+  freshly expanded data frame plus a hand-rolled conditional-
+  likelihood score root from `matched_sets` itself. All six leaves are
+  bit-identical to `coxph(method = "exact")`, and the hand-rolled
+  estimates agree to ~1e-11 relative. The first cut's "independent
+  check" had re-run `clogit` on the generator's own expansion, so it
+  could not catch the orientation bug; this round's check re-derives
+  the expansion from the fixture inputs. Fixture values:
+  `matched_1to2` est 1.7213892162463522, CI
+  [0.9480759477623332, 3.125467786418363]; `matched_1to4` est
+  2.1750734364802318, CI [1.1954040577809311, 3.9576111719615006].
+- **`smr` `conf_level` kind → `percent`.** One line in
+  `docs/v1.0-calculators.md`: the committed
+  `fixtures/calc/smr/conf_97` case (conf_level 97) is authoritative —
+  any level is allowed. Ury–Wiggins (90/95/99 only) and Vandenbroucke
+  (95 only) stay `Undefined{reason}` elsewhere, as the inventory line
+  already states.
+- **Known CI consequence.** The engine still emits
+  `Undefined{reason}` for `matched_n.cmle_or` (the stacked engine
+  follow-up implements it), so the engine corpus check fails on these
+  six leaves by design in this PR; no `crates/` code is changed.
+- Files outside the follow-up's scope list: `docs/decisions.md` (this
+  entry).

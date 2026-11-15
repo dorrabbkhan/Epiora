@@ -634,6 +634,80 @@ dose_response_write <- function(id, strata, conf = 95) {
 
 # --- matched_case_control -------------------------------------------------
 
+# Generation-time guard (fix round 1): the 1:n cmle_or estimate comes
+# from survival::clogit on an expanded one-row-per-member data frame,
+# so an orientation bug in that expansion silently flips the
+# reference (it did: `case_exp - 1` wrote the exposed case as
+# unexposed). matched_cmle_direct refits the conditional likelihood
+# straight from `matched_sets` — a set with case exposure e and k of
+# M controls exposed contributes psi^e / (t*psi + M + 1 - t), t = e +
+# k exposed members — and check_clogit_direct asserts the two
+# estimates agree to 1e-6 relative (the iterative tolerance class).
+# Non-finite sides agree only when they are the same kind, as in
+# check_tight.
+matched_cmle_direct <- function(matched_sets, controls_per_case) {
+  M <- controls_per_case
+  # Count of sets with case exposure e (row 2 - e) and k exposed
+  # controls. M >= 2 stores counts at column k + 1; M = 1 stores the
+  # OpenEpi pair table [[a, b], [c, d]] whose columns are control
+  # exposure (exposed, unexposed), i.e. column M + 1 - k.
+  cnt <- function(e, k) {
+    matched_sets[2 - e, if (M == 1) M + 1 - k else k + 1]
+  }
+  score <- function(beta) {
+    psi <- exp(beta)
+    s <- 0
+    for (e in 0:1) {
+      for (k in 0:M) {
+        n <- cnt(e, k)
+        if (n > 0) {
+          t <- e + k
+          # `(M + 1 - t)` first: `t*psi + M + 1 - t` evaluated left
+          # to right absorbs a tiny t*psi into M before the
+          # subtraction and cancels to 0.
+          s <- s + n * (e - t * psi / (t * psi + (M + 1 - t)))
+        }
+      }
+    }
+    s
+  }
+  # Boundary sets: e = 1 with k < M pushes the estimate up, e = 0
+  # with k > 0 pushes it down. A missing side puts the conditional
+  # MLE on the boundary; both missing means a flat likelihood.
+  up <- sum(vapply(0:(M - 1), function(k) cnt(1, k), numeric(1)))
+  down <- sum(vapply(1:M, function(k) cnt(0, k), numeric(1)))
+  if (up == 0) return(if (down == 0) NA else 0)
+  if (down == 0) return(Inf)
+  exp(uniroot(score, c(-40, 40), tol = 1e-12)$root)
+}
+
+check_clogit_direct <- function(matched_sets, controls_per_case,
+                                cl_est, what) {
+  direct <- matched_cmle_direct(matched_sets, controls_per_case)
+  bad <- if (is.finite(direct) && is.finite(cl_est)) {
+    abs(direct - cl_est) > 1e-6 * abs(cl_est)
+  } else {
+    val_kind(direct) != val_kind(cl_est)
+  }
+  stop_if(bad, sprintf(paste0(
+    "clogit direct-fit check failed for %s: direct=%s clogit=%s"),
+    what, format(direct, digits = 17), format(cl_est, digits = 17)))
+  invisible(TRUE)
+}
+
+# For M = 1 the direct fit must reduce to the classic pair-matched
+# CMLE b/c (discordant-pair counts) whenever b and c are positive.
+check_pair_cmle <- function(matched_sets, what) {
+  b <- matched_sets[1, 2]; cc <- matched_sets[2, 1]
+  if (b == 0 || cc == 0) return(invisible(TRUE))
+  direct <- matched_cmle_direct(matched_sets, 1)
+  bc <- b / cc
+  stop_if(abs(direct - bc) > 1e-6 * bc, sprintf(paste0(
+    "pair-matched CMLE check failed for %s: direct=%s b/c=%s"),
+    what, format(direct, digits = 17), format(bc, digits = 17)))
+  invisible(TRUE)
+}
+
 matched_expected <- function(matched_sets, controls_per_case, conf, id) {
   expected <- list()
   if (controls_per_case == 1) {
@@ -688,6 +762,7 @@ matched_expected <- function(matched_sets, controls_per_case, conf, id) {
         fisher_p_1t = leaf(b1, "iterative"),
         fisher_p_2t = leaf(bt$p.value, "iterative")),
       discordant_pairs = leaf(discordant_pairs(disc_b, disc_c)))
+    check_pair_cmle(matched_sets, paste0(id, ".cmle_or"))
   }
   if (controls_per_case >= 2) {
     # 1:n matched sets: each set becomes one 2x2 stratum
@@ -726,7 +801,7 @@ matched_expected <- function(matched_sets, controls_per_case, conf, id) {
             rows[[sid]] <- data.frame(
               stratum = sid,
               case = c(1, rep(0, controls_per_case)),
-              exposed = c(case_exp - 1,
+              exposed = c(2 - case_exp,
                           c(rep(1, k),
                             rep(0, controls_per_case - k))))
           }
@@ -734,10 +809,24 @@ matched_expected <- function(matched_sets, controls_per_case, conf, id) {
       }
     }
     sets_df <- do.call(rbind, rows)
-    cl <- tryCatch(
-      survival::clogit(case ~ exposed + strata(stratum),
-                       data = sets_df),
-      error = function(e) NULL)
+    # clogit re-evaluates a literal `coxph` call in its caller's
+    # frame and resolves Surv()/strata() through the formula's
+    # environment, so coxph/Surv are bound in a local scope and the
+    # strata term is namespaced. No tryCatch: a real failure here
+    # stops generation instead of writing Undefined.
+    co <- local({
+      coxph <- survival::coxph
+      Surv <- survival::Surv
+      summary(survival::clogit(
+        case ~ exposed + survival::strata(stratum),
+        data = sets_df))$coefficients
+    })
+    # Guard: the clogit estimate must agree with a conditional-
+    # likelihood fit computed straight from matched_sets, so an
+    # orientation bug in the expansion above stops generation.
+    check_clogit_direct(matched_sets, controls_per_case,
+                        exp(co[1, "coef"]),
+                        paste0(id, ".matched_n.cmle_or"))
     z <- qnorm((1 + conf / 100) / 2)
     expected$matched_n <- list(
       mh_or = list(
@@ -750,19 +839,12 @@ matched_expected <- function(matched_sets, controls_per_case, conf, id) {
       mh_chisq_cc = list(
         value = leaf(unname(mhc$statistic)),
         p = leaf(mhc$p.value)),
-      cmle_or = if (is.null(cl)) {
-        list(est = leaf(NA, "iterative"),
-             lower = leaf(NA, "iterative"),
-             upper = leaf(NA, "iterative"))
-      } else {
-        co <- summary(cl)$coefficients
-        list(
-          est = leaf(exp(co[1, "coef"]), "iterative"),
-          lower = leaf(exp(co[1, "coef"] - z * co[1, "se(coef)"]),
-                       "iterative"),
-          upper = leaf(exp(co[1, "coef"] + z * co[1, "se(coef)"]),
-                       "iterative"))
-      })
+      cmle_or = list(
+        est = leaf(exp(co[1, "coef"]), "iterative"),
+        lower = leaf(exp(co[1, "coef"] - z * co[1, "se(coef)"]),
+                     "iterative"),
+        upper = leaf(exp(co[1, "coef"] + z * co[1, "se(coef)"]),
+                     "iterative")))
   }
   expected
 }
