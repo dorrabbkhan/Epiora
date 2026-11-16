@@ -4283,3 +4283,46 @@ m1 = 2e6+1 → 0:00.00 / 3,060 kB (all five leaves `too_large`);
 9 strata × 2e6 → 0:30.59 / 49,700 kB (all strata compute; crude
 `too_large`).
 Supersedes: —
+### v1.0 Task 8 follow-up — T4 total person-time support cap (2026-11-16)
+
+Decision: Apply the owner's T4 decision recorded on [PR #78, comment
+6912652577](https://github.com/dorrabbkhan/Epiora/pull/78#issuecomment-6912652577)
+(escalation [comment
+6905524130](https://github.com/dorrabbkhan/Epiora/pull/78#issuecomment-6905524130))
+— option (a): cap `Σm1` across the call's informative strata at
+2,000,000 for `rate_compare` `cmle_rr`.
+
+- **T4 — `MAX_PT_TOTAL_SUPPORT = 2_000_000`** next to
+  `MAX_PT_SUPPORT` in `calc/counts/shared.rs`. `rate_compare`
+  computes each stratum's `cmle_rr` on its own single-stratum slice,
+  so `martin_pt::too_large` never saw the call's total; the new
+  `martin_pt::call_too_large` sums `m1 = rint(a + b)` over the
+  call's informative strata (no convolution-work term — the strata
+  are never convolved together) and `rate_compare::run` decides it
+  once before any per-stratum work. Above the cap every stratum's
+  and the crude `cmle_rr.*` leaves are `{"undefined": "too_large"}`;
+  below it nothing changes. `too_large` itself also sums `m1` over
+  its slice — a multi-stratum slice trips at the same total — while
+  the per-stratum `MAX_PT_SUPPORT` and the 1e8
+  `MAX_EXACT_CONVOLUTION_WORK` checks stay. Pure arithmetic before
+  any allocation. `large_counts` (m1 = 1.2e6, single stratum) still
+  computes.
+- **Files outside the Files block:**
+  `crates/epiora-core/src/calc/counts/shared.rs` (the constant),
+  `crates/epiora-core/src/calc/person_time/{martin_pt,rate_compare}.rs`
+  (the checks and the call-level plumbing),
+  `crates/epiora-core/tests/calc_person_time.rs` (the new test plus
+  added cases in `rate_compare_too_large_is_bounded`),
+  `docs/decisions.md` (this entry).
+Evidence: `cargo test -p epiora-core --all-features` green —
+`pt_total_support_limit_is_2e6`, `pt_support_limit_is_2e6`,
+`rate_compare_too_large_is_bounded`,
+`every_person_time_fixture_matches` (incl. `large_counts`, 0
+mismatches). Release `/usr/bin/time -v` (corpus-runner on scratch
+`calc.rate_compare` fixtures, exact commands in the PR body):
+2 strata × m1 = 1e6 (Σ = 2e6, worst admitted multi-stratum) →
+0:02.42 / 49,792 kB, all leaves compute; 1 stratum × m1 = 2e6 →
+0:04.24 / 49,496 kB, computes; 9 strata × m1 = 2e6 →
+0:00.00 / 3,368 kB, every stratum's and crude `cmle_rr` leaves
+`too_large` (was 0:30.59 / 49,700 kB computing strata before T4).
+Supersedes: —

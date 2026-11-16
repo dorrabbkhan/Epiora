@@ -54,6 +54,17 @@ pub const MAX_EXACT_CONVOLUTION_WORK: u64 = 100_000_000;
 /// `MAX_EXACT_CONVOLUTION_WORK` total-work cap applies on top.
 pub const MAX_PT_SUPPORT: u64 = 2_000_000;
 
+/// Owner decision T4 (v1.0 Task 8 follow-up, recorded on PR #78):
+/// `rate_compare` computes each stratum's `cmle_rr` separately, so
+/// the worst admitted call was 9 strata at `MAX_PT_SUPPORT` (~30 s
+/// release). The call's total support — `Σ m1 = rint(a + b)` over
+/// the informative strata — is therefore capped at the same
+/// 2,000,000; above it every stratum's and the crude `cmle_rr.*`
+/// leaves are `{"undefined": "too_large"}`. Checked arithmetically
+/// before any allocation; `MAX_PT_SUPPORT` and
+/// `MAX_EXACT_CONVOLUTION_WORK` stay in force per stratum.
+pub const MAX_PT_TOTAL_SUPPORT: u64 = 2_000_000;
+
 /// The hypergeometric support size of a 2×2's `a` cell given its
 /// margins — `min(n1, m1) − max(0, n1−m0) + 1` (with `n1` the first
 /// row total, `m1`/`m0` the column totals; `n1 − m0 = n1 + m1 − N`),
