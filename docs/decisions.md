@@ -4453,7 +4453,11 @@ Task 7 fail-closed family gate in `calc::run`.
   `crates/epiora-core/src/validation/registry/{calc_sample_size,
   calc_power,calc_random}.rs` + `mod.rs` (the plan's
   `registry/calc.rs` — the repository's actual split-file
-  architecture); `crates/epiora-core/src/calc/other/mod.rs` (the
+  architecture); `crates/epiora-core/src/calc/registry_power.rs`,
+  `registry_sample_size.rs` and `registry_sample_size_rest.rs` (the
+  calculator registry defs — the conductor notes mandate the
+  `registry_power.rs` edit for C2, and the `groups`/`_real` output
+  declarations for C1); `crates/epiora-core/src/calc/other/mod.rs` (the
   `other` family module root — the Files block names the leaf file
   only; `sample_size/mod.rs` and `power/mod.rs` fall under the
   `*.rs` globs)
