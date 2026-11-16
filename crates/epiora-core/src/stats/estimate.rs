@@ -32,6 +32,10 @@ pub enum UndefinedReason {
     /// size limits (v1.0 Task 7 follow-up, PR #74): the work is
     /// refused before any allocation.
     TooLarge,
+    /// The required sample size is infinite — the effect being
+    /// powered for is zero (equal proportions, a unit effect
+    /// measure, a zero mean difference; v1.0 Task 9, Review Focus 3).
+    InfiniteSampleSize,
 }
 
 impl UndefinedReason {
@@ -48,6 +52,7 @@ impl UndefinedReason {
             UndefinedReason::ZeroVariance => "zero_variance",
             UndefinedReason::OutOfRange => "out_of_range",
             UndefinedReason::TooLarge => "too_large",
+            UndefinedReason::InfiniteSampleSize => "infinite_sample_size",
         }
     }
 }
@@ -59,7 +64,7 @@ impl UndefinedReason {
     derive(ts_rs::TS),
     ts(
         export,
-        type = "number | { \"undefined\": \"zero_cell\" | \"zero_margin\" | \"empty_table\" | \"not_bracketed\" | \"no_convergence\" | \"unbounded\" | \"too_few\" | \"zero_variance\" | \"out_of_range\" | \"too_large\" }"
+        type = "number | { \"undefined\": \"zero_cell\" | \"zero_margin\" | \"empty_table\" | \"not_bracketed\" | \"no_convergence\" | \"unbounded\" | \"too_few\" | \"zero_variance\" | \"out_of_range\" | \"too_large\" | \"infinite_sample_size\" }"
     )
 )]
 pub enum Estimate {

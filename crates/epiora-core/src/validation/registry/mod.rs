@@ -7,10 +7,13 @@ mod calc_continuous;
 mod calc_dose_response;
 mod calc_matched_case_control;
 mod calc_poisson;
+mod calc_power;
 mod calc_proportion;
 mod calc_r_by_c;
+mod calc_random;
 mod calc_rate_compare;
 mod calc_rate_one;
+mod calc_sample_size;
 mod calc_screening;
 mod calc_smr;
 mod calc_two_by_n;
@@ -30,8 +33,11 @@ const LEN: usize = calc_binomial::ENTRIES.len()
     + calc_dose_response::ENTRIES.len()
     + calc_matched_case_control::ENTRIES.len()
     + calc_poisson::ENTRIES.len()
+    + calc_power::ENTRIES.len()
+    + calc_random::ENTRIES.len()
     + calc_rate_compare::ENTRIES.len()
     + calc_rate_one::ENTRIES.len()
+    + calc_sample_size::ENTRIES.len()
     + calc_proportion::ENTRIES.len()
     + calc_r_by_c::ENTRIES.len()
     + calc_screening::ENTRIES.len()
@@ -74,10 +80,13 @@ pub(super) static ALL: [Coverage; LEN] = flatten(&[
     calc_dose_response::ENTRIES,
     calc_matched_case_control::ENTRIES,
     calc_poisson::ENTRIES,
+    calc_power::ENTRIES,
+    calc_proportion::ENTRIES,
+    calc_random::ENTRIES,
     calc_rate_compare::ENTRIES,
     calc_rate_one::ENTRIES,
-    calc_proportion::ENTRIES,
     calc_r_by_c::ENTRIES,
+    calc_sample_size::ENTRIES,
     calc_screening::ENTRIES,
     calc_smr::ENTRIES,
     calc_two_by_n::ENTRIES,

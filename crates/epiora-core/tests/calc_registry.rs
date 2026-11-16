@@ -41,12 +41,9 @@ fn registry_ids_match_inventory() {
 fn every_output_has_registry_coverage() {
     let registered: BTreeSet<&str> = COVERAGE.iter().map(|c| c.statistic).collect();
     let mut missing = Vec::new();
-    // Non-counts families are registered but cannot emit yet — Tasks
-    // 8/9 add their coverage with their implementations.
-    for def in REGISTRY
-        .iter()
-        .filter(|d| d.family == epiora_core::calc::Family::Counts)
-    {
+    // All six families emit as of Task 9 — every declared output must
+    // carry a validation REGISTRY row.
+    for def in REGISTRY.iter() {
         for out in def.outputs {
             if !registered.contains(out.statistic) {
                 missing.push(format!("{}: {}", def.id, out.statistic));

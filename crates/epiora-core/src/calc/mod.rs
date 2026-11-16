@@ -2,19 +2,23 @@
 //! every calculator the engine knows, in `docs/v1.0-calculators.md`
 //! inventory order; `run` validates the inputs against the definition,
 //! dispatches the calculator and seals the result in a v3 receipt.
-//! Only the counts family is implemented in Task 7; the other families
-//! carry their inventory metadata and are added by Tasks 8 and 9.
+//! Counts came in Task 7, person-time and continuous in Task 8, and
+//! the sample-size, power and other families in Task 9.
 
 pub mod continuous;
 pub mod counts;
 pub mod input;
+mod mean_diff;
+pub mod other;
 pub mod person_time;
+pub mod power;
 mod registry;
 mod registry_continuous;
 mod registry_power;
 mod registry_rate;
 mod registry_sample_size;
 mod registry_sample_size_rest;
+pub mod sample_size;
 
 use crate::error::EngineError;
 use crate::procedures::RunContext;
@@ -211,9 +215,7 @@ pub struct CalcOutput {
 }
 
 /// Runs calculator `id` on `inputs`: validates them against the
-/// definition, computes, and seals a v3 receipt. Non-counts families
-/// are registered but not implemented in Task 7 — they fail closed
-/// with `invalid_options`, a defined error rather than a guess.
+/// definition, computes, and seals a v3 receipt.
 pub fn run(
     id: &str,
     inputs: &serde_json::Value,
@@ -225,20 +227,14 @@ pub fn run(
         });
     }
     let def = definition(id)?;
-    if !matches!(
-        def.family,
-        Family::Counts | Family::PersonTime | Family::Continuous
-    ) {
-        return Err(EngineError::InvalidOptions {
-            reason: format!("calculator {id} is registered but its family is not implemented yet"),
-        });
-    }
     let canonical = input::validate(def, inputs)?;
     let result = match def.family {
         Family::Counts => counts::run(def.id, &canonical)?,
         Family::PersonTime => person_time::run(def.id, &canonical)?,
         Family::Continuous => continuous::run(def.id, &canonical)?,
-        _ => unreachable!("family gate above"),
+        Family::SampleSize => sample_size::run(def.id, &canonical)?,
+        Family::Power => power::run(def.id, &canonical)?,
+        Family::Other => other::run(def.id, &canonical)?,
     };
 
     let mut entries = BTreeMap::new();
