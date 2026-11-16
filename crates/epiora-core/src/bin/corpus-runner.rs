@@ -38,10 +38,7 @@ fn sha256_hex(bytes: &[u8]) -> String {
 }
 
 fn run() -> Result<(), String> {
-    let args: Vec<String> = std::env::args()
-        .skip(1)
-        .skip_while(|a| a == "--")
-        .collect();
+    let args: Vec<String> = std::env::args().skip(1).skip_while(|a| a == "--").collect();
     // `corpus-runner --snapshot-hex <dataset-id> [fixtures-dir]` prints
     // the lowercase hex of the dataset's `encode_snapshot` bytes (v0.3
     // Task 1); the Node binding test compares them against the wasm
@@ -95,7 +92,10 @@ fn hash_golden(root: &Path) -> Result<(), String> {
         let (dataset_path, dataset_sha) = match line.fixture["inputs"]["dataset"].as_str() {
             Some(id) => match datasets.get(id) {
                 Some(p) => (
-                    format!("{repo_root}/{}", p.strip_prefix(root).unwrap_or(p).to_string_lossy()),
+                    format!(
+                        "{repo_root}/{}",
+                        p.strip_prefix(root).unwrap_or(p).to_string_lossy()
+                    ),
                     sha256_hex(
                         &std::fs::read(p).map_err(|e| format!("read {}: {e}", p.display()))?,
                     ),

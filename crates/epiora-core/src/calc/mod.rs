@@ -8,7 +8,7 @@
 pub mod continuous;
 pub mod counts;
 pub mod input;
-mod mean_diff;
+pub(crate) mod mean_diff;
 pub mod other;
 pub mod person_time;
 pub mod power;

@@ -117,6 +117,71 @@ fn margins(t: &Table2x2) -> (f64, f64, f64, f64, f64) {
     (a + b, c + d, a + c, b + d, a + b + c + d)
 }
 
+/// The closed-form intermediates `stratified` accumulates over the
+/// kept strata — the explain trace's named values (v1.0 Task 10,
+/// spec §6). The run path calls `stratified_parts` and the explain
+/// path reuses it.
+pub(crate) struct StratParts {
+    /// `sum(a − N1·M1/n)` over kept strata.
+    pub delta: f64,
+    /// `sum(N1·N0·M1·M0 / (n²·(n−1)))`.
+    pub var_delta: f64,
+    /// `sum(a·d/n)`.
+    pub s_diag: f64,
+    /// `sum(b·c/n)`.
+    pub s_offd: f64,
+    /// `sum((a+d)·a·d/n²)` — first RBG variance term.
+    pub rbg_diag: f64,
+    /// `sum(((a+d)·b·c + (b+c)·a·d)/n²)` — second RBG term.
+    pub rbg_cross: f64,
+    /// `sum((b+c)·b·c/n²)` — third RBG term.
+    pub rbg_offd: f64,
+    /// `sum(a·N0/n)` — MH risk-ratio numerator.
+    pub rr_num: f64,
+    /// `sum(c·N1/n)` — MH risk-ratio denominator.
+    pub rr_den: f64,
+    /// `sum(M1·N1·N0/n² − a·c/n)` — Greenland–Robins numerator.
+    pub gr_num: f64,
+}
+
+/// The accumulated sums of `stratified(kept)` (spec §6).
+pub(crate) fn stratified_parts(kept: &[Table2x2]) -> StratParts {
+    let (mut delta, mut var_delta) = (0.0, 0.0);
+    let (mut s_diag, mut s_offd) = (0.0, 0.0);
+    let (mut rbg_diag, mut rbg_cross, mut rbg_offd) = (0.0, 0.0, 0.0);
+    let (mut rr_num, mut rr_den, mut gr_num) = (0.0, 0.0, 0.0);
+    for t in kept {
+        let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
+        let (n1, n0, m1, m0, n) = margins(t);
+        // mantelhaen.test: DELTA = sum(a − N1·M1/n) with variance
+        // sum(N1·N0·M1·M0 / (n²·(n−1))).
+        delta += a - n1 * m1 / n;
+        var_delta += n1 * n0 * m1 * m0 / (n * n * (n - 1.0));
+        // Common OR: sum(ad/n) / sum(bc/n) with the RBG variance.
+        s_diag += a * d / n;
+        s_offd += b * c / n;
+        rbg_diag += (a + d) * a * d / (n * n);
+        rbg_cross += ((a + d) * b * c + (b + c) * a * d) / (n * n);
+        rbg_offd += (b + c) * b * c / (n * n);
+        // Greenland–Robins MH risk ratio.
+        rr_num += a * n0 / n;
+        rr_den += c * n1 / n;
+        gr_num += m1 * n1 * n0 / (n * n) - a * c / n;
+    }
+    StratParts {
+        delta,
+        var_delta,
+        s_diag,
+        s_offd,
+        rbg_diag,
+        rbg_cross,
+        rbg_offd,
+        rr_num,
+        rr_den,
+        gr_num,
+    }
+}
+
 /// All stratified statistics of `strata` (spec §3.5). Strata of total
 /// 0 are excluded and listed; the crude table is the sum of the kept
 /// strata. Nothing panics and no NaN is ever emitted.
@@ -156,28 +221,19 @@ pub fn stratified(strata: &[Table2x2]) -> StratifiedStats {
     }
 
     let z = z_975();
-    let (mut delta, mut var_delta) = (0.0, 0.0);
-    let (mut s_diag, mut s_offd) = (0.0, 0.0);
-    let (mut rbg_diag, mut rbg_cross, mut rbg_offd) = (0.0, 0.0, 0.0);
-    let (mut rr_num, mut rr_den, mut gr_num) = (0.0, 0.0, 0.0);
-    for t in &kept {
-        let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
-        let (n1, n0, m1, m0, n) = margins(t);
-        // mantelhaen.test: DELTA = sum(a − N1·M1/n) with variance
-        // sum(N1·N0·M1·M0 / (n²·(n−1))).
-        delta += a - n1 * m1 / n;
-        var_delta += n1 * n0 * m1 * m0 / (n * n * (n - 1.0));
-        // Common OR: sum(ad/n) / sum(bc/n) with the RBG variance.
-        s_diag += a * d / n;
-        s_offd += b * c / n;
-        rbg_diag += (a + d) * a * d / (n * n);
-        rbg_cross += ((a + d) * b * c + (b + c) * a * d) / (n * n);
-        rbg_offd += (b + c) * b * c / (n * n);
-        // Greenland–Robins MH risk ratio.
-        rr_num += a * n0 / n;
-        rr_den += c * n1 / n;
-        gr_num += m1 * n1 * n0 / (n * n) - a * c / n;
-    }
+    let p = stratified_parts(&kept);
+    let StratParts {
+        delta,
+        var_delta,
+        s_diag,
+        s_offd,
+        rbg_diag,
+        rbg_cross,
+        rbg_offd,
+        rr_num,
+        rr_den,
+        gr_num,
+    } = p;
 
     let uncorrected = delta * delta / var_delta;
     let yates = if delta.abs() >= 0.5 { 0.5 } else { 0.0 };

@@ -53,6 +53,11 @@ pub enum EngineError {
     /// `bad_conf_level`; v1.0 spec §5.3).
     #[error("calculator input out of range: {input} ({reason})")]
     CalcInputOutOfRange { input: String, reason: String },
+    /// A statistic path no procedure or calculator run can produce
+    /// (v1.0 spec §6): an unknown family, an absent leaf, or a path
+    /// that is not a statistic.
+    #[error("unknown statistic for explain: {statistic}")]
+    ExplainUnknown { statistic: String },
 }
 
 impl EngineError {
@@ -72,6 +77,7 @@ impl EngineError {
             Self::CalcUnknown { .. } => "calc_unknown",
             Self::CalcInputMissing { .. } => "calc_input_missing",
             Self::CalcInputOutOfRange { .. } => "calc_input_out_of_range",
+            Self::ExplainUnknown { .. } => "explain_unknown",
         }
     }
 }

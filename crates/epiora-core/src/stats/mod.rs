@@ -20,6 +20,7 @@ mod two_by_two;
 pub mod estimate;
 pub mod proportion;
 
+pub(crate) use breslow_day::bdt_parts;
 pub use breslow_day::BreslowDayTarone;
 pub use estimate::{Ci, Estimate, UndefinedReason};
 pub use exact::fisher_p_two_sided;
@@ -28,13 +29,17 @@ pub(crate) use means::{
     t_tests_from_summary_at, GroupSummary,
 };
 pub use means::{Anova, Bartlett, GroupStats, TTest, TwoGroupTests};
+pub(crate) use means_summary::{bartlett_parts, t_parts, TParts};
 pub use proportion::{proportions, CategoryStats};
-pub(crate) use rank::kruskal_wallis;
 pub use rank::KruskalWallis;
+pub(crate) use rank::{kruskal_wallis, kw_parts};
 pub(crate) use rates::{
-    adjusted_rates, ef_person_time, pois_approx, pt_zscore, rate_ratio, rd_byar, rg_ci,
+    adjusted_rate_parts, adjusted_rates, ef_person_time, pois_approx, pt_zscore, rate_ratio,
+    rd_byar, rg_ci,
 };
 pub use rxc::{rxc, RxcStats};
+pub(crate) use stratified::stratified_parts;
 pub use stratified::{stratified, MantelHaenszel, MhChiSquare, MhEstimate, StratifiedStats};
 pub use summation::neumaier_sum;
+pub(crate) use two_by_two::parts as two_by_two_parts;
 pub use two_by_two::{two_by_two, ChiSquare, Table2x2, TwoByTwoStats};

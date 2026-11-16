@@ -9,7 +9,7 @@ use crate::error::EngineError;
 use serde_json::{json, Value};
 
 /// One stratum's `[score, cases, controls]` rows.
-fn stratum_table(v: &Value) -> Vec<[f64; 3]> {
+pub(crate) fn stratum_table(v: &Value) -> Vec<[f64; 3]> {
     v.as_array()
         .map(|rows| {
             rows.iter()
@@ -30,13 +30,13 @@ fn stratum_table(v: &Value) -> Vec<[f64; 3]> {
 /// `dr_or_levels` — crude OR `ad/bc` of level i against the baseline
 /// row (the epiR Wald estimate; the baseline returns 1, the
 /// ad/bc fallback on cells epiR cannot score).
-fn or_levels(s: &[[f64; 3]]) -> Vec<f64> {
+pub(crate) fn or_levels(s: &[[f64; 3]]) -> Vec<f64> {
     let (abase, bbase) = (s[0][1], s[0][2]);
     s.iter().map(|l| (l[1] * bbase) / (l[2] * abase)).collect()
 }
 
 /// `dr_mh_or` — MH OR of level i vs baseline pooled over strata.
-fn mh_or(strata: &[Vec<[f64; 3]>]) -> Vec<f64> {
+pub(crate) fn mh_or(strata: &[Vec<[f64; 3]>]) -> Vec<f64> {
     let nlev = strata.first().map_or(0, |s| s.len());
     (1..nlev)
         .map(|i| {
@@ -53,8 +53,11 @@ fn mh_or(strata: &[Vec<[f64; 3]>]) -> Vec<f64> {
         .collect()
 }
 
-/// `xmh_trend` — the extended MH trend chi-square (df 1).
-fn xmh(strata: &[Vec<[f64; 3]>], correct: bool) -> [f64; 2] {
+/// The `xmh` pooled sums — `(v1sum, vsum)`, the observed-minus-
+/// expected score sum and its variance across strata. `xmh` and the
+/// explain trace share them so a trace reports the intermediates
+/// the run itself used.
+pub(crate) fn xmh_parts(strata: &[Vec<[f64; 3]>]) -> (f64, f64) {
     let (mut vsum, mut v1sum) = (0.0, 0.0);
     for s in strata {
         let a: Vec<f64> = s.iter().map(|l| l[1]).collect();
@@ -69,6 +72,12 @@ fn xmh(strata: &[Vec<[f64; 3]>], correct: bool) -> [f64; 2] {
         vsum += (n1 * n2 * (n * t3 - t2 * t2)) / (n * n * (n - 1.0));
         v1sum += t1 - (n1 / n) * t2;
     }
+    (v1sum, vsum)
+}
+
+/// `xmh_trend` — the extended MH trend chi-square (df 1).
+pub(crate) fn xmh(strata: &[Vec<[f64; 3]>], correct: bool) -> [f64; 2] {
+    let (v1sum, vsum) = xmh_parts(strata);
     let num = if correct {
         (v1sum.abs() - 0.5).max(0.0)
     } else {

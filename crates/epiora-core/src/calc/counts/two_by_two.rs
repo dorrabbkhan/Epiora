@@ -20,27 +20,7 @@ fn strata(inputs: &Value) -> Vec<Table2x2> {
 /// single-stratum `mantelhaen.test` (N−1 variance) chi-square;
 /// `p_1t` is the halved p-value as the corpus records.
 fn chi_leaf(t: &Table2x2) -> Value {
-    let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
-    let (n1, n0, m1, m0) = (a + b, c + d, a + c, b + d);
-    let n = n1 + n0;
-    // `stats::chisq.test` — Pearson and Yates from the (O−E)²/E sum,
-    // not the determinant shortcut; Yates clamps the correction at 0.
-    let cells = [
-        [a, n1 * m1 / n],
-        [b, n1 * m0 / n],
-        [c, n0 * m1 / n],
-        [d, n0 * m0 / n],
-    ];
-    let unc: f64 = cells.iter().map(|&[o, e]| (o - e) * (o - e) / e).sum();
-    let yat: f64 = cells
-        .iter()
-        .map(|&[o, e]| {
-            let s = (o - e).abs() - 0.5;
-            s.max(0.0) * s.max(0.0) / e
-        })
-        .sum();
-    let delta = a - n1 * m1 / n;
-    let mh = delta * delta / (n1 * n0 * m1 * m0 / (n * n * (n - 1.0)));
+    let [unc, yat, mh] = chi_parts(t);
     let mk = |x: f64| {
         let p = chi_p(x, 1.0);
         json!({ "value": leaf(x), "p_1t": leaf(p / 2.0), "p_2t": leaf(p) })
@@ -83,7 +63,7 @@ fn rclamp(x: f64) -> f64 {
 
 /// `ef_risk` — the OpenEpi risk-based etiologic/prevented fractions
 /// (`fixtures/R/methods/tables.R`).
-fn ef_risk(t: &Table2x2, conf: f64) -> [[f64; 3]; 4] {
+pub(crate) fn ef_risk(t: &Table2x2, conf: f64) -> [[f64; 3]; 4] {
     let zz = z(conf);
     let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
     let (n1, n0, r1, tt) = (a + b, c + d, a + c, a + b + c + d);
@@ -120,7 +100,7 @@ fn ef_risk(t: &Table2x2, conf: f64) -> [[f64; 3]; 4] {
 }
 
 /// `ef_or` — the OR-derived fractions.
-fn ef_or(t: &Table2x2, conf: f64) -> [[f64; 3]; 4] {
+pub(crate) fn ef_or(t: &Table2x2, conf: f64) -> [[f64; 3]; 4] {
     let zz = z(conf);
     let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
     let (r1, r2) = (a + c, b + d);
@@ -186,14 +166,7 @@ fn table_block(t: &Table2x2, conf: f64) -> Value {
         }
         stat_ci(v)
     };
-    let pe = a / n1;
-    let pu = c / n0;
-    let rr = pe / pu;
-    let rr_se = libm::sqrt(b / (a * n1) + d / (c * n0));
-    let rd = pe - pu;
-    let rd_se = libm::sqrt(pe * (1.0 - pe) / n1 + pu * (1.0 - pu) / n0);
-    let or_ = (a * d) / (b * c);
-    let or_se = libm::sqrt(1.0 / a + 1.0 / b + 1.0 / c + 1.0 / d);
+    let [_, _, rr, rr_se, rd, rd_se, or_, or_se] = wald_parts(t);
 
     let (cmle, ml, mu, fl, fu) = if too_large {
         (u(), u(), u(), u(), u())
@@ -245,7 +218,7 @@ fn table_block(t: &Table2x2, conf: f64) -> Value {
 
 /// `direct_adjust` — inverse-variance pooling on the log (OR/RR) or
 /// raw (RD) scale, Taylor CI.
-fn direct_adjust(strata: &[Table2x2], conf: f64, measure: &str) -> [f64; 3] {
+pub(crate) fn direct_adjust(strata: &[Table2x2], conf: f64, measure: &str) -> [f64; 3] {
     let zz = z(conf);
     let (mut sw, mut swe) = (0.0, 0.0);
     for t in strata {
@@ -277,38 +250,45 @@ fn direct_adjust(strata: &[Table2x2], conf: f64, measure: &str) -> [f64; 3] {
     }
 }
 
+/// The per-stratum estimate/weight pairs `direct_adjust` and
+/// `breslow_day` share, plus the pooled adjoint `sum(w·e)/sum(w)` —
+/// the explain trace's named values (v1.0 Task 10, spec §6).
+pub(crate) fn woolf(strata: &[Table2x2], measure: &str) -> (f64, Vec<f64>, Vec<f64>) {
+    let (mut sw, mut swe) = (0.0, 0.0);
+    let mut ests = Vec::with_capacity(strata.len());
+    let mut ws = Vec::with_capacity(strata.len());
+    for t in strata {
+        let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
+        let (n1, n0) = (a + b, c + d);
+        let (e, w) = match measure {
+            "or" => (
+                libm::log(a * d / (b * c)),
+                1.0 / (1.0 / a + 1.0 / b + 1.0 / c + 1.0 / d),
+            ),
+            "rr" => (
+                libm::log((a / n1) / (c / n0)),
+                1.0 / (b / (a * n1) + d / (c * n0)),
+            ),
+            _ => (
+                a / n1 - c / n0,
+                1.0 / (a * b / (n1 * n1 * n1) + c * d / (n0 * n0 * n0)),
+            ),
+        };
+        ests.push(e);
+        ws.push(w);
+        sw += w;
+        swe += w * e;
+    }
+    (swe / sw, ests, ws)
+}
+
 /// `breslow_day` — Woolf homogeneity chi-squares for OR, RR and RD
 /// around their directly adjusted estimates.
 fn breslow_day(strata: &[Table2x2]) -> Value {
     let k = strata.len() as f64;
     let mut out = serde_json::Map::new();
     for measure in ["or", "rr", "rd"] {
-        let (mut sw, mut swe) = (0.0, 0.0);
-        let mut ests = Vec::with_capacity(strata.len());
-        let mut ws = Vec::with_capacity(strata.len());
-        for t in strata {
-            let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
-            let (n1, n0) = (a + b, c + d);
-            let (e, w) = match measure {
-                "or" => (
-                    libm::log(a * d / (b * c)),
-                    1.0 / (1.0 / a + 1.0 / b + 1.0 / c + 1.0 / d),
-                ),
-                "rr" => (
-                    libm::log((a / n1) / (c / n0)),
-                    1.0 / (b / (a * n1) + d / (c * n0)),
-                ),
-                _ => (
-                    a / n1 - c / n0,
-                    1.0 / (a * b / (n1 * n1 * n1) + c * d / (n0 * n0 * n0)),
-                ),
-            };
-            ests.push(e);
-            ws.push(w);
-            sw += w;
-            swe += w * e;
-        }
-        let adj = swe / sw;
+        let (adj, ests, ws) = woolf(strata, measure);
         let chi: f64 = ests
             .iter()
             .zip(&ws)
@@ -320,12 +300,34 @@ fn breslow_day(strata: &[Table2x2]) -> Value {
     Value::Object(out)
 }
 
-/// The `adjusted` block — `mantelhaen.test(correct=FALSE)`'s
-/// chi-square and RBG OR interval, the Greenland–Robins MH RR, the
-/// three directly adjusted measures, Breslow–Day, and the
-/// stratified CMLE.
-fn adjusted(strata: &[Table2x2], conf: f64) -> Value {
-    let zz = z(conf);
+/// The pooled sums of `adjusted` — the explain trace's named values
+/// (v1.0 Task 10, spec §6). The run path calls `adjusted_parts` and
+/// the explain path reuses it.
+pub(crate) struct AdjustedParts {
+    /// `sum(a − N1·M1/n)`.
+    pub delta: f64,
+    /// `sum(N1·N0·M1·M0 / (n²·(n−1)))`.
+    pub var: f64,
+    /// `sum(a·d/n)`.
+    pub sd_: f64,
+    /// `sum(b·c/n)`.
+    pub so_: f64,
+    /// `sum((a+d)·a·d/n²)`.
+    pub rg_a: f64,
+    /// `sum(((a+d)·b·c + (b+c)·a·d)/n²)`.
+    pub rg_b: f64,
+    /// `sum((b+c)·b·c/n²)`.
+    pub rg_c: f64,
+    /// `sum(a·N0/n)`.
+    pub rr_num: f64,
+    /// `sum(c·N1/n)`.
+    pub rr_den: f64,
+    /// `sum(M1·N1·N0/n² − a·c/n)`.
+    pub gr_num: f64,
+}
+
+/// The `adjusted` sums over `strata` (spec §6).
+pub(crate) fn adjusted_parts(strata: &[Table2x2]) -> AdjustedParts {
     let (mut delta, mut var): (f64, f64) = (0.0, 0.0);
     let (mut sd_, mut so_, mut rg_a, mut rg_b, mut rg_c) = (0.0, 0.0, 0.0, 0.0, 0.0);
     let (mut rr_num, mut rr_den, mut gr_num) = (0.0, 0.0, 0.0);
@@ -343,12 +345,35 @@ fn adjusted(strata: &[Table2x2], conf: f64) -> Value {
         rr_den += c * n1 / n;
         gr_num += m1 * n1 * n0 / (n * n) - a * c / n;
     }
+    AdjustedParts {
+        delta,
+        var,
+        sd_,
+        so_,
+        rg_a,
+        rg_b,
+        rg_c,
+        rr_num,
+        rr_den,
+        gr_num,
+    }
+}
+
+/// The `adjusted` block — `mantelhaen.test(correct=FALSE)`'s
+/// chi-square and RBG OR interval, the Greenland–Robins MH RR, the
+/// three directly adjusted measures, Breslow–Day, and the
+/// stratified CMLE.
+fn adjusted(strata: &[Table2x2], conf: f64) -> Value {
+    let zz = z(conf);
+    let p = adjusted_parts(strata);
+    let (delta, var, sd_, so_) = (p.delta, p.var, p.sd_, p.so_);
     let mh_chi = delta * delta / var;
     let or = sd_ / so_;
-    let sd =
-        libm::sqrt(rg_a / (2.0 * sd_ * sd_) + rg_b / (2.0 * sd_ * so_) + rg_c / (2.0 * so_ * so_));
-    let rr = rr_num / rr_den;
-    let gr_se = libm::sqrt(gr_num / (rr_num * rr_den));
+    let sd = libm::sqrt(
+        p.rg_a / (2.0 * sd_ * sd_) + p.rg_b / (2.0 * sd_ * so_) + p.rg_c / (2.0 * so_ * so_),
+    );
+    let rr = p.rr_num / p.rr_den;
+    let gr_se = libm::sqrt(p.gr_num / (p.rr_num * p.rr_den));
     // Owner-decision work guard (PR #74): the stratified CMLE leaves
     // go `too_large` before any polynomial is allocated.
     let cmle_or = if martin::too_large(strata) {

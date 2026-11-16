@@ -16,7 +16,7 @@ fn wilson_stat(x: u64, n: u64, conf: f64) -> Value {
 /// `entropy_reduction` — H(prev) − H(posterior) per test sign;
 /// `post` is PPV for a positive test, NPV for a negative one (the
 /// OpenEpi `DiagnosticTest.js` convention).
-fn entropy(prev: f64, ppv: f64, npv: f64) -> Value {
+pub(crate) fn entropy(prev: f64, ppv: f64, npv: f64) -> Value {
     let h = |p: f64| -(p * libm::log(p) + (1.0 - p) * libm::log(1.0 - p));
     json!({
         "positive": leaf(h(prev) - h(ppv)),
@@ -26,7 +26,7 @@ fn entropy(prev: f64, ppv: f64, npv: f64) -> Value {
 
 /// `level_lr` — per-level likelihood ratio, `DiagnosticTest.js` log
 /// method.
-fn level_lr(ld: f64, ln: f64, d: f64, nd: f64, conf: f64) -> Value {
+pub(crate) fn level_lr(ld: f64, ln: f64, d: f64, nd: f64, conf: f64) -> Value {
     let (p1, p2) = (ld / d, ln / nd);
     let lr = p1 / p2;
     let half = z(conf) * ((1.0 - p1) / (d * p1) + (1.0 - p2) / (nd * p2));

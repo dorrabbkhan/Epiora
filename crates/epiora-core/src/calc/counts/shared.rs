@@ -161,6 +161,52 @@ pub fn conf(inputs: &Value) -> f64 {
     num(inputs, "conf_level")
 }
 
+/// The closed-form Wald intermediates of one 2×2 block —
+/// `[pe, pu, rr, rr_se, rd, rd_se, or, or_se]` — shared by
+/// `two_by_two`'s and `two_by_n`'s `table_block` and by the explain
+/// trace (v1.0 Task 10, spec §6).
+pub fn wald_parts(t: &crate::stats::Table2x2) -> [f64; 8] {
+    let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
+    let (n1, n0) = (a + b, c + d);
+    let pe = a / n1;
+    let pu = c / n0;
+    let rr = pe / pu;
+    let rr_se = libm::sqrt(b / (a * n1) + d / (c * n0));
+    let rd = pe - pu;
+    let rd_se = libm::sqrt(pe * (1.0 - pe) / n1 + pu * (1.0 - pu) / n0);
+    let or_ = (a * d) / (b * c);
+    let or_se = libm::sqrt(1.0 / a + 1.0 / b + 1.0 / c + 1.0 / d);
+    [pe, pu, rr, rr_se, rd, rd_se, or_, or_se]
+}
+
+/// The three chi-square statistics of one 2×2 —
+/// `[uncorrected, yates, mantel_haenszel]` (`stats::chisq.test`
+/// Pearson/Yates from the (O−E)²/E sums, Yates clamped at 0, plus the
+/// single-stratum `mantelhaen.test` N−1 chi-square). Shared by both
+/// counts-table calculators and the explain trace (spec §6).
+pub fn chi_parts(t: &crate::stats::Table2x2) -> [f64; 3] {
+    let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
+    let (n1, n0, m1, m0) = (a + b, c + d, a + c, b + d);
+    let n = n1 + n0;
+    let cells = [
+        [a, n1 * m1 / n],
+        [b, n1 * m0 / n],
+        [c, n0 * m1 / n],
+        [d, n0 * m0 / n],
+    ];
+    let unc: f64 = cells.iter().map(|&[o, e]| (o - e) * (o - e) / e).sum();
+    let yat: f64 = cells
+        .iter()
+        .map(|&[o, e]| {
+            let s = (o - e).abs() - 0.5;
+            s.max(0.0) * s.max(0.0) / e
+        })
+        .sum();
+    let delta = a - n1 * m1 / n;
+    let mh = delta * delta / (n1 * n0 * m1 * m0 / (n * n * (n - 1.0)));
+    [unc, yat, mh]
+}
+
 /// `qnorm((1 + conf/100)/2)` — the two-sided normal deviate for a
 /// confidence level given in percent (`oe_z` in the R methods).
 pub fn z(conf: f64) -> f64 {

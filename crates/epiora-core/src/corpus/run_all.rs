@@ -129,10 +129,10 @@ pub fn dataset_files(root: &Path) -> Result<BTreeMap<String, PathBuf>, String> {
         {
             continue;
         }
-        let text = std::fs::read_to_string(&path)
-            .map_err(|e| format!("read {}: {e}", path.display()))?;
-        let doc: Value = serde_json::from_str(&text)
-            .map_err(|e| format!("parse {}: {e}", path.display()))?;
+        let text =
+            std::fs::read_to_string(&path).map_err(|e| format!("read {}: {e}", path.display()))?;
+        let doc: Value =
+            serde_json::from_str(&text).map_err(|e| format!("parse {}: {e}", path.display()))?;
         if let Some(id) = doc["id"].as_str() {
             out.insert(id.to_string(), path);
         }

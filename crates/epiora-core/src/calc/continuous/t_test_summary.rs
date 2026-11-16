@@ -37,7 +37,7 @@ fn t_block(t: Option<&TTest>) -> Value {
 /// Group `i`'s sd from whichever of `sd_i`/`se_i`/`var_i` the
 /// canonical inputs carry — the registry's `groups` guarantees
 /// exactly one is present: `sd` given, `sd = se·√n` or `sd = √var`.
-fn group_sd(inputs: &Value, i: usize, n: u64) -> f64 {
+pub(crate) fn group_sd(inputs: &Value, i: usize, n: u64) -> f64 {
     if let Some(sd) = inputs.get(format!("sd_{i}")).and_then(Value::as_f64) {
         return sd;
     }

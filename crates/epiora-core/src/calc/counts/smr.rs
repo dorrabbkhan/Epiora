@@ -12,14 +12,14 @@ use serde_json::{json, Value};
 
 /// `byar_stat` — Byar's approximation: signed normal deviate
 /// squared with `v = O` when `O > E` else `O + 1`.
-fn byar(o: f64, e: f64) -> [f64; 2] {
+pub(crate) fn byar(o: f64, e: f64) -> [f64; 2] {
     let v = if o > e { o } else { o + 1.0 };
     let x2 = libm::sqrt(9.0 * v) * (1.0 - 1.0 / (9.0 * v) - libm::pow(e / v, 1.0 / 3.0));
     [x2 * x2, chi_p(x2 * x2, 1.0)]
 }
 
 /// `ury_wiggins` — the shortcut CI, defined only at 90/95/99.
-fn ury_wiggins(o: f64, e: f64, conf: f64) -> [f64; 2] {
+pub(crate) fn ury_wiggins(o: f64, e: f64, conf: f64) -> [f64; 2] {
     let zz = z(conf);
     let add = if o > 50.0 { 0.0 } else { 0.1 };
     let so = libm::sqrt(o);
@@ -35,7 +35,7 @@ fn ury_wiggins(o: f64, e: f64, conf: f64) -> [f64; 2] {
 }
 
 /// `vandenbroucke` — the 95% shortcut; undefined elsewhere.
-fn vandenbroucke(o: f64, e: f64, conf: f64) -> [f64; 2] {
+pub(crate) fn vandenbroucke(o: f64, e: f64, conf: f64) -> [f64; 2] {
     if conf != 95.0 {
         return [f64::NAN, f64::NAN];
     }

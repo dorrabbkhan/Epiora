@@ -48,14 +48,27 @@ pub(crate) fn t_tests_from_summary(a: &GroupSummary, b: &GroupSummary) -> Option
     t_tests_from_summary_at(a, b, 95.0)
 }
 
-/// `t.test(x1, x2)` for both variance assumptions at `conf` percent.
-/// `diff_ci_95` carries the CI at `conf` — the field name is fixed by
-/// the serialized `MeansResult`; calculators pass their `conf_level`.
-pub(crate) fn t_tests_from_summary_at(
-    a: &GroupSummary,
-    b: &GroupSummary,
-    conf: f64,
-) -> Option<TwoGroupTests> {
+/// The closed-form intermediates of the pooled and Welch t-tests
+/// (v1.0 Task 10, spec §6): the explain trace's named values. `None`
+/// for the same inputs `t_tests_from_summary_at` rejects.
+pub(crate) struct TParts {
+    /// `mean₁ − mean₂`.
+    pub diff: f64,
+    /// Pooled variance `((n₁−1)v₁ + (n₂−1)v₂)/(n₁+n₂−2)`.
+    pub var_pooled: f64,
+    /// `sqrt(var_pooled·(1/n₁ + 1/n₂))`.
+    pub se_pooled: f64,
+    /// `sqrt(v₁/n₁ + v₂/n₂)`.
+    pub se_welch: f64,
+    /// `n₁ + n₂ − 2`.
+    pub df_pooled: f64,
+    /// The Satterthwaite df.
+    pub df_welch: f64,
+}
+
+/// The intermediates of `t_tests_from_summary_at(a, b, _)` — shared
+/// by the result and the explain trace.
+pub(crate) fn t_parts(a: &GroupSummary, b: &GroupSummary) -> Option<TParts> {
     if a.n < 2 || b.n < 2 {
         return None;
     }
@@ -77,6 +90,26 @@ pub(crate) fn t_tests_from_summary_at(
     let df_p = n1 + n2 - 2.0;
     let df_w = (se_w * se_w * se_w * se_w)
         / (se1 * se1 * se1 * se1 / (n1 - 1.0) + se2 * se2 * se2 * se2 / (n2 - 1.0));
+    Some(TParts {
+        diff,
+        var_pooled: vp,
+        se_pooled: se_p,
+        se_welch: se_w,
+        df_pooled: df_p,
+        df_welch: df_w,
+    })
+}
+
+/// `t.test(x1, x2)` for both variance assumptions at `conf` percent.
+/// `diff_ci_95` carries the CI at `conf` — the field name is fixed by
+/// the serialized `MeansResult`; calculators pass their `conf_level`.
+pub(crate) fn t_tests_from_summary_at(
+    a: &GroupSummary,
+    b: &GroupSummary,
+    conf: f64,
+) -> Option<TwoGroupTests> {
+    let p = t_parts(a, b)?;
+    let diff = p.diff;
     let t_test = |se: f64, df: f64| -> TTest {
         let t = diff / se;
         let p = 2.0 * t_sf(t.abs(), df);
@@ -93,8 +126,8 @@ pub(crate) fn t_tests_from_summary_at(
         }
     };
     Some(TwoGroupTests {
-        pooled: t_test(se_p, df_p),
-        welch: t_test(se_w, df_w),
+        pooled: t_test(p.se_pooled, p.df_pooled),
+        welch: t_test(p.se_welch, p.df_welch),
     })
 }
 
@@ -185,10 +218,21 @@ pub(crate) fn anova_from_summary(groups: &[GroupSummary]) -> Anova {
     }
 }
 
-/// R's `bartlett.test(x, g)`: `None` when any group has fewer than 2
-/// observations (R's error); otherwise the corrected χ² — NaN or
-/// infinite on zero-variance input, hence `Undefined { zero_variance }`.
-pub(crate) fn bartlett_from_summary(groups: &[GroupSummary]) -> Option<Bartlett> {
+/// The closed-form intermediates of `bartlett_from_summary` — the
+/// explain trace's named values (v1.0 Task 10, spec §6). `None` for
+/// the same inputs that yield no Bartlett result.
+pub(crate) struct BartlettParts {
+    /// `N·log(v_pooled) − Σ nᵢ·log(vᵢ)`.
+    pub numerator: f64,
+    /// The small-sample correction `1 + (Σ1/nᵢ − 1/N)/(3(k−1))`.
+    pub correction: f64,
+    /// k − 1.
+    pub df: f64,
+}
+
+/// The intermediates of `bartlett_from_summary(groups)` — shared by
+/// the result and the explain trace.
+pub(crate) fn bartlett_parts(groups: &[GroupSummary]) -> Option<BartlettParts> {
     if groups.iter().any(|g| g.n < 2) {
         return None;
     }
@@ -204,15 +248,26 @@ pub(crate) fn bartlett_from_summary(groups: &[GroupSummary]) -> Option<Bartlett>
         - neumaier_sum(n.iter().zip(&v).map(|(ni, vi)| ni * libm::log(*vi)));
     let correction =
         1.0 + (neumaier_sum(n.iter().map(|ni| 1.0 / ni)) - 1.0 / n_tot) / (3.0 * (k - 1.0));
-    let df = k - 1.0;
-    let stat = Estimate::from_f64(numerator / correction, UndefinedReason::ZeroVariance);
-    let p = match stat {
-        Estimate::Value(x) => Estimate::from_f64(chisq_sf(x, df), UndefinedReason::ZeroVariance),
+    Some(BartlettParts {
+        numerator,
+        correction,
+        df: k - 1.0,
+    })
+}
+
+/// R's `bartlett.test(x, g)`: `None` when any group has fewer than 2
+/// observations (R's error); otherwise the corrected χ² — NaN or
+/// infinite on zero-variance input, hence `Undefined { zero_variance }`.
+pub(crate) fn bartlett_from_summary(groups: &[GroupSummary]) -> Option<Bartlett> {
+    let p = bartlett_parts(groups)?;
+    let stat = Estimate::from_f64(p.numerator / p.correction, UndefinedReason::ZeroVariance);
+    let f_p = match stat {
+        Estimate::Value(x) => Estimate::from_f64(chisq_sf(x, p.df), UndefinedReason::ZeroVariance),
         Estimate::Undefined { reason } => Estimate::Undefined { reason },
     };
     Some(Bartlett {
         statistic: stat,
-        df: Estimate::Value(df),
-        p_value: p,
+        df: Estimate::Value(p.df),
+        p_value: f_p,
     })
 }

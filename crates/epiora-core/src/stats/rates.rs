@@ -125,11 +125,41 @@ pub(crate) struct AdjustedRates {
     pub rd: [f64; 2],
 }
 
-/// The `strata` rows are `[a, b, n1, n0]` (cases and person-time,
-/// exposed then unexposed).
-pub(crate) fn adjusted_rates(strata: &[[f64; 4]], conf: f64) -> AdjustedRates {
-    let z = z(conf);
-    let k = strata.len() as f64;
+/// The closed-form intermediates of `adjusted_rates` — the explain
+/// trace's named values (v1.0 Task 10, spec §6). The run path calls
+/// `adjusted_rate_parts` and the explain path reuses it.
+pub(crate) struct AdjRateParts {
+    /// `sum(w_rr)` — the directly adjusted RR's inverse-variance mass.
+    pub sw_rr: f64,
+    /// `sum(w_rr·log rr_i) / sw_rr` — the pooled log RR.
+    pub adj_ln_rr: f64,
+    /// `sum(a·n0/n)` — the MH RR numerator.
+    pub mh_num: f64,
+    /// `sum(b·n1/n)` — the MH RR denominator.
+    pub mh_den: f64,
+    /// `sum(m1·n1·n0/n²)` — the GR numerator and z-score variance.
+    pub mh_var: f64,
+    /// `sqrt(mh_var / (mh_num·mh_den))` — the log-scale MH SE.
+    pub se_mh: f64,
+    /// `sum(w_rd)`.
+    pub sw_rd: f64,
+    /// `sum(w_rd·rd_i) / sw_rd` — the pooled RD.
+    pub adj_rd: f64,
+    /// `sum(a)`.
+    pub sum_a: f64,
+    /// `sum(m1·n1/n)` — the pooled expectation of `a`.
+    pub sum_e: f64,
+    /// The pooled z-score.
+    pub zs: f64,
+    /// Woolf χ² of the stratum log-RRs around `adj_ln_rr`.
+    pub chi_rr: f64,
+    /// Woolf χ² of the stratum RDs around `adj_rd`.
+    pub chi_rd: f64,
+}
+
+/// The intermediates of `adjusted_rates(strata, _)` — shared by the
+/// result and the explain trace.
+pub(crate) fn adjusted_rate_parts(strata: &[[f64; 4]]) -> AdjRateParts {
     let sum = |f: &dyn Fn(&[f64; 4]) -> f64| neumaier_sum(strata.iter().map(f));
     let m1 = |t: &[f64; 4]| t[0] + t[1];
     let n = |t: &[f64; 4]| t[2] + t[3];
@@ -140,21 +170,18 @@ pub(crate) fn adjusted_rates(strata: &[[f64; 4]], conf: f64) -> AdjustedRates {
 
     let sw_rr = sum(&w_rr);
     let adj_ln_rr = sum(&|t| w_rr(t) * libm::log(rr_i(t))) / sw_rr;
-    let adj_rr = libm::exp(adj_ln_rr);
-    let h_rr = z / libm::sqrt(sw_rr);
 
     let mh_num = sum(&|t| t[0] * t[3] / n(t));
     let mh_den = sum(&|t| t[1] * t[2] / n(t));
-    let mh_rr = mh_num / mh_den;
     let mh_var = sum(&|t| m1(t) * t[2] * t[3] / (n(t) * n(t)));
     let se_mh = libm::sqrt(mh_var / (mh_num * mh_den));
 
     let sw_rd = sum(&w_rd);
     let adj_rd = sum(&|t| w_rd(t) * rd_i(t)) / sw_rd;
-    let h_rd = z / libm::sqrt(sw_rd);
 
-    let zs = (sum(&|t| t[0]) - sum(&|t| m1(t) * t[2] / n(t))) / libm::sqrt(mh_var);
-    let zs_p = 2.0 * normal_cdf(-libm::fabs(zs));
+    let sum_a = sum(&|t| t[0]);
+    let sum_e = sum(&|t| m1(t) * t[2] / n(t));
+    let zs = (sum_a - sum_e) / libm::sqrt(mh_var);
 
     let chi_rr = sum(&|t| {
         let d = libm::log(rr_i(t)) - adj_ln_rr;
@@ -164,16 +191,44 @@ pub(crate) fn adjusted_rates(strata: &[[f64; 4]], conf: f64) -> AdjustedRates {
         let d = rd_i(t) - adj_rd;
         w_rd(t) * d * d
     });
+    AdjRateParts {
+        sw_rr,
+        adj_ln_rr,
+        mh_num,
+        mh_den,
+        mh_var,
+        se_mh,
+        sw_rd,
+        adj_rd,
+        sum_a,
+        sum_e,
+        zs,
+        chi_rr,
+        chi_rd,
+    }
+}
+
+/// The `strata` rows are `[a, b, n1, n0]` (cases and person-time,
+/// exposed then unexposed).
+pub(crate) fn adjusted_rates(strata: &[[f64; 4]], conf: f64) -> AdjustedRates {
+    let z = z(conf);
+    let k = strata.len() as f64;
+    let p = adjusted_rate_parts(strata);
+    let adj_rr = libm::exp(p.adj_ln_rr);
+    let h_rr = z / libm::sqrt(p.sw_rr);
+    let h_rd = z / libm::sqrt(p.sw_rd);
+    let mh_rr = p.mh_num / p.mh_den;
+    let zs_p = 2.0 * normal_cdf(-libm::fabs(p.zs));
     AdjustedRates {
         direct_rr: [adj_rr, adj_rr * libm::exp(-h_rr), adj_rr * libm::exp(h_rr)],
         mh_rr: [
             mh_rr,
-            mh_rr * libm::exp(-z * se_mh),
-            mh_rr * libm::exp(z * se_mh),
+            mh_rr * libm::exp(-z * p.se_mh),
+            mh_rr * libm::exp(z * p.se_mh),
         ],
-        direct_rd: [adj_rd, adj_rd - h_rd, adj_rd + h_rd],
-        zscore: [zs, zs_p],
-        rr: [chi_rr, chisq_sf(chi_rr, k - 1.0)],
-        rd: [chi_rd, chisq_sf(chi_rd, k - 1.0)],
+        direct_rd: [p.adj_rd, p.adj_rd - h_rd, p.adj_rd + h_rd],
+        zscore: [p.zs, zs_p],
+        rr: [p.chi_rr, chisq_sf(p.chi_rr, k - 1.0)],
+        rd: [p.chi_rd, chisq_sf(p.chi_rd, k - 1.0)],
     }
 }

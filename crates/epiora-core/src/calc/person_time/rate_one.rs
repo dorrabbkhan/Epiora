@@ -12,7 +12,7 @@ use serde_json::{json, Value};
 /// `per_unit`, or OpenEpi's `PersonTime1.js` auto-scale when omitted:
 /// the smallest power of 10 that makes the raw rate `>= 1` (a rate of
 /// 0 keeps `1` — OpenEpi's `while (rate < 1)` loop never exits there).
-fn per_unit(inputs: &Value, cases: u64, pt: f64) -> f64 {
+pub(crate) fn per_unit(inputs: &Value, cases: u64, pt: f64) -> f64 {
     match inputs.get("per_unit").and_then(Value::as_f64) {
         Some(u) => u,
         None => {

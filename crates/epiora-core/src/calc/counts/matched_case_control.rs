@@ -182,17 +182,29 @@ fn matched_n_cmle(t: &[Vec<u64>], m: u64, conf: f64) -> [f64; 3] {
     [libm::exp(beta), libm::exp(beta - h), libm::exp(beta + h)]
 }
 
-/// The 1:n block: each matched set is one 2×2 stratum
-/// `[[case_exp, k], [case_unexp, M-k]]` under `mantelhaen.test`. The
-/// sums are linear over identical strata, so the 2·(M+1) ≤ 10
-/// distinct (case_exp, k) shapes carry each accumulated term times
-/// its multiplicity — O(M) work and memory for any valid counts,
-/// where enumerating one stratum per set was O(Σ cells) (Review
-/// Focus 1/3).
-fn matched_n(inputs: &Value, conf: f64) -> Value {
-    let m = cnt(inputs, "controls_per_case");
-    let t = count_table(inputs, "matched_sets");
-    let zz = z(conf);
+/// The multiplicity-weighted MH sums of `matched_n` — the explain
+/// trace's named values (v1.0 Task 10, spec §6). The run path calls
+/// `matched_n_parts` and the explain path reuses it.
+pub(crate) struct MatchedNParts {
+    /// `sum(mult·(a − N1·M1/n))` over the distinct set shapes.
+    pub delta: f64,
+    /// `sum(mult·N1·N0·M1·M0 / (n²·(n−1)))`.
+    pub var: f64,
+    /// `sum(mult·a·d/n)`.
+    pub sd_: f64,
+    /// `sum(mult·b·c/n)`.
+    pub so_: f64,
+    /// `sum(mult·(a+d)·a·d/n²)`.
+    pub rg_a: f64,
+    /// `sum(mult·((a+d)·b·c + (b+c)·a·d)/n²)`.
+    pub rg_b: f64,
+    /// `sum(mult·(b+c)·b·c/n²)`.
+    pub rg_c: f64,
+}
+
+/// The `matched_n` sums — shared by the result and the explain
+/// trace.
+pub(crate) fn matched_n_parts(t: &[Vec<u64>], m: u64) -> MatchedNParts {
     let (mut delta, mut var, mut sd_, mut so_): (f64, f64, f64, f64) = (0.0, 0.0, 0.0, 0.0);
     let (mut rg_a, mut rg_b, mut rg_c) = (0.0, 0.0, 0.0);
     for (case_exp, row) in t.iter().enumerate().take(2) {
@@ -216,6 +228,31 @@ fn matched_n(inputs: &Value, conf: f64) -> Value {
             rg_c += mult * ((b + c) * b * c / (n * n));
         }
     }
+    MatchedNParts {
+        delta,
+        var,
+        sd_,
+        so_,
+        rg_a,
+        rg_b,
+        rg_c,
+    }
+}
+
+/// The 1:n block: each matched set is one 2×2 stratum
+/// `[[case_exp, k], [case_unexp, M-k]]` under `mantelhaen.test`. The
+/// sums are linear over identical strata, so the 2·(M+1) ≤ 10
+/// distinct (case_exp, k) shapes carry each accumulated term times
+/// its multiplicity — O(M) work and memory for any valid counts,
+/// where enumerating one stratum per set was O(Σ cells) (Review
+/// Focus 1/3).
+fn matched_n(inputs: &Value, conf: f64) -> Value {
+    let m = cnt(inputs, "controls_per_case");
+    let t = count_table(inputs, "matched_sets");
+    let zz = z(conf);
+    let p = matched_n_parts(&t, m);
+    let (delta, var, sd_, so_) = (p.delta, p.var, p.sd_, p.so_);
+    let (rg_a, rg_b, rg_c) = (p.rg_a, p.rg_b, p.rg_c);
     let chi = delta * delta / var;
     let chi_cc = {
         let s = (delta.abs() - 0.5).max(0.0);

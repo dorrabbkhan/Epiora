@@ -24,6 +24,9 @@ fn all_variants() -> Vec<EngineError> {
         EngineError::CorpusFormat {
             reason: "bad leaf".into(),
         },
+        EngineError::ExplainUnknown {
+            statistic: "calc.proportion.missing".into(),
+        },
     ]
 }
 
@@ -37,6 +40,7 @@ fn every_variant_has_its_code() {
         "type_mismatch",
         "invalid_options",
         "corpus_format",
+        "explain_unknown",
     ];
     let variants = all_variants();
     assert_eq!(variants.len(), expected.len());
