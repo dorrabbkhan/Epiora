@@ -71,14 +71,15 @@ fn poly_strat_pt(t: &PtStratum) -> Option<martin::Poly> {
     })
 }
 
-/// Bounded-work guard (owner decision D1, applied to the person-time
-/// path): a stratum's binomial support is `m1 + 1` — the corpus's
-/// `large_counts` fixture (m1 = 1.2e6) must compute, so the 1e6
-/// *hypergeometric* support cap cannot apply here. The same
-/// `MAX_EXACT_CONVOLUTION_WORK` bounds the total work instead:
-/// `m1 + 1` coefficient evaluations per informative stratum plus the
-/// `logmult_poly` multiply pairs `Σ_{i≥2} s_{<i}·s_i`. Pure
-/// arithmetic on the inputs — runs before any allocation.
+/// Bounded-work guard (owner decisions D1 and T1, applied to the
+/// person-time path): a stratum's binomial support is `m1 + 1` — the
+/// corpus's `large_counts` fixture (m1 = 1.2e6) must compute, so the
+/// 1e6 *hypergeometric* support cap cannot apply here. Two caps
+/// instead, both pure arithmetic on the inputs before any
+/// allocation: T1's per-stratum `m1 ≤ MAX_PT_SUPPORT` (2e6), and the
+/// same `MAX_EXACT_CONVOLUTION_WORK` (1e8) on total work — `m1 + 1`
+/// coefficient evaluations per informative stratum plus the
+/// `logmult_poly` multiply pairs `Σ_{i≥2} s_{<i}·s_i`.
 pub(crate) fn too_large(strata: &[PtStratum]) -> bool {
     let mut work: u128 = 0;
     let mut convolved: Option<u64> = None;
@@ -86,10 +87,14 @@ pub(crate) fn too_large(strata: &[PtStratum]) -> bool {
         if !informative(t) {
             continue;
         }
-        // `m1` as u64 saturates at huge inputs; the work total is all
-        // that matters there.
+        // `m1` as u64 saturates at huge inputs — which are past
+        // `MAX_PT_SUPPORT` anyway, so the saturating cast cannot hide
+        // an over-limit stratum.
         let m1 = (libm::rint(t.a + t.b)).max(0.0) as u64;
-        let s = m1.saturating_add(1);
+        if m1 > shared::MAX_PT_SUPPORT {
+            return true;
+        }
+        let s = m1 + 1;
         work += s as u128;
         convolved = Some(match convolved {
             None => s,
@@ -103,9 +108,9 @@ pub(crate) fn too_large(strata: &[PtStratum]) -> bool {
 }
 
 /// `cmle_rr` — est plus mid-p and Fisher limits at `conf` (percent),
-/// or `None` when the exact work exceeds the D1 cap (the caller emits
-/// `{"undefined": "too_large"}` leaves). `NA` roots surface as NaN
-/// inside the array, which the leaf writer records as
+/// or `None` when the support or work exceeds the caps (the caller
+/// emits `{"undefined": "too_large"}` leaves). `NA` roots surface as
+/// NaN inside the array, which the leaf writer records as
 /// `{"undefined": "out_of_range"}` — the corpus's null leaves.
 pub(crate) fn cmle_rr(strata: &[PtStratum], conf: f64) -> Option<[f64; 5]> {
     if too_large(strata) {

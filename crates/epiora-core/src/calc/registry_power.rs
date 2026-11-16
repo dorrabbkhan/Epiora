@@ -42,6 +42,7 @@ pub(super) static POWER_UNMATCHED_CC: CalculatorDef = CalculatorDef {
     id: "power_unmatched_cc",
     family: Family::Power,
     inputs: POWER_UNMATCHED_CC_INPUTS,
+    groups: &[],
     outputs: POWER_UNMATCHED_CC_OUTPUTS,
 };
 
@@ -92,6 +93,7 @@ pub(super) static POWER_COHORT: CalculatorDef = CalculatorDef {
     id: "power_cohort",
     family: Family::Power,
     inputs: POWER_COHORT_INPUTS,
+    groups: &[],
     outputs: POWER_COHORT_OUTPUTS,
 };
 
@@ -194,6 +196,7 @@ pub(super) static POWER_MEAN_DIFFERENCE: CalculatorDef = CalculatorDef {
     id: "power_mean_difference",
     family: Family::Power,
     inputs: POWER_MEAN_DIFFERENCE_INPUTS,
+    groups: &[],
     outputs: POWER_MEAN_DIFFERENCE_OUTPUTS,
 };
 
@@ -236,5 +239,6 @@ pub(super) static RANDOM_NUMBERS: CalculatorDef = CalculatorDef {
     id: "random_numbers",
     family: Family::Other,
     inputs: RANDOM_NUMBERS_INPUTS,
+    groups: &[],
     outputs: RANDOM_NUMBERS_OUTPUTS,
 };

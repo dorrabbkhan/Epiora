@@ -34,13 +34,26 @@ fn t_block(t: Option<&TTest>) -> Value {
     }
 }
 
+/// Group `i`'s sd from whichever of `sd_i`/`se_i`/`var_i` the
+/// canonical inputs carry — the registry's `groups` guarantees
+/// exactly one is present: `sd` given, `sd = se·√n` or `sd = √var`.
+fn group_sd(inputs: &Value, i: usize, n: u64) -> f64 {
+    if let Some(sd) = inputs.get(format!("sd_{i}")).and_then(Value::as_f64) {
+        return sd;
+    }
+    if let Some(se) = inputs.get(format!("se_{i}")).and_then(Value::as_f64) {
+        return se * libm::sqrt(n as f64);
+    }
+    libm::sqrt(num(inputs, &format!("var_{i}")))
+}
+
 pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let c = conf(inputs);
     let a = GroupSummary {
         n: cnt(inputs, "n_1"),
         mean: num(inputs, "mean_1"),
         variance: Some({
-            let s = num(inputs, "sd_1");
+            let s = group_sd(inputs, 1, cnt(inputs, "n_1"));
             s * s
         }),
     };
@@ -48,7 +61,7 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
         n: cnt(inputs, "n_2"),
         mean: num(inputs, "mean_2"),
         variance: Some({
-            let s = num(inputs, "sd_2");
+            let s = group_sd(inputs, 2, cnt(inputs, "n_2"));
             s * s
         }),
     };

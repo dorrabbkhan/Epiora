@@ -156,3 +156,48 @@ fn rate_compare_too_large_is_bounded() {
         assert_eq!(out.result["strata"][0]["cmle_rr"][leaf_name], want);
     }
 }
+
+/// Owner decision T1 (recorded on PR #77): a person-time stratum's
+/// binomial support `m1 = rint(a + b)` is capped at 2,000,000 — at
+/// the limit the stratum still computes; one case past it turns all
+/// five `cmle_rr` leaves `too_large`. The pooled (`crude`) table's
+/// `m1` is the sum, so it crosses with the stratum.
+#[test]
+fn pt_support_limit_is_2e6() {
+    let run_at = |a: f64, b: f64| {
+        run(
+            "rate_compare",
+            &json!({
+                "strata": [[[a, b], [2000000.0, 1000000.0]]],
+                "per_unit": 1000.0,
+                "conf_level": 95,
+            }),
+            &ctx(),
+        )
+        .expect("rate_compare")
+    };
+    const LEAVES: [&str; 5] = [
+        "est",
+        "midp_lower",
+        "midp_upper",
+        "fisher_lower",
+        "fisher_upper",
+    ];
+    // m1 = 1,600,000 + 400,000 = 2,000,000 — at the cap: computes.
+    let at = run_at(1_600_000.0, 400_000.0);
+    for leaf_name in LEAVES {
+        let leaf = &at.result["strata"][0]["cmle_rr"][leaf_name];
+        assert!(
+            leaf.as_f64().is_some_and(|x| x.is_finite()),
+            "m1 = 2e6 must compute, got {leaf} for {leaf_name}"
+        );
+    }
+    // m1 = 1,600,001 + 400,000 = 2,000,001 — one over: too_large,
+    // stratum and crude alike.
+    let over = run_at(1_600_001.0, 400_000.0);
+    let want = json!({ "undefined": "too_large" });
+    for leaf_name in LEAVES {
+        assert_eq!(over.result["strata"][0]["cmle_rr"][leaf_name], want);
+        assert_eq!(over.result["crude"]["cmle_rr"][leaf_name], want);
+    }
+}

@@ -43,6 +43,17 @@ pub const MAX_EXACT_SUPPORT: u64 = 1_000_000;
 /// support_i`, which reduces to `support₁ · support₂` at `k = 2`.
 pub const MAX_EXACT_CONVOLUTION_WORK: u64 = 100_000_000;
 
+/// Owner decision T1 (v1.0 Task 8 follow-up, recorded on PR #77): a
+/// person-time stratum's binomial support is `m1 + 1` with
+/// `m1 = rint(a + b)` as `poly_strat_pt` computes it; any informative
+/// stratum with `m1` above this turns its five `cmle_rr.*` leaves
+/// `{"undefined": "too_large"}` (the pooled table's `m1` is the sum,
+/// so it crosses with the stratum). Chosen at or above the corpus's
+/// `large_counts` fixture (m1 = 1.2e6), which still computes.
+/// Checked arithmetically before any allocation; the
+/// `MAX_EXACT_CONVOLUTION_WORK` total-work cap applies on top.
+pub const MAX_PT_SUPPORT: u64 = 2_000_000;
+
 /// The hypergeometric support size of a 2×2's `a` cell given its
 /// margins — `min(n1, m1) − max(0, n1−m0) + 1` (with `n1` the first
 /// row total, `m1`/`m0` the column totals; `n1 − m0 = n1 + m1 − N`),

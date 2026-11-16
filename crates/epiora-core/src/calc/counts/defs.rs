@@ -60,6 +60,7 @@ pub(crate) static PROPORTION: CalculatorDef = CalculatorDef {
     id: "proportion",
     family: Family::Counts,
     inputs: PROPORTION_INPUTS,
+    groups: &[],
     outputs: PROPORTION_OUTPUTS,
 };
 
@@ -246,6 +247,7 @@ pub(crate) static TWO_BY_TWO: CalculatorDef = CalculatorDef {
     id: "two_by_two",
     family: Family::Counts,
     inputs: TWO_BY_TWO_INPUTS,
+    groups: &[],
     outputs: TWO_BY_TWO_OUTPUTS,
 };
 
@@ -322,6 +324,7 @@ pub(crate) static TWO_BY_N: CalculatorDef = CalculatorDef {
     id: "two_by_n",
     family: Family::Counts,
     inputs: TWO_BY_N_INPUTS,
+    groups: &[],
     outputs: TWO_BY_N_OUTPUTS,
 };
 
@@ -350,5 +353,6 @@ pub(crate) static R_BY_C: CalculatorDef = CalculatorDef {
     id: "r_by_c",
     family: Family::Counts,
     inputs: R_BY_C_INPUTS,
+    groups: &[],
     outputs: R_BY_C_OUTPUTS,
 };

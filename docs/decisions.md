@@ -4185,3 +4185,59 @@ Evidence: `cargo test -p epiora-core --all-features` all green —
 `median_ci_needs_minimum_n`, `every_output_has_registry_coverage`,
 `every_means_fixture_matches`, `golden_v1_unchanged`.
 Supersedes: —
+### v1.0 Task 8 follow-up — owner decisions T1–T3 (2026-11-16)
+
+Decision: Apply the owner's three decisions recorded on [PR #77,
+comment
+6904346253](https://github.com/dorrabbkhan/Epiora/pull/77#issuecomment-6904346253)
+(escalation [comment
+6902876797](https://github.com/dorrabbkhan/Epiora/pull/77#issuecomment-6902876797)).
+
+- **T1 — person-time CMLE rate-ratio support limit (owner-chosen
+  threshold).** `MAX_PT_SUPPORT = 2_000_000` next to the D1
+  constants in `calc/counts/shared.rs`: any informative stratum with
+  `m1 = rint(a + b) > 2e6` turns all five `cmle_rr.*` leaves
+  `{"undefined": "too_large"}` — stratum and crude alike (the pooled
+  `m1` is the sum, so it crosses with the stratum). The 1e8
+  `MAX_EXACT_CONVOLUTION_WORK` total-work cap stays in addition; both
+  are checked arithmetically before any allocation in
+  `martin_pt::too_large`. The `rate_compare/large_counts` fixture
+  (m1 = 1.2e6) still computes. Measured on a release build
+  (`/usr/bin/time -v`): m1 = 1.2e6 → 2.44 s / 30.6 MB peak RSS;
+  m1 = 2e6 → 6.14 s / 49.2 MB; m1 = 2e6+1 → instant `too_large`.
+- **T2 — `median_ci` minimum n.** The rule
+  `n·p < 1 or n·(1−p) < 1 → Undefined { too_few }` (covers the
+  degenerate percentile 0/100) is accepted and now recorded in
+  `docs/v1.0-calculators.md` under `## median_ci` as a "Minimum n"
+  line. Docs-only — the engine already implemented it.
+- **T3 — `t_test_summary` `se_i`/`var_i` alternatives.** The
+  inventory's "one of `sd_i`/`se_i`/`var_i` real >0" per group is now
+  expressed: `CalculatorDef` gains `groups: &[InputGroup]` (each
+  `InputGroup.members` lists alternative input names, canonical
+  first; members are declared `Omit`-defaulted inputs), and
+  `input::validate` enforces exactly-one — none given →
+  `calc_input_missing` on the member list, more than one →
+  `calc_input_out_of_range` on the member list with the existing
+  `bad_choice` reason (no new code or reason). The same construct
+  serves the Task 9 "one of" lines (`ss_unmatched_cc`, `ss_cohort`)
+  and Task 14's renderer via the regenerated `InputGroup.ts` /
+  `CalculatorDef.ts` bindings. `t_test_summary` converts `sd = se·√n`
+  and `sd = √var`; the receipt's canonical inputs record only what
+  the user gave.
+- **Files outside the Files block:** none beyond the follow-up
+  scope — `calc/counts/shared.rs` (the constant), `calc/person_time/
+  martin_pt.rs` (the check), `calc/mod.rs` (`InputGroup` + the
+  `groups` field), `calc/input.rs` (cardinality check),
+  `calc/registry_continuous.rs` + the other six registry files
+  (`groups` field on every literal), `calc/continuous/
+  t_test_summary.rs`, `crates/epiora-wasm/bindings/{CalculatorDef,
+  InputGroup}.ts` (regenerated), `docs/v1.0-calculators.md`,
+  `tests/{calc_person_time,calc_continuous,calc_registry}.rs`.
+Evidence: `cargo test -p epiora-core --all-features` green —
+`pt_support_limit_is_2e6`, `rate_compare_too_large_is_bounded`,
+`t_test_summary_se_and_var_equal_sd`,
+`t_test_summary_needs_exactly_one_spread`,
+`group_members_are_declared_optional_inputs`,
+`every_person_time_fixture_matches` (incl. `large_counts`),
+`every_continuous_fixture_matches`.
+Supersedes: —

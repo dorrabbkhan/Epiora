@@ -60,6 +60,30 @@ fn every_output_has_registry_coverage() {
     );
 }
 
+/// `CalculatorDef::groups` is the registry's "one of" construct
+/// (v1.0 Task 8 follow-up): every member must be a declared input
+/// and `Omit`-defaulted — a filled or required member would make the
+/// group's cardinality check meaningless.
+#[test]
+fn group_members_are_declared_optional_inputs() {
+    for def in REGISTRY {
+        for group in def.groups {
+            for member in group.members {
+                let input = def
+                    .inputs
+                    .iter()
+                    .find(|i| i.name == *member)
+                    .unwrap_or_else(|| panic!("{}: group member {member} undeclared", def.id));
+                assert!(
+                    matches!(input.default, Some(epiora_core::calc::DefaultValue::Omit)),
+                    "{}: group member {member} must be Omit-defaulted",
+                    def.id
+                );
+            }
+        }
+    }
+}
+
 #[test]
 fn defaults_fill_canonically() {
     let def = definition("proportion").expect("proportion def");

@@ -116,6 +116,21 @@ pub struct InputDef {
     pub unit: Option<&'static str>,
 }
 
+/// An inventory "one of" input group — `t_test_summary`'s
+/// `sd_i`/`se_i`/`var_i`, the Task 9 effect-measure alternatives
+/// (`odds_ratio`/`percent_cases_exposed`, …). The user supplies
+/// exactly one of `members`, each declared as an ordinary optional
+/// input (`DefaultValue::Omit`); `input::validate` enforces the
+/// cardinality — none given is `calc_input_missing`, more than one
+/// `calc_input_out_of_range` (`bad_choice`) — and the canonical
+/// inputs record only what the user gave.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
+pub struct InputGroup {
+    /// The alternative input names, the canonical one first.
+    pub members: &'static [&'static str],
+}
+
 /// One emitted statistic of a calculator.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize)]
 #[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
@@ -140,6 +155,8 @@ pub struct CalculatorDef {
     pub family: Family,
     /// Declared inputs.
     pub inputs: &'static [InputDef],
+    /// "One of" input groups (`&[]` for most calculators).
+    pub groups: &'static [InputGroup],
     /// Emitted statistics.
     pub outputs: &'static [OutputDef],
 }
