@@ -14,12 +14,24 @@
         "value": 110,
         "class": "closed_form"
       },
+      "cases_real": {
+        "value": 109.88431628088715,
+        "class": "closed_form"
+      },
       "controls": {
         "value": 220,
         "class": "closed_form"
       },
+      "controls_real": {
+        "value": 219.7686325617743,
+        "class": "closed_form"
+      },
       "total": {
         "value": 330,
+        "class": "closed_form"
+      },
+      "total_real": {
+        "value": 329.65294884266143,
         "class": "closed_form"
       }
     },
@@ -28,12 +40,24 @@
         "value": 112,
         "class": "closed_form"
       },
+      "cases_real": {
+        "value": 111.82934231290619,
+        "class": "closed_form"
+      },
       "controls": {
         "value": 224,
         "class": "closed_form"
       },
+      "controls_real": {
+        "value": 223.65868462581238,
+        "class": "closed_form"
+      },
       "total": {
         "value": 336,
+        "class": "closed_form"
+      },
+      "total_real": {
+        "value": 335.48802693871858,
         "class": "closed_form"
       }
     },
@@ -42,12 +66,24 @@
         "value": 122,
         "class": "closed_form"
       },
+      "cases_real": {
+        "value": 121.62379042282707,
+        "class": "closed_form"
+      },
       "controls": {
         "value": 244,
         "class": "closed_form"
       },
+      "controls_real": {
+        "value": 243.24758084565414,
+        "class": "closed_form"
+      },
       "total": {
         "value": 366,
+        "class": "closed_form"
+      },
+      "total_real": {
+        "value": 364.8713712684812,
         "class": "closed_form"
       }
     }

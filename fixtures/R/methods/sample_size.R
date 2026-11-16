@@ -29,12 +29,13 @@ ss_prop_openepi <- function(population_size, expected_freq, margin_error,
                             design_effect) {
   p <- expected_freq / 100
   d <- margin_error / 100
-  out <- vapply(ss_level_pct, function(lv) {
+  real <- vapply(ss_level_pct, function(lv) {
     za <- qnorm((1 + lv / 100) / 2)
-    ceiling((design_effect * population_size * p * (1 - p)) /
-              ((d * d / (za * za)) * (population_size - 1) + p * (1 - p)))
+    (design_effect * population_size * p * (1 - p)) /
+      ((d * d / (za * za)) * (population_size - 1) + p * (1 - p))
   }, numeric(1))
-  setNames(out, ss_levels)
+  list(n = setNames(ceiling(real), ss_levels),
+       n_real = setNames(real, ss_levels))
 }
 
 # EI7: per level, n0 = z^2*p(1-p)/d^2 (freq/margin entered as percents,
@@ -49,10 +50,13 @@ ss_prop_ei7 <- function(population_size, expected_freq, margin_error,
     n0 <- za * za * factor
     round(n0 / (1 + n0 / population_size))
   }, numeric(1))
-  cluster_size <- ceiling(design_effect * n_raw / clusters)
+  cluster_real <- design_effect * n_raw / clusters
+  cluster_size <- ceiling(cluster_real)
   list(
     n_ei7 = setNames(cluster_size, ss_levels),
+    n_ei7_real = setNames(cluster_real, ss_levels),
     cluster_size = setNames(cluster_size, ss_levels),
+    cluster_size_real = setNames(cluster_real, ss_levels),
     total = setNames(clusters * cluster_size, ss_levels)
   )
 }
@@ -70,7 +74,9 @@ kelsey <- function(conf, power, r, p2, p1) {
   vn <- (za + zb)^2 * pbar * qbar * (r + 1) / ((p1 - p2)^2 * r)
   n1 <- ceiling(vn)
   n2 <- ceiling(vn * r)
-  c(group1 = n1, group2 = n2, total = n1 + n2)
+  c(group1 = n1, group2 = n2, total = n1 + n2,
+    group1_real = vn, group2_real = vn * r,
+    total_real = vn + vn * r)
 }
 
 # Fleiss: n1 = (Za*sqrt((r+1)pbar qbar) + Zb*sqrt(r*p1*q1 + p2*q2))^2 /
@@ -83,7 +89,9 @@ fleiss <- function(conf, power, r, p2, p1) {
     (r * (p2 - p1)^2)
   n1 <- ceiling(vn)
   n2 <- ceiling(vn * r)
-  c(group1 = n1, group2 = n2, total = n1 + n2)
+  c(group1 = n1, group2 = n2, total = n1 + n2,
+    group1_real = vn, group2_real = vn * r,
+    total_real = vn + vn * r)
 }
 
 # Fleiss with continuity correction: same base n then
@@ -97,7 +105,9 @@ fleiss_cc <- function(conf, power, r, p2, p1) {
   vn <- vn * (1 + sqrt(1 + 2 * (r + 1) / (vn * r * abs(p2 - p1))))^2 / 4
   n1 <- ceiling(vn)
   n2 <- ceiling(vn * r)
-  c(group1 = n1, group2 = n2, total = n1 + n2)
+  c(group1 = n1, group2 = n2, total = n1 + n2,
+    group1_real = vn, group2_real = vn * r,
+    total_real = vn + vn * r)
 }
 
 # --- mean difference -------------------------------------------------
@@ -106,9 +116,14 @@ fleiss_cc <- function(conf, power, r, p2, p1) {
 #   diff^2; n2 = ceil(n1*ratio); OpenEpi SSMean.js.
 ss_means <- function(conf, power, ratio, diff, s1, s2) {
   za <- ss_za(conf); zb <- ss_zb(power)
-  n1 <- ceiling((s1^2 + s2^2 / ratio) * (za + zb)^2 / diff^2)
-  n2 <- ceiling(n1 * ratio)
-  c(n1 = n1, n2 = n2, total = n1 + n2)
+  vn <- (s1^2 + s2^2 / ratio) * (za + zb)^2 / diff^2
+  n1 <- ceiling(vn)
+  # OpenEpi ceils n1 first, then applies the ratio: n2's ceiling
+  # argument is the already-ceiled n1 * ratio (integer-valued).
+  vn2 <- n1 * ratio
+  n2 <- ceiling(vn2)
+  c(n1 = n1, n2 = n2, total = n1 + n2,
+    n1_real = vn, n2_real = vn2, total_real = vn + vn2)
 }
 
 # --- power -----------------------------------------------------------
