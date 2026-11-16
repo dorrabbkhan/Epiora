@@ -4241,3 +4241,45 @@ Evidence: `cargo test -p epiora-core --all-features` green —
 `every_person_time_fixture_matches` (incl. `large_counts`),
 `every_continuous_fixture_matches`.
 Supersedes: —
+### v1.0 Task 8 follow-up — martin CMLE roots via `zeroin` (2026-11-16)
+
+Decision: `martin_root` (the shared root step behind both the
+person-time `cmle_rr` leaves and the Task 7 counts-path
+`adjusted.cmle_or`) now solves with `special::zeroin` — the
+R_zeroin2 port — at tol = 1e-14, the tolerance both
+`stratified_cmle_pt_one` and `stratified_cmle_one` pass to
+`uniroot` in `fixtures/R/methods`. `brent_root`'s absolute-only
+tolerance can never satisfy its stopping rule at roots ≳ ~500, so
+large-`m1` cases returned `{"undefined": "out_of_range"}` where R
+returns finite roots. The same change fixes the shared
+`adjusted.cmle_or` path for count tables with large margins.
+
+- **Ill-conditioned extreme `est` (no oracle value).** For the
+  person-time stratum `[[m1−1, 1], [2e6, 1e6]]` at m1 = 1.2e6 and
+  2e6, R's `est` is an iteration-landing artifact: `martin_func`
+  has no zero there, only a quantized residual plateau (R evidence:
+  f(600131) < 0, f(600132) > 0, f(600133) < 0). The regression
+  test `martin_cmle_large_roots_match_r` therefore asserts only
+  that those `est` leaves are finite `Value`s (the regression was
+  `out_of_range`); every other leaf still matches R at the
+  `iterative` class — all five leaves at m1 = 100/1e3/1e5, the
+  four limits at m1 = 1.2e6/2e6, and all five `adjusted.cmle_or`
+  leaves.
+- **Files outside the Files block:**
+  `crates/epiora-core/src/calc/counts/martin.rs` (brent_root →
+  zeroin at 1e-14), `crates/epiora-core/tests/calc_counts.rs` (the
+  regression test), `docs/decisions.md` (this entry).
+
+Evidence: `cargo test -p epiora-core --all-features` green —
+`martin_cmle_large_roots_match_r`, `every_counts_fixture_matches`,
+`every_person_time_fixture_matches`, `large_counts_terminate`,
+`exact_paths_too_large_above_owner_limits`; full corpus 0
+mismatches (calc 91 fixtures/3,207 leaves + means 10/484 — the
+review's 3,691-leaf convention — plus the 44 v0.2 procedure
+fixtures/5,937 leaves). Release `/usr/bin/time -v` after the
+change (corpus-runner on scratch `calc.rate_compare` fixtures):
+m1 = 1.2e6 → 0:04.18 / 30,860 kB; m1 = 2e6 → 0:06.78 / 49,524 kB;
+m1 = 2e6+1 → 0:00.00 / 3,060 kB (all five leaves `too_large`);
+9 strata × 2e6 → 0:30.59 / 49,700 kB (all strata compute; crude
+`too_large`).
+Supersedes: —
