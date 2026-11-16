@@ -6,10 +6,12 @@ pub mod compare;
 pub mod dataset_json;
 pub mod ei7;
 pub mod report;
+pub mod run_all;
 pub mod run_case;
 pub mod run_means;
 pub mod run_special;
 
 pub use dataset_json::{load_dataset, load_dataset_dir};
+pub use run_all::{corpus_lines, corpus_lines_with, dataset_files, CorpusLine, FAMILIES};
 pub use run_case::{run_case, CaseOutput};
 pub use run_special::run_special;
