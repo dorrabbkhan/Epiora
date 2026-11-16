@@ -14,12 +14,24 @@
         "value": 436,
         "class": "closed_form"
       },
+      "exposed_real": {
+        "value": 435.61282525637426,
+        "class": "closed_form"
+      },
       "unexposed": {
         "value": 436,
         "class": "closed_form"
       },
+      "unexposed_real": {
+        "value": 435.61282525637426,
+        "class": "closed_form"
+      },
       "total": {
         "value": 872,
+        "class": "closed_form"
+      },
+      "total_real": {
+        "value": 871.22565051274853,
         "class": "closed_form"
       }
     },
@@ -28,12 +40,24 @@
         "value": 435,
         "class": "closed_form"
       },
+      "exposed_real": {
+        "value": 434.43202243946848,
+        "class": "closed_form"
+      },
       "unexposed": {
         "value": 435,
         "class": "closed_form"
       },
+      "unexposed_real": {
+        "value": 434.43202243946848,
+        "class": "closed_form"
+      },
       "total": {
         "value": 870,
+        "class": "closed_form"
+      },
+      "total_real": {
+        "value": 868.86404487893697,
         "class": "closed_form"
       }
     },
@@ -42,12 +66,24 @@
         "value": 474,
         "class": "closed_form"
       },
+      "exposed_real": {
+        "value": 473.58740538366646,
+        "class": "closed_form"
+      },
       "unexposed": {
         "value": 474,
         "class": "closed_form"
       },
+      "unexposed_real": {
+        "value": 473.58740538366646,
+        "class": "closed_form"
+      },
       "total": {
         "value": 948,
+        "class": "closed_form"
+      },
+      "total_real": {
+        "value": 947.17481076733293,
         "class": "closed_form"
       }
     }

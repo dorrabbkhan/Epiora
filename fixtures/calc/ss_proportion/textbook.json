@@ -39,6 +39,36 @@
         "class": "closed_form"
       }
     },
+    "n_openepi_real": {
+      "80": {
+        "value": 164.21063619086033,
+        "class": "closed_form"
+      },
+      "90": {
+        "value": 270.48143596312451,
+        "class": "closed_form"
+      },
+      "95": {
+        "value": 383.99875452789513,
+        "class": "closed_form"
+      },
+      "97": {
+        "value": 470.70802523115822,
+        "class": "closed_form"
+      },
+      "99": {
+        "value": 663.05039607059757,
+        "class": "closed_form"
+      },
+      "999": {
+        "value": 1081.5866036009179,
+        "class": "closed_form"
+      },
+      "9999": {
+        "value": 1511.3842961886826,
+        "class": "closed_form"
+      }
+    },
     "n_ei7": {
       "80": {
         "value": 164,
@@ -69,7 +99,67 @@
         "class": "closed_form"
       }
     },
+    "n_ei7_real": {
+      "80": {
+        "value": 164,
+        "class": "closed_form"
+      },
+      "90": {
+        "value": 270,
+        "class": "closed_form"
+      },
+      "95": {
+        "value": 384,
+        "class": "closed_form"
+      },
+      "97": {
+        "value": 471,
+        "class": "closed_form"
+      },
+      "99": {
+        "value": 663,
+        "class": "closed_form"
+      },
+      "999": {
+        "value": 1082,
+        "class": "closed_form"
+      },
+      "9999": {
+        "value": 1511,
+        "class": "closed_form"
+      }
+    },
     "cluster_size": {
+      "80": {
+        "value": 164,
+        "class": "closed_form"
+      },
+      "90": {
+        "value": 270,
+        "class": "closed_form"
+      },
+      "95": {
+        "value": 384,
+        "class": "closed_form"
+      },
+      "97": {
+        "value": 471,
+        "class": "closed_form"
+      },
+      "99": {
+        "value": 663,
+        "class": "closed_form"
+      },
+      "999": {
+        "value": 1082,
+        "class": "closed_form"
+      },
+      "9999": {
+        "value": 1511,
+        "class": "closed_form"
+      }
+    },
+    "cluster_size_real": {
       "80": {
         "value": 164,
         "class": "closed_form"

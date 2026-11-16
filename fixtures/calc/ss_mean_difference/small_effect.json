@@ -14,12 +14,24 @@
       "value": 7661,
       "class": "closed_form"
     },
+    "n1_real": {
+      "value": 7660.5066207247073,
+      "class": "closed_form"
+    },
     "n2": {
+      "value": 7661,
+      "class": "closed_form"
+    },
+    "n2_real": {
       "value": 7661,
       "class": "closed_form"
     },
     "total": {
       "value": 15322,
+      "class": "closed_form"
+    },
+    "total_real": {
+      "value": 15321.506620724707,
       "class": "closed_form"
     }
   },

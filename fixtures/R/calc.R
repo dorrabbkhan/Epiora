@@ -1244,14 +1244,37 @@ anova_summary_write <- function(id, tab) {
 
 # --- sample size & power ----------------------------------------------------
 
+# Generation-time guard (v1.0 Task 2 follow-up): every ceiling-
+# produced sample-size leaf gets a `<leaf>_real` sibling holding the
+# value the ceiling was applied to, so ceiling(x_real) == x must hold
+# elementwise. Scoped to ceiling pairs only — `total` leaves are sums
+# or products of the integer leaves, not ceilings, so their `_real`
+# siblings (sums of the reals) are not asserted: ceiling(a) +
+# ceiling(b) != ceiling(a + b) in general.
+check_ss_real <- function(x, x_real, what) {
+  bad <- which(ceiling(x_real) != x)
+  stop_if(length(bad) > 0, sprintf(paste0(
+    "real-value guard failed for %s at element %d: ceiling(%s) != %s"),
+    what, bad[1], format(x_real[bad[1]], digits = 17),
+    format(x[bad[1]], digits = 17)))
+  invisible(TRUE)
+}
+
 ss_proportion_write <- function(id, pop, freq, margin, deff,
                                 clusters = 1) {
   on <- ss_prop_openepi(pop, freq, margin, deff)
   ei <- ss_prop_ei7(pop, freq, margin, deff, clusters)
+  check_ss_real(on$n, on$n_real, paste0(id, ".n_openepi"))
+  check_ss_real(ei$n_ei7, ei$n_ei7_real, paste0(id, ".n_ei7"))
+  check_ss_real(ei$cluster_size, ei$cluster_size_real,
+                paste0(id, ".cluster_size"))
   expected <- list(
-    n_openepi = lapply(on, leaf),
+    n_openepi = lapply(on$n, leaf),
+    n_openepi_real = lapply(on$n_real, leaf),
     n_ei7 = lapply(ei$n_ei7, leaf),
+    n_ei7_real = lapply(ei$n_ei7_real, leaf),
     cluster_size = lapply(ei$cluster_size, leaf),
+    cluster_size_real = lapply(ei$cluster_size_real, leaf),
     total = lapply(ei$total, leaf))
   calc_write("ss_proportion", id,
              list(population_size = pop, expected_freq = freq,
@@ -1272,13 +1295,31 @@ ss_cc_write <- function(id, conf, power, r, p2_pct, p1_pct = NULL,
     ke <- kelsey(c, power, r, p2, p1)
     fl <- fleiss(c, power, r, p2, p1)
     fc <- fleiss_cc(c, power, r, p2, p1)
+    for (m in list(list("kelsey", ke), list("fleiss", fl),
+                   list("fleiss_cc", fc))) {
+      check_ss_real(m[[2]][c("group1", "group2")],
+                    m[[2]][c("group1_real", "group2_real")],
+                    paste0(id, ".", m[[1]]))
+    }
     list(
-      kelsey = list(cases = leaf(ke[1]), controls = leaf(ke[2]),
-                    total = leaf(ke[3])),
-      fleiss = list(cases = leaf(fl[1]), controls = leaf(fl[2]),
-                    total = leaf(fl[3])),
-      fleiss_cc = list(cases = leaf(fc[1]), controls = leaf(fc[2]),
-                       total = leaf(fc[3])))
+      kelsey = list(cases = leaf(ke[1]),
+                    cases_real = leaf(ke["group1_real"]),
+                    controls = leaf(ke[2]),
+                    controls_real = leaf(ke["group2_real"]),
+                    total = leaf(ke[3]),
+                    total_real = leaf(ke["total_real"])),
+      fleiss = list(cases = leaf(fl[1]),
+                    cases_real = leaf(fl["group1_real"]),
+                    controls = leaf(fl[2]),
+                    controls_real = leaf(fl["group2_real"]),
+                    total = leaf(fl[3]),
+                    total_real = leaf(fl["total_real"])),
+      fleiss_cc = list(cases = leaf(fc[1]),
+                       cases_real = leaf(fc["group1_real"]),
+                       controls = leaf(fc[2]),
+                       controls_real = leaf(fc["group2_real"]),
+                       total = leaf(fc[3]),
+                       total_real = leaf(fc["total_real"])))
   }
   expected <- build(conf)
   check_conf_leak(id, conf, expected, build)
@@ -1307,13 +1348,31 @@ ss_cohort_write <- function(id, conf, power, r, p2_pct,
     ke <- kelsey(c, power, r, p2, p1)
     fl <- fleiss(c, power, r, p2, p1)
     fc <- fleiss_cc(c, power, r, p2, p1)
+    for (m in list(list("kelsey", ke), list("fleiss", fl),
+                   list("fleiss_cc", fc))) {
+      check_ss_real(m[[2]][c("group1", "group2")],
+                    m[[2]][c("group1_real", "group2_real")],
+                    paste0(id, ".", m[[1]]))
+    }
     list(
-      kelsey = list(exposed = leaf(ke[1]), unexposed = leaf(ke[2]),
-                    total = leaf(ke[3])),
-      fleiss = list(exposed = leaf(fl[1]), unexposed = leaf(fl[2]),
-                    total = leaf(fl[3])),
-      fleiss_cc = list(exposed = leaf(fc[1]), unexposed = leaf(fc[2]),
-                       total = leaf(fc[3])))
+      kelsey = list(exposed = leaf(ke[1]),
+                    exposed_real = leaf(ke["group1_real"]),
+                    unexposed = leaf(ke[2]),
+                    unexposed_real = leaf(ke["group2_real"]),
+                    total = leaf(ke[3]),
+                    total_real = leaf(ke["total_real"])),
+      fleiss = list(exposed = leaf(fl[1]),
+                    exposed_real = leaf(fl["group1_real"]),
+                    unexposed = leaf(fl[2]),
+                    unexposed_real = leaf(fl["group2_real"]),
+                    total = leaf(fl[3]),
+                    total_real = leaf(fl["total_real"])),
+      fleiss_cc = list(exposed = leaf(fc[1]),
+                       exposed_real = leaf(fc["group1_real"]),
+                       unexposed = leaf(fc[2]),
+                       unexposed_real = leaf(fc["group2_real"]),
+                       total = leaf(fc[3]),
+                       total_real = leaf(fc["total_real"])))
   }
   expected <- build(conf)
   check_conf_leak(id, conf, expected, build)
@@ -1333,8 +1392,11 @@ ss_mean_difference_write <- function(id, conf, power, ratio, diff,
                                      mean_2 = NULL) {
   build <- function(c) {
     ss <- ss_means(c, power, ratio, diff, s1, s2)
-    list(n1 = leaf(ss[1]), n2 = leaf(ss[2]),
-         total = leaf(ss[3]))
+    check_ss_real(ss[c("n1", "n2")], ss[c("n1_real", "n2_real")],
+                  paste0(id, ".ss_means"))
+    list(n1 = leaf(ss[1]), n1_real = leaf(ss["n1_real"]),
+         n2 = leaf(ss[2]), n2_real = leaf(ss["n2_real"]),
+         total = leaf(ss[3]), total_real = leaf(ss["total_real"]))
   }
   expected <- build(conf)
   check_conf_leak(id, conf, expected, build)

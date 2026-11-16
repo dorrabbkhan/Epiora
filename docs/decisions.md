@@ -4326,3 +4326,51 @@ mismatches). Release `/usr/bin/time -v` (corpus-runner on scratch
 0:00.00 / 3,368 kB, every stratum's and crude `cmle_rr` leaves
 `too_large` (was 0:30.59 / 49,700 kB computing strata before T4).
 Supersedes: —
+
+### v1.0 Task 2 follow-up — real-valued sample sizes (2026-11-16)
+
+Decision: Owner decision 2026-11-16 (v1.0 Task 9, C1: "Fixture PR
+first" — a Task 2 follow-up adds real-value (pre-ceiling) leaves via
+`generate.R`; Task 9 stacks on it). Every ceiling-produced `ss_*`
+leaf gained a `<leaf>_real` sibling (class `closed_form`) holding the
+value the ceiling was applied to:
+
+- `ss_proportion`: `n_openepi_real`, `n_ei7_real` and
+  `cluster_size_real` per confidence level (`{80,...,9999}`); the
+  EI7 `_real` values are `DEFF · round(n0/(1+n0/N)) / clusters` — the
+  expression the ceiling is applied to, `round(n)` inside kept as
+  written. `total` (clusters × integer cluster size) is a product,
+  not a ceiling — no `_real` sibling.
+- `ss_unmatched_cc` / `ss_cohort`: per method (kelsey, fleiss,
+  fleiss_cc) `{cases|exposed}_real` = vn,
+  `{controls|unexposed}_real` = vn·r (the second ceiling's argument),
+  `total_real` = their sum.
+- `ss_mean_difference`: `n1_real` = vn; `n2_real` = the argument of
+  n2's ceiling as R computes it — `ceiling(n1) · ratio`, the
+  already-ceiled n1 (OpenEpi `SSMean.js` `n2=Math.ceil(n1*ratio)`
+  does the same), so `n2_real` is integer-valued. `total_real` =
+  `n1_real + n2_real`. The alternative `n1_real · ratio` was not
+  used: `ceiling(330.671) = 331 ≠ n2 = 332` on `high_power`, which
+  would break `check_ss_real` and Task 9's `rounded_up_is_ceiling`
+  (`rounded == ceil(real)`). Flagged for owner review in the PR.
+- Generation-time guard `check_ss_real` (fixtures/R/calc.R): for
+  every case, `ceiling(x_real) == x` elementwise for each ceiling
+  pair. `total` pairs are not asserted — they are sums/products, not
+  ceilings (`ceiling(a)+ceiling(b) ≠ ceiling(a+b)` in general).
+
+Census (`git diff` + leaf walk vs main): 14 fixture files, 156 added
+leaves, 0 removed, 0 changed — ss_proportion 4 files × 21,
+ss_unmatched_cc 3 × 9, ss_cohort 4 × 9, ss_mean_difference 3 × 3.
+`fixtures/special/t_quantile.json` drifted by one ulp on the two
+known Cauchy-`tanpi` leaves on regeneration (PR #71 precedent) and
+was restored from main.
+
+Independent check (fresh R session, formulas typed from the
+OpenEpi/inventory source, not the methods file): 14 comparisons
+across `clustered`, `odds_ratio_input`, `risk_difference_input`,
+`high_power` — all rel = 0 (≤ 1e-9 required).
+
+Files outside the task's Files block: `docs/v1.0-calculators.md`
+(one `_real` output line per group, owner decision C1). `fixtures/`
+changed only via `Rscript fixtures/generate.R`.
+Supersedes: —
