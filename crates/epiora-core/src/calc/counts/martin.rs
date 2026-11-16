@@ -4,12 +4,15 @@
 //! stratum's hypergeometric coefficient polynomial, kept in log
 //! space and max-normalised. The CMLE and the mid-p/Fisher limits
 //! are roots of that distribution's tails; the corpus records
-//! `uniroot(tol = 1e-14)` roots, so `brent_root` suffices.
+//! `uniroot(tol = 1e-14)` roots, so `zeroin` — the R_zeroin2 port
+//! whose `2·eps·|b|` relative term converges at roots ≳ 500 that
+//! `brent_root`'s absolute-only tolerance never reaches — is the
+//! solver.
 
 use super::shared::{
     hypergeom_support, informative, MAX_EXACT_CONVOLUTION_WORK, MAX_EXACT_SUPPORT,
 };
-use crate::special::{brent_root, dhyper};
+use crate::special::{dhyper, zeroin};
 use crate::stats::Table2x2;
 
 /// Per-stratum polynomial: log coefficients `lchoose(n1,k) +
@@ -141,8 +144,8 @@ fn martin_func(lp_n: &[f64], lp_d: &[f64], r: f64, value: f64) -> f64 {
 
 /// `martin_root` — the expanding bracket `x0=0, x1=max(0.5,approx)`
 /// grown by `x1 *= 1.5 * iter`, then a root on the bracket; the
-/// corpus value uses `uniroot(tol=1e-14)`, so `brent_root` returns
-/// the same root to its own tolerance.
+/// corpus value uses `uniroot(tol=1e-14)`, so `zeroin` — R_zeroin2
+/// itself — solves at the same 1e-14.
 fn martin_root(lp_n: &[f64], lp_d: &[f64], value: f64, approx: f64) -> f64 {
     let f = |r: f64| martin_func(lp_n, lp_d, r, value);
     let mut x0 = 0.0;
@@ -167,7 +170,7 @@ fn martin_root(lp_n: &[f64], lp_d: &[f64], value: f64, approx: f64) -> f64 {
     if f1 * f0 > 0.0 {
         return f64::NAN;
     }
-    brent_root(f, x0, x1).unwrap_or(f64::NAN)
+    zeroin(f, x0, x1, 1e-14).unwrap_or(f64::NAN)
 }
 
 /// The owner-decision size guard (v1.0 Task 7 follow-up, PR #74):

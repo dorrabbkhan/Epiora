@@ -154,5 +154,165 @@ fn rate_compare_too_large_is_bounded() {
         "fisher_upper",
     ] {
         assert_eq!(out.result["strata"][0]["cmle_rr"][leaf_name], want);
+        assert_eq!(out.result["crude"]["cmle_rr"][leaf_name], want);
+    }
+    // Two huge strata: the T4 whole-call cap marks every stratum's
+    // and the crude `cmle_rr` leaves, from arithmetic alone.
+    let two = run(
+        "rate_compare",
+        &json!({
+            "strata": [
+                [[4e15, 4e15], [1.0, 1.0]],
+                [[4e15, 4e15], [1.0, 1.0]],
+            ],
+            "per_unit": 1000.0,
+            "conf_level": 95,
+        }),
+        &ctx(),
+    )
+    .expect("rate_compare on two huge strata");
+    for i in 0..2 {
+        for leaf_name in [
+            "est",
+            "midp_lower",
+            "midp_upper",
+            "fisher_lower",
+            "fisher_upper",
+        ] {
+            assert_eq!(two.result["strata"][i]["cmle_rr"][leaf_name], want);
+        }
+    }
+    for leaf_name in [
+        "est",
+        "midp_lower",
+        "midp_upper",
+        "fisher_lower",
+        "fisher_upper",
+    ] {
+        assert_eq!(two.result["crude"]["cmle_rr"][leaf_name], want);
+    }
+}
+
+/// Owner decision T1 (recorded on PR #77): a person-time stratum's
+/// binomial support `m1 = rint(a + b)` is capped at 2,000,000 — at
+/// the limit the stratum still computes; one case past it turns all
+/// five `cmle_rr` leaves `too_large`. The pooled (`crude`) table's
+/// `m1` is the sum, so it crosses with the stratum.
+#[test]
+fn pt_support_limit_is_2e6() {
+    let run_at = |a: f64, b: f64| {
+        run(
+            "rate_compare",
+            &json!({
+                "strata": [[[a, b], [2000000.0, 1000000.0]]],
+                "per_unit": 1000.0,
+                "conf_level": 95,
+            }),
+            &ctx(),
+        )
+        .expect("rate_compare")
+    };
+    const LEAVES: [&str; 5] = [
+        "est",
+        "midp_lower",
+        "midp_upper",
+        "fisher_lower",
+        "fisher_upper",
+    ];
+    // m1 = 1,600,000 + 400,000 = 2,000,000 — at the cap: computes.
+    let at = run_at(1_600_000.0, 400_000.0);
+    for leaf_name in LEAVES {
+        let leaf = &at.result["strata"][0]["cmle_rr"][leaf_name];
+        assert!(
+            leaf.as_f64().is_some_and(|x| x.is_finite()),
+            "m1 = 2e6 must compute, got {leaf} for {leaf_name}"
+        );
+    }
+    // m1 = 1,600,001 + 400,000 = 2,000,001 — one over: too_large,
+    // stratum and crude alike.
+    let over = run_at(1_600_001.0, 400_000.0);
+    let want = json!({ "undefined": "too_large" });
+    for leaf_name in LEAVES {
+        assert_eq!(over.result["strata"][0]["cmle_rr"][leaf_name], want);
+        assert_eq!(over.result["crude"]["cmle_rr"][leaf_name], want);
+    }
+}
+
+/// Owner decision T4 (recorded on PR #78): `rate_compare` computes
+/// each stratum's `cmle_rr` separately, so the call's total support —
+/// Σm1 over the informative strata — is capped at 2,000,000 on top of
+/// the per-stratum cap. At the cap the strata still compute; one case
+/// past it, or nine maximal strata, turns every stratum's and the
+/// crude `cmle_rr` leaves `too_large` without any allocation.
+#[test]
+fn pt_total_support_limit_is_2e6() {
+    let run_strata = |strata: Value| {
+        run(
+            "rate_compare",
+            &json!({
+                "strata": strata,
+                "per_unit": 1000.0,
+                "conf_level": 95,
+            }),
+            &ctx(),
+        )
+        .expect("rate_compare")
+    };
+    const LEAVES: [&str; 5] = [
+        "est",
+        "midp_lower",
+        "midp_upper",
+        "fisher_lower",
+        "fisher_upper",
+    ];
+    // Σm1 = 1,000,000 + 1,000,000 = 2,000,000 — at the cap: both
+    // strata and the pooled crude compute.
+    let at = run_strata(json!([
+        [[500_000, 500_000], [1_000_000.0, 1_000_000.0]],
+        [[500_000, 500_000], [1_000_000.0, 1_000_000.0]],
+    ]));
+    for i in 0..2 {
+        for leaf_name in LEAVES {
+            let leaf = &at.result["strata"][i]["cmle_rr"][leaf_name];
+            assert!(
+                leaf.as_f64().is_some_and(|x| x.is_finite()),
+                "Σm1 = 2e6 must compute, got {leaf} for strata[{i}].{leaf_name}"
+            );
+        }
+    }
+    for leaf_name in LEAVES {
+        let leaf = &at.result["crude"]["cmle_rr"][leaf_name];
+        assert!(
+            leaf.as_f64().is_some_and(|x| x.is_finite()),
+            "Σm1 = 2e6 must compute, got {leaf} for crude.{leaf_name}"
+        );
+    }
+    // Σm1 = 1,000,000 + 1,000,001 = 2,000,001 — one over: every
+    // stratum's and the crude's leaves are too_large, including the
+    // stratum that is itself under the per-stratum cap.
+    let over = run_strata(json!([
+        [[500_000, 500_000], [1_000_000.0, 1_000_000.0]],
+        [[500_001, 500_000], [1_000_000.0, 1_000_000.0]],
+    ]));
+    let want = json!({ "undefined": "too_large" });
+    for i in 0..2 {
+        for leaf_name in LEAVES {
+            assert_eq!(over.result["strata"][i]["cmle_rr"][leaf_name], want);
+        }
+    }
+    for leaf_name in LEAVES {
+        assert_eq!(over.result["crude"]["cmle_rr"][leaf_name], want);
+    }
+    // 9 strata × m1 = 2,000,000 — the pre-T4 worst case: the cap is
+    // decided arithmetically, so every `cmle_rr` leaf answers
+    // too_large without a single polynomial being allocated.
+    let nine = run_strata(json!(vec![[[1e6, 1e6], [1.0, 1.0]]; 9]));
+    for i in 0..9 {
+        for leaf_name in LEAVES {
+            assert_eq!(nine.result["strata"][i]["cmle_rr"][leaf_name], want);
+        }
+    }
+    for leaf_name in LEAVES {
+        assert_eq!(nine.result["crude"]["cmle_rr"][leaf_name], want);
     }
 }

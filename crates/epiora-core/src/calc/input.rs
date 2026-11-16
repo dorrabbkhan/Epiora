@@ -223,5 +223,24 @@ pub fn validate(def: &CalculatorDef, inputs: &Value) -> Result<Value, EngineErro
             },
         }
     }
+    // "One of" groups: exactly one member present in the user's
+    // inputs (members are `Omit`-defaulted, so nothing was filled).
+    // Zero → `calc_input_missing`; more than one → the existing
+    // `bad_choice` reason — both name the member list.
+    for group in def.groups {
+        let present = group
+            .members
+            .iter()
+            .filter(|m| map.contains_key(**m))
+            .count();
+        if present != 1 {
+            let input = group.members.join("/");
+            return Err(if present == 0 {
+                EngineError::CalcInputMissing { input }
+            } else {
+                out_of_range(&input, "bad_choice")
+            });
+        }
+    }
     Ok(Value::Object(out))
 }

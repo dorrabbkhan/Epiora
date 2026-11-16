@@ -51,6 +51,7 @@ pub(super) static RATE_ONE: CalculatorDef = CalculatorDef {
     id: "rate_one",
     family: Family::PersonTime,
     inputs: RATE_ONE_INPUTS,
+    groups: &[],
     outputs: RATE_ONE_OUTPUTS,
 };
 
@@ -175,5 +176,6 @@ pub(super) static RATE_COMPARE: CalculatorDef = CalculatorDef {
     id: "rate_compare",
     family: Family::PersonTime,
     inputs: RATE_COMPARE_INPUTS,
+    groups: &[],
     outputs: RATE_COMPARE_OUTPUTS,
 };

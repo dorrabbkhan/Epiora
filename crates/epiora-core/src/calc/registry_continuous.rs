@@ -3,7 +3,8 @@
 //! metadata; they are registered but not runnable in Task 7.
 
 use crate::calc::{
-    idf, od, CalculatorDef, CellKind, DefaultValue, Family, InputDef, InputKind, OutputDef,
+    idf, od, CalculatorDef, CellKind, DefaultValue, Family, InputDef, InputGroup, InputKind,
+    OutputDef,
 };
 use crate::validation::ToleranceClass::ClosedForm as CF;
 const MEAN_CI_INPUTS: &[InputDef] = &[
@@ -66,6 +67,7 @@ pub(super) static MEAN_CI: CalculatorDef = CalculatorDef {
     id: "mean_ci",
     family: Family::Continuous,
     inputs: MEAN_CI_INPUTS,
+    groups: &[],
     outputs: MEAN_CI_OUTPUTS,
 };
 
@@ -109,6 +111,7 @@ pub(super) static MEDIAN_CI: CalculatorDef = CalculatorDef {
     id: "median_ci",
     family: Family::Continuous,
     inputs: MEDIAN_CI_INPUTS,
+    groups: &[],
     outputs: MEDIAN_CI_OUTPUTS,
 };
 
@@ -143,7 +146,25 @@ const T_TEST_SUMMARY_INPUTS: &[InputDef] = &[
             min: f64::MIN_POSITIVE,
             max: f64::MAX,
         },
+        Some(DefaultValue::Omit),
         None,
+    ),
+    idf(
+        "se_1",
+        InputKind::Real {
+            min: f64::MIN_POSITIVE,
+            max: f64::MAX,
+        },
+        Some(DefaultValue::Omit),
+        None,
+    ),
+    idf(
+        "var_1",
+        InputKind::Real {
+            min: f64::MIN_POSITIVE,
+            max: f64::MAX,
+        },
+        Some(DefaultValue::Omit),
         None,
     ),
     idf(
@@ -170,9 +191,38 @@ const T_TEST_SUMMARY_INPUTS: &[InputDef] = &[
             min: f64::MIN_POSITIVE,
             max: f64::MAX,
         },
-        None,
+        Some(DefaultValue::Omit),
         None,
     ),
+    idf(
+        "se_2",
+        InputKind::Real {
+            min: f64::MIN_POSITIVE,
+            max: f64::MAX,
+        },
+        Some(DefaultValue::Omit),
+        None,
+    ),
+    idf(
+        "var_2",
+        InputKind::Real {
+            min: f64::MIN_POSITIVE,
+            max: f64::MAX,
+        },
+        Some(DefaultValue::Omit),
+        None,
+    ),
+];
+
+/// Inventory `## t_test_summary`: per group, exactly one of
+/// `sd_i`/`se_i`/`var_i` — the canonical `sd` first.
+const T_TEST_SUMMARY_GROUPS: &[InputGroup] = &[
+    InputGroup {
+        members: &["sd_1", "se_1", "var_1"],
+    },
+    InputGroup {
+        members: &["sd_2", "se_2", "var_2"],
+    },
 ];
 
 const T_TEST_SUMMARY_OUTPUTS: &[OutputDef] = &[
@@ -253,6 +303,7 @@ pub(super) static T_TEST_SUMMARY: CalculatorDef = CalculatorDef {
     id: "t_test_summary",
     family: Family::Continuous,
     inputs: T_TEST_SUMMARY_INPUTS,
+    groups: T_TEST_SUMMARY_GROUPS,
     outputs: T_TEST_SUMMARY_OUTPUTS,
 };
 
@@ -292,5 +343,6 @@ pub(super) static ANOVA_SUMMARY: CalculatorDef = CalculatorDef {
     id: "anova_summary",
     family: Family::Continuous,
     inputs: ANOVA_SUMMARY_INPUTS,
+    groups: &[],
     outputs: ANOVA_SUMMARY_OUTPUTS,
 };

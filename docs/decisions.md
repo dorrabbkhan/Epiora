@@ -4185,3 +4185,144 @@ Evidence: `cargo test -p epiora-core --all-features` all green —
 `median_ci_needs_minimum_n`, `every_output_has_registry_coverage`,
 `every_means_fixture_matches`, `golden_v1_unchanged`.
 Supersedes: —
+### v1.0 Task 8 follow-up — owner decisions T1–T3 (2026-11-16)
+
+Decision: Apply the owner's three decisions recorded on [PR #77,
+comment
+6904346253](https://github.com/dorrabbkhan/Epiora/pull/77#issuecomment-6904346253)
+(escalation [comment
+6902876797](https://github.com/dorrabbkhan/Epiora/pull/77#issuecomment-6902876797)).
+
+- **T1 — person-time CMLE rate-ratio support limit (owner-chosen
+  threshold).** `MAX_PT_SUPPORT = 2_000_000` next to the D1
+  constants in `calc/counts/shared.rs`: any informative stratum with
+  `m1 = rint(a + b) > 2e6` turns all five `cmle_rr.*` leaves
+  `{"undefined": "too_large"}` — stratum and crude alike (the pooled
+  `m1` is the sum, so it crosses with the stratum). The 1e8
+  `MAX_EXACT_CONVOLUTION_WORK` total-work cap stays in addition; both
+  are checked arithmetically before any allocation in
+  `martin_pt::too_large`. The `rate_compare/large_counts` fixture
+  (m1 = 1.2e6) still computes. Measured on a release build
+  (`/usr/bin/time -v`): m1 = 1.2e6 → 2.44 s / 30.6 MB peak RSS;
+  m1 = 2e6 → 6.14 s / 49.2 MB; m1 = 2e6+1 → instant `too_large`.
+- **T2 — `median_ci` minimum n.** The rule
+  `n·p < 1 or n·(1−p) < 1 → Undefined { too_few }` (covers the
+  degenerate percentile 0/100) is accepted and now recorded in
+  `docs/v1.0-calculators.md` under `## median_ci` as a "Minimum n"
+  line. Docs-only — the engine already implemented it.
+- **T3 — `t_test_summary` `se_i`/`var_i` alternatives.** The
+  inventory's "one of `sd_i`/`se_i`/`var_i` real >0" per group is now
+  expressed: `CalculatorDef` gains `groups: &[InputGroup]` (each
+  `InputGroup.members` lists alternative input names, canonical
+  first; members are declared `Omit`-defaulted inputs), and
+  `input::validate` enforces exactly-one — none given →
+  `calc_input_missing` on the member list, more than one →
+  `calc_input_out_of_range` on the member list with the existing
+  `bad_choice` reason (no new code or reason). The same construct
+  serves the Task 9 "one of" lines (`ss_unmatched_cc`, `ss_cohort`)
+  and Task 14's renderer via the regenerated `InputGroup.ts` /
+  `CalculatorDef.ts` bindings. `t_test_summary` converts `sd = se·√n`
+  and `sd = √var`; the receipt's canonical inputs record only what
+  the user gave.
+- **Files outside the Files block:** none beyond the follow-up
+  scope — `calc/counts/shared.rs` (the constant), `calc/person_time/
+  martin_pt.rs` (the check), `calc/mod.rs` (`InputGroup` + the
+  `groups` field), `calc/input.rs` (cardinality check),
+  `calc/registry_continuous.rs` + the other six registry files
+  (`groups` field on every literal), `calc/continuous/
+  t_test_summary.rs`, `crates/epiora-wasm/bindings/{CalculatorDef,
+  InputGroup}.ts` (regenerated), `docs/v1.0-calculators.md`,
+  `tests/{calc_person_time,calc_continuous,calc_registry}.rs`.
+Evidence: `cargo test -p epiora-core --all-features` green —
+`pt_support_limit_is_2e6`, `rate_compare_too_large_is_bounded`,
+`t_test_summary_se_and_var_equal_sd`,
+`t_test_summary_needs_exactly_one_spread`,
+`group_members_are_declared_optional_inputs`,
+`every_person_time_fixture_matches` (incl. `large_counts`),
+`every_continuous_fixture_matches`.
+Supersedes: —
+### v1.0 Task 8 follow-up — martin CMLE roots via `zeroin` (2026-11-16)
+
+Decision: `martin_root` (the shared root step behind both the
+person-time `cmle_rr` leaves and the Task 7 counts-path
+`adjusted.cmle_or`) now solves with `special::zeroin` — the
+R_zeroin2 port — at tol = 1e-14, the tolerance both
+`stratified_cmle_pt_one` and `stratified_cmle_one` pass to
+`uniroot` in `fixtures/R/methods`. `brent_root`'s absolute-only
+tolerance can never satisfy its stopping rule at roots ≳ ~500, so
+large-`m1` cases returned `{"undefined": "out_of_range"}` where R
+returns finite roots. The same change fixes the shared
+`adjusted.cmle_or` path for count tables with large margins.
+
+- **Ill-conditioned extreme `est` (no oracle value).** For the
+  person-time stratum `[[m1−1, 1], [2e6, 1e6]]` at m1 = 1.2e6 and
+  2e6, R's `est` is an iteration-landing artifact: `martin_func`
+  has no zero there, only a quantized residual plateau (R evidence:
+  f(600131) < 0, f(600132) > 0, f(600133) < 0). The regression
+  test `martin_cmle_large_roots_match_r` therefore asserts only
+  that those `est` leaves are finite `Value`s (the regression was
+  `out_of_range`); every other leaf still matches R at the
+  `iterative` class — all five leaves at m1 = 100/1e3/1e5, the
+  four limits at m1 = 1.2e6/2e6, and all five `adjusted.cmle_or`
+  leaves.
+- **Files outside the Files block:**
+  `crates/epiora-core/src/calc/counts/martin.rs` (brent_root →
+  zeroin at 1e-14), `crates/epiora-core/tests/calc_counts.rs` (the
+  regression test), `docs/decisions.md` (this entry).
+
+Evidence: `cargo test -p epiora-core --all-features` green —
+`martin_cmle_large_roots_match_r`, `every_counts_fixture_matches`,
+`every_person_time_fixture_matches`, `large_counts_terminate`,
+`exact_paths_too_large_above_owner_limits`; full corpus 0
+mismatches (calc 91 fixtures/3,207 leaves + means 10/484 — the
+review's 3,691-leaf convention — plus the 44 v0.2 procedure
+fixtures/5,937 leaves). Release `/usr/bin/time -v` after the
+change (corpus-runner on scratch `calc.rate_compare` fixtures):
+m1 = 1.2e6 → 0:04.18 / 30,860 kB; m1 = 2e6 → 0:06.78 / 49,524 kB;
+m1 = 2e6+1 → 0:00.00 / 3,060 kB (all five leaves `too_large`);
+9 strata × 2e6 → 0:30.59 / 49,700 kB (all strata compute; crude
+`too_large`).
+Supersedes: —
+### v1.0 Task 8 follow-up — T4 total person-time support cap (2026-11-16)
+
+Decision: Apply the owner's T4 decision recorded on [PR #78, comment
+6912652577](https://github.com/dorrabbkhan/Epiora/pull/78#issuecomment-6912652577)
+(escalation [comment
+6905524130](https://github.com/dorrabbkhan/Epiora/pull/78#issuecomment-6905524130))
+— option (a): cap `Σm1` across the call's informative strata at
+2,000,000 for `rate_compare` `cmle_rr`.
+
+- **T4 — `MAX_PT_TOTAL_SUPPORT = 2_000_000`** next to
+  `MAX_PT_SUPPORT` in `calc/counts/shared.rs`. `rate_compare`
+  computes each stratum's `cmle_rr` on its own single-stratum slice,
+  so `martin_pt::too_large` never saw the call's total; the new
+  `martin_pt::call_too_large` sums `m1 = rint(a + b)` over the
+  call's informative strata (no convolution-work term — the strata
+  are never convolved together) and `rate_compare::run` decides it
+  once before any per-stratum work. Above the cap every stratum's
+  and the crude `cmle_rr.*` leaves are `{"undefined": "too_large"}`;
+  below it nothing changes. `too_large` itself also sums `m1` over
+  its slice — a multi-stratum slice trips at the same total — while
+  the per-stratum `MAX_PT_SUPPORT` and the 1e8
+  `MAX_EXACT_CONVOLUTION_WORK` checks stay. Pure arithmetic before
+  any allocation. `large_counts` (m1 = 1.2e6, single stratum) still
+  computes.
+- **Files outside the Files block:**
+  `crates/epiora-core/src/calc/counts/shared.rs` (the constant),
+  `crates/epiora-core/src/calc/person_time/{martin_pt,rate_compare}.rs`
+  (the checks and the call-level plumbing),
+  `crates/epiora-core/tests/calc_person_time.rs` (the new test plus
+  added cases in `rate_compare_too_large_is_bounded`),
+  `docs/decisions.md` (this entry).
+Evidence: `cargo test -p epiora-core --all-features` green —
+`pt_total_support_limit_is_2e6`, `pt_support_limit_is_2e6`,
+`rate_compare_too_large_is_bounded`,
+`every_person_time_fixture_matches` (incl. `large_counts`, 0
+mismatches). Release `/usr/bin/time -v` (corpus-runner on scratch
+`calc.rate_compare` fixtures, exact commands in the PR body):
+2 strata × m1 = 1e6 (Σ = 2e6, worst admitted multi-stratum) →
+0:02.42 / 49,792 kB, all leaves compute; 1 stratum × m1 = 2e6 →
+0:04.24 / 49,496 kB, computes; 9 strata × m1 = 2e6 →
+0:00.00 / 3,368 kB, every stratum's and crude `cmle_rr` leaves
+`too_large` (was 0:30.59 / 49,700 kB computing strata before T4).
+Supersedes: —

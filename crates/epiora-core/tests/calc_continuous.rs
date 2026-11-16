@@ -10,6 +10,7 @@ use epiora_core::corpus::compare::compare;
 use epiora_core::corpus::load_dataset_dir;
 use epiora_core::corpus::run_case::run_case;
 use epiora_core::dataset::Dataset;
+use epiora_core::error::EngineError;
 use epiora_core::procedures::{means, MeansOptions, RunContext};
 use epiora_core::stats::Estimate;
 use serde_json::{json, Value};
@@ -127,6 +128,89 @@ fn t_test_summary_equals_means_on_same_data() {
                 "{side}.{calc_key}: calc {c} vs means {} (diff {diff})",
                 value(est)
             );
+        }
+    }
+}
+
+/// Inventory `## t_test_summary`: each group takes exactly one of
+/// `sd_i`/`se_i`/`var_i`. `se` and `var` inputs converting to the
+/// textbook fixture's `sd` must give the same t, df, p and CI —
+/// `sd = se·√n`, `sd = √var`.
+#[test]
+fn t_test_summary_se_and_var_equal_sd() {
+    let (n1, sd1, n2, sd2) = (25.0_f64, 2.5_f64, 30.0_f64, 3.0_f64);
+    let base = json!({
+        "conf_level": 95,
+        "n_1": n1 as u64, "mean_1": 10.5, "sd_1": sd1,
+        "n_2": n2 as u64, "mean_2": 8.5, "sd_2": sd2,
+    });
+    let with = |spread: &str, v1: f64, v2: f64| {
+        let mut inputs = base.clone();
+        let m = inputs.as_object_mut().expect("object");
+        m.remove("sd_1");
+        m.remove("sd_2");
+        m.insert(format!("{spread}_1"), json!(v1));
+        m.insert(format!("{spread}_2"), json!(v2));
+        run("t_test_summary", &inputs, &ctx()).expect("t_test_summary")
+    };
+    let want = run("t_test_summary", &base, &ctx()).expect("t_test_summary");
+    let variants = [
+        with("se", sd1 / libm::sqrt(n1), sd2 / libm::sqrt(n2)),
+        with("var", sd1 * sd1, sd2 * sd2),
+    ];
+    for (label, variant) in ["se", "var"].iter().zip(variants.iter()) {
+        for side in ["pooled", "welch"] {
+            for leaf_name in ["t", "df", "p_2t", "diff", "lower", "upper"] {
+                let a = leaf_value(&want.result[side][leaf_name]);
+                let b = leaf_value(&variant.result[side][leaf_name]);
+                assert!(
+                    (a - b).abs() <= 1e-12,
+                    "{label} {side}.{leaf_name}: sd {a} vs {label} {b}"
+                );
+            }
+        }
+        for leaf_name in ["f", "df_num", "df_den", "p"] {
+            let a = leaf_value(&want.result["f_variance"][leaf_name]);
+            let b = leaf_value(&variant.result["f_variance"][leaf_name]);
+            assert!(
+                (a - b).abs() <= 1e-12,
+                "{label} f_variance.{leaf_name}: sd {a} vs {label} {b}"
+            );
+        }
+    }
+}
+
+/// The `sd_i`/`se_i`/`var_i` groups are exactly-one: none given →
+/// `calc_input_missing`; more than one → `calc_input_out_of_range`.
+#[test]
+fn t_test_summary_needs_exactly_one_spread() {
+    let base = json!({
+        "conf_level": 95,
+        "n_1": 25, "mean_1": 10.5,
+        "n_2": 30, "mean_2": 8.5,
+    });
+    // Neither group carries a spread.
+    let err = run("t_test_summary", &base, &ctx()).expect_err("no spread");
+    assert_eq!(err.code(), "calc_input_missing");
+    // Group 2 spread only: group 1's group still misses.
+    let mut only_g2 = base.clone();
+    only_g2["sd_2"] = json!(3.0);
+    let err = run("t_test_summary", &only_g2, &ctx()).expect_err("group 1 spread");
+    assert_eq!(err.code(), "calc_input_missing");
+    // Two spreads in one group is out of range.
+    for (a, b) in [("sd_1", "se_1"), ("sd_2", "var_2")] {
+        let mut both = base.clone();
+        both["sd_1"] = json!(2.5);
+        both["var_2"] = json!(9.0);
+        both[a] = json!(2.5);
+        both[b] = json!(6.25);
+        let err =
+            run("t_test_summary", &both, &ctx()).expect_err(&format!("{a} + {b} must be rejected"));
+        match err {
+            EngineError::CalcInputOutOfRange { reason, .. } => {
+                assert_eq!(reason, "bad_choice", "{a} + {b}")
+            }
+            other => panic!("expected CalcInputOutOfRange, got {other:?}"),
         }
     }
 }

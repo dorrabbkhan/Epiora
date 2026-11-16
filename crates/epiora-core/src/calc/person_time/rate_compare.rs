@@ -7,7 +7,7 @@
 //! `fixtures/R/methods/rates.R`.
 
 use super::super::counts::shared::{leaf, stat_ci, undefined};
-use super::martin_pt::{cmle_rr, PtStratum};
+use super::martin_pt::{call_too_large, cmle_rr, PtStratum};
 use crate::calc::input::MAX_COUNT;
 use crate::stats::{self as rates};
 use crate::EngineError;
@@ -105,9 +105,16 @@ fn rate_stat(cases: f64, pt: f64, pu: f64, conf: f64) -> Value {
 }
 
 /// The five `cmle_rr` leaves: finite roots, or `too_large` when the
-/// exact work exceeds the D1 cap.
-fn cmle_block(t: &PtStratum, conf: f64) -> Value {
-    let [est, ml, mu, fl, fu] = match cmle_rr(std::slice::from_ref(t), conf) {
+/// exact work exceeds the D1 cap — or when `call_capped` says the
+/// call's Σm1 crossed the T4 total-support cap, which marks every
+/// stratum's and the crude block's leaves at once.
+fn cmle_block(t: &PtStratum, conf: f64, call_capped: bool) -> Value {
+    let result = if call_capped {
+        None
+    } else {
+        cmle_rr(std::slice::from_ref(t), conf)
+    };
+    let [est, ml, mu, fl, fu] = match result {
         Some(v) => v,
         None => {
             return json!({
@@ -129,8 +136,8 @@ fn cmle_block(t: &PtStratum, conf: f64) -> Value {
 }
 
 /// `rate_compare_table` — one stratum's (or the crude table's) full
-/// block.
-fn table_block(t: &PtStratum, pu: f64, conf: f64) -> Value {
+/// block. `call_capped` is the T4 whole-call `cmle_rr` verdict.
+fn table_block(t: &PtStratum, pu: f64, conf: f64, call_capped: bool) -> Value {
     let (a, b, n1, n0) = (t.a, t.b, t.n1, t.n0);
     let zs = rates::pt_zscore(a, b, n1, n0);
     let rr = rates::rate_ratio(a, b, n1, n0, conf);
@@ -149,7 +156,7 @@ fn table_block(t: &PtStratum, pu: f64, conf: f64) -> Value {
             "lower": leaf(rd[1] * pu),
             "upper": leaf(rd[2] * pu),
         },
-        "cmle_rr": cmle_block(t, conf),
+        "cmle_rr": cmle_block(t, conf, call_capped),
         "etiologic": {
             "efp": stat_ci([ef[0][0] * 100.0, ef[0][1] * 100.0, ef[0][2] * 100.0]),
             "efe": stat_ci([ef[1][0] * 100.0, ef[1][1] * 100.0, ef[1][2] * 100.0]),
@@ -178,9 +185,15 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
             n0: m.n0 + t.n0,
         },
     );
+    // Owner decision T4 (PR #78): the total-support cap applies to
+    // the whole call — decide it once, before any per-stratum work.
+    let call_capped = call_too_large(&strata);
     let mut out = json!({
-        "strata": strata.iter().map(|t| table_block(t, pu, conf)).collect::<Vec<_>>(),
-        "crude": table_block(&crude, pu, conf),
+        "strata": strata
+            .iter()
+            .map(|t| table_block(t, pu, conf, call_capped))
+            .collect::<Vec<_>>(),
+        "crude": table_block(&crude, pu, conf, call_capped),
     });
     if strata.len() > 1 {
         let rows: Vec<[f64; 4]> = strata.iter().map(|t| [t.a, t.b, t.n1, t.n0]).collect();
