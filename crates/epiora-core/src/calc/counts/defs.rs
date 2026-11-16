@@ -60,6 +60,7 @@ pub(crate) static PROPORTION: CalculatorDef = CalculatorDef {
     id: "proportion",
     family: Family::Counts,
     inputs: PROPORTION_INPUTS,
+    groups: &[],
     outputs: PROPORTION_OUTPUTS,
 };
 
@@ -68,9 +69,10 @@ const TWO_BY_TWO_INPUTS: &[InputDef] = &[
         "strata",
         InputKind::Table {
             cols: 2,
-            min_rows: 1,
-            max_rows: 9,
+            min_rows: 2,
+            max_rows: 2,
             cell: CellKind::Count,
+            strata: Some(9),
         },
         None,
         None,
@@ -245,6 +247,7 @@ pub(crate) static TWO_BY_TWO: CalculatorDef = CalculatorDef {
     id: "two_by_two",
     family: Family::Counts,
     inputs: TWO_BY_TWO_INPUTS,
+    groups: &[],
     outputs: TWO_BY_TWO_OUTPUTS,
 };
 
@@ -253,9 +256,10 @@ const TWO_BY_N_INPUTS: &[InputDef] = &[
         "strata",
         InputKind::Table {
             cols: 2,
-            min_rows: 1,
-            max_rows: 9,
+            min_rows: 2,
+            max_rows: 2,
             cell: CellKind::Count,
+            strata: Some(9),
         },
         None,
         None,
@@ -320,6 +324,7 @@ pub(crate) static TWO_BY_N: CalculatorDef = CalculatorDef {
     id: "two_by_n",
     family: Family::Counts,
     inputs: TWO_BY_N_INPUTS,
+    groups: &[],
     outputs: TWO_BY_N_OUTPUTS,
 };
 
@@ -330,6 +335,7 @@ const R_BY_C_INPUTS: &[InputDef] = &[idf(
         min_rows: 2,
         max_rows: 10,
         cell: CellKind::Count,
+        strata: None,
     },
     None,
     None,
@@ -347,5 +353,6 @@ pub(crate) static R_BY_C: CalculatorDef = CalculatorDef {
     id: "r_by_c",
     family: Family::Counts,
     inputs: R_BY_C_INPUTS,
+    groups: &[],
     outputs: R_BY_C_OUTPUTS,
 };

@@ -9,7 +9,7 @@ use crate::error::EngineError;
 use serde_json::{Map, Value};
 
 /// `2^53` — counts are integers strictly below it (Review Focus 3).
-const MAX_COUNT: u64 = 1u64 << 53;
+pub(crate) const MAX_COUNT: u64 = 1u64 << 53;
 
 fn out_of_range(input: &str, reason: &str) -> EngineError {
     EngineError::CalcInputOutOfRange {
@@ -60,11 +60,10 @@ fn cell(name: &str, kind: CellKind, v: &Value) -> Result<Value, EngineError> {
     }
 }
 
-/// A 2-D table of `cols`-wide rows (or calculator-defined columns when
-/// `cols == 0`), `min_rows..=max_rows` rows. When every element is
-/// itself a 2-D array the input is a list of tables (dose-response
-/// strata) and each element is validated on the same spec.
-fn table(
+/// One flat 2-D table of `cols`-wide rows (or calculator-defined
+/// columns when `cols == 0` — one width 2..=10 shared by every row,
+/// since a ragged table is not a table), `min_rows..=max_rows` rows.
+fn flat_table(
     name: &str,
     v: &Value,
     cols: u8,
@@ -75,26 +74,17 @@ fn table(
     let items = v
         .as_array()
         .ok_or_else(|| out_of_range(name, "bad_table_shape"))?;
-    let nested = !items.is_empty()
-        && items
-            .iter()
-            .all(|e| e.as_array().is_some_and(|r| r.iter().all(Value::is_array)));
-    if nested {
-        for e in items {
-            table(name, e, cols, min_rows, max_rows, kind)?;
-        }
-        return Ok(v.clone());
-    }
     let rows = items.len();
     if (rows as u64) < u64::from(min_rows) || (rows as u64) > u64::from(max_rows) {
         return Err(out_of_range(name, "bad_table_shape"));
     }
+    let width = items.first().and_then(Value::as_array).map_or(0, Vec::len);
     for row in items {
         let row = row
             .as_array()
             .ok_or_else(|| out_of_range(name, "bad_table_shape"))?;
         let width_ok = if cols == 0 {
-            (2..=10).contains(&row.len())
+            (2..=10).contains(&row.len()) && row.len() == width
         } else {
             row.len() == usize::from(cols)
         };
@@ -106,6 +96,44 @@ fn table(
         }
     }
     Ok(v.clone())
+}
+
+/// A table input — the flat single-table form, or when `strata` is
+/// `Some(bound)` a list of `1..=bound` tables each of the same spec
+/// (the inventory's strata bound, which is NOT `max_rows`:
+/// `dose_response` allows 10 rows per stratum but only 9 strata). A
+/// list-of-tables into a plain-table input (`strata` `None`) is
+/// `bad_table_shape` — calculators whose contract is not a strata
+/// list cannot consume it.
+fn table(
+    name: &str,
+    v: &Value,
+    cols: u8,
+    min_rows: u8,
+    max_rows: u8,
+    kind: CellKind,
+    strata: Option<u8>,
+) -> Result<Value, EngineError> {
+    let items = v
+        .as_array()
+        .ok_or_else(|| out_of_range(name, "bad_table_shape"))?;
+    let nested = !items.is_empty()
+        && items
+            .iter()
+            .all(|e| e.as_array().is_some_and(|r| r.iter().all(Value::is_array)));
+    if nested {
+        let Some(bound) = strata else {
+            return Err(out_of_range(name, "bad_table_shape"));
+        };
+        if items.len() > usize::from(bound) {
+            return Err(out_of_range(name, "bad_table_shape"));
+        }
+        for e in items {
+            flat_table(name, e, cols, min_rows, max_rows, kind)?;
+        }
+        return Ok(v.clone());
+    }
+    flat_table(name, v, cols, min_rows, max_rows, kind)
 }
 
 fn validate_kind(name: &str, kind: &InputKind, v: &Value) -> Result<Value, EngineError> {
@@ -141,7 +169,8 @@ fn validate_kind(name: &str, kind: &InputKind, v: &Value) -> Result<Value, Engin
             min_rows,
             max_rows,
             cell,
-        } => table(name, v, *cols, *min_rows, *max_rows, *cell),
+            strata,
+        } => table(name, v, *cols, *min_rows, *max_rows, *cell, *strata),
     }
 }
 
@@ -192,6 +221,25 @@ pub fn validate(def: &CalculatorDef, inputs: &Value) -> Result<Value, EngineErro
                     })
                 }
             },
+        }
+    }
+    // "One of" groups: exactly one member present in the user's
+    // inputs (members are `Omit`-defaulted, so nothing was filled).
+    // Zero → `calc_input_missing`; more than one → the existing
+    // `bad_choice` reason — both name the member list.
+    for group in def.groups {
+        let present = group
+            .members
+            .iter()
+            .filter(|m| map.contains_key(**m))
+            .count();
+        if present != 1 {
+            let input = group.members.join("/");
+            return Err(if present == 0 {
+                EngineError::CalcInputMissing { input }
+            } else {
+                out_of_range(&input, "bad_choice")
+            });
         }
     }
     Ok(Value::Object(out))

@@ -5,8 +5,10 @@
 //! Only the counts family is implemented in Task 7; the other families
 //! carry their inventory metadata and are added by Tasks 8 and 9.
 
+pub mod continuous;
 pub mod counts;
 pub mod input;
+pub mod person_time;
 mod registry;
 mod registry_continuous;
 mod registry_power;
@@ -72,12 +74,17 @@ pub enum InputKind {
     Choice { options: &'static [&'static str] },
     /// A table: `min_rows..=max_rows` rows; each row `cols` cells of
     /// `cell` kind — or `cols == 0` for a calculator-defined column
-    /// count (validated inside the calculator).
+    /// count (uniform across rows, 2..=10 wide). `strata` is the
+    /// inventory's strata bound: `Some(bound)` means the input is a
+    /// strata list — the flat single-stratum form or a list of
+    /// `1..=bound` tables of this spec; `None` rejects a nested
+    /// list-of-tables as `bad_table_shape`.
     Table {
         cols: u8,
         min_rows: u8,
         max_rows: u8,
         cell: CellKind,
+        strata: Option<u8>,
     },
 }
 
@@ -109,6 +116,21 @@ pub struct InputDef {
     pub unit: Option<&'static str>,
 }
 
+/// An inventory "one of" input group — `t_test_summary`'s
+/// `sd_i`/`se_i`/`var_i`, the Task 9 effect-measure alternatives
+/// (`odds_ratio`/`percent_cases_exposed`, …). The user supplies
+/// exactly one of `members`, each declared as an ordinary optional
+/// input (`DefaultValue::Omit`); `input::validate` enforces the
+/// cardinality — none given is `calc_input_missing`, more than one
+/// `calc_input_out_of_range` (`bad_choice`) — and the canonical
+/// inputs record only what the user gave.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
+pub struct InputGroup {
+    /// The alternative input names, the canonical one first.
+    pub members: &'static [&'static str],
+}
+
 /// One emitted statistic of a calculator.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize)]
 #[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
@@ -133,6 +155,8 @@ pub struct CalculatorDef {
     pub family: Family,
     /// Declared inputs.
     pub inputs: &'static [InputDef],
+    /// "One of" input groups (`&[]` for most calculators).
+    pub groups: &'static [InputGroup],
     /// Emitted statistics.
     pub outputs: &'static [OutputDef],
 }
@@ -201,13 +225,21 @@ pub fn run(
         });
     }
     let def = definition(id)?;
-    if def.family != Family::Counts {
+    if !matches!(
+        def.family,
+        Family::Counts | Family::PersonTime | Family::Continuous
+    ) {
         return Err(EngineError::InvalidOptions {
             reason: format!("calculator {id} is registered but its family is not implemented yet"),
         });
     }
     let canonical = input::validate(def, inputs)?;
-    let result = counts::run(def.id, &canonical)?;
+    let result = match def.family {
+        Family::Counts => counts::run(def.id, &canonical)?,
+        Family::PersonTime => person_time::run(def.id, &canonical)?,
+        Family::Continuous => continuous::run(def.id, &canonical)?,
+        _ => unreachable!("family gate above"),
+    };
 
     let mut entries = BTreeMap::new();
     for path in statistic_ids(&result) {

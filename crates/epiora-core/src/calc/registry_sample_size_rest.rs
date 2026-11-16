@@ -121,6 +121,7 @@ pub(super) static SS_COHORT: CalculatorDef = CalculatorDef {
     id: "ss_cohort",
     family: Family::SampleSize,
     inputs: SS_COHORT_INPUTS,
+    groups: &[],
     outputs: SS_COHORT_OUTPUTS,
 };
 
@@ -232,5 +233,6 @@ pub(super) static SS_MEAN_DIFFERENCE: CalculatorDef = CalculatorDef {
     id: "ss_mean_difference",
     family: Family::SampleSize,
     inputs: SS_MEAN_DIFFERENCE_INPUTS,
+    groups: &[],
     outputs: SS_MEAN_DIFFERENCE_OUTPUTS,
 };

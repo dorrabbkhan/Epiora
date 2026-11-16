@@ -14,6 +14,7 @@ const DOSE_RESPONSE_INPUTS: &[InputDef] = &[
             min_rows: 2,
             max_rows: 10,
             cell: CellKind::Real,
+            strata: Some(9),
         },
         None,
         None,
@@ -39,6 +40,7 @@ pub(crate) static DOSE_RESPONSE: CalculatorDef = CalculatorDef {
     id: "dose_response",
     family: Family::Counts,
     inputs: DOSE_RESPONSE_INPUTS,
+    groups: &[],
     outputs: DOSE_RESPONSE_OUTPUTS,
 };
 
@@ -56,6 +58,7 @@ const MATCHED_CASE_CONTROL_INPUTS: &[InputDef] = &[
             min_rows: 2,
             max_rows: 2,
             cell: CellKind::Count,
+            strata: None,
         },
         None,
         None,
@@ -100,6 +103,7 @@ pub(crate) static MATCHED_CASE_CONTROL: CalculatorDef = CalculatorDef {
     id: "matched_case_control",
     family: Family::Counts,
     inputs: MATCHED_CASE_CONTROL_INPUTS,
+    groups: &[],
     outputs: MATCHED_CASE_CONTROL_OUTPUTS,
 };
 
@@ -111,6 +115,7 @@ const SCREENING_INPUTS: &[InputDef] = &[
             min_rows: 2,
             max_rows: 10,
             cell: CellKind::Count,
+            strata: None,
         },
         None,
         None,
@@ -198,6 +203,7 @@ pub(crate) static SCREENING: CalculatorDef = CalculatorDef {
     id: "screening",
     family: Family::Counts,
     inputs: SCREENING_INPUTS,
+    groups: &[],
     outputs: SCREENING_OUTPUTS,
 };
 
@@ -301,6 +307,7 @@ pub(crate) static SMR: CalculatorDef = CalculatorDef {
     id: "smr",
     family: Family::Counts,
     inputs: SMR_INPUTS,
+    groups: &[],
     outputs: SMR_OUTPUTS,
 };
 
@@ -324,6 +331,7 @@ pub(crate) static BINOMIAL: CalculatorDef = CalculatorDef {
     id: "binomial",
     family: Family::Counts,
     inputs: BINOMIAL_INPUTS,
+    groups: &[],
     outputs: BINOMIAL_OUTPUTS,
 };
 
@@ -351,5 +359,6 @@ pub(crate) static POISSON: CalculatorDef = CalculatorDef {
     id: "poisson",
     family: Family::Counts,
     inputs: POISSON_INPUTS,
+    groups: &[],
     outputs: POISSON_OUTPUTS,
 };

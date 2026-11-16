@@ -556,6 +556,184 @@ fn mcnemar_cc_balanced_discordance_is_zero() {
     assert_eq!(out.result["mcnemar_cc"]["p"].as_f64(), Some(1.0));
 }
 
+/// v1.0 Task 8 follow-up (PR #78 fix round 1): `martin_root` must
+/// converge where R's `uniroot` does. `brent_root`'s absolute-only
+/// tolerance can never satisfy roots ≳ ~500; `special::zeroin`
+/// (R_zeroin2, tol = 1e-14 — the tol `stratified_cmle_pt_one`/
+/// `stratified_cmle_one` pass in `fixtures/R/methods`) carries the
+/// relative term. Expected values: R 4.6.2, `fixtures/R/methods`
+/// (renv), the exact command and output in the PR #78 body —
+/// `stratified_cmle_pt_one(list(matrix(c(a, 1, 2e6, 1e6), 2, 2,
+/// byrow = TRUE)), 0.95, 1e-14)` and `stratified_cmle_one(list(
+/// matrix(c(1000, 1, 1, 1000), 2, 2, byrow = TRUE),
+/// matrix(c(10, 5, 5, 10), 2, 2, byrow = TRUE)), 0.95, 1e-14)`.
+/// Compared at the `iterative` tolerance class (E7).
+#[test]
+fn martin_cmle_large_roots_match_r() {
+    let iterative = |got: Option<f64>, want: f64, path: &str| {
+        assert!(
+            got.is_some_and(|g| (g - want).abs() <= 1e-6 * want.abs()),
+            "{path}: {got:?} vs {want}"
+        );
+    };
+    // Person-time strata `[[m1−1, 1], [2e6, 1e6]]` — the review's
+    // `out_of_range` cases at m1 = 100, 1e3 and 1e5.
+    // Leaf order: est, midp_lower, midp_upper, fisher_lower,
+    // fisher_upper.
+    let pt_cases: [(f64, [f64; 5]); 3] = [
+        (
+            99.0,
+            [
+                49.499_999_999_999_12,
+                9.847_714_539_196_751,
+                999.105_105_316_891,
+                8.681_153_925_998_533,
+                1974.644520809587,
+            ],
+        ),
+        (
+            999.0,
+            [
+                499.500000191906,
+                101.0896419972828,
+                9_995.444_590_009_036,
+                89.445_459_738_344_84,
+                19_748.695_103_681_26,
+            ],
+        ),
+        (
+            99_999.0,
+            [
+                49_999.499_999_992_32,
+                10137.869656678491,
+                999_592.780_801_722_1,
+                8_973.718_095_118_962,
+                1974894.2601724067,
+            ],
+        ),
+    ];
+    for (a, want) in pt_cases {
+        let out = run(
+            "rate_compare",
+            &json!({"strata": [[[a, 1.0], [2000000.0, 1000000.0]]],
+                    "per_unit": 1000.0, "conf_level": 95}),
+            &ctx(),
+        )
+        .unwrap_or_else(|e| panic!("rate_compare a={a}: {e}"));
+        for (key, w) in [
+            "est",
+            "midp_lower",
+            "midp_upper",
+            "fisher_lower",
+            "fisher_upper",
+        ]
+        .iter()
+        .zip(want)
+        {
+            for block in [&out.result["strata"][0], &out.result["crude"]] {
+                iterative(
+                    block["cmle_rr"][key].as_f64(),
+                    w,
+                    &format!("rate_compare a={a} cmle_rr.{key}"),
+                );
+            }
+        }
+    }
+    // m1 = 1.2e6 and 2e6 with a 1-count unexposed arm: the four
+    // limits still match R, but R's `est` is an iteration-landing
+    // artifact — `martin_func` has no zero there, only a quantized
+    // residual plateau (R evidence: f(600131) < 0, f(600132) > 0,
+    // f(600133) < 0) — so it is not an oracle value. The regression
+    // is that `est` used to come back `out_of_range`; assert only
+    // that it is now a finite `Value`. Leaf order: midp_lower,
+    // midp_upper, fisher_lower, fisher_upper.
+    let pt_extreme: [(f64, [f64; 4]); 2] = [
+        (
+            1_199_999.0,
+            [
+                121657.64973310455,
+                11995118.717246097,
+                107687.86024179005,
+                23698733.868378676,
+            ],
+        ),
+        (
+            1_999_999.0,
+            [
+                202762.94508843697,
+                19991864.874644913,
+                179479.96557191815,
+                39497890.062663056,
+            ],
+        ),
+    ];
+    for (a, want) in pt_extreme {
+        let out = run(
+            "rate_compare",
+            &json!({"strata": [[[a, 1.0], [2000000.0, 1000000.0]]],
+                    "per_unit": 1000.0, "conf_level": 95}),
+            &ctx(),
+        )
+        .unwrap_or_else(|e| panic!("rate_compare a={a}: {e}"));
+        for (key, w) in ["midp_lower", "midp_upper", "fisher_lower", "fisher_upper"]
+            .iter()
+            .zip(want)
+        {
+            for block in [&out.result["strata"][0], &out.result["crude"]] {
+                iterative(
+                    block["cmle_rr"][key].as_f64(),
+                    w,
+                    &format!("rate_compare a={a} cmle_rr.{key}"),
+                );
+            }
+        }
+        for block in [&out.result["strata"][0], &out.result["crude"]] {
+            assert!(
+                block["cmle_rr"]["est"].as_f64().is_some(),
+                "rate_compare a={a} cmle_rr.est: {:?}",
+                block["cmle_rr"]["est"],
+            );
+        }
+    }
+    // The same `martin_root` on the counts hypergeometric path:
+    // `two_by_two` strata `[[1000,1],[1,1000]] + [[10,5],[5,10]]`,
+    // the review's `adjusted.cmle_or` case (`two_by_n` has no
+    // `adjusted` block).
+    let out = run(
+        "two_by_two",
+        &json!({"strata": [[[1000, 1], [1, 1000]], [[10, 5], [5, 10]]],
+                "conf_level": 95}),
+        &ctx(),
+    )
+    .expect("two_by_two run");
+    let cmle = &out.result["adjusted"]["cmle_or"];
+    iterative(
+        cmle["est"].as_f64(),
+        25385.105906210898,
+        "adjusted.cmle_or.est",
+    );
+    iterative(
+        cmle["midp"]["lower"].as_f64(),
+        8_814.709_199_503_686,
+        "adjusted.cmle_or.midp.lower",
+    );
+    iterative(
+        cmle["midp"]["upper"].as_f64(),
+        86_976.376_286_180_47,
+        "adjusted.cmle_or.midp.upper",
+    );
+    iterative(
+        cmle["fisher"]["lower"].as_f64(),
+        8_055.365_755_196_057,
+        "adjusted.cmle_or.fisher.lower",
+    );
+    iterative(
+        cmle["fisher"]["upper"].as_f64(),
+        101317.88377482712,
+        "adjusted.cmle_or.fisher.upper",
+    );
+}
+
 proptest! {
     /// PPV and NPV estimates always land in [0, 1] — or are typed
     /// Undefined when the margins make them incalculable (spec §5.3).

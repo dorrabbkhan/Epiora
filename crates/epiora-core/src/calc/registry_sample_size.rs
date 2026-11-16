@@ -80,6 +80,7 @@ pub(super) static SS_PROPORTION: CalculatorDef = CalculatorDef {
     id: "ss_proportion",
     family: Family::SampleSize,
     inputs: SS_PROPORTION_INPUTS,
+    groups: &[],
     outputs: SS_PROPORTION_OUTPUTS,
 };
 
@@ -146,5 +147,6 @@ pub(super) static SS_UNMATCHED_CC: CalculatorDef = CalculatorDef {
     id: "ss_unmatched_cc",
     family: Family::SampleSize,
     inputs: SS_UNMATCHED_CC_INPUTS,
+    groups: &[],
     outputs: SS_UNMATCHED_CC_OUTPUTS,
 };
