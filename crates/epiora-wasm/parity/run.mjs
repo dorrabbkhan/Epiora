@@ -14,8 +14,9 @@ import { join } from "node:path";
 const require = createRequire(import.meta.url);
 const wasm = require("../pkg-parity/epiora_wasm.js");
 
-// Must match `corpus-runner`'s FAMILIES exactly — counts `calc`
-// families are per calculator; the rest belong to Tasks 8/9.
+// Must match `corpus-runner`'s FAMILIES exactly — `calc` families are
+// per calculator; `calc/random_numbers` has no fixture directory (its
+// coverage is the golden file), so the missing-dir skip is load-bearing.
 const FAMILIES = [
   "special",
   "2x2",
@@ -38,6 +39,14 @@ const FAMILIES = [
   "calc/median_ci",
   "calc/t_test_summary",
   "calc/anova_summary",
+  "calc/ss_proportion",
+  "calc/ss_unmatched_cc",
+  "calc/ss_cohort",
+  "calc/ss_mean_difference",
+  "calc/power_unmatched_cc",
+  "calc/power_cohort",
+  "calc/power_mean_difference",
+  "calc/random_numbers",
 ];
 
 const root = process.argv[2];

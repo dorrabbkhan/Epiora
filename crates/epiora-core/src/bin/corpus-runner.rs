@@ -7,8 +7,9 @@ use epiora_core::corpus::{load_dataset_dir, run_case};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
-// The counts `calc` families are listed per calculator: every other
-// `fixtures/calc/<id>` belongs to a family Tasks 8/9 implement.
+// The `calc` families are listed per calculator. `calc/random_numbers`
+// has no fixture directory (spec §5.2 — golden coverage only), so the
+// missing-dir skip below is load-bearing for it.
 const FAMILIES: &[&str] = &[
     "special",
     "2x2",
@@ -31,6 +32,14 @@ const FAMILIES: &[&str] = &[
     "calc/median_ci",
     "calc/t_test_summary",
     "calc/anova_summary",
+    "calc/ss_proportion",
+    "calc/ss_unmatched_cc",
+    "calc/ss_cohort",
+    "calc/ss_mean_difference",
+    "calc/power_unmatched_cc",
+    "calc/power_cohort",
+    "calc/power_mean_difference",
+    "calc/random_numbers",
 ];
 
 fn main() -> ExitCode {

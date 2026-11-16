@@ -1,0 +1,194 @@
+{
+  "algorithm": "ChaCha20Rng::seed_from_u64(seed); Lemire nearly-divisionless bounded draws on next_u32(); no floats (spec §5.2, v1.0 Task 9)",
+  "cases": [
+    {
+      "inputs": {
+        "count": 20,
+        "lower": 1,
+        "seed": 0,
+        "upper": 100
+      },
+      "seed": 0,
+      "values": [
+        51,
+        3,
+        44,
+        99,
+        1,
+        87,
+        83,
+        19,
+        10,
+        90,
+        53,
+        24,
+        13,
+        12,
+        54,
+        26,
+        6,
+        50,
+        66,
+        78
+      ]
+    },
+    {
+      "inputs": {
+        "count": 20,
+        "lower": 1,
+        "seed": 1,
+        "upper": 100
+      },
+      "seed": 1,
+      "values": [
+        32,
+        62,
+        64,
+        16,
+        5,
+        55,
+        48,
+        44,
+        79,
+        93,
+        19,
+        38,
+        26,
+        64,
+        26,
+        30,
+        21,
+        45,
+        8,
+        62
+      ]
+    },
+    {
+      "inputs": {
+        "count": 20,
+        "lower": 1,
+        "seed": 20261112,
+        "upper": 100
+      },
+      "seed": 20261112,
+      "values": [
+        4,
+        47,
+        38,
+        17,
+        50,
+        84,
+        91,
+        80,
+        74,
+        68,
+        20,
+        11,
+        8,
+        33,
+        74,
+        74,
+        78,
+        10,
+        54,
+        46
+      ]
+    }
+  ],
+  "expected": {
+    "values": [
+      {
+        "class": "closed_form",
+        "value": 51
+      },
+      {
+        "class": "closed_form",
+        "value": 3
+      },
+      {
+        "class": "closed_form",
+        "value": 44
+      },
+      {
+        "class": "closed_form",
+        "value": 99
+      },
+      {
+        "class": "closed_form",
+        "value": 1
+      },
+      {
+        "class": "closed_form",
+        "value": 87
+      },
+      {
+        "class": "closed_form",
+        "value": 83
+      },
+      {
+        "class": "closed_form",
+        "value": 19
+      },
+      {
+        "class": "closed_form",
+        "value": 10
+      },
+      {
+        "class": "closed_form",
+        "value": 90
+      },
+      {
+        "class": "closed_form",
+        "value": 53
+      },
+      {
+        "class": "closed_form",
+        "value": 24
+      },
+      {
+        "class": "closed_form",
+        "value": 13
+      },
+      {
+        "class": "closed_form",
+        "value": 12
+      },
+      {
+        "class": "closed_form",
+        "value": 54
+      },
+      {
+        "class": "closed_form",
+        "value": 26
+      },
+      {
+        "class": "closed_form",
+        "value": 6
+      },
+      {
+        "class": "closed_form",
+        "value": 50
+      },
+      {
+        "class": "closed_form",
+        "value": 66
+      },
+      {
+        "class": "closed_form",
+        "value": 78
+      }
+    ]
+  },
+  "id": "random_numbers",
+  "inputs": {
+    "count": 20,
+    "lower": 1,
+    "seed": 0,
+    "upper": 100
+  },
+  "procedure": "calc.random_numbers",
+  "tolerance_classes": {
+    "closed_form": 1e-9,
+    "iterative": 1e-6
+  }
+}

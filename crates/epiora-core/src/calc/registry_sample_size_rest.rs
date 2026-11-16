@@ -2,7 +2,9 @@
 //! `docs/v1.0-calculators.md` inventory metadata; they are
 //! registered but not runnable in Task 7.
 
-use crate::calc::{idf, od, CalculatorDef, DefaultValue, Family, InputDef, InputKind, OutputDef};
+use crate::calc::{
+    idf, od, CalculatorDef, DefaultValue, Family, InputDef, InputGroup, InputKind, OutputDef,
+};
 use crate::validation::ToleranceClass::ClosedForm as CF;
 const SS_COHORT_INPUTS: &[InputDef] = &[
     idf(
@@ -77,7 +79,17 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
         "`fixtures/R/methods/sample_size.R::fleiss` — same source as `ss_unmatched_cc`",
     ),
     od(
+        "calc.ss_cohort.fleiss.exposed_real",
+        CF,
+        "`fixtures/R/methods/sample_size.R::fleiss` — same source as `ss_unmatched_cc`",
+    ),
+    od(
         "calc.ss_cohort.fleiss.total",
+        CF,
+        "`fixtures/R/methods/sample_size.R::fleiss` — same source as `ss_unmatched_cc`",
+    ),
+    od(
+        "calc.ss_cohort.fleiss.total_real",
         CF,
         "`fixtures/R/methods/sample_size.R::fleiss` — same source as `ss_unmatched_cc`",
     ),
@@ -87,7 +99,17 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
         "`fixtures/R/methods/sample_size.R::fleiss` — same source as `ss_unmatched_cc`",
     ),
     od(
+        "calc.ss_cohort.fleiss.unexposed_real",
+        CF,
+        "`fixtures/R/methods/sample_size.R::fleiss` — same source as `ss_unmatched_cc`",
+    ),
+    od(
         "calc.ss_cohort.fleiss_cc.exposed",
+        CF,
+        "`fixtures/R/methods/sample_size.R::fleiss_cc` — same source as `ss_unmatched_cc`",
+    ),
+    od(
+        "calc.ss_cohort.fleiss_cc.exposed_real",
         CF,
         "`fixtures/R/methods/sample_size.R::fleiss_cc` — same source as `ss_unmatched_cc`",
     ),
@@ -97,7 +119,17 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
         "`fixtures/R/methods/sample_size.R::fleiss_cc` — same source as `ss_unmatched_cc`",
     ),
     od(
+        "calc.ss_cohort.fleiss_cc.total_real",
+        CF,
+        "`fixtures/R/methods/sample_size.R::fleiss_cc` — same source as `ss_unmatched_cc`",
+    ),
+    od(
         "calc.ss_cohort.fleiss_cc.unexposed",
+        CF,
+        "`fixtures/R/methods/sample_size.R::fleiss_cc` — same source as `ss_unmatched_cc`",
+    ),
+    od(
+        "calc.ss_cohort.fleiss_cc.unexposed_real",
         CF,
         "`fixtures/R/methods/sample_size.R::fleiss_cc` — same source as `ss_unmatched_cc`",
     ),
@@ -107,7 +139,17 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
         "`fixtures/R/methods/sample_size.R::kelsey` — same source as `ss_unmatched_cc`",
     ),
     od(
+        "calc.ss_cohort.kelsey.exposed_real",
+        CF,
+        "`fixtures/R/methods/sample_size.R::kelsey` — same source as `ss_unmatched_cc`",
+    ),
+    od(
         "calc.ss_cohort.kelsey.total",
+        CF,
+        "`fixtures/R/methods/sample_size.R::kelsey` — same source as `ss_unmatched_cc`",
+    ),
+    od(
+        "calc.ss_cohort.kelsey.total_real",
         CF,
         "`fixtures/R/methods/sample_size.R::kelsey` — same source as `ss_unmatched_cc`",
     ),
@@ -116,12 +158,25 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
         CF,
         "`fixtures/R/methods/sample_size.R::kelsey` — same source as `ss_unmatched_cc`",
     ),
+    od(
+        "calc.ss_cohort.kelsey.unexposed_real",
+        CF,
+        "`fixtures/R/methods/sample_size.R::kelsey` — same source as `ss_unmatched_cc`",
+    ),
 ];
+const SS_COHORT_GROUPS: &[InputGroup] = &[InputGroup {
+    members: &[
+        "odds_ratio",
+        "percent_exposed_outcome",
+        "risk_ratio",
+        "risk_difference",
+    ],
+}];
 pub(super) static SS_COHORT: CalculatorDef = CalculatorDef {
     id: "ss_cohort",
     family: Family::SampleSize,
     inputs: SS_COHORT_INPUTS,
-    groups: &[],
+    groups: SS_COHORT_GROUPS,
     outputs: SS_COHORT_OUTPUTS,
 };
 
@@ -224,15 +279,47 @@ const SS_MEAN_DIFFERENCE_OUTPUTS: &[OutputDef] = &[
         "`fixtures/R/methods/sample_size.R::ss_means` — OpenEpi `SSMean.js` formula",
     ),
     od(
+        "calc.ss_mean_difference.n1_real",
+        CF,
+        "`fixtures/R/methods/sample_size.R::ss_means` — same source as `n1`/`n2`/`total`",
+    ),
+    od(
+        "calc.ss_mean_difference.n2_real",
+        CF,
+        "`fixtures/R/methods/sample_size.R::ss_means` — same source as `n1`/`n2`/`total`",
+    ),
+    od(
         "calc.ss_mean_difference.total",
         CF,
         "`fixtures/R/methods/sample_size.R::ss_means` — OpenEpi `SSMean.js` formula",
     ),
+    od(
+        "calc.ss_mean_difference.total_real",
+        CF,
+        "`fixtures/R/methods/sample_size.R::ss_means` — same source as `n1`/`n2`/`total`",
+    ),
+];
+const SS_MEAN_DIFFERENCE_GROUPS: &[InputGroup] = &[
+    // `mean_1`/`mean_2` together XOR `difference` — each mean is one
+    // alternative to it, so giving all three, or one mean with
+    // `difference`, is `bad_choice`.
+    InputGroup {
+        members: &["mean_1", "difference"],
+    },
+    InputGroup {
+        members: &["mean_2", "difference"],
+    },
+    InputGroup {
+        members: &["sd_1", "var_1"],
+    },
+    InputGroup {
+        members: &["sd_2", "var_2"],
+    },
 ];
 pub(super) static SS_MEAN_DIFFERENCE: CalculatorDef = CalculatorDef {
     id: "ss_mean_difference",
     family: Family::SampleSize,
     inputs: SS_MEAN_DIFFERENCE_INPUTS,
-    groups: &[],
+    groups: SS_MEAN_DIFFERENCE_GROUPS,
     outputs: SS_MEAN_DIFFERENCE_OUTPUTS,
 };

@@ -2,7 +2,9 @@
 //! `docs/v1.0-calculators.md` inventory metadata; they are
 //! registered but not runnable in Task 7.
 
-use crate::calc::{idf, od, CalculatorDef, DefaultValue, Family, InputDef, InputKind, OutputDef};
+use crate::calc::{
+    idf, od, CalculatorDef, DefaultValue, Family, InputDef, InputGroup, InputKind, OutputDef,
+};
 use crate::validation::ToleranceClass::ClosedForm as CF;
 const POWER_UNMATCHED_CC_INPUTS: &[InputDef] = &[
     idf(
@@ -192,11 +194,27 @@ const POWER_MEAN_DIFFERENCE_OUTPUTS: &[OutputDef] = &[od(
     CF,
     "`fixtures/R/methods/sample_size.R::power_means` — OpenEpi `PowerMean.js` z-formula",
 )];
+const POWER_MEAN_DIFFERENCE_GROUPS: &[InputGroup] = &[
+    // `mean_1`/`mean_2` together XOR `difference`; `sd_i` XOR `var_i`
+    // per side — same "one of" scheme as `ss_mean_difference`.
+    InputGroup {
+        members: &["mean_1", "difference"],
+    },
+    InputGroup {
+        members: &["mean_2", "difference"],
+    },
+    InputGroup {
+        members: &["sd_1", "var_1"],
+    },
+    InputGroup {
+        members: &["sd_2", "var_2"],
+    },
+];
 pub(super) static POWER_MEAN_DIFFERENCE: CalculatorDef = CalculatorDef {
     id: "power_mean_difference",
     family: Family::Power,
     inputs: POWER_MEAN_DIFFERENCE_INPUTS,
-    groups: &[],
+    groups: POWER_MEAN_DIFFERENCE_GROUPS,
     outputs: POWER_MEAN_DIFFERENCE_OUTPUTS,
 };
 
@@ -227,6 +245,22 @@ const RANDOM_NUMBERS_INPUTS: &[InputDef] = &[
     ),
     idf("seed", InputKind::Count, None, None),
     idf(
+        "unique",
+        InputKind::Choice {
+            options: &["no", "yes"],
+        },
+        Some(DefaultValue::Choice("no")),
+        None,
+    ),
+    idf(
+        "sorted",
+        InputKind::Choice {
+            options: &["no", "yes"],
+        },
+        Some(DefaultValue::Choice("no")),
+        None,
+    ),
+    idf(
         "columns",
         InputKind::Integer { min: 1, max: 20 },
         Some(DefaultValue::Number(1.0)),
@@ -234,7 +268,11 @@ const RANDOM_NUMBERS_INPUTS: &[InputDef] = &[
     ),
 ];
 
-const RANDOM_NUMBERS_OUTPUTS: &[OutputDef] = &[];
+const RANDOM_NUMBERS_OUTPUTS: &[OutputDef] = &[od(
+    "calc.random_numbers.values[]",
+    CF,
+    "seeded ChaCha20 stream (spec §5.2) — golden `crates/epiora-core/tests/golden/random_numbers.json`",
+)];
 pub(super) static RANDOM_NUMBERS: CalculatorDef = CalculatorDef {
     id: "random_numbers",
     family: Family::Other,

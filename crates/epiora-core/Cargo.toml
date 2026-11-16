@@ -21,6 +21,8 @@ fuzzing = ["corpus", "dep:arbitrary"]
 [dependencies]
 arbitrary = { version = "1", optional = true }
 libm = "0.2"
+rand_chacha = "0.10"
+rand_core = "0.10"
 ryu = "1"
 serde = { version = "1", features = ["derive"] }
 # float_roundtrip: serde_json's default float parser is not correctly

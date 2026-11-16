@@ -242,6 +242,7 @@ export const t = {
       zero_variance: 'the values carry no variance',
       out_of_range: 'the value is out of range',
       too_large: 'the exact computation is too large',
+      infinite_sample_size: 'the required sample size is infinite',
     },
   },
   lock: {
