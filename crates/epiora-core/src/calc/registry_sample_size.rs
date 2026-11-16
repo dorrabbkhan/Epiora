@@ -1,6 +1,7 @@
-//! Registry data for the Task 9 calculators, declared as
-//! `docs/v1.0-calculators.md` inventory metadata; they are
-//! registered but not runnable in Task 7.
+//! Registry data for the Task 9 sample-size calculators
+//! (`ss_proportion`, `ss_unmatched_cc`), declared as
+//! `docs/v1.0-calculators.md` inventory metadata; registered and
+//! runnable since Task 9.
 
 use crate::calc::{
     idf, od, CalculatorDef, DefaultValue, Family, InputDef, InputGroup, InputKind, OutputDef,

@@ -1,6 +1,7 @@
-//! Registry data for the Task 9 calculators, declared as
-//! `docs/v1.0-calculators.md` inventory metadata; they are
-//! registered but not runnable in Task 7.
+//! Registry data for the Task 9 power and `other` calculators
+//! (`power_unmatched_cc`, `power_cohort`, `power_mean_difference`,
+//! `random_numbers`), declared as `docs/v1.0-calculators.md`
+//! inventory metadata; registered and runnable since Task 9.
 
 use crate::calc::{
     idf, od, CalculatorDef, DefaultValue, Family, InputDef, InputGroup, InputKind, OutputDef,
