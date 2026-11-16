@@ -4370,6 +4370,7 @@ OpenEpi/inventory source, not the methods file): 14 comparisons
 across `clustered`, `odds_ratio_input`, `risk_difference_input`,
 `high_power` — all rel = 0 (≤ 1e-9 required).
 
-Files outside the task's Files block: `docs/decisions.md` (this
-entry). `fixtures/` changed only via `Rscript fixtures/generate.R`.
+Files outside the task's Files block: `docs/v1.0-calculators.md`
+(one `_real` output line per group, owner decision C1). `fixtures/`
+changed only via `Rscript fixtures/generate.R`.
 Supersedes: —
