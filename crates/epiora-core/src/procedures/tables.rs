@@ -39,7 +39,11 @@ pub fn tables(
     };
 
     let is_2x2 = xt.row_labels.len() == 2 && xt.col_labels.len() == 2;
-    let (result, stats): (TablesResult, Vec<(&'static str, serde_json::Value)>) = if is_2x2 {
+    let (result, stats, notes): (
+        TablesResult,
+        Vec<(&'static str, serde_json::Value)>,
+        Vec<crate::notes::Note>,
+    ) = if is_2x2 {
         let to_2x2 = |t: &Vec<Vec<u64>>| Table2x2 {
             a: t[0][0],
             b: t[0][1],
@@ -84,6 +88,7 @@ pub fn tables(
                 serde_json::to_value(&s.stats).map_err(ser_err)?,
             ));
         }
+        let notes = crate::notes::tables_two_by_two(&sum, stratified.as_ref().map(|s| &s.stats));
         (
             TablesResult::TwoByTwo {
                 labels: Labels2x2 {
@@ -94,6 +99,7 @@ pub fn tables(
                 stratified,
             },
             stats,
+            notes,
         )
     } else {
         if !opts.stratify_by.is_empty() {
@@ -103,6 +109,7 @@ pub fn tables(
         }
         let counts = pooled(&xt.counts);
         let stats = rxc(&counts);
+        let notes = crate::notes::tables_rxc(&counts);
         (
             TablesResult::RxC {
                 row_labels: xt.row_labels.clone(),
@@ -111,6 +118,7 @@ pub fn tables(
                 stats: stats.clone(),
             },
             vec![("rxc", serde_json::to_value(&stats).map_err(ser_err)?)],
+            notes,
         )
     };
 
@@ -122,7 +130,11 @@ pub fn tables(
         xt.exclusions,
         ctx,
     );
-    Ok(ProcOutput { result, receipt })
+    Ok(ProcOutput {
+        result,
+        receipt,
+        notes,
+    })
 }
 
 fn ser_err(e: serde_json::Error) -> EngineError {

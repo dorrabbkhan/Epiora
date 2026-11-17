@@ -12,6 +12,7 @@ pub(crate) use means::stats_json;
 pub use tables::tables;
 
 use crate::dataset::{Dataset, Value};
+use crate::notes::Note;
 use crate::receipt::{ProjectStamp, Receipt, ValidationEntry};
 use crate::stats::{
     Anova, Bartlett, CategoryStats, GroupStats, KruskalWallis, RxcStats, StratifiedStats,
@@ -44,6 +45,8 @@ pub struct ProcOutput<T> {
     pub result: T,
     /// The receipt v1 of spec §4.3.
     pub receipt: Receipt,
+    /// The run's assumption notes (spec §6.1), outside the receipt.
+    pub notes: Vec<Note>,
 }
 
 /// Which proportion CI is labelled as Epi Info's (spec §3.5). The

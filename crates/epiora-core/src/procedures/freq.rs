@@ -71,6 +71,9 @@ pub fn freq(
     Ok(ProcOutput {
         result: FreqResult { tables, exclusions },
         receipt,
+        // FREQ emits Clopper–Pearson/Wilson intervals only — no
+        // spec §6.1 rule applies.
+        notes: Vec::new(),
     })
 }
 
