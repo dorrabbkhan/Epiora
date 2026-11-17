@@ -59,7 +59,10 @@ fn normalize_receipt(receipt: &str) -> String {
     canonical_json(&v)
 }
 
-fn encode_bits(v: &Value) -> Value {
+/// Replaces every f64 in `v` by its 16-hex-digit bit pattern — the
+/// parity encoding of `actual` (spec §5.2), shared by the explain
+/// parity lines of v1.0 Task 11.
+pub(crate) fn encode_bits(v: &Value) -> Value {
     match v {
         Value::Number(n) => match n.as_f64() {
             Some(f) if n.is_f64() => Value::String(format!("{:016x}", f.to_bits())),

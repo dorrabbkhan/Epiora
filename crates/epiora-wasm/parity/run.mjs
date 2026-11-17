@@ -23,6 +23,7 @@ const FAMILIES = [
   "stratified",
   "rxc",
   "freq",
+  "means",
   "calc/proportion",
   "calc/two_by_two",
   "calc/two_by_n",
@@ -74,7 +75,18 @@ for (const family of FAMILIES) {
   for (const file of readdirSync(dir).sort()) {
     if (!file.endsWith(".json")) continue;
     const fixtureJson = readFileSync(join(dir, file), "utf8");
-    lines.push(wasm.runCorpusCase(fixtureJson, datasetsJson));
+    // runCorpusCase returns the case line plus the Epi Info command
+    // line of dataset cases (v1.0 Task 11), `\n`-separated.
+    lines.push(...wasm.runCorpusCase(fixtureJson, datasetsJson).split("\n"));
   }
+}
+
+// Trailing explain section: one explain trace per registry
+// statistic, in registry order — the same lines corpus-runner
+// prints (v1.0 Task 11). Keys are `dir/id` and may root through `..`
+// (the calc.random_numbers golden under crates/).
+for (const [statistic, key] of wasm.explainCorpusPlan()) {
+  const fixtureJson = readFileSync(join(root, `${key}.json`), "utf8");
+  lines.push(wasm.runCorpusExplainLine(fixtureJson, datasetsJson, statistic));
 }
 process.stdout.write(lines.join("\n") + "\n");

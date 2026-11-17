@@ -181,7 +181,11 @@ test("tables via handle equals runCorpusCase receipt", () => {
     }
   }
   const fixtureJson = readFileSync(join(fixturesDir, "2x2", "oswego_vanilla.json"), "utf8");
-  const line = JSON.parse(wasm.runCorpusCase(fixtureJson, JSON.stringify(datasets)));
+  // runCorpusCase returns the case line plus the command line of
+  // dataset cases — the case parity line is the first.
+  const line = JSON.parse(
+    wasm.runCorpusCase(fixtureJson, JSON.stringify(datasets)).split("\n")[0],
+  );
   const corpusReceipt = JSON.parse(line.receipt);
   assert.equal(out.receipt.receipt_sha256, corpusReceipt.receipt_sha256);
 });
@@ -216,6 +220,121 @@ test("unknown variable throws with code unknown_variable", () => {
         CTX,
       ),
     (err) => err.code === "unknown_variable",
+  );
+});
+
+test("means via handle matches the corpus receipt (means_matches_native)", () => {
+  const handle = wasm.datasetFromColumns(
+    oswegoDoc.id,
+    oswegoDoc.version,
+    oswegoDoc.columns.map(columnInput),
+  );
+  const out = wasm.means(
+    handle,
+    { variable: "AGE", group_by: "SEX", include_missing: false },
+    CTX,
+  );
+  assert.equal(out.result.variable, "AGE");
+  assert.equal(out.result.group_by, "SEX");
+  assert.equal(out.result.groups.length, 2);
+
+  const datasets = {};
+  for (const file of readdirSync(join(fixturesDir, "data"))) {
+    if (file.endsWith(".dataset.json")) {
+      const doc = JSON.parse(readFileSync(join(fixturesDir, "data", file), "utf8"));
+      datasets[doc.id] = doc;
+    }
+  }
+  const fixtureJson = readFileSync(
+    join(fixturesDir, "means", "means_oswego_age_sex.json"),
+    "utf8",
+  );
+  const line = JSON.parse(
+    wasm.runCorpusCase(fixtureJson, JSON.stringify(datasets)).split("\n")[0],
+  );
+  const corpusReceipt = JSON.parse(line.receipt);
+  assert.equal(out.receipt.receipt_sha256, corpusReceipt.receipt_sha256);
+});
+
+test("calcRegistry round-trips the registry (calc_registry_round_trips)", () => {
+  const registry = wasm.calcRegistry();
+  assert.equal(registry.length, 24);
+  const ids = new Set();
+  for (const def of registry) {
+    ids.add(def.id);
+    assert.equal(typeof def.family, "string", `${def.id}: family`);
+    assert.ok(Array.isArray(def.inputs), `${def.id}: inputs`);
+    assert.ok(Array.isArray(def.outputs), `${def.id}: outputs`);
+    for (const out of def.outputs) {
+      assert.ok(
+        out.statistic.startsWith(`calc.${def.id}.`),
+        `${def.id}: output ${out.statistic} is family-prefixed`,
+      );
+    }
+  }
+  for (const id of ["proportion", "screening", "mean_ci", "power_cohort", "random_numbers"]) {
+    assert.ok(ids.has(id), `registry is missing ${id}`);
+  }
+});
+
+test("calcRun seals a v3 receipt (calc_run_receipt_v3)", () => {
+  const fixtureJson = readFileSync(
+    join(fixturesDir, "calc", "proportion", "textbook.json"),
+    "utf8",
+  );
+  const fixture = JSON.parse(fixtureJson);
+  const out = wasm.calcRun("proportion", fixture.inputs, CTX);
+  assert.equal(out.receipt.receipt_version, 3);
+  assert.equal(out.receipt.calculator.id, "proportion");
+  assert.equal("dataset" in out.receipt && out.receipt.dataset !== null, false);
+  assert.ok(out.result.estimate > 0);
+
+  const line = JSON.parse(wasm.runCorpusCase(fixtureJson, "{}").split("\n")[0]);
+  const corpusReceipt = JSON.parse(line.receipt);
+  assert.equal(out.receipt.receipt_sha256, corpusReceipt.receipt_sha256);
+});
+
+test("explainProcedure and explainCalculator return the run's own trace (explain_matches_native)", () => {
+  const handle = wasm.datasetFromColumns(
+    oswegoDoc.id,
+    oswegoDoc.version,
+    oswegoDoc.columns.map(columnInput),
+  );
+  const opts = {
+    variables: ["SEX"],
+    stratify_by: null,
+    include_missing: false,
+    ci_method: "clopper_pearson",
+  };
+  const exp = wasm.explainProcedure(handle, "freq", opts, "freq.categories[0].percent");
+  assert.equal(exp.statistic, "freq.categories[0].percent");
+  assert.ok(exp.steps.length >= 1);
+  const leaf = exp.steps.at(-1).result;
+  const run = wasm.freq(handle, opts, CTX);
+  const want = run.result.tables[0].categories[0].percent;
+  assert.deepEqual(leaf, want);
+
+  const calc = wasm.explainCalculator(
+    "proportion",
+    { numerator: 10, denominator: 45 },
+    "calc.proportion.estimate",
+  );
+  assert.equal(calc.statistic, "calc.proportion.estimate");
+  assert.equal(calc.steps.at(-1).result, wasm.calcRun(
+    "proportion",
+    { numerator: 10, denominator: 45 },
+    CTX,
+  ).result.estimate);
+});
+
+test("epiInfoCommand renders the Epi Info command", () => {
+  assert.equal(
+    wasm.epiInfoCommand("freq", { variables: ["AGE"], include_missing: true }),
+    "FREQ AGE\n* Epiora: include_missing",
+  );
+  assert.equal(
+    wasm.epiInfoCommand("means", { variable: "AGE", group_by: "SEX" }),
+    "MEANS AGE SEX",
   );
 });
 
