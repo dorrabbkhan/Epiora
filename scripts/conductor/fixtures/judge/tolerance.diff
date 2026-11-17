@@ -1,0 +1,8 @@
+diff --git a/crates/epiora-core/src/stats.rs b/crates/epiora-core/src/stats.rs
+index 1111111..2222222 100644
+--- a/crates/epiora-core/src/stats.rs
++++ b/crates/epiora-core/src/stats.rs
+@@ -1,2 +1,2 @@
+-const TOLERANCE: f64 = 1e-9;
++const TOLERANCE: f64 = 1e-8;
+ const OTHER: f64 = 0.5;

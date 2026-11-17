@@ -1,0 +1,7 @@
+diff --git a/fixtures/ei7/two-proportion.json b/fixtures/ei7/two-proportion.json
+index 1111111..2222222 100644
+--- a/fixtures/ei7/two-proportion.json
++++ b/fixtures/ei7/two-proportion.json
+@@ -1,2 +1,2 @@
+-{"p": 0.123}
++{"p": 0.124}

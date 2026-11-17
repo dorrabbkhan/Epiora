@@ -4466,3 +4466,85 @@ Task 7 fail-closed family gate in `calc::run`.
   `ss_mean_difference` and `power_mean_difference` — one helper, not
   two copies).
 Supersedes: —
+
+### v1.0 Task 0a — judge script, waits, prompt builder, usage report (2026-11-17)
+
+Decision: Ported babelgate's conductor-efficiency scripts to Epiora per
+docs/superpowers/plans/2026-11-17-epiora-v1.0-conductor-efficiency.md.
+Every check is Epiora's as written in the plan: fixtures (any `fixtures/`,
+`**/golden/**`, `*baseline*` file), numbers (changed numeric literal on a
+tolerance/budget/threshold-keyworded line or anywhere in a plan/spec),
+assertions, skips, files-block, spikes-import, licences, spike-report,
+secrets, diff-stat, owner-gate — plus the same uninspectable-entry rule as
+babelgate (binary/rename-only/truncated entries FLAG every check that
+cannot inspect them).
+Evidence: `node --test scripts/conductor/*.test.ts` — 35 tests pass;
+`./scripts/check.sh` — ALL CHECKS PASSED.
+Resolved interpretations and port deltas:
+
+- **Reference run:** `node scripts/conductor/judge.ts` / `usage-report.ts`
+  use Node 24's built-in type stripping (explicit `.ts` import extensions,
+  no enums/namespaces/parameter properties) and `node --test` — no vitest,
+  no ts-node, no new dependencies, no package.json.
+- **Baseline doc numbers** come from the babelgate script's run by the
+  conductor (`.conductor-ref/usage-baseline.{txt,json}`, untracked); the
+  doc's own-script table was produced by
+  `node scripts/conductor/usage-report.ts --since 2026-10-28`, whose new
+  attribution rules re-assign most of the 57 `unattributed` sessions
+  (11 remain).
+- **Attribution, first match wins:** `/conduct <v> <N>` in a user message;
+  a Bash `devin.sh|build-prompt.sh <kind> <v> <N>` call; an
+  `epiora-conductor/<v>-task<N>` path; `<v>-task<N>` text — scanned over
+  user-message text and Bash tool_use commands. Task ids must start with a
+  digit (`0a`, `11`), so `/conduct v1.0 N` placeholders stay unattributed.
+- **devin.sh:** body inside `main()`; empty prompt exits 2 before any
+  session; the empty-prompt check runs before `app-env.sh` is sourced so a
+  missing app identity can't mask it; the checkout is restored to the
+  starting branch only when no tracked file is modified; stdout is
+  `tail -30` plus every `PR_URL:`/`STOP:` line, de-duplicated; exit code is
+  Devin's. `DEVIN_CMD` keeps `--sandbox --permission-mode bypass -p` — this
+  session did not prove the flag ignored under `--sandbox`.
+- **diff-stat** defaults to the newest `~/epiora-conductor/<v>-task<N>/
+  *.out.md` (the plan's words; babelgate used the union of task/fix outs).
+- **spike-report** runs `scripts/check-spikes.sh` and flags a Measurements
+  line (inside a `Measurements`/`measurement` heading section) that
+  contains a digit but no `http` link or backticked command on the same
+  line; N/A when `docs/spikes/**` is untouched.
+- **licences** flags added rejected-dependency lines (`gadm|powersync|
+  sqlite-?see|sqlite3-see`) in the four dependency manifests and any touch
+  of `deny.toml` or a licence allow-list line (`--onlyAllow`,
+  `license-checker`, …) — a "conductor must look" FLAG, not a verdict.
+- **owner-gate** also reads the task's Gate column in the plan's Task
+  Index table (parsed by header name, so extra columns can sit anywhere)
+  for `OWNER GATE`, `OWNER REVIEW` or `(human step)`.
+- **judge.ts** finds the plan as the newest
+  `docs/superpowers/plans/*epiora-<version>-*.md` containing
+  `### Task <task>:` (v1.0 has two plan files).
+- **build-prompt.sh** resolves the plan the same way; when the resolved
+  file is not the one in the skill's version mapping it names the plan by
+  path in the first line.
+- **Port fixes found on this branch's own diff:** the babelgate glob
+  compiler collapsed `**` into one path segment (the `.*` it emits was
+  re-matched by the single-`*` pass), so `fixtures/usage/**` never reached
+  `<session>/subagents/` — `**` is now marked before the `*` pass.
+  `numbers` flags only when a keyworded line was *removed* (a changed
+  literal, per the plan's "removed line ↔ added line" — pure additions are
+  new code); and the licence-list scan skips `.md` files (the allow-list
+  lives in scripts/config; docs mentioning it are prose).
+- **Files outside the Files block:** `scripts/conductor/usage-classify.ts`
+  (session-log parsing, `<v>-task<N>` attribution and the tool-mix
+  classifier), `scripts/conductor/usage-render.ts` (the text/JSON report
+  tables) and `scripts/conductor/judge-checks-gates.ts` (the licence,
+  spike-report and owner-gate checks, plan order 7/8/11) — split out of
+  `usage-report.ts` (was 562 lines) and `judge-checks.ts` (was 485) so
+  every file is under the ~400-line house rule (owner decision on this
+  task). `usage-report.ts` re-exports the public surface and `judge.ts`
+  imports the moved checks from `judge-checks-gates.ts`, so the tests and
+  what they assert are unchanged.
+- **check.sh** gained exactly one step — "conductor scripts" runs
+  `node --test scripts/conductor/*.test.ts` when that dir has test files,
+  in both modes. (`node --test <dir>` does not scan directories on Node
+  24, hence the glob.)
+- Shell-script tests are node:test files that spawn bash with stub
+  `devin`/`gh` on `PATH` (bats is not installed).
+Supersedes: —
