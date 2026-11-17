@@ -82,20 +82,19 @@ fn chi_leaf(
     Ok(closed(statistic, fid, v, est))
 }
 
-/// The observed/expected cell intermediates of `chi_parts`.
+/// The observed/expected cell intermediates of `chi_parts` — the
+/// cells `shared::oe_cells` returns.
 fn oe_cells(t: &Table2x2) -> Vals {
-    let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
-    let (n1, n0, m1, m0) = (a + b, c + d, a + c, b + d);
-    let n = n1 + n0;
+    let c = shared::oe_cells(t);
     finite(&[
-        ("o_a", a),
-        ("o_b", b),
-        ("o_c", c),
-        ("o_d", d),
-        ("e_a", n1 * m1 / n),
-        ("e_b", n1 * m0 / n),
-        ("e_c", n0 * m1 / n),
-        ("e_d", n0 * m0 / n),
+        ("o_a", c[0][0]),
+        ("o_b", c[1][0]),
+        ("o_c", c[2][0]),
+        ("o_d", c[3][0]),
+        ("e_a", c[0][1]),
+        ("e_b", c[1][1]),
+        ("e_c", c[2][1]),
+        ("e_d", c[3][1]),
     ])
 }
 

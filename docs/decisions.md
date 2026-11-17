@@ -4556,4 +4556,40 @@ fabricated.
   `rates/{adjusted,compare,leaf_pt,one}.rs`,
   `tables/{adjusted,dose,ef,rxc,table}.rs` sub-splits to stay under
   ~400 lines each, as the conductor notes instructed).
+- Fix round 1 (PR #81): every intermediate a trace shows now comes
+  from the `pub(crate)` helper the run path itself calls — parity is
+  structural, not asserted. Helpers extracted from the run code into
+  new files so `stats/two_by_two.rs` (307 ≤ 350), `calc/counts/
+  shared.rs` (347 ≤ 400) and `calc/counts/two_by_two.rs` (163 ≤ 400)
+  meet the size rule: `stats/two_by_two_parts.rs`
+  (`Parts2x2`/`parts`/`z_975`/`yates_adj_of`),
+  `calc/counts/shared_ci.rs` (CI/diagnostic parts incl.
+  `KappaParts`), `calc/counts/ef.rs` (`EfRiskParts`/`EfOrParts`),
+  `calc/counts/adjusted.rs` (adjusted-table `adjusted_parts`/`woolf`),
+  and `calc/power/parts.rs` (the Fleiss `powerz` chain). In-place
+  extractions: `stats/rxc.rs` (`RxcParts`), `stats/rates.rs`
+  (`rd_byar_parts`/`rate_ratio_parts`/`EfPtParts`/`AdjRateParts`),
+  `stats/stratified.rs` (`StratDerived`), `stats/means_summary.rs`
+  (`GroupSummary::total`/`ssq`, `BartlettParts::stat`),
+  `calc/counts/dose_response.rs` (`mh_or_parts`),
+  `calc/counts/smr.rs` (`byar`), `calc/person_time/rate_one.rs`
+  (`pu_scale`), `calc/counts/shared.rs` (`oe_cells`, `t_crit`),
+  `calc/continuous/{mean_ci,t_test_summary,anova_summary}.rs`
+  (`se_parts`, `groups`/`f_ratio`, `group_ci_parts`/`pooled_h_base`),
+  `calc/sample_size/{proportion,two_props,mean_difference,
+  unmatched_cc,cohort}.rs` (`SsPropParts`/`vn`/`group2`/
+  `block_parts`/`n1_n2`/`p1p2`). The only arithmetic left in
+  `explain/` is `/100.0` percent normalization of raw inputs and
+  index arithmetic — every statistical quantity is a run-path
+  helper call. `results_unchanged` now implements D1's
+  fail-on-missing rule (an absent golden row fails when its fixture
+  and dataset files still exist unchanged), and both coverage tests
+  fail on missing fixture paths, `run_case` errors and rows with no
+  exercised instance instead of silently `continue`-ing.
+  Additional files outside the task's Files block:
+  `app/src/ui/strings.ts` (`zero_expected` undefined-reason label
+  and `explain_unknown` error message — the regenerated
+  `Estimate.ts` adds the union member the label map must cover);
+  `app/src/worker/errors.ts` (`explain_unknown` in
+  `ENGINE_ERROR_CODES`, matching the `EngineError::code()` list).
 Supersedes: —

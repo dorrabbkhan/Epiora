@@ -52,6 +52,13 @@ pub(crate) struct KwParts {
     pub df: f64,
 }
 
+impl KwParts {
+    /// `h_raw / correction` — the tie-corrected H.
+    pub(crate) fn h(&self) -> f64 {
+        self.h_raw / self.correction
+    }
+}
+
 /// The intermediates of `kruskal_wallis(groups)` — shared by the
 /// result and the explain trace.
 pub(crate) fn kw_parts(groups: &[&[f64]]) -> KwParts {
@@ -100,12 +107,9 @@ pub(crate) fn kw_parts(groups: &[&[f64]]) -> KwParts {
 /// divided by the tie correction `1 − Σ(t³−t)/(N³−N)`. An all-tied
 /// input makes the correction zero and H `Undefined { zero_variance }`.
 pub(crate) fn kruskal_wallis(groups: &[&[f64]]) -> KruskalWallis {
-    let KwParts {
-        h_raw,
-        correction,
-        df,
-    } = kw_parts(groups);
-    let h = Estimate::from_f64(h_raw / correction, UndefinedReason::ZeroVariance);
+    let p = kw_parts(groups);
+    let df = p.df;
+    let h = Estimate::from_f64(p.h(), UndefinedReason::ZeroVariance);
     let p = match h {
         Estimate::Value(v) => Estimate::from_f64(chisq_sf(v, df), UndefinedReason::ZeroVariance),
         Estimate::Undefined { reason } => Estimate::Undefined { reason },

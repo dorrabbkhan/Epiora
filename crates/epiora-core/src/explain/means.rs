@@ -12,7 +12,7 @@ use crate::dataset::Dataset;
 use crate::error::EngineError;
 use crate::procedures::{means, MeansOptions, RunContext};
 use crate::stats::{
-    bartlett_parts, kw_parts, summarize, t_parts, Estimate, GroupStats, GroupSummary,
+    anova_parts, bartlett_parts, kw_parts, summarize, t_parts, Estimate, GroupStats, GroupSummary,
 };
 use crate::tabulate::group_numeric;
 use serde_json::Value;
@@ -45,7 +45,7 @@ fn descriptives(
     let n = summary.n as f64;
     // Σ(x − mean)² — the sample-variance numerator `summarize`
     // accumulates.
-    let ssq = summary.variance.map(|v| v * (n - 1.0)).unwrap_or(f64::NAN);
+    let ssq = summary.ssq();
     let (fid, v) = match leaf_seg.key.as_str() {
         "observations" => ("data", vals(&[("value", n)])),
         "total" => (
@@ -55,7 +55,7 @@ fn descriptives(
                 Estimate::Undefined { .. } => vals(&[]),
             },
         ),
-        "mean" => ("mean", finite(&[("total", summary.mean * n), ("n", n)])),
+        "mean" => ("mean", finite(&[("total", summary.total()), ("n", n)])),
         "variance" => ("sample_variance", finite(&[("ssq", ssq), ("df", n - 1.0)])),
         "std_dev" => (
             "sqrt",
@@ -90,7 +90,11 @@ fn t_leaf(
         None => (f64::NAN, f64::NAN),
     };
     let diff = parts.map(|p| p.diff).unwrap_or(f64::NAN);
-    let t = diff / se;
+    let t = match parts {
+        Some(p) if which == "pooled" => p.t_pooled,
+        Some(p) => p.t_welch,
+        None => f64::NAN,
+    };
     let crit = crate::special::t_quantile(0.975, df).unwrap_or(f64::NAN);
 
     match rest {
@@ -153,8 +157,8 @@ fn t_leaf(
     }
 }
 
-/// `anova.*` leaves — the sums recomputed from the same
-/// `GroupSummary`s `anova_from_summary` consumes.
+/// `anova.*` leaves — the same `AnovaParts` `anova_from_summary`
+/// computes from the `GroupSummary`s.
 pub(crate) fn anova_leaf(
     groups: &[GroupSummary],
     statistic: &str,
@@ -163,24 +167,13 @@ pub(crate) fn anova_leaf(
 ) -> Result<Explanation, EngineError> {
     let u = || super::path::unknown(statistic);
     let k = groups.len() as f64;
-    let n_tot: f64 = groups.iter().map(|g| g.n as f64).sum();
-    let grand = crate::stats::neumaier_sum(groups.iter().map(|g| g.n as f64 * g.mean)) / n_tot;
-    let ss_b = crate::stats::neumaier_sum(
-        groups
-            .iter()
-            .map(|g| g.n as f64 * (g.mean - grand) * (g.mean - grand)),
-    );
-    let ss_w = if groups.iter().all(|g| g.variance.is_some()) {
-        crate::stats::neumaier_sum(
-            groups
-                .iter()
-                .map(|g| (g.n - 1) as f64 * g.variance.unwrap_or(0.0)),
-        )
-    } else {
-        f64::NAN
-    };
-    let (df_b, df_w) = (k - 1.0, n_tot - k);
-    let (ms_b, ms_w) = (ss_b / df_b, ss_w / df_w);
+    let p = anova_parts(groups);
+    let n_tot = p.n_tot;
+    let grand = p.grand;
+    let ss_b = p.ss_b;
+    let ss_w = p.ss_w.unwrap_or(f64::NAN);
+    let (df_b, df_w) = (p.df_b, p.df_w);
+    let (ms_b, ms_w) = (p.ms_b(), p.ms_w());
 
     let group_vals = |prefix: &str, f: &dyn Fn(&GroupSummary) -> f64| {
         let mut v = std::collections::BTreeMap::new();
@@ -226,7 +219,7 @@ pub(crate) fn anova_leaf(
                 // `means` emits `p_value`; `anova_summary` emits `p`.
                 "p_value" | "p" => (
                     "f_sf",
-                    finite(&[("f", ms_b / ms_w), ("df1", df_b), ("df2", df_w)]),
+                    finite(&[("f", p.f_ratio()), ("df1", df_b), ("df2", df_w)]),
                 ),
                 _ => return Err(u()),
             };
@@ -324,10 +317,7 @@ pub(super) fn explain(
                     est,
                 )),
                 "p_value" => {
-                    let x = parts
-                        .as_ref()
-                        .map(|p| p.numerator / p.correction)
-                        .unwrap_or(f64::NAN);
+                    let x = parts.as_ref().map(|p| p.stat()).unwrap_or(f64::NAN);
                     Ok(closed(
                         statistic,
                         "chi_sf",
@@ -360,7 +350,7 @@ pub(super) fn explain(
                 "p_value" => Ok(closed(
                     statistic,
                     "chi_sf",
-                    finite(&[("x", p.h_raw / p.correction), ("df", p.df)]),
+                    finite(&[("x", p.h()), ("df", p.df)]),
                     est,
                 )),
                 _ => Err(u()),

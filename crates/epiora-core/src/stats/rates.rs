@@ -41,22 +41,40 @@ pub(crate) fn rg_ci(o: u64, pt: f64, conf: f64) -> [f64; 2] {
     [libm::exp(lo - h), libm::exp(lo + h)]
 }
 
+/// `rd_byar`'s intermediates: the two rates, the difference and its
+/// SE — shared by the run and the explain trace (v1.0 Task 10,
+/// spec §6).
+pub(crate) fn rd_byar_parts(a: f64, b: f64, n1: f64, n0: f64) -> (f64, f64, f64, f64) {
+    let (re, ru) = (a / n1, b / n0);
+    let dp = re - ru;
+    let se = libm::sqrt(a / (n1 * n1) + b / (n0 * n0));
+    (re, ru, dp, se)
+}
+
 /// `rates.R::rd_byar` — the rate difference `a/n1 − b/n0` and its
 /// Taylor CI (labelled "Byar" in OpenEpi's PersonTime2 output). The
 /// caller scales by `per_unit`.
 pub(crate) fn rd_byar(a: f64, b: f64, n1: f64, n0: f64, conf: f64) -> [f64; 3] {
     let z = z(conf);
-    let dp = a / n1 - b / n0;
-    let se = libm::sqrt(a / (n1 * n1) + b / (n0 * n0));
+    let (_, _, dp, se) = rd_byar_parts(a, b, n1, n0);
     [dp, dp - z * se, dp + z * se]
+}
+
+/// `rate_ratio`'s intermediates: the two rates, the ratio and its
+/// log-scale SE — shared by the run and the explain trace.
+pub(crate) fn rate_ratio_parts(a: f64, b: f64, n1: f64, n0: f64) -> (f64, f64, f64, f64) {
+    let (re, ru) = (a / n1, b / n0);
+    let rr = ru / re;
+    let se = libm::sqrt(1.0 / n1 + 1.0 / n0);
+    (re, ru, rr, se)
 }
 
 /// `epitools::rateratio` (`method = "wald"`, `rev = "both"`): the
 /// unexposed/exposed rate ratio `(b/n0)/(a/n1)` with log-scale
 /// `se = sqrt(1/n1 + 1/n0)` on the person-times.
 pub(crate) fn rate_ratio(a: f64, b: f64, n1: f64, n0: f64, conf: f64) -> [f64; 3] {
-    let rr = (b / n0) / (a / n1);
-    let h = z(conf) * libm::sqrt(1.0 / n1 + 1.0 / n0);
+    let (_, _, rr, se) = rate_ratio_parts(a, b, n1, n0);
+    let h = z(conf) * se;
     [rr, rr * libm::exp(-h), rr * libm::exp(h)]
 }
 
@@ -70,15 +88,56 @@ pub(crate) fn pt_zscore(a: f64, b: f64, n1: f64, n0: f64) -> [f64; 3] {
     [z, p, 2.0 * p]
 }
 
+/// `ef_person_time`'s intermediates — the explain trace's named
+/// values (v1.0 Task 10, spec §6). `clamp1` propagates NaN like R's
+/// `max(-1, min(1, x))` (Rust's `min`/`max` would swallow it).
+pub(crate) struct EfPtParts {
+    /// `a/n1` — rate in the exposed.
+    pub re: f64,
+    /// `b/n0` — rate in the unexposed.
+    pub ru: f64,
+    /// `(a+b)/(n1+n0)` — overall rate.
+    pub ro: f64,
+    /// `re/ru`.
+    pub rr: f64,
+    /// `rr·exp(−h)`.
+    pub rr_lo: f64,
+    /// `rr·exp(h)`.
+    pub rr_hi: f64,
+    /// `n1/(n1+n0)` — the exposed person-time share.
+    pub share: f64,
+    /// Clamped `(ro−ru)/ro`.
+    pub efp: f64,
+    /// `share·(rr_lo−1) / (share·(rr_lo−1) + 1)`.
+    pub efp_lo: f64,
+    /// `share·(rr_hi−1) / (share·(rr_hi−1) + 1)`.
+    pub efp_hi: f64,
+    /// Clamped `(rr−1)/rr`.
+    pub efe: f64,
+    /// `(rr_lo−1)/rr_lo`.
+    pub efe_lo: f64,
+    /// `(rr_hi−1)/rr_hi`.
+    pub efe_hi: f64,
+    /// `(ru−ro)/ru`.
+    pub pfp: f64,
+    /// `1 − 1/(1−efp_hi)`.
+    pub pfp_lo: f64,
+    /// `1 − 1/(1−efp_lo)`.
+    pub pfp_hi: f64,
+    /// `(ru−re)/ru`.
+    pub pfe: f64,
+    /// `1 − rr_hi`.
+    pub pfe_lo: f64,
+    /// `1 − rr_lo`.
+    pub pfe_hi: f64,
+}
+
 /// `rates.R::ef_person_time` — etiologic fractions in the exposed and
 /// population plus prevented fractions, Abramson & Gahlinger PEPI
-/// formulas as in `PersonTime2.js`. Returns `[efp, efe, pfp, pfe]`,
-/// each `[est, lower, upper]`; the caller scales by 100. EFp/EFe are
-/// clamped to `[-1, 1]`; R's `max(-1, min(1, x))` propagates NaN
-/// (Rust's `min`/`max` would swallow it), so `clamp1` checks first.
-pub(crate) fn ef_person_time(a: f64, b: f64, n1: f64, n0: f64, conf: f64) -> [[f64; 3]; 4] {
-    // `clamp` propagates NaN like R's max(-1, min(1, x)) — Rust's
-    // `min`/`max` would swallow it.
+/// formulas as in `PersonTime2.js`. The intermediates of
+/// `ef_person_time(a, b, n1, n0, conf)` — shared by the result and
+/// the explain trace.
+pub(crate) fn ef_pt_parts(a: f64, b: f64, n1: f64, n0: f64, conf: f64) -> EfPtParts {
     let clamp1 = |x: f64| x.clamp(-1.0, 1.0);
     let (re, ru, ro) = (a / n1, b / n0, (a + b) / (n1 + n0));
     let rr = re / ru;
@@ -97,11 +156,38 @@ pub(crate) fn ef_person_time(a: f64, b: f64, n1: f64, n0: f64, conf: f64) -> [[f
     let pfp_hi = 1.0 - 1.0 / (1.0 - efp_lo);
     let pfe_lo = 1.0 - rr_hi;
     let pfe_hi = 1.0 - rr_lo;
+    EfPtParts {
+        re,
+        ru,
+        ro,
+        rr,
+        rr_lo,
+        rr_hi,
+        share,
+        efp,
+        efp_lo,
+        efp_hi,
+        efe,
+        efe_lo,
+        efe_hi,
+        pfp,
+        pfp_lo,
+        pfp_hi,
+        pfe,
+        pfe_lo,
+        pfe_hi,
+    }
+}
+
+/// `ef_person_time` as `[efp, efe, pfp, pfe]`, each
+/// `[est, lower, upper]`; the caller scales by 100.
+pub(crate) fn ef_person_time(a: f64, b: f64, n1: f64, n0: f64, conf: f64) -> [[f64; 3]; 4] {
+    let p = ef_pt_parts(a, b, n1, n0, conf);
     [
-        [efp, efp_lo, efp_hi],
-        [efe, efe_lo, efe_hi],
-        [pfp, pfp_lo, pfp_hi],
-        [pfe, pfe_lo, pfe_hi],
+        [p.efp, p.efp_lo, p.efp_hi],
+        [p.efe, p.efe_lo, p.efe_hi],
+        [p.pfp, p.pfp_lo, p.pfp_hi],
+        [p.pfe, p.pfe_lo, p.pfe_hi],
     ]
 }
 
@@ -137,6 +223,11 @@ pub(crate) struct AdjRateParts {
     pub mh_num: f64,
     /// `sum(b·n1/n)` — the MH RR denominator.
     pub mh_den: f64,
+    /// `mh_num / mh_den` — the MH RR estimate.
+    pub mh_rr: f64,
+    /// `1/sqrt(sw_rd)` — the direct RD's SE (the explain trace's
+    /// `se`; the run halves it as `z/sqrt(sw_rd)`).
+    pub se_rd: f64,
     /// `sum(m1·n1·n0/n²)` — the GR numerator and z-score variance.
     pub mh_var: f64,
     /// `sqrt(mh_var / (mh_num·mh_den))` — the log-scale MH SE.
@@ -157,19 +248,51 @@ pub(crate) struct AdjRateParts {
     pub chi_rd: f64,
 }
 
+/// One `[a, b, n1, n0]` stratum's adjustment terms — the
+/// per-stratum estimate and weight the pooled sums fold (v1.0
+/// Task 10, spec §6).
+pub(crate) struct AdjStratum {
+    /// `a + b`.
+    pub m1: f64,
+    /// `n1 + n0`.
+    pub n: f64,
+    /// `ln(rr_i)` — the Woolf estimate, `ln((a/n1)/(b/n0))`.
+    pub ln_rr_i: f64,
+    /// `a/n1 − b/n0` — the stratum rate difference.
+    pub rd_i: f64,
+    /// `a·b/m1` — the RR weight.
+    pub w_rr: f64,
+    /// `1/(a/n1² + b/n0²)` — the RD weight.
+    pub w_rd: f64,
+}
+
+/// The stratum terms `adjusted_rate_parts` sums — shared by the
+/// result and the explain trace.
+pub(crate) fn adj_stratum(t: &[f64; 4]) -> AdjStratum {
+    let (m1, n) = (t[0] + t[1], t[2] + t[3]);
+    AdjStratum {
+        m1,
+        n,
+        ln_rr_i: libm::log((t[0] / t[2]) / (t[1] / t[3])),
+        rd_i: t[0] / t[2] - t[1] / t[3],
+        w_rr: t[0] * t[1] / m1,
+        w_rd: 1.0 / (t[0] / (t[2] * t[2]) + t[1] / (t[3] * t[3])),
+    }
+}
+
 /// The intermediates of `adjusted_rates(strata, _)` — shared by the
 /// result and the explain trace.
 pub(crate) fn adjusted_rate_parts(strata: &[[f64; 4]]) -> AdjRateParts {
     let sum = |f: &dyn Fn(&[f64; 4]) -> f64| neumaier_sum(strata.iter().map(f));
-    let m1 = |t: &[f64; 4]| t[0] + t[1];
-    let n = |t: &[f64; 4]| t[2] + t[3];
-    let rr_i = |t: &[f64; 4]| (t[0] / t[2]) / (t[1] / t[3]);
-    let rd_i = |t: &[f64; 4]| t[0] / t[2] - t[1] / t[3];
-    let w_rr = |t: &[f64; 4]| t[0] * t[1] / m1(t);
-    let w_rd = |t: &[f64; 4]| 1.0 / (t[0] / (t[2] * t[2]) + t[1] / (t[3] * t[3]));
+    let m1 = |t: &[f64; 4]| adj_stratum(t).m1;
+    let n = |t: &[f64; 4]| adj_stratum(t).n;
+    let ln_rr_i = |t: &[f64; 4]| adj_stratum(t).ln_rr_i;
+    let rd_i = |t: &[f64; 4]| adj_stratum(t).rd_i;
+    let w_rr = |t: &[f64; 4]| adj_stratum(t).w_rr;
+    let w_rd = |t: &[f64; 4]| adj_stratum(t).w_rd;
 
     let sw_rr = sum(&w_rr);
-    let adj_ln_rr = sum(&|t| w_rr(t) * libm::log(rr_i(t))) / sw_rr;
+    let adj_ln_rr = sum(&|t| w_rr(t) * ln_rr_i(t)) / sw_rr;
 
     let mh_num = sum(&|t| t[0] * t[3] / n(t));
     let mh_den = sum(&|t| t[1] * t[2] / n(t));
@@ -184,7 +307,7 @@ pub(crate) fn adjusted_rate_parts(strata: &[[f64; 4]]) -> AdjRateParts {
     let zs = (sum_a - sum_e) / libm::sqrt(mh_var);
 
     let chi_rr = sum(&|t| {
-        let d = libm::log(rr_i(t)) - adj_ln_rr;
+        let d = ln_rr_i(t) - adj_ln_rr;
         w_rr(t) * d * d
     });
     let chi_rd = sum(&|t| {
@@ -196,6 +319,8 @@ pub(crate) fn adjusted_rate_parts(strata: &[[f64; 4]]) -> AdjRateParts {
         adj_ln_rr,
         mh_num,
         mh_den,
+        mh_rr: mh_num / mh_den,
+        se_rd: 1.0 / libm::sqrt(sw_rd),
         mh_var,
         se_mh,
         sw_rd,
@@ -217,7 +342,7 @@ pub(crate) fn adjusted_rates(strata: &[[f64; 4]], conf: f64) -> AdjustedRates {
     let adj_rr = libm::exp(p.adj_ln_rr);
     let h_rr = z / libm::sqrt(p.sw_rr);
     let h_rd = z / libm::sqrt(p.sw_rd);
-    let mh_rr = p.mh_num / p.mh_den;
+    let mh_rr = p.mh_rr;
     let zs_p = 2.0 * normal_cdf(-libm::fabs(p.zs));
     AdjustedRates {
         direct_rr: [adj_rr, adj_rr * libm::exp(-h_rr), adj_rr * libm::exp(h_rr)],

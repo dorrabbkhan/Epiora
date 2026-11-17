@@ -1,7 +1,7 @@
 //! `adjusted_leaf`, the `strata[]/crude` routers, and the
 //! `two_by_two`/`two_by_n` family entry points.
 use super::*;
-use crate::calc::counts::two_by_two as c22;
+use crate::calc::counts::adjusted as cadj;
 
 /// `adjusted.*` of `two_by_two`.
 fn adjusted_leaf(
@@ -12,14 +12,10 @@ fn adjusted_leaf(
     est: crate::stats::Estimate,
 ) -> Result<Explanation, EngineError> {
     let u = || unknown(statistic);
-    let p = c22::adjusted_parts(strata);
+    let p = cadj::adjusted_parts(strata);
     let zz = z(conf);
-    let sd = libm::sqrt(
-        p.rg_a / (2.0 * p.sd_ * p.sd_)
-            + p.rg_b / (2.0 * p.sd_ * p.so_)
-            + p.rg_c / (2.0 * p.so_ * p.so_),
-    );
-    let gr_se = libm::sqrt(p.gr_num / (p.rr_num * p.rr_den));
+    let sd = p.sd_or();
+    let gr_se = p.gr_se();
 
     match segs {
         [f, l] if f.key == "mh_chisq" => match l.key.as_str() {
@@ -32,7 +28,7 @@ fn adjusted_leaf(
             "p" => Ok(closed(
                 statistic,
                 "chi_sf",
-                finite(&[("x", p.delta * p.delta / p.var), ("df", 1.0)]),
+                finite(&[("x", p.mh_chi()), ("df", 1.0)]),
                 est,
             )),
             _ => Err(u()),
@@ -44,7 +40,7 @@ fn adjusted_leaf(
                 finite(&[("num", p.sd_), ("den", p.so_)]),
                 est,
             )),
-            _ => stat_ci_wald_exp(statistic, &l.key, p.sd_ / p.so_, sd, conf, est),
+            _ => stat_ci_wald_exp(statistic, &l.key, p.or(), sd, conf, est),
         },
         [f, l] if f.key == "mh_rr" => match l.key.as_str() {
             "est" => Ok(closed(
@@ -53,12 +49,12 @@ fn adjusted_leaf(
                 finite(&[("num", p.rr_num), ("den", p.rr_den)]),
                 est,
             )),
-            _ => stat_ci_wald_exp(statistic, &l.key, p.rr_num / p.rr_den, gr_se, conf, est),
+            _ => stat_ci_wald_exp(statistic, &l.key, p.rr(), gr_se, conf, est),
         },
         [f, l] if f.key.starts_with("direct_") => {
             let measure = f.key.trim_start_matches("direct_");
-            let (adj, _, ws) = c22::woolf(strata, measure);
-            let sw: f64 = ws.iter().sum();
+            let wp = cadj::woolf(strata, measure);
+            let (sw, swe) = (wp.sw, wp.swe);
             let fid = match l.key.as_str() {
                 "est" => {
                     if measure == "rd" {
@@ -83,7 +79,6 @@ fn adjusted_leaf(
                 }
                 _ => return Err(u()),
             };
-            let swe = adj * sw;
             Ok(closed(
                 statistic,
                 fid,
@@ -105,16 +100,14 @@ fn adjusted_leaf(
             } else {
                 return Err(u());
             };
-            let (adj, ests, ws) = c22::woolf(strata, measure);
-            let chi: f64 = ests
-                .iter()
-                .zip(&ws)
-                .map(|(e, w)| w * (e - adj) * (e - adj))
-                .sum();
+            let wp = cadj::woolf(strata, measure);
+            let adj = wp.adj;
+            let chi = cadj::woolf_chisq(adj, &wp.ests, &wp.ws);
+            let (ests, ws) = (&wp.ests, &wp.ws);
             match kind {
                 "chisq" => {
                     let mut v = finite(&[("adj", adj)]);
-                    for (i, (e, w)) in ests.iter().zip(&ws).enumerate() {
+                    for (i, (e, w)) in ests.iter().zip(ws.iter()).enumerate() {
                         if e.is_finite() {
                             v.insert(format!("e_{i}"), *e);
                         }

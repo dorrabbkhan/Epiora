@@ -54,11 +54,31 @@ fn check_rows(inputs: &Value) -> Result<(), EngineError> {
     Ok(())
 }
 
-pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
-    check_rows(inputs)?;
-    let rows = table(inputs, "table");
-    let groups: Vec<GroupSummary> = rows
-        .iter()
+/// `group_ci`'s per-group `(tc, h_base, h)` — `tc` the
+/// `qt(0.975, n−1)` crit, `h_base = sd/√n`, `h = tc·sd/√n` in the
+/// run's operand order. Shared by the result and the explain trace
+/// (v1.0 Task 10, spec §6).
+pub(crate) fn group_ci_parts(g: &GroupSummary) -> (f64, f64, f64) {
+    let sd = libm::sqrt(g.variance.unwrap_or(f64::NAN));
+    let tc = t_quantile(0.975, (g.n - 1) as f64).unwrap_or(f64::NAN);
+    (
+        tc,
+        sd / libm::sqrt(g.n as f64),
+        tc * sd / libm::sqrt(g.n as f64),
+    )
+}
+
+/// `group_ci_pooled`'s per-group `h_base = √(ms_w/nᵢ)` — shared by
+/// the result (`h = tc_p·h_base`) and the explain trace.
+pub(crate) fn pooled_h_base(g: &GroupSummary, ms_w: f64) -> f64 {
+    libm::sqrt(ms_w / g.n as f64)
+}
+
+/// The `GroupSummary`s the `table` rows describe — `n`, `mean`, and
+/// the squared `sd` column. Shared by `run` and the explain trace
+/// (v1.0 Task 10, spec §6).
+pub(crate) fn groups_of(rows: &[Vec<f64>]) -> Vec<GroupSummary> {
+    rows.iter()
         .map(|r| GroupSummary {
             n: *r.first().unwrap_or(&0.0) as u64,
             mean: *r.get(1).unwrap_or(&0.0),
@@ -67,7 +87,13 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
                 s * s
             }),
         })
-        .collect();
+        .collect()
+}
+
+pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
+    check_rows(inputs)?;
+    let rows = table(inputs, "table");
+    let groups = groups_of(&rows);
     let an = anova_from_summary(&groups);
     let ms_w = match an.ms_within {
         Estimate::Value(v) => v,
@@ -81,16 +107,14 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let group_ci: Vec<Value> = groups
         .iter()
         .map(|g| {
-            let sd = libm::sqrt(g.variance.unwrap_or(f64::NAN));
-            let tc = t_quantile(0.975, (g.n - 1) as f64).unwrap_or(f64::NAN);
-            let h = tc * sd / libm::sqrt(g.n as f64);
+            let (_, _, h) = group_ci_parts(g);
             json!({ "lower": leaf(g.mean - h), "upper": leaf(g.mean + h) })
         })
         .collect();
     let group_ci_pooled: Vec<Value> = groups
         .iter()
         .map(|g| {
-            let h = tc_p * libm::sqrt(ms_w / g.n as f64);
+            let h = tc_p * pooled_h_base(g, ms_w);
             json!({ "lower": leaf(g.mean - h), "upper": leaf(g.mean + h) })
         })
         .collect();

@@ -8,7 +8,7 @@ use super::finite;
 use crate::dataset::Dataset;
 use crate::error::EngineError;
 use crate::procedures::TablesOptions;
-use crate::stats::{bdt_parts, stratified_parts, StratifiedStats};
+use crate::stats::{bdt_parts, stratified_derived, stratified_parts, StratifiedStats};
 
 /// The kept strata of a `stratified` run (totals > 0), re-derived as
 /// `stats::stratified` filters them.
@@ -42,17 +42,14 @@ pub(super) fn mh_leaf(
     let u = || super::super::path::unknown(statistic);
     let kept = kept_strata(ds, opts)?;
     let p = stratified_parts(&kept);
+    let dv = stratified_derived(&p);
 
-    let sd_or = libm::sqrt(
-        p.rbg_diag / (2.0 * p.s_diag * p.s_diag)
-            + p.rbg_cross / (2.0 * p.s_diag * p.s_offd)
-            + p.rbg_offd / (2.0 * p.s_offd * p.s_offd),
-    );
-    let se_rr = libm::sqrt(p.gr_num / (p.rr_num * p.rr_den));
+    let sd_or = dv.sd_or;
+    let se_rr = dv.se_rr;
     let z = crate::special::normal_quantile(0.975).unwrap_or(1.959963984540054);
-    let x2 = p.delta * p.delta / p.var_delta;
-    let yates = if p.delta.abs() >= 0.5 { 0.5 } else { 0.0 };
-    let x2c = (p.delta.abs() - yates) * (p.delta.abs() - yates) / p.var_delta;
+    let x2 = dv.x2;
+    let yates = dv.yates;
+    let x2c = dv.x2c;
 
     match rest {
         [f, which, l] if f.key == "chi_square" => {
@@ -96,9 +93,9 @@ pub(super) fn mh_leaf(
                 _ => return Err(u()),
             };
             let (est_v, se) = if f.key == "odds_ratio" {
-                (p.s_diag / p.s_offd, sd_or)
+                (dv.or, sd_or)
             } else {
-                (p.rr_num / p.rr_den, se_rr)
+                (dv.rr, se_rr)
             };
             Ok(closed(
                 statistic,
@@ -150,7 +147,7 @@ pub(super) fn bdt_leaf(
         }
         [l] if l.key == "p_value" => {
             let x2t = match parts {
-                Some(p) => p.x2 - (p.sum_a - p.sum_e) * (p.sum_a - p.sum_e) / p.sum_var,
+                Some(p) => p.tarone(),
                 None => f64::NAN,
             };
             Ok(closed(

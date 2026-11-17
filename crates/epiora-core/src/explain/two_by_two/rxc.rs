@@ -28,28 +28,10 @@ pub(crate) fn explain_rxc(
     let est = leaf(&tree, segs, statistic)?;
     let u = || super::super::path::unknown(statistic);
 
-    let rows = counts.len();
-    let cols = counts.iter().map(Vec::len).max().unwrap_or(0);
+    let p = crate::stats::rxc_parts(counts);
+    let (rows, cols) = (p.rows, p.cols);
     let cell = |r: usize, c: usize| counts[r].get(c).copied().unwrap_or(0) as f64;
-    let row_totals: Vec<f64> = (0..rows)
-        .map(|r| (0..cols).map(|c| cell(r, c)).sum())
-        .collect();
-    let col_totals: Vec<f64> = (0..cols)
-        .map(|c| (0..rows).map(|r| cell(r, c)).sum())
-        .collect();
-    let n: f64 = row_totals.iter().sum();
-    let stat_v: f64 = (0..rows)
-        .flat_map(|r| (0..cols).map(move |c| (r, c)))
-        .map(|(r, c)| {
-            let e = row_totals[r] * col_totals[c] / n;
-            if e == 0.0 {
-                0.0
-            } else {
-                let d = cell(r, c) - e;
-                d * d / e
-            }
-        })
-        .sum();
+    let stat_v = p.statistic;
 
     match segs {
         [f, l] if f.key == "chi_square" && l.key == "df" => Ok(closed(
@@ -60,11 +42,11 @@ pub(crate) fn explain_rxc(
         )),
         [f, l] if f.key == "chi_square" && l.key == "statistic" => {
             let mut v = std::collections::BTreeMap::new();
-            for (r, &rt) in row_totals.iter().enumerate() {
-                for (c, &ct) in col_totals.iter().enumerate() {
+            for r in 0..rows {
+                for c in 0..cols {
                     let i = r * cols + c;
                     v.insert(format!("o_{i}"), cell(r, c));
-                    let e = rt * ct / n;
+                    let e = p.expected[i];
                     if e.is_finite() {
                         v.insert(format!("e_{i}"), e);
                     }
@@ -72,15 +54,12 @@ pub(crate) fn explain_rxc(
             }
             Ok(closed(statistic, "chi_square_cells", v, est))
         }
-        [f, l] if f.key == "chi_square" && l.key == "p_value" => {
-            let df = ((rows - 1) * (cols - 1)) as f64;
-            Ok(closed(
-                statistic,
-                "chi_sf",
-                finite(&[("x", stat_v), ("df", df)]),
-                est,
-            ))
-        }
+        [f, l] if f.key == "chi_square" && l.key == "p_value" => Ok(closed(
+            statistic,
+            "chi_sf",
+            finite(&[("x", stat_v), ("df", p.df)]),
+            est,
+        )),
         _ => Err(u()),
     }
 }

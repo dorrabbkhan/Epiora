@@ -35,19 +35,27 @@ pub(crate) fn or_levels(s: &[[f64; 3]]) -> Vec<f64> {
     s.iter().map(|l| (l[1] * bbase) / (l[2] * abase)).collect()
 }
 
+/// `(num, den)` — the MH pooled sums of level `i` vs baseline across
+/// `strata`; `num/den` is the `dr_mh_or` estimate. Shared by `mh_or`
+/// and the explain trace (v1.0 Task 10, spec §6).
+pub(crate) fn mh_or_parts(strata: &[Vec<[f64; 3]>], i: usize) -> (f64, f64) {
+    let (mut num, mut den) = (0.0, 0.0);
+    for s in strata {
+        let (a, b) = (s[i][1], s[i][2]);
+        let (ab, bb) = (s[0][1], s[0][2]);
+        let tt = a + bb + b + ab;
+        num += a * bb / tt;
+        den += b * ab / tt;
+    }
+    (num, den)
+}
+
 /// `dr_mh_or` — MH OR of level i vs baseline pooled over strata.
 pub(crate) fn mh_or(strata: &[Vec<[f64; 3]>]) -> Vec<f64> {
     let nlev = strata.first().map_or(0, |s| s.len());
     (1..nlev)
         .map(|i| {
-            let (mut num, mut den) = (0.0, 0.0);
-            for s in strata {
-                let (a, b) = (s[i][1], s[i][2]);
-                let (ab, bb) = (s[0][1], s[0][2]);
-                let tt = a + bb + b + ab;
-                num += a * bb / tt;
-                den += b * ab / tt;
-            }
+            let (num, den) = mh_or_parts(strata, i);
             num / den
         })
         .collect()

@@ -7,8 +7,7 @@ use super::super::path::Segment;
 use super::super::steps::{closed, leaf, vals};
 use super::super::Explanation;
 use super::finite;
-use crate::calc::continuous::t_test_summary::group_sd;
-use crate::calc::counts::shared::{cnt, conf, num, table, z};
+use crate::calc::counts::shared::{conf, num, table, z};
 use crate::error::EngineError;
 use crate::stats::{anova_from_summary, bartlett_parts, t_parts, Estimate, GroupSummary};
 use serde_json::Value;
@@ -17,26 +16,10 @@ fn unknown(statistic: &str) -> EngineError {
     super::super::path::unknown(statistic)
 }
 
-/// `mean_ci`'s `sd`/`fpc`/`se` derivation — the run's same chain.
-fn mean_ci_se(inputs: &Value) -> (f64, f64) {
-    let n = num(inputs, "n");
-    let sd_or = inputs
-        .get("sd_or")
-        .and_then(Value::as_str)
-        .unwrap_or_default();
-    let sd_value = num(inputs, "sd_value");
-    let sd = match sd_or {
-        "se" => sd_value * libm::sqrt(n),
-        "variance" => libm::sqrt(sd_value),
-        _ => sd_value,
-    };
-    let pop = num(inputs, "population_size");
-    let fpc = if pop > 0.0 && pop < 999_999_999.0 {
-        libm::sqrt((pop - n) / (pop - 1.0))
-    } else {
-        1.0
-    };
-    (sd / libm::sqrt(n) * fpc, fpc)
+/// `mean_ci`'s `se` — the run's `se_parts` in
+/// `calc::continuous::mean_ci`.
+fn mean_ci_se(inputs: &Value) -> f64 {
+    crate::calc::continuous::mean_ci::se_parts(inputs).0
 }
 
 pub(super) fn mean_ci(
@@ -50,8 +33,8 @@ pub(super) fn mean_ci(
     let mean = num(inputs, "mean");
     let n = num(inputs, "n");
     let c = conf(inputs);
-    let (se, _fpc) = mean_ci_se(inputs);
-    let tc = crate::special::t_quantile((1.0 + c / 100.0) / 2.0, n - 1.0).unwrap_or(f64::NAN);
+    let se = mean_ci_se(inputs);
+    let tc = crate::calc::counts::shared::t_crit(c, n - 1.0);
 
     match segs {
         [m, l] if m.key == "z" || m.key == "t" => {
@@ -103,18 +86,10 @@ pub(super) fn median_ci(
     }
 }
 
-/// `t_test_summary`'s two `GroupSummary`s — the run's construction.
+/// `t_test_summary`'s two `GroupSummary`s — the run's own
+/// `groups` constructor.
 fn t_groups(inputs: &Value) -> (GroupSummary, GroupSummary) {
-    let group = |i: usize| {
-        let n = cnt(inputs, &format!("n_{i}"));
-        let s = group_sd(inputs, i, n);
-        GroupSummary {
-            n,
-            mean: num(inputs, &format!("mean_{i}")),
-            variance: Some(s * s),
-        }
-    };
-    (group(1), group(2))
+    crate::calc::continuous::t_test_summary::groups(inputs)
 }
 
 /// One `{t, df, p_2t, diff, lower, upper}` t-test block.
@@ -135,8 +110,12 @@ fn t_block(
         None => (f64::NAN, f64::NAN),
     };
     let diff = parts.map(|p| p.diff).unwrap_or(f64::NAN);
-    let t = diff / se;
-    let crit = crate::special::t_quantile((1.0 + conf / 100.0) / 2.0, df).unwrap_or(f64::NAN);
+    let t = match parts {
+        Some(p) if which == "pooled" => p.t_pooled,
+        Some(p) => p.t_welch,
+        None => f64::NAN,
+    };
+    let crit = crate::calc::counts::shared::t_crit(conf, df);
 
     let (fid, v) = match leaf_key {
         "t" => ("t_stat", finite(&[("diff", diff), ("se", se)])),
@@ -219,7 +198,10 @@ pub(super) fn t_test_summary(
                     statistic,
                     "f_p_2t",
                     finite(&[
-                        ("f", v1 / v2),
+                        (
+                            "f",
+                            crate::calc::continuous::t_test_summary::f_ratio(&a, &b),
+                        ),
                         ("df_num", (a.n - 1) as f64),
                         ("df_den", (b.n - 1) as f64),
                     ]),
@@ -233,19 +215,9 @@ pub(super) fn t_test_summary(
 }
 
 /// `anova_summary`'s `GroupSummary`s from the `table` rows — the
-/// run's construction.
+/// run's own `groups_of` constructor.
 fn anova_groups(inputs: &Value) -> Vec<GroupSummary> {
-    table(inputs, "table")
-        .iter()
-        .map(|r| GroupSummary {
-            n: *r.first().unwrap_or(&0.0) as u64,
-            mean: *r.get(1).unwrap_or(&0.0),
-            variance: Some({
-                let s = *r.get(2).unwrap_or(&0.0);
-                s * s
-            }),
-        })
-        .collect()
+    crate::calc::continuous::anova_summary::groups_of(&table(inputs, "table"))
 }
 
 pub(super) fn anova_summary(
@@ -284,10 +256,7 @@ pub(super) fn anova_summary(
                     est,
                 )),
                 "p" => {
-                    let x = parts
-                        .as_ref()
-                        .map(|p| p.numerator / p.correction)
-                        .unwrap_or(f64::NAN);
+                    let x = parts.as_ref().map(|p| p.stat()).unwrap_or(f64::NAN);
                     Ok(closed(
                         statistic,
                         "chi_sf",
@@ -306,9 +275,8 @@ pub(super) fn anova_summary(
             let g = groups.get(i).ok_or_else(u)?;
             let an = anova_from_summary(&groups);
             let (crit, h_base) = if f.key == "group_ci" {
-                let sd = libm::sqrt(g.variance.unwrap_or(f64::NAN));
-                let tc = crate::special::t_quantile(0.975, (g.n - 1) as f64).unwrap_or(f64::NAN);
-                (tc, sd / libm::sqrt(g.n as f64))
+                let (tc, h, _) = crate::calc::continuous::anova_summary::group_ci_parts(g);
+                (tc, h)
             } else {
                 let ms_w = match an.ms_within {
                     Estimate::Value(v) => v,
@@ -320,7 +288,7 @@ pub(super) fn anova_summary(
                 };
                 (
                     crate::special::t_quantile(0.975, df_w).unwrap_or(f64::NAN),
-                    libm::sqrt(ms_w / g.n as f64),
+                    crate::calc::continuous::anova_summary::pooled_h_base(g, ms_w),
                 )
             };
             let fid = match l.key.as_str() {

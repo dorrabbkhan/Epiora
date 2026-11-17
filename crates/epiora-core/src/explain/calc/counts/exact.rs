@@ -1,6 +1,7 @@
 //! `binomial`, `poisson`, `proportion` — exact tails are method
 //! traces; CIs report the helper intermediates.
 use super::*;
+use crate::calc::counts::proportion::ztest_z;
 
 pub(crate) fn binomial(
     result: &Value,
@@ -153,7 +154,7 @@ pub(crate) fn proportion(
                     est,
                 )),
                 "p" => {
-                    let zv = (p - p0) / libm::sqrt(p0 * (1.0 - p0) / n as f64);
+                    let zv = ztest_z(p, p0, n as f64);
                     Ok(closed(
                         statistic,
                         "normal_cdf_2t",

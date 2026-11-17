@@ -11,7 +11,11 @@ use crate::calc::counts::shared::{conf, num};
 use crate::EngineError;
 use serde_json::Value;
 
-pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
+/// The `(p1, p2)` proportions `run` derives — `p1` from
+/// `percent_exposed_outcome` directly or through `odds_ratio`,
+/// `risk_ratio` or `risk_difference`. Shared by the result and
+/// the explain trace (v1.0 Task 10, spec §6).
+pub(crate) fn p1p2(inputs: &Value) -> (f64, f64) {
     let p2 = num(inputs, "percent_unexposed_outcome") / 100.0;
     let p1 = if let Some(pct) = inputs
         .get("percent_exposed_outcome")
@@ -27,6 +31,11 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
         // risk_difference, in percent.
         p2 + num(inputs, "risk_difference") / 100.0
     };
+    (p1, p2)
+}
+
+pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
+    let (p1, p2) = p1p2(inputs);
     Ok(two_props::run(
         "exposed",
         "unexposed",

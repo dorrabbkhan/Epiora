@@ -450,6 +450,10 @@ fn every_registry_statistic_explains() {
     let mut covered_stats = 0usize;
     for coverage in REGISTRY {
         if coverage.fixtures.is_empty() {
+            problems.push(format!(
+                "{}: registry row lists no covering fixtures",
+                coverage.statistic
+            ));
             continue;
         }
         let rel = if coverage.statistic.starts_with("calc.") {
@@ -470,6 +474,10 @@ fn every_registry_statistic_explains() {
         for fixture_id in coverage.fixtures {
             let path = root.join(format!("{fixture_id}.json"));
             if !path.exists() {
+                problems.push(format!(
+                    "{}: covering fixture {fixture_id}.json missing",
+                    coverage.statistic
+                ));
                 continue;
             }
             let fixture: Value =
@@ -584,9 +592,21 @@ fn iterative_statistics_are_method_kind() {
                 .expect("rel")
         };
         let prefix = registry_prefix(coverage.statistic);
+        if coverage.fixtures.is_empty() {
+            problems.push(format!(
+                "{}: iterative registry row lists no covering fixtures",
+                coverage.statistic
+            ));
+            continue;
+        }
+        let mut row_checked = 0usize;
         for fixture_id in coverage.fixtures {
             let path = root.join(format!("{fixture_id}.json"));
             if !path.exists() {
+                problems.push(format!(
+                    "{}: covering fixture {fixture_id}.json missing",
+                    coverage.statistic
+                ));
                 continue;
             }
             let fixture: Value =
@@ -594,7 +614,13 @@ fn iterative_statistics_are_method_kind() {
                     .expect("parse");
             let output = match run_case(&fixture, &datasets) {
                 Ok(o) => o,
-                Err(_) => continue,
+                Err(e) => {
+                    problems.push(format!(
+                        "{}: run_case {fixture_id}: {e:?}",
+                        coverage.statistic
+                    ));
+                    continue;
+                }
             };
             for concrete in concretize(&output.actual, rel) {
                 let stat = format!("{prefix}.{concrete}");
@@ -608,10 +634,17 @@ fn iterative_statistics_are_method_kind() {
                             ));
                         }
                         checked += 1;
+                        row_checked += 1;
                     }
                     Err(e) => problems.push(format!("{stat}: {e:?}")),
                 }
             }
+        }
+        if row_checked == 0 {
+            problems.push(format!(
+                "{}: iterative row exercised by no fixture",
+                coverage.statistic
+            ));
         }
     }
     assert!(
@@ -654,7 +687,31 @@ fn results_unchanged() {
             .strip_prefix("fixtures/")
             .expect("golden fixture path is fixtures/<rel>");
         let Some(line) = lines.get(&(id.to_string(), rel.to_string())) else {
-            notes.push(format!("row {n} ({id}): fixture absent from corpus run"));
+            // D1: a missing row fails when its fixture file (and
+            // dataset file, if any) still exists unchanged — only a
+            // genuinely changed or removed file is a note.
+            let fpath = root.join(rel);
+            let fixture_same = fpath.exists()
+                && sha256_hex(&std::fs::read(&fpath).expect("read fixture")) == fixture_sha;
+            let dataset_same = if dataset_path == "-" {
+                true
+            } else {
+                let drel = dataset_path
+                    .strip_prefix("fixtures/")
+                    .expect("golden dataset path is fixtures/<rel>");
+                let dpath = root.join(drel);
+                dpath.exists()
+                    && sha256_hex(&std::fs::read(&dpath).expect("read dataset")) == dataset_sha
+            };
+            if fixture_same && dataset_same {
+                failures.push(format!(
+                    "row {n} ({id}): fixture absent from corpus run                      but its fixture/dataset files are unchanged"
+                ));
+            } else {
+                notes.push(format!(
+                    "row {n} ({id}): fixture absent from corpus run;                      source file changed or removed"
+                ));
+            }
             continue;
         };
         let current_sha =

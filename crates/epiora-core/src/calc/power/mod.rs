@@ -6,6 +6,7 @@
 
 pub(crate) mod cohort;
 pub(crate) mod mean_difference;
+pub(crate) mod parts;
 pub(crate) mod unmatched_cc;
 
 use crate::EngineError;

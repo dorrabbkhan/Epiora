@@ -1,5 +1,6 @@
 //! `smr` — the standardized mortality ratio leaves.
 use super::*;
+use crate::calc::counts::smr::{byar, oe_chisq};
 
 pub(crate) fn smr(
     result: &Value,
@@ -38,13 +39,11 @@ pub(crate) fn smr(
                 est,
             )),
             "byar_p" => {
-                let v = if o > e { o } else { o + 1.0 };
-                let x2 =
-                    libm::sqrt(9.0 * v) * (1.0 - 1.0 / (9.0 * v) - libm::pow(e / v, 1.0 / 3.0));
+                let x2 = byar(o, e)[0];
                 Ok(closed(
                     statistic,
                     "chi_sf",
-                    finite(&[("x", x2 * x2), ("df", 1.0)]),
+                    finite(&[("x", x2), ("df", 1.0)]),
                     est,
                 ))
             }
@@ -55,7 +54,7 @@ pub(crate) fn smr(
                 est,
             )),
             "chisq_p" => {
-                let cs = (o - e) * (o - e) / e;
+                let cs = oe_chisq(o, e);
                 Ok(closed(
                     statistic,
                     "chi_sf",

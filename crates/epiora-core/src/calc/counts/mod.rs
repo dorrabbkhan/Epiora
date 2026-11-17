@@ -2,10 +2,12 @@
 //! count inputs. `defs.rs` holds the registry data; each module
 //! computes the result tree the `fixtures/calc/<id>` corpus records.
 
+pub(crate) mod adjusted;
 pub(crate) mod binomial;
 pub(crate) mod defs;
 pub(crate) mod defs_rest;
 pub(crate) mod dose_response;
+pub(crate) mod ef;
 pub(crate) mod exact_or;
 pub(crate) mod martin;
 pub(crate) mod matched_case_control;
@@ -14,6 +16,7 @@ pub(crate) mod proportion;
 pub(crate) mod r_by_c;
 pub(crate) mod screening;
 pub(crate) mod shared;
+pub(crate) mod shared_ci;
 pub(crate) mod shared_exact;
 pub(crate) mod smr;
 pub(crate) mod two_by_n;

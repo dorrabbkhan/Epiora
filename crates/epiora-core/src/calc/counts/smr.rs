@@ -10,11 +10,24 @@ use super::shared::*;
 use crate::error::EngineError;
 use serde_json::{json, Value};
 
-/// `byar_stat` — Byar's approximation: signed normal deviate
-/// squared with `v = O` when `O > E` else `O + 1`.
-pub(crate) fn byar(o: f64, e: f64) -> [f64; 2] {
+/// `(O−E)²/E` — the Pearson observed/expected chi-square, shared
+/// by the run and the explain trace (v1.0 Task 10, spec §6).
+pub(crate) fn oe_chisq(o: f64, e: f64) -> f64 {
+    (o - e) * (o - e) / e
+}
+
+/// Byar's signed normal deviate `√(9v)·(1 − 1/(9v) − (e/v)^{1/3})`
+/// with `v = O` when `O > E` else `O + 1` — shared by `byar` and
+/// the explain trace.
+pub(crate) fn byar_dev(o: f64, e: f64) -> f64 {
     let v = if o > e { o } else { o + 1.0 };
-    let x2 = libm::sqrt(9.0 * v) * (1.0 - 1.0 / (9.0 * v) - libm::pow(e / v, 1.0 / 3.0));
+    libm::sqrt(9.0 * v) * (1.0 - 1.0 / (9.0 * v) - libm::pow(e / v, 1.0 / 3.0))
+}
+
+/// `byar_stat` — Byar's approximation: the squared signed deviate
+/// and its chi-square tail.
+pub(crate) fn byar(o: f64, e: f64) -> [f64; 2] {
+    let x2 = byar_dev(o, e);
     [x2 * x2, chi_p(x2 * x2, 1.0)]
 }
 
@@ -59,7 +72,7 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let [fl, fu] = pois_fisher_ci(o as u64, conf);
     let [bl, bu] = pois_byar(o as u64, conf);
     let b = byar(o, e);
-    let cs = (o - e) * (o - e) / e;
+    let cs = oe_chisq(o, e);
     let uw = ury_wiggins(o, e, conf_pct);
     let vb = vandenbroucke(o, e, conf_pct);
 

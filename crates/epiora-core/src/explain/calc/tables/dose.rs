@@ -87,14 +87,7 @@ pub(crate) fn dose_response(
             if i + 1 >= nlev {
                 return Err(u());
             }
-            let (mut num, mut den) = (0.0, 0.0);
-            for s in &ss {
-                let (a, b) = (s[i + 1][1], s[i + 1][2]);
-                let (ab, bb) = (s[0][1], s[0][2]);
-                let tt = a + bb + b + ab;
-                num += a * bb / tt;
-                den += b * ab / tt;
-            }
+            let (num, den) = dr::mh_or_parts(&ss, i + 1);
             Ok(closed(
                 statistic,
                 "dr_mh_or",

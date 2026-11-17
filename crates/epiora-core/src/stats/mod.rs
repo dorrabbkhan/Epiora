@@ -16,6 +16,7 @@ mod rxc;
 mod stratified;
 mod summation;
 mod two_by_two;
+mod two_by_two_parts;
 
 pub mod estimate;
 pub mod proportion;
@@ -29,17 +30,18 @@ pub(crate) use means::{
     t_tests_from_summary_at, GroupSummary,
 };
 pub use means::{Anova, Bartlett, GroupStats, TTest, TwoGroupTests};
-pub(crate) use means_summary::{bartlett_parts, t_parts, TParts};
+pub(crate) use means_summary::{anova_parts, bartlett_parts, t_parts, TParts};
 pub use proportion::{proportions, CategoryStats};
 pub use rank::KruskalWallis;
 pub(crate) use rank::{kruskal_wallis, kw_parts};
 pub(crate) use rates::{
-    adjusted_rate_parts, adjusted_rates, ef_person_time, pois_approx, pt_zscore, rate_ratio,
-    rd_byar, rg_ci,
+    adj_stratum, adjusted_rate_parts, adjusted_rates, ef_person_time, ef_pt_parts, pois_approx,
+    pt_zscore, rate_ratio, rate_ratio_parts, rd_byar, rd_byar_parts, rg_ci,
 };
+pub(crate) use rxc::rxc_parts;
 pub use rxc::{rxc, RxcStats};
-pub(crate) use stratified::stratified_parts;
 pub use stratified::{stratified, MantelHaenszel, MhChiSquare, MhEstimate, StratifiedStats};
+pub(crate) use stratified::{stratified_derived, stratified_parts};
 pub use summation::neumaier_sum;
 pub(crate) use two_by_two::parts as two_by_two_parts;
 pub use two_by_two::{two_by_two, ChiSquare, Table2x2, TwoByTwoStats};

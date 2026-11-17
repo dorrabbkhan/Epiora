@@ -1,5 +1,8 @@
 //! `screening` — the diagnostic-measure blocks.
 use super::*;
+use crate::calc::counts::screening::level_lr_parts;
+use crate::calc::counts::shared::{prop, simel_parts, wald_parts};
+use crate::calc::counts::shared_ci::kappa_parts;
 
 pub(crate) fn screening(
     result: &Value,
@@ -25,9 +28,7 @@ pub(crate) fn screening(
             let t = count_table(inputs, "table");
             let r = t.get(i).ok_or_else(u)?;
             let (ld, ln) = (r[0] as f64, r[1] as f64);
-            let (p1, p2) = (ld / df, ln / dnf);
-            let lr = p1 / p2;
-            let half = z(conf) * ((1.0 - p1) / (df * p1) + (1.0 - p2) / (dnf * p2));
+            let (p1, p2, lr, half) = level_lr_parts(ld, ln, df, dnf, conf);
             match l.key.as_str() {
                 "est" => Ok(closed(
                     statistic,
@@ -67,13 +68,11 @@ pub(crate) fn screening(
                     // `simel_lr(a, c, b, d)`: the positive cell's row
                     // counts in each column.
                     let (a, c, b, dd) = if f.key == "lr_pos" {
-                        (tp as f64, fn_ as f64, fp as f64, tn as f64)
+                        (tp, fn_, fp, tn)
                     } else {
-                        (fn_ as f64, tp as f64, tn as f64, fp as f64)
+                        (fn_, tp, tn, fp)
                     };
-                    let (p1, p2) = (a / (a + c), b / (b + dd));
-                    let lr = p1 / p2;
-                    let se = libm::sqrt(1.0 / a - 1.0 / (a + c) + 1.0 / b - 1.0 / (b + dd));
+                    let (p1, p2, lr, se) = simel_parts(a, c, b, dd);
                     if l.key == "est" {
                         Ok(closed(
                             statistic,
@@ -86,10 +85,12 @@ pub(crate) fn screening(
                     }
                 }
                 "diagnostic_odds" => {
-                    let dod = (tp as f64 * tn as f64) / (fp as f64 * fn_ as f64);
-                    let se = libm::sqrt(
-                        1.0 / tp as f64 + 1.0 / fp as f64 + 1.0 / fn_ as f64 + 1.0 / tn as f64,
-                    );
+                    let [_, _, _, _, _, _, dod, se] = wald_parts(&crate::stats::Table2x2 {
+                        a: tp,
+                        b: fp,
+                        c: fn_,
+                        d: tn,
+                    });
                     if l.key == "est" {
                         Ok(closed(
                             statistic,
@@ -108,15 +109,8 @@ pub(crate) fn screening(
                 }
                 "kappa" => {
                     // The `kappa` Fleiss intermediates.
-                    let (a, b, c, dd) = (tp as f64, fp as f64, fn_ as f64, tn as f64);
-                    let nn = a + b + c + dd;
-                    let (r1, r2) = ((a + b) / nn, (c + dd) / nn);
-                    let (c1, c2) = ((a + c) / nn, (b + dd) / nn);
-                    let po = (a + dd) / nn;
-                    let pe = r1 * c1 + r2 * c2;
-                    let k = (po - pe) / (1.0 - pe);
-                    let inside = pe + pe * pe - (r1 * c1 * (r1 + c1) + r2 * c2 * (r2 + c2));
-                    let se = libm::sqrt(inside) / ((1.0 - pe) * libm::sqrt(nn));
+                    let p = kappa_parts(tp, fp, fn_, tn);
+                    let (po, pe, k, se) = (p.po, p.pe, p.k, p.se);
                     match l.key.as_str() {
                         "est" => Ok(closed(
                             statistic,
@@ -140,10 +134,10 @@ pub(crate) fn screening(
                     }
                 }
                 "entropy" => {
-                    let prev = df / n as f64;
+                    let prev = prop(d, n);
                     let post = match l.key.as_str() {
-                        "positive" => tp as f64 / tpos as f64,
-                        "negative" => tn as f64 / tneg as f64,
+                        "positive" => prop(tp, tpos),
+                        "negative" => prop(tn, tneg),
                         _ => return Err(u()),
                     };
                     Ok(closed(

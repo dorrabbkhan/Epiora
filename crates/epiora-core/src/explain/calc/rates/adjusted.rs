@@ -50,7 +50,7 @@ pub(crate) fn adjusted_leaf(
             _ => Err(u()),
         },
         [f, l] if f.key == "mh_rr" => {
-            let mh = p.mh_num / p.mh_den;
+            let mh = p.mh_rr;
             match l.key.as_str() {
                 "est" => Ok(closed(
                     statistic,
@@ -79,7 +79,7 @@ pub(crate) fn adjusted_leaf(
                 est,
             )),
             "lower" | "upper" => {
-                let se = 1.0 / libm::sqrt(p.sw_rd);
+                let se = p.se_rd;
                 Ok(closed(
                     statistic,
                     if l.key == "lower" {
@@ -113,12 +113,11 @@ pub(crate) fn adjusted_leaf(
                     let mut v = Vals::new();
                     v.insert("adj".into(), adj);
                     for (i, t) in rows.iter().enumerate() {
-                        let (a, b, n1, n0) = (t[0], t[1], t[2], t[3]);
-                        let m1 = a + b;
+                        let s = rates::adj_stratum(t);
                         let (e_i, w_i) = if measure == "rr" {
-                            (libm::log((a / n1) / (b / n0)), a * b / m1)
+                            (s.ln_rr_i, s.w_rr)
                         } else {
-                            (a / n1 - b / n0, 1.0 / (a / (n1 * n1) + b / (n0 * n0)))
+                            (s.rd_i, s.w_rd)
                         };
                         if e_i.is_finite() {
                             v.insert(format!("e_{i}"), e_i);

@@ -76,6 +76,13 @@ pub(crate) struct BdtParts {
     pub sum_var: f64,
 }
 
+impl BdtParts {
+    /// The Tarone-corrected statistic `x2 − (sum_a − sum_e)²/sum_var`.
+    pub(crate) fn tarone(&self) -> f64 {
+        self.x2 - (self.sum_a - self.sum_e) * (self.sum_a - self.sum_e) / self.sum_var
+    }
+}
+
 /// The sums `breslow_day_tarone` accumulates — shared by the result
 /// and the explain trace.
 pub(crate) fn bdt_parts(kept: &[Table2x2], or_mh: &Estimate) -> Option<BdtParts> {
@@ -130,13 +137,7 @@ pub(crate) fn breslow_day_tarone(kept: &[Table2x2], or_mh: &Estimate) -> Breslow
         Some(p) => p,
         None => return BreslowDayTarone::all_undefined(UndefinedReason::NotBracketed),
     };
-    let BdtParts {
-        x2,
-        sum_a,
-        sum_e,
-        sum_var,
-    } = p;
-    let x2t = x2 - (sum_a - sum_e) * (sum_a - sum_e) / sum_var;
+    let x2t = p.tarone();
     let df = (kept.len() - 1) as f64;
     BreslowDayTarone {
         statistic: Estimate::from_f64(x2t, UndefinedReason::ZeroCell),

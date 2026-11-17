@@ -1,7 +1,7 @@
 //! `rate_one` — a single person-time rate and its CI set.
 use super::*;
 use crate::calc::counts::shared::num;
-use crate::calc::person_time::rate_one::per_unit;
+use crate::calc::person_time::rate_one::{per_unit, pu_scale};
 
 pub(crate) fn rate_one(
     result: &Value,
@@ -15,7 +15,7 @@ pub(crate) fn rate_one(
     let pt = num(inputs, "person_time");
     let conf = conf(inputs);
     let pu = per_unit(inputs, cases, pt);
-    let scale = pu / pt;
+    let scale = pu_scale(pu, pt);
     let zz = z(conf);
 
     match segs {

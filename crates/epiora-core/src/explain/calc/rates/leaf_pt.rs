@@ -13,16 +13,12 @@ pub(crate) fn ef_pt_leaf(
     est: Estimate,
 ) -> Result<Explanation, EngineError> {
     let (a, b, n1, n0) = (t.a, t.b, t.n1, t.n0);
-    let clamp1 = |x: f64| x.clamp(-1.0, 1.0);
-    let (re, ru, ro) = (a / n1, b / n0, (a + b) / (n1 + n0));
-    let rr = re / ru;
-    let h = z(conf) * libm::sqrt(1.0 / a + 1.0 / b);
-    let (rr_lo, rr_hi) = (rr * libm::exp(-h), rr * libm::exp(h));
-    let efp = clamp1((ro - ru) / ro);
-    let efe = clamp1((rr - 1.0) / rr);
-    let share = n1 / (n1 + n0);
-    let efp_lo = (share * (rr_lo - 1.0)) / (share * (rr_lo - 1.0) + 1.0);
-    let efp_hi = (share * (rr_hi - 1.0)) / (share * (rr_hi - 1.0) + 1.0);
+    // `ef_person_time`'s intermediates, as the run computes them.
+    let p = rates::ef_pt_parts(a, b, n1, n0, conf);
+    let (re, ru, ro) = (p.re, p.ru, p.ro);
+    let (rr, rr_lo, rr_hi) = (p.rr, p.rr_lo, p.rr_hi);
+    let share = p.share;
+    let (efp_lo, efp_hi) = (p.efp_lo, p.efp_hi);
 
     let (fid, v) = match (name, side) {
         ("efp", "est") => ("ef_pt_efp", finite(&[("ro", ro), ("ru", ru)])),
@@ -45,7 +41,6 @@ pub(crate) fn ef_pt_leaf(
         ("pfe", "upper") => ("ef_pt_pfe_upper", finite(&[("rr_lo", rr_lo)])),
         _ => return Err(unknown(statistic)),
     };
-    let _ = (efp, efe);
     Ok(closed(statistic, fid, v, est))
 }
 
@@ -105,13 +100,12 @@ pub(crate) fn pt_block_leaf(
             _ => Err(u()),
         },
         [f, l] if f.key == "rate_ratio" => {
-            let rr = (b / n0) / (a / n1);
-            let se = libm::sqrt(1.0 / n1 + 1.0 / n0);
+            let (re, ru, rr, se) = rates::rate_ratio_parts(a, b, n1, n0);
             match l.key.as_str() {
                 "est" => Ok(closed(
                     statistic,
                     "rate_ratio",
-                    finite(&[("re", a / n1), ("ru", b / n0)]),
+                    finite(&[("re", re), ("ru", ru)]),
                     est,
                 )),
                 "lower" | "upper" => Ok(closed(
@@ -128,13 +122,12 @@ pub(crate) fn pt_block_leaf(
             }
         }
         [f, l] if f.key == "rate_difference" => {
-            let dp = a / n1 - b / n0;
-            let se = libm::sqrt(a / (n1 * n1) + b / (n0 * n0));
+            let (re, ru, dp, se) = rates::rd_byar_parts(a, b, n1, n0);
             match l.key.as_str() {
                 "est" => Ok(closed(
                     statistic,
                     "rate_difference",
-                    finite(&[("re", a / n1), ("ru", b / n0), ("per_unit", pu)]),
+                    finite(&[("re", re), ("ru", ru), ("per_unit", pu)]),
                     est,
                 )),
                 "lower" | "upper" => Ok(closed(

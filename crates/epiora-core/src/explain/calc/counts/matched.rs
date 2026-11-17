@@ -1,7 +1,7 @@
 //! `matched_case_control` — pair-table leaves and the matched-N
 //! design.
 use super::*;
-use crate::calc::counts::matched_case_control::matched_n_parts;
+use crate::calc::counts::matched_case_control::{matched_n_parts, mcnemar_chi, pair_or};
 
 /// The pair block (`controls_per_case == 1`): McNemar, the
 /// discordant-pairs OR and the binomial exacts on `(db, n)`.
@@ -20,19 +20,7 @@ pub(crate) fn pair_leaf(
     let nf = n as f64;
     match segs {
         [f, l] if f.key == "mcnemar" || f.key == "mcnemar_cc" => {
-            let chi = if n == 0 {
-                f64::NAN
-            } else if f.key == "mcnemar" {
-                let d = dbcf - dcc;
-                d * d / nf
-            } else {
-                let d = if db == dc {
-                    0.0
-                } else {
-                    (dbcf - dcc).abs() - 1.0
-                };
-                d * d / nf
-            };
+            let chi = mcnemar_chi(db, dc, f.key == "mcnemar_cc");
             let fid = if f.key == "mcnemar" {
                 "mcnemar"
             } else {
@@ -62,8 +50,7 @@ pub(crate) fn pair_leaf(
                 est,
             )),
             "lower" | "upper" => {
-                let or = dbcf / dcc;
-                let se = libm::sqrt(1.0 / dbcf + 1.0 / dcc);
+                let (or, se) = pair_or(db, dc);
                 wald_exp_block(or, se, conf, statistic, &l.key, est)
             }
             _ => Err(u()),
@@ -113,11 +100,7 @@ pub(crate) fn matched_n_leaf(
     let u = || unknown(statistic);
     let p = matched_n_parts(t, m);
     let _zz = z(conf);
-    let sd = libm::sqrt(
-        p.rg_a / (2.0 * p.sd_ * p.sd_)
-            + p.rg_b / (2.0 * p.sd_ * p.so_)
-            + p.rg_c / (2.0 * p.so_ * p.so_),
-    );
+    let sd = p.sd_or();
 
     // The `matched_sets` cells — a method step's inputs.
     let mut cells = Vals::new();
@@ -138,15 +121,14 @@ pub(crate) fn matched_n_leaf(
                     finite(&[("num", p.sd_), ("den", p.so_)]),
                     est,
                 )),
-                [l] => wald_exp_block(p.sd_ / p.so_, sd, conf, statistic, &l.key, est),
+                [l] => wald_exp_block(p.or(), sd, conf, statistic, &l.key, est),
                 _ => Err(u()),
             },
             "mh_chisq" | "mh_chisq_cc" => {
                 let chi = if blk.key == "mh_chisq" {
-                    p.delta * p.delta / p.var
+                    p.chi()
                 } else {
-                    let s = (p.delta.abs() - 0.5).max(0.0);
-                    s * s / p.var
+                    p.chi_cc()
                 };
                 let fid = if blk.key == "mh_chisq" {
                     "mh_chi_square"

@@ -8,7 +8,7 @@
 //! Extracted from `stats/means.rs` in Task 8 so that file stays under
 //! the ~400-line limit.
 
-use crate::special::{chisq_sf, f_sf, t_quantile, t_sf};
+use crate::special::{chisq_sf, f_sf, t_sf};
 use crate::stats::means::{Anova, Bartlett, TTest, TwoGroupTests};
 use crate::stats::summation::neumaier_sum;
 use crate::stats::{Ci, Estimate, UndefinedReason};
@@ -40,6 +40,22 @@ pub(crate) fn summarize(values: &[f64]) -> GroupSummary {
     GroupSummary { n, mean, variance }
 }
 
+impl GroupSummary {
+    /// `n·mean` — the group total `summarize` accumulates. Shared by
+    /// `anova_parts`' grand sum and the explain trace (v1.0 Task 10,
+    /// spec §6).
+    pub fn total(&self) -> f64 {
+        self.n as f64 * self.mean
+    }
+
+    /// `(n−1)·v` — the Σ(x−mean)² `summarize` accumulates, NaN when
+    /// no variance exists. Shared by `anova_parts`' `ss_w` and the
+    /// explain trace's `sample_variance` intermediate.
+    pub fn ssq(&self) -> f64 {
+        (self.n - 1) as f64 * self.variance.unwrap_or(f64::NAN)
+    }
+}
+
 /// call would error in R — a group below two observations, or an
 /// "essentially constant" pooled or Welch standard error
 /// (`stderr < 10·ε·max(|m₁|, |m₂|)`), which is also how both tests
@@ -64,6 +80,10 @@ pub(crate) struct TParts {
     pub df_pooled: f64,
     /// The Satterthwaite df.
     pub df_welch: f64,
+    /// `diff/se_pooled` — the Student t.
+    pub t_pooled: f64,
+    /// `diff/se_welch` — the Welch t.
+    pub t_welch: f64,
 }
 
 /// The intermediates of `t_tests_from_summary_at(a, b, _)` — shared
@@ -97,6 +117,8 @@ pub(crate) fn t_parts(a: &GroupSummary, b: &GroupSummary) -> Option<TParts> {
         se_welch: se_w,
         df_pooled: df_p,
         df_welch: df_w,
+        t_pooled: diff / se_p,
+        t_welch: diff / se_w,
     })
 }
 
@@ -110,10 +132,9 @@ pub(crate) fn t_tests_from_summary_at(
 ) -> Option<TwoGroupTests> {
     let p = t_parts(a, b)?;
     let diff = p.diff;
-    let t_test = |se: f64, df: f64| -> TTest {
-        let t = diff / se;
+    let t_test = |t: f64, se: f64, df: f64| -> TTest {
         let p = 2.0 * t_sf(t.abs(), df);
-        let crit = t_quantile((1.0 + conf / 100.0) / 2.0, df).unwrap_or(f64::NAN);
+        let crit = crate::calc::counts::shared::t_crit(conf, df);
         TTest {
             t: Estimate::from_f64(t, UndefinedReason::ZeroVariance),
             df: Estimate::from_f64(df, UndefinedReason::OutOfRange),
@@ -126,9 +147,73 @@ pub(crate) fn t_tests_from_summary_at(
         }
     };
     Some(TwoGroupTests {
-        pooled: t_test(p.se_pooled, p.df_pooled),
-        welch: t_test(p.se_welch, p.df_welch),
+        pooled: t_test(p.t_pooled, p.se_pooled, p.df_pooled),
+        welch: t_test(p.t_welch, p.se_welch, p.df_welch),
     })
+}
+
+/// The closed-form intermediates of `anova_from_summary` — the
+/// explain trace's named values (v1.0 Task 10, spec §6). `ss_w` is
+/// `None` for the same inputs that yield an `Undefined { too_few }`
+/// within SS: a group below two observations.
+pub(crate) struct AnovaParts {
+    /// `Σnᵢ` — the total observation count.
+    pub n_tot: f64,
+    /// The grand mean `Σnᵢ·meanᵢ / Σnᵢ`.
+    pub grand: f64,
+    /// `Σnᵢ·(meanᵢ − grand)²` — between-groups SS.
+    pub ss_b: f64,
+    /// `Σ(nᵢ−1)·vᵢ` — within-groups SS, when every group has one.
+    pub ss_w: Option<f64>,
+    /// `k − 1`.
+    pub df_b: f64,
+    /// `N − k`.
+    pub df_w: f64,
+    /// `N − 1`.
+    pub df_t: f64,
+}
+
+impl AnovaParts {
+    /// `ss_b/df_b`.
+    pub(crate) fn ms_b(&self) -> f64 {
+        self.ss_b / self.df_b
+    }
+
+    /// `ss_w/df_w` — NaN when no within SS exists.
+    pub(crate) fn ms_w(&self) -> f64 {
+        self.ss_w.map(|w| w / self.df_w).unwrap_or(f64::NAN)
+    }
+
+    /// `ms_b/ms_w` — the F ratio before the zero-variance guard.
+    pub(crate) fn f_ratio(&self) -> f64 {
+        self.ms_b() / self.ms_w()
+    }
+}
+
+/// The intermediates of `anova_from_summary(groups)` — shared by the
+/// result and the explain trace.
+pub(crate) fn anova_parts(groups: &[GroupSummary]) -> AnovaParts {
+    let n_tot: f64 = groups.iter().map(|g| g.n).sum::<u64>() as f64;
+    let k = groups.len() as f64;
+    let grand = neumaier_sum(groups.iter().map(|g| g.total())) / n_tot;
+    let ss_b = neumaier_sum(
+        groups
+            .iter()
+            .map(|g| g.n as f64 * (g.mean - grand) * (g.mean - grand)),
+    );
+    let ss_w = groups
+        .iter()
+        .all(|g| g.variance.is_some())
+        .then(|| neumaier_sum(groups.iter().map(|g| g.ssq())));
+    AnovaParts {
+        n_tot,
+        grand,
+        ss_b,
+        ss_w,
+        df_b: k - 1.0,
+        df_w: n_tot - k,
+        df_t: n_tot - 1.0,
+    }
 }
 
 /// One-way ANOVA from per-group summaries (spec §4.2). `ss_within`
@@ -138,33 +223,15 @@ pub(crate) fn t_tests_from_summary_at(
 /// overflows f64's range is `Undefined { out_of_range }`, propagated
 /// the same way.
 pub(crate) fn anova_from_summary(groups: &[GroupSummary]) -> Anova {
-    let k = groups.len();
-    let n_tot: u64 = groups.iter().map(|g| g.n).sum();
-    let (k_f, n_f) = (k as f64, n_tot as f64);
-    let grand = neumaier_sum(groups.iter().map(|g| g.n as f64 * g.mean)) / n_f;
-    let ss_b = Estimate::from_f64(
-        neumaier_sum(
-            groups
-                .iter()
-                .map(|g| g.n as f64 * (g.mean - grand) * (g.mean - grand)),
-        ),
-        UndefinedReason::OutOfRange,
-    );
-    let ss_w = if groups.iter().all(|g| g.variance.is_some()) {
-        Estimate::from_f64(
-            neumaier_sum(
-                groups
-                    .iter()
-                    .map(|g| (g.n - 1) as f64 * g.variance.unwrap_or(0.0)),
-            ),
-            UndefinedReason::OutOfRange,
-        )
-    } else {
-        Estimate::Undefined {
+    let p = anova_parts(groups);
+    let (df_b, df_w, df_t) = (p.df_b, p.df_w, p.df_t);
+    let ss_b = Estimate::from_f64(p.ss_b, UndefinedReason::OutOfRange);
+    let ss_w = match p.ss_w {
+        Some(w) => Estimate::from_f64(w, UndefinedReason::OutOfRange),
+        None => Estimate::Undefined {
             reason: UndefinedReason::TooFew,
-        }
+        },
     };
-    let (df_b, df_w, df_t) = (k_f - 1.0, n_f - k_f, n_f - 1.0);
     let ms_b = match ss_b {
         Estimate::Value(b) => Estimate::from_f64(b / df_b, UndefinedReason::OutOfRange),
         Estimate::Undefined { reason } => Estimate::Undefined { reason },
@@ -230,6 +297,13 @@ pub(crate) struct BartlettParts {
     pub df: f64,
 }
 
+impl BartlettParts {
+    /// `numerator / correction` — the corrected chi-square.
+    pub(crate) fn stat(&self) -> f64 {
+        self.numerator / self.correction
+    }
+}
+
 /// The intermediates of `bartlett_from_summary(groups)` — shared by
 /// the result and the explain trace.
 pub(crate) fn bartlett_parts(groups: &[GroupSummary]) -> Option<BartlettParts> {
@@ -260,7 +334,7 @@ pub(crate) fn bartlett_parts(groups: &[GroupSummary]) -> Option<BartlettParts> {
 /// infinite on zero-variance input, hence `Undefined { zero_variance }`.
 pub(crate) fn bartlett_from_summary(groups: &[GroupSummary]) -> Option<Bartlett> {
     let p = bartlett_parts(groups)?;
-    let stat = Estimate::from_f64(p.numerator / p.correction, UndefinedReason::ZeroVariance);
+    let stat = Estimate::from_f64(p.stat(), UndefinedReason::ZeroVariance);
     let f_p = match stat {
         Estimate::Value(x) => Estimate::from_f64(chisq_sf(x, p.df), UndefinedReason::ZeroVariance),
         Estimate::Undefined { reason } => Estimate::Undefined { reason },
