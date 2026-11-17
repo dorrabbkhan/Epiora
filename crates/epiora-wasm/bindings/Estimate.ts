@@ -3,4 +3,4 @@
 /**
  * A statistic: a finite number, or `Undefined` with a reason.
  */
-export type Estimate = number | { "undefined": "zero_cell" | "zero_margin" | "empty_table" | "not_bracketed" | "no_convergence" | "unbounded" | "too_few" | "zero_variance" | "out_of_range" | "too_large" | "infinite_sample_size" };
+export type Estimate = number | { "undefined": "zero_cell" | "zero_margin" | "empty_table" | "not_bracketed" | "no_convergence" | "unbounded" | "too_few" | "zero_variance" | "out_of_range" | "too_large" | "infinite_sample_size" | "zero_expected" };

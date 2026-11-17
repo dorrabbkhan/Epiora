@@ -67,7 +67,7 @@ fn check_strata(inputs: &Value) -> Result<(), EngineError> {
 
 /// The `strata` input — `[[a,b],[n1,n0]]` or a list of those — as
 /// `PtStratum`s (the same shape rule as `counts::shared::strata2x2`).
-fn strata(inputs: &Value) -> Vec<PtStratum> {
+pub(crate) fn strata(inputs: &Value) -> Vec<PtStratum> {
     let cell = |v: Option<&Value>| v.and_then(Value::as_f64).unwrap_or(0.0);
     let one = |t: &Value| PtStratum {
         a: cell(t.get(0).and_then(|r| r.get(0))),

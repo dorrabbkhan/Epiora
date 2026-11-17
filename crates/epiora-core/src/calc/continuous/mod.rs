@@ -3,10 +3,10 @@
 //! summary statistics (n, mean, sd) rather than raw data. The t-test
 //! and ANOVA paths share `stats::means_summary` with MEANS itself.
 
-mod anova_summary;
-mod mean_ci;
-mod median_ci;
-mod t_test_summary;
+pub(crate) mod anova_summary;
+pub(crate) mod mean_ci;
+pub(crate) mod median_ci;
+pub(crate) mod t_test_summary;
 
 use super::counts::shared::{leaf, undefined};
 use crate::stats::Estimate;

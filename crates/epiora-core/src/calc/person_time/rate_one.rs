@@ -12,7 +12,13 @@ use serde_json::{json, Value};
 /// `per_unit`, or OpenEpi's `PersonTime1.js` auto-scale when omitted:
 /// the smallest power of 10 that makes the raw rate `>= 1` (a rate of
 /// 0 keeps `1` — OpenEpi's `while (rate < 1)` loop never exits there).
-fn per_unit(inputs: &Value, cases: u64, pt: f64) -> f64 {
+/// `pu/pt` — the per-`per_unit` scale of the rate leaves. Shared by
+/// `run` and the explain trace (v1.0 Task 10, spec §6).
+pub(crate) fn pu_scale(pu: f64, pt: f64) -> f64 {
+    pu / pt
+}
+
+pub(crate) fn per_unit(inputs: &Value, cases: u64, pt: f64) -> f64 {
     match inputs.get("per_unit").and_then(Value::as_f64) {
         Some(u) => u,
         None => {
@@ -31,7 +37,7 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let pt = shared::num(inputs, "person_time");
     let conf = shared::conf(inputs);
     let pu = per_unit(inputs, cases, pt);
-    let scale = pu / pt;
+    let scale = pu_scale(pu, pt);
     // Review Focus 3: at zero events every method's lower limit is
     // exactly 0 and every upper is finite — except Rothman–Greenland,
     // whose log formula degenerates to R's `exp(-Inf)=0` / `NaN`, so

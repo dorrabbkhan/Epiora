@@ -16,7 +16,7 @@ fn wilson_stat(x: u64, n: u64, conf: f64) -> Value {
 /// `entropy_reduction` — H(prev) − H(posterior) per test sign;
 /// `post` is PPV for a positive test, NPV for a negative one (the
 /// OpenEpi `DiagnosticTest.js` convention).
-fn entropy(prev: f64, ppv: f64, npv: f64) -> Value {
+pub(crate) fn entropy(prev: f64, ppv: f64, npv: f64) -> Value {
     let h = |p: f64| -(p * libm::log(p) + (1.0 - p) * libm::log(1.0 - p));
     json!({
         "positive": leaf(h(prev) - h(ppv)),
@@ -24,12 +24,19 @@ fn entropy(prev: f64, ppv: f64, npv: f64) -> Value {
     })
 }
 
-/// `level_lr` — per-level likelihood ratio, `DiagnosticTest.js` log
-/// method.
-fn level_lr(ld: f64, ln: f64, d: f64, nd: f64, conf: f64) -> Value {
+/// `level_lr`'s intermediates — `(p1, p2, lr, half)` — shared by
+/// the run and the explain trace (v1.0 Task 10, spec §6).
+pub(crate) fn level_lr_parts(ld: f64, ln: f64, d: f64, nd: f64, conf: f64) -> (f64, f64, f64, f64) {
     let (p1, p2) = (ld / d, ln / nd);
     let lr = p1 / p2;
     let half = z(conf) * ((1.0 - p1) / (d * p1) + (1.0 - p2) / (nd * p2));
+    (p1, p2, lr, half)
+}
+
+/// `level_lr` — per-level likelihood ratio, `DiagnosticTest.js` log
+/// method.
+pub(crate) fn level_lr(ld: f64, ln: f64, d: f64, nd: f64, conf: f64) -> Value {
+    let (_, _, lr, half) = level_lr_parts(ld, ln, d, nd, conf);
     stat_ci([lr, lr * libm::exp(-half), lr * libm::exp(half)])
 }
 
@@ -45,12 +52,18 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let zz = z(conf);
 
     let dod = {
-        let odds = (tp as f64 * tn as f64) / (fp as f64 * fn_ as f64);
-        let se = libm::sqrt(1.0 / tp as f64 + 1.0 / fp as f64 + 1.0 / fn_ as f64 + 1.0 / tn as f64);
+        // The diagnostic odds is the 2×2 OR and its Wald SE —
+        // `wald_parts`' `or_`/`or_se`.
+        let [_, _, _, _, _, _, odds, se] = wald_parts(&crate::stats::Table2x2 {
+            a: tp,
+            b: fp,
+            c: fn_,
+            d: tn,
+        });
         stat_ci([odds, odds * libm::exp(-zz * se), odds * libm::exp(zz * se)])
     };
-    let ppv = tp as f64 / tpos as f64;
-    let npv = tn as f64 / tneg as f64;
+    let ppv = prop(tp, tpos);
+    let npv = prop(tn, tneg);
 
     let mut out = json!({
         "sensitivity": wilson_stat(tp, d, conf),
@@ -62,7 +75,7 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
         "lr_neg": stat_ci(simel_lr(fn_, tp, tn, fp, conf)),
         "diagnostic_odds": dod,
         "kappa": stat_ci(kappa(tp, fp, fn_, tn, conf)),
-        "entropy": entropy(d as f64 / n as f64, ppv, npv),
+        "entropy": entropy(prop(d, n), ppv, npv),
         "bias_index": leaf((fp as f64 - fn_ as f64) / n as f64),
     });
     if t.len() > 2 {

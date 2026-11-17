@@ -60,6 +60,62 @@ fn expected_cell(n1: f64, m1: f64, m0: f64, or: f64) -> Option<f64> {
     [r1, r2].into_iter().find(|e| in_support(*e))
 }
 
+/// The accumulated sums of `breslow_day_tarone` — the explain trace's
+/// named intermediates (v1.0 Task 10, spec §6). `None` for the same
+/// inputs `breslow_day_tarone` turns `Undefined`: fewer than two kept
+/// strata, an undefined common odds ratio, or an expected-cell root
+/// outside a stratum's support.
+pub(crate) struct BdtParts {
+    /// Uncorrected `sum((a − E)² / var)` over kept strata.
+    pub x2: f64,
+    /// `sum(a)`.
+    pub sum_a: f64,
+    /// `sum(E)`.
+    pub sum_e: f64,
+    /// `sum(var)` — Tarone's correction denominator.
+    pub sum_var: f64,
+}
+
+impl BdtParts {
+    /// The Tarone-corrected statistic `x2 − (sum_a − sum_e)²/sum_var`.
+    pub(crate) fn tarone(&self) -> f64 {
+        self.x2 - (self.sum_a - self.sum_e) * (self.sum_a - self.sum_e) / self.sum_var
+    }
+}
+
+/// The sums `breslow_day_tarone` accumulates — shared by the result
+/// and the explain trace.
+pub(crate) fn bdt_parts(kept: &[Table2x2], or_mh: &Estimate) -> Option<BdtParts> {
+    if kept.len() < 2 {
+        return None;
+    }
+    let or = match or_mh {
+        Estimate::Value(v) => *v,
+        Estimate::Undefined { .. } => return None,
+    };
+    let (mut x2, mut sum_a, mut sum_e, mut sum_var) = (0.0, 0.0, 0.0, 0.0);
+    for t in kept {
+        let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
+        let (n1, n0, m1, m0) = (a + b, c + d, a + c, b + d);
+        let e = expected_cell(n1, m1, m0, or)?;
+        let bt = n1 - e;
+        let ct = m1 - e;
+        // DescTools: tildedj = mj[2] − tildecj = N0 − (M1 − E).
+        let dt = n0 - ct;
+        let var = 1.0 / (1.0 / e + 1.0 / bt + 1.0 / ct + 1.0 / dt);
+        x2 += (a - e) * (a - e) / var;
+        sum_a += a;
+        sum_e += e;
+        sum_var += var;
+    }
+    Some(BdtParts {
+        x2,
+        sum_a,
+        sum_e,
+        sum_var,
+    })
+}
+
 /// Breslow–Day–Tarone over the kept `strata` (each of total > 0) under
 /// the common MH odds ratio `or_mh`. Fewer than two strata, an
 /// undefined `or_mh`, or a root outside a stratum's support make every
@@ -74,30 +130,14 @@ pub(crate) fn breslow_day_tarone(kept: &[Table2x2], or_mh: &Estimate) -> Breslow
         };
         return BreslowDayTarone::all_undefined(reason);
     }
-    let or = match or_mh {
-        Estimate::Value(v) => *v,
-        Estimate::Undefined { reason } => return BreslowDayTarone::all_undefined(*reason),
-    };
-
-    let (mut x2, mut sum_a, mut sum_e, mut sum_var) = (0.0, 0.0, 0.0, 0.0);
-    for t in kept {
-        let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
-        let (n1, n0, m1, m0) = (a + b, c + d, a + c, b + d);
-        let e = match expected_cell(n1, m1, m0, or) {
-            Some(e) => e,
-            None => return BreslowDayTarone::all_undefined(UndefinedReason::NotBracketed),
-        };
-        let bt = n1 - e;
-        let ct = m1 - e;
-        // DescTools: tildedj = mj[2] − tildecj = N0 − (M1 − E).
-        let dt = n0 - ct;
-        let var = 1.0 / (1.0 / e + 1.0 / bt + 1.0 / ct + 1.0 / dt);
-        x2 += (a - e) * (a - e) / var;
-        sum_a += a;
-        sum_e += e;
-        sum_var += var;
+    if let Estimate::Undefined { reason } = or_mh {
+        return BreslowDayTarone::all_undefined(*reason);
     }
-    let x2t = x2 - (sum_a - sum_e) * (sum_a - sum_e) / sum_var;
+    let p = match bdt_parts(kept, or_mh) {
+        Some(p) => p,
+        None => return BreslowDayTarone::all_undefined(UndefinedReason::NotBracketed),
+    };
+    let x2t = p.tarone();
     let df = (kept.len() - 1) as f64;
     BreslowDayTarone {
         statistic: Estimate::from_f64(x2t, UndefinedReason::ZeroCell),

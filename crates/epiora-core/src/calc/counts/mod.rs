@@ -2,22 +2,25 @@
 //! count inputs. `defs.rs` holds the registry data; each module
 //! computes the result tree the `fixtures/calc/<id>` corpus records.
 
-mod binomial;
+pub(crate) mod adjusted;
+pub(crate) mod binomial;
 pub(crate) mod defs;
 pub(crate) mod defs_rest;
-mod dose_response;
-mod exact_or;
+pub(crate) mod dose_response;
+pub(crate) mod ef;
+pub(crate) mod exact_or;
 pub(crate) mod martin;
-mod matched_case_control;
-mod poisson;
-mod proportion;
-mod r_by_c;
-mod screening;
+pub(crate) mod matched_case_control;
+pub(crate) mod poisson;
+pub(crate) mod proportion;
+pub(crate) mod r_by_c;
+pub(crate) mod screening;
 pub(crate) mod shared;
-mod shared_exact;
-mod smr;
-mod two_by_n;
-mod two_by_two;
+pub(crate) mod shared_ci;
+pub(crate) mod shared_exact;
+pub(crate) mod smr;
+pub(crate) mod two_by_n;
+pub(crate) mod two_by_two;
 
 use crate::EngineError;
 use serde_json::Value;

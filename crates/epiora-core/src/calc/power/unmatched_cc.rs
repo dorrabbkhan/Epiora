@@ -6,42 +6,28 @@
 //! the implied OR from the two proportions
 //! (`fixtures/R/methods/sample_size.R::power_cc`, `_cc`).
 
-use crate::calc::counts::shared::{cnt, conf, leaf, num, z};
+use super::parts::{cc_inputs, cc_n1, group_ratio, or_cc, pooled_cc, powerz};
+use crate::calc::counts::shared::{conf, leaf, z};
 use crate::special::normal_cdf;
 use crate::EngineError;
 use serde_json::{json, Value};
 
 pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let za = z(conf(inputs));
-    let p1 = num(inputs, "percent_cases_exposed") / 100.0;
-    let p2 = num(inputs, "percent_controls_exposed") / 100.0;
-    let n1 = cnt(inputs, "n_cases") as f64;
-    let n2 = cnt(inputs, "n_controls") as f64;
-    let r = n2 / n1;
+    let (p1, p2, n1, n2) = cc_inputs(inputs);
+    let r = group_ratio(n1, n2);
+    let (pbar, denom) = pooled_cc(p1, p2, r);
 
-    let q1 = 1.0 - p1;
-    let q2 = 1.0 - p2;
-    let d = p1 - p2;
-    let pbar = (p1 + r * p2) / (1.0 + r);
-    let qbar = 1.0 - pbar;
-    let denom = libm::sqrt(p1 * q1 + p2 * q2 / r);
-
-    let powerz = (libm::sqrt(n1 * d * d) - za * libm::sqrt((1.0 + 1.0 / r) * pbar * qbar)) / denom;
-
-    let or = (p1 * q2) / (p2 * q1);
+    let pz = powerz(n1, p1, p2, r, za, pbar, denom);
+    let or = or_cc(p1, p2);
     // The continuity correction adds/subtracts (r+1)/(r·d) from n1
     // following the OR's direction.
-    let nn1 = if or > 1.0 {
-        n1 - (r + 1.0) / (r * d)
-    } else {
-        n1 + (r + 1.0) / (r * d)
-    };
-    let powerz_cc =
-        (libm::sqrt(nn1.abs() * d * d) - za * libm::sqrt((1.0 + 1.0 / r) * pbar * qbar)) / denom;
+    let nn1 = cc_n1(n1, r, p1, p2, or > 1.0);
+    let pz_cc = powerz(nn1, p1, p2, r, za, pbar, denom);
 
     Ok(json!({
-        "normal": leaf(normal_cdf(powerz) * 100.0),
-        "normal_cc": leaf(normal_cdf(powerz_cc) * 100.0),
+        "normal": leaf(normal_cdf(pz) * 100.0),
+        "normal_cc": leaf(normal_cdf(pz_cc) * 100.0),
         "odds_ratio": leaf(or),
     }))
 }

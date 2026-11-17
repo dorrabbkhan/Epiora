@@ -36,6 +36,10 @@ pub enum UndefinedReason {
     /// powered for is zero (equal proportions, a unit effect
     /// measure, a zero mean difference; v1.0 Task 9, Review Focus 3).
     InfiniteSampleSize,
+    /// A table margin is zero, so an expected cell is zero and the
+    /// chi-square is not computable (the `r_by_c` calculator's
+    /// `zero_expected` leaf).
+    ZeroExpected,
 }
 
 impl UndefinedReason {
@@ -53,7 +57,29 @@ impl UndefinedReason {
             UndefinedReason::OutOfRange => "out_of_range",
             UndefinedReason::TooLarge => "too_large",
             UndefinedReason::InfiniteSampleSize => "infinite_sample_size",
+            UndefinedReason::ZeroExpected => "zero_expected",
         }
+    }
+
+    /// The reason a serialized `{"undefined": "<code>"}` leaf names —
+    /// the inverse of `code` (explain relays the leaf's reason; it
+    /// never invents one).
+    pub(crate) fn from_code(code: &str) -> Option<UndefinedReason> {
+        Some(match code {
+            "zero_cell" => UndefinedReason::ZeroCell,
+            "zero_margin" => UndefinedReason::ZeroMargin,
+            "empty_table" => UndefinedReason::EmptyTable,
+            "not_bracketed" => UndefinedReason::NotBracketed,
+            "no_convergence" => UndefinedReason::NoConvergence,
+            "unbounded" => UndefinedReason::Unbounded,
+            "too_few" => UndefinedReason::TooFew,
+            "zero_variance" => UndefinedReason::ZeroVariance,
+            "out_of_range" => UndefinedReason::OutOfRange,
+            "too_large" => UndefinedReason::TooLarge,
+            "infinite_sample_size" => UndefinedReason::InfiniteSampleSize,
+            "zero_expected" => UndefinedReason::ZeroExpected,
+            _ => return None,
+        })
     }
 }
 
@@ -64,7 +90,7 @@ impl UndefinedReason {
     derive(ts_rs::TS),
     ts(
         export,
-        type = "number | { \"undefined\": \"zero_cell\" | \"zero_margin\" | \"empty_table\" | \"not_bracketed\" | \"no_convergence\" | \"unbounded\" | \"too_few\" | \"zero_variance\" | \"out_of_range\" | \"too_large\" | \"infinite_sample_size\" }"
+        type = "number | { \"undefined\": \"zero_cell\" | \"zero_margin\" | \"empty_table\" | \"not_bracketed\" | \"no_convergence\" | \"unbounded\" | \"too_few\" | \"zero_variance\" | \"out_of_range\" | \"too_large\" | \"infinite_sample_size\" | \"zero_expected\" }"
     )
 )]
 pub enum Estimate {

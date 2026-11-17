@@ -10,33 +10,45 @@ use crate::error::EngineError;
 use serde_json::{json, Value};
 
 /// The 1:1 block: `matched_expected` with `controls_per_case == 1`.
+/// `(b/c, √(1/b + 1/c))` — the discordant-pairs OR and its
+/// log-scale SE, shared by `pair` and the explain trace (v1.0
+/// Task 10, spec §6).
+pub(crate) fn pair_or(db: u64, dc: u64) -> (f64, f64) {
+    let (dbcf, dcc) = (db as f64, dc as f64);
+    (dbcf / dcc, libm::sqrt(1.0 / dbcf + 1.0 / dcc))
+}
+
+/// McNemar's chi-square on `n = db + dc` discordant pairs;
+/// `correct` applies `(|db−dc|−1)²/n` — 0 when `db == dc`, as
+/// `mcnemar.test(correct=TRUE)`.
+pub(crate) fn mcnemar_chi(db: u64, dc: u64, correct: bool) -> f64 {
+    let (dbcf, dcc) = (db as f64, dc as f64);
+    let nf = dbcf + dcc;
+    if nf == 0.0 {
+        return f64::NAN;
+    }
+    let d = if !correct {
+        dbcf - dcc
+    } else if db == dc {
+        0.0
+    } else {
+        (dbcf - dcc).abs() - 1.0
+    };
+    d * d / nf
+}
+
 fn pair(inputs: &Value, conf: f64) -> Value {
     let t = count_table(inputs, "matched_sets");
     let db = t[0][1];
     let dc = t[1][0];
     let n = db + dc;
     let zz = z(conf);
-    let chi = if n == 0 {
-        f64::NAN
-    } else {
-        let d = db as f64 - dc as f64;
-        d * d / n as f64
-    };
-    let chi_cc = if n == 0 {
-        f64::NAN
-    } else {
-        // `mcnemar.test(correct=TRUE)` subtracts the 1 only when the
-        // table differs from its transpose (`any(x - t(x) != 0)`);
-        // `db == dc` therefore gives statistic 0 (p = 1), not 1/n.
-        let d = if db == dc {
-            0.0
-        } else {
-            (db as f64 - dc as f64).abs() - 1.0
-        };
-        d * d / n as f64
-    };
-    let or = db as f64 / dc as f64;
-    let se = libm::sqrt(1.0 / db as f64 + 1.0 / dc as f64);
+    // `mcnemar.test(correct=TRUE)` subtracts the 1 only when the
+    // table differs from its transpose (`any(x - t(x) != 0)`);
+    // `db == dc` therefore gives statistic 0 (p = 1), not 1/n.
+    let chi = mcnemar_chi(db, dc, false);
+    let chi_cc = mcnemar_chi(db, dc, true);
+    let (or, se) = pair_or(db, dc);
     let [ml, mu] = {
         let [l, u] = binom_midp_ci(db, n, conf);
         [l / (1.0 - l), u / (1.0 - u)]
@@ -182,17 +194,56 @@ fn matched_n_cmle(t: &[Vec<u64>], m: u64, conf: f64) -> [f64; 3] {
     [libm::exp(beta), libm::exp(beta - h), libm::exp(beta + h)]
 }
 
-/// The 1:n block: each matched set is one 2×2 stratum
-/// `[[case_exp, k], [case_unexp, M-k]]` under `mantelhaen.test`. The
-/// sums are linear over identical strata, so the 2·(M+1) ≤ 10
-/// distinct (case_exp, k) shapes carry each accumulated term times
-/// its multiplicity — O(M) work and memory for any valid counts,
-/// where enumerating one stratum per set was O(Σ cells) (Review
-/// Focus 1/3).
-fn matched_n(inputs: &Value, conf: f64) -> Value {
-    let m = cnt(inputs, "controls_per_case");
-    let t = count_table(inputs, "matched_sets");
-    let zz = z(conf);
+/// The multiplicity-weighted MH sums of `matched_n` — the explain
+/// trace's named values (v1.0 Task 10, spec §6). The run path calls
+/// `matched_n_parts` and the explain path reuses it.
+pub(crate) struct MatchedNParts {
+    /// `sum(mult·(a − N1·M1/n))` over the distinct set shapes.
+    pub delta: f64,
+    /// `sum(mult·N1·N0·M1·M0 / (n²·(n−1)))`.
+    pub var: f64,
+    /// `sum(mult·a·d/n)`.
+    pub sd_: f64,
+    /// `sum(mult·b·c/n)`.
+    pub so_: f64,
+    /// `sum(mult·(a+d)·a·d/n²)`.
+    pub rg_a: f64,
+    /// `sum(mult·((a+d)·b·c + (b+c)·a·d)/n²)`.
+    pub rg_b: f64,
+    /// `sum(mult·(b+c)·b·c/n²)`.
+    pub rg_c: f64,
+}
+
+impl MatchedNParts {
+    /// `delta²/var` — the uncorrected MH chi-square.
+    pub(crate) fn chi(&self) -> f64 {
+        self.delta * self.delta / self.var
+    }
+
+    /// `(|delta|−0.5)²/var` clamped at 0 — the corrected chi-square.
+    pub(crate) fn chi_cc(&self) -> f64 {
+        let s = (self.delta.abs() - 0.5).max(0.0);
+        s * s / self.var
+    }
+
+    /// `sd_/so_` — the MH odds ratio.
+    pub(crate) fn or(&self) -> f64 {
+        self.sd_ / self.so_
+    }
+
+    /// The Robins–Breslow–Greenland SD of `log or`.
+    pub(crate) fn sd_or(&self) -> f64 {
+        libm::sqrt(
+            self.rg_a / (2.0 * self.sd_ * self.sd_)
+                + self.rg_b / (2.0 * self.sd_ * self.so_)
+                + self.rg_c / (2.0 * self.so_ * self.so_),
+        )
+    }
+}
+
+/// The `matched_n` sums — shared by the result and the explain
+/// trace.
+pub(crate) fn matched_n_parts(t: &[Vec<u64>], m: u64) -> MatchedNParts {
     let (mut delta, mut var, mut sd_, mut so_): (f64, f64, f64, f64) = (0.0, 0.0, 0.0, 0.0);
     let (mut rg_a, mut rg_b, mut rg_c) = (0.0, 0.0, 0.0);
     for (case_exp, row) in t.iter().enumerate().take(2) {
@@ -216,14 +267,33 @@ fn matched_n(inputs: &Value, conf: f64) -> Value {
             rg_c += mult * ((b + c) * b * c / (n * n));
         }
     }
-    let chi = delta * delta / var;
-    let chi_cc = {
-        let s = (delta.abs() - 0.5).max(0.0);
-        s * s / var
-    };
-    let or = sd_ / so_;
-    let sd =
-        libm::sqrt(rg_a / (2.0 * sd_ * sd_) + rg_b / (2.0 * sd_ * so_) + rg_c / (2.0 * so_ * so_));
+    MatchedNParts {
+        delta,
+        var,
+        sd_,
+        so_,
+        rg_a,
+        rg_b,
+        rg_c,
+    }
+}
+
+/// The 1:n block: each matched set is one 2×2 stratum
+/// `[[case_exp, k], [case_unexp, M-k]]` under `mantelhaen.test`. The
+/// sums are linear over identical strata, so the 2·(M+1) ≤ 10
+/// distinct (case_exp, k) shapes carry each accumulated term times
+/// its multiplicity — O(M) work and memory for any valid counts,
+/// where enumerating one stratum per set was O(Σ cells) (Review
+/// Focus 1/3).
+fn matched_n(inputs: &Value, conf: f64) -> Value {
+    let m = cnt(inputs, "controls_per_case");
+    let t = count_table(inputs, "matched_sets");
+    let zz = z(conf);
+    let p = matched_n_parts(&t, m);
+    let chi = p.chi();
+    let chi_cc = p.chi_cc();
+    let or = p.or();
+    let sd = p.sd_or();
     let [ce, cl, cu] = matched_n_cmle(&t, m, conf);
     // A boundary MLE (NaN from the guard) is `unbounded`, not the
     // generic non-finite fallback.

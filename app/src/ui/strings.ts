@@ -243,6 +243,7 @@ export const t = {
       out_of_range: 'the value is out of range',
       too_large: 'the exact computation is too large',
       infinite_sample_size: 'the required sample size is infinite',
+      zero_expected: 'an expected count is zero',
     },
   },
   lock: {
@@ -311,6 +312,7 @@ export const t = {
     calc_unknown: 'That calculator is not known.',
     calc_input_missing: 'A required calculator input is missing.',
     calc_input_out_of_range: 'A calculator input is out of range.',
+    explain_unknown: 'That statistic has no explanation.',
     // StoreError codes
     migration_failed: 'The local database could not be upgraded.',
     tx_aborted: 'The database transaction was aborted.',

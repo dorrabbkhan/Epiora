@@ -4,9 +4,10 @@
 //! §3.18 inverted) plus the implied effect measure — and
 //! `power_mean_difference` (`PowerMean.js`).
 
-mod cohort;
-mod mean_difference;
-mod unmatched_cc;
+pub(crate) mod cohort;
+pub(crate) mod mean_difference;
+pub(crate) mod parts;
+pub(crate) mod unmatched_cc;
 
 use crate::EngineError;
 use serde_json::Value;

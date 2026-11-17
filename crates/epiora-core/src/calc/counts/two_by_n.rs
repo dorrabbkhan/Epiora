@@ -35,8 +35,8 @@ fn chi_leaf(t: &Table2x2) -> Value {
 }
 
 fn table_block(t: &Table2x2, conf: f64) -> Value {
-    let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
-    let (n1, n0) = (a + b, c + d);
+    let (a, b) = (t.a as f64, t.b as f64);
+    let n1 = a + b;
     let zz = z(conf);
     // Owner-decision size guard (PR #74): the exact-path leaves go
     // `too_large` before `NcHypergeom`'s support allocation when this
@@ -69,14 +69,7 @@ fn table_block(t: &Table2x2, conf: f64) -> Value {
         )
     };
 
-    let pe = a / n1;
-    let pu = c / n0;
-    let rr = pe / pu;
-    let rr_se = libm::sqrt(b / (a * n1) + d / (c * n0));
-    let rd = pe - pu;
-    let rd_se = libm::sqrt(pe * (1.0 - pe) / n1 + pu * (1.0 - pu) / n0);
-    let or_ = (a * d) / (b * c);
-    let or_se = libm::sqrt(1.0 / a + 1.0 / b + 1.0 / c + 1.0 / d);
+    let [_, _, rr, rr_se, rd, rd_se, or_, or_se] = wald_parts(t);
 
     json!({
         "odds_ratio": stat_ci([or_, or_ * libm::exp(-zz * or_se), or_ * libm::exp(zz * or_se)]),

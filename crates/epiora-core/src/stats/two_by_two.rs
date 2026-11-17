@@ -9,8 +9,10 @@
 
 use super::estimate::{Ci, Estimate, UndefinedReason};
 use super::exact;
-use crate::special::{chisq_sf, normal_quantile, NcHypergeom};
+use crate::special::{chisq_sf, NcHypergeom};
 use serde::Serialize;
+
+pub(crate) use super::two_by_two_parts::parts;
 
 /// One 2×2 table: rows exposed/unexposed, columns ill/well.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
@@ -197,12 +199,6 @@ impl TwoByTwoStats {
     }
 }
 
-/// `qnorm(0.975)`; `normal_quantile` is `Some` for every p in (0, 1),
-/// the fallback is the same correctly-rounded constant.
-fn z_975() -> f64 {
-    normal_quantile(0.975).unwrap_or(1.959963984540054)
-}
-
 fn chi(statistic: f64) -> ChiSquare {
     ChiSquare {
         statistic: Estimate::from_f64(statistic, UndefinedReason::ZeroMargin),
@@ -223,26 +219,17 @@ fn chi(statistic: f64) -> ChiSquare {
 /// `Undefined { EmptyTable }` everywhere; zero margins give
 /// `Undefined` per statistic, never NaN.
 pub fn two_by_two(t: &Table2x2) -> TwoByTwoStats {
-    let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
-    let n1 = a + b;
-    let n0 = c + d;
-    let n = n1 + n0;
-    if n == 0.0 {
+    let p = parts(t);
+    if p.n == 0.0 {
         return TwoByTwoStats::all_undefined(UndefinedReason::EmptyTable);
     }
-    let m1 = a + c;
-    let m0 = b + d;
-    let z = z_975();
+    let (pe, pu, rd, se_rd, rr, se_rr, or, se_or, z) =
+        (p.pe, p.pu, p.rd, p.se_rd, p.rr, p.se_rr, p.or, p.se_or, p.z);
     let zc = UndefinedReason::ZeroCell;
     let zm = UndefinedReason::ZeroMargin;
-
-    let pe = a / n1;
-    let pu = c / n0;
     let exposed = Estimate::from_f64(pe, zm);
     let unexposed = Estimate::from_f64(pu, zm);
 
-    let rd = pe - pu;
-    let se_rd = libm::sqrt(pe * (1.0 - pe) / n1 + pu * (1.0 - pu) / n0);
     let risk = RiskStats {
         exposed,
         unexposed,
@@ -253,13 +240,10 @@ pub fn two_by_two(t: &Table2x2) -> TwoByTwoStats {
         },
     };
 
-    let rr = pe / pu;
-    let se_rr = libm::sqrt(1.0 / a - 1.0 / n1 + 1.0 / c - 1.0 / n0);
     let log_rr = libm::log(rr);
     // epitools::riskratio.small: the reference-group count and margin
     // get +1; the CI keeps the unadjusted Wald standard error.
-    let rr_small = pe / ((c + 1.0) / (n0 + 1.0));
-    let log_rr_small = libm::log(rr_small);
+    let log_rr_small = libm::log(p.rr_small);
     let risk_ratio = RiskRatioStats {
         estimate: Estimate::from_f64(rr, zc),
         ci_95_wald: Ci {
@@ -267,14 +251,12 @@ pub fn two_by_two(t: &Table2x2) -> TwoByTwoStats {
             upper: Estimate::from_f64(libm::exp(log_rr + z * se_rr), zc),
         },
         small_sample: SmallSample {
-            estimate: Estimate::from_f64(rr_small, zc),
+            estimate: Estimate::from_f64(p.rr_small, zc),
             lower: Estimate::from_f64(libm::exp(log_rr_small - z * se_rr), zc),
             upper: Estimate::from_f64(libm::exp(log_rr_small + z * se_rr), zc),
         },
     };
 
-    let or = a * d / (b * c);
-    let se_or = libm::sqrt(1.0 / a + 1.0 / b + 1.0 / c + 1.0 / d);
     let log_or = libm::log(or);
     // Margins in u64 for the conditional support; saturating so an
     // absurd input can never panic (rule: no input panics the engine).
@@ -295,36 +277,11 @@ pub fn two_by_two(t: &Table2x2) -> TwoByTwoStats {
         ci_95_midp_exact: exact::midp_ci(&h, t.a),
     };
 
-    let delta = (a - n1 * m1 / n).abs();
-    let e = [n1 * m1 / n, n1 * m0 / n, n0 * m1 / n, n0 * m0 / n];
-    let o = [a, b, c, d];
-    let chi_square = if e.iter().all(|&ei| ei > 0.0) {
-        let uncorrected: f64 = o
-            .iter()
-            .zip(&e)
-            .map(|(oi, ei)| (oi - ei) * (oi - ei) / ei)
-            .sum();
-        let yates_adj = 0.5_f64.min(delta);
-        let yates: f64 = o
-            .iter()
-            .zip(&e)
-            .map(|(oi, ei)| ((oi - ei).abs() - yates_adj) * ((oi - ei).abs() - yates_adj) / ei)
-            .sum();
-        // The mantelhaen.test port: DELTA² / (prod(margins) / (n² (n−1))).
-        let mh = delta * delta * n * n * (n - 1.0) / (n1 * n0 * m1 * m0);
-        ChiSquareStats {
-            df: Estimate::Value(1.0),
-            uncorrected: chi(uncorrected),
-            yates: chi(yates),
-            mantel_haenszel: chi(mh),
-        }
-    } else {
-        ChiSquareStats {
-            df: Estimate::Value(1.0),
-            uncorrected: chi(f64::NAN),
-            yates: chi(f64::NAN),
-            mantel_haenszel: chi(f64::NAN),
-        }
+    let chi_square = ChiSquareStats {
+        df: Estimate::Value(1.0),
+        uncorrected: chi(p.chi_uncorrected),
+        yates: chi(p.chi_yates),
+        mantel_haenszel: chi(p.chi_mh),
     };
 
     let p_lower = h.lower_tail(t.a, 1.0).clamp(0.0, 1.0);

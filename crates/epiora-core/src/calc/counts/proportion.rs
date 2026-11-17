@@ -13,6 +13,12 @@ use crate::error::EngineError;
 use crate::special::normal_cdf;
 use serde_json::{json, Value};
 
+/// `(p − p0)/√(p0·(1−p0)/n)` — the one-sample z-statistic, shared
+/// by the run and the explain trace (v1.0 Task 10, spec §6).
+pub(crate) fn ztest_z(p: f64, p0: f64, n: f64) -> f64 {
+    (p - p0) / libm::sqrt(p0 * (1.0 - p0) / n)
+}
+
 pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let x = cnt(inputs, "numerator");
     let n = cnt(inputs, "denominator");
@@ -77,7 +83,7 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let mut out = json!({ "estimate": leaf(p), "ci": Value::Object(ci) });
     if let Some(cw) = inputs.get("compare_with").and_then(Value::as_f64) {
         let p0 = cw / 100.0;
-        let zv = (p - p0) / libm::sqrt(p0 * (1.0 - p0) / n as f64);
+        let zv = ztest_z(p, p0, n as f64);
         out["ztest"] = json!({ "z": leaf(zv), "p": leaf(2.0 * normal_cdf(-zv.abs())) });
     }
     let _ = stat_ci;

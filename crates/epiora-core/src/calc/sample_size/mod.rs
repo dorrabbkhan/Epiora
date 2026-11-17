@@ -4,11 +4,11 @@
 //! (Kelsey, Fleiss and Fleiss-with-continuity-correction) and
 //! `ss_mean_difference` (OpenEpi `SSMean.js`).
 
-mod cohort;
-mod mean_difference;
-mod proportion;
-mod two_props;
-mod unmatched_cc;
+pub(crate) mod cohort;
+pub(crate) mod mean_difference;
+pub(crate) mod proportion;
+pub(crate) mod two_props;
+pub(crate) mod unmatched_cc;
 
 use crate::EngineError;
 use serde_json::Value;
