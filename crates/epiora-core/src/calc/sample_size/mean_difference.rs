@@ -12,6 +12,28 @@ use crate::special::normal_quantile;
 use crate::EngineError;
 use serde_json::{json, Value};
 
+/// The group-1 variance-based size — `(s1² + s2²/ratio)·(zα+zβ)²/d²`
+/// — shared by the run and the explain trace (v1.0 Task 10, spec §6).
+pub(crate) fn vn(s1: f64, s2: f64, ratio: f64, za: f64, zb: f64, diff: f64) -> f64 {
+    (s1 * s1 + s2 * s2 / ratio) * (za + zb) * (za + zb) / (diff * diff)
+}
+
+/// `n2_real = n1·ratio` — the group-2 size from the already-rounded
+/// `n1`, shared by the run and the explain trace.
+pub(crate) fn n2_real(n1: f64, ratio: f64) -> f64 {
+    n1 * ratio
+}
+
+/// `(n1, n2_real, n2)` — `ceil(vn)`, then `n2_real = n1·ratio`, then
+/// `ceil(n2_real)`; `n2` comes from the already-rounded `n1`, which
+/// is why `n2_real` in the fixtures is not `vn·ratio` — shared by
+/// the run and the explain trace (v1.0 Task 10, spec §6).
+pub(crate) fn n1_n2(vn: f64, ratio: f64) -> (f64, f64, f64) {
+    let n1 = vn.ceil();
+    let vn2 = n2_real(n1, ratio);
+    (n1, vn2, vn2.ceil())
+}
+
 pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let (s1, s2) = mean_diff::sds(inputs)?;
     let ratio = num(inputs, "ratio");
@@ -29,10 +51,8 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let za = z(conf(inputs));
     // zb is one-sided: qnorm(power/100), not the two-sided z().
     let zb = normal_quantile(num(inputs, "power") / 100.0).unwrap_or(f64::NAN);
-    let vn = (s1 * s1 + s2 * s2 / ratio) * (za + zb) * (za + zb) / (diff * diff);
-    let n1 = vn.ceil();
-    let vn2 = n1 * ratio;
-    let n2 = vn2.ceil();
+    let vn = vn(s1, s2, ratio, za, zb, diff);
+    let (n1, vn2, n2) = n1_n2(vn, ratio);
 
     Ok(json!({
         "n1": leaf(n1),

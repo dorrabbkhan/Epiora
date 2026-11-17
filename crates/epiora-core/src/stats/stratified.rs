@@ -117,6 +117,110 @@ fn margins(t: &Table2x2) -> (f64, f64, f64, f64, f64) {
     (a + b, c + d, a + c, b + d, a + b + c + d)
 }
 
+/// The closed-form intermediates `stratified` accumulates over the
+/// kept strata — the explain trace's named values (v1.0 Task 10,
+/// spec §6). The run path calls `stratified_parts` and the explain
+/// path reuses it.
+pub(crate) struct StratParts {
+    /// `sum(a − N1·M1/n)` over kept strata.
+    pub delta: f64,
+    /// `sum(N1·N0·M1·M0 / (n²·(n−1)))`.
+    pub var_delta: f64,
+    /// `sum(a·d/n)`.
+    pub s_diag: f64,
+    /// `sum(b·c/n)`.
+    pub s_offd: f64,
+    /// `sum((a+d)·a·d/n²)` — first RBG variance term.
+    pub rbg_diag: f64,
+    /// `sum(((a+d)·b·c + (b+c)·a·d)/n²)` — second RBG term.
+    pub rbg_cross: f64,
+    /// `sum((b+c)·b·c/n²)` — third RBG term.
+    pub rbg_offd: f64,
+    /// `sum(a·N0/n)` — MH risk-ratio numerator.
+    pub rr_num: f64,
+    /// `sum(c·N1/n)` — MH risk-ratio denominator.
+    pub rr_den: f64,
+    /// `sum(M1·N1·N0/n² − a·c/n)` — Greenland–Robins numerator.
+    pub gr_num: f64,
+}
+
+/// The accumulated sums of `stratified(kept)` (spec §6).
+pub(crate) fn stratified_parts(kept: &[Table2x2]) -> StratParts {
+    let (mut delta, mut var_delta) = (0.0, 0.0);
+    let (mut s_diag, mut s_offd) = (0.0, 0.0);
+    let (mut rbg_diag, mut rbg_cross, mut rbg_offd) = (0.0, 0.0, 0.0);
+    let (mut rr_num, mut rr_den, mut gr_num) = (0.0, 0.0, 0.0);
+    for t in kept {
+        let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
+        let (n1, n0, m1, m0, n) = margins(t);
+        // mantelhaen.test: DELTA = sum(a − N1·M1/n) with variance
+        // sum(N1·N0·M1·M0 / (n²·(n−1))).
+        delta += a - n1 * m1 / n;
+        var_delta += n1 * n0 * m1 * m0 / (n * n * (n - 1.0));
+        // Common OR: sum(ad/n) / sum(bc/n) with the RBG variance.
+        s_diag += a * d / n;
+        s_offd += b * c / n;
+        rbg_diag += (a + d) * a * d / (n * n);
+        rbg_cross += ((a + d) * b * c + (b + c) * a * d) / (n * n);
+        rbg_offd += (b + c) * b * c / (n * n);
+        // Greenland–Robins MH risk ratio.
+        rr_num += a * n0 / n;
+        rr_den += c * n1 / n;
+        gr_num += m1 * n1 * n0 / (n * n) - a * c / n;
+    }
+    StratParts {
+        delta,
+        var_delta,
+        s_diag,
+        s_offd,
+        rbg_diag,
+        rbg_cross,
+        rbg_offd,
+        rr_num,
+        rr_den,
+        gr_num,
+    }
+}
+
+/// The estimates `stratified` derives from `StratParts` — the
+/// explain trace's named values (v1.0 Task 10, spec §6).
+pub(crate) struct StratDerived {
+    /// `delta²/var_delta` — the uncorrected MH chi-square.
+    pub x2: f64,
+    /// `0.5` when `|delta| ≥ 0.5`, else 0 — the continuity correction.
+    pub yates: f64,
+    /// `(|delta| − yates)²/var_delta` — the corrected chi-square.
+    pub x2c: f64,
+    /// `s_diag/s_offd` — the common odds ratio.
+    pub or: f64,
+    /// The Robins–Breslow–Greenland SD of `log or`.
+    pub sd_or: f64,
+    /// `rr_num/rr_den` — the Greenland–Robins MH risk ratio.
+    pub rr: f64,
+    /// `sqrt(gr_num/(rr_num·rr_den))` — the log-RR SE.
+    pub se_rr: f64,
+}
+
+/// The derived estimates of `stratified_parts(kept)` — shared by the
+/// result and the explain trace.
+pub(crate) fn stratified_derived(p: &StratParts) -> StratDerived {
+    let x2 = p.delta * p.delta / p.var_delta;
+    let yates = if p.delta.abs() >= 0.5 { 0.5 } else { 0.0 };
+    StratDerived {
+        x2,
+        yates,
+        x2c: (p.delta.abs() - yates) * (p.delta.abs() - yates) / p.var_delta,
+        or: p.s_diag / p.s_offd,
+        sd_or: libm::sqrt(
+            p.rbg_diag / (2.0 * p.s_diag * p.s_diag)
+                + p.rbg_cross / (2.0 * p.s_diag * p.s_offd)
+                + p.rbg_offd / (2.0 * p.s_offd * p.s_offd),
+        ),
+        rr: p.rr_num / p.rr_den,
+        se_rr: libm::sqrt(p.gr_num / (p.rr_num * p.rr_den)),
+    }
+}
+
 /// All stratified statistics of `strata` (spec §3.5). Strata of total
 /// 0 are excluded and listed; the crude table is the sum of the kept
 /// strata. Nothing panics and no NaN is ever emitted.
@@ -156,48 +260,15 @@ pub fn stratified(strata: &[Table2x2]) -> StratifiedStats {
     }
 
     let z = z_975();
-    let (mut delta, mut var_delta) = (0.0, 0.0);
-    let (mut s_diag, mut s_offd) = (0.0, 0.0);
-    let (mut rbg_diag, mut rbg_cross, mut rbg_offd) = (0.0, 0.0, 0.0);
-    let (mut rr_num, mut rr_den, mut gr_num) = (0.0, 0.0, 0.0);
-    for t in &kept {
-        let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
-        let (n1, n0, m1, m0, n) = margins(t);
-        // mantelhaen.test: DELTA = sum(a − N1·M1/n) with variance
-        // sum(N1·N0·M1·M0 / (n²·(n−1))).
-        delta += a - n1 * m1 / n;
-        var_delta += n1 * n0 * m1 * m0 / (n * n * (n - 1.0));
-        // Common OR: sum(ad/n) / sum(bc/n) with the RBG variance.
-        s_diag += a * d / n;
-        s_offd += b * c / n;
-        rbg_diag += (a + d) * a * d / (n * n);
-        rbg_cross += ((a + d) * b * c + (b + c) * a * d) / (n * n);
-        rbg_offd += (b + c) * b * c / (n * n);
-        // Greenland–Robins MH risk ratio.
-        rr_num += a * n0 / n;
-        rr_den += c * n1 / n;
-        gr_num += m1 * n1 * n0 / (n * n) - a * c / n;
-    }
-
-    let uncorrected = delta * delta / var_delta;
-    let yates = if delta.abs() >= 0.5 { 0.5 } else { 0.0 };
-    let corrected = (delta.abs() - yates) * (delta.abs() - yates) / var_delta;
+    let p = stratified_parts(&kept);
+    let dv = stratified_derived(&p);
     let chi_square = MhChiSquare {
-        uncorrected: chi(uncorrected),
-        corrected: chi(corrected),
+        uncorrected: chi(dv.x2),
+        corrected: chi(dv.x2c),
     };
 
-    // mantelhaen.test estimate and RBG CI:
-    //   sd² = sum((a+d)ad/n²)/(2·s.diag²)
-    //       + sum(((a+d)bc + (b+c)ad)/n²)/(2·s.diag·s.offd)
-    //       + sum((b+c)bc/n²)/(2·s.offd²)
-    //   CI  = OR · exp(±z·sd)
-    let or = s_diag / s_offd;
-    let sd = libm::sqrt(
-        rbg_diag / (2.0 * s_diag * s_diag)
-            + rbg_cross / (2.0 * s_diag * s_offd)
-            + rbg_offd / (2.0 * s_offd * s_offd),
-    );
+    // mantelhaen.test estimate and RBG CI: CI = OR · exp(±z·sd).
+    let (or, sd) = (dv.or, dv.sd_or);
     let odds_ratio = MhEstimate {
         estimate: Estimate::from_f64(or, UndefinedReason::ZeroCell),
         ci_95: Ci {
@@ -208,8 +279,8 @@ pub fn stratified(strata: &[Table2x2]) -> StratifiedStats {
 
     // Greenland–Robins: RR = sum(a·N0/n)/sum(c·N1/n),
     // var(log RR) = sum(M1·N1·N0/n² − ac/n) / (sum(a·N0/n)·sum(c·N1/n)).
-    let rr = rr_num / rr_den;
-    let half = z * libm::sqrt(gr_num / (rr_num * rr_den));
+    let rr = dv.rr;
+    let half = z * dv.se_rr;
     let log_rr = libm::log(rr);
     let risk_ratio = MhEstimate {
         estimate: Estimate::from_f64(rr, UndefinedReason::ZeroCell),

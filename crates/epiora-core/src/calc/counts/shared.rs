@@ -161,8 +161,78 @@ pub fn conf(inputs: &Value) -> f64 {
     num(inputs, "conf_level")
 }
 
+/// The closed-form Wald intermediates of one 2×2 block —
+/// `[pe, pu, rr, rr_se, rd, rd_se, or, or_se]` — shared by
+/// `two_by_two`'s and `two_by_n`'s `table_block` and by the explain
+/// trace (v1.0 Task 10, spec §6).
+pub fn wald_parts(t: &crate::stats::Table2x2) -> [f64; 8] {
+    let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
+    let (n1, n0) = (a + b, c + d);
+    let pe = a / n1;
+    let pu = c / n0;
+    let rr = pe / pu;
+    let rr_se = libm::sqrt(b / (a * n1) + d / (c * n0));
+    let rd = pe - pu;
+    let rd_se = libm::sqrt(pe * (1.0 - pe) / n1 + pu * (1.0 - pu) / n0);
+    let or_ = (a * d) / (b * c);
+    let or_se = libm::sqrt(1.0 / a + 1.0 / b + 1.0 / c + 1.0 / d);
+    [pe, pu, rr, rr_se, rd, rd_se, or_, or_se]
+}
+
+/// The three chi-square statistics of one 2×2 —
+/// `[uncorrected, yates, mantel_haenszel]` (`stats::chisq.test`
+/// Pearson/Yates from the (O−E)²/E sums, Yates clamped at 0, plus the
+/// single-stratum `mantelhaen.test` N−1 chi-square). Shared by both
+/// counts-table calculators and the explain trace (spec §6).
+/// The `[[o, e] × 4]` observed/expected pairs of one 2×2 — the cells
+/// `chi_parts` sums over. Shared by `chi_parts` and the explain
+/// trace's `chi_square_cells` intermediates (v1.0 Task 10, spec §6).
+pub fn oe_cells(t: &crate::stats::Table2x2) -> [[f64; 2]; 4] {
+    let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
+    let (n1, n0, m1, m0) = (a + b, c + d, a + c, b + d);
+    let n = n1 + n0;
+    [
+        [a, n1 * m1 / n],
+        [b, n1 * m0 / n],
+        [c, n0 * m1 / n],
+        [d, n0 * m0 / n],
+    ]
+}
+
+pub fn chi_parts(t: &crate::stats::Table2x2) -> [f64; 3] {
+    let (a, b, c, d) = (t.a as f64, t.b as f64, t.c as f64, t.d as f64);
+    let (n1, n0, m1, m0) = (a + b, c + d, a + c, b + d);
+    let n = n1 + n0;
+    let cells = oe_cells(t);
+    let unc: f64 = cells.iter().map(|&[o, e]| (o - e) * (o - e) / e).sum();
+    let yat: f64 = cells
+        .iter()
+        .map(|&[o, e]| {
+            let s = (o - e).abs() - 0.5;
+            s.max(0.0) * s.max(0.0) / e
+        })
+        .sum();
+    let delta = a - n1 * m1 / n;
+    let mh = delta * delta / (n1 * n0 * m1 * m0 / (n * n * (n - 1.0)));
+    [unc, yat, mh]
+}
+
+/// `x/n` — a count proportion. Shared by the runs and the explain
+/// traces so a trace's count-ratio input is the run's own division
+/// (v1.0 Task 10, spec §6).
+pub fn prop(x: u64, n: u64) -> f64 {
+    x as f64 / n as f64
+}
+
 /// `qnorm((1 + conf/100)/2)` — the two-sided normal deviate for a
 /// confidence level given in percent (`oe_z` in the R methods).
+/// `t_quantile((1 + conf/100)/2, df)` — the two-sided t critical
+/// value at `conf` percent. Shared by the runs and the explain
+/// trace (v1.0 Task 10, spec §6).
+pub fn t_crit(conf: f64, df: f64) -> f64 {
+    crate::special::t_quantile((1.0 + conf / 100.0) / 2.0, df).unwrap_or(f64::NAN)
+}
+
 pub fn z(conf: f64) -> f64 {
     normal_quantile((1.0 + conf / 100.0) / 2.0).unwrap_or(f64::NAN)
 }
@@ -273,135 +343,5 @@ pub fn binom_tails(x: u64, n: u64, p: f64) -> BinomTails {
 
 // --- exactci binomial/Poisson machinery -------------------------------------
 
-// --- closed-form statistic families -----------------------------------------
-
-/// Taylor (Wald) CI for a proportion, in the unit of `x/n`
-/// (`risk_ci` in `tables.R`). `stat_ci`-ready.
-pub fn prop_taylor(x: u64, n: u64, conf: f64) -> [f64; 3] {
-    let p = x as f64 / n as f64;
-    let se = libm::sqrt(p * (1.0 - p) / n as f64);
-    let h = z(conf) * se;
-    [p, p - h, p + h]
-}
-
-/// `PropCIs::wald2ci` — the plain Wald interval.
-pub fn wald_ci(x: u64, n: u64, conf: f64) -> [f64; 2] {
-    let t = prop_taylor(x, n, conf);
-    [t[1], t[2]]
-}
-
-/// `PropCIs::addz2ci` — Agresti–Coull modified Wald.
-pub fn agresti_coull_ci(x: u64, n: u64, conf: f64) -> [f64; 2] {
-    let zz = z(conf) * z(conf);
-    let (x, n) = (x as f64, n as f64);
-    let tn = n + zz;
-    let tp = (x + zz / 2.0) / tn;
-    let h = z(conf) * libm::sqrt(tp * (1.0 - tp) / tn);
-    [(tp - h).max(0.0), (tp + h).min(1.0)]
-}
-
-/// The unrounded Wilson score interval.
-fn wilson_raw(x: u64, n: u64, conf: f64) -> [f64; 2] {
-    let zz = z(conf) * z(conf);
-    let (x, n) = (x as f64, n as f64);
-    let p = x / n;
-    let den = 1.0 + zz / n;
-    let center = p + zz / (2.0 * n);
-    let half = z(conf) * libm::sqrt(p * (1.0 - p) / n + zz / (4.0 * n * n));
-    [(center - half) / den, (center + half) / den]
-}
-
-/// `PropCIs::scoreci` — the Wilson score interval, rounded to four
-/// decimals as the package reports it.
-pub fn scoreci(x: u64, n: u64, conf: f64) -> [f64; 2] {
-    let [l, u] = wilson_raw(x, n, conf);
-    let r = |v: f64| (v * 1e4).round() / 1e4;
-    [r(l), r(u)]
-}
-
-/// `wilson_fpc_ci` — Wilson with the `sqrt((N-n)/(N-1))` FPC applied
-/// to the score half-width (`fixtures/R/methods/proportion.R`).
-pub fn wilson_fpc_ci(x: u64, n: u64, conf: f64, pop: f64) -> [f64; 2] {
-    let zz = z(conf) * z(conf);
-    let (x, n) = (x as f64, n as f64);
-    let p = x / n;
-    let fpc = libm::sqrt((pop - n) / (pop - 1.0));
-    let r = libm::sqrt(x * (n - x) / (n * n * n) + zz / (4.0 * n * n));
-    let lower = if p == 0.0 {
-        0.0
-    } else {
-        (n / (n + zz)) * ((p + zz / (2.0 * n)) - fpc * z(conf) * r)
-    };
-    let upper = if p == 1.0 {
-        1.0
-    } else {
-        (n / (n + zz)) * ((p + zz / (2.0 * n)) + fpc * z(conf) * r)
-    };
-    [lower, upper]
-}
-
-/// `score_cc_ci` — the Fleiss score interval with continuity
-/// correction (`fixtures/R/methods/proportion.R`).
-pub fn score_cc_ci(x: u64, n: u64, conf: f64) -> [f64; 2] {
-    let zz = z(conf) * z(conf);
-    let (x, n) = (x as f64, n as f64);
-    let p = x / n;
-    let den = 2.0 * (n + zz);
-    let lower = if p == 0.0 {
-        0.0
-    } else {
-        ((2.0 * n * p + zz - 1.0)
-            - z(conf) * libm::sqrt(zz - (2.0 + 1.0 / n) + 4.0 * p * (n * (1.0 - p) + 1.0)))
-            / den
-    };
-    let upper = if p == 1.0 {
-        1.0
-    } else {
-        ((2.0 * n * p + zz + 1.0)
-            + z(conf) * libm::sqrt(zz + (2.0 - 1.0 / n) + 4.0 * p * (n * (1.0 - p) - 1.0)))
-            / den
-    };
-    [lower, upper]
-}
-
-/// epitools `pois.byar` — Byar's Poisson approximation on the count
-/// scale (divide by person-time for a rate): both limits expand
-/// around `x + 0.5`.
-pub fn pois_byar(x: u64, conf: f64) -> [f64; 2] {
-    let ap = x as f64 + 0.5;
-    let zin = (z(conf) / 3.0) * libm::sqrt(1.0 / ap);
-    let base = 1.0 - 1.0 / (9.0 * ap);
-    [
-        ap * libm::pow(base - zin, 3.0),
-        ap * libm::pow(base + zin, 3.0),
-    ]
-}
-
-/// The Simel log-method likelihood-ratio CI (`epiR::epi.tests`):
-/// `se = sqrt(1/a - 1/(a+c) + 1/b - 1/(b+d))` with `a`/`b` the row
-/// counts of the positive cell in each column.
-pub fn simel_lr(a: u64, c: u64, b: u64, d: u64, conf: f64) -> [f64; 3] {
-    let (a, c, b, d) = (a as f64, c as f64, b as f64, d as f64);
-    let lr = (a / (a + c)) / (b / (b + d));
-    let se = libm::sqrt(1.0 / a - 1.0 / (a + c) + 1.0 / b - 1.0 / (b + d));
-    let h = z(conf) * se;
-    [lr, lr * libm::exp(-h), lr * libm::exp(h)]
-}
-
-/// `epiR::epi.kappa` (method "fleiss") — Cohen's kappa with the
-/// Fleiss standard error, Fleiss Equation 18.13.
-pub fn kappa(tp: u64, fp: u64, fn_: u64, tn: u64, conf: f64) -> [f64; 3] {
-    let (a, b, c, d) = (tp as f64, fp as f64, fn_ as f64, tn as f64);
-    let n = a + b + c + d;
-    let (r1, r2) = ((a + b) / n, (c + d) / n);
-    let (c1, c2) = ((a + c) / n, (b + d) / n);
-    let po = (a + d) / n;
-    let pe = r1 * c1 + r2 * c2;
-    let k = (po - pe) / (1.0 - pe);
-    let inside = pe + pe * pe - (r1 * c1 * (r1 + c1) + r2 * c2 * (r2 + c2));
-    let se = libm::sqrt(inside) / ((1.0 - pe) * libm::sqrt(n));
-    let h = z(conf) * se;
-    [k, k - h, k + h]
-}
-
+pub(crate) use super::shared_ci::*;
 pub(crate) use super::shared_exact::*;

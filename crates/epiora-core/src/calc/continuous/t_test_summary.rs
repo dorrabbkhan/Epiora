@@ -37,7 +37,7 @@ fn t_block(t: Option<&TTest>) -> Value {
 /// Group `i`'s sd from whichever of `sd_i`/`se_i`/`var_i` the
 /// canonical inputs carry — the registry's `groups` guarantees
 /// exactly one is present: `sd` given, `sd = se·√n` or `sd = √var`.
-fn group_sd(inputs: &Value, i: usize, n: u64) -> f64 {
+pub(crate) fn group_sd(inputs: &Value, i: usize, n: u64) -> f64 {
     if let Some(sd) = inputs.get(format!("sd_{i}")).and_then(Value::as_f64) {
         return sd;
     }
@@ -47,28 +47,35 @@ fn group_sd(inputs: &Value, i: usize, n: u64) -> f64 {
     libm::sqrt(num(inputs, &format!("var_{i}")))
 }
 
+/// The two `GroupSummary`s the inputs describe — `n_i`/`mean_i` plus
+/// the variance implied by whichever of `sd_i`/`se_i`/`var_i` is set.
+/// Shared by `run` and the explain trace (v1.0 Task 10, spec §6).
+pub(crate) fn groups(inputs: &Value) -> (GroupSummary, GroupSummary) {
+    let group = |i: usize| {
+        let n = cnt(inputs, &format!("n_{i}"));
+        GroupSummary {
+            n,
+            mean: num(inputs, &format!("mean_{i}")),
+            variance: Some({
+                let s = group_sd(inputs, i, n);
+                s * s
+            }),
+        }
+    };
+    (group(1), group(2))
+}
+
+/// `v1/v2` — the variance-ratio F the `f_variance` block reports.
+/// Shared by `run` and the explain trace.
+pub(crate) fn f_ratio(a: &GroupSummary, b: &GroupSummary) -> f64 {
+    a.variance.unwrap_or(f64::NAN) / b.variance.unwrap_or(f64::NAN)
+}
+
 pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let c = conf(inputs);
-    let a = GroupSummary {
-        n: cnt(inputs, "n_1"),
-        mean: num(inputs, "mean_1"),
-        variance: Some({
-            let s = group_sd(inputs, 1, cnt(inputs, "n_1"));
-            s * s
-        }),
-    };
-    let b = GroupSummary {
-        n: cnt(inputs, "n_2"),
-        mean: num(inputs, "mean_2"),
-        variance: Some({
-            let s = group_sd(inputs, 2, cnt(inputs, "n_2"));
-            s * s
-        }),
-    };
+    let (a, b) = groups(inputs);
     let tests = t_tests_from_summary_at(&a, &b, c);
-    let v1 = a.variance.unwrap_or(f64::NAN);
-    let v2 = b.variance.unwrap_or(f64::NAN);
-    let f = v1 / v2;
+    let f = f_ratio(&a, &b);
     let (df_n, df_d) = ((a.n - 1) as f64, (b.n - 1) as f64);
     let pf_f = 1.0 - f_sf(f, df_n, df_d);
     let p_f = 2.0 * pf_f.min(1.0 - pf_f);

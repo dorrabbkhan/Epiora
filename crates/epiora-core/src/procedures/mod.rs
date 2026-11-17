@@ -8,7 +8,6 @@ mod tables;
 
 pub use freq::freq;
 pub use means::means;
-#[cfg(feature = "corpus")]
 pub(crate) use means::stats_json;
 pub use tables::tables;
 

@@ -38,28 +38,15 @@ impl CaseOutput {
     /// Canonical JSON of `{id, actual, receipt}` with every f64
     /// replaced by its 16-hex-digit bit pattern (spec §5.2) — the line
     /// `corpus-runner` prints and the wasm parity run must reproduce.
+    /// The rendering lives in `corpus::parity_norm`.
     pub fn parity_line(&self) -> String {
-        canonical_json(&json!({
-            "id": self.id,
-            "actual": encode_bits(&self.actual),
-            "receipt": self.receipt,
-        }))
+        super::parity_norm::parity_line(&self.id, &self.actual, self.receipt.clone())
     }
-}
 
-fn encode_bits(v: &Value) -> Value {
-    match v {
-        Value::Number(n) => match n.as_f64() {
-            Some(f) if n.is_f64() => Value::String(format!("{:016x}", f.to_bits())),
-            _ => v.clone(),
-        },
-        Value::Array(items) => Value::Array(items.iter().map(encode_bits).collect()),
-        Value::Object(map) => Value::Object(
-            map.iter()
-                .map(|(k, c)| (k.clone(), encode_bits(c)))
-                .collect(),
-        ),
-        _ => v.clone(),
+    /// `parity_line` with the receipt build-normalized (v1.0 Task
+    /// 10, owner decision D1) — see `corpus::parity_norm`.
+    pub fn parity_line_normalized(&self) -> String {
+        super::parity_norm::parity_line_normalized(&self.id, &self.actual, self.receipt.as_deref())
     }
 }
 

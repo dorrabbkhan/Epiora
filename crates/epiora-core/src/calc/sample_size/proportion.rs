@@ -24,6 +24,52 @@ const LEVELS: [(&str, f64); 7] = [
     ("9999", 99.99),
 ];
 
+/// One level's chain — `oe_real` (the OpenEpi formula), `n0`, the
+/// FPC-rounded `n_raw`, and the post-DEFF `cs_real` whose ceiling is
+/// `cs` — shared by the run and the explain trace (v1.0 Task 10,
+/// spec §6).
+pub(crate) struct SsPropParts {
+    /// `DEFF·N·p(1−p) / ((d²/z²)·(N−1) + p(1−p))`.
+    pub oe_real: f64,
+    /// `rint(n0/(1 + n0/N))` — the FPC round.
+    pub n_raw: f64,
+    /// `DEFF·n_raw/clusters`.
+    pub cs_real: f64,
+    /// `cs_real.ceil()` — the reported cluster size.
+    pub cs: f64,
+}
+
+/// The `(oe_real, n_raw, cs_real)` chain of `run` at level `za`
+/// — shared by the result and the explain trace.
+pub(crate) fn level_parts(
+    deff: f64,
+    n_pop: f64,
+    p: f64,
+    d: f64,
+    factor: f64,
+    clusters: f64,
+    za: f64,
+) -> SsPropParts {
+    let za2 = za * za;
+    let oe_real = deff * n_pop * p * (1.0 - p) / ((d * d / za2) * (n_pop - 1.0) + p * (1.0 - p));
+    let n0 = za2 * factor;
+    // R's `round` — nearest, ties to even — is libm::rint.
+    let n_raw = libm::rint(n0 / (1.0 + n0 / n_pop));
+    let cs_real = deff * n_raw / clusters;
+    SsPropParts {
+        oe_real,
+        n_raw,
+        cs_real,
+        cs: cs_real.ceil(),
+    }
+}
+
+/// `freq·(100−freq)/margin²` — the percent-unit numerator of `n0`.
+/// Shared by `run` and the explain trace (v1.0 Task 10, spec §6).
+pub(crate) fn margin_factor(freq: f64, margin_pct: f64) -> f64 {
+    freq * (100.0 - freq) / (margin_pct * margin_pct)
+}
+
 pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let n_pop = cnt(inputs, "population_size") as f64;
     let freq = num(inputs, "expected_freq");
@@ -35,7 +81,7 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
     let deff = num(inputs, "design_effect");
     let clusters = cnt(inputs, "clusters") as f64;
     let p = freq / 100.0;
-    let factor = freq * (100.0 - freq) / (margin_pct * margin_pct);
+    let factor = margin_factor(freq, margin_pct);
 
     let mut n_openepi = serde_json::Map::new();
     let mut n_openepi_real = serde_json::Map::new();
@@ -47,16 +93,8 @@ pub(super) fn run(inputs: &Value) -> Result<Value, EngineError> {
 
     for (key, lv) in LEVELS {
         let za = z(lv);
-        let za2 = za * za;
-
-        let oe_real =
-            deff * n_pop * p * (1.0 - p) / ((d * d / za2) * (n_pop - 1.0) + p * (1.0 - p));
-
-        let n0 = za2 * factor;
-        // R's `round` — nearest, ties to even — is libm::rint.
-        let n_raw = libm::rint(n0 / (1.0 + n0 / n_pop));
-        let cs_real = deff * n_raw / clusters;
-        let cs = cs_real.ceil();
+        let p_ = level_parts(deff, n_pop, p, d, factor, clusters, za);
+        let (oe_real, cs_real, cs) = (p_.oe_real, p_.cs_real, p_.cs);
 
         n_openepi.insert(key.into(), leaf(oe_real.ceil()));
         n_openepi_real.insert(key.into(), leaf(oe_real));

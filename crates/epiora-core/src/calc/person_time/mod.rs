@@ -3,9 +3,9 @@
 //! over strata). The corpus `fixtures/calc/<id>` trees are the
 //! oracle.
 
-mod martin_pt;
-mod rate_compare;
-mod rate_one;
+pub(crate) mod martin_pt;
+pub(crate) mod rate_compare;
+pub(crate) mod rate_one;
 
 use crate::EngineError;
 use serde_json::Value;

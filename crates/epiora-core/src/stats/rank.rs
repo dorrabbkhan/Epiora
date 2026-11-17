@@ -41,10 +41,27 @@ pub(crate) fn midranks(values: &[f64]) -> Vec<f64> {
     ranks
 }
 
-/// `kruskal.test(x, g)`: H = `12·Σ(Rᵢ²/nᵢ) / (N(N+1)) − 3(N+1)`,
-/// divided by the tie correction `1 − Σ(t³−t)/(N³−N)`. An all-tied
-/// input makes the correction zero and H `Undefined { zero_variance }`.
-pub(crate) fn kruskal_wallis(groups: &[&[f64]]) -> KruskalWallis {
+/// The closed-form intermediates of `kruskal_wallis` — the explain
+/// trace's named values (v1.0 Task 10, spec §6).
+pub(crate) struct KwParts {
+    /// The uncorrected H statistic.
+    pub h_raw: f64,
+    /// R's tie correction `1 − Σ(t³−t)/(N³−N)`.
+    pub correction: f64,
+    /// Groups minus one.
+    pub df: f64,
+}
+
+impl KwParts {
+    /// `h_raw / correction` — the tie-corrected H.
+    pub(crate) fn h(&self) -> f64 {
+        self.h_raw / self.correction
+    }
+}
+
+/// The intermediates of `kruskal_wallis(groups)` — shared by the
+/// result and the explain trace.
+pub(crate) fn kw_parts(groups: &[&[f64]]) -> KwParts {
     let n_tot: usize = groups.iter().map(|g| g.len()).sum();
     let mut all: Vec<f64> = Vec::with_capacity(n_tot);
     for g in groups {
@@ -79,8 +96,20 @@ pub(crate) fn kruskal_wallis(groups: &[&[f64]]) -> KruskalWallis {
         i = j;
     }
     let correction = 1.0 - tie_sum / (n_f * n_f * n_f - n_f);
+    KwParts {
+        h_raw,
+        correction,
+        df,
+    }
+}
 
-    let h = Estimate::from_f64(h_raw / correction, UndefinedReason::ZeroVariance);
+/// `kruskal.test(x, g)`: H = `12·Σ(Rᵢ²/nᵢ) / (N(N+1)) − 3(N+1)`,
+/// divided by the tie correction `1 − Σ(t³−t)/(N³−N)`. An all-tied
+/// input makes the correction zero and H `Undefined { zero_variance }`.
+pub(crate) fn kruskal_wallis(groups: &[&[f64]]) -> KruskalWallis {
+    let p = kw_parts(groups);
+    let df = p.df;
+    let h = Estimate::from_f64(p.h(), UndefinedReason::ZeroVariance);
     let p = match h {
         Estimate::Value(v) => Estimate::from_f64(chisq_sf(v, df), UndefinedReason::ZeroVariance),
         Estimate::Undefined { reason } => Estimate::Undefined { reason },
