@@ -7,7 +7,8 @@ mod parity;
 
 use epiora_core::dataset::Dataset;
 use epiora_core::procedures::{
-    freq as freq_core, tables as tables_core, FreqOptions, ProcOutput, RunContext, TablesOptions,
+    freq as freq_core, means as means_core, tables as tables_core, FreqOptions, MeansOptions,
+    ProcOutput, RunContext, TablesOptions,
 };
 use epiora_core::receipt::EngineStamp;
 use epiora_core::EngineError;
@@ -126,6 +127,93 @@ pub fn tables(
     let ctx: RunContext = options(ctx_value)?;
     let out = tables_core(&handle.dataset, &opts, &ctx).map_err(|e| js_error(&e))?;
     output(&out)
+}
+
+/// `means` (v1.0 spec §4.2); returns `{ result, receipt, notes }` as
+/// a plain object.
+#[wasm_bindgen(js_name = means)]
+pub fn means(
+    handle: &DatasetHandle,
+    options_value: JsValue,
+    ctx_value: JsValue,
+) -> Result<JsValue, JsValue> {
+    let opts: MeansOptions = options(options_value)?;
+    let ctx: RunContext = options(ctx_value)?;
+    let out = means_core(&handle.dataset, &opts, &ctx).map_err(|e| js_error(&e))?;
+    output(&out)
+}
+
+/// The calculator registry (`calc::REGISTRY`) as plain
+/// `CalculatorDef[]` data (v1.0 spec §5.1, §5.3). Serialized through
+/// JSON rather than serde_wasm_bindgen: `Integer` bounds use
+/// `i64::MAX` for "unbounded", which has no JS `number` value —
+/// `JSON.parse` maps it to the nearest f64 the way every engine
+/// output crossing this boundary already does.
+#[wasm_bindgen(js_name = calcRegistry)]
+pub fn calc_registry() -> Result<JsValue, JsValue> {
+    let text = serde_json::to_string(epiora_core::calc::REGISTRY)
+        .map_err(|e| invalid_options(e.to_string()))?;
+    js_sys::JSON::parse(&text).map_err(|e| invalid_options(format!("{e:?}")))
+}
+
+/// Runs calculator `id` on `inputs`; returns
+/// `{ result, receipt, notes }` as a plain object (v1.0 spec §5.3,
+/// receipt v3 of §5.4).
+#[wasm_bindgen(js_name = calcRun)]
+pub fn calc_run(id: &str, inputs_value: JsValue, ctx_value: JsValue) -> Result<JsValue, JsValue> {
+    let inputs: serde_json::Value = options(inputs_value)?;
+    let ctx: RunContext = options(ctx_value)?;
+    let out = epiora_core::calc::run(id, &inputs, &ctx).map_err(|e| js_error(&e))?;
+    serde_json::json!({
+        "result": out.result,
+        "receipt": out.receipt,
+        "notes": out.notes,
+    })
+    .serialize(&serde_wasm_bindgen::Serializer::json_compatible())
+    .map_err(|e| invalid_options(e.to_string()))
+}
+
+/// The explain trace of one procedure statistic (v1.0 spec §6):
+/// `procedure` is `"freq"`, `"tables"` or `"means"`, `options` its
+/// options object, `statistic` the registry id with concrete
+/// indices.
+#[wasm_bindgen(js_name = explainProcedure)]
+pub fn explain_procedure(
+    handle: &DatasetHandle,
+    procedure: &str,
+    options_value: JsValue,
+    statistic: &str,
+) -> Result<JsValue, JsValue> {
+    let opts: serde_json::Value = options(options_value)?;
+    let out = epiora_core::explain::explain_procedure(&handle.dataset, procedure, &opts, statistic)
+        .map_err(|e| js_error(&e))?;
+    out.serialize(&serde_wasm_bindgen::Serializer::json_compatible())
+        .map_err(|e| invalid_options(e.to_string()))
+}
+
+/// The explain trace of one calculator statistic (v1.0 spec §6):
+/// `id` is the calculator's registry id, `inputs` its inputs object,
+/// `statistic` the `calc.<id>.<path>` id with concrete indices.
+#[wasm_bindgen(js_name = explainCalculator)]
+pub fn explain_calculator(
+    id: &str,
+    inputs_value: JsValue,
+    statistic: &str,
+) -> Result<JsValue, JsValue> {
+    let inputs: serde_json::Value = options(inputs_value)?;
+    let out = epiora_core::explain::explain_calculator(id, &inputs, statistic)
+        .map_err(|e| js_error(&e))?;
+    out.serialize(&serde_wasm_bindgen::Serializer::json_compatible())
+        .map_err(|e| invalid_options(e.to_string()))
+}
+
+/// The Epi Info Classic Analysis command of `procedure`
+/// (`"freq"`, `"tables"` or `"means"`) under its canonical options —
+/// display only (v1.0 spec §7.3/G4).
+#[wasm_bindgen(js_name = epiInfoCommand)]
+pub fn epi_info_command(procedure: &str, options_value: JsValue) -> Result<String, JsValue> {
+    let opts: serde_json::Value = options(options_value)?;
+    epiora_core::export::epi_info_command(procedure, &opts).map_err(|e| js_error(&e))
 }
 
 /// The engine version stamped on receipts (spec §5.1).

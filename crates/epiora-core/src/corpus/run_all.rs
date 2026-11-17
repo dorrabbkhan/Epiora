@@ -18,6 +18,7 @@ pub const FAMILIES: &[&str] = &[
     "stratified",
     "rxc",
     "freq",
+    "means",
     "calc/proportion",
     "calc/two_by_two",
     "calc/two_by_n",

@@ -14,7 +14,10 @@
 //! `receipt_sha256` resealed — build metadata, spec §4.3) — the
 //! `results_unchanged` golden of v1.0 Task 10.
 
-use epiora_core::corpus::{corpus_lines, dataset_files, load_dataset_dir};
+use epiora_core::corpus::{
+    command_line, corpus_lines, corpus_lines_with, dataset_files, explain_line, explain_plan,
+    load_dataset_dir, load_datasets,
+};
 use sha2::Digest;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -67,12 +70,29 @@ fn run() -> Result<(), String> {
         return hash_golden(&root);
     }
     let root = PathBuf::from(args.first().ok_or("usage: corpus-runner <fixtures-dir>")?);
-    let lines = corpus_lines(&root)?;
+    let datasets = load_datasets(&root)?;
+    let lines = corpus_lines_with(&root, &datasets)?;
     let stdout = std::io::stdout();
     let mut lock = stdout.lock();
+    use std::io::Write;
     for line in &lines {
-        use std::io::Write;
         writeln!(lock, "{}", line.output.parity_line()).map_err(|e| format!("stdout: {e}"))?;
+        // The Epi Info command of every dataset case (v1.0 Task 11).
+        if let Some(command) = command_line(&line.fixture).map_err(|e| format!("{e}"))? {
+            writeln!(lock, "{command}").map_err(|e| format!("stdout: {e}"))?;
+        }
+    }
+    // One explain trace per registry statistic (v1.0 Task 11): every
+    // REGISTRY row's first covering fixture, in registry order.
+    for (statistic, key) in explain_plan() {
+        let path = root.join(format!("{key}.json"));
+        let text =
+            std::fs::read_to_string(&path).map_err(|e| format!("read {}: {e}", path.display()))?;
+        let fixture: serde_json::Value =
+            serde_json::from_str(&text).map_err(|e| format!("parse {}: {e}", path.display()))?;
+        let line = explain_line(&fixture, &datasets, &statistic)
+            .map_err(|e| format!("{}: {e}", path.display()))?;
+        writeln!(lock, "{line}").map_err(|e| format!("stdout: {e}"))?;
     }
     Ok(())
 }
