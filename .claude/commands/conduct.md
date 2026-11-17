@@ -24,7 +24,7 @@ Run the conductor loop from CLAUDE.md for plan version $1, task $2.
    subagent for long logs. Keep a short running log in ~/epiora-conductor/$1-task$2/conductor-log.md.
 5. Finish with scripts/conductor/status-comment.sh and scripts/conductor/notify.sh, then print a summary:
    PR, verdict, CI, fix rounds used, anything the owner must look at (gates, human steps, decisions).
-6. End by appending exactly one last line to conductor-log.md — run-plan.sh reads it:
-   `RESULT: READY <PR>` when the PR is up and only merge remains, `RESULT: ESCALATED` on a STOP or
-   owner-decision escalation, `RESULT: GATE` at an owner gate, `RESULT: FAILED` when the task could not
-   complete. No other `RESULT:` values; it must be the file's last line.
+6. End by calling `scripts/conductor/result.sh $1 $2 <value>` — it appends exactly one last line to
+   conductor-log.md and run-plan.sh reads it: `READY <PR>` when the PR is up and only merge remains,
+   `ESCALATED` on a STOP or owner-decision escalation, `GATE` at an owner gate, `FAILED` when the task
+   could not complete. No other `RESULT:` values; it must be the file's last line.

@@ -4629,7 +4629,10 @@ Evidence: `node --test scripts/conductor/*.test.ts` — all pass;
   background, killed at the deadline, exit 4.
 - **Files outside the Files block:** `scripts/conductor/run-plan.test.ts`
   (the plan's Step 2 shell tests need a `node --test` file; the Files
-  block names only the fixtures glob), and the carry-over fix the owner
+  block names only the fixtures glob), `scripts/conductor/result.sh`
+  (fix round 1: headless sessions have no echo/printf, so /conduct
+  appends its `RESULT:` line through this script — covered by the
+  existing `Bash(scripts/conductor/*)`), and the carry-over fix the owner
   assigned to this task: `scripts/conductor/judge-checks.ts`,
   `scripts/conductor/judge.test.ts`,
   `scripts/conductor/fixtures/judge/spikes-docs-path.diff`.

@@ -17,13 +17,19 @@
 # contains both ids (v1.0 has two plan files); PLAN_FILE=<path> overrides
 # it (used by the dry-run fixtures under fixtures/run-plan/).
 #
-# After each session the script reads the last non-empty line of the task's
-# ~/epiora-conductor/<version>-task<id>/conductor-log.md — but only if the
-# session appended to the log (a stale RESULT from an earlier run does not
-# count) — and treats it as a RESULT only if it starts with "RESULT: ":
+# After each session the script reads the last non-empty line of the
+# region this session appended to the task's
+# ~/epiora-conductor/<version>-task<id>/conductor-log.md (the line count
+# is recorded before the session; a stale RESULT from an earlier run, or
+# an appended region of only blank lines, does not count) — and treats it
+# as a RESULT only if it starts with "RESULT: ":
 #   RESULT: READY <PR>              → poll `gh pr view <PR> --json state`
 #                                     every RUN_PLAN_POLL_S (default 300)
-#                                     seconds until MERGED, then next task
+#                                     seconds until MERGED, then next
+#                                     task; any state other than
+#                                     OPEN/MERGED/CLOSED (UNKNOWN, or gh
+#                                     failing) for 3 consecutive polls
+#                                     stops the run
 #   RESULT: ESCALATED|GATE|FAILED   → notify.sh and stop
 #   missing/unparseable             → notify.sh and stop
 # It never merges and never starts a session while a previous task's PR is
@@ -170,19 +176,24 @@ for ((i = PI; i <= QI; i++)); do
   [ "$LINES_AFTER" -gt "$LINES_BEFORE" ] \
     || stop_with "task $ID: no new RESULT: line in $LOG (session rc=$rc, output $OUT)"
   RESULT=""
-  LAST="$(awk 'NF{l=$0} END{print l}' "$LOG")"
+  LAST="$(tail -n "+$((LINES_BEFORE + 1))" "$LOG" | awk 'NF{l=$0} END{print l}')"
   case "$LAST" in "RESULT: "*) RESULT="$LAST" ;; esac
   case "$RESULT" in
     "RESULT: READY "*)
       PR="${RESULT#RESULT: READY }"; PR="${PR%%[[:space:]]*}"
       [ -n "$PR" ] || stop_with "task $ID: 'RESULT: READY' without a PR"
       echo "run-plan.sh: task $ID ready, waiting for PR $PR to merge (poll ${POLL_S}s)"
+      UNKNOWN_POLLS=0
       while :; do
         state="$(gh pr view "$PR" --json state --jq .state 2>/dev/null || echo UNKNOWN)"
         case "$state" in
           MERGED) echo "run-plan.sh: PR $PR merged"; break ;;
           CLOSED) stop_with "task $ID: PR $PR closed without merge" ;;
-          *) sleep "$POLL_S" ;;
+          OPEN) UNKNOWN_POLLS=0; sleep "$POLL_S" ;;
+          *)
+            UNKNOWN_POLLS=$((UNKNOWN_POLLS + 1))
+            [ "$UNKNOWN_POLLS" -lt 3 ] || stop_with "task $ID: PR $PR state '$state' for $UNKNOWN_POLLS consecutive polls"
+            sleep "$POLL_S" ;;
         esac
       done
       ;;

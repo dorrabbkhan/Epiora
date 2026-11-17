@@ -46,8 +46,9 @@ when a human decision is needed. The owner reviews PRs on GitHub and talks to yo
 6. Post/update ONE sticky status comment on the PR (scripts/conductor/status-comment.sh) and notify the owner.
 7. Escalation: a PR comment starting "**Owner decision needed:**" with the question, 2–3 options, and your
    recommendation; then notify and stop.
-8. End every run by appending `RESULT: READY <PR>` / `RESULT: ESCALATED` / `RESULT: GATE` /
-   `RESULT: FAILED` as the last line of the task's conductor-log.md —
+8. End every run by calling `scripts/conductor/result.sh <version> <task> <value>` — it appends
+   `RESULT: READY <PR>` / `RESULT: ESCALATED` / `RESULT: GATE` / `RESULT: FAILED` as the last line of
+   the task's conductor-log.md (headless sessions have no echo/printf on the allow list) —
    `run-plan.sh <version> <from> <to>` (one headless `/conduct` session per task, model from the Task
    Index's Conductor column, explicit `--allowedTools` in scripts/conductor/headless-tools.txt) reads it
    to decide whether to start the next session.

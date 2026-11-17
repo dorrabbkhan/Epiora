@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -82,6 +82,28 @@ describe("run-plan.sh (conductor efficiency plan Task 0b)", () => {
     assert.match(r.stderr, /no new RESULT: line/);
   });
 
+  it("blank lines only after a stale RESULT stops", () => {
+    const dir = tmp("rp-");
+    const taskdir = join(dir, "v1.0-task11");
+    mkdirSync(taskdir, { recursive: true });
+    writeFileSync(
+      join(taskdir, "conductor-log.md"),
+      "notes from a previous run\nRESULT: READY 5\n",
+    );
+    const stubs = stubDir({
+      claude: `printf '\n\n' >> "$RUN_PLAN_DIR/v1.0-task11/conductor-log.md"
+exit 0`,
+    });
+    const r = runPlan(["v1.0", "11", "11"], {
+      PLAN_FILE: join(FIX, "v1.0-index-with-conductor.md"),
+      RUN_PLAN_DIR: dir,
+      RUN_PLAN_POLL_S: "1",
+      PATH: `${stubs}:${process.env.PATH}`,
+    });
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /no RESULT: line/);
+  });
+
   it("RESULT: READY waits in bash until the PR is MERGED, then finishes", () => {
     const dir = tmp("rp-");
     const stubs = stubDir({
@@ -122,6 +144,38 @@ exit 0`,
     assert.match(r.stderr, /escalated/i);
   });
 
+  it("unknown PR state stops after three polls", () => {
+    const dir = tmp("rp-");
+    const stubs = stubDir({
+      claude: `set -- $2
+mkdir -p "$RUN_PLAN_DIR/$2-task$3"
+echo "RESULT: READY 99" >> "$RUN_PLAN_DIR/$2-task$3/conductor-log.md"
+exit 0`,
+      gh: `echo x >> "$RUN_PLAN_DIR/polls"
+echo UNKNOWN
+exit 0`,
+    });
+    const r = runPlan(["v1.0", "11", "11"], {
+      PLAN_FILE: join(FIX, "v1.0-index-with-conductor.md"),
+      RUN_PLAN_DIR: dir,
+      RUN_PLAN_POLL_S: "0",
+      PATH: `${stubs}:${process.env.PATH}`,
+    });
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /'UNKNOWN' for 3 consecutive polls/);
+    assert.equal(readFileSync(join(dir, "polls"), "utf8").trim().split("\n").length, 3);
+  });
+
+  it("bad Conductor value exits 2", () => {
+    const r = runPlan(["v1.0", "11", "11"], {
+      PLAN_FILE: join(FIX, "v1.0-index-bad-conductor.md"),
+      DRY_RUN: "1",
+      RUN_PLAN_DIR: tmp("rp-"),
+    });
+    assert.equal(r.status, 2);
+    assert.match(r.stderr, /Conductor column is 'Haiku'/);
+  });
+
   it("an unknown id or model exits 2", () => {
     const env = {
       PLAN_FILE: join(FIX, "v1.0-index-with-conductor.md"),
@@ -129,6 +183,47 @@ exit 0`,
       RUN_PLAN_DIR: tmp("rp-"),
     };
     assert.equal(runPlan(["v1.0", "11", "99"], env).status, 2);
+  });
+});
+
+describe("result.sh (conductor efficiency plan Task 0b)", () => {
+  it("result.sh appends a valid READY line", () => {
+    const dir = tmp("rs-");
+    for (const args of [
+      ["v1.0", "11", "READY", "99"],
+      ["v1.0", "12", "READY 7"],
+      ["v1.0", "13", "ESCALATED"],
+      ["v1.0", "14", "GATE"],
+      ["v1.0", "15", "FAILED"],
+    ]) {
+      const r = sh("result.sh", args, { RUN_PLAN_DIR: dir });
+      assert.equal(r.status, 0, `args ${args}: ${r.stderr}`);
+    }
+    const log = (id: string) =>
+      readFileSync(join(dir, `v1.0-task${id}`, "conductor-log.md"), "utf8");
+    assert.equal(log("11"), "RESULT: READY 99\n");
+    assert.equal(log("12"), "RESULT: READY 7\n");
+    assert.equal(log("13"), "RESULT: ESCALATED\n");
+    assert.equal(log("14"), "RESULT: GATE\n");
+    assert.equal(log("15"), "RESULT: FAILED\n");
+  });
+
+  it("result.sh rejects an invalid value without writing", () => {
+    const dir = tmp("rs-");
+    const taskdir = join(dir, "v1.0-task11");
+    mkdirSync(taskdir, { recursive: true });
+    const log = join(taskdir, "conductor-log.md");
+    writeFileSync(log, "earlier notes\nRESULT: READY 5\n");
+    for (const args of [
+      ["v1.0", "11", "MAYBE"],
+      ["v1.0", "11", "READY"],
+      ["v1.0", "11", "READY", "abc"],
+      ["v1.0", "11"],
+    ]) {
+      const r = sh("result.sh", args, { RUN_PLAN_DIR: dir });
+      assert.equal(r.status, 2, `args ${args}: ${r.stderr}`);
+    }
+    assert.equal(readFileSync(log, "utf8"), "earlier notes\nRESULT: READY 5\n");
   });
 });
 
