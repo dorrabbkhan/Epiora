@@ -237,6 +237,12 @@ describe("judge.ts (conductor efficiency plan Task 0a)", () => {
     assert.match(line(r, "spikes-import")!, /^FLAG spikes-import .*spikes/);
   });
 
+  it("docs/spikes path string is not a spikes import", () => {
+    const r = judge("spikes-docs-path.diff");
+    assert.equal(r.exitCode, 0, r.stdout);
+    assert.match(line(r, "spikes-import")!, /^PASS spikes-import/);
+  });
+
   it("rejected licence dependency flags", () => {
     const r = judge("licence.diff");
     assert.equal(r.exitCode, 1);

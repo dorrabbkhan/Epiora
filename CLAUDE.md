@@ -12,20 +12,46 @@ when a human decision is needed. The owner reviews PRs on GitHub and talks to yo
 ## How to talk to Devin
 - Always a FRESH non-interactive session per task, review or fix round, through the wrapper
   `scripts/conductor/devin.sh <task|review|fix> <version> <N> [prompt-file]`.
-- Every prompt = the task line or the instruction + standing notes + the per-task notes file (if present) +
-  the footer from scripts/conductor/footer.md (PR_URL / STOP line contract).
+- Every prompt is built by `scripts/conductor/build-prompt.sh`: the skill named by its path (never a
+  leading "/epiora-…" line: Devin then ignores what follows it) + the per-task notes file first (owner
+  decisions) + extra instructions + standing notes + the footer from scripts/conductor/footer.md
+  (PR_URL / STOP line contract). Pipe it: `build-prompt.sh … | devin.sh …`.
+- devin.sh puts the shared checkout back on its starting branch after each session (if no tracked file
+  is modified).
 - Every prompt and output is saved under ~/epiora-conductor/<version>-task<N>/ (the wrapper does this).
+- Bounded waits: a foreground tool call is capped at ~10 minutes and headless `claude -p` has no
+  `t3_background_wait`. For a session or CI wait that may outlast one call, run
+  `DEVIN_DETACH=1 scripts/conductor/devin.sh …` (it prints the `.out.md` path and returns at once) and
+  join it with `scripts/conductor/wait-for.sh <out.md>` (exit 4 + `PENDING` means re-call; the session
+  keeps running), and run `scripts/conductor/wait-ci.sh <PR>` with `WAIT_CI_DEADLINE_S=540` the same way
+  (the watch is killed at the deadline; a re-call resumes). An interactive T3 Code session may still use
+  `run_in_background` + one `t3_background_wait`. Never a polling loop either way.
 
 ## The loop for one task (/conduct <version> <N>)
 1. Preconditions: clean tree; main up to date; the task's dependencies in the plan's Task Index merged.
-2. Task session → parse `PR_URL:` or `STOP:`. STOP → escalate (step 7) and end.
-3. Start the review session immediately (in parallel with CI): /epiora-review for that PR.
-4. Judge (see "Judgment rules"). If REQUIRED fixes exist (from the review or your own checks) → a fix
-   session on the same branch, listing them precisely. Max 2 fix rounds; then escalate.
-5. Wait for CI green (`gh pr checks <PR> --watch`). Red CI → a fix round (counts toward the max).
+2. Build the task prompt with `scripts/conductor/build-prompt.sh task <version> <N>` piped into
+   `scripts/conductor/devin.sh task <version> <N>` (detached + wait-for.sh when the session would outlast
+   one tool call). Task session → parse `PR_URL:` or `STOP:`. STOP → escalate (step 7) and end.
+3. Start the review session and `scripts/conductor/wait-ci.sh <PR>` in the background together, right
+   after the push (one blocking wait each, never a polling loop; bounded wait-for.sh /
+   WAIT_CI_DEADLINE_S re-calls in headless runs): the review is the epiora-review skill for that PR
+   (build-prompt.sh review).
+4. Judge (see "Judgment rules"): run `scripts/conductor/judge.sh <PR> <version> <N>` first and read its
+   FLAGs instead of hand greps — the rules below are unchanged; judge.sh runs the mechanical ones, while
+   flake re-runs, computed-vs-described evidence and anything it can't parse stay your call. Send long
+   CI or Devin logs to the `log-reader` subagent (Haiku, ≤ 15 lines with pointers) instead of reading
+   them inline. If REQUIRED fixes exist (from the review or judge.sh) → a fix session on the same
+   branch, listing them precisely (build-prompt.sh fix). Max 2 fix rounds; then escalate.
+5. CI result from wait-ci.sh: green → step 6; red → a fix round (counts toward the max).
 6. Post/update ONE sticky status comment on the PR (scripts/conductor/status-comment.sh) and notify the owner.
 7. Escalation: a PR comment starting "**Owner decision needed:**" with the question, 2–3 options, and your
    recommendation; then notify and stop.
+8. End every run by calling `scripts/conductor/result.sh <version> <task> <value>` — it appends
+   `RESULT: READY <PR>` / `RESULT: ESCALATED` / `RESULT: GATE` / `RESULT: FAILED` as the last line of
+   the task's conductor-log.md (headless sessions have no echo/printf on the allow list) —
+   `run-plan.sh <version> <from> <to>` (one headless `/conduct` session per task, model from the Task
+   Index's Conductor column, explicit `--allowedTools` in scripts/conductor/headless-tools.txt) reads it
+   to decide whether to start the next session.
 
 ## Judgment rules (carried over from NeoPhylo; apply every time)
 - **Never loosened:** any change to a numeric tolerance, budget, decision rule, fixture or baseline in a

@@ -279,12 +279,19 @@ export function checkFilesBlock(
 
 // ---------- 6. spikes-import ----------
 
+// `spikes/` counts only where a path can start: the start of a quoted
+// path, after `../`/`./` segments, or a Cargo member/path value — never
+// inside a longer path like "docs/spikes/" (spike reports live there; a
+// "docs/spikes/" string is not an import).
 const SPIKES_RES = [
   /\buse\s+[^\n;]*\bspikes(::|\/)/, // Rust `use spikes::…` / `use …/spikes/…`
   /\bmod\s+[^\n;]*\bspikes\b/,
-  /\bpath\s*=\s*"[^"]*spikes\//, // #[path = "…"] and Cargo path deps
-  /\b(?:import|require)\b[^\n]*["'][^"']*spikes\//,
-  /["'][^"']*spikes\/[^"']*["']/, // quoted path containing spikes/ (Cargo member entries)
+  /\bpath\s*=\s*"(?:\.\.?\/)*spikes\//, // #[path = "…"] and Cargo path deps
+  /\b(?:import|require)\b[^\n]*["'](?:\.\.?\/)*spikes\//,
+  /["'](?:\.\.?\/)*spikes\/[^"']*["']/, // quoted path starting at spikes/ (Cargo member entries)
+  // Built at runtime so this line never self-matches; a Rust path segment
+  // outside use/mod (type refs, calls).
+  new RegExp("\\bspikes" + "::"),
 ];
 
 export function checkSpikesImport(files: DiffFile[]): Check {

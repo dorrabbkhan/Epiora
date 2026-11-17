@@ -32,7 +32,27 @@ while :; do
 done
 log="$(mktemp -t wait-ci.XXXXXX)"
 rc=0
-gh pr checks "$pr" --watch --fail-fast=false >"$log" 2>&1 || rc=$?
+if [ -n "${WAIT_CI_DEADLINE_S:-}" ]; then
+  # Bounded waits (conductor efficiency plan Task 0b): a foreground tool
+  # call is capped at ~10 minutes. Watch in the background; at the
+  # deadline kill the watch and exit 4 — a re-call resumes the wait.
+  gh pr checks "$pr" --watch --fail-fast=false >"$log" 2>&1 &
+  watch_pid=$!
+  start=$SECONDS
+  while kill -0 "$watch_pid" 2>/dev/null; do
+    if [ $((SECONDS - start)) -ge "$WAIT_CI_DEADLINE_S" ]; then
+      kill "$watch_pid" 2>/dev/null || true
+      wait "$watch_pid" 2>/dev/null || true
+      rm -f "$log"
+      echo "wait-ci: deadline ${WAIT_CI_DEADLINE_S}s reached; the PR's checks are still running — re-call to resume" >&2
+      exit 4
+    fi
+    sleep "$poll_s"
+  done
+  wait "$watch_pid" || rc=$?
+else
+  gh pr checks "$pr" --watch --fail-fast=false >"$log" 2>&1 || rc=$?
+fi
 gh pr checks "$pr" || true
 if [ "$rc" -ne 0 ]; then
   # Same gh 2.46 limit as the poll above: `pr checks` has no --json, so the

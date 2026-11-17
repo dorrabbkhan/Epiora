@@ -1,4 +1,8 @@
 {
+  "disableClaudeAiConnectors": true,
+  "enabledPlugins": {
+    "superpowers@synced": false
+  },
   "permissions": {
     "allow": [
       "Read", "Grep", "Glob",
@@ -23,7 +27,9 @@
       "Bash(sudo:*)", "Bash(rm -rf:*)", "Bash(curl:*)", "Bash(wget:*)",
       "Edit(spikes/**)", "Edit(fixtures/**)", "Edit(scripts/**)", "Edit(docs/spikes/**)",
       "Edit(docs/decisions.md)", "Edit(.github/**)", "Edit(AGENTS.md)",
-      "Edit(CLAUDE.md)", "Edit(.claude/**)"
+      "Edit(CLAUDE.md)", "Edit(.claude/**)",
+      "Artifact", "Workflow", "ScheduleWakeup", "ReportFindings",
+      "ShareOnboardingGuide", "ListAgents"
     ]
   },
   "hooks": {
