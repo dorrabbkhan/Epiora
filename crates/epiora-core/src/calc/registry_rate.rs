@@ -35,16 +35,16 @@ const RATE_ONE_INPUTS: &[InputDef] = &[
 ];
 
 const RATE_ONE_OUTPUTS: &[OutputDef] = &[
-    od("calc.rate_one.ci.byar.lower", CF, "`epitools::pois.byar` scaled"),
-    od("calc.rate_one.ci.byar.upper", CF, "`epitools::pois.byar` scaled"),
+    od("calc.rate_one.ci.byar.lower", CF, "`epitools::pois.byar` scaled; OpenEpi shows the classic Byar — x for the lower bound, x+1 for the upper — z = √cscrit — alternative display (default: ci.midp)"),
+    od("calc.rate_one.ci.byar.upper", CF, "`epitools::pois.byar` scaled; OpenEpi shows the classic Byar — x for the lower bound, x+1 for the upper — z = √cscrit — alternative display (default: ci.midp)"),
     od("calc.rate_one.ci.fisher.lower", IT, "`exactci::poisson.exact(tsmethod=\"central\")`"),
     od("calc.rate_one.ci.fisher.upper", IT, "`exactci::poisson.exact(tsmethod=\"central\")`"),
-    od("calc.rate_one.ci.midp.lower", IT, "`exactci::poisson.exact(midp=TRUE)`"),
-    od("calc.rate_one.ci.midp.upper", IT, "`exactci::poisson.exact(midp=TRUE)`"),
-    od("calc.rate_one.ci.normal.lower", CF, "`epitools::pois.approx` scaled"),
-    od("calc.rate_one.ci.normal.upper", CF, "`epitools::pois.approx` scaled"),
-    od("calc.rate_one.ci.rothman_greenland.lower", CF, "`fixtures/R/methods/poisson.R::rg_ci` — Rothman & Greenland, Modern Epidemiology 2e (shared with `smr`)"),
-    od("calc.rate_one.ci.rothman_greenland.upper", CF, "`fixtures/R/methods/poisson.R::rg_ci` — Rothman & Greenland, Modern Epidemiology 2e (shared with `smr`)"),
+    od("calc.rate_one.ci.midp.lower", IT, "`exactci::poisson.exact(midp=TRUE)`; OpenEpi shows mid-P bounds by own-CDF bisection (~1e-5 steps) — default display"),
+    od("calc.rate_one.ci.midp.upper", IT, "`exactci::poisson.exact(midp=TRUE)`; OpenEpi shows mid-P bounds by own-CDF bisection (~1e-5 steps) — default display"),
+    od("calc.rate_one.ci.normal.lower", CF, "`epitools::pois.approx` scaled; OpenEpi shows a Wald bound (x ± z·√x)/PT clamped at 0, z = √cscrit — alternative display (default: ci.midp)"),
+    od("calc.rate_one.ci.normal.upper", CF, "`epitools::pois.approx` scaled; OpenEpi shows a Wald bound (x ± z·√x)/PT clamped at 0, z = √cscrit — alternative display (default: ci.midp)"),
+    od("calc.rate_one.ci.rothman_greenland.lower", CF, "`fixtures/R/methods/poisson.R::rg_ci` — Rothman & Greenland, Modern Epidemiology 2e (shared with `smr`); OpenEpi shows the same formula with z = √cscrit (hard-coded chi-square criticals) — alternative display (default: ci.midp)"),
+    od("calc.rate_one.ci.rothman_greenland.upper", CF, "`fixtures/R/methods/poisson.R::rg_ci` — Rothman & Greenland, Modern Epidemiology 2e (shared with `smr`); OpenEpi shows the same formula with z = √cscrit (hard-coded chi-square criticals) — alternative display (default: ci.midp)"),
     od("calc.rate_one.estimate", CF, "`exactci::poisson.exact` (`estimate` = x/T)"),
 ];
 pub(super) static RATE_ONE: CalculatorDef = CalculatorDef {

@@ -77,7 +77,7 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.ss_cohort.fleiss.exposed",
         CF,
-        "`fixtures/R/methods/sample_size.R::fleiss` — same source as `ss_unmatched_cc`",
+        "`fixtures/R/methods/sample_size.R::fleiss` — same source as `ss_unmatched_cc`; OpenEpi shows the same Kelsey/Fleiss formula via own ANorm/Norm quantiles — alternative display (default: kelsey)",
     ),
     od(
         "calc.ss_cohort.fleiss.exposed_real",
@@ -87,7 +87,7 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.ss_cohort.fleiss.total",
         CF,
-        "`fixtures/R/methods/sample_size.R::fleiss` — same source as `ss_unmatched_cc`",
+        "`fixtures/R/methods/sample_size.R::fleiss` — same source as `ss_unmatched_cc`; OpenEpi shows the same Kelsey/Fleiss formula via own ANorm/Norm quantiles — alternative display (default: kelsey)",
     ),
     od(
         "calc.ss_cohort.fleiss.total_real",
@@ -97,7 +97,7 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.ss_cohort.fleiss.unexposed",
         CF,
-        "`fixtures/R/methods/sample_size.R::fleiss` — same source as `ss_unmatched_cc`",
+        "`fixtures/R/methods/sample_size.R::fleiss` — same source as `ss_unmatched_cc`; OpenEpi shows the same Kelsey/Fleiss formula via own ANorm/Norm quantiles — alternative display (default: kelsey)",
     ),
     od(
         "calc.ss_cohort.fleiss.unexposed_real",
@@ -107,7 +107,7 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.ss_cohort.fleiss_cc.exposed",
         CF,
-        "`fixtures/R/methods/sample_size.R::fleiss_cc` — same source as `ss_unmatched_cc`",
+        "`fixtures/R/methods/sample_size.R::fleiss_cc` — same source as `ss_unmatched_cc`; OpenEpi shows the same Kelsey/Fleiss formula via own ANorm/Norm quantiles — alternative display (default: kelsey)",
     ),
     od(
         "calc.ss_cohort.fleiss_cc.exposed_real",
@@ -117,7 +117,7 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.ss_cohort.fleiss_cc.total",
         CF,
-        "`fixtures/R/methods/sample_size.R::fleiss_cc` — same source as `ss_unmatched_cc`",
+        "`fixtures/R/methods/sample_size.R::fleiss_cc` — same source as `ss_unmatched_cc`; OpenEpi shows the same Kelsey/Fleiss formula via own ANorm/Norm quantiles — alternative display (default: kelsey)",
     ),
     od(
         "calc.ss_cohort.fleiss_cc.total_real",
@@ -127,7 +127,7 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.ss_cohort.fleiss_cc.unexposed",
         CF,
-        "`fixtures/R/methods/sample_size.R::fleiss_cc` — same source as `ss_unmatched_cc`",
+        "`fixtures/R/methods/sample_size.R::fleiss_cc` — same source as `ss_unmatched_cc`; OpenEpi shows the same Kelsey/Fleiss formula via own ANorm/Norm quantiles — alternative display (default: kelsey)",
     ),
     od(
         "calc.ss_cohort.fleiss_cc.unexposed_real",
@@ -137,7 +137,7 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.ss_cohort.kelsey.exposed",
         CF,
-        "`fixtures/R/methods/sample_size.R::kelsey` — same source as `ss_unmatched_cc`",
+        "`fixtures/R/methods/sample_size.R::kelsey` — same source as `ss_unmatched_cc`; OpenEpi shows the same Kelsey/Fleiss formula via own ANorm/Norm quantiles — default display",
     ),
     od(
         "calc.ss_cohort.kelsey.exposed_real",
@@ -147,7 +147,7 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.ss_cohort.kelsey.total",
         CF,
-        "`fixtures/R/methods/sample_size.R::kelsey` — same source as `ss_unmatched_cc`",
+        "`fixtures/R/methods/sample_size.R::kelsey` — same source as `ss_unmatched_cc`; OpenEpi shows the same Kelsey/Fleiss formula via own ANorm/Norm quantiles — default display",
     ),
     od(
         "calc.ss_cohort.kelsey.total_real",
@@ -157,7 +157,7 @@ const SS_COHORT_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.ss_cohort.kelsey.unexposed",
         CF,
-        "`fixtures/R/methods/sample_size.R::kelsey` — same source as `ss_unmatched_cc`",
+        "`fixtures/R/methods/sample_size.R::kelsey` — same source as `ss_unmatched_cc`; OpenEpi shows the same Kelsey/Fleiss formula via own ANorm/Norm quantiles — default display",
     ),
     od(
         "calc.ss_cohort.kelsey.unexposed_real",
@@ -272,12 +272,12 @@ const SS_MEAN_DIFFERENCE_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.ss_mean_difference.n1",
         CF,
-        "`fixtures/R/methods/sample_size.R::ss_means` — OpenEpi `SSMean.js` formula",
+        "`fixtures/R/methods/sample_size.R::ss_means` — OpenEpi `SSMean.js` formula; OpenEpi shows n₁ = ⌈(s₁²+s₂²/r)(z_α+z_β)²/Δ²⌉ — a z formula, not power.t.test — default display",
     ),
     od(
         "calc.ss_mean_difference.n2",
         CF,
-        "`fixtures/R/methods/sample_size.R::ss_means` — OpenEpi `SSMean.js` formula",
+        "`fixtures/R/methods/sample_size.R::ss_means` — OpenEpi `SSMean.js` formula; OpenEpi shows n₁ = ⌈(s₁²+s₂²/r)(z_α+z_β)²/Δ²⌉ — a z formula, not power.t.test — default display",
     ),
     od(
         "calc.ss_mean_difference.n1_real",
@@ -292,7 +292,7 @@ const SS_MEAN_DIFFERENCE_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.ss_mean_difference.total",
         CF,
-        "`fixtures/R/methods/sample_size.R::ss_means` — OpenEpi `SSMean.js` formula",
+        "`fixtures/R/methods/sample_size.R::ss_means` — OpenEpi `SSMean.js` formula; OpenEpi shows n₁ = ⌈(s₁²+s₂²/r)(z_α+z_β)²/Δ²⌉ — a z formula, not power.t.test — default display",
     ),
     od(
         "calc.ss_mean_difference.total_real",

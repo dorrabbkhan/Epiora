@@ -31,10 +31,10 @@ const DOSE_RESPONSE_OUTPUTS: &[OutputDef] = &[
     od("calc.dose_response.crude.odds_ratio[]", CF, "`epiR::epi.2by2`"),
     od("calc.dose_response.mh_or[]", CF, "`stats::mantelhaen.test`"),
     od("calc.dose_response.strata[].odds_ratio[]", CF, "`epiR::epi.2by2`"),
-    od("calc.dose_response.xmh.cc.p", CF, "`fixtures/R/methods/dose_response.R::xmh_trend` — Rosner, Fundamentals of Biostatistics 5th ed., p.606"),
-    od("calc.dose_response.xmh.cc.value", CF, "`fixtures/R/methods/dose_response.R::xmh_trend` — Rosner, Fundamentals of Biostatistics 5th ed., p.606"),
-    od("calc.dose_response.xmh.uncorrected.p", CF, "`fixtures/R/methods/dose_response.R::xmh_trend` — Schlesselman 1982 p.203"),
-    od("calc.dose_response.xmh.uncorrected.value", CF, "`fixtures/R/methods/dose_response.R::xmh_trend` — Schlesselman 1982 p.203"),
+    od("calc.dose_response.xmh.cc.p", CF, "`fixtures/R/methods/dose_response.R::xmh_trend` — Rosner, Fundamentals of Biostatistics 5th ed., p.606; OpenEpi shows its corrected extended MH's tail via Posten's pchisq approximation — default display"),
+    od("calc.dose_response.xmh.cc.value", CF, "`fixtures/R/methods/dose_response.R::xmh_trend` — Rosner, Fundamentals of Biostatistics 5th ed., p.606; OpenEpi shows the corrected extended MH as (Σv1 − 0.5)²/Σv (no |·| on Σv1) — default display"),
+    od("calc.dose_response.xmh.uncorrected.p", CF, "`fixtures/R/methods/dose_response.R::xmh_trend` — Schlesselman 1982 p.203; EI7 shows this output (PopulationSurvey.xaml.cs) — alternative display (default: xmh.cc)"),
+    od("calc.dose_response.xmh.uncorrected.value", CF, "`fixtures/R/methods/dose_response.R::xmh_trend` — Schlesselman 1982 p.203; EI7 shows this output (PopulationSurvey.xaml.cs) — alternative display (default: xmh.cc)"),
 ];
 pub(crate) static DOSE_RESPONSE: CalculatorDef = CalculatorDef {
     id: "dose_response",
@@ -72,11 +72,11 @@ const MATCHED_CASE_CONTROL_INPUTS: &[InputDef] = &[
 ];
 
 const MATCHED_CASE_CONTROL_OUTPUTS: &[OutputDef] = &[
-    od("calc.matched_case_control.cmle_or.fisher.lower", IT, "`exact2x2::exact2x2(paired=TRUE, tsmethod=\"central\")`"),
-    od("calc.matched_case_control.cmle_or.fisher.upper", IT, "`exact2x2::exact2x2(paired=TRUE, tsmethod=\"central\")`"),
+    od("calc.matched_case_control.cmle_or.fisher.lower", IT, "`exact2x2::exact2x2(paired=TRUE, tsmethod=\"central\")`; OpenEpi shows its own CMLE Fisher-CL solver (MartinStats.js) — alternative display (default: cmle_or.midp)"),
+    od("calc.matched_case_control.cmle_or.fisher.upper", IT, "`exact2x2::exact2x2(paired=TRUE, tsmethod=\"central\")`; OpenEpi shows its own CMLE Fisher-CL solver (MartinStats.js) — alternative display (default: cmle_or.midp)"),
     od("calc.matched_case_control.cmle_or.midp.est", IT, "`exact2x2::exact2x2(paired=TRUE, midp=TRUE)`"),
     od("calc.matched_case_control.cmle_or.midp.lower", IT, "`exact2x2::exact2x2(paired=TRUE, midp=TRUE)`"),
-    od("calc.matched_case_control.cmle_or.midp.upper", IT, "`exact2x2::exact2x2(paired=TRUE, midp=TRUE)`"),
+    od("calc.matched_case_control.cmle_or.midp.upper", IT, "`exact2x2::exact2x2(paired=TRUE, midp=TRUE)`; OpenEpi shows its own CMLE mid-P solver (MartinStats.js) — default display"),
     od("calc.matched_case_control.discordant_pairs", CF, "`fixtures/R/methods/matched.R::discordant_pairs` — discordant pair count b+c as in OpenEpi `MatchCC.js` / EI7 `pmccTable.cs`"),
     od("calc.matched_case_control.exact.fisher_p_1t", IT, "`stats::binom.test` on discordants"),
     od("calc.matched_case_control.exact.fisher_p_2t", IT, "`stats::binom.test` on discordants"),
@@ -96,7 +96,7 @@ const MATCHED_CASE_CONTROL_OUTPUTS: &[OutputDef] = &[
     od("calc.matched_case_control.mcnemar_cc.p", CF, "`stats::mcnemar.test(correct=TRUE)`"),
     od("calc.matched_case_control.mcnemar_cc.value", CF, "`stats::mcnemar.test(correct=TRUE)`"),
     od("calc.matched_case_control.or.est", CF, "`fixtures/R/methods/matched.R::matched_or_taylor` — b/c with log CI √(1/b+1/c)"),
-    od("calc.matched_case_control.or.lower", CF, "`fixtures/R/methods/matched.R::matched_or_taylor` — b/c with log CI √(1/b+1/c)"),
+    od("calc.matched_case_control.or.lower", CF, "`fixtures/R/methods/matched.R::matched_or_taylor` — b/c with log CI √(1/b+1/c); OpenEpi shows the same formula with z = √cscrit (hard-coded chi-square criticals) — default display"),
     od("calc.matched_case_control.or.upper", CF, "`fixtures/R/methods/matched.R::matched_or_taylor` — b/c with log CI √(1/b+1/c)"),
 ];
 pub(crate) static MATCHED_CASE_CONTROL: CalculatorDef = CalculatorDef {
@@ -173,24 +173,24 @@ const SCREENING_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.screening.level_lr[].lower",
         CF,
-        "`fixtures/R/methods/screening.R::level_lr` — log-method LR CI as in `DiagnosticTest.js`",
+        "`fixtures/R/methods/screening.R::level_lr` — log-method LR CI as in `DiagnosticTest.js`; OpenEpi shows level-LR bounds with the level's own 2×2 counts, not column totals — default display",
     ),
     od(
         "calc.screening.level_lr[].upper",
         CF,
-        "`fixtures/R/methods/screening.R::level_lr` — log-method LR CI as in `DiagnosticTest.js`",
+        "`fixtures/R/methods/screening.R::level_lr` — log-method LR CI as in `DiagnosticTest.js`; OpenEpi shows level-LR bounds with the level's own 2×2 counts, not column totals — default display",
     ),
     od("calc.screening.lr_neg.est", CF, "fixtures/R/calc.R"),
-    od("calc.screening.lr_neg.lower", CF, "fixtures/R/calc.R"),
-    od("calc.screening.lr_neg.upper", CF, "fixtures/R/calc.R"),
+    od("calc.screening.lr_neg.lower", CF, "fixtures/R/calc.R; OpenEpi shows bounds exp(ln LR ± 1.96·Σ(1/nᵢ)) — no √ on the SE sum — default display"),
+    od("calc.screening.lr_neg.upper", CF, "fixtures/R/calc.R; OpenEpi shows bounds exp(ln LR ± 1.96·Σ(1/nᵢ)) — no √ on the SE sum — default display"),
     od("calc.screening.lr_pos.est", CF, "fixtures/R/calc.R"),
-    od("calc.screening.lr_pos.lower", CF, "fixtures/R/calc.R"),
-    od("calc.screening.lr_pos.upper", CF, "fixtures/R/calc.R"),
+    od("calc.screening.lr_pos.lower", CF, "fixtures/R/calc.R; OpenEpi shows bounds exp(ln LR ± 1.96·Σ(1/nᵢ)) — no √ on the SE sum — default display"),
+    od("calc.screening.lr_pos.upper", CF, "fixtures/R/calc.R; OpenEpi shows bounds exp(ln LR ± 1.96·Σ(1/nᵢ)) — no √ on the SE sum — default display"),
     od("calc.screening.npv.est", CF, "`PropCIs::scoreci`"),
     od("calc.screening.npv.lower", CF, "`PropCIs::scoreci`"),
     od("calc.screening.npv.upper", CF, "`PropCIs::scoreci`"),
     od("calc.screening.ppv.est", CF, "`PropCIs::scoreci`"),
-    od("calc.screening.ppv.lower", CF, "`PropCIs::scoreci`"),
+    od("calc.screening.ppv.lower", CF, "`PropCIs::scoreci`; OpenEpi shows a Wilson score CI at fixed z = 1.96 (z² = 3.8416) — default display"),
     od("calc.screening.ppv.upper", CF, "`PropCIs::scoreci`"),
     od("calc.screening.sensitivity.est", CF, "`PropCIs::scoreci`"),
     od("calc.screening.sensitivity.lower", CF, "`PropCIs::scoreci`"),
@@ -227,8 +227,8 @@ const SMR_INPUTS: &[InputDef] = &[
 ];
 
 const SMR_OUTPUTS: &[OutputDef] = &[
-    od("calc.smr.ci.byar.lower", CF, "`epitools::pois.byar` scaled"),
-    od("calc.smr.ci.byar.upper", CF, "`epitools::pois.byar` scaled"),
+    od("calc.smr.ci.byar.lower", CF, "`epitools::pois.byar` scaled; OpenEpi shows the classic Byar — x for the lower bound, x+1 for the upper — z = √cscrit — alternative display (default: ci.midp)"),
+    od("calc.smr.ci.byar.upper", CF, "`epitools::pois.byar` scaled; OpenEpi shows the classic Byar — x for the lower bound, x+1 for the upper — z = √cscrit — alternative display (default: ci.midp)"),
     od(
         "calc.smr.ci.fisher.lower",
         IT,
@@ -257,12 +257,12 @@ const SMR_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.smr.ci.rothman_greenland.upper",
         CF,
-        "`fixtures/R/methods/poisson.R::rg_ci` — Rothman & Greenland, Modern Epidemiology 2e",
+        "`fixtures/R/methods/poisson.R::rg_ci` — Rothman & Greenland, Modern Epidemiology 2e; OpenEpi shows the same formula with z = √cscrit (hard-coded chi-square criticals) — alternative display (default: ci.midp)",
     ),
     od(
         "calc.smr.ci.ury_wiggins.lower",
         CF,
-        "`fixtures/R/methods/poisson.R::ury_wiggins` — Am J Epidemiol 1985;122:197-8",
+        "`fixtures/R/methods/poisson.R::ury_wiggins` — Am J Epidemiol 1985;122:197-8; OpenEpi shows Ury–Wiggins bounds with hard-coded per-conf offsets, z = √cscrit — alternative display (default: ci.midp)",
     ),
     od(
         "calc.smr.ci.ury_wiggins.upper",
