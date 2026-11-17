@@ -6,6 +6,7 @@ pub mod compare;
 pub mod dataset_json;
 pub mod ei7;
 pub mod explain_lines;
+pub mod openepi;
 pub mod parity_norm;
 pub mod report;
 pub mod run_all;

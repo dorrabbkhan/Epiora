@@ -8,6 +8,7 @@
 //! jobs of `engine.yml`.
 
 mod ei7;
+mod openepi;
 
 use super::compare::compare;
 use super::load_dataset_dir;
@@ -25,7 +26,8 @@ pub struct Row {
     pub statistic: &'static str,
     /// Reference software: the R version and packages that generated
     /// the covering fixtures, plus `Epi Info 7` when the ei7 check
-    /// maps a label to this statistic.
+    /// maps a label to this statistic and `OpenEpi` when an
+    /// `openepi/` capture value maps to it.
     pub reference: String,
     /// The tolerance class the fixtures assign to the leaf.
     pub class: ToleranceClass,
@@ -160,6 +162,7 @@ fn row(
     datasets: &BTreeMap<String, Dataset>,
     cache: &mut BTreeMap<String, Ran>,
     ei7_stats: &BTreeSet<String>,
+    openepi_stats: &BTreeSet<String>,
 ) -> Result<Row, EngineError> {
     // `calc.<id>.<path>` carries a two-segment prefix; every other
     // family is one segment.
@@ -206,6 +209,9 @@ fn row(
     if ei7_stats.contains(coverage.statistic) {
         reference.push_str("; Epi Info 7");
     }
+    if openepi_stats.contains(coverage.statistic) {
+        reference.push_str("; OpenEpi");
+    }
     Ok(Row {
         statistic: coverage.statistic,
         reference,
@@ -221,6 +227,7 @@ pub fn build_rows(fixtures_dir: &Path) -> Result<Vec<Row>, EngineError> {
     let datasets = load_dataset_dir(&fixtures_dir.join("data"))
         .map_err(|e| corpus(format!("load datasets: {e}")))?;
     let ei7_stats = ei7::covered_statistics(fixtures_dir);
+    let openepi_stats = openepi::covered_statistics(fixtures_dir);
     let mut cache = BTreeMap::new();
     let mut rows = Vec::with_capacity(REGISTRY.len());
     for coverage in REGISTRY {
@@ -230,6 +237,7 @@ pub fn build_rows(fixtures_dir: &Path) -> Result<Vec<Row>, EngineError> {
             &datasets,
             &mut cache,
             &ei7_stats,
+            &openepi_stats,
         )?);
     }
     Ok(rows)
@@ -322,5 +330,6 @@ pub fn build_report(
         ));
     }
     md.push_str(&ei7::section(fixtures_dir)?);
+    md.push_str(&openepi::section(fixtures_dir)?);
     Ok(md)
 }

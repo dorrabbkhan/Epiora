@@ -11,9 +11,10 @@ use serde_json::Value;
 use std::collections::BTreeSet;
 
 /// How tightly an expected value must be matched (spec §6.2).
-/// `ei7_display` (Epi Info 7 comparisons only, spec §6.4) is not a class
-/// here — its tolerance is per-value (`0.5 × 10^−d`) and arrives with
-/// Task 9.
+/// `ei7_display` (Epi Info 7 comparisons only, spec §6.4) and
+/// `openepi_display` (OpenEpi comparisons only, v1.0 spec §9) are not
+/// classes here — their tolerance is per-value (`0.5 × 10^−d`, `d` the
+/// displayed decimals) and lives in `corpus::ei7`/`corpus::openepi`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]

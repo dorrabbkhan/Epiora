@@ -1,8 +1,10 @@
-//! `validation-report <fixtures-dir> <run-url>` — prints the v0.2
+//! `validation-report <fixtures-dir> <run-url>` — prints the
 //! validation report (platform §12.10) to stdout: one row per
 //! `validation::REGISTRY` statistic measured by running the corpus,
 //! plus headers naming the commit, the run URL, the wasm `gzip -9`
-//! size and the Chromium bench median. The last two arrive from the
+//! size and the Chromium bench median, then the `## Epi Info 7 check`
+//! and `## OpenEpi check` sections (v1.0 spec §9). The last two
+//! arrive from the
 //! `engine` and `bench` jobs as `EPIORA_WASM_GZIP_BYTES` /
 //! `EPIORA_BENCH_MEDIAN_MS`; when unset they render "not measured".
 
