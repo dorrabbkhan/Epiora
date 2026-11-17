@@ -5,12 +5,13 @@
  *   scripts/conductor/judge.sh <PR> <version> <task>
  *   node scripts/conductor/judge.ts --pr <PR> --version <v> --task <N>
  *   node scripts/conductor/judge.ts --task <N> [--version <v>]
- *       --diff-file <patch> --plan <plan.md> [--claimed out.md] [--title t]
+ *       --diff-file <patch> --plan <plan.md> [--claimed out.md …] [--title t]
  *       [--report-dir <dir>]
  *
  * Stdout (≤ 60 lines): one `PASS|FLAG|N/A <check-id> <reason> [file:line]`
- * per check, then `JUDGE: PASS` or `JUDGE: FLAG (<n>)`. Full detail goes to
- * <report-dir>/judge-<stamp>.md (default ~/epiora-conductor/<v>-task<N>).
+ * per check — at most five items per line, each whole, then "(+k more in
+ * the report)" — then `JUDGE: PASS` or `JUDGE: FLAG (<n>)`. Full detail
+ * goes to <report-dir>/judge-<stamp>.md (default ~/epiora-conductor/<v>-task<N>).
  * Exit 0 = all pass, 1 = any FLAG, 2 = usage error.
  *
  * A check that cannot run on part of the diff — binary file, rename-only
@@ -55,7 +56,8 @@ export interface JudgeOpts {
   task: string;
   diffFile?: string;
   plan?: string;
-  claimed?: string;
+  /** One path, or several (--claimed may repeat); each stat list unions. */
+  claimed?: string | string[];
   title?: string;
   reportDir?: string;
 }
@@ -74,15 +76,12 @@ export interface JudgeDeps {
   runSpikeCheck?: () => SpikeCheckResult;
 }
 
-// One stdout line per check: whole reasons only, never cut mid-path. What
-// doesn't fit is counted; the report file lists every reason.
-const summarize = (reasons: string[], n = 300) => {
-  let out = reasons[0];
-  let i = 1;
-  for (; i < reasons.length && out.length + 2 + reasons[i].length <= n; i++)
-    out += "; " + reasons[i];
-  return i < reasons.length ? `${out}; (+${reasons.length - i} more in the report)` : out;
-};
+// One stdout line per check: at most five items, each whole — stdout is for
+// the conductor's context; the report file lists every reason.
+const summarize = (reasons: string[], max = 5) =>
+  reasons.length <= max
+    ? reasons.join("; ")
+    : `${reasons.slice(0, max).join("; ")}; (+${reasons.length - max} more in the report)`;
 const firstLine = (e: unknown) =>
   String(e instanceof Error ? e.message : e).split("\n")[0];
 
@@ -188,24 +187,29 @@ export function runJudge(opts: JudgeOpts, deps: JudgeDeps = {}): JudgeResult {
     const planPath = opts.plan ?? (opts.version ? findPlan(opts.version, opts.task) : undefined);
     const planText = planPath && existsSync(planPath) ? readFileSync(planPath, "utf8") : null;
 
-    // The claimed stat defaults to the newest task-* or fix-* session
-    // output under ~/epiora-conductor/<v>-task<N>/ — never a review's
-    // .out.md, which may belong to a session still running and has no
-    // diff-stat block yet. devin.sh names files <kind>-<stamp>.out.md, so
-    // the part after the first dash sorts oldest → newest.
-    let claimedText: string | null = null;
-    let claimedPath = opts.claimed;
-    if (!claimedPath && existsSync(dir)) {
-      const outs = readdirSync(dir)
-        .filter((f) => /^(?:task|fix)-.+\.out\.md$/.test(f))
-        .sort(
-          (a, b) =>
-            a.slice(a.indexOf("-")).localeCompare(b.slice(b.indexOf("-"))) ||
-            a.localeCompare(b),
-        );
-      if (outs.length) claimedPath = join(dir, outs[outs.length - 1]);
-    }
-    if (claimedPath && existsSync(claimedPath)) claimedText = readFileSync(claimedPath, "utf8");
+    // The claimed stat defaults to every task-* and fix-* session output
+    // under ~/epiora-conductor/<v>-task<N>/ — a PR's diff is the task
+    // session plus its fix rounds, so the claimed file set is the union
+    // across them. Never a review's .out.md: it may belong to a session
+    // still running and has no diff-stat block yet. An explicit --claimed
+    // (repeatable) overrides the scan and unions the same way.
+    const explicit = opts.claimed
+      ? Array.isArray(opts.claimed)
+        ? opts.claimed
+        : [opts.claimed]
+      : [];
+    const claimedPaths = explicit.length
+      ? explicit
+      : existsSync(dir)
+        ? readdirSync(dir)
+            .filter((f) => /^(?:task|fix)-.+\.out\.md$/.test(f))
+            .sort()
+            .map((f) => join(dir, f))
+        : [];
+    const claimedTexts = claimedPaths
+      .filter((p) => existsSync(p))
+      .map((p) => readFileSync(p, "utf8"));
+    const claimedText = claimedTexts.length ? claimedTexts.join("\n") : null;
 
     checks = [
       checkDiff(files),
@@ -273,10 +277,10 @@ const KNOWN_OPTS = new Set([
 ]);
 const USAGE =
   "usage: judge.ts (--pr <PR> | --diff-file <patch>) --task <N> " +
-  "[--version <v>] [--plan <plan.md>] [--claimed <out.md>] [--title <t>] [--report-dir <d>]\n";
+  "[--version <v>] [--plan <plan.md>] [--claimed <out.md> …] [--title <t>] [--report-dir <d>]\n";
 
 export function main(argv: string[]): number {
-  const opts = { task: "" } as JudgeOpts & Record<string, string>;
+  const opts = { task: "" } as JudgeOpts & Record<string, string | string[]>;
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     const key = a.startsWith("--")
@@ -286,7 +290,12 @@ export function main(argv: string[]): number {
       process.stderr.write(USAGE);
       return 2;
     }
-    opts[key] = argv[++i];
+    if (key === "claimed") {
+      const prev = opts.claimed;
+      opts.claimed = [...(Array.isArray(prev) ? prev : prev ? [prev] : []), argv[++i]];
+    } else {
+      opts[key] = argv[++i];
+    }
   }
   if (!opts.task || (!opts.pr && !opts.diffFile)) {
     process.stderr.write(USAGE);

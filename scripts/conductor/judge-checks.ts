@@ -351,7 +351,7 @@ export function claimedStatFiles(text: string): string[] {
 export function checkDiffStat(files: DiffFile[], claimedText: string | null): Check {
   if (claimedText === null)
     return na("diff-stat", "no claimed session output (--claimed / saved .out.md not found)");
-  const claimed = claimedStatFiles(claimedText);
+  const claimed = [...new Set(claimedStatFiles(claimedText))];
   if (!claimed.length)
     return flag("diff-stat", ["no git diff --stat block found in the claimed output"]);
   const actual = new Set(files.map((f) => f.path));
@@ -359,17 +359,21 @@ export function checkDiffStat(files: DiffFile[], claimedText: string | null): Ch
     set.some((c) => (c.startsWith("...") ? p.endsWith(c.slice(3)) : c === p));
   const unclaimed = [...actual].filter((p) => !hit(claimed, p));
   const absent = claimed.filter((c) => ![...actual].some((p) => hit([c], p)));
-  const reasons: string[] = [];
-  if (unclaimed.length)
-    reasons.push(`in diff but not claimed by any session: ${unclaimed.join(", ")}`);
-  if (absent.length) reasons.push(`claimed but absent from diff: ${absent.join(", ")}`);
+  // One reason per path so the stdout line can cap at five whole items.
+  const absentReasons = absent.map((c) => `claimed but absent from diff: ${c}`);
   return unclaimed.length
-    ? flag("diff-stat", reasons)
-    : pass(
-        "diff-stat",
-        `${actual.size} file(s) match the claimed git diff --stat` +
-          (absent.length ? `; claimed but absent from diff: ${absent.join(", ")}` : ""),
-      );
+    ? flag("diff-stat", [
+        ...unclaimed.map((p) => `in diff but not claimed by any session: ${p}`),
+        ...absentReasons,
+      ])
+    : {
+        id: "diff-stat",
+        status: "PASS",
+        reasons: [
+          `${actual.size} file(s) match the claimed git diff --stat`,
+          ...absentReasons,
+        ],
+      };
 }
 
 // ---------- 11. owner-gate → judge-checks-gates.ts ----------

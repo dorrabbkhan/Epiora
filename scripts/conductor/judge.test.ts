@@ -188,6 +188,49 @@ describe("judge.ts (conductor efficiency plan Task 0a)", () => {
     assert.match(line(r, "diff-stat")!, /^PASS diff-stat/);
   });
 
+  it("claimed files are the union of task and fix sessions", () => {
+    const dir = mkdtempSync(join(tmpdir(), "judge-union-"));
+    writeFileSync(
+      join(dir, "task-20261101-000000.out.md"),
+      "task output\n\n src/foo.ts | 3 ++-\n 1 file changed, 2 insertions(+), 1 deletion(-)\n",
+    );
+    writeFileSync(
+      join(dir, "fix-20261102-000000.out.md"),
+      "fix output\n\n src/foo.test.ts | 3 ++-\n docs/decisions.md | 3 ++-\n" +
+        " 2 files changed, 4 insertions(+), 2 deletions(-)\n",
+    );
+    // a review's stat block never joins the union
+    writeFileSync(
+      join(dir, "review-20261103-000000.out.md"),
+      "review output\n\n src/review-only.ts | 1 +\n 1 file changed, 1 insertion(+)\n",
+    );
+    const r = judge("clean.diff", { reportDir: dir });
+    assert.match(line(r, "diff-stat")!, /^PASS diff-stat/);
+    assert.ok(!r.report.includes("review-only"), r.report);
+    // repeated --claimed unions the same way
+    const r2 = judge("clean.diff", {
+      claimed: [
+        join(dir, "task-20261101-000000.out.md"),
+        join(dir, "fix-20261102-000000.out.md"),
+      ],
+    });
+    assert.match(line(r2, "diff-stat")!, /^PASS diff-stat/);
+  });
+
+  it("stdout lists at most five items per check", () => {
+    const r = judge("many-files.diff", { claimed: join(FIX, "claimed-clean.out.md") });
+    const fb = line(r, "files-block")!;
+    assert.match(fb, /^FLAG files-block /);
+    const items = fb.replace(/^FLAG files-block /, "").split("; ");
+    assert.equal(items.filter((i) => !i.startsWith("(+")).length, 5, fb);
+    assert.match(items[items.length - 1], /^\(\+2 more in the report\)$/);
+    const ds = line(r, "diff-stat")!;
+    assert.match(ds, /\(\+5 more in the report\)/, ds);
+    // the report file lists every item
+    for (const p of ["src/extra6.ts", "src/extra7.ts", "docs/decisions.md"])
+      assert.ok(r.report.includes(p), p);
+  });
+
   it("import of spikes from crates flags", () => {
     const r = judge("spikes-import.diff");
     assert.equal(r.exitCode, 1);

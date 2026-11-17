@@ -4,7 +4,7 @@
 # through to judge.ts (e.g. --claimed, --report-dir).
 set -euo pipefail
 if [ "$#" -lt 3 ]; then
-  echo "usage: judge.sh <PR> <version> <task> [--claimed <out.md>] [--report-dir <dir>] …" >&2
+  echo "usage: judge.sh <PR> <version> <task> [--claimed <out.md> …] [--report-dir <dir>] …" >&2
   exit 2
 fi
 cd "$(git rev-parse --show-toplevel)"
