@@ -1,0 +1,9 @@
+diff --git a/scripts/conductor/x.sh b/scripts/conductor/x.sh
+index 1111111..2222222 100644
+--- a/scripts/conductor/x.sh
++++ b/scripts/conductor/x.sh
+@@ -1,3 +1,4 @@
+ #!/usr/bin/env bash
++TOKEN="sk-ant-api03-AAAAbbbbCCCCddddEEEEffff"
+ echo hi
+ exit 0

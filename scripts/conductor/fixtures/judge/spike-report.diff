@@ -1,0 +1,14 @@
+diff --git a/docs/spikes/wasm-mdb.md b/docs/spikes/wasm-mdb.md
+index 1111111..2222222 100644
+--- a/docs/spikes/wasm-mdb.md
++++ b/docs/spikes/wasm-mdb.md
+@@ -1,5 +1,8 @@
+ # spike report
++
++## Measurements
++
++| probe | 4200000 rows in 91 ms |
++| bench | see `cargo bench --manifest-path spikes/wasm-mdb/Cargo.toml` |
+ 
+ ## Decision
+ go

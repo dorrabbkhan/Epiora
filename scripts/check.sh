@@ -35,6 +35,9 @@ if [ -x scripts/check-spikes.sh ]; then scripts/check-spikes.sh; else echo "skip
 step "shell tests"
 if [ -d scripts/tests ] && command -v bats >/dev/null; then bats scripts/tests; else echo "skipped"; fi
 
+step "conductor scripts"
+if compgen -G "scripts/conductor/*.test.ts" >/dev/null; then node --test scripts/conductor/*.test.ts; else echo "skipped"; fi
+
 # Engine gate (v0.2): runs whenever crates/ exists — in quick mode only
 # when the engine inputs changed.
 step "engine (crates/)"
