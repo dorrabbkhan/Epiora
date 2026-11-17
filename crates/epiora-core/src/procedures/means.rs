@@ -79,7 +79,12 @@ pub fn means(
         grouped.exclusions,
         ctx,
     );
-    Ok(ProcOutput { result, receipt })
+    let notes = crate::notes::means(&result);
+    Ok(ProcOutput {
+        result,
+        receipt,
+        notes,
+    })
 }
 
 /// The statistics object the fixture `expected` tree and the receipt's

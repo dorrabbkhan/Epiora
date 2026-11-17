@@ -212,6 +212,8 @@ pub struct CalcOutput {
     pub result: serde_json::Value,
     /// The v3 receipt (`calculator` stamp, no dataset).
     pub receipt: Receipt,
+    /// The run's assumption notes (spec §6.1), outside the receipt.
+    pub notes: Vec<crate::notes::Note>,
 }
 
 /// Runs calculator `id` on `inputs`: validates them against the
@@ -255,6 +257,7 @@ pub fn run(
             );
         }
     }
+    let notes = crate::notes::calc(def.id, &canonical);
     let stamp = CalculatorStamp {
         id: id.to_string(),
         inputs: canonical.clone(),
@@ -267,5 +270,9 @@ pub fn run(
         ctx.timestamp.clone(),
         EngineStamp::current(),
     );
-    Ok(CalcOutput { result, receipt })
+    Ok(CalcOutput {
+        result,
+        receipt,
+        notes,
+    })
 }

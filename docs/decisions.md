@@ -4839,3 +4839,126 @@ Evidence: `node --test scripts/conductor/*.test.ts` — all pass;
   `scripts/conductor/judge.test.ts`,
   `scripts/conductor/fixtures/judge/spikes-docs-path.diff`.
 Supersedes: —
+### v1.0 Task 22 — assumption-note rules (2026-11-18)
+
+Decision: Add `epiora_core::notes` — `Note { code, statistics, values,
+suggests }`, `NOTE_CODES`, `rules.rs` (one pure function per code) and
+`attach.rs` (one adapter per run surface). `ProcOutput<T>` and
+`CalcOutput` gain `notes: Vec<Note>` beside `receipt` — never inside
+it — so receipts v1/v2 stay byte-identical, v3 receipt hashes are
+unchanged, and the corpus parity line (which serializes `result` +
+`receipt` only) is untouched. Notes sort by code, then the sorted
+statistics list; every emitted code is a `NOTE_CODES` member; every
+`values` entry is a finite engine-computed number.
+
+Rules, named thresholds (constants in `notes/rules.rs`) and sources:
+
+- `expected_count_below_5`: any expected cell of a chi-square table
+  below `EXPECTED_CELL_MIN` (= 5.0) — Cochran (1954), "Some Methods
+  for Strengthening the Common χ² Tests", *Biometrics* 10(2): 417–451
+  (the same 5 `stats::rxc` already uses for `low_expected`). Fires on
+  the pooled 2×2 of `tables`, every `strata[]` and `crude` block of
+  the `two_by_two`/`two_by_n` calculators, and `r_by_c`. Suggests the
+  block's Fisher two-sided p for a 2×2, nothing for R×C (no exact
+  alternative is emitted).
+- `zero_cell`: an observed zero among the cells the Wald log-scale
+  interval's `1/cell` standard error sums over — Agresti (2003),
+  *Categorical Data Analysis* 2nd ed., §2.3.3. Fires on the pooled
+  2×2 of `tables`, every `two_by_two`/`two_by_n` block, and the two
+  discordant cells of `matched_case_control`'s 1:1 pair (its Taylor
+  OR interval is the same construction; the 1:n block is
+  Mantel–Haenszel, not Wald, so the rule does not apply there).
+  Suggests the block's exact/mid-p odds-ratio estimate.
+- `normal_approx_small`: `n·p` or `n·(1−p)` below `NP_MIN` (= 5.0)
+  for a Wald proportion interval — Brown, Cai & DasGupta (2001),
+  *Statistical Science* 16(2): 101–133. Applies only to
+  `calc.proportion` (the engine's only Wald proportion interval;
+  FREQ emits Clopper–Pearson/Wilson and `screening`/`two_by_n` use
+  score intervals). Suggests `calc.proportion.ci.wilson.lower`.
+- `unequal_variances`: Bartlett p below `SIGNIFICANCE` (= 0.05) —
+  Bartlett (1937), *Proc. R. Soc. London* A 160: 268–282. Fires on
+  `means.bartlett` and `calc.anova_summary.bartlett` (the only
+  Bartlett statistics; `t_test_summary`'s variance test is
+  `var.test`, not Bartlett). Suggests `means.t_test.welch.t` /
+  `t_test_summary` for two groups, `means.kruskal_wallis.h` / nothing
+  for more.
+- `heterogeneous_strata`: Breslow–Day homogeneity p below
+  `SIGNIFICANCE` (= 0.05) — Breslow & Day (1980), IARC
+  *Statistical Methods in Cancer Research* I, §4.4; Tarone (1985).
+  The procedure fires on its Tarone-corrected
+  `breslow_day_tarone.p_value`; the `two_by_two` calculator fires on
+  its own `adjusted.breslow_day.or_p` (the Woolf OR-homogeneity test
+  the corpus records under `breslow_day`). Suggests stratum-specific
+  estimates where the output has them (`two_by_two.strata[].
+  odds_ratio.est`), nothing for the procedure (it emits none).
+
+Ambiguities resolved (all recorded for the owner review the task
+requires): notes for a stratified `tables` run evaluate the pooled
+2×2 only — the procedure emits no per-stratum chi-square or Wald
+interval; per-block notes on the calculators carry a `stratum`
+index value (`crude` blocks carry none); `freq` and `means`
+ungrouped emit no notes, and the remaining calculators emit none
+in this PR — but several of them do carry statistics a §6.1 rule
+could reach (coverage audit below), so "no §6.1 rule's statistic
+is present" is not the reason.
+
+Coverage audit — the §6.1-adjacent statistics this PR emits no
+note for, checked against `calc/**` and `notes/attach.rs`:
+
+- `rate_compare` emits `adjusted.breslow_day.{rr_p,rd_p}` (with
+  `rr_chisq`/`rd_chisq`) when it has ≥ 2 strata — Breslow–Day
+  homogeneity chi-squares, df = k − 1, for the directly adjusted
+  rate ratio and rate difference, computed by
+  `stats::rates::adjusted_rates`. `heterogeneous_strata` could
+  match: §6.1 names a Breslow–Day–Tarone p, and `rr_p`/`rd_p` are
+  the same homogeneity construction for RR/RD. NO note is emitted
+  for them in this PR — the rule is wired to the OR-homogeneity
+  p's only (`tables`' `breslow_day_tarone.p_value`,
+  `two_by_two`'s `adjusted.breslow_day.or_p`); extending a rule to
+  another statistic is the owner's decision, not this PR's.
+- `proportion` with `compare_with` emits `ztest.{z,p}` —
+  `(p − p0)/√(p0·(1−p0)/n)`, the Wald-form one-sample z-test on a
+  proportion. `normal_approx_small` could match: §6.1 names a Wald
+  proportion interval and the same n·p / n·(1−p) caveat applies to
+  the z-test's Wald form. NO note names `ztest` in this PR — the
+  note lists only `ci.wald.lower`/`upper`; extending a rule's
+  statistic list is the owner's decision, not this PR's.
+- `dose_response` emits `xmh.{cc,uncorrected}.{value,p}` — the
+  extended Mantel–Haenszel trend chi-square (df 1), built from
+  per-stratum observed-minus-expected score sums (`xmh_parts`).
+  `expected_count_below_5` could match: it is a χ² test over
+  expected counts. NO note is emitted for it in this PR — §6.1
+  names expected cells of a chi-square table and `dose_response`
+  emits no expected-cell array for the rule to read; extending a
+  rule to another statistic is the owner's decision, not this
+  PR's.
+
+Files outside the task's Files block (the plan's generic "the
+procedure and calculator output types" covers the new `notes`
+fields, but these files are not named literally; `git diff --stat
+origin/main` confirms no `stats/*.rs` and no other `calc/**` file
+changed — the existing `pub(crate)` helpers `strata2x2`,
+`oe_cells`, `count_table`, `groups_of`, `woolf`, `woolf_chisq` and
+`chi_p` already expose every trigger intermediate):
+- `crates/epiora-core/src/calc/mod.rs` — `CalcOutput` gains
+  `notes: Vec<Note>`; `run` calls `notes::calc`.
+- `crates/epiora-core/src/procedures/mod.rs` — `ProcOutput<T>`
+  gains `notes: Vec<Note>`.
+- `crates/epiora-core/src/procedures/freq.rs` — returns
+  `notes: Vec::new()` (FREQ emits Clopper–Pearson/Wilson only).
+- `crates/epiora-core/src/procedures/means.rs` — calls
+  `notes::means` on the result.
+- `crates/epiora-core/src/procedures/tables.rs` — calls
+  `notes::tables_two_by_two` / `notes::tables_rxc`.
+- `crates/epiora-wasm/bindings/Note.ts` and
+  `crates/epiora-wasm/bindings/ProcOutput.ts` — regenerated by
+  `cargo test -p epiora-core --features ts export_bindings` after
+  the `notes` field and `Note` type became ts-exported; the engine
+  gate fails on stale bindings (same convention as Tasks 9/10).
+
+Owner question: extend `heterogeneous_strata` to `rate_compare`'s
+`rr_p`/`rd_p` (and `normal_approx_small` /
+`expected_count_below_5` to the other calculators listed above)?
+Default if no answer: not extended (Task 23 shows no note for
+them).
+Supersedes: —

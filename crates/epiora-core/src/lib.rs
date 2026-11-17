@@ -13,6 +13,7 @@ pub mod calc;
 pub mod dataset;
 pub mod error;
 pub mod explain;
+pub mod notes;
 pub mod procedures;
 pub mod project;
 pub mod receipt;
