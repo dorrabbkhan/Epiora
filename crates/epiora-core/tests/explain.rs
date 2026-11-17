@@ -10,7 +10,9 @@ use epiora_core::dataset::{Column, ColumnData, Dataset, Value as CellValue};
 use epiora_core::explain::{
     explain_calculator, explain_procedure, ExplainKind, Explanation, FORMULAS,
 };
-use epiora_core::procedures::{FreqOptions, MeansOptions, ProportionCi, TablesOptions, VarSpec};
+use epiora_core::procedures::{
+    means, FreqOptions, MeansOptions, ProportionCi, RunContext, TablesOptions, VarSpec,
+};
 use epiora_core::stats::{Estimate, Table2x2, UndefinedReason};
 use epiora_core::validation::{statistic_ids, ToleranceClass, REGISTRY};
 use epiora_core::EngineError;
@@ -660,7 +662,12 @@ fn iterative_statistics_are_method_kind() {
 /// main (owner decision D1, v1.0 Task 10). A row whose fixture file
 /// (or dataset file) hash changed is reported, not compared; a row
 /// whose fixture vanished from the run is reported; every unchanged
-/// row's parity hash must match, and at least one row compares.
+/// row's parity hash must match, and at least one row compares. The
+/// hash is over `parity_line_normalized`: the receipt's
+/// `engine.git_sha` is build metadata fixed at compile time (spec
+/// §4.3), not a result, so it is pinned to `"unknown"` and
+/// `receipt_sha256` resealed before hashing — the comparison is
+/// build-environment independent.
 #[test]
 fn results_unchanged() {
     let root = fixtures_root();
@@ -734,7 +741,7 @@ fn results_unchanged() {
                 continue;
             }
         }
-        let got = sha256_hex(line.output.parity_line().as_bytes());
+        let got = sha256_hex(line.output.parity_line_normalized().as_bytes());
         if got != parity_sha {
             failures.push(format!(
                 "row {n} ({id}): parity hash changed\n  want {parity_sha}\n  got  {got}"
@@ -755,6 +762,152 @@ fn results_unchanged() {
         "results_unchanged: {compared} rows compared, {} notes",
         notes.len()
     );
+}
+
+/// `zero_observation_group_explains_without_panic` — a MEANS run
+/// whose groups hold zero non-missing values explains `Undefined`
+/// leaves, never a panic: `GroupSummary::ssq` computed `n − 1` on
+/// `u64` and panicked in debug builds on the all-missing `overall`
+/// block (v1.0 Task 10 fix round 2; release wrapped silently).
+#[test]
+fn zero_observation_group_explains_without_panic() {
+    let ctx = RunContext {
+        timestamp: "2026-11-17T00:00:00Z".to_string(),
+        project: None,
+    };
+    let too_few = Estimate::Undefined {
+        reason: UndefinedReason::TooFew,
+    };
+    let last_result = |exp: &Explanation, stat: &str| {
+        for step in &exp.steps {
+            for (k, v) in &step.values {
+                assert!(v.is_finite(), "{stat}: non-finite value {k}={v}");
+            }
+        }
+        exp.steps.last().expect("at least one step").result.clone()
+    };
+
+    // Every `V` missing: `group_numeric` keeps no group and `overall`
+    // is the zero-observation summary `ssq` underflowed on.
+    let empty = Dataset::new(
+        "empty",
+        1,
+        vec![
+            Column {
+                name: "G".to_string(),
+                data: ColumnData::Text(vec![
+                    Some("a".to_string()),
+                    Some("a".to_string()),
+                    Some("b".to_string()),
+                ]),
+            },
+            Column {
+                name: "V".to_string(),
+                data: ColumnData::Real(vec![None, None, None]),
+            },
+        ],
+    )
+    .expect("empty dataset");
+    let opts = json!(MeansOptions {
+        variable: "V".to_string(),
+        group_by: Some("G".to_string()),
+        include_missing: false,
+    });
+    let run = means(
+        &empty,
+        &serde_json::from_value::<MeansOptions>(opts.clone()).expect("options"),
+        &ctx,
+    )
+    .expect("means run");
+    assert_eq!(run.result.overall.observations, 0);
+    assert_eq!(run.result.overall.mean, too_few);
+    assert_eq!(run.result.overall.variance, too_few);
+    assert!(run.result.anova.is_none());
+    for stat in [
+        "means.overall.observations",
+        "means.overall.total",
+        "means.overall.mean",
+        "means.overall.variance",
+        "means.overall.std_dev",
+        "means.overall.min",
+        "means.overall.p25",
+        "means.overall.median",
+        "means.overall.p75",
+        "means.overall.max",
+        "means.overall.mode",
+    ] {
+        let exp = explain_procedure(&empty, "means", &opts, stat).expect(stat);
+        let result = last_result(&exp, stat);
+        match stat {
+            "means.overall.observations" | "means.overall.total" => {
+                assert_eq!(result, Estimate::Value(0.0), "{stat}")
+            }
+            _ => assert_eq!(result, too_few, "{stat}"),
+        }
+    }
+
+    // Group `c` has zero non-missing values (`group_numeric` drops
+    // it); group `b` keeps one observation — ANOVA stays in the
+    // result, its within-group statistics `Undefined { too_few }`.
+    let sparse = Dataset::new(
+        "sparse",
+        1,
+        vec![
+            Column {
+                name: "G".to_string(),
+                data: ColumnData::Text(vec![
+                    Some("a".to_string()),
+                    Some("a".to_string()),
+                    Some("a".to_string()),
+                    Some("b".to_string()),
+                    Some("c".to_string()),
+                    Some("c".to_string()),
+                ]),
+            },
+            Column {
+                name: "V".to_string(),
+                data: ColumnData::Real(vec![
+                    Some(1.0),
+                    Some(2.0),
+                    Some(3.0),
+                    Some(9.0),
+                    None,
+                    None,
+                ]),
+            },
+        ],
+    )
+    .expect("sparse dataset");
+    let run = means(
+        &sparse,
+        &serde_json::from_value::<MeansOptions>(opts.clone()).expect("options"),
+        &ctx,
+    )
+    .expect("means run");
+    let anova = run.result.anova.as_ref().expect("anova present");
+    for est in [
+        &anova.ss_within,
+        &anova.ms_within,
+        &anova.f,
+        &anova.p_value,
+        &anova.ss_total,
+    ] {
+        assert_eq!(*est, too_few);
+    }
+    assert_eq!(run.result.groups[1].variance, too_few);
+    assert_eq!(run.result.groups[1].mean, Estimate::Value(9.0));
+    for stat in [
+        "means.groups[1].variance",
+        "means.groups[1].std_dev",
+        "means.anova.ss_within",
+        "means.anova.ms_within",
+        "means.anova.f",
+        "means.anova.p_value",
+        "means.anova.ss_total",
+    ] {
+        let exp = explain_procedure(&sparse, "means", &opts, stat).expect(stat);
+        assert_eq!(last_result(&exp, stat), too_few, "{stat}");
+    }
 }
 
 /// `explain_unknown` — a statistic that resolves to no leaf is a

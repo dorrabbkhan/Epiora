@@ -9,7 +9,9 @@
 //! `corpus-runner --hash-golden [fixtures-dir]` prints one TSV row
 //! per corpus line — the fixture id, its repo-relative path, the
 //! SHA-256 of the fixture bytes, the `inputs.dataset` file path and
-//! SHA-256 (or `-`), and the SHA-256 of the parity line — the
+//! SHA-256 (or `-`), and the SHA-256 of the build-normalized parity
+//! line (the receipt's `engine.git_sha` pinned to `"unknown"` and
+//! `receipt_sha256` resealed — build metadata, spec §4.3) — the
 //! `results_unchanged` golden of v1.0 Task 10.
 
 use epiora_core::corpus::{corpus_lines, dataset_files, load_dataset_dir};
@@ -104,7 +106,7 @@ fn hash_golden(root: &Path) -> Result<(), String> {
             },
             None => ("-".to_string(), "-".to_string()),
         };
-        let parity_sha = sha256_hex(line.output.parity_line().as_bytes());
+        let parity_sha = sha256_hex(line.output.parity_line_normalized().as_bytes());
         use std::io::Write;
         writeln!(
             lock,

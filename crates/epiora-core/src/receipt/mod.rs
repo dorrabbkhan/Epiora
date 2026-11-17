@@ -202,12 +202,20 @@ impl Receipt {
         if let Value::Object(m) = &mut value {
             m.remove("receipt_sha256");
         }
-        let digest = sha2::Sha256::digest(canonical_json(&value).as_bytes());
-        let mut hex = String::with_capacity(digest.len() * 2);
-        for byte in digest {
-            hex.push(char::from_digit((byte >> 4) as u32, 16).unwrap_or('0'));
-            hex.push(char::from_digit((byte & 0xf) as u32, 16).unwrap_or('0'));
-        }
-        hex
+        canonical_sha256_hex(&value)
     }
+}
+
+/// SHA-256 hex of a value's canonical JSON — the `receipt_sha256`
+/// primitive, shared with the corpus's build-normalized parity line,
+/// which reseals a receipt exactly as `Receipt::sha256_hex` does
+/// (v1.0 Task 10).
+pub(crate) fn canonical_sha256_hex(v: &Value) -> String {
+    let digest = sha2::Sha256::digest(canonical_json(v).as_bytes());
+    let mut hex = String::with_capacity(digest.len() * 2);
+    for byte in digest {
+        hex.push(char::from_digit((byte >> 4) as u32, 16).unwrap_or('0'));
+        hex.push(char::from_digit((byte & 0xf) as u32, 16).unwrap_or('0'));
+    }
+    hex
 }

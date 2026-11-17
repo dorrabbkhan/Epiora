@@ -4592,4 +4592,37 @@ fabricated.
   `Estimate.ts` adds the union member the label map must cover);
   `app/src/worker/errors.ts` (`explain_unknown` in
   `ENGINE_ERROR_CODES`, matching the `EngineError::code()` list).
+- Fix round 2 (PR #81): two release-hidden bugs the CI debug build
+  caught.
+  - `results_unchanged` was build-environment dependent: a
+    receipt-bearing row hashed `engine.git_sha`
+    (`env!("EPIORA_GIT_SHA")` — `"unknown"` where the golden was
+    generated, the merge SHA in CI) and the `receipt_sha256` that
+    seals it. D1 implementation detail: `git_sha` is build metadata
+    fixed at compile time (spec §4.3), not a result, so
+    `--hash-golden` and `results_unchanged` now hash
+    `CaseOutput::parity_line_normalized` — the parity line with the
+    receipt parsed, `git_sha` pinned to `"unknown"` and
+    `receipt_sha256` resealed over the normalized receipt exactly as
+    `Receipt::sha256_hex` seals it (structural normalization, never a
+    string edit; every other byte is still compared). The committed
+    golden is unchanged — a
+    `GIT_SHA=deadbeef corpus-runner --hash-golden fixtures` run is
+    byte-identical to it. `parity_line` itself is untouched: the
+    native/wasm corpus diff still compares receipts as built.
+  - `GroupSummary::ssq` computed `n − 1` on `u64` and panicked in
+    debug on a zero-observation `overall` (release wrapped
+    silently). `n = 0`/`n = 1` now give the NaN the run path flows
+    into `Undefined { too_few }` — `summarize` computes no variance
+    below `n = 2` — via a shared `df()` helper the explain
+    `sample_variance`/`ss_within` intermediates use too. Result bits
+    for `n ≥ 1` are unchanged.
+  - Additional files outside the task's Files block:
+    `crates/epiora-core/src/receipt/mod.rs`
+    (`canonical_sha256_hex`, the reseal primitive
+    `parity_line_normalized` shares with `Receipt::sha256_hex`) and
+    `crates/epiora-core/src/corpus/run_case.rs`
+    (`parity_line_normalized` itself — `corpus` was already in the
+    D1 list above for `--hash-golden`, but `run_case.rs` is new in
+    this round).
 Supersedes: —

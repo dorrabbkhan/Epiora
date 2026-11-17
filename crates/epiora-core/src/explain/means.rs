@@ -56,7 +56,10 @@ fn descriptives(
             },
         ),
         "mean" => ("mean", finite(&[("total", summary.total()), ("n", n)])),
-        "variance" => ("sample_variance", finite(&[("ssq", ssq), ("df", n - 1.0)])),
+        "variance" => (
+            "sample_variance",
+            finite(&[("ssq", ssq), ("df", summary.df())]),
+        ),
         "std_dev" => (
             "sqrt",
             finite(&[("x", summary.variance.unwrap_or(f64::NAN))]),
@@ -198,7 +201,7 @@ pub(crate) fn anova_leaf(
                     )
                 }
                 "ss_within" => {
-                    let mut v = group_vals("df", &|g| (g.n - 1) as f64);
+                    let mut v = group_vals("df", &GroupSummary::df);
                     for (i, g) in groups.iter().enumerate() {
                         if let Some(var) = g.variance {
                             v.insert(format!("var_{i}"), var);

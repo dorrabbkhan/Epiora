@@ -48,11 +48,19 @@ impl GroupSummary {
         self.n as f64 * self.mean
     }
 
+    /// `n − 1` — the sample-variance denominator, NaN on an empty
+    /// group (`n = 0` has no `n − 1` in `u64`). Shared by the explain
+    /// trace's `sample_variance`/`ss_within` intermediates.
+    pub fn df(&self) -> f64 {
+        self.n.checked_sub(1).map(|d| d as f64).unwrap_or(f64::NAN)
+    }
+
     /// `(n−1)·v` — the Σ(x−mean)² `summarize` accumulates, NaN when
-    /// no variance exists. Shared by `anova_parts`' `ss_w` and the
-    /// explain trace's `sample_variance` intermediate.
+    /// no variance exists (or the group is empty). Shared by
+    /// `anova_parts`' `ss_w` and the explain trace's
+    /// `sample_variance` intermediate.
     pub fn ssq(&self) -> f64 {
-        (self.n - 1) as f64 * self.variance.unwrap_or(f64::NAN)
+        self.df() * self.variance.unwrap_or(f64::NAN)
     }
 }
 
