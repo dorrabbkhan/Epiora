@@ -202,3 +202,32 @@ test('keyboard path test', async ({ page }) => {
   ).toBeVisible();
   await expectNoA11yViolations(page, 'expanded receipt (keyboard path)');
 });
+
+test('keyboard path: calculator', async ({ page }) => {
+  // v1.0 Task 14: open a calculator, fill it, calculate and expand the
+  // receipt — keyboard only.
+  await page.goto('/calc/proportion');
+
+  const numerator = page.getByLabel('Numerator');
+  await tabTo(page, numerator, 'Numerator field');
+  await page.keyboard.type('12');
+  const denominator = page.getByLabel('Denominator');
+  await tabTo(page, denominator, 'Denominator field');
+  await page.keyboard.type('40');
+
+  const calculate = page.getByRole('button', { name: 'Calculate' });
+  await tabTo(page, calculate, 'Calculate button');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { name: 'Results' })).toBeVisible();
+  await expect(page).toHaveURL(/numerator=12/);
+  await expectNoA11yViolations(page, 'calculator result (keyboard path)');
+
+  // Expand the receipt.
+  const receipt = page.getByRole('button', { name: 'Receipt' });
+  await tabTo(page, receipt, 'Receipt disclosure');
+  await page.keyboard.press('Enter');
+  await expect(
+    page.getByRole('button', { name: 'Copy receipt JSON' }),
+  ).toBeVisible();
+  await expectNoA11yViolations(page, 'calc receipt (keyboard path)');
+});

@@ -5300,3 +5300,37 @@ fixture ids that exhibit the difference.
     changed: `Coverage` rows carry only `statistic`/`fixtures`/`class`
     (no label field), so the Files block's `calc.rs (labels)` has no
     surface to edit; all method labels live in `calc/**` `OutputDef`s.
+
+### v1.0 Task 14 — calculators from a link in a store-less worker (2026-11-18)
+
+Decision: `/calc` and `/calc/$id` render the registry generically in
+the existing app shell; the query string is a plain string map
+(`?strata=10,11;4,20`), decoded into raw-text drafts so a malformed
+link marks inputs instead of blanking. A complete link computes on
+load; calculate pushes the inputs back into the URL. `random_numbers`
+without `seed` draws one inside the calc worker via
+`crypto.getRandomValues` (53 bits) and writes it into the URL with
+replace. The calc worker (`calc.worker.ts`) loads core-wasm only —
+no store, no import-wasm, no Web Lock — and stamps
+`RunContext.timestamp`; the app's data worker now spawns lazily so a
+calculator tab never acquires `epiora-store`.
+
+- Files outside the task's Files block:
+  - `app/src/worker/client.ts` — `dataWorker`/`dataApi` were created
+    at module load, so importing the module (every screen does, calc
+    routes included through the statically imported router tree)
+    spawned the worker and took the `epiora-store` Web Lock on
+    `/calc`. `dataApi` is now a `Proxy` that spawns the worker on
+    first method call (writes shadow it — the e2e
+    `window.dataApi.<method>` patches still work) and the Tauri
+    bridge attaches inside `dataWorker()` at spawn; `workerName` and
+    the tab-lock BroadcastChannel contract are unchanged.
+- `app/vite.config.ts` (listed under Modify) is unchanged: Vite
+  already emits `new Worker` entries as `assets/calc.worker-*.js`,
+  which the unchanged precache globs cover — verified by
+  `calc-offline.spec.ts`'s dead-server reload.
+- `app/src/main.tsx`: the Tauri `listProjects` startup probe is
+  skipped on `/calc` (it would otherwise spawn the store worker via
+  the lazy path); the tab-lock channel listener stays unconditional
+  because its `workerName` tag makes calc routes a no-op.
+Supersedes: —

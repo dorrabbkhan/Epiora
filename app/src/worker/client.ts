@@ -85,9 +85,36 @@ export const inTauri =
   typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
 export const workerName = `${inTauri ? 'epiora-tauri' : 'epiora'}:${crypto.randomUUID()}`;
 
-/** The app's one data worker. */
-export const dataWorker = new Worker(
-  new URL('./data.worker.ts', import.meta.url),
-  { type: 'module', name: workerName },
-);
-export const dataApi: Remote<DataApi> = wrapDataApi(dataWorker);
+let spawned: { worker: Worker; api: Remote<DataApi> } | null = null;
+
+/** Spawns (once) this tab's data worker. Lazy since v1.0 Task 14: the
+ *  `/calc` routes must not acquire the `epiora-store` Web Lock, so the
+ *  worker — which takes the lock eagerly at startup — is created on
+ *  first use, not at module load. Under Tauri the main-thread bridge
+ *  attaches here so the listener precedes any relay message. */
+export function dataWorker(): { worker: Worker; api: Remote<DataApi> } {
+  if (spawned === null) {
+    const worker = new Worker(new URL('./data.worker.ts', import.meta.url), {
+      type: 'module',
+      name: workerName,
+    });
+    if (inTauri) {
+      void import('../tauri/bridge').then((m) => m.startTauriBridge(worker));
+    }
+    spawned = { worker, api: wrapDataApi(worker) };
+  }
+  return spawned;
+}
+
+/** The app's typed RPC client. A proxy: every method forwards to the
+ *  worker created on first access, so importing this module (as every
+ *  screen does, calc routes included) never spawns the store worker.
+ *  Writes land on the proxy target and shadow the worker's method —
+ *  e2e specs patch `window.dataApi.<method>` to drive failure paths. */
+const dataApiTarget: Record<string | symbol, unknown> = {};
+export const dataApi: Remote<DataApi> = new Proxy(dataApiTarget, {
+  get: (target, prop: string | symbol) =>
+    prop in target
+      ? target[prop]
+      : (dataWorker().api as unknown as Record<string | symbol, unknown>)[prop],
+}) as unknown as Remote<DataApi>;

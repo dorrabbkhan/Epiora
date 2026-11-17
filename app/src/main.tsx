@@ -9,7 +9,7 @@ import {
   type Theme,
 } from './design/theme';
 import { router } from './ui/router';
-import { dataApi, dataWorker, inTauri, workerName } from './worker/client';
+import { dataApi, inTauri, workerName } from './worker/client';
 import type { DataApi } from './worker/api';
 import type { Remote } from 'comlink';
 import { RpcError } from './worker/errors';
@@ -31,11 +31,13 @@ declare global {
 }
 window.dataApi = dataApi;
 
-// Task 14: inside Tauri the worker's store ops go through the
-// main-thread bridge to the native encrypted store. Started before the
-// first render so the listener precedes any relay message.
-if (inTauri) {
-  void import('./tauri/bridge').then((m) => m.startTauriBridge(dataWorker));
+// v1.0 Task 14: `/calc` routes run against the store-less calculator
+// worker — the data worker (and its `epiora-store` Web Lock) spawns
+// lazily on first store RPC, so a calculator tab never touches it.
+// Under Tauri the bridge attaches inside `dataWorker()` at spawn.
+function onCalcRoute(): boolean {
+  const p = window.location.pathname;
+  return p === '/calc' || p.startsWith('/calc/');
 }
 
 const stored = localStorage.getItem(THEME_STORAGE_KEY);
@@ -61,9 +63,10 @@ function App() {
   const [fatal, setFatal] = useState<FatalReason | null>(null);
   // Task 14: a `keychain_unavailable`/`key_invalid` at startup shows a
   // full-screen error — never an empty store. The probe also forces the
-  // store open (and migrations) at startup under Tauri.
+  // store open (and migrations) at startup under Tauri; it is skipped
+  // on `/calc` so a calculator link spawns no store worker.
   useEffect(() => {
-    if (!inTauri) return;
+    if (!inTauri || onCalcRoute()) return;
     let mounted = true;
     dataApi.listProjects().then(
       () => {},

@@ -6,6 +6,8 @@ import {
   Outlet,
 } from '@tanstack/react-router';
 import { AnalysisScreen } from './routes/analysis';
+import { CalcIndexScreen } from './routes/calc-index';
+import { CalcScreen } from './routes/calc';
 import { DatasetScreen } from './routes/dataset';
 import { ImportScreen } from './routes/import';
 import { ProjectsScreen } from './routes/index';
@@ -23,6 +25,9 @@ function Shell() {
         <nav className={shell.nav} aria-label={t.nav.main}>
           <Link to="/" className={shell.brand}>
             {t.appName}
+          </Link>
+          <Link to="/calc" className={shell.link}>
+            {t.nav.calculators}
           </Link>
           <Link to="/settings" className={shell.link}>
             {t.nav.settings}
@@ -95,6 +100,24 @@ const settingsRoute = createRoute({
   component: SettingsScreen,
 });
 
+// v1.0 Task 14: calculators live on the same shell but run against
+// the store-less calc worker — no `epiora-store` lock.
+const calcIndexRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/calc',
+  component: CalcIndexScreen,
+});
+
+const calcRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/calc/$id',
+  validateSearch: (search: Record<string, unknown>) => search,
+  component: function CalcRoute() {
+    const { id } = calcRoute.useParams();
+    return <CalcScreen id={id} />;
+  },
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   projectRoute,
@@ -102,11 +125,28 @@ const routeTree = rootRoute.addChildren([
   datasetRoute,
   analysisRoute,
   settingsRoute,
+  calcIndexRoute,
+  calcRoute,
 ]);
 
 export const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
+  // v1.0 Task 14: calculator links carry raw input values
+  // (`?strata=10,11;4,20`) — the query is a plain string map, not the
+  // default JSON-per-value codec (`numerator=%2212%22`).
+  parseSearch: (searchStr) =>
+    Object.fromEntries(new URLSearchParams(searchStr)),
+  stringifySearch: (search) => {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(search)) {
+      if (value !== undefined && value !== null) {
+        params.set(key, String(value));
+      }
+    }
+    const s = params.toString();
+    return s === '' ? '' : `?${s}`;
+  },
 });
 
 declare module '@tanstack/react-router' {
