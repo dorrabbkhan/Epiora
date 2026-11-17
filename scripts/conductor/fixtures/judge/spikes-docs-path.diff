@@ -1,0 +1,18 @@
+diff --git a/scripts/conductor/x.sh b/scripts/conductor/x.sh
+index 1111111..2222222 100644
+--- a/scripts/conductor/x.sh
++++ b/scripts/conductor/x.sh
+@@ -1,2 +1,4 @@
+ #!/usr/bin/env bash
++# docs/spikes/ is the reports directory, not spike code — not an import.
++reports=$(git ls-files "docs/spikes/")
+ echo "$reports"
+diff --git a/docs/decisions.md b/docs/decisions.md
+index 1111111..2222222 100644
+--- a/docs/decisions.md
++++ b/docs/decisions.md
+@@ -1,2 +1,3 @@
+ # decisions
++
++- v1.0 task 0b entry
+ trailing

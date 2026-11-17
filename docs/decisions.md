@@ -4548,3 +4548,89 @@ Resolved interpretations and port deltas:
 - Shell-script tests are node:test files that spawn bash with stub
   `devin`/`gh` on `PATH` (bats is not installed).
 Supersedes: —
+
+### v1.0 Task 0b — lean context, bounded waits, log reader, headless per-task runs (2026-11-17)
+
+Decision: Cut the conductor's fixed per-turn context per
+docs/superpowers/plans/2026-11-17-epiora-v1.0-conductor-efficiency.md Task
+0b. `.claude/settings.json` gains `"disableClaudeAiConnectors": true`,
+`"enabledPlugins": {"superpowers@synced": false}` and six
+`permissions.deny` tool entries (`Artifact`, `Workflow`, `ScheduleWakeup`,
+`ReportFindings`, `ShareOnboardingGuide`, `ListAgents` — the built-ins the
+conductor never uses, E8). `scripts/conductor/run-plan.sh` runs one fresh
+headless `/conduct` session per task with the explicit allow-list in
+`scripts/conductor/headless-tools.txt`; bounded waits
+(`DEVIN_DETACH=1 devin.sh` + `wait-for.sh`, `wait-ci.sh
+WAIT_CI_DEADLINE_S`) keep every wait under one tool call; the `log-reader`
+Haiku subagent digests long CI/Devin logs. The settings allow list, hook
+and CLAUDE.md judgment-rules text are unchanged.
+Evidence: `node --test scripts/conductor/*.test.ts` — all pass;
+`./scripts/check.sh quick` — QUICK CHECKS PASSED; full gate: CI.
+
+- **Context measurements** (conductor, 2026-11-17, ~/Epiora branch
+  conductor/efficiency-plan, Claude Code 2.1.322, plain
+  `claude -p "/context" --model opus`). Before (repo settings as on main):
+  **32.5k** — system prompt 2.8k · system tools 17.2k · MCP tools 586 ·
+  MCP server instructions 2.4k · memory files 2.4k · skills 5.8k ·
+  messages 1.3k; deferred: MCP tools 30k (claude.ai connectors Atlassian,
+  Claude Data, Claude Docs, Meetings), system tools 23.1k. After (same
+  command plus `--settings` with the two lean keys): **28.2k** — system
+  prompt 2.8k · system tools 18.1k · memory files 2.4k · skills 4.9k ·
+  messages 10; MCP tools, MCP server instructions and deferred MCP
+  tools 0; deferred system tools 22.9k.
+- **What each key saved:** `disableClaudeAiConnectors` −2.9k (586 MCP
+  tools + 2.4k server instructions; the 30k of deferred connector tools is
+  gone too); `enabledPlugins: {"superpowers@synced": false}` −1.3k
+  (superpowers skills 16 → 0). Not set: `disableBundledSkills` and
+  `skillOverrides` — babelgate measured them at +6.2k / ≈ 0.
+- **Real first-turn input tokens** (conductor, `claude -p "Reply with OK
+  only." --model opus --output-format json`, input + cache-creation +
+  cache-read, two runs each; raw in
+  ~/epiora-conductor/v1.0-task0b/first-turn-api.txt): main 44,189 → lean
+  settings 37,143 → lean + the six `permissions.deny` tools 18,974 /
+  18,979 (19,028 with `--permission-mode bypassPermissions`). Agent, Bash,
+  Edit, Read, Skill, ToolSearch, Write stay loaded. `/context` under the
+  deny list reports system tools 941 — an undercount, since a direct tool
+  listing shows those tools still loaded; the API numbers are
+  authoritative, the /context one is context. Meets the ≤ 20k first-turn
+  target.
+- **T3 Code injection:** T3 Code conductor sessions start at a median
+  45.1k — ~13k of host-injected t3-code MCP tools/instructions and
+  orchestration text that project settings cannot remove; the lean
+  settings apply on top of it.
+- **spikes-import carry-over fix (from Task 0a):** `spikes/` now matches
+  only at the start of a quoted path, after `../`/`./` segments, or as a
+  Rust path segment or Cargo member/path value — `"docs/spikes/"` (the
+  reports directory) no longer flags. The Rust-segment pattern is built at
+  runtime so judge-checks.ts's own added lines never carry the literal it
+  looks for (same trick as the licence allow-list pattern).
+- **run-plan.sh resolutions:** the plan file is the
+  `docs/superpowers/plans/*epiora-<version>-*.md` whose Task Index
+  contains both range ids (v1.0 has two plan files; `PLAN_FILE`
+  overrides). The id column is `#` when present, else `Task` (the two
+  plans differ). `Conductor` → `Opus|Sonnet` maps to `--model
+  opus|sonnet`; an absent column defaults every task to opus with a
+  warning; any other value is an error. A `RESULT:` line counts only when
+  this session appended to the task's conductor-log.md (line count
+  recorded before the session) — a stale `READY` no longer lets a crashed
+  session slip through. `READY <PR>` polls `gh pr view --json state` every
+  `RUN_PLAN_POLL_S` (default 300 s) until MERGED; CLOSED stops like
+  FAILED. `RUN_PLAN_DIR` overrides `~/epiora-conductor` for offline tests;
+  `DRY_RUN=1` prints the `claude -p` commands and exits 0.
+- **Bounded waits:** `DEVIN_DETACH=1 devin.sh` re-invokes itself as
+  `--detached-worker` under `setsid nohup` (new session, survives the
+  caller's exit), writes `<out>.md` then `<out>.rc` on exit and prints the
+  `.out.md` path at once. `wait-for.sh <out.md> [max_s=540]` polls every
+  `WAIT_FOR_POLL_S` (default 5 s), then prints the 0a trimmed stdout and
+  exits with the session's rc; past the deadline it prints `PENDING <n>
+  lines` and exits 4 — a re-call resumes. Foreground devin.sh runs write
+  `<out>.rc` too, so wait-for.sh joins either mode. `wait-ci.sh` honours
+  `WAIT_CI_DEADLINE_S` the same way: `gh pr checks --watch` in the
+  background, killed at the deadline, exit 4.
+- **Files outside the Files block:** `scripts/conductor/run-plan.test.ts`
+  (the plan's Step 2 shell tests need a `node --test` file; the Files
+  block names only the fixtures glob), and the carry-over fix the owner
+  assigned to this task: `scripts/conductor/judge-checks.ts`,
+  `scripts/conductor/judge.test.ts`,
+  `scripts/conductor/fixtures/judge/spikes-docs-path.diff`.
+Supersedes: —
