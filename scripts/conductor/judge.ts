@@ -77,7 +77,7 @@ export interface JudgeDeps {
 // One stdout line per check: whole reasons only, never cut mid-path. What
 // doesn't fit is counted; the report file lists every reason.
 const summarize = (reasons: string[], n = 300) => {
-  let out = reasons[0].length > n ? reasons[0].slice(0, n - 1) + "…" : reasons[0];
+  let out = reasons[0];
   let i = 1;
   for (; i < reasons.length && out.length + 2 + reasons[i].length <= n; i++)
     out += "; " + reasons[i];
@@ -188,14 +188,21 @@ export function runJudge(opts: JudgeOpts, deps: JudgeDeps = {}): JudgeResult {
     const planPath = opts.plan ?? (opts.version ? findPlan(opts.version, opts.task) : undefined);
     const planText = planPath && existsSync(planPath) ? readFileSync(planPath, "utf8") : null;
 
-    // The claimed stat defaults to the newest task/review/fix session
-    // output under ~/epiora-conductor/<v>-task<N>/.
+    // The claimed stat defaults to the newest task-* or fix-* session
+    // output under ~/epiora-conductor/<v>-task<N>/ — never a review's
+    // .out.md, which may belong to a session still running and has no
+    // diff-stat block yet. devin.sh names files <kind>-<stamp>.out.md, so
+    // the part after the first dash sorts oldest → newest.
     let claimedText: string | null = null;
     let claimedPath = opts.claimed;
     if (!claimedPath && existsSync(dir)) {
       const outs = readdirSync(dir)
-        .filter((f) => f.endsWith(".out.md"))
-        .sort();
+        .filter((f) => /^(?:task|fix)-.+\.out\.md$/.test(f))
+        .sort(
+          (a, b) =>
+            a.slice(a.indexOf("-")).localeCompare(b.slice(b.indexOf("-"))) ||
+            a.localeCompare(b),
+        );
       if (outs.length) claimedPath = join(dir, outs[outs.length - 1]);
     }
     if (claimedPath && existsSync(claimedPath)) claimedText = readFileSync(claimedPath, "utf8");

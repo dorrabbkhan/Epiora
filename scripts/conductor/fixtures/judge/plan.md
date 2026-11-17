@@ -10,7 +10,7 @@
 
 ### Task 1: Plain
 **Files:**
-- Create: `src/foo.ts`, `foo.test.ts`, `scripts/conductor/x.sh`
+- Create: `src/foo.ts`, `foo.test.ts`, `scripts/conductor/x.sh`, `src/glob-?.ts`
 - Modify: `docs/decisions.md`, `crates/epiora-core/src/stats.rs`, `docs/spikes/wasm-mdb.md`
 
 ### Task 2: Gated

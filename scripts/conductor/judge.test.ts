@@ -158,6 +158,36 @@ describe("judge.ts (conductor efficiency plan Task 0a)", () => {
     assert.match(line(r, "files-block")!, /^PASS files-block/);
   });
 
+  it("glob question mark matches one char, dots are literal", () => {
+    const one = judge("glob-question.diff");
+    assert.match(line(one, "files-block")!, /^PASS files-block/);
+    const two = judge("glob-question-two.diff");
+    assert.match(line(two, "files-block")!, /^FLAG files-block .*src\/glob-ab\.ts/);
+    const dots = judge("glob-dots.diff");
+    assert.match(line(dots, "files-block")!, /^FLAG files-block .*src\/foo1test2ts/);
+  });
+
+  it("long reason is never cut mid-item", () => {
+    const r = judge("long-reason.diff");
+    assert.equal(r.exitCode, 1);
+    const l = line(r, "numbers")!;
+    // the reason ends with the whole added line — a sliced reason would end in "…"
+    assert.ok(l.includes("0.77777] };"), l);
+    assert.ok(!l.includes("…"), l);
+  });
+
+  it("default claimed ignores review output", () => {
+    const dir = mkdtempSync(join(tmpdir(), "judge-claimed-"));
+    for (const f of ["task-20261101-000000.out.md", "review-20261231-235959.out.md"])
+      writeFileSync(join(dir, f), "session output\nno stat block here\n");
+    writeFileSync(
+      join(dir, "fix-20261102-000000.out.md"),
+      readFileSync(join(FIX, "claimed-clean.out.md"), "utf8"),
+    );
+    const r = judge("clean.diff", { reportDir: dir });
+    assert.match(line(r, "diff-stat")!, /^PASS diff-stat/);
+  });
+
   it("import of spikes from crates flags", () => {
     const r = judge("spikes-import.diff");
     assert.equal(r.exitCode, 1);

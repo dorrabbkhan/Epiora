@@ -102,6 +102,7 @@ const patToRe = (p: string) =>
         .replace(/^\*\*\//, "\u0000")
         .replace(/\*\*/g, "\u0001")
         .replace(/\*/g, "[^/]*")
+        .replace(/\?/g, "[^/]")
         .replace(/\u0001/g, ".*")
         .replace("\u0000", "(?:.*/)?") +
       "$",
