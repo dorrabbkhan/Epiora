@@ -58,10 +58,10 @@ const MEAN_CI_INPUTS: &[InputDef] = &[
 ];
 
 const MEAN_CI_OUTPUTS: &[OutputDef] = &[
-    od("calc.mean_ci.t.lower", CF, "`stats::qt`"),
+    od("calc.mean_ci.t.lower", CF, "`stats::qt`; OpenEpi shows its own t quantile (AStudT bisection) — default display"),
     od("calc.mean_ci.t.upper", CF, "`stats::qt`"),
-    od("calc.mean_ci.z.lower", CF, "`fixtures/R/methods/means.R::mean_ci` — z-CI with √((N−n)/(N−1)) FPC, Cochran, Sampling Techniques 1977 §2.8, as in `CIMean.js`"),
-    od("calc.mean_ci.z.upper", CF, "`fixtures/R/methods/means.R::mean_ci` — z-CI with √((N−n)/(N−1)) FPC, Cochran, Sampling Techniques 1977 §2.8, as in `CIMean.js`"),
+    od("calc.mean_ci.z.lower", CF, "`fixtures/R/methods/means.R::mean_ci` — z-CI with √((N−n)/(N−1)) FPC, Cochran, Sampling Techniques 1977 §2.8, as in `CIMean.js`; OpenEpi shows the same formula with z = √cscrit (hard-coded chi-square criticals) — alternative display (default: t)"),
+    od("calc.mean_ci.z.upper", CF, "`fixtures/R/methods/means.R::mean_ci` — z-CI with √((N−n)/(N−1)) FPC, Cochran, Sampling Techniques 1977 §2.8, as in `CIMean.js`; OpenEpi shows the same formula with z = √cscrit (hard-coded chi-square criticals) — alternative display (default: t)"),
 ];
 pub(super) static MEAN_CI: CalculatorDef = CalculatorDef {
     id: "mean_ci",
@@ -99,12 +99,12 @@ const MEDIAN_CI_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.median_ci.normal.lower_rank",
         CF,
-        "`fixtures/R/methods/means.R::percentile_ci` — Conover, Practical Nonparametric Statistics",
+        "`fixtures/R/methods/means.R::percentile_ci` — Conover, Practical Nonparametric Statistics; OpenEpi shows rounded normal-approx ranks (Math.round) — default display",
     ),
     od(
         "calc.median_ci.normal.upper_rank",
         CF,
-        "`fixtures/R/methods/means.R::percentile_ci` — Conover, Practical Nonparametric Statistics",
+        "`fixtures/R/methods/means.R::percentile_ci` — Conover, Practical Nonparametric Statistics; OpenEpi shows rounded normal-approx ranks (Math.round) — default display",
     ),
 ];
 pub(super) static MEDIAN_CI: CalculatorDef = CalculatorDef {
@@ -251,7 +251,7 @@ const T_TEST_SUMMARY_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.t_test_summary.pooled.lower",
         CF,
-        "`stats::t.test(var.equal=TRUE)` equivalent",
+        "`stats::t.test(var.equal=TRUE)` equivalent; OpenEpi shows its own t quantile (AStudT bisection) — default display",
     ),
     od(
         "calc.t_test_summary.pooled.p_2t",
@@ -266,7 +266,7 @@ const T_TEST_SUMMARY_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.t_test_summary.pooled.upper",
         CF,
-        "`stats::t.test(var.equal=TRUE)` equivalent",
+        "`stats::t.test(var.equal=TRUE)` equivalent; OpenEpi shows its own t quantile (AStudT bisection) — default display",
     ),
     od(
         "calc.t_test_summary.welch.df",
@@ -281,12 +281,12 @@ const T_TEST_SUMMARY_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.t_test_summary.welch.lower",
         CF,
-        "`stats::t.test(var.equal=FALSE)`",
+        "`stats::t.test(var.equal=FALSE)`; OpenEpi shows its own t quantile at Math.round(Satterthwaite df) (AStudT bisection) — alternative display (default: pooled)",
     ),
     od(
         "calc.t_test_summary.welch.p_2t",
         CF,
-        "`stats::t.test(var.equal=FALSE)`",
+        "`stats::t.test(var.equal=FALSE)`; OpenEpi shows its own t quantile at Math.round(Satterthwaite df) (AStudT bisection) — alternative display (default: pooled)",
     ),
     od(
         "calc.t_test_summary.welch.t",
@@ -296,7 +296,7 @@ const T_TEST_SUMMARY_OUTPUTS: &[OutputDef] = &[
     od(
         "calc.t_test_summary.welch.upper",
         CF,
-        "`stats::t.test(var.equal=FALSE)`",
+        "`stats::t.test(var.equal=FALSE)`; OpenEpi shows its own t quantile at Math.round(Satterthwaite df) (AStudT bisection) — alternative display (default: pooled)",
     ),
 ];
 pub(super) static T_TEST_SUMMARY: CalculatorDef = CalculatorDef {
@@ -327,7 +327,7 @@ const ANOVA_SUMMARY_OUTPUTS: &[OutputDef] = &[
     od("calc.anova_summary.anova.f", CF, "`fixtures/R/methods/means.R::anova_from_summary` — ANOVA identities from n/mean/sd as in `ANOVA.js`"),
     od("calc.anova_summary.anova.ms_between", CF, "`fixtures/R/methods/means.R::anova_from_summary` — ANOVA identities from n/mean/sd as in `ANOVA.js`"),
     od("calc.anova_summary.anova.ms_within", CF, "`fixtures/R/methods/means.R::anova_from_summary` — ANOVA identities from n/mean/sd as in `ANOVA.js`"),
-    od("calc.anova_summary.anova.p", CF, "`fixtures/R/methods/means.R::anova_from_summary` — ANOVA identities from n/mean/sd as in `ANOVA.js`"),
+    od("calc.anova_summary.anova.p", CF, "`fixtures/R/methods/means.R::anova_from_summary` — ANOVA identities from n/mean/sd as in `ANOVA.js`; OpenEpi shows its own F tail (FishF) — default display"),
     od("calc.anova_summary.anova.ss_between", CF, "`fixtures/R/methods/means.R::anova_from_summary` — ANOVA identities from n/mean/sd as in `ANOVA.js`"),
     od("calc.anova_summary.anova.ss_total", CF, "`fixtures/R/methods/means.R::anova_from_summary` — ANOVA identities from n/mean/sd as in `ANOVA.js`"),
     od("calc.anova_summary.anova.ss_within", CF, "`fixtures/R/methods/means.R::anova_from_summary` — ANOVA identities from n/mean/sd as in `ANOVA.js`"),

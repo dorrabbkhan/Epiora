@@ -47,8 +47,16 @@ pub struct OpenEpiReport {
     /// Labels OpenEpi printed with `statistic: null`, deduplicated in
     /// first-seen order as `"<calculator>: <label>"`.
     pub unmapped: Vec<String>,
-    /// Every mapped value failing the display rule.
+    /// Every mapped value failing the display rule that is not a
+    /// documented method difference.
     pub mismatches: Vec<Mismatch>,
+    /// Mapped values failing the display rule on a statistic whose
+    /// `OutputDef.method` carries the `OE_METHOD_MARK` label — a
+    /// documented method difference (v1.0 Task 13, `docs/decisions.md`
+    /// `### v1.0 Task 13 — method choices`). They are still reported,
+    /// but they are not mismatches: OpenEpi computes a different
+    /// method or approximation than the R-validated engine method.
+    pub method_differences: Vec<Mismatch>,
 }
 
 /// One calculator's counts for the report's per-calculator row.
@@ -58,8 +66,38 @@ pub struct CalculatorCheck {
     pub id: String,
     /// Mapped values compared for this calculator.
     pub checked: usize,
-    /// Mapped values failing the display rule.
+    /// Mapped values failing the display rule without a documented
+    /// method difference.
     pub mismatches: usize,
+    /// Mapped values failing the display rule on a documented
+    /// method-difference statistic.
+    pub differences: usize,
+}
+
+/// The `OutputDef.method` substring marking a documented method
+/// difference between the engine's method (the R fixture) and the
+/// method OpenEpi shows. Set by Task 13's labels; each marked
+/// statistic is row in `docs/decisions.md` `### v1.0 Task 13 —
+/// method choices` with evidence.
+pub(crate) const OE_METHOD_MARK: &str = "OpenEpi shows";
+
+/// `calc.two_by_two.strata.0.z` → `calc.two_by_two.strata[].z`: a
+/// numeric path segment is an array index — it folds into the
+/// preceding segment as `[]` — so a captured statistic key matches
+/// the registry's `[]` statistic id.
+pub(crate) fn normalize_key(key: &str) -> String {
+    let mut out = String::new();
+    for seg in key.split('.') {
+        if !seg.is_empty() && seg.bytes().all(|b| b.is_ascii_digit()) {
+            out.push_str("[]");
+        } else {
+            if !out.is_empty() {
+                out.push('.');
+            }
+            out.push_str(seg);
+        }
+    }
+    out
 }
 
 fn corpus(reason: impl Into<String>) -> EngineError {
@@ -175,6 +213,7 @@ pub fn compare_openepi(dir: &Path) -> Result<OpenEpiReport, EngineError> {
         calculators: Vec::new(),
         unmapped: Vec::new(),
         mismatches: Vec::new(),
+        method_differences: Vec::new(),
     };
     let mut seen_unmapped = BTreeSet::new();
     for path in capture_files(dir)? {
@@ -208,6 +247,7 @@ fn check_file(
         id: calculator.to_string(),
         checked: 0,
         mismatches: 0,
+        differences: 0,
     };
     for case in doc
         .get("cases")
@@ -298,17 +338,44 @@ fn check_entry(
     }
     check.checked += 1;
     let node = resolve(actual, &segs[2..]);
-    if !node
+    if node
         .and_then(Value::as_f64)
         .is_some_and(|v| within_display(v, expected, decimals))
     {
+        return Ok(());
+    }
+    let mm = Mismatch {
+        path: format!("{calculator}/{case_id} {label:?} -> {statistic} ({decimals} decimals)"),
+        expected: Some(expected),
+        actual: node.map_or_else(|| "missing".to_string(), |v| v.to_string()),
+        class: CLASS.to_string(),
+    };
+    // A numeric disagreement on a statistic the registry labels with
+    // the OpenEpi method (`OE_METHOD_MARK`, Task 13's table) is a
+    // documented method difference, not a mismatch — the engine
+    // value is the R-validated one. A missing engine value stays a
+    // mismatch either way.
+    if node.and_then(Value::as_f64).is_some() && documented_difference(calculator, &statistic) {
+        check.differences += 1;
+        report.method_differences.push(mm);
+    } else {
         check.mismatches += 1;
-        report.mismatches.push(Mismatch {
-            path: format!("{calculator}/{case_id} {label:?} -> {statistic} ({decimals} decimals)"),
-            expected: Some(expected),
-            actual: node.map_or_else(|| "missing".to_string(), |v| v.to_string()),
-            class: CLASS.to_string(),
-        });
+        report.mismatches.push(mm);
     }
     Ok(())
+}
+
+/// Whether `statistic` (a `calc.<id>.…` capture key) names an
+/// `OutputDef` whose `method` marks a documented OpenEpi method
+/// difference — i.e. carries `OE_METHOD_MARK`. Numeric segments are
+/// array indices, matched against the registry's `[]` id.
+fn documented_difference(calculator: &str, statistic: &str) -> bool {
+    let normalized = normalize_key(statistic);
+    crate::calc::definition(calculator)
+        .map(|d| {
+            d.outputs
+                .iter()
+                .any(|o| o.statistic == normalized && o.method.contains(OE_METHOD_MARK))
+        })
+        .unwrap_or(false)
 }

@@ -378,3 +378,59 @@ fn calc_run_never_panics_on_table_inputs() {
         }
     });
 }
+
+/// v1.0 Task 13: every `calc.*` statistic the `### v1.0 Task 13 —
+/// method choices` table in `docs/decisions.md` lists must be an
+/// `OutputDef` whose `method` names the tool showing the differing
+/// method (`"OpenEpi shows …"`, `"EI7 shows …"` or `Epi Info`), and
+/// every output whose `method` carries an `"OpenEpi shows"` /
+/// `"EI7 shows"` marker must appear in the table. The markers also
+/// classify the OpenEpi corpus leg's documented method differences.
+#[test]
+fn every_differing_output_is_labelled() {
+    let text = std::fs::read_to_string(
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../../docs/decisions.md"),
+    )
+    .expect("docs/decisions.md");
+    let section = text
+        .split("### v1.0 Task 13 — method choices")
+        .nth(1)
+        .expect("the method-choices section must exist")
+        .split("\n### ")
+        .next()
+        .unwrap();
+    let listed: BTreeSet<&str> = section
+        .lines()
+        .filter(|l| l.starts_with("| `calc."))
+        .map(|l| l.trim_start_matches("| `").split('`').next().unwrap())
+        .collect();
+    assert!(
+        !listed.is_empty(),
+        "the method-choices table must list statistics"
+    );
+    for stat in &listed {
+        let output = REGISTRY
+            .iter()
+            .flat_map(|d| d.outputs.iter())
+            .find(|o| o.statistic == *stat)
+            .unwrap_or_else(|| panic!("{stat}: listed in decisions.md but not an OutputDef"));
+        assert!(
+            output.method.contains("OpenEpi shows")
+                || output.method.contains("EI7 shows")
+                || output.method.contains("Epi Info"),
+            "{stat}: `method` does not name the tool showing the differing method: {}",
+            output.method
+        );
+    }
+    let marked: BTreeSet<&str> = REGISTRY
+        .iter()
+        .flat_map(|d| d.outputs.iter())
+        .filter(|o| o.method.contains("OpenEpi shows") || o.method.contains("EI7 shows"))
+        .map(|o| o.statistic)
+        .collect();
+    let unlisted: Vec<_> = marked.difference(&listed).copied().collect();
+    assert!(
+        unlisted.is_empty(),
+        "outputs marked as method differences but missing from the table: {unlisted:?}"
+    );
+}

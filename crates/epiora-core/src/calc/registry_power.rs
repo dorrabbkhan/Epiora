@@ -37,8 +37,8 @@ const POWER_UNMATCHED_CC_INPUTS: &[InputDef] = &[
 ];
 
 const POWER_UNMATCHED_CC_OUTPUTS: &[OutputDef] = &[
-    od("calc.power_unmatched_cc.normal", CF, "`fixtures/R/methods/sample_size.R::power_cc` — OpenEpi `PowerCC.js` (Fleiss §3.18 inverted)"),
-    od("calc.power_unmatched_cc.normal_cc", CF, "`fixtures/R/methods/sample_size.R::power_cc_cc` — same"),
+    od("calc.power_unmatched_cc.normal", CF, "`fixtures/R/methods/sample_size.R::power_cc` — OpenEpi `PowerCC.js` (Fleiss §3.18 inverted); OpenEpi shows the same normal-approx power formula via own Norm/ANorm and z = √cscrit — default display"),
+    od("calc.power_unmatched_cc.normal_cc", CF, "`fixtures/R/methods/sample_size.R::power_cc_cc` — same; OpenEpi shows the same normal-approx power formula via own Norm/ANorm and z = √cscrit — alternative display (default: normal)"),
     od("calc.power_unmatched_cc.odds_ratio", CF, "`fixtures/R/methods/sample_size.R::implied_or` — OpenEpi `PowerCC.js` (odds of exposure, cases vs controls)"),
 ];
 pub(super) static POWER_UNMATCHED_CC: CalculatorDef = CalculatorDef {
@@ -87,8 +87,8 @@ const POWER_COHORT_INPUTS: &[InputDef] = &[
 ];
 
 const POWER_COHORT_OUTPUTS: &[OutputDef] = &[
-    od("calc.power_cohort.normal", CF, "`fixtures/R/methods/sample_size.R::power_cohort` — OpenEpi `PowerCohort.js` (same code in RCT/Cross)"),
-    od("calc.power_cohort.normal_cc", CF, "`fixtures/R/methods/sample_size.R::power_cohort_cc` — same source"),
+    od("calc.power_cohort.normal", CF, "`fixtures/R/methods/sample_size.R::power_cohort` — OpenEpi `PowerCohort.js` (same code in RCT/Cross); OpenEpi shows the same normal-approx power formula via own Norm/ANorm and z = √cscrit — default display"),
+    od("calc.power_cohort.normal_cc", CF, "`fixtures/R/methods/sample_size.R::power_cohort_cc` — same source; OpenEpi shows the same normal-approx power formula via own Norm/ANorm and z = √cscrit — alternative display (default: normal)"),
     od("calc.power_cohort.risk_difference", CF, "fixtures/R/calc.R"),
     od("calc.power_cohort.risk_ratio", CF, "fixtures/R/calc.R"),
 ];
@@ -193,7 +193,7 @@ const POWER_MEAN_DIFFERENCE_INPUTS: &[InputDef] = &[
 const POWER_MEAN_DIFFERENCE_OUTPUTS: &[OutputDef] = &[od(
     "calc.power_mean_difference.power",
     CF,
-    "`fixtures/R/methods/sample_size.R::power_means` — OpenEpi `PowerMean.js` z-formula",
+    "`fixtures/R/methods/sample_size.R::power_means` — OpenEpi `PowerMean.js` z-formula; OpenEpi shows a z-power 1 − Norm(−z + √n₁·Δ/√(s₁²+s₂²/r)) (own Norm), not power.t.test — default display",
 )];
 const POWER_MEAN_DIFFERENCE_GROUPS: &[InputGroup] = &[
     // `mean_1`/`mean_2` together XOR `difference`; `sd_i` XOR `var_i`

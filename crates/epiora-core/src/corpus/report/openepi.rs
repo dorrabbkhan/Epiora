@@ -4,7 +4,7 @@
 //! per captured calculator with its mapped-value and mismatch counts,
 //! measured by `corpus::openepi::compare_openepi`.
 
-use crate::corpus::openepi::{capture_files, compare_openepi};
+use crate::corpus::openepi::{capture_files, compare_openepi, normalize_key};
 use crate::EngineError;
 use serde_json::Value;
 use std::collections::BTreeSet;
@@ -14,22 +14,6 @@ fn corpus(reason: impl Into<String>) -> EngineError {
     EngineError::CorpusFormat {
         reason: reason.into(),
     }
-}
-
-/// `strata.0.zscore` → `strata[].zscore`: a numeric path segment is an
-/// array index, so a mapped OpenEpi key can be matched against a
-/// registry statistic id.
-fn normalize_key(key: &str) -> String {
-    key.split('.')
-        .map(|seg| {
-            if !seg.is_empty() && seg.bytes().all(|b| b.is_ascii_digit()) {
-                "[]".to_string()
-            } else {
-                seg.to_string()
-            }
-        })
-        .collect::<Vec<_>>()
-        .join(".")
 }
 
 /// The registry statistic ids the `openepi/` capture files map labels
@@ -76,10 +60,13 @@ pub(super) fn section(fixtures_dir: &Path) -> Result<String, EngineError> {
     out.push_str(&format!(
         "`openepi/*.json`: {} displayed values mapped to engine statistics across {} \
          calculators, {} mismatch(es) at `openepi_display` (half a unit in the last \
-         displayed decimal, spec §9).",
+         displayed decimal, spec §9), {} documented method difference(s) (the output's \
+         `method` names the tool showing the differing method — `docs/decisions.md` \
+         `### v1.0 Task 13 — method choices`).",
         report.checked,
         report.calculators.len(),
-        report.mismatches.len()
+        report.mismatches.len(),
+        report.method_differences.len()
     ));
     if report.unmapped.is_empty() {
         out.push_str(" Every printed label maps to an engine statistic.\n");
@@ -93,14 +80,21 @@ pub(super) fn section(fixtures_dir: &Path) -> Result<String, EngineError> {
     out.push_str("\n| Calculator | OpenEpi |\n|---|---|\n");
     for c in &report.calculators {
         out.push_str(&format!(
-            "| {} | {} mapped, {} mismatches |\n",
-            c.id, c.checked, c.mismatches
+            "| {} | {} mapped, {} mismatches, {} documented differences |\n",
+            c.id, c.checked, c.mismatches, c.differences
         ));
     }
     for m in &report.mismatches {
         out.push_str(&format!("\n- {m}"));
     }
     if !report.mismatches.is_empty() {
+        out.push('\n');
+    }
+    if !report.method_differences.is_empty() {
+        out.push_str("\nDocumented method differences:\n");
+        for m in &report.method_differences {
+            out.push_str(&format!("\n- {m}"));
+        }
         out.push('\n');
     }
     Ok(out)
