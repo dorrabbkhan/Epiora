@@ -5,6 +5,7 @@
 pub mod compare;
 pub mod dataset_json;
 pub mod ei7;
+pub mod parity_norm;
 pub mod report;
 pub mod run_all;
 pub mod run_case;

@@ -5,32 +5,12 @@ use super::super::path::Segment;
 use super::super::steps::{closed, leaf};
 use super::super::Explanation;
 use super::finite;
-use crate::dataset::Dataset;
 use crate::error::EngineError;
-use crate::procedures::TablesOptions;
-use crate::stats::{bdt_parts, stratified_derived, stratified_parts, StratifiedStats};
-
-/// The kept strata of a `stratified` run (totals > 0), re-derived as
-/// `stats::stratified` filters them.
-fn kept_strata(
-    ds: &Dataset,
-    opts: &TablesOptions,
-) -> Result<Vec<crate::stats::Table2x2>, EngineError> {
-    Ok(super::strata_of(ds, opts)?
-        .into_iter()
-        .filter(|t| {
-            t.a.saturating_add(t.b)
-                .saturating_add(t.c)
-                .saturating_add(t.d)
-                > 0
-        })
-        .collect())
-}
+use crate::stats::{bdt_parts, stratified_derived, stratified_parts, StratifiedStats, Table2x2};
 
 pub(super) fn mh_leaf(
     stats: &StratifiedStats,
-    ds: &Dataset,
-    opts: &TablesOptions,
+    kept: &[Table2x2],
     statistic: &str,
     rest: &[Segment],
 ) -> Result<Explanation, EngineError> {
@@ -40,8 +20,7 @@ pub(super) fn mh_leaf(
         })?;
     let est = leaf(&tree, rest, statistic)?;
     let u = || super::super::path::unknown(statistic);
-    let kept = kept_strata(ds, opts)?;
-    let p = stratified_parts(&kept);
+    let p = stratified_parts(kept);
     let dv = stratified_derived(&p);
 
     let sd_or = dv.sd_or;
@@ -111,8 +90,7 @@ pub(super) fn mh_leaf(
 /// `breslow_day_tarone.*` leaves.
 pub(super) fn bdt_leaf(
     stats: &StratifiedStats,
-    ds: &Dataset,
-    opts: &TablesOptions,
+    kept: &[Table2x2],
     statistic: &str,
     rest: &[Segment],
 ) -> Result<Explanation, EngineError> {
@@ -123,8 +101,7 @@ pub(super) fn bdt_leaf(
     })?;
     let est = leaf(&tree, rest, statistic)?;
     let u = || super::super::path::unknown(statistic);
-    let kept = kept_strata(ds, opts)?;
-    let parts = bdt_parts(&kept, &stats.mantel_haenszel.odds_ratio.estimate);
+    let parts = bdt_parts(kept, &stats.mantel_haenszel.odds_ratio.estimate);
 
     match rest {
         [l] if l.key == "df" => Ok(closed(

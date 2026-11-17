@@ -80,7 +80,9 @@ const EXPLAIN_TS: &str = "explain";
 /// `"means"`; `options` is the procedure's options object;
 /// `statistic` is the registry id with concrete indices —
 /// `freq.categories[1].percent`,
-/// `two_by_two.odds_ratio.ci_95_wald.lower`.
+/// `two_by_two.odds_ratio.ci_95_wald.lower`. The call is
+/// run-then-trace: the procedure runs once and the trace reads the
+/// run's output.
 pub fn explain_procedure(
     ds: &Dataset,
     procedure: &str,
@@ -93,13 +95,13 @@ pub fn explain_procedure(
         _ => return Err(path::unknown(statistic)),
     };
     match (procedure, family) {
-        ("freq", "freq") => freq::explain(ds, options, statistic, sub),
-        ("tables", "two_by_two") => two_by_two::explain(ds, options, statistic, sub),
-        ("tables", "stratified_two_by_two") => {
-            two_by_two::explain_stratified(ds, options, statistic, sub)
+        ("freq", "freq")
+        | ("tables", "two_by_two")
+        | ("tables", "stratified_two_by_two")
+        | ("tables", "rxc")
+        | ("means", "means") => {
+            run_procedure(ds, procedure, options)?.trace_sub(family, statistic, sub)
         }
-        ("tables", "rxc") => two_by_two::explain_rxc(ds, options, statistic, sub),
-        ("means", "means") => means::explain(ds, options, statistic, sub),
         _ => Err(path::unknown(statistic)),
     }
 }
@@ -108,7 +110,8 @@ pub fn explain_procedure(
 /// `id` is the calculator's registry id (`"screening"`),
 /// `inputs` the calculator inputs object, `statistic` the
 /// `calc.<id>.<path>` id with concrete indices —
-/// `calc.screening.sensitivity.estimate`.
+/// `calc.screening.sensitivity.estimate`. Run-then-trace like
+/// [`explain_procedure`].
 pub fn explain_calculator(
     id: &str,
     inputs: &Value,
@@ -123,7 +126,116 @@ pub fn explain_calculator(
     {
         return Err(path::unknown(statistic));
     }
-    calc::explain(id, inputs, statistic, &segs[2..])
+    run_calculator(id, inputs)?.trace_sub(statistic, &segs[2..])
+}
+
+/// The run half of [`explain_procedure`] — one procedure run every
+/// emitted statistic traces from (v1.0 Task 10 fix round 3). The
+/// corpus explain tests run each corpus case once and `trace` every
+/// leaf off the same output; the public entry point stays
+/// `explain_procedure` ("run, then trace" — no behaviour change).
+/// Not part of the supported API.
+#[doc(hidden)]
+pub struct ProcedureRun(ProcedureRunInner);
+
+enum ProcedureRunInner {
+    Freq(Box<freq::FreqRun>),
+    Means(Box<means::MeansRun>),
+    Tables(Box<two_by_two::TablesRun>),
+}
+
+impl ProcedureRun {
+    fn trace_sub(
+        &self,
+        family: &str,
+        statistic: &str,
+        sub: &[path::Segment],
+    ) -> Result<Explanation, EngineError> {
+        match (&self.0, family) {
+            (ProcedureRunInner::Freq(r), "freq") => r.trace(statistic, sub),
+            (ProcedureRunInner::Tables(r), "two_by_two") => r.trace(statistic, sub),
+            (ProcedureRunInner::Tables(r), "stratified_two_by_two") => {
+                r.trace_stratified(statistic, sub)
+            }
+            (ProcedureRunInner::Tables(r), "rxc") => r.trace_rxc(statistic, sub),
+            (ProcedureRunInner::Means(r), "means") => r.trace(statistic, sub),
+            _ => Err(path::unknown(statistic)),
+        }
+    }
+
+    /// The trace entry the corpus tests use — parses `statistic`
+    /// and dispatches exactly as `explain_procedure` does after its
+    /// run, so the two paths cannot diverge.
+    #[doc(hidden)]
+    pub fn trace(&self, statistic: &str) -> Result<Explanation, EngineError> {
+        let segs = path::parse(statistic);
+        let (family, sub) = match segs.split_first() {
+            Some((f, rest)) if !rest.is_empty() => (f.key.as_str(), rest),
+            _ => return Err(path::unknown(statistic)),
+        };
+        self.trace_sub(family, statistic, sub)
+    }
+}
+
+/// Runs `procedure` (`"freq"`, `"tables"` or `"means"`) once for
+/// [`ProcedureRun::trace`]; test support for the corpus explain
+/// tests, not part of the supported API.
+#[doc(hidden)]
+pub fn run_procedure(
+    ds: &Dataset,
+    procedure: &str,
+    options: &Value,
+) -> Result<ProcedureRun, EngineError> {
+    match procedure {
+        "freq" => {
+            freq::run(ds, options).map(|r| ProcedureRun(ProcedureRunInner::Freq(Box::new(r))))
+        }
+        "means" => {
+            means::run(ds, options).map(|r| ProcedureRun(ProcedureRunInner::Means(Box::new(r))))
+        }
+        "tables" => two_by_two::run(ds, options)
+            .map(|r| ProcedureRun(ProcedureRunInner::Tables(Box::new(r)))),
+        _ => Err(path::unknown(procedure)),
+    }
+}
+
+/// The run half of [`explain_calculator`] — one calculator run
+/// every `calc.<id>.*` statistic traces from. Test support, not
+/// part of the supported API.
+#[doc(hidden)]
+pub struct CalcRun(calc::CalcRun);
+
+impl CalcRun {
+    fn trace_sub(
+        &self,
+        statistic: &str,
+        sub: &[path::Segment],
+    ) -> Result<Explanation, EngineError> {
+        self.0.trace(statistic, sub)
+    }
+
+    /// The trace entry the corpus tests use — same
+    /// `calc.<id>.<path>` check `explain_calculator` performs.
+    #[doc(hidden)]
+    pub fn trace(&self, statistic: &str) -> Result<Explanation, EngineError> {
+        let segs = path::parse(statistic);
+        if segs.len() < 3
+            || segs[0].key != "calc"
+            || segs[0].index.is_some()
+            || segs[1].key != self.0.id()
+            || segs[1].index.is_some()
+        {
+            return Err(path::unknown(statistic));
+        }
+        self.trace_sub(statistic, &segs[2..])
+    }
+}
+
+/// Runs calculator `id` once for [`CalcRun::trace`]; test support
+/// for the corpus explain tests, not part of the supported API.
+#[doc(hidden)]
+pub fn run_calculator(id: &str, inputs: &Value) -> Result<CalcRun, EngineError> {
+    calc::run(id, inputs).map(CalcRun)
 }
 
 /// Deserialize `options` into a procedure's options type.

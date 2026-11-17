@@ -3,25 +3,20 @@
 
 use super::super::path::Segment;
 use super::super::steps::{closed, leaf};
-use super::super::{options, Explanation};
-use super::{ctx, finite};
-use crate::dataset::Dataset;
+use super::super::Explanation;
+use super::finite;
 use crate::error::EngineError;
-use crate::procedures::{tables, TablesOptions, TablesResult};
-use serde_json::Value;
+use crate::stats::RxcStats;
 
-pub(crate) fn explain_rxc(
-    ds: &Dataset,
-    opts_json: &Value,
+/// The trace half of an `rxc` explain — `stats`/`counts` are the
+/// `TablesResult::RxC` fields of the one `tables` run
+/// (`TablesRun::trace_rxc`).
+pub(super) fn trace(
+    stats: &RxcStats,
+    counts: &[Vec<u64>],
     statistic: &str,
     segs: &[Segment],
 ) -> Result<Explanation, EngineError> {
-    let opts: TablesOptions = options(opts_json)?;
-    let out = tables(ds, &opts, &ctx())?;
-    let (stats, counts) = match &out.result {
-        TablesResult::RxC { stats, counts, .. } => (stats, counts),
-        _ => return Err(super::super::path::unknown(statistic)),
-    };
     let tree = serde_json::to_value(stats).map_err(|e| EngineError::InvalidOptions {
         reason: format!("result does not serialize: {e}"),
     })?;

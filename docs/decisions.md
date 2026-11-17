@@ -4625,4 +4625,46 @@ fabricated.
     (`parity_line_normalized` itself — `corpus` was already in the
     D1 list above for `--hash-golden`, but `run_case.rs` is new in
     this round).
+- Fix round 3 (PR #81): the explain tests re-ran the whole
+  procedure or calculator once per statistic, which made the CI
+  `engine` job take 2 h 17 min (tests/explain.rs alone 7,596 s in
+  the debug build). Owner decision D2 (2026-11-17, quoted):
+  "Follow all your recos; 2h is way too long, do something about
+  it". Each family's explain is now split into a `run` half and a
+  `trace` half: `run` executes the procedure/calculator once and
+  keeps the output and the run-derived intermediates a trace reads
+  (`FreqRun` — first table + its serialized tree; `MeansRun` —
+  result, `group_numeric` buckets, `GroupSummary`s and the
+  `stats_json` tree; `TablesRun` — `TablesResult`, pooled table and
+  kept strata; `CalcRun` — canonical inputs + result tree). The
+  public `explain_procedure`/`explain_calculator` keep their exact
+  signatures and semantics — they are "run, then trace" on the
+  same code path the tests drive through the `#[doc(hidden)]`
+  `run_procedure`/`run_calculator` + `ProcedureRun::trace`/
+  `CalcRun::trace` entry points. `every_registry_statistic_explains`
+  still calls the public API for each registry row's first covering
+  fixture and asserts its `Explanation` equals the run-once trace
+  bit-for-bit (792 public-API checks), so the two paths cannot
+  diverge. The corpus sweep runs once per test process behind a
+  `OnceLock`, shared by `last_step_equals_result_bitwise`,
+  `formula_ids_are_declared`, `every_registry_statistic_explains`,
+  `iterative_statistics_are_method_kind` and `results_unchanged`
+  (which reuses the same run outputs); shared test machinery moved
+  to `tests/explain_support/mod.rs`. Coverage is unchanged —
+  counts verified identical before/after (4,228 swept leaves / 248
+  undefined, 4,228 stats / 4,228 formula steps, 688 registry rows /
+  4,732 concrete stats, 530 iterative stats, 127 golden rows / 0
+  notes, 18 zero-observation stats, 2 unknown-statistic errors).
+  - Files outside the task's Files block:
+    `crates/epiora-core/src/corpus/parity_norm.rs` (owner choice
+    2A — `parity_line_normalized`/`normalize_receipt` and the
+    parity-line rendering they share moved out of
+    `corpus/run_case.rs`, which returns to 315 ≤ 324 lines) and
+    `crates/epiora-core/tests/explain_support/{mod,synth,tree}.rs`
+    (the sweep machinery above — split into sweep/run-once,
+    synthetic-dataset builders and result-tree navigation so every
+    file stays ≤ 400 lines). No `Cargo.toml` change: the run-once
+    sweep alone met the target (debug `tests/explain.rs` 72 s vs a
+    492.76 s release baseline; a `[profile.dev]` opt-level bump was
+    not needed).
 Supersedes: —

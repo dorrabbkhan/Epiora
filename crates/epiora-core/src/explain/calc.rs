@@ -56,42 +56,71 @@ pub(super) fn cells_conf(t: &crate::stats::Table2x2, conf: f64) -> Vals {
     v
 }
 
-pub(super) fn explain(
-    id: &str,
-    inputs: &Value,
-    statistic: &str,
-    segs: &[Segment],
-) -> Result<Explanation, EngineError> {
+/// The run half of a calculator explain (v1.0 Task 10 fix round
+/// 3): the validated inputs and the serialized result of the one
+/// `calc::run` every `calc.<id>.*` statistic traces from.
+pub(crate) struct CalcRun {
+    id: String,
+    canonical: Value,
+    result: Value,
+}
+
+impl CalcRun {
+    pub(crate) fn id(&self) -> &str {
+        &self.id
+    }
+}
+
+/// `definition` + `validate` + `calc::run` once — the public
+/// `explain` and the corpus tests' run-once path share this.
+pub(crate) fn run(id: &str, inputs: &Value) -> Result<CalcRun, EngineError> {
     let def = crate::calc::definition(id)?;
     let canonical = crate::calc::input::validate(def, inputs)?;
     let out = crate::calc::run(id, inputs, &ctx())?;
-    let result = &out.result;
+    Ok(CalcRun {
+        id: id.to_string(),
+        canonical,
+        result: out.result,
+    })
+}
 
-    match id {
-        "two_by_two" => tables::two_by_two(result, &canonical, statistic, segs),
-        "two_by_n" => tables::two_by_n(result, &canonical, statistic, segs),
-        "r_by_c" => tables::r_by_c(result, &canonical, statistic, segs),
-        "dose_response" => tables::dose_response(result, &canonical, statistic, segs),
-        "binomial" => counts::binomial(result, &canonical, statistic, segs),
-        "poisson" => counts::poisson(result, &canonical, statistic, segs),
-        "proportion" => counts::proportion(result, &canonical, statistic, segs),
-        "screening" => counts::screening(result, &canonical, statistic, segs),
-        "smr" => counts::smr(result, &canonical, statistic, segs),
-        "matched_case_control" => counts::matched_case_control(result, &canonical, statistic, segs),
-        "rate_one" => rates::rate_one(result, &canonical, statistic, segs),
-        "rate_compare" => rates::rate_compare(result, &canonical, statistic, segs),
-        "mean_ci" => summary::mean_ci(result, &canonical, statistic, segs),
-        "median_ci" => summary::median_ci(result, &canonical, statistic, segs),
-        "t_test_summary" => summary::t_test_summary(result, &canonical, statistic, segs),
-        "anova_summary" => summary::anova_summary(result, &canonical, statistic, segs),
-        "ss_proportion"
-        | "ss_unmatched_cc"
-        | "ss_cohort"
-        | "ss_mean_difference"
-        | "power_unmatched_cc"
-        | "power_cohort"
-        | "power_mean_difference"
-        | "random_numbers" => ss::explain(id, result, &canonical, statistic, segs),
-        _ => Err(super::path::unknown(statistic)),
+impl CalcRun {
+    /// The trace half — the same per-calculator dispatch the inline
+    /// explainer performed.
+    pub(crate) fn trace(
+        &self,
+        statistic: &str,
+        segs: &[Segment],
+    ) -> Result<Explanation, EngineError> {
+        let (result, canonical) = (&self.result, &self.canonical);
+        match self.id.as_str() {
+            "two_by_two" => tables::two_by_two(result, canonical, statistic, segs),
+            "two_by_n" => tables::two_by_n(result, canonical, statistic, segs),
+            "r_by_c" => tables::r_by_c(result, canonical, statistic, segs),
+            "dose_response" => tables::dose_response(result, canonical, statistic, segs),
+            "binomial" => counts::binomial(result, canonical, statistic, segs),
+            "poisson" => counts::poisson(result, canonical, statistic, segs),
+            "proportion" => counts::proportion(result, canonical, statistic, segs),
+            "screening" => counts::screening(result, canonical, statistic, segs),
+            "smr" => counts::smr(result, canonical, statistic, segs),
+            "matched_case_control" => {
+                counts::matched_case_control(result, canonical, statistic, segs)
+            }
+            "rate_one" => rates::rate_one(result, canonical, statistic, segs),
+            "rate_compare" => rates::rate_compare(result, canonical, statistic, segs),
+            "mean_ci" => summary::mean_ci(result, canonical, statistic, segs),
+            "median_ci" => summary::median_ci(result, canonical, statistic, segs),
+            "t_test_summary" => summary::t_test_summary(result, canonical, statistic, segs),
+            "anova_summary" => summary::anova_summary(result, canonical, statistic, segs),
+            "ss_proportion"
+            | "ss_unmatched_cc"
+            | "ss_cohort"
+            | "ss_mean_difference"
+            | "power_unmatched_cc"
+            | "power_cohort"
+            | "power_mean_difference"
+            | "random_numbers" => ss::explain(self.id.as_str(), result, canonical, statistic, segs),
+            _ => Err(super::path::unknown(statistic)),
+        }
     }
 }

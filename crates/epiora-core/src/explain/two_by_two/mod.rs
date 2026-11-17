@@ -19,13 +19,80 @@ use serde_json::Value;
 mod rxc;
 mod stratified;
 
-pub(super) use rxc::explain_rxc;
-
 fn ctx() -> RunContext {
     RunContext {
         timestamp: super::EXPLAIN_TS.to_string(),
         project: None,
     }
+}
+
+/// Sum of a table's cells — the kept-strata test (`stats::stratified`
+/// keeps strata whose total is positive).
+fn total(t: &Table2x2) -> u64 {
+    t.a.saturating_add(t.b)
+        .saturating_add(t.c)
+        .saturating_add(t.d)
+}
+
+/// The pooled 2×2 of `strata` — the fold the explainers applied to
+/// `strata_of`'s output.
+fn pooled(strata: &[Table2x2]) -> Table2x2 {
+    strata.iter().fold(
+        Table2x2 {
+            a: 0,
+            b: 0,
+            c: 0,
+            d: 0,
+        },
+        |s, t| Table2x2 {
+            a: s.a.saturating_add(t.a),
+            b: s.b.saturating_add(t.b),
+            c: s.c.saturating_add(t.c),
+            d: s.d.saturating_add(t.d),
+        },
+    )
+}
+
+/// The run half of a `tables` explain (v1.0 Task 10 fix round 3):
+/// the procedure result plus the strata-derived tables the
+/// `two_by_two`/`stratified_two_by_two` traces read — the pooled
+/// table and the kept strata (totals > 0, as `stats::stratified`
+/// filters them). Both are computed only for a `TwoByTwo` result:
+/// `strata_of` re-runs the run's own `cross`, which such a result
+/// guarantees is 2×2.
+pub(crate) struct TablesRun {
+    result: TablesResult,
+    sum: Table2x2,
+    kept: Vec<Table2x2>,
+}
+
+/// `options` + `tables` + the `cross` re-derivation once — the
+/// public `explain`/`explain_stratified`/`explain_rxc` and the
+/// corpus tests' run-once path share this.
+pub(crate) fn run(ds: &Dataset, opts_json: &Value) -> Result<TablesRun, EngineError> {
+    let opts: TablesOptions = options(opts_json)?;
+    let out = tables(ds, &opts, &ctx())?;
+    let (sum, kept) = match &out.result {
+        TablesResult::TwoByTwo { .. } => {
+            let strata = strata_of(ds, &opts)?;
+            let kept = strata.iter().copied().filter(|t| total(t) > 0).collect();
+            (pooled(&strata), kept)
+        }
+        _ => (
+            Table2x2 {
+                a: 0,
+                b: 0,
+                c: 0,
+                d: 0,
+            },
+            Vec::new(),
+        ),
+    };
+    Ok(TablesRun {
+        result: out.result,
+        sum,
+        kept,
+    })
 }
 
 /// A `vals` map with the non-finite intermediates dropped — an
@@ -272,93 +339,75 @@ fn leaf_2x2(
     }
 }
 
-/// `two_by_two.*` of the `tables` result.
-pub(super) fn explain(
-    ds: &Dataset,
-    opts_json: &Value,
-    statistic: &str,
-    segs: &[Segment],
-) -> Result<Explanation, EngineError> {
-    let opts: TablesOptions = options(opts_json)?;
-    let out = tables(ds, &opts, &ctx())?;
-    let crude = match &out.result {
-        TablesResult::TwoByTwo { crude, .. } => crude.clone(),
-        _ => return Err(super::path::unknown(statistic)),
-    };
-    let strata = strata_of(ds, &opts)?;
-    let sum = strata.iter().fold(
-        Table2x2 {
-            a: 0,
-            b: 0,
-            c: 0,
-            d: 0,
-        },
-        |s, t| Table2x2 {
-            a: s.a.saturating_add(t.a),
-            b: s.b.saturating_add(t.b),
-            c: s.c.saturating_add(t.c),
-            d: s.d.saturating_add(t.d),
-        },
-    );
-    leaf_2x2(&sum, &crude, statistic, segs)
-}
-pub(super) fn explain_stratified(
-    ds: &Dataset,
-    opts_json: &Value,
-    statistic: &str,
-    segs: &[Segment],
-) -> Result<Explanation, EngineError> {
-    let opts: TablesOptions = options(opts_json)?;
-    let out = tables(ds, &opts, &ctx())?;
-    let strat = match &out.result {
-        TablesResult::TwoByTwo {
-            stratified: Some(s),
-            ..
-        } => s.clone(),
-        _ => return Err(super::path::unknown(statistic)),
-    };
-    let u = || super::path::unknown(statistic);
+impl TablesRun {
+    /// `two_by_two.*` — the crude statistics of the pooled table.
+    pub(crate) fn trace(
+        &self,
+        statistic: &str,
+        segs: &[Segment],
+    ) -> Result<Explanation, EngineError> {
+        let crude = match &self.result {
+            TablesResult::TwoByTwo { crude, .. } => crude,
+            _ => return Err(super::path::unknown(statistic)),
+        };
+        leaf_2x2(&self.sum, crude, statistic, segs)
+    }
 
-    match segs.split_first() {
-        Some((head, rest)) if head.key == "crude" => {
-            let strata = strata_of(ds, &opts)?;
-            let sum = strata.iter().fold(
-                Table2x2 {
-                    a: 0,
-                    b: 0,
-                    c: 0,
-                    d: 0,
-                },
-                |s, t| Table2x2 {
-                    a: s.a.saturating_add(t.a),
-                    b: s.b.saturating_add(t.b),
-                    c: s.c.saturating_add(t.c),
-                    d: s.d.saturating_add(t.d),
-                },
-            );
-            leaf_2x2(&sum, &strat.stats.crude, statistic, rest)
-        }
-        Some((head, _rest)) if head.key == "excluded_strata" => {
-            let tree =
-                serde_json::to_value(&strat.stats).map_err(|e| EngineError::InvalidOptions {
-                    reason: format!("result does not serialize: {e}"),
+    /// `stratified_two_by_two.*` — crude, excluded strata, MH and
+    /// Breslow–Day–Tarone leaves.
+    pub(crate) fn trace_stratified(
+        &self,
+        statistic: &str,
+        segs: &[Segment],
+    ) -> Result<Explanation, EngineError> {
+        let strat = match &self.result {
+            TablesResult::TwoByTwo {
+                stratified: Some(s),
+                ..
+            } => s,
+            _ => return Err(super::path::unknown(statistic)),
+        };
+        let u = || super::path::unknown(statistic);
+
+        match segs.split_first() {
+            Some((head, rest)) if head.key == "crude" => {
+                leaf_2x2(&self.sum, &strat.stats.crude, statistic, rest)
+            }
+            Some((head, _rest)) if head.key == "excluded_strata" => {
+                let tree = serde_json::to_value(&strat.stats).map_err(|e| {
+                    EngineError::InvalidOptions {
+                        reason: format!("result does not serialize: {e}"),
+                    }
                 })?;
-            let est = leaf(&tree, segs, statistic)?;
-            let idx = head.index.ok_or_else(u)?;
-            let v = strat
-                .stats
-                .excluded_strata
-                .get(idx)
-                .map(|i| *i as f64)
-                .ok_or_else(u)?;
-            Ok(closed(statistic, "data", vals(&[("value", v)]), est))
+                let est = leaf(&tree, segs, statistic)?;
+                let idx = head.index.ok_or_else(u)?;
+                let v = strat
+                    .stats
+                    .excluded_strata
+                    .get(idx)
+                    .map(|i| *i as f64)
+                    .ok_or_else(u)?;
+                Ok(closed(statistic, "data", vals(&[("value", v)]), est))
+            }
+            Some((head, rest)) if head.key == "mantel_haenszel" => {
+                stratified::mh_leaf(&strat.stats, &self.kept, statistic, rest)
+            }
+            Some((head, rest)) if head.key == "breslow_day_tarone" => {
+                stratified::bdt_leaf(&strat.stats, &self.kept, statistic, rest)
+            }
+            _ => Err(u()),
         }
-        Some((head, rest)) if head.key == "mantel_haenszel" => {
-            stratified::mh_leaf(&strat.stats, ds, &opts, statistic, rest)
+    }
+
+    /// `rxc.*` — the Pearson chi-square of the pooled R×C table.
+    pub(crate) fn trace_rxc(
+        &self,
+        statistic: &str,
+        segs: &[Segment],
+    ) -> Result<Explanation, EngineError> {
+        match &self.result {
+            TablesResult::RxC { stats, counts, .. } => rxc::trace(stats, counts, statistic, segs),
+            _ => Err(super::path::unknown(statistic)),
         }
-        Some((head, rest)) if head.key == "breslow_day_tarone" => {
-            stratified::bdt_leaf(&strat.stats, ds, &opts, statistic, rest)
-        }
-        _ => Err(u()),
     }
 }

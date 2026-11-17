@@ -10,11 +10,11 @@ use super::steps::{closed, leaf, vals};
 use super::{options, Explanation};
 use crate::dataset::Dataset;
 use crate::error::EngineError;
-use crate::procedures::{means, MeansOptions, RunContext};
+use crate::procedures::{means, MeansOptions, MeansResult, RunContext};
 use crate::stats::{
     anova_parts, bartlett_parts, kw_parts, summarize, t_parts, Estimate, GroupStats, GroupSummary,
 };
-use crate::tabulate::group_numeric;
+use crate::tabulate::{group_numeric, Groups};
 use serde_json::Value;
 
 fn ctx() -> RunContext {
@@ -232,18 +232,25 @@ pub(crate) fn anova_leaf(
     }
 }
 
-pub(super) fn explain(
-    ds: &Dataset,
-    opts_json: &Value,
-    statistic: &str,
-    segs: &[Segment],
-) -> Result<Explanation, EngineError> {
+/// The run half of a `means` explain (v1.0 Task 10 fix round 3):
+/// the procedure result plus the `group_numeric` buckets and
+/// `GroupSummary`s the run itself computed — every `means.*`
+/// statistic traces off this one output.
+pub(crate) struct MeansRun {
+    tree: Value,
+    result: MeansResult,
+    grouped: Groups,
+    summaries: Vec<GroupSummary>,
+    overall: GroupSummary,
+    row_count: u64,
+}
+
+/// `options` + `means` + `group_numeric`/`summarize` once — the
+/// public `explain` and the corpus tests' run-once path share this.
+pub(crate) fn run(ds: &Dataset, opts_json: &Value) -> Result<MeansRun, EngineError> {
     let opts: MeansOptions = options(opts_json)?;
     let out = means(ds, &opts, &ctx())?;
     let tree = crate::procedures::stats_json(&out.result, ds.row_count() as u64)?;
-    let est = leaf(&tree, segs, statistic)?;
-    let u = || super::path::unknown(statistic);
-
     let grouped = group_numeric(
         ds,
         &opts.variable,
@@ -251,114 +258,136 @@ pub(super) fn explain(
         opts.include_missing,
     )?;
     let summaries: Vec<GroupSummary> = grouped.values.iter().map(|v| summarize(v)).collect();
+    let overall = summarize(&grouped.all);
+    Ok(MeansRun {
+        tree,
+        result: out.result,
+        grouped,
+        summaries,
+        overall,
+        row_count: ds.row_count() as u64,
+    })
+}
 
-    match segs {
-        [s] if s.key == "total" => Ok(closed(
-            statistic,
-            "data",
-            vals(&[("value", ds.row_count() as f64)]),
-            est,
-        )),
-        [s] if s.key == "missing" => Ok(closed(
-            statistic,
-            "data",
-            vals(&[(
-                "value",
-                ds.row_count() as f64 - out.result.overall.observations as f64,
-            )]),
-            est,
-        )),
-        [g, l] if g.key == "groups" => {
-            let i = g.index.ok_or_else(u)?;
-            let gs = out.result.groups.get(i).ok_or_else(u)?;
-            let s = summaries.get(i).ok_or_else(u)?;
-            descriptives(gs, s, statistic, l, est)
-        }
-        [g, l] if g.key == "overall" => {
-            let all_summary = summarize(&grouped.all);
-            descriptives(&out.result.overall, &all_summary, statistic, l, est)
-        }
-        [t, which, rest @ ..] if t.key == "t_test" => {
-            let p = if summaries.len() == 2 {
-                t_parts(&summaries[0], &summaries[1])
-            } else {
-                None
-            };
-            if summaries.len() == 2 {
-                t_leaf(
-                    &which.key,
-                    p.as_ref(),
-                    (&summaries[0], &summaries[1]),
-                    statistic,
-                    rest,
-                    est,
-                )
-            } else {
-                Err(u())
+impl MeansRun {
+    /// The trace half — resolves `segs` against the run's result
+    /// exactly as the inline explainer did.
+    pub(crate) fn trace(
+        &self,
+        statistic: &str,
+        segs: &[Segment],
+    ) -> Result<Explanation, EngineError> {
+        let est = leaf(&self.tree, segs, statistic)?;
+        let u = || super::path::unknown(statistic);
+        let (result, summaries) = (&self.result, &self.summaries);
+
+        match segs {
+            [s] if s.key == "total" => Ok(closed(
+                statistic,
+                "data",
+                vals(&[("value", self.row_count as f64)]),
+                est,
+            )),
+            [s] if s.key == "missing" => Ok(closed(
+                statistic,
+                "data",
+                vals(&[(
+                    "value",
+                    self.row_count as f64 - result.overall.observations as f64,
+                )]),
+                est,
+            )),
+            [g, l] if g.key == "groups" => {
+                let i = g.index.ok_or_else(u)?;
+                let gs = result.groups.get(i).ok_or_else(u)?;
+                let s = summaries.get(i).ok_or_else(u)?;
+                descriptives(gs, s, statistic, l, est)
             }
-        }
-        [a, rest @ ..] if a.key == "anova" => anova_leaf(&summaries, statistic, rest, est),
-        [b, l] if b.key == "bartlett" => {
-            let parts = bartlett_parts(&summaries);
-            match l.key.as_str() {
-                "statistic" => {
-                    let (num, corr) = parts
-                        .as_ref()
-                        .map(|p| (p.numerator, p.correction))
-                        .unwrap_or((f64::NAN, f64::NAN));
-                    Ok(closed(
+            [g, l] if g.key == "overall" => {
+                descriptives(&result.overall, &self.overall, statistic, l, est)
+            }
+            [t, which, rest @ ..] if t.key == "t_test" => {
+                let p = if summaries.len() == 2 {
+                    t_parts(&summaries[0], &summaries[1])
+                } else {
+                    None
+                };
+                if summaries.len() == 2 {
+                    t_leaf(
+                        &which.key,
+                        p.as_ref(),
+                        (&summaries[0], &summaries[1]),
                         statistic,
-                        "bartlett",
-                        finite(&[("numerator", num), ("correction", corr)]),
+                        rest,
                         est,
-                    ))
+                    )
+                } else {
+                    Err(u())
                 }
-                "df" => Ok(closed(
-                    statistic,
-                    "df_between",
-                    finite(&[("k", summaries.len() as f64)]),
-                    est,
-                )),
-                "p_value" => {
-                    let x = parts.as_ref().map(|p| p.stat()).unwrap_or(f64::NAN);
-                    Ok(closed(
+            }
+            [a, rest @ ..] if a.key == "anova" => anova_leaf(summaries, statistic, rest, est),
+            [b, l] if b.key == "bartlett" => {
+                let parts = bartlett_parts(summaries);
+                match l.key.as_str() {
+                    "statistic" => {
+                        let (num, corr) = parts
+                            .as_ref()
+                            .map(|p| (p.numerator, p.correction))
+                            .unwrap_or((f64::NAN, f64::NAN));
+                        Ok(closed(
+                            statistic,
+                            "bartlett",
+                            finite(&[("numerator", num), ("correction", corr)]),
+                            est,
+                        ))
+                    }
+                    "df" => Ok(closed(
+                        statistic,
+                        "df_between",
+                        finite(&[("k", summaries.len() as f64)]),
+                        est,
+                    )),
+                    "p_value" => {
+                        let x = parts.as_ref().map(|p| p.stat()).unwrap_or(f64::NAN);
+                        Ok(closed(
+                            statistic,
+                            "chi_sf",
+                            finite(&[
+                                ("x", x),
+                                ("df", parts.as_ref().map(|p| p.df).unwrap_or(f64::NAN)),
+                            ]),
+                            est,
+                        ))
+                    }
+                    _ => Err(u()),
+                }
+            }
+            [k, l] if k.key == "kruskal_wallis" => {
+                let refs: Vec<&[f64]> = self.grouped.values.iter().map(Vec::as_slice).collect();
+                let p = kw_parts(&refs);
+                match l.key.as_str() {
+                    "h" => Ok(closed(
+                        statistic,
+                        "kruskal_wallis",
+                        finite(&[("h_raw", p.h_raw), ("correction", p.correction)]),
+                        est,
+                    )),
+                    "df" => Ok(closed(
+                        statistic,
+                        "df_between",
+                        finite(&[("k", summaries.len() as f64)]),
+                        est,
+                    )),
+                    "p_value" => Ok(closed(
                         statistic,
                         "chi_sf",
-                        finite(&[
-                            ("x", x),
-                            ("df", parts.as_ref().map(|p| p.df).unwrap_or(f64::NAN)),
-                        ]),
+                        finite(&[("x", p.h()), ("df", p.df)]),
                         est,
-                    ))
+                    )),
+                    _ => Err(u()),
                 }
-                _ => Err(u()),
             }
+            _ => Err(u()),
         }
-        [k, l] if k.key == "kruskal_wallis" => {
-            let refs: Vec<&[f64]> = grouped.values.iter().map(Vec::as_slice).collect();
-            let p = kw_parts(&refs);
-            match l.key.as_str() {
-                "h" => Ok(closed(
-                    statistic,
-                    "kruskal_wallis",
-                    finite(&[("h_raw", p.h_raw), ("correction", p.correction)]),
-                    est,
-                )),
-                "df" => Ok(closed(
-                    statistic,
-                    "df_between",
-                    finite(&[("k", summaries.len() as f64)]),
-                    est,
-                )),
-                "p_value" => Ok(closed(
-                    statistic,
-                    "chi_sf",
-                    finite(&[("x", p.h()), ("df", p.df)]),
-                    est,
-                )),
-                _ => Err(u()),
-            }
-        }
-        _ => Err(u()),
     }
 }
