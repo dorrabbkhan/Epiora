@@ -5,6 +5,7 @@ export const t = {
   nav: {
     main: 'Main navigation',
     home: 'Projects',
+    calculators: 'Calculators',
     settings: 'Settings',
   },
   common: {

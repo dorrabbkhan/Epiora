@@ -1,0 +1,215 @@
+/* Calculator index + generic calculator screen (v1.0 plan Task 14,
+ * spec §7.2): tokens only — Stylelint bans raw colours and px on
+ * spacing/radius/font outside src/design. */
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size5);
+}
+
+.intro {
+  color: var(--color-textMuted);
+  margin: 0;
+}
+
+.search {
+  max-width: 28rem;
+}
+
+.families {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.family h2 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--font-size4);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  display: block;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2);
+  background: var(--color-surface);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.card:hover,
+.card:focus-visible {
+  border-color: var(--color-accent);
+}
+
+.empty {
+  color: var(--color-textMuted);
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 40rem;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.field {
+  max-width: 18rem;
+}
+
+.hint {
+  color: var(--color-textMuted);
+  font-size: var(--font-size2);
+  margin: 0;
+}
+
+.error {
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.notice {
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2);
+  padding: var(--space-2);
+}
+
+.tableWrap fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.tableWrap legend {
+  font-weight: var(--font-weightBold);
+  padding: 0;
+}
+
+.grid {
+  border-collapse: collapse;
+}
+
+.grid th,
+.grid td {
+  border: 1px solid var(--color-border);
+  padding: var(--space-1);
+  text-align: left;
+}
+
+.grid input {
+  width: 6rem;
+}
+
+.tableActions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.strata {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.result {
+  margin: var(--space-2) 0;
+  min-width: 0;
+}
+
+.result h3 {
+  margin: 0;
+  font-size: var(--font-size4);
+}
+
+.result table {
+  border-collapse: collapse;
+  color: var(--color-text);
+  font-size: var(--font-size2);
+  margin: var(--space-2) 0;
+}
+
+.result caption {
+  padding: var(--space-1) 0;
+  color: var(--color-text);
+  font-weight: var(--font-weightBold);
+  text-align: left;
+}
+
+.result th,
+.result td {
+  border: 1px solid var(--color-border);
+  padding: var(--space-1) var(--space-2);
+  text-align: left;
+}
+
+.result p {
+  color: var(--color-textMuted);
+}
+
+.notes {
+  margin: 0;
+  padding-left: var(--space-4);
+  color: var(--color-text);
+}
+
+.receipt {
+  margin: var(--space-2) 0;
+}
+
+.receiptGrid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: var(--space-2) 0;
+}
+
+.receiptGrid dt {
+  color: var(--color-textMuted);
+}
+
+.receiptGrid dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.receiptGrid code {
+  font-size: var(--font-size2);
+}

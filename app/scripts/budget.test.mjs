@@ -2,7 +2,8 @@
 // §10.2): `budget.mjs <dist>` sums the gzip -9 sizes of index.html,
 // the entry chunk's JS + CSS from Vite's dist/.vite/manifest.json,
 // the core engine .wasm and sqlite3.wasm, and exits 1 at or above
-// 5,000,000 bytes.
+// 5,000,000 bytes. v1.0 Task 14 added the second, reported-only
+// `/calc/$id` first-load table (spec §10).
 //
 // Run: `node --test app/scripts`.
 
@@ -58,6 +59,9 @@ const entryManifest = {
     src: 'index.html',
     isEntry: true,
     css: ['assets/index-bbb.css'],
+    // Worker chunks are not manifest keys; Vite lists them under the
+    // importing chunk's `assets` (v1.0 Task 14 build shape).
+    assets: ['assets/calc.worker-www.js'],
   },
   'lazy.ts': {
     file: 'assets/lazy-ccc.js',
@@ -85,6 +89,9 @@ test('sums_first_load_set_only', (t) => {
     'epiora_import_wasm_bg-z.wasm': incompressible(400_000),
     // A non-entry lazy chunk — not first-load either.
     'lazy-ccc.js': 'lazy chunk\n'.repeat(30),
+    // Listed under the entry's `assets`; counted only in the
+    // `/calc/$id` table, never in the gated first-load set.
+    'calc.worker-www.js': 'calc worker\n'.repeat(30),
   };
   const dist = makeDist(t, entryManifest, files);
   const expected =
@@ -112,6 +119,7 @@ test('fails_at_5_000_000', (t) => {
     'index-bbb.css': ':root{}\n',
     'epiora_wasm_bg-x.wasm': 'core'.repeat(10),
     'sqlite3-y.wasm': 'sqlite'.repeat(10),
+    'calc.worker-www.js': 'calc'.repeat(10),
   };
   const dist = makeDist(t, entryManifest, files);
 
@@ -126,4 +134,88 @@ test('fails_at_5_000_000', (t) => {
   const total = Number(m[1]);
   assert.equal(runBudget(dist, String(total + 1)).status, 0);
   assert.equal(runBudget(dist, String(total)).status, 1);
+});
+
+test('calc_route_first_load_reported_not_gated', (t) => {
+  const files = {
+    'index.html':
+      '<!doctype html><script type="module" src="/assets/index-aaa.js"></script>',
+    'index-aaa.js': 'console.log("entry");\n'.repeat(50),
+    'index-bbb.css': ':root { color: red; }\n'.repeat(20),
+    'epiora_wasm_bg-x.wasm': 'fake-core-wasm'.repeat(100),
+    // Store-side payloads: shipped in dist but excluded from the
+    // `/calc/$id` set — calculators are store-less.
+    'sqlite3-y.wasm': 'fake-sqlite'.repeat(100),
+    'epiora_import_wasm_bg-z.wasm': incompressible(400_000),
+    'data.worker-ddd.js': 'data worker\n'.repeat(30),
+    // The `/calc/$id` set's own lazily loaded chunks.
+    'calc.worker-www.js': 'calc worker\n'.repeat(30),
+    'calc-rrr.js': 'calc route\n'.repeat(30),
+    'chunk-sss.js': 'shared chunk\n'.repeat(30),
+  };
+  const manifest = {
+    'index.html': {
+      file: 'assets/index-aaa.js',
+      name: 'index',
+      src: 'index.html',
+      isEntry: true,
+      css: ['assets/index-bbb.css'],
+      assets: ['assets/calc.worker-www.js', 'assets/data.worker-ddd.js'],
+    },
+    'src/ui/routes/calc.tsx': {
+      file: 'assets/calc-rrr.js',
+      name: 'calc',
+      src: 'src/ui/routes/calc.tsx',
+      isDynamicEntry: true,
+      imports: ['src/shared/chunk.ts'],
+    },
+    // Not named like a calc module: only reachable — and counted —
+    // through the calc route chunk's `imports`.
+    'src/shared/chunk.ts': {
+      file: 'assets/chunk-sss.js',
+      name: 'chunk',
+      src: 'src/shared/chunk.ts',
+    },
+  };
+  const dist = makeDist(t, manifest, files);
+  const expected =
+    gzip9(Buffer.from(files['index.html'])) +
+    gzip9(Buffer.from(files['index-aaa.js'])) +
+    gzip9(Buffer.from(files['index-bbb.css'])) +
+    gzip9(Buffer.from(files['epiora_wasm_bg-x.wasm'])) +
+    gzip9(Buffer.from(files['calc.worker-www.js'])) +
+    gzip9(Buffer.from(files['calc-rrr.js'])) +
+    gzip9(Buffer.from(files['chunk-sss.js']));
+
+  const r = runBudget(dist);
+  assert.equal(r.status, 0, r.stderr);
+
+  // The second table is printed and sums exactly the `/calc/$id`
+  // first-load set.
+  const calcStart = r.stdout.indexOf('`/calc/$id` first load');
+  assert.ok(calcStart !== -1, `calc section missing:\n${r.stdout}`);
+  const calcSection = r.stdout.slice(calcStart);
+  const m = /\*\*\/calc\/\$id first-load total\*\* \| \*\*(\d+)\*\*/.exec(
+    calcSection,
+  );
+  assert.ok(m !== null, `calc total line missing:\n${r.stdout}`);
+  assert.equal(Number(m[1]), expected);
+  assert.match(calcSection, /reported, not gated/);
+  // sqlite3.wasm, import-wasm and the data worker are store-side.
+  assert.ok(!calcSection.includes('sqlite3'));
+  assert.ok(!calcSection.includes('epiora_import_wasm_bg'));
+  assert.ok(!calcSection.includes('data.worker'));
+
+  // The gated first-load total is unchanged: it still sums only the
+  // original five files (no calc.worker, no route chunks).
+  const firstExpected =
+    expected -
+    gzip9(Buffer.from(files['calc.worker-www.js'])) -
+    gzip9(Buffer.from(files['calc-rrr.js'])) -
+    gzip9(Buffer.from(files['chunk-sss.js'])) +
+    gzip9(Buffer.from(files['sqlite3-y.wasm']));
+  const g = /\*\*first-load total\*\* \| \*\*(\d+)\*\*/.exec(r.stdout);
+  assert.ok(g !== null);
+  assert.equal(Number(g[1]), firstExpected);
+  assert.match(r.stdout, /PASS/);
 });

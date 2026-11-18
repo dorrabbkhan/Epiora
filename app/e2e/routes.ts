@@ -6,4 +6,6 @@ export const ROUTES = [
   '/p/demo/d/demo',
   '/p/demo/analysis',
   '/settings',
+  '/calc',
+  '/calc/two_by_two',
 ] as const;
