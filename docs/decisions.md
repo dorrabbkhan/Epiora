@@ -5333,4 +5333,16 @@ calculator tab never acquires `epiora-store`.
   skipped on `/calc` (it would otherwise spawn the store worker via
   the lazy path); the tab-lock channel listener stays unconditional
   because its `workerName` tag makes calc routes a no-op.
+- `app/src/ui/screens/calc/calc.module.css` — the Files block lists a
+  `.module.css` per calc screen component; the four components share
+  one module (`calc.module.css`) because their classes are the shared
+  form/table/result layout, and per-component modules would duplicate
+  the same token references. No per-component CSS exists.
+- `app/scripts/budget.mjs` and `app/scripts/budget.test.mjs` — outside
+  the Files block. Step 4 / spec §10 requires the `/calc/$id` first
+  load reported in the job summary (not gated); the only reporter is
+  the existing budget script, which now prints a second table over
+  index.html, the entry JS/CSS, the core .wasm and the manifest's
+  calc route/`calc.worker` chunks. The 5,000,000 gate and the exit
+  code are unchanged; the test gained a case asserting both.
 Supersedes: —
