@@ -5517,6 +5517,13 @@ change.
   gate skips the serial Playwright run; locally the script is unchanged
   (unset → all three engines). The shards were not run before push — CI
   on this PR is their first run.
+- app-e2e follow-up (owner-authorised fix round 3): every shard installs
+  chromium plus its own engine — what launches chromium regardless of
+  `--project` is `app/playwright.config.ts` spreading
+  `devices['Desktop WebKit']`, which is `undefined` (the real key is
+  `Desktop Safari`), so the `webkit` project falls back to chromium's
+  headless shell (run 44376118964); config unchanged per owner
+  instruction.
 - Task sizing note in
   `docs/superpowers/plans/2026-11-12-epiora-v1.0-calculators-and-means.md`
   (a UI task over ~12 files, or pairing a new component tree with a new

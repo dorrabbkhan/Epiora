@@ -340,16 +340,29 @@ jobs:
         id: playwright_version
         run: node -p '"version=" + require("./app/package-lock.json").packages["node_modules/playwright-core"].version' >> "$GITHUB_OUTPUT"
 
-      # Per-browser key: each leg caches only the engine it installs
-      # (the bench job's chromium-only key is the precedent).
+      # Every leg also needs chromium: the webkit project resolves
+      # devices['Desktop WebKit'] to undefined (the key is 'Desktop
+      # Safari') and Playwright falls back to chromium's headless shell
+      # whatever --project selects (run 44376118964). The set is
+      # de-duplicated so the chromium leg installs once.
+      - name: Browser set (shard engine + chromium)
+        id: browsers
+        run: |
+          set="${{ matrix.browser }}"
+          [ "$set" = "chromium" ] || set="chromium $set"
+          echo "install=$set" >> "$GITHUB_OUTPUT"
+          echo "key=${set// /-}" >> "$GITHUB_OUTPUT"
+
+      # Per-leg key: each leg caches chromium plus its own engine, so
+      # the key names both (the stale engine-only entries miss chromium).
       - name: Cache Playwright browsers
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ matrix.browser }}-${{ steps.playwright_version.outputs.version }}
+          key: ${{ runner.os }}-playwright-${{ steps.browsers.outputs.key }}-${{ steps.playwright_version.outputs.version }}
 
-      - name: Install Playwright browser
-        run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ steps.browsers.outputs.install }}
         working-directory: app
 
       - name: Download e2e dist (test-hooks build)
