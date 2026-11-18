@@ -5448,7 +5448,7 @@ no substituted mathematics.
   no explain button rather than a wrong trace).
 Supersedes: —
 
-### Conductor process — review/task gate trimming and CI sharding (2026-11-18, owner-authorised in PR #91)
+### Conductor process — review/task gate trimming (2026-11-18, owner-authorised in PR #91)
 
 Decision: the owner approved the conductor's recommendations on PR #91
 ("do all your recos in the same PR"). This is a process change only — no
@@ -5503,27 +5503,13 @@ change.
   `docs/superpowers/plans/2026-11-17-epiora-v1.0-conductor-efficiency.md`
   (`line-count` added as check 6, list renumbered — it enumerates check
   ids).
-- CI sharding in `.github/workflows/app.yml`: the old `app` job is now
-  `app-gate` (every non-Playwright step once, uploads the test-hooks
-  dist as `e2e-dist` and the production build as `deploy-dist`),
-  `app-e2e` (matrix chromium/firefox/webkit, each leg runs only its
-  browser on the downloaded dist, report artifacts under distinct
-  per-browser names) and a final `app` job (`needs: [app-gate, app-e2e]`,
-  `if: always()`, fails unless both succeeded — the required check name
-  is unchanged). Netlify deploys moved into `app` so they still run only
-  after every gate passes; no test, tolerance, budget or retry-count
-  change; perf, engine, bundle, fuzz and native-store jobs untouched.
-  `scripts/check-app.sh` gained `CHECK_APP_SKIP_PLAYWRIGHT=1` so the CI
-  gate skips the serial Playwright run; locally the script is unchanged
-  (unset → all three engines). The shards were not run before push — CI
-  on this PR is their first run.
-- app-e2e follow-up (owner-authorised fix round 3): every shard installs
-  chromium plus its own engine — what launches chromium regardless of
-  `--project` is `app/playwright.config.ts` spreading
-  `devices['Desktop WebKit']`, which is `undefined` (the real key is
-  `Desktop Safari`), so the `webkit` project falls back to chromium's
-  headless shell (run 44376118964); config unchanged per owner
-  instruction.
+- Sharding the `app` job was tried in this PR and withdrawn by the owner
+  (shards failed on the deploy preview; no wall-time gain because
+  `app-gate` precedes the shards); it will be its own PR.
+- Found, not fixed: `app/playwright.config.ts:29` uses
+  `devices['Desktop WebKit']`, which does not exist (key is `Desktop
+  Safari`), so the webkit project runs chromium — to be handled by its
+  own task.
 - Task sizing note in
   `docs/superpowers/plans/2026-11-12-epiora-v1.0-calculators-and-means.md`
   (a UI task over ~12 files, or pairing a new component tree with a new

@@ -2,9 +2,7 @@ name: app
 
 # The app gate (v0.3 spec §10.1): strict typecheck, ESLint, Stylelint,
 # token regeneration check, Vitest (units, contrast, lint rules),
-# licence check, vite build and Playwright on all three engines —
-# the e2e run is sharded per engine (app-e2e matrix) behind a final
-# aggregate job named `app` that keeps the required check name.
+# licence check, vite build and Playwright on all three engines.
 
 on:
   pull_request:
@@ -126,13 +124,7 @@ jobs:
         run: npx vitest run src/store/conformance/native.test.ts
         working-directory: app
 
-  # The old single `app` job is split (v1.0 process change, owner-authorised
-  # on PR #91): app-gate runs every non-Playwright step once; app-e2e runs
-  # the Playwright suite sharded per browser engine on the test-hooks dist
-  # app-gate uploads as `e2e-dist`, so wall time is the longest engine's,
-  # not the sum of three. The required check name `app` is the aggregate
-  # job below — it runs `if: always()` and fails when either need failed.
-  app-gate:
+  app:
     # Pinned: ubuntu-latest moved to 26.04 (resolute) on 2026-11-13 and
     # Playwright's WebKit build needs libicudata.so.74, which resolute does
     # not ship — the store-opfs suite and e2e cannot launch WebKit there.
@@ -243,22 +235,19 @@ jobs:
           cargo deny --version
 
       # EPIORA_DENY_DB: same as native-store above — check-app.sh runs
-      # `cargo deny check` inside app/src-tauri. CHECK_APP_SKIP_PLAYWRIGHT:
-      # the e2e suite runs in the app-e2e shards below instead.
+      # `cargo deny check` inside app/src-tauri.
       - name: check-app.sh full
         run: scripts/check-app.sh full
         env:
           EPIORA_DENY_DB: ${{ runner.temp }}/advisory-dbs
-          CHECK_APP_SKIP_PLAYWRIGHT: '1'
 
-      # The VITE_TEST_HOOKS=1 build check-app.sh just made — the e2e
-      # shards serve exactly this dist through `vite preview`.
-      - name: Upload e2e dist (test-hooks build)
+      - name: Upload Playwright report
+        if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: e2e-dist
-          path: app/dist/
-          if-no-files-found: error
+          name: playwright-report
+          path: app/playwright-report/
+          if-no-files-found: ignore
 
       # First-load budget gate (v0.3 Task 17, spec §10.2): fails at or
       # above 5,000,000 bytes gzip -9. The budget describes the shipping
@@ -279,11 +268,11 @@ jobs:
       # Netlify deploys (v0.3 spec §7.2; owner's Step 5 change on PR #49):
       # production deploys happen only on a published release, never on
       # pushes to main. Same-repo PRs get an `pr-<number>` alias preview,
-      # manual runs a branch-name alias preview. Deploys live in the `app`
-      # aggregate job so they still run only after every gate — including
-      # the e2e shards — has passed, and never on fork PRs (secrets stay
-      # env-only, so a fork would have no token anyway). The push trigger
-      # exists to warm the Rust cache on main; it matches none of them.
+      # manual runs a branch-name alias preview. Every step below only
+      # runs after every gate above has passed, and never on fork PRs
+      # (secrets stay env-only, so a fork would have no token anyway).
+      # The push trigger exists to warm the Rust cache on main; it
+      # matches none of these steps.
 
       - name: Build production dist
         if: >-
@@ -294,151 +283,6 @@ jobs:
         # suite; the deploy must ship a fresh build without it.
         run: env -u VITE_TEST_HOOKS npm run build
         working-directory: app
-
-      # The `app` job deploys this build, not a rebuild.
-      - name: Upload deploy dist (no test hooks)
-        if: >-
-          github.event_name == 'release' || github.event_name == 'workflow_dispatch' ||
-          (github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.full_name == github.repository)
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: deploy-dist
-          path: app/dist/
-          if-no-files-found: error
-
-  # One Playwright engine per leg. The shard needs only the repo, node
-  # modules, its browser and the e2e-dist artifact — no Rust toolchain.
-  app-e2e:
-    needs: app-gate
-    runs-on: ubuntu-24.04
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chromium, firefox, webkit]
-    steps:
-      # Release runs the gate against the tagged tree, not main.
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
-
-      - name: Install Node 24
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: 24
-          cache: npm
-          cache-dependency-path: app/package-lock.json
-
-      # npm ci must run before the browser install: with no
-      # node_modules, npx fetches the latest playwright and installs
-      # browser revisions the lockfile-pinned version cannot launch.
-      - name: Install app dependencies
-        run: npm ci
-        working-directory: app
-
-      - name: Playwright version (lockfile-pinned)
-        id: playwright_version
-        run: node -p '"version=" + require("./app/package-lock.json").packages["node_modules/playwright-core"].version' >> "$GITHUB_OUTPUT"
-
-      # Every leg also needs chromium: the webkit project resolves
-      # devices['Desktop WebKit'] to undefined (the key is 'Desktop
-      # Safari') and Playwright falls back to chromium's headless shell
-      # whatever --project selects (run 44376118964). The set is
-      # de-duplicated so the chromium leg installs once.
-      - name: Browser set (shard engine + chromium)
-        id: browsers
-        run: |
-          set="${{ matrix.browser }}"
-          [ "$set" = "chromium" ] || set="chromium $set"
-          echo "install=$set" >> "$GITHUB_OUTPUT"
-          echo "key=${set// /-}" >> "$GITHUB_OUTPUT"
-
-      # Per-leg key: each leg caches chromium plus its own engine, so
-      # the key names both (the stale engine-only entries miss chromium).
-      - name: Cache Playwright browsers
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.browsers.outputs.key }}-${{ steps.playwright_version.outputs.version }}
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps ${{ steps.browsers.outputs.install }}
-        working-directory: app
-
-      - name: Download e2e dist (test-hooks build)
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
-        with:
-          name: e2e-dist
-          path: app/dist
-
-      - name: Playwright (${{ matrix.browser }})
-        run: npx playwright test --project=${{ matrix.browser }}
-        working-directory: app
-
-      - name: Upload Playwright report
-        if: failure()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: playwright-report-${{ matrix.browser }}
-          path: |
-            app/playwright-report/
-            app/test-results/
-          if-no-files-found: ignore
-
-  # The required check: keeps the literal job name `app` so branch
-  # protection and the rulesets are untouched. `if: always()` because a
-  # job that needs a failed job is skipped otherwise — a skipped check is
-  # not a green one. The Netlify deploys moved here (with their dist as
-  # an artifact) so they still run only after every gate has passed.
-  app:
-    needs: [app-gate, app-e2e]
-    if: always()
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Gate on app-gate and app-e2e results
-        run: |
-          echo "app-gate: ${{ needs.app-gate.result }}"
-          echo "app-e2e: ${{ needs.app-e2e.result }}"
-          [ "${{ needs.app-gate.result }}" = "success" ]
-          [ "${{ needs.app-e2e.result }}" = "success" ]
-
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        if: >-
-          github.event_name == 'release' || github.event_name == 'workflow_dispatch' ||
-          (github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.full_name == github.repository)
-        with:
-          ref: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
-
-      - name: Install Node 24
-        if: >-
-          github.event_name == 'release' || github.event_name == 'workflow_dispatch' ||
-          (github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.full_name == github.repository)
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: 24
-          cache: npm
-          cache-dependency-path: app/package-lock.json
-
-      # netlify-cli is a devDependency — npx runs it from node_modules.
-      - name: Install app dependencies
-        if: >-
-          github.event_name == 'release' || github.event_name == 'workflow_dispatch' ||
-          (github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.full_name == github.repository)
-        run: npm ci
-        working-directory: app
-
-      - name: Download deploy dist (no test hooks)
-        if: >-
-          github.event_name == 'release' || github.event_name == 'workflow_dispatch' ||
-          (github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.full_name == github.repository)
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
-        with:
-          name: deploy-dist
-          path: app/dist
 
       - name: Assert no test hooks in the deploy build
         if: >-
