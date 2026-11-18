@@ -5370,6 +5370,10 @@ group, then overall) plus each test block the engine returned.
   - `app/src/worker/client.ts` — `wrapDataApi` mirrors every `DataApi`
     method explicitly; `runMeans` and the test hook below need the
     main-thread twin `api.ts` defines.
+  - `app/src/ui/screens/analysis/render-means.tsx` (fix round 1) —
+    `renderMeans` moved here so `render-result.tsx` stays under the
+    ~400-line global constraint; `render-result.tsx` re-exports it, so
+    `render-result.test.tsx` and `ResultCard.tsx` are unchanged.
 - `DataApi.__clearRunCommand` (VITE_TEST_HOOKS=1 only): the plan's e2e
   `old_run_gets_generated_command` needs a `runs` row with NULL
   `command`, which no public write path creates — `run()` always stores
