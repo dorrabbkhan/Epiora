@@ -1,13 +1,11 @@
 /**
- * judge-checks.ts — the eleven mechanical checks judge.ts runs, in the
+ * judge-checks.ts — the twelve mechanical checks judge.ts runs, in the
  * order the conductor efficiency plan (Task 0a) lists them: fixtures,
- * numbers, assertions, skips, files-block, spikes-import, licences,
- * spike-report, secrets, diff-stat, owner-gate. A check that cannot run on
- * part of the diff FLAGs naming the file — never a silent PASS.
- *
- * Checks 7 (licences), 8 (spike-report) and 11 (owner-gate) live in
- * judge-checks-gates.ts, split out to keep this file under the ~400-line
- * rule; the section numbers below keep the plan's order.
+ * numbers, assertions, skips, files-block, line-count, spikes-import,
+ * licences, spike-report, secrets, diff-stat, owner-gate. A check that
+ * cannot run on part of the diff FLAGs naming the file — never a silent
+ * PASS. Checks 6, 8, 9 and 12 live in judge-checks-gates.ts (the
+ * ~400-line rule); the section numbers below keep the plan's order.
  */
 import { addedLines, isTestFile, uninspectable, type DiffFile } from "./diff-parse.ts";
 
@@ -18,6 +16,7 @@ export const CONTENT_CHECK_IDS = [
   "assertions",
   "skips",
   "files-block",
+  "line-count",
   "spikes-import",
   "licences",
   "spike-report",
@@ -78,14 +77,21 @@ export function filesBlockPatterns(planText: string, task: string): string[] | n
     // Plans write later entries on a line by bare name, after a full path
     // in the same directory. A bare name resolves against the nearest full
     // path before it on the line; with none before it, it matches that
-    // file name in any directory.
+    // file name in any directory. A bare extension joined by "+" to the
+    // previous path's stem ("`X.tsx` + `.module.css`") names X.module.css.
     let dir: string | null = null;
+    let stem: string | null = null;
+    let prevEnd = 0;
     for (const m of l.matchAll(/`([^`]+)`/g)) {
       const p = m[1];
       if (p.includes("/")) {
         dir = p.slice(0, p.lastIndexOf("/") + 1);
+        stem = p.slice(p.lastIndexOf("/") + 1).replace(/\.[^.]*$/, "");
         pats.push(p);
+      } else if (dir !== null && stem !== null && p.startsWith(".") && /\+/.test(l.slice(prevEnd, m.index))) {
+        pats.push(dir + stem + p);
       } else pats.push(dir !== null ? dir + p : "**/" + p);
+      prevEnd = (m.index ?? 0) + m[0].length;
     }
   }
   return pats.length ? pats : null;
@@ -240,19 +246,24 @@ export function checkSkips(files: DiffFile[]): Check {
 
 // ---------- 5. files-block ----------
 
-const baseName = (p: string) => p.slice(p.lastIndexOf("/") + 1);
 const reEscape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 /**
- * A file counts as named when decisions.md has its full path, or its bare
- * basename (not part of a longer name or path) and no other file in the
- * diff shares that basename.
+ * A file counts as named when decisions.md has its full path, or a unique
+ * path suffix ("e2e/analysis.spec.ts" for "app/e2e/analysis.spec.ts", down
+ * to the bare basename) not part of a longer name or path.
  */
 function namedInDecisions(decText: string, path: string, files: DiffFile[]): boolean {
   if (decText.includes(path)) return true;
-  const base = baseName(path);
-  if (files.filter((f) => baseName(f.path) === base).length > 1) return false;
-  return new RegExp(`(^|[^\\w./-])${reEscape(base)}(?![\\w/-]|\\.\\w)`).test(decText);
+  const segs = path.split("/");
+  for (let i = 1; i < segs.length; i++) {
+    const suffix = segs.slice(i).join("/");
+    if (files.filter((f) => f.path === suffix || f.path.endsWith("/" + suffix)).length !== 1)
+      continue;
+    if (new RegExp(`(^|[^\\w./-])${reEscape(suffix)}(?![\\w/-]|\\.\\w)`).test(decText))
+      return true;
+  }
+  return false;
 }
 
 export function checkFilesBlock(
@@ -305,9 +316,9 @@ export function checkSpikesImport(files: DiffFile[]): Check {
   return reasons.length ? flag("spikes-import", reasons) : pass("spikes-import");
 }
 
-// ---------- 7. licences, 8. spike-report → judge-checks-gates.ts ----------
+// ---------- 6. line-count, 8. licences, 9. spike-report → judge-checks-gates.ts ----------
 
-// ---------- 9. secrets ----------
+// ---------- 10. secrets ----------
 
 const SECRET_RES = [
   /sk-ant-[A-Za-z0-9_-]{8,}/,
@@ -339,7 +350,7 @@ export function checkSecrets(files: DiffFile[]): Check {
   return reasons.length ? flag("secrets", reasons) : pass("secrets");
 }
 
-// ---------- 10. diff-stat ----------
+// ---------- 11. diff-stat ----------
 
 export function claimedStatFiles(text: string): string[] {
   const out: string[] = [];
@@ -383,4 +394,4 @@ export function checkDiffStat(files: DiffFile[], claimedText: string | null): Ch
       };
 }
 
-// ---------- 11. owner-gate → judge-checks-gates.ts ----------
+// ---------- 12. owner-gate → judge-checks-gates.ts ----------

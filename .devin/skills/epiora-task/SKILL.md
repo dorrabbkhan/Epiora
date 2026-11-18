@@ -33,8 +33,10 @@ The matching spec is read from the plan's `**Spec:**` line, not hard-coded.
 5. Write the failing tests (or checks) exactly as the task lists them, using the plan's values.
 6. Run them and confirm they fail for the expected reason. Show the output.
 7. Implement the minimum needed, using the exact names and signatures from **Interfaces → Produces**.
-8. Iterate with `./scripts/check.sh quick`. Once complete, run the full `./scripts/check.sh` once before
-   pushing. Fix until everything is green.
+8. Iterate with targeted checks only — the task's named tests, `tsc --noEmit`, lint, the relevant
+   `vitest run <path>` / `cargo test -p <crate>`. Run the full `./scripts/check.sh` at most once,
+   immediately before pushing; never loop on the whole three-browser Playwright suite locally — CI
+   re-runs it. Fix until everything is green.
    8a. For spikes: every number in the report links to the run or command that produced it. A failed run is
        recorded as a measurement, not hidden.
    8b. Compare `git diff --name-only main` with the task's Files block. For every file outside it, add a

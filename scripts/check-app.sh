@@ -110,4 +110,10 @@ step "vite build"
 VITE_TEST_HOOKS=1 npm run build
 
 step "Playwright (chromium, firefox, webkit)"
-npx playwright test
+# CI runs the e2e suite sharded per browser (app.yml's app-e2e matrix);
+# unset locally so `check-app.sh full` is unchanged there.
+if [ "${CHECK_APP_SKIP_PLAYWRIGHT:-}" = "1" ]; then
+  echo "skipped (CHECK_APP_SKIP_PLAYWRIGHT=1 — CI runs it sharded per browser)"
+else
+  npx playwright test
+fi

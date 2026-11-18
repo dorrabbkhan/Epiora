@@ -5447,3 +5447,79 @@ no substituted mathematics.
   the explain affordance on `tables[0]`'s rows only (later tables get
   no explain button rather than a wrong trace).
 Supersedes: —
+
+### Conductor process — review/task gate trimming and CI sharding (2026-11-18, owner-authorised in PR #91)
+
+Decision: the owner approved the conductor's recommendations on PR #91
+("do all your recos in the same PR"). This is a process change only — no
+app product code, fixture, tolerance, budget or Task 16 template/panel
+change.
+
+- Review prompt: CI is the gate. `gh pr checks` green (perf skipped on
+  PRs is by design) means the reviewer does not re-run
+  `./scripts/check.sh` or the full Playwright suite, does not fight
+  sandbox limits, reviews the diff against the plan and runs only
+  targeted tests for something it doubts; red/pending CI means review
+  the diff only. Escape hatch: the full gate runs only when the
+  conductor's extra instructions ask for it. Files:
+  `.devin/skills/epiora-review/SKILL.md` (step 5 replaced — it told the
+  reviewer to run `./scripts/check.sh`) and
+  `scripts/conductor/build-prompt.sh` (review mode prints the same
+  paragraph).
+- Task prompt: iterate on targeted tests (the task's named tests, tsc,
+  lint, the relevant vitest/`cargo -p` test); run the full
+  `./scripts/check.sh` at most once, immediately before the push; never
+  loop on the whole three-browser Playwright suite locally — CI re-runs
+  it. Files: `.devin/skills/epiora-task/SKILL.md` (step 8 — one rule,
+  replacing the old iterate-with-quick wording) and
+  `scripts/conductor/build-prompt.sh` (task mode prints it).
+- `line-count` judge check: flags an added or grown source file
+  provably over ~400 lines post-change (`*.md`, `*.json`, lockfiles,
+  `fixtures/**`, generated files and snapshots exempt; a file already
+  over on main that did not grow is exempt — `run_case.rs` and
+  `special/gamma.rs` follow the same rule). A diff does not carry a
+  modified file's total size, so the check uses the provable bound
+  `max(last shown new-side line, last shown old-side end + net growth)`
+  from the hunk headers — it catches every file the diff proves is past
+  the limit and cannot prove (never guesses) a mid-file-only growth.
+  `checkLineCount` lives in `scripts/conductor/judge-checks-gates.ts`
+  (placement deviation from the fix instructions: `judge-checks.ts`
+  would exceed the 400-line rule the check enforces). Also in
+  `judge-checks.ts`: `files-block` now resolves a
+  `` `X.tsx` + `.module.css` `` Files-block entry to `X.module.css`, and
+  a `docs/decisions.md` mention by unique path suffix
+  (`e2e/analysis.spec.ts` for `app/e2e/analysis.spec.ts`) counts as
+  named — both were false FLAGs on this PR. Files:
+  `scripts/conductor/judge-checks.ts`, `scripts/conductor/judge.ts`,
+  `scripts/conductor/judge.test.ts` (423 lines — the new cases were
+  required in this file; the check's bound does not reach it because no
+  hunk lands past line 400), `scripts/conductor/fixtures/judge/plan.md`
+  (fixture Task 4), `scripts/conductor/fixtures/judge/line-count-new-file.diff`,
+  `scripts/conductor/fixtures/judge/line-count-grew-past.diff`,
+  `scripts/conductor/fixtures/judge/line-count-long-nogrow.diff`,
+  `scripts/conductor/fixtures/judge/line-count-exempt.diff`,
+  `scripts/conductor/fixtures/judge/files-block-plus-css.diff`,
+  `scripts/conductor/fixtures/judge/decisions-suffix.diff`,
+  `docs/superpowers/plans/2026-11-17-epiora-v1.0-conductor-efficiency.md`
+  (`line-count` added as check 6, list renumbered — it enumerates check
+  ids).
+- CI sharding in `.github/workflows/app.yml`: the old `app` job is now
+  `app-gate` (every non-Playwright step once, uploads the test-hooks
+  dist as `e2e-dist` and the production build as `deploy-dist`),
+  `app-e2e` (matrix chromium/firefox/webkit, each leg runs only its
+  browser on the downloaded dist, report artifacts under distinct
+  per-browser names) and a final `app` job (`needs: [app-gate, app-e2e]`,
+  `if: always()`, fails unless both succeeded — the required check name
+  is unchanged). Netlify deploys moved into `app` so they still run only
+  after every gate passes; no test, tolerance, budget or retry-count
+  change; perf, engine, bundle, fuzz and native-store jobs untouched.
+  `scripts/check-app.sh` gained `CHECK_APP_SKIP_PLAYWRIGHT=1` so the CI
+  gate skips the serial Playwright run; locally the script is unchanged
+  (unset → all three engines). The shards were not run before push — CI
+  on this PR is their first run.
+- Task sizing note in
+  `docs/superpowers/plans/2026-11-12-epiora-v1.0-calculators-and-means.md`
+  (a UI task over ~12 files, or pairing a new component tree with a new
+  three-engine e2e spec, is split into logic+unit tests and UI+e2e; no
+  existing task split). And `docs/decisions.md` (this entry).
+Supersedes: —

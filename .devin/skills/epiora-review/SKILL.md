@@ -38,6 +38,10 @@ The matching spec is read from the plan's `**Spec:**` line, not hard-coded.
      spec (GADM, SQLite SEE, PowerSync) is used.
    - Spike code is only under `spikes/`, and nothing outside imports it.
    - No "(human step)" was simulated.
-5. Check out the PR branch (`gh pr checkout <N>`), run `./scripts/check.sh`, and report the results.
+5. CI is the gate. When `gh pr checks` is all green (perf skipped on PRs is by design), do NOT
+   re-run `./scripts/check.sh` or the full Playwright suite and do not fight sandbox limits
+   (cargo-deny, npm proxy, read-only `~/.cargo`). Review the diff against the plan and run only
+   targeted tests for something you doubt. If CI is red or pending, say so and review the diff
+   only. Run the full gate only when the conductor's extra instructions ask for it.
 6. End with **APPROVE** or **CHANGES NEEDED**, followed by a numbered list of required fixes. Post the verdict
    as a PR comment: `gh pr comment <N> --body "<verdict and required fixes>"`, and print it here as well.

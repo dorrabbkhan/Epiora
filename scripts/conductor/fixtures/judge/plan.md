@@ -20,3 +20,7 @@
 ### Task 3: Human step
 **Files:**
 - Create: `src/baz.ts`
+
+### Task 4: Component plus stylesheet
+**Files:**
+- Create: `app/src/x/Panel.tsx` + `.module.css`

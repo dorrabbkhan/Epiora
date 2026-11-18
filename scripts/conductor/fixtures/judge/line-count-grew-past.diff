@@ -1,0 +1,33 @@
+diff --git a/crates/epiora-core/src/corpus/run_case.rs b/crates/epiora-core/src/corpus/run_case.rs
+index 1111111..2222222 100644
+--- a/crates/epiora-core/src/corpus/run_case.rs
++++ b/crates/epiora-core/src/corpus/run_case.rs
+@@ -385,8 +385,25 @@
+ let c1 = 1;
+ let c2 = 2;
+ let c3 = 3;
+ let c4 = 4;
+ let c5 = 5;
+-let gone1 = 1;
+-let gone2 = 2;
+-let gone3 = 3;
++let extra01 = 1;
++let extra02 = 2;
++let extra03 = 3;
++let extra04 = 4;
++let extra05 = 5;
++let extra06 = 6;
++let extra07 = 7;
++let extra08 = 8;
++let extra09 = 9;
++let extra10 = 10;
++let extra11 = 11;
++let extra12 = 12;
++let extra13 = 13;
++let extra14 = 14;
++let extra15 = 15;
++let extra16 = 16;
++let extra17 = 17;
++let extra18 = 18;
++let extra19 = 19;
++let extra20 = 20;

@@ -1,0 +1,18 @@
+diff --git a/app/src/x/Panel.tsx b/app/src/x/Panel.tsx
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/app/src/x/Panel.tsx
+@@ -0,0 +1,3 @@
++export function Panel() {
++  return null;
++}
+diff --git a/app/src/x/Panel.module.css b/app/src/x/Panel.module.css
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/app/src/x/Panel.module.css
+@@ -0,0 +1,3 @@
++.panel {
++  color: var(--ink);
++}
