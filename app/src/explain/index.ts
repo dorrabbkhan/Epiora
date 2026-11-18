@@ -5,11 +5,14 @@
 // the merge matches `FORMULAS` exactly, and the guard test proves
 // every closed-form `compute` reproduces the engine result within
 // the statistic's tolerance class.
+import { BINOMIAL } from './templates/binomial';
 import { CHI_SQUARE } from './templates/chiSquare';
+import { CHI_SQUARE_POOLED } from './templates/chiSquarePooled';
 import { CONTINUOUS } from './templates/continuous';
 import { ETIOLOGIC } from './templates/etiologic';
 import { METHODS } from './templates/methods';
 import { PERSON_TIME } from './templates/personTime';
+import { PERSON_TIME_ADJUSTED } from './templates/personTimeAdjusted';
 import { POISSON } from './templates/poisson';
 import { PROPORTIONS } from './templates/proportions';
 import { SAMPLE_SIZE } from './templates/sampleSize';
@@ -43,13 +46,16 @@ export interface FormulaTemplate {
 export const TEMPLATES: Record<string, FormulaTemplate> = {
   ...SHARED,
   ...CHI_SQUARE,
+  ...CHI_SQUARE_POOLED,
   ...TAILS,
   ...WALD,
   ...TWO_BY_TWO,
   ...PROPORTIONS,
+  ...BINOMIAL,
   ...SCREENING,
   ...POISSON,
   ...PERSON_TIME,
+  ...PERSON_TIME_ADJUSTED,
   ...CONTINUOUS,
   ...ETIOLOGIC,
   ...SAMPLE_SIZE,

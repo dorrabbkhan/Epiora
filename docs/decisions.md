@@ -5422,6 +5422,26 @@ no substituted mathematics.
     `render-result.test.tsx`,
     `CalculatorResult.tsx`, `ExplainPanel.tsx`,
     `e2e/analysis.spec.ts`, `e2e/explain.spec.ts`.
+  - Fix-round split under the ~400-line rule (AGENTS.md rule 8) —
+    pure move; no behaviour, template id, string or number changed:
+    - `app/src/ui/screens/analysis/stats-table.tsx` — `StatsTable`,
+      `StatRow`/`ExplainHandler`, `stat`, `ciStats`, `estimate` and
+      `interval` moved out of `render-result.tsx`, which re-exports
+      the public pieces so callers are unchanged.
+    - `app/src/ui/screens/analysis/render-freq.tsx` — the FREQ table
+      view and `renderFreq` (same sibling-module precedent as
+      `render-means.tsx`).
+    - `app/src/explain/templates/chiSquarePooled.ts` — the pooled
+      and homogeneity χ² templates; `chiSquare.ts` keeps the
+      single-table and paired forms and exports `CHI`, `SQ`, `MH`.
+    - `app/src/explain/templates/personTimeAdjusted.ts` — the
+      directly adjusted and pooled Mantel–Haenszel person-time
+      templates (with `directLn`/`rrLn`); `personTime.ts` exports
+      `RB`.
+    - `app/src/explain/templates/binomial.ts` — the one-sample z
+      test and binomial tail templates; `proportions.ts` keeps the
+      interval bounds. `app/src/explain/index.ts` merges
+      `CHI_SQUARE_POOLED`, `PERSON_TIME_ADJUSTED` and `BINOMIAL`.
 - `freq.*` statistic paths name no table, so the engine resolves them
   against the run's first table only; `renderFreq` therefore offers
   the explain affordance on `tables[0]`'s rows only (later tables get

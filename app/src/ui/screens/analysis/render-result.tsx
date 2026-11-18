@@ -1,134 +1,36 @@
-// Result rendering (v0.3 plan Task 12, spec §8.2): `FreqResult` and
-// `TablesResult` become semantic `<table>` markup — captions and
-// scoped headers; an undefined `Estimate` renders "—" with the reason
-// in a visually hidden span; every statistic goes through the one
-// `formatNumber` helper (exactly 4 significant digits, trailing
-// zeros kept, p-values below 0.0001 as "< 0.0001"). Visual styling
-// comes from the caller's
+// TABLES result rendering (v0.3 plan Task 12, spec §8.2): the
+// `TablesResult` becomes semantic `<table>` markup — captions and
+// scoped headers — through the shared `StatsTable` in
+// `stats-table.tsx` (an undefined `Estimate` renders "—" with the
+// reason in a visually hidden span; every statistic goes through the
+// one `formatNumber` helper). The FREQ renderers live in
+// `render-freq.tsx` and MEANS in `render-means.tsx`; they and the
+// `stats-table` pieces are re-exported here so callers keep a single
+// entry point. Visual styling comes from the caller's
 // `.result` scope in analysis.module.css so this module stays free of
 // stylesheet imports.
-import type { CSSProperties, ReactNode } from 'react';
-import type { CategoryStats } from '@engine-types/CategoryStats';
-import type { Ci } from '@engine-types/Ci';
-import type { Estimate } from '@engine-types/Estimate';
-import type { FreqResult } from '@engine-types/FreqResult';
-import type { FreqTable } from '@engine-types/FreqTable';
+import type { ReactNode } from 'react';
 import type { MantelHaenszel } from '@engine-types/MantelHaenszel';
-import type { ProportionCi } from '@engine-types/ProportionCi';
 import type { StratifiedStats } from '@engine-types/StratifiedStats';
 import type { TablesResult } from '@engine-types/TablesResult';
 import type { TwoByTwoStats } from '@engine-types/TwoByTwoStats';
-import { Button } from '../../components';
-import { et, type ExplainStat } from '../../../explain';
-import { formatNumber } from '../../format';
+import type { ExplainStat } from '../../../explain';
 import { t } from '../../strings';
+import {
+  ciStats,
+  stat,
+  StatsTable,
+  type ExplainHandler,
+  type StatRow,
+} from './stats-table';
 
-// `renderMeans` lives in ./render-means; re-exported here so callers
-// keep a single entry point.
+// `stats-table` holds the row model and generic table; `renderFreq`
+// lives in ./render-freq and `renderMeans` in ./render-means —
+// re-exported here so callers keep a single entry point.
+export { estimate, StatsTable } from './stats-table';
+export type { ExplainHandler, StatRow } from './stats-table';
+export { renderFreq } from './render-freq';
 export { renderMeans } from './render-means';
-
-const VISUALLY_HIDDEN: CSSProperties = {
-  position: 'absolute',
-  width: '1px',
-  height: '1px',
-  padding: 0,
-  margin: '-1px',
-  overflow: 'hidden',
-  clip: 'rect(0 0 0 0)',
-  whiteSpace: 'nowrap',
-  border: 0,
-};
-
-export function estimate(e: Estimate, kind: 'estimate' | 'p' = 'estimate'): ReactNode {
-  if (typeof e === 'number') return formatNumber(e, kind);
-  const reason = t.analysis.undefinedReason[e.undefined];
-  return (
-    <>
-      {'—'}
-      <span style={VISUALLY_HIDDEN}> ({reason})</span>
-    </>
-  );
-}
-
-function interval(c: Ci): ReactNode {
-  return (
-    <>
-      {estimate(c.lower)}
-      {' – '}
-      {estimate(c.upper)}
-    </>
-  );
-}
-
-/** Explain (v1.0 plan Task 16, spec §6): a row may expose the
- *  concrete `explainProcedure` paths of the leaves it displays —
- *  the Estimate first, then CI bounds and the p-value — so the
- *  panel's picker can switch between them. */
-export interface StatRow {
-  label: string;
-  estimate?: Estimate;
-  ci?: Ci;
-  p?: Estimate;
-  stats?: ExplainStat[];
-}
-
-/** The explain affordance one row passes to `StatsTable`. */
-export type ExplainHandler = (row: StatRow) => void;
-
-function stat(path: string, label: string): ExplainStat {
-  return { path, label };
-}
-
-export function StatsTable({
-  caption,
-  rows,
-  onExplain,
-}: {
-  caption: string;
-  rows: StatRow[];
-  onExplain?: ExplainHandler | undefined;
-}) {
-  const explainable = onExplain !== undefined;
-  return (
-    <table>
-      <caption>{caption}</caption>
-      <thead>
-        <tr>
-          <th scope="col">{t.analysis.statisticCol}</th>
-          <th scope="col">{t.analysis.estimateCol}</th>
-          <th scope="col">{t.analysis.ciCol}</th>
-          <th scope="col">{t.analysis.pValueCol}</th>
-          {explainable && <th scope="col">{et.explain}</th>}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((r, i) => (
-          <tr key={i}>
-            <th scope="row">{r.label}</th>
-            <td>{r.estimate === undefined ? '' : estimate(r.estimate)}</td>
-            <td>{r.ci === undefined ? '' : interval(r.ci)}</td>
-            <td>{r.p === undefined ? '' : estimate(r.p, 'p')}</td>
-            {explainable && (
-              <td>
-                {r.stats !== undefined && r.stats.length > 0 && (
-                  <Button onPress={() => onExplain(r)}>{et.explain}</Button>
-                )}
-              </td>
-            )}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-/** The leaves a CI row covers, with picker labels. */
-function ciStats(prefix: string, base: string): ExplainStat[] {
-  return [
-    stat(`${prefix}.${base}.lower`, 'Lower bound'),
-    stat(`${prefix}.${base}.upper`, 'Upper bound'),
-  ];
-}
 
 /** Every statistic v0.2 returns for a 2×2 (spec §8.2). `prefix` is
  *  `two_by_two` for the crude table and
@@ -314,115 +216,6 @@ function mhRows(mh: MantelHaenszel, s: StratifiedStats): StatRow[] {
       stats: [stat(`${P}.breslow_day_tarone.p_value`, 'p-value')],
     },
   ];
-}
-
-function categoryCi(cat: CategoryStats, method: ProportionCi): Ci {
-  return method === 'wilson' ? cat.ci_95_wilson : cat.ci_95_clopper_pearson;
-}
-
-/** The explainable leaves of one frequency category. `freq.*` paths
- *  name no table, so the engine always resolves them against the
- *  run's first table — `renderFreq` therefore only offers the
- *  explain affordance on `tables[0]` (the one a trace reads). */
-function freqCatStats(i: number, methods: ProportionCi[]): ExplainStat[] {
-  const base = `freq.categories[${i}]`;
-  return [
-    stat(`${base}.count`, 'Count'),
-    stat(`${base}.percent`, 'Percent'),
-    stat(`${base}.cumulative_percent`, 'Cumulative percent'),
-    ...methods.flatMap((m) => [
-      stat(`${base}.ci_95_${m}.lower`, `${m} — lower bound`),
-      stat(`${base}.ci_95_${m}.upper`, `${m} — upper bound`),
-    ]),
-  ];
-}
-
-function FreqTableView({
-  table,
-  onExplain,
-}: {
-  table: FreqTable;
-  onExplain?: ExplainHandler | undefined;
-}) {
-  // Every statistic v0.2 returns: both per-category CIs are shown;
-  // the procedure's `ci_method` interval comes first.
-  const methods: ProportionCi[] = [
-    table.ci_method,
-    table.ci_method === 'wilson' ? 'clopper_pearson' : 'wilson',
-  ];
-  const explainable = onExplain !== undefined;
-  return (
-    <>
-      <table>
-        <caption>{t.analysis.freqCaption(table.variable, table.stratum ?? null)}</caption>
-        <thead>
-          <tr>
-            <th scope="col">{t.analysis.valueCol}</th>
-            <th scope="col">{t.analysis.countCol}</th>
-            <th scope="col">{t.analysis.percentCol}</th>
-            <th scope="col">{t.analysis.cumPercentCol}</th>
-            {methods.map((m) => (
-              <th scope="col" key={m}>
-                {t.analysis.ciMethodLabel[m]} {t.analysis.ciCol}
-              </th>
-            ))}
-            {explainable && <th scope="col">{et.explain}</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {table.labels.map((label, i) => {
-            const cat = table.categories[i];
-            return (
-              <tr key={i}>
-                <th scope="row">{label}</th>
-                <td>{cat === undefined ? '' : cat.count}</td>
-                <td>{cat === undefined ? '' : estimate(cat.percent)}</td>
-                <td>
-                  {cat === undefined ? '' : estimate(cat.cumulative_percent)}
-                </td>
-                {methods.map((m) => (
-                  <td key={m}>
-                    {cat === undefined ? '' : interval(categoryCi(cat, m))}
-                  </td>
-                ))}
-                {explainable && (
-                  <td>
-                    <Button
-                      onPress={() =>
-                        onExplain({
-                          label,
-                          stats: cat === undefined ? [] : freqCatStats(i, methods),
-                        })
-                      }
-                    >
-                      {et.explain}
-                    </Button>
-                  </td>
-                )}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <p>{t.analysis.freqSummary(table.total, table.missing)}</p>
-    </>
-  );
-}
-
-export function renderFreq(result: FreqResult, onExplain?: ExplainHandler | undefined): ReactNode {
-  const excluded = Object.entries(result.exclusions);
-  return (
-    <>
-      {result.tables.map((table, i) => (
-        <FreqTableView
-          key={i}
-          table={table}
-          onExplain={i === 0 ? onExplain : undefined}
-        />
-      ))}
-      {excluded.length > 0 && <p>{t.analysis.exclusions(excluded)}</p>}
-    </>
-  );
 }
 
 export function renderTables(result: TablesResult, onExplain?: ExplainHandler | undefined): ReactNode {
