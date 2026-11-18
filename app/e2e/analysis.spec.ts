@@ -18,6 +18,13 @@ const OSWEGO_VANILLA = JSON.parse(
   ),
 ) as { expected: { odds_ratio: { estimate: { value: number } } } };
 
+const OSWEGO_AGE_SEX = JSON.parse(
+  readFileSync(
+    new URL('../../fixtures/means/means_oswego_age_sex.json', import.meta.url),
+    'utf8',
+  ),
+) as { expected: { groups: { mean: { value: number } }[] } };
+
 // One extra record turns the Oswego re-import into a v2.
 const OSWEGO_PLUS = `${OSWEGO.trimEnd()}\n"Patient76",45,"Male",1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"04/19/40 09:00:00",,"g76","P76"\n`;
 
@@ -75,7 +82,7 @@ async function openWorkspace(page: Page, seed: Seed): Promise<void> {
   ).toBeVisible();
 }
 
-async function openDialog(page: Page, name: 'FREQ' | 'TABLES'): Promise<void> {
+async function openDialog(page: Page, name: 'FREQ' | 'TABLES' | 'MEANS'): Promise<void> {
   await page.getByRole('button', { name: 'Run procedure' }).click();
   await page.getByRole('menuitem', { name, exact: true }).click();
   await expect(
@@ -324,6 +331,109 @@ test('text_levels_picker_runs_sex_by_ill', async ({ page }) => {
 
   await expect(
     page.getByRole('heading', { name: 'TABLES SEX × ILL — oswego.csv v1' }),
+  ).toBeVisible();
+});
+
+test('means_age_by_sex_matches_engine', async ({ page }) => {
+  await page.goto('/');
+  const seed = await seedOswego(page);
+  await openWorkspace(page, seed);
+  await openDialog(page, 'MEANS');
+  await expectNoA11yViolations(page, 'MEANS dialog');
+
+  await pick(page, /Variable/, 'AGE');
+  await pick(page, /Group by/, 'SEX');
+  await page.getByRole('button', { name: 'Run', exact: true }).click();
+
+  await expect(
+    page.getByRole('heading', { name: 'MEANS AGE SEX — oswego.csv v1' }),
+  ).toBeVisible();
+  // fixtures/means/means_oswego_age_sex.json, first group's mean.
+  const expected = formatNumber(
+    OSWEGO_AGE_SEX.expected.groups[0]!.mean.value,
+  );
+  await expect(page.getByRole('cell', { name: expected })).toBeVisible();
+});
+
+test('means_dialog_offers_numeric_variables_only', async ({ page }) => {
+  await page.goto('/');
+  const seed = await seedOswego(page);
+  await openWorkspace(page, seed);
+  await openDialog(page, 'MEANS');
+
+  await page.getByRole('button', { name: /Variable/ }).focus();
+  await page.keyboard.press('Enter');
+  const listbox = page.getByRole('listbox');
+  await expect(
+    listbox.getByRole('option', { name: 'AGE', exact: true }),
+  ).toBeVisible();
+  await expect(
+    listbox.getByRole('option', { name: 'SEX', exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    listbox.getByRole('option', { name: 'Name', exact: true }),
+  ).toHaveCount(0);
+});
+
+test('command_line_shown_and_copied', async ({ page }) => {
+  await page.addInitScript(() => {
+    const w = window as unknown as { __copied: string[] };
+    w.__copied = [];
+    navigator.clipboard.writeText = (text: string) => {
+      w.__copied.push(text);
+      return Promise.resolve();
+    };
+  });
+  await page.goto('/');
+  const seed = await seedOswego(page);
+  await openWorkspace(page, seed);
+  await openDialog(page, 'MEANS');
+  await pick(page, /Variable/, 'AGE');
+  await pick(page, /Group by/, 'SEX');
+  await page.getByRole('button', { name: 'Run', exact: true }).click();
+
+  const card = page.getByRole('article', {
+    name: 'MEANS AGE SEX — oswego.csv v1',
+  });
+  await expect(card).toBeVisible();
+  await expect(
+    card.getByText('MEANS AGE SEX', { exact: true }),
+  ).toBeVisible();
+  await card.getByRole('button', { name: 'Copy', exact: true }).click();
+  const copied = await page.evaluate(
+    () => (window as unknown as { __copied: string[] }).__copied.at(-1),
+  );
+  expect(copied).toBe('MEANS AGE SEX');
+});
+
+test('old_run_gets_generated_command', async ({ page }) => {
+  await page.goto('/');
+  const seed = await seedOswego(page);
+  // A run written before the `command` column existed holds NULL; the
+  // test hook rewinds the stored row the way a v1 database would have
+  // left it, so the card's command must come from `epiInfoCommand`.
+  await page.evaluate(async (seed) => {
+    const run = await window.dataApi.runTables(
+      seed.projectId,
+      seed.datasetId,
+      1,
+      {
+        exposure: { name: 'VANILLA', levels: null },
+        outcome: { name: 'ILL', levels: null },
+        stratify_by: [],
+        include_missing: false,
+      },
+    );
+    await window.dataApi.__clearRunCommand(run.id);
+  }, seed);
+  await openWorkspace(page, seed);
+
+  const card = page.getByRole('article', {
+    name: 'TABLES VANILLA × ILL — oswego.csv v1',
+  });
+  await expect(card).toBeVisible();
+  await expect(
+    card.getByText('TABLES VANILLA ILL', { exact: true }),
   ).toBeVisible();
 });
 

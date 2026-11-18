@@ -9,11 +9,15 @@ import sqlite3InitModule, {
 } from '@sqlite.org/sqlite-wasm';
 import sqlite3WasmUrl from '@sqlite.org/sqlite-wasm/sqlite3.wasm?url';
 import initSql from '../../../store/migrations/0001_init.sql?raw';
+import runCommandSql from '../../../store/migrations/0002_run_command.sql?raw';
 import { mapError } from './map-error';
 import { migrate } from './migrate';
 import { StoreError, type Row, type SqlValue, type Store, type Tx } from './types';
 
-const MIGRATIONS: { version: number; sql: string }[] = [{ version: 1, sql: initSql }];
+const MIGRATIONS: { version: number; sql: string }[] = [
+  { version: 1, sql: initSql },
+  { version: 2, sql: runCommandSql },
+];
 
 const WRITE_RE =
   /^\s*(?:insert|update|delete|replace|create|drop|alter|vacuum|reindex|attach|detach|truncate)\b/i;

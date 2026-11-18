@@ -24,6 +24,13 @@ const MIGRATIONS = [
       'utf8',
     ),
   },
+  {
+    version: 2,
+    sql: readFileSync(
+      join(process.cwd(), '..', 'store', 'migrations', '0002_run_command.sql'),
+      'utf8',
+    ),
+  },
 ];
 
 interface WireValue {

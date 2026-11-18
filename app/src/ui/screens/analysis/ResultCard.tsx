@@ -7,13 +7,16 @@ import { useId } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { FreqOptions } from '@engine-types/FreqOptions';
 import type { FreqResult } from '@engine-types/FreqResult';
+import type { MeansOptions } from '@engine-types/MeansOptions';
+import type { MeansResult } from '@engine-types/MeansResult';
 import type { TablesOptions } from '@engine-types/TablesOptions';
 import type { TablesResult } from '@engine-types/TablesResult';
 import { Button } from '../../components';
 import { dataApi } from '../../../worker/client';
 import type { RunRecord } from '../../../worker/api';
 import { t } from '../../strings';
-import { renderFreq, renderTables } from './render-result';
+import { CommandLine } from './CommandLine';
+import { renderFreq, renderMeans, renderTables } from './render-result';
 import { ReceiptPanel } from './ReceiptPanel';
 import styles from './analysis.module.css';
 
@@ -23,6 +26,15 @@ export function cardTitle(run: RunRecord, datasetName: string): string {
     const options = run.options as FreqOptions;
     return t.analysis.cardTitleFreq(
       options.variables.join(', '),
+      datasetName,
+      run.version,
+    );
+  }
+  if (run.procedure === 'means') {
+    const options = run.options as MeansOptions;
+    return t.analysis.cardTitleMeans(
+      options.variable,
+      options.group_by,
       datasetName,
       run.version,
     );
@@ -81,8 +93,11 @@ export function ResultCard({
       <div className={styles.result}>
         {run.procedure === 'freq'
           ? renderFreq(run.result as FreqResult)
-          : renderTables(run.result as TablesResult)}
+          : run.procedure === 'means'
+            ? renderMeans(run.result as MeansResult)
+            : renderTables(run.result as TablesResult)}
       </div>
+      <CommandLine command={run.command} />
       <ReceiptPanel receipt={run.receipt} />
       <div className={styles.actions}>
         <Button onPress={() => del.mutate()} isDisabled={del.isPending}>

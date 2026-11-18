@@ -20,6 +20,10 @@ import type { TablesResult } from '@engine-types/TablesResult';
 import type { TwoByTwoStats } from '@engine-types/TwoByTwoStats';
 import { t } from '../../strings';
 
+// `renderMeans` lives in ./render-means; re-exported here so callers
+// keep a single entry point.
+export { renderMeans } from './render-means';
+
 const VISUALLY_HIDDEN: CSSProperties = {
   position: 'absolute',
   width: '1px',
@@ -67,7 +71,7 @@ function expandExponential(s: string): string {
   return `${sign}${digits.slice(0, point)}.${digits.slice(point)}`;
 }
 
-function estimate(e: Estimate, kind: 'estimate' | 'p' = 'estimate'): ReactNode {
+export function estimate(e: Estimate, kind: 'estimate' | 'p' = 'estimate'): ReactNode {
   if (typeof e === 'number') return formatNumber(e, kind);
   const reason = t.analysis.undefinedReason[e.undefined];
   return (
@@ -88,14 +92,14 @@ function interval(c: Ci): ReactNode {
   );
 }
 
-interface StatRow {
+export interface StatRow {
   label: string;
   estimate?: Estimate;
   ci?: Ci;
   p?: Estimate;
 }
 
-function StatsTable({ caption, rows }: { caption: string; rows: StatRow[] }) {
+export function StatsTable({ caption, rows }: { caption: string; rows: StatRow[] }) {
   return (
     <table>
       <caption>{caption}</caption>
