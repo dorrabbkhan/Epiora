@@ -8,6 +8,7 @@
 // by `epiInfoCommand` and never written back (v1.0 Task 15).
 
 import type { DatasetHandle } from '@engine/epiora_wasm';
+import type { Explanation } from '@engine-types/Explanation';
 import type { FreqOptions } from '@engine-types/FreqOptions';
 import type { FreqResult } from '@engine-types/FreqResult';
 import type { MeansOptions } from '@engine-types/MeansOptions';
@@ -145,6 +146,37 @@ export async function rerun(store: Store, runId: string, version: number): Promi
     old.procedure as 'freq' | 'tables' | 'means',
     JSON.parse(old.options) as FreqOptions | TablesOptions | MeansOptions,
   );
+}
+
+// Explain (v1.0 plan Task 16, spec §6): the trace is computed on the
+// run's stored dataset snapshot and options — the same inputs that
+// produced the displayed leaf — so every number in the panel is one
+// the engine returned. Traces are not part of the receipt.
+export async function explainRun(
+  store: Store,
+  runId: string,
+  statistic: string,
+): Promise<Explanation> {
+  const run = await runs.get(store, runId);
+  if (run === null || run.deletedAt !== null) {
+    throw rpc('not_found', `run ${runId} does not exist`);
+  }
+  const handle: DatasetHandle = await loadHandle(
+    store,
+    run.datasetId,
+    run.datasetVersion,
+  );
+  const eng = await engine();
+  const options = JSON.parse(run.options) as
+    | FreqOptions
+    | TablesOptions
+    | MeansOptions;
+  return eng.explainProcedure(
+    handle,
+    run.procedure,
+    options,
+    statistic,
+  ) as Explanation;
 }
 
 export async function deleteRun(store: Store, runId: string): Promise<void> {

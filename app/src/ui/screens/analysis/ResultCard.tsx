@@ -3,7 +3,7 @@
 // receipt, a "Rerun on vN" badge when a newer dataset version exists
 // (rerunning adds a new card and keeps this one) and a recorded
 // delete.
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { FreqOptions } from '@engine-types/FreqOptions';
 import type { FreqResult } from '@engine-types/FreqResult';
@@ -12,11 +12,17 @@ import type { MeansResult } from '@engine-types/MeansResult';
 import type { TablesOptions } from '@engine-types/TablesOptions';
 import type { TablesResult } from '@engine-types/TablesResult';
 import { Button } from '../../components';
+import { ExplainPanel } from '../../../explain/ExplainPanel';
 import { dataApi } from '../../../worker/client';
 import type { RunRecord } from '../../../worker/api';
 import { t } from '../../strings';
 import { CommandLine } from './CommandLine';
-import { renderFreq, renderMeans, renderTables } from './render-result';
+import {
+  renderFreq,
+  renderMeans,
+  renderTables,
+  type StatRow,
+} from './render-result';
 import { ReceiptPanel } from './ReceiptPanel';
 import styles from './analysis.module.css';
 
@@ -60,6 +66,9 @@ export function ResultCard({
   const qc = useQueryClient();
   const titleId = useId();
   const title = cardTitle(run, datasetName);
+  // The row being explained — its stats are the concrete
+  // `explainProcedure` paths the panel's picker offers.
+  const [explaining, setExplaining] = useState<StatRow | null>(null);
 
   const invalidate = () =>
     qc.invalidateQueries({ queryKey: ['runs', run.projectId] });
@@ -92,11 +101,20 @@ export function ResultCard({
       )}
       <div className={styles.result}>
         {run.procedure === 'freq'
-          ? renderFreq(run.result as FreqResult)
+          ? renderFreq(run.result as FreqResult, setExplaining)
           : run.procedure === 'means'
-            ? renderMeans(run.result as MeansResult)
-            : renderTables(run.result as TablesResult)}
+            ? renderMeans(run.result as MeansResult, setExplaining)
+            : renderTables(run.result as TablesResult, setExplaining)}
       </div>
+      {explaining !== null && explaining.stats !== undefined && (
+        <ExplainPanel
+          title={explaining.label}
+          stats={explaining.stats}
+          fetchTrace={(statistic) => dataApi.explainRun(run.id, statistic)}
+          keyParts={['run', run.id]}
+          onClose={() => setExplaining(null)}
+        />
+      )}
       <CommandLine command={run.command} />
       <ReceiptPanel receipt={run.receipt} />
       <div className={styles.actions}>

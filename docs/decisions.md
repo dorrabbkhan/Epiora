@@ -5380,3 +5380,50 @@ group, then overall) plus each test block the engine returned.
   a command now. The hook nulls the column on a stored run, following
   the `__simulateQuotaOnNextWrite` / `__clearSnapshotCache` pattern.
 Supersedes: —
+### v1.0 Task 16 — Explain panel, MathML templates, formula guard (2026-11-19)
+
+Decision: one reusable `ExplainPanel` serves both surfaces. Every
+Analysis result row carries the concrete `explainProcedure` paths of
+the leaves it displays (estimate first, then CI bounds and p-value);
+when a row covers more than one leaf the panel's Select switches the
+traced statistic — labels stay digit-free so the "every number comes
+from the trace" rule holds. Words come first, "Show the maths" reveals
+the template's MathML with the trace's formatted values substituted,
+and `method.*` traces render words plus the inputs/result table only —
+no substituted mathematics.
+
+- Files outside the task's Files block:
+  - `crates/epiora-core/src/explain/freq.rs` — engine trace fix the
+    guard test made visible: the trace passed `table.total` (records
+    in scope, including missing) as the `n` denominator for
+    `percent`, `cumulative_percent` and both per-category CIs, but
+    the procedure divides by `nf = Σ counts`. The formula could not
+    reproduce the leaf it claims to explain; `n` is now the summed
+    category counts. No leaf values change — only trace inputs.
+  - `scripts/check-app.sh` — the guard test needs the Node parity
+    build (`pkg-parity`, target `nodejs`, `parity` feature); the app
+    gate now builds it next to the release packages so Vitest finds
+    it in CI and locally.
+  - `app/src/worker/client.ts` — `wrapDataApi` mirrors every
+    `DataApi` method explicitly; `explainRun` needs its main-thread
+    twin (same pattern as `rerun`/`deleteRun`).
+  - `app/src/ui/screens/analysis/ResultCard.tsx` — the plan's Modify
+    list names `render-result.tsx` but not the card that owns the
+    dialog state and calls `dataApi.explainRun`.
+  - `app/src/ui/screens/analysis/render-means.tsx` — `renderMeans`
+    lives in its own module (v1.0 Task 15); its descriptives and test
+    rows get the same `stats` mapping `render-result.tsx` gained.
+  - `app/src/ui/format.ts` — `formatNumber` moved out of
+    `render-result.tsx` into a leaf module with no React or stylesheet
+    imports: result rows now import the Epiora `Button`, and the e2e
+    specs import `formatNumber`, so keeping it in `render-result.tsx`
+    pulled a `.module.css` into Playwright's transform (which cannot
+    load CSS). Callers updated: `render-result.tsx`,
+    `render-result.test.tsx`,
+    `CalculatorResult.tsx`, `ExplainPanel.tsx`,
+    `e2e/analysis.spec.ts`, `e2e/explain.spec.ts`.
+- `freq.*` statistic paths name no table, so the engine resolves them
+  against the run's first table only; `renderFreq` therefore offers
+  the explain affordance on `tables[0]`'s rows only (later tables get
+  no explain button rather than a wrong trace).
+Supersedes: —

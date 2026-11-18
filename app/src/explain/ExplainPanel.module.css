@@ -1,0 +1,79 @@
+/* ExplainPanel (v1.0 plan Task 16, spec §6) — dialog layout for
+   the explain panel: words, optional MathML disclosure and the
+   inputs/result table. Tokens only. */
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: min(32rem, 80vw);
+  max-width: 42rem;
+}
+
+.hint {
+  color: var(--color-textMuted);
+  font-size: var(--font-size2);
+  margin: 0;
+}
+
+.error {
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.picker {
+  align-self: flex-start;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.words {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--font-size3);
+}
+
+.maths {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2);
+}
+
+.mathml {
+  overflow-x: auto;
+  padding: var(--space-2) 0;
+}
+
+.mathml math {
+  font-size: var(--font-size3);
+  color: var(--color-text);
+}
+
+.inputs {
+  border-collapse: collapse;
+  color: var(--color-text);
+  font-size: var(--font-size2);
+}
+
+.inputs caption {
+  padding: var(--space-1) 0;
+  color: var(--color-text);
+  font-weight: var(--font-weightBold);
+  text-align: left;
+}
+
+.inputs th,
+.inputs td {
+  border: 1px solid var(--color-border);
+  padding: var(--space-1) var(--space-2);
+  text-align: left;
+}
+
+.source {
+  margin: 0;
+  color: var(--color-textMuted);
+  font-size: var(--font-size2);
+}

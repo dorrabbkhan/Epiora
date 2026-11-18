@@ -11,7 +11,8 @@ import type { GroupStats } from '@engine-types/GroupStats';
 import type { MeansResult } from '@engine-types/MeansResult';
 import type { TablesResult } from '@engine-types/TablesResult';
 import type { TwoByTwoStats } from '@engine-types/TwoByTwoStats';
-import { formatNumber, renderFreq, renderMeans, renderTables } from './render-result';
+import { formatNumber } from '../../format';
+import { renderFreq, renderMeans, renderTables } from './render-result';
 
 const num = (x: number): Estimate => x;
 const ci = (lower: number, upper: number): Ci => ({ lower, upper });

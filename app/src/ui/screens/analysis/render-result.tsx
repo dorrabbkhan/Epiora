@@ -18,6 +18,9 @@ import type { ProportionCi } from '@engine-types/ProportionCi';
 import type { StratifiedStats } from '@engine-types/StratifiedStats';
 import type { TablesResult } from '@engine-types/TablesResult';
 import type { TwoByTwoStats } from '@engine-types/TwoByTwoStats';
+import { Button } from '../../components';
+import { et, type ExplainStat } from '../../../explain';
+import { formatNumber } from '../../format';
 import { t } from '../../strings';
 
 // `renderMeans` lives in ./render-means; re-exported here so callers
@@ -35,41 +38,6 @@ const VISUALLY_HIDDEN: CSSProperties = {
   whiteSpace: 'nowrap',
   border: 0,
 };
-
-/** The one number format (spec §8.2): exactly 4 significant digits
- *  with trailing zeros kept, never exponent notation, locale-
- *  independent via `toPrecision` (ECMA-262) plus `expandExponential`
- *  for the magnitudes it renders in exponential form. `kind: 'p'`
- *  adds the open bound: p-values in [0, 0.0001) render "< 0.0001",
- *  including an exact 0 (or -0) produced when an upper tail
- *  underflows; estimates of the same magnitude keep their digits.
- *  Non-finite input renders "—". */
-export function formatNumber(
-  x: number,
-  kind: 'estimate' | 'p' = 'estimate',
-): string {
-  if (!Number.isFinite(x)) return '—';
-  if (kind === 'p' && x >= 0 && x < 0.0001) return '< 0.0001';
-  return expandExponential(x.toPrecision(4));
-}
-
-const EXPONENTIAL = /^(-?)(\d)(?:\.(\d+))?e([+-]\d+)$/;
-
-/** `toPrecision` switches to exponential form outside [1e-6, 1e4);
- *  expanding it by hand keeps the "no exponent" rule for every
- *  finite input ("1.235e+4" → "12350", "3.000e-7" → "0.0000003000"). */
-function expandExponential(s: string): string {
-  const m = EXPONENTIAL.exec(s);
-  if (m === null) return s;
-  const [, sign, head, tail = '', expText] = m;
-  const digits = head + tail;
-  const point = Number(expText) + 1; // '.' sits `point` digits into `digits`
-  if (point <= 0) return `${sign}0.${'0'.repeat(-point)}${digits}`;
-  if (point >= digits.length) {
-    return `${sign}${digits}${'0'.repeat(point - digits.length)}`;
-  }
-  return `${sign}${digits.slice(0, point)}.${digits.slice(point)}`;
-}
 
 export function estimate(e: Estimate, kind: 'estimate' | 'p' = 'estimate'): ReactNode {
   if (typeof e === 'number') return formatNumber(e, kind);
@@ -92,14 +60,35 @@ function interval(c: Ci): ReactNode {
   );
 }
 
+/** Explain (v1.0 plan Task 16, spec §6): a row may expose the
+ *  concrete `explainProcedure` paths of the leaves it displays —
+ *  the Estimate first, then CI bounds and the p-value — so the
+ *  panel's picker can switch between them. */
 export interface StatRow {
   label: string;
   estimate?: Estimate;
   ci?: Ci;
   p?: Estimate;
+  stats?: ExplainStat[];
 }
 
-export function StatsTable({ caption, rows }: { caption: string; rows: StatRow[] }) {
+/** The explain affordance one row passes to `StatsTable`. */
+export type ExplainHandler = (row: StatRow) => void;
+
+function stat(path: string, label: string): ExplainStat {
+  return { path, label };
+}
+
+export function StatsTable({
+  caption,
+  rows,
+  onExplain,
+}: {
+  caption: string;
+  rows: StatRow[];
+  onExplain?: ExplainHandler | undefined;
+}) {
+  const explainable = onExplain !== undefined;
   return (
     <table>
       <caption>{caption}</caption>
@@ -109,6 +98,7 @@ export function StatsTable({ caption, rows }: { caption: string; rows: StatRow[]
           <th scope="col">{t.analysis.estimateCol}</th>
           <th scope="col">{t.analysis.ciCol}</th>
           <th scope="col">{t.analysis.pValueCol}</th>
+          {explainable && <th scope="col">{et.explain}</th>}
         </tr>
       </thead>
       <tbody>
@@ -118,6 +108,13 @@ export function StatsTable({ caption, rows }: { caption: string; rows: StatRow[]
             <td>{r.estimate === undefined ? '' : estimate(r.estimate)}</td>
             <td>{r.ci === undefined ? '' : interval(r.ci)}</td>
             <td>{r.p === undefined ? '' : estimate(r.p, 'p')}</td>
+            {explainable && (
+              <td>
+                {r.stats !== undefined && r.stats.length > 0 && (
+                  <Button onPress={() => onExplain(r)}>{et.explain}</Button>
+                )}
+              </td>
+            )}
           </tr>
         ))}
       </tbody>
@@ -125,21 +122,48 @@ export function StatsTable({ caption, rows }: { caption: string; rows: StatRow[]
   );
 }
 
-/** Every statistic v0.2 returns for a 2×2 (spec §8.2). */
-function crudeRows(s: TwoByTwoStats): StatRow[] {
-  const or = s.odds_ratio;
+/** The leaves a CI row covers, with picker labels. */
+function ciStats(prefix: string, base: string): ExplainStat[] {
   return [
-    { label: t.analysis.attackExposed, estimate: s.risk.exposed },
-    { label: t.analysis.attackUnexposed, estimate: s.risk.unexposed },
+    stat(`${prefix}.${base}.lower`, 'Lower bound'),
+    stat(`${prefix}.${base}.upper`, 'Upper bound'),
+  ];
+}
+
+/** Every statistic v0.2 returns for a 2×2 (spec §8.2). `prefix` is
+ *  `two_by_two` for the crude table and
+ *  `stratified_two_by_two.crude` for the pooled-across-strata one. */
+function crudeRows(s: TwoByTwoStats, prefix = 'two_by_two'): StatRow[] {
+  const or = s.odds_ratio;
+  const orCi = (base: string): ExplainStat[] => ciStats(prefix, `odds_ratio.${base}`);
+  return [
+    {
+      label: t.analysis.attackExposed,
+      estimate: s.risk.exposed,
+      stats: [stat(`${prefix}.risk.exposed`, 'Risk')],
+    },
+    {
+      label: t.analysis.attackUnexposed,
+      estimate: s.risk.unexposed,
+      stats: [stat(`${prefix}.risk.unexposed`, 'Risk')],
+    },
     {
       label: t.analysis.riskDifference,
       estimate: s.risk.difference,
       ci: s.risk.difference_ci_95_wald,
+      stats: [
+        stat(`${prefix}.risk.difference`, 'Estimate'),
+        ...ciStats(prefix, 'risk.difference_ci_95_wald'),
+      ],
     },
     {
       label: t.analysis.riskRatio,
       estimate: s.risk_ratio.estimate,
       ci: s.risk_ratio.ci_95_wald,
+      stats: [
+        stat(`${prefix}.risk_ratio.estimate`, 'Estimate'),
+        ...ciStats(prefix, 'risk_ratio.ci_95_wald'),
+      ],
     },
     {
       label: t.analysis.riskRatioSmall,
@@ -148,60 +172,147 @@ function crudeRows(s: TwoByTwoStats): StatRow[] {
         lower: s.risk_ratio.small_sample.lower,
         upper: s.risk_ratio.small_sample.upper,
       },
+      stats: [
+        stat(`${prefix}.risk_ratio.small_sample.estimate`, 'Estimate'),
+        ...ciStats(prefix, 'risk_ratio.small_sample'),
+      ],
     },
-    { label: t.analysis.oddsRatio, estimate: or.estimate, ci: or.ci_95_wald },
-    { label: t.analysis.oddsRatioCmle, estimate: or.cmle },
-    { label: t.analysis.oddsRatioFisherCi, ci: or.ci_95_fisher_exact },
-    { label: t.analysis.oddsRatioMidpCi, ci: or.ci_95_midp_exact },
+    {
+      label: t.analysis.oddsRatio,
+      estimate: or.estimate,
+      ci: or.ci_95_wald,
+      stats: [
+        stat(`${prefix}.odds_ratio.estimate`, 'Estimate'),
+        ...orCi('ci_95_wald'),
+      ],
+    },
+    {
+      label: t.analysis.oddsRatioCmle,
+      estimate: or.cmle,
+      stats: [stat(`${prefix}.odds_ratio.cmle`, 'Estimate')],
+    },
+    {
+      label: t.analysis.oddsRatioFisherCi,
+      ci: or.ci_95_fisher_exact,
+      stats: orCi('ci_95_fisher_exact'),
+    },
+    {
+      label: t.analysis.oddsRatioMidpCi,
+      ci: or.ci_95_midp_exact,
+      stats: orCi('ci_95_midp_exact'),
+    },
     {
       label: t.analysis.chiUncorrected,
       estimate: s.chi_square.uncorrected.statistic,
       p: s.chi_square.uncorrected.p_value,
+      stats: [
+        stat(`${prefix}.chi_square.uncorrected.statistic`, 'Statistic'),
+        stat(`${prefix}.chi_square.uncorrected.p_value`, 'p-value'),
+      ],
     },
     {
       label: t.analysis.chiYates,
       estimate: s.chi_square.yates.statistic,
       p: s.chi_square.yates.p_value,
+      stats: [
+        stat(`${prefix}.chi_square.yates.statistic`, 'Statistic'),
+        stat(`${prefix}.chi_square.yates.p_value`, 'p-value'),
+      ],
     },
     {
       label: t.analysis.chiMantelHaenszel,
       estimate: s.chi_square.mantel_haenszel.statistic,
       p: s.chi_square.mantel_haenszel.p_value,
+      stats: [
+        stat(`${prefix}.chi_square.mantel_haenszel.statistic`, 'Statistic'),
+        stat(`${prefix}.chi_square.mantel_haenszel.p_value`, 'p-value'),
+      ],
     },
-    { label: t.analysis.chiDf, estimate: s.chi_square.df },
-    { label: t.analysis.fisherLower, p: s.fisher_exact.p_lower },
-    { label: t.analysis.fisherUpper, p: s.fisher_exact.p_upper },
-    { label: t.analysis.fisherTwoSided, p: s.fisher_exact.p_two_sided },
-    { label: t.analysis.midpTwoSided, p: s.midp_exact.p_two_sided },
+    {
+      label: t.analysis.chiDf,
+      estimate: s.chi_square.df,
+      stats: [stat(`${prefix}.chi_square.df`, 'df')],
+    },
+    {
+      label: t.analysis.fisherLower,
+      p: s.fisher_exact.p_lower,
+      stats: [stat(`${prefix}.fisher_exact.p_lower`, 'p-value')],
+    },
+    {
+      label: t.analysis.fisherUpper,
+      p: s.fisher_exact.p_upper,
+      stats: [stat(`${prefix}.fisher_exact.p_upper`, 'p-value')],
+    },
+    {
+      label: t.analysis.fisherTwoSided,
+      p: s.fisher_exact.p_two_sided,
+      stats: [stat(`${prefix}.fisher_exact.p_two_sided`, 'p-value')],
+    },
+    {
+      label: t.analysis.midpTwoSided,
+      p: s.midp_exact.p_two_sided,
+      stats: [stat(`${prefix}.midp_exact.p_two_sided`, 'p-value')],
+    },
   ];
 }
 
 function mhRows(mh: MantelHaenszel, s: StratifiedStats): StatRow[] {
   const bdt = s.breslow_day_tarone;
+  const P = 'stratified_two_by_two';
   return [
     {
       label: t.analysis.mhOddsRatio,
       estimate: mh.odds_ratio.estimate,
       ci: mh.odds_ratio.ci_95,
+      stats: [
+        stat(`${P}.mantel_haenszel.odds_ratio.estimate`, 'Estimate'),
+        stat(`${P}.mantel_haenszel.odds_ratio.ci_95.lower`, 'Lower bound'),
+        stat(`${P}.mantel_haenszel.odds_ratio.ci_95.upper`, 'Upper bound'),
+      ],
     },
     {
       label: t.analysis.mhRiskRatio,
       estimate: mh.risk_ratio.estimate,
       ci: mh.risk_ratio.ci_95,
+      stats: [
+        stat(`${P}.mantel_haenszel.risk_ratio.estimate`, 'Estimate'),
+        stat(`${P}.mantel_haenszel.risk_ratio.ci_95.lower`, 'Lower bound'),
+        stat(`${P}.mantel_haenszel.risk_ratio.ci_95.upper`, 'Upper bound'),
+      ],
     },
     {
       label: t.analysis.mhChiUncorrected,
       estimate: mh.chi_square.uncorrected.statistic,
       p: mh.chi_square.uncorrected.p_value,
+      stats: [
+        stat(`${P}.mantel_haenszel.chi_square.uncorrected.statistic`, 'Statistic'),
+        stat(`${P}.mantel_haenszel.chi_square.uncorrected.p_value`, 'p-value'),
+      ],
     },
     {
       label: t.analysis.mhChiCorrected,
       estimate: mh.chi_square.corrected.statistic,
       p: mh.chi_square.corrected.p_value,
+      stats: [
+        stat(`${P}.mantel_haenszel.chi_square.corrected.statistic`, 'Statistic'),
+        stat(`${P}.mantel_haenszel.chi_square.corrected.p_value`, 'p-value'),
+      ],
     },
-    { label: t.analysis.bdt, estimate: bdt.statistic },
-    { label: t.analysis.bdtDf, estimate: bdt.df },
-    { label: t.analysis.bdtP, p: bdt.p_value },
+    {
+      label: t.analysis.bdt,
+      estimate: bdt.statistic,
+      stats: [stat(`${P}.breslow_day_tarone.statistic`, 'Statistic')],
+    },
+    {
+      label: t.analysis.bdtDf,
+      estimate: bdt.df,
+      stats: [stat(`${P}.breslow_day_tarone.df`, 'df')],
+    },
+    {
+      label: t.analysis.bdtP,
+      p: bdt.p_value,
+      stats: [stat(`${P}.breslow_day_tarone.p_value`, 'p-value')],
+    },
   ];
 }
 
@@ -209,13 +320,37 @@ function categoryCi(cat: CategoryStats, method: ProportionCi): Ci {
   return method === 'wilson' ? cat.ci_95_wilson : cat.ci_95_clopper_pearson;
 }
 
-function FreqTableView({ table }: { table: FreqTable }) {
+/** The explainable leaves of one frequency category. `freq.*` paths
+ *  name no table, so the engine always resolves them against the
+ *  run's first table — `renderFreq` therefore only offers the
+ *  explain affordance on `tables[0]` (the one a trace reads). */
+function freqCatStats(i: number, methods: ProportionCi[]): ExplainStat[] {
+  const base = `freq.categories[${i}]`;
+  return [
+    stat(`${base}.count`, 'Count'),
+    stat(`${base}.percent`, 'Percent'),
+    stat(`${base}.cumulative_percent`, 'Cumulative percent'),
+    ...methods.flatMap((m) => [
+      stat(`${base}.ci_95_${m}.lower`, `${m} — lower bound`),
+      stat(`${base}.ci_95_${m}.upper`, `${m} — upper bound`),
+    ]),
+  ];
+}
+
+function FreqTableView({
+  table,
+  onExplain,
+}: {
+  table: FreqTable;
+  onExplain?: ExplainHandler | undefined;
+}) {
   // Every statistic v0.2 returns: both per-category CIs are shown;
   // the procedure's `ci_method` interval comes first.
   const methods: ProportionCi[] = [
     table.ci_method,
     table.ci_method === 'wilson' ? 'clopper_pearson' : 'wilson',
   ];
+  const explainable = onExplain !== undefined;
   return (
     <>
       <table>
@@ -231,6 +366,7 @@ function FreqTableView({ table }: { table: FreqTable }) {
                 {t.analysis.ciMethodLabel[m]} {t.analysis.ciCol}
               </th>
             ))}
+            {explainable && <th scope="col">{et.explain}</th>}
           </tr>
         </thead>
         <tbody>
@@ -249,6 +385,20 @@ function FreqTableView({ table }: { table: FreqTable }) {
                     {cat === undefined ? '' : interval(categoryCi(cat, m))}
                   </td>
                 ))}
+                {explainable && (
+                  <td>
+                    <Button
+                      onPress={() =>
+                        onExplain({
+                          label,
+                          stats: cat === undefined ? [] : freqCatStats(i, methods),
+                        })
+                      }
+                    >
+                      {et.explain}
+                    </Button>
+                  </td>
+                )}
               </tr>
             );
           })}
@@ -259,19 +409,23 @@ function FreqTableView({ table }: { table: FreqTable }) {
   );
 }
 
-export function renderFreq(result: FreqResult): ReactNode {
+export function renderFreq(result: FreqResult, onExplain?: ExplainHandler | undefined): ReactNode {
   const excluded = Object.entries(result.exclusions);
   return (
     <>
       {result.tables.map((table, i) => (
-        <FreqTableView key={i} table={table} />
+        <FreqTableView
+          key={i}
+          table={table}
+          onExplain={i === 0 ? onExplain : undefined}
+        />
       ))}
       {excluded.length > 0 && <p>{t.analysis.exclusions(excluded)}</p>}
     </>
   );
 }
 
-export function renderTables(result: TablesResult): ReactNode {
+export function renderTables(result: TablesResult, onExplain?: ExplainHandler | undefined): ReactNode {
   if ('rx_c' in result) {
     const r = result.rx_c;
     return (
@@ -301,13 +455,22 @@ export function renderTables(result: TablesResult): ReactNode {
         </table>
         <StatsTable
           caption={t.analysis.chiTableCaption}
+          onExplain={onExplain}
           rows={[
             {
               label: t.analysis.chiUncorrected,
               estimate: r.stats.chi_square.statistic,
               p: r.stats.chi_square.p_value,
+              stats: [
+                stat('rxc.chi_square.statistic', 'Statistic'),
+                stat('rxc.chi_square.p_value', 'p-value'),
+              ],
             },
-            { label: t.analysis.chiDf, estimate: r.stats.chi_square.df },
+            {
+              label: t.analysis.chiDf,
+              estimate: r.stats.chi_square.df,
+              stats: [stat('rxc.chi_square.df', 'df')],
+            },
           ]}
         />
         {r.stats.low_expected && <p>{t.analysis.lowExpected}</p>}
@@ -333,6 +496,7 @@ export function renderTables(result: TablesResult): ReactNode {
       {/* Variable names are not in the result; the card title names them. */}
       <StatsTable
         caption={t.analysis.statsCaption}
+        onExplain={onExplain}
         rows={crudeRows(r.crude)}
       />
       {s !== null && (
@@ -347,10 +511,12 @@ export function renderTables(result: TablesResult): ReactNode {
           )}
           <StatsTable
             caption={t.analysis.stratifiedStatsCaption}
-            rows={crudeRows(s.stats.crude)}
+            onExplain={onExplain}
+            rows={crudeRows(s.stats.crude, 'stratified_two_by_two.crude')}
           />
           <StatsTable
             caption={t.analysis.mhCaption}
+            onExplain={onExplain}
             rows={mhRows(s.stats.mantel_haenszel, s.stats)}
           />
         </>
