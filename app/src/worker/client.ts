@@ -64,6 +64,8 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
       call(r.runFreq(projectId, datasetId, version, options)),
     runTables: (projectId, datasetId, version, options) =>
       call(r.runTables(projectId, datasetId, version, options)),
+    runMeans: (projectId, datasetId, version, options) =>
+      call(r.runMeans(projectId, datasetId, version, options)),
     listRuns: (projectId) => call(r.listRuns(projectId)),
     rerun: (runId, version) => call(r.rerun(runId, version)),
     deleteRun: (runId) => call(r.deleteRun(runId)),
@@ -72,6 +74,7 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
     requestPersistence: () => call(r.requestPersistence()),
     __simulateQuotaOnNextWrite: () => call(r.__simulateQuotaOnNextWrite()),
     __clearSnapshotCache: () => call(r.__clearSnapshotCache()),
+    __clearRunCommand: (runId) => call(r.__clearRunCommand(runId)),
   };
   return api as Remote<DataApi>;
 }

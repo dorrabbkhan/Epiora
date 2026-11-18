@@ -7,9 +7,11 @@ import { describe, expect, it } from 'vitest';
 import type { Ci } from '@engine-types/Ci';
 import type { Estimate } from '@engine-types/Estimate';
 import type { FreqResult } from '@engine-types/FreqResult';
+import type { GroupStats } from '@engine-types/GroupStats';
+import type { MeansResult } from '@engine-types/MeansResult';
 import type { TablesResult } from '@engine-types/TablesResult';
 import type { TwoByTwoStats } from '@engine-types/TwoByTwoStats';
-import { formatNumber, renderFreq, renderTables } from './render-result';
+import { formatNumber, renderFreq, renderMeans, renderTables } from './render-result';
 
 const num = (x: number): Estimate => x;
 const ci = (lower: number, upper: number): Ci => ({ lower, upper });
@@ -85,6 +87,111 @@ const FREQ_ILL: FreqResult = {
     },
   ],
   exclusions: { ILL: 0 },
+};
+
+// fixtures/means/means_oswego_age_sex.json — AGE by SEX.
+const OVERALL: GroupStats = {
+  label: '(all)',
+  observations: 75,
+  total: num(2761),
+  mean: num(36.81333333333333),
+  variance: num(460.1809009009009),
+  std_dev: num(21.451827448982076),
+  min: num(3),
+  p25: num(16),
+  median: num(36),
+  p75: num(58),
+  max: num(77),
+  mode: num(11),
+};
+
+const MEANS_AGE_SEX: MeansResult = {
+  variable: 'AGE',
+  group_by: 'SEX',
+  groups: [
+    {
+      label: 'Female',
+      observations: 44,
+      total: num(1619),
+      mean: num(36.79545454545455),
+      variance: num(385.93393234672305),
+      std_dev: num(19.645201254930505),
+      min: num(8),
+      p25: num(16.5),
+      median: num(35.5),
+      p75: num(53.5),
+      max: num(72),
+      mode: num(35),
+    },
+    {
+      label: 'Male',
+      observations: 31,
+      total: num(1142),
+      mean: num(36.83870967741935),
+      variance: num(581.9397849462366),
+      std_dev: num(24.123428134206726),
+      min: num(3),
+      p25: num(15),
+      median: num(36),
+      p75: num(62),
+      max: num(77),
+      mode: num(17),
+    },
+  ],
+  overall: OVERALL,
+  t_test: {
+    pooled: {
+      t: num(-0.008540743654635592),
+      df: num(73),
+      p_value: num(0.9932088529737979),
+      diff: num(-0.04325513196480557),
+      diff_ci_95: ci(-10.13691408858901, 10.0504038246594),
+    },
+    welch: {
+      t: num(-0.008241917457091378),
+      df: num(56.04735430648786),
+      p_value: num(0.9934532426594315),
+      diff: num(-0.04325513196480557),
+      diff_ci_95: ci(-10.556442937780664, 10.469932673851053),
+    },
+  },
+  anova: {
+    ss_between: num(0.03402737047897738),
+    df_between: num(1),
+    ms_between: num(0.03402737047897738),
+    ss_within: num(34053.352639296194),
+    df_within: num(73),
+    ms_within: num(466.48428273008483),
+    f: num(7.294430217419812e-5),
+    p_value: num(0.9932088529737979),
+    ss_total: num(34053.38666666667),
+    df_total: num(74),
+  },
+  bartlett: {
+    statistic: num(1.4953414830009246),
+    df: num(1),
+    p_value: num(0.2213895445032587),
+  },
+  kruskal_wallis: {
+    h: num(0.00046346953961963645),
+    df: num(1),
+    p_value: num(0.9828241944901128),
+  },
+  exclusions: {},
+};
+
+// fixtures/means/means_oswego_age.json — an ungrouped run returns no
+// test blocks at all.
+const MEANS_AGE: MeansResult = {
+  variable: 'AGE',
+  group_by: null,
+  groups: [OVERALL],
+  overall: OVERALL,
+  t_test: null,
+  anova: null,
+  bartlett: null,
+  kruskal_wallis: null,
+  exclusions: {},
 };
 
 const oswego2x2 = (() => {
@@ -171,6 +278,49 @@ describe('renderFreq', () => {
     ).toBeInTheDocument();
     expect(
       within(table).getByRole('cell', { name: '50.10 – 71.60' }),
+    ).toBeInTheDocument();
+  });
+});
+
+describe('renderMeans', () => {
+  it('means_descriptives_table_has_caption_and_scoped_headers', () => {
+    const { container } = render(<>{renderMeans(MEANS_AGE_SEX)}</>);
+    const table = within(container).getByRole('table', {
+      name: /descriptives/i,
+    });
+    expect(table.querySelector('caption')).not.toBeNull();
+    // Every statistic is a scoped column header; each group (then the
+    // overall row) is a scoped row header.
+    expect(table.querySelectorAll('th[scope="col"]').length).toBeGreaterThan(0);
+    expect(table.querySelectorAll('tbody th[scope="row"]').length).toBe(3);
+    // Statistics route through formatNumber (4 significant digits).
+    expect(
+      within(table).getByRole('cell', { name: '36.80' }),
+    ).toBeInTheDocument();
+    expect(
+      within(table).getByRole('cell', { name: '36.84' }),
+    ).toBeInTheDocument();
+  });
+
+  it('means_tests_only_when_grouped', () => {
+    const ungrouped = render(<>{renderMeans(MEANS_AGE)}</>);
+    // Ungrouped: only the descriptives table, no test tables.
+    expect(ungrouped.container.querySelectorAll('table')).toHaveLength(1);
+    ungrouped.unmount();
+
+    const grouped = render(<>{renderMeans(MEANS_AGE_SEX)}</>);
+    // Grouped: descriptives plus every test block the engine returned.
+    expect(
+      grouped.container.querySelectorAll('table').length,
+    ).toBeGreaterThan(1);
+    expect(
+      within(grouped.container).getByRole('table', { name: /ANOVA/i }),
+    ).toBeInTheDocument();
+    expect(
+      within(grouped.container).getByRole('table', { name: /Bartlett/i }),
+    ).toBeInTheDocument();
+    expect(
+      within(grouped.container).getByRole('table', { name: /Kruskal/i }),
     ).toBeInTheDocument();
   });
 });

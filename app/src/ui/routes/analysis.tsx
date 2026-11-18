@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import type { FreqOptions } from '@engine-types/FreqOptions';
+import type { MeansOptions } from '@engine-types/MeansOptions';
 import type { TablesOptions } from '@engine-types/TablesOptions';
 import { useDatasets, useRuns, useVersions } from '../queries';
 import { dataApi } from '../../worker/client';
@@ -13,6 +14,7 @@ import type { RunRecord } from '../../worker/api';
 import { EmptyState } from '../screens/EmptyState';
 import { DatasetPicker } from '../screens/analysis/DatasetPicker';
 import { FreqDialog } from '../screens/analysis/FreqDialog';
+import { MeansDialog } from '../screens/analysis/MeansDialog';
 import { OutputLog } from '../screens/analysis/OutputLog';
 import { ProcedureMenu } from '../screens/analysis/ProcedureMenu';
 import { cardTitle } from '../screens/analysis/ResultCard';
@@ -27,7 +29,7 @@ export function AnalysisScreen({ project }: { project: string }) {
   const qc = useQueryClient();
   const [datasetId, setDatasetId] = useState<string | null>(null);
   const [version, setVersion] = useState<number | null>(null);
-  const [dialog, setDialog] = useState<'freq' | 'tables' | null>(null);
+  const [dialog, setDialog] = useState<'freq' | 'tables' | 'means' | null>(null);
   const [announce, setAnnounce] = useState<string | null>(null);
 
   const all = datasets.data ?? [];
@@ -48,8 +50,8 @@ export function AnalysisScreen({ project }: { project: string }) {
   };
 
   const makeRun =
-    (procedure: 'freq' | 'tables') =>
-    async (options: FreqOptions | TablesOptions) => {
+    (procedure: 'freq' | 'tables' | 'means') =>
+    async (options: FreqOptions | TablesOptions | MeansOptions) => {
       if (dataset === undefined) return;
       const run =
         procedure === 'freq'
@@ -59,12 +61,19 @@ export function AnalysisScreen({ project }: { project: string }) {
               versionNumber,
               options as FreqOptions,
             )
-          : await dataApi.runTables(
-              project,
-              dataset.id,
-              versionNumber,
-              options as TablesOptions,
-            );
+          : procedure === 'means'
+            ? await dataApi.runMeans(
+                project,
+                dataset.id,
+                versionNumber,
+                options as MeansOptions,
+              )
+            : await dataApi.runTables(
+                project,
+                dataset.id,
+                versionNumber,
+                options as TablesOptions,
+              );
       onRan(run);
     };
 
@@ -132,6 +141,15 @@ export function AnalysisScreen({ project }: { project: string }) {
             datasetId={dataset.id}
             version={versionNumber}
             run={makeRun('tables')}
+          />
+          <MeansDialog
+            open={dialog === 'means'}
+            onOpenChange={(open) => {
+              if (!open) setDialog(null);
+            }}
+            datasetId={dataset.id}
+            version={versionNumber}
+            run={makeRun('means')}
           />
         </>
       )}

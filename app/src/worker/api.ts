@@ -8,6 +8,8 @@
 
 import type { FreqOptions } from '@engine-types/FreqOptions';
 import type { FreqResult } from '@engine-types/FreqResult';
+import type { MeansOptions } from '@engine-types/MeansOptions';
+import type { MeansResult } from '@engine-types/MeansResult';
 import type { Receipt } from '@engine-types/Receipt';
 import type { TablesOptions } from '@engine-types/TablesOptions';
 import type { TablesResult } from '@engine-types/TablesResult';
@@ -78,11 +80,15 @@ export interface RunRecord {
   projectId: string;
   datasetId: string;
   version: number;
-  procedure: 'freq' | 'tables';
-  options: FreqOptions | TablesOptions;
-  result: FreqResult | TablesResult;
+  procedure: 'freq' | 'tables' | 'means';
+  options: FreqOptions | TablesOptions | MeansOptions;
+  result: FreqResult | TablesResult | MeansResult;
   receipt: Receipt;
   receiptSha256: string;
+  /** The equivalent Epi Info command (v1.0 Task 15, spec §7.3):
+   *  stored for new runs; generated on load by `epiInfoCommand` for
+   *  rows written before store schema v2 — never written back. */
+  command: string;
   createdAt: string;
   newerVersion: number | null;
 }
@@ -141,6 +147,12 @@ export interface DataApi {
     version: number,
     options: TablesOptions,
   ): Promise<RunRecord>;
+  runMeans(
+    projectId: string,
+    datasetId: string,
+    version: number,
+    options: MeansOptions,
+  ): Promise<RunRecord>;
   listRuns(projectId: string): Promise<RunRecord[]>;
   rerun(runId: string, version: number): Promise<RunRecord>;
   deleteRun(runId: string): Promise<void>;
@@ -159,6 +171,14 @@ export interface DataApi {
    * Only functional in builds made with `VITE_TEST_HOOKS=1`.
    */
   __clearSnapshotCache(): Promise<void>;
+  /**
+   * Test hook (v1.0 Task 15 e2e `old_run_gets_generated_command`):
+   * nulls a run's stored command, leaving the row exactly as a pre-v2
+   * database would — the card's command then has to come from
+   * `epiInfoCommand` on load. Only functional in builds made with
+   * `VITE_TEST_HOOKS=1`.
+   */
+  __clearRunCommand(runId: string): Promise<void>;
 }
 
 function toDatasetInfo(d: datasets.Dataset): DatasetInfo {
@@ -235,6 +255,9 @@ export const api: DataApi = {
   runTables: wire((projectId, datasetId, version, options) =>
     withStore((s) => analysis.runTables(s, projectId, datasetId, version, options)),
   ),
+  runMeans: wire((projectId, datasetId, version, options) =>
+    withStore((s) => analysis.runMeans(s, projectId, datasetId, version, options)),
+  ),
   listRuns: wire((projectId) => withStore((s) => analysis.listRuns(s, projectId))),
   rerun: wire((runId, version) => withStore((s) => analysis.rerun(s, runId, version))),
   deleteRun: wire((runId) => withStore((s) => analysis.deleteRun(s, runId))),
@@ -259,5 +282,13 @@ export const api: DataApi = {
     }
     clearSnapshotCache();
     return Promise.resolve();
+  }),
+  __clearRunCommand: wire((runId) => {
+    if (import.meta.env.VITE_TEST_HOOKS !== '1') {
+      return Promise.reject(rpc('not_found', 'test hooks are disabled in this build'));
+    }
+    return withStore(async (s) => {
+      await s.exec('UPDATE runs SET command = NULL WHERE id = ?', [runId]);
+    });
   }),
 };

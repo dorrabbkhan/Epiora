@@ -5346,3 +5346,33 @@ calculator tab never acquires `epiora-store`.
   calc route/`calc.worker` chunks. The 5,000,000 gate and the exit
   code are unchanged; the test gained a case asserting both.
 Supersedes: —
+### v1.0 Task 15 — MEANS dialog and Epi Info command line (2026-11-18)
+
+Decision: every result card shows its Epi Info command with a Copy
+button. `runs.command` (store schema v2, `ALTER TABLE runs ADD COLUMN
+command TEXT`, nullable) is stored at insert for new runs; rows written
+before the migration hold NULL and `toRunRecord` generates the command
+on load with the worker's `epiInfoCommand` — never written back. MEANS
+joins `run()`'s freq/tables dispatch, `RunRecord`'s unions and the
+procedure menu; `renderMeans` renders one descriptives table (a row per
+group, then overall) plus each test block the engine returned.
+
+- Files outside the task's Files block:
+  - `app/src/store/opfs.ts`, `app/src/store/relay.ts`,
+    `app/src/store/stdio.ts` — the three backends each hold a
+    `MIGRATIONS` list that must name `0002_run_command.sql` or the new
+    column never materialises (the plan lists the migration file
+    itself; the loaders are the mechanical wiring).
+  - `app/src/ui/routes/analysis.tsx` — the screen's dialog state and
+    `makeRun` dispatch gain `'means'` → `dataApi.runMeans`; the plan's
+    Modify list names the analysis components but not the route that
+    wires them.
+  - `app/src/worker/client.ts` — `wrapDataApi` mirrors every `DataApi`
+    method explicitly; `runMeans` and the test hook below need the
+    main-thread twin `api.ts` defines.
+- `DataApi.__clearRunCommand` (VITE_TEST_HOOKS=1 only): the plan's e2e
+  `old_run_gets_generated_command` needs a `runs` row with NULL
+  `command`, which no public write path creates — `run()` always stores
+  a command now. The hook nulls the column on a stored run, following
+  the `__simulateQuotaOnNextWrite` / `__clearSnapshotCache` pattern.
+Supersedes: —

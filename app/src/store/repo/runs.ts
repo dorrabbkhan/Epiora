@@ -1,6 +1,8 @@
 // runs repository (spec §4.1): the output log. Entries carry result and
 // receipt JSON plus the receipt hash; deletion is a tombstone
-// (deleted_at), never a row removal.
+// (deleted_at), never a row removal. `command` (schema v2) is the
+// Epi Info command shown on the card — NULL on rows written before the
+// migration; the worker generates it on load and never writes it back.
 
 import type { Row, Tx } from '../types';
 
@@ -14,6 +16,8 @@ export interface Run {
   result: string;
   receipt: string;
   receiptHash: string;
+  /** The stored Epi Info command, or null on pre-v2 rows. */
+  command: string | null;
   createdAt: string;
   deletedAt: string | null;
 }
@@ -29,13 +33,14 @@ function toRun(r: Row): Run {
     result: String(r.result),
     receipt: String(r.receipt),
     receiptHash: String(r.receipt_hash),
+    command: r.command === null ? null : String(r.command),
     createdAt: String(r.created_at),
     deletedAt: r.deleted_at === null ? null : String(r.deleted_at),
   };
 }
 
 const COLUMNS =
-  'id, project_id, procedure, options, dataset_id, dataset_version, result, receipt, receipt_hash, created_at, deleted_at';
+  'id, project_id, procedure, options, dataset_id, dataset_version, result, receipt, receipt_hash, command, created_at, deleted_at';
 
 export async function insert(
   tx: Tx,
@@ -48,13 +53,14 @@ export async function insert(
     result: string;
     receipt: string;
     receiptHash: string;
+    command: string;
     now: string;
   },
 ): Promise<Run> {
   const id = crypto.randomUUID();
   await tx.exec(
-    'INSERT INTO runs (id, project_id, procedure, options, dataset_id, dataset_version, result, receipt, receipt_hash, created_at) ' +
-      'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    'INSERT INTO runs (id, project_id, procedure, options, dataset_id, dataset_version, result, receipt, receipt_hash, command, created_at) ' +
+      'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [
       id,
       r.projectId,
@@ -65,6 +71,7 @@ export async function insert(
       r.result,
       r.receipt,
       r.receiptHash,
+      r.command,
       r.now,
     ],
   );
@@ -78,6 +85,7 @@ export async function insert(
     result: r.result,
     receipt: r.receipt,
     receiptHash: r.receiptHash,
+    command: r.command,
     createdAt: r.now,
     deletedAt: null,
   };

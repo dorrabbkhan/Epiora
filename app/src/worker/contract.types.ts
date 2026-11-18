@@ -6,6 +6,8 @@
 import type { DataApi, CommitResult, GridPage, ImportProgress, RunRecord } from './api';
 import type { FreqOptions } from '@engine-types/FreqOptions';
 import type { FreqResult } from '@engine-types/FreqResult';
+import type { MeansOptions } from '@engine-types/MeansOptions';
+import type { MeansResult } from '@engine-types/MeansResult';
 import type { TablesOptions } from '@engine-types/TablesOptions';
 import type { TablesResult } from '@engine-types/TablesResult';
 import type { Receipt } from '@engine-types/Receipt';
@@ -28,6 +30,7 @@ type DiffReturn = Awaited<ReturnType<DataApi['diffAgainst']>>;
 type SettingsParam = Parameters<DataApi['previewWithSettings']>[1];
 type FreqOptionsParam = Parameters<DataApi['runFreq']>[3];
 type TablesOptionsParam = Parameters<DataApi['runTables']>[3];
+type MeansOptionsParam = Parameters<DataApi['runMeans']>[3];
 
 // Binding types flow through the API unchanged, in both directions.
 export type Check_a = Assert<Equal<InspectionReturn, Inspection>>;
@@ -36,15 +39,21 @@ export type Check_c = Assert<Equal<DiffReturn, DiffSummary>>;
 export type Check_d = Assert<Equal<SettingsParam, ImportSettings>>;
 export type Check_e = Assert<Equal<FreqOptionsParam, FreqOptions>>;
 export type Check_f = Assert<Equal<TablesOptionsParam, TablesOptions>>;
+export type Check_o = Assert<Equal<MeansOptionsParam, MeansOptions>>;
 
 // The API's own wire shapes match the plan (§5.3 surfaces, Task 9
 // Interfaces block).
 export type Check_g = Assert<Equal<ImportProgress['stage'], 'parse' | 'diff' | 'write' | 'snapshot'>>;
 export type Check_h = Assert<Equal<CommitResult, { datasetId: string; version: number | null }>>;
-export type Check_i = Assert<Equal<RunRecord['procedure'], 'freq' | 'tables'>>;
-export type Check_j = Assert<Equal<RunRecord['options'], FreqOptions | TablesOptions>>;
-export type Check_k = Assert<Equal<RunRecord['result'], FreqResult | TablesResult>>;
+export type Check_i = Assert<Equal<RunRecord['procedure'], 'freq' | 'tables' | 'means'>>;
+export type Check_j = Assert<
+  Equal<RunRecord['options'], FreqOptions | TablesOptions | MeansOptions>
+>;
+export type Check_k = Assert<
+  Equal<RunRecord['result'], FreqResult | TablesResult | MeansResult>
+>;
 export type Check_l = Assert<Equal<RunRecord['receipt'], Receipt>>;
+export type Check_p = Assert<Equal<RunRecord['command'], string>>;
 export type Check_m = Assert<
   Equal<GridPage['columns'][number], { name: string; type: ValueType; missing: number }>
 >;
