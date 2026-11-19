@@ -40,6 +40,12 @@ pub struct Row {
     /// The R part of `reference` — versions and packages only, no
     /// `Epi Info 7`/`OpenEpi` suffixes (v1.0 Task 24's JSON `references.r`).
     pub r_reference: String,
+    /// Whether any covering fixture recorded an `r_version` or a
+    /// package — the JSON report's `references.r` is optional in the
+    /// plan and is omitted when false (the seeded `random_numbers`
+    /// golden has no R generator, so its `r_reference` is the empty
+    /// `": "` shell, not a reference).
+    pub has_r_reference: bool,
     /// `ei7/oswego.json` maps a label to this statistic.
     pub ei7: bool,
     /// An `openepi/` capture maps a value to this statistic.
@@ -216,6 +222,7 @@ fn row(
             }
         }
     }
+    let has_r_reference = !r_versions.is_empty() || !packages.is_empty();
     let r_reference = format!(
         "{}: {}",
         r_versions.into_iter().collect::<Vec<_>>().join(", "),
@@ -235,6 +242,7 @@ fn row(
         method: crate::validation::method(coverage.statistic),
         reference,
         r_reference,
+        has_r_reference,
         ei7,
         openepi,
         class: coverage.class,

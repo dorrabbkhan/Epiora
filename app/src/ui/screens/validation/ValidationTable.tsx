@@ -5,15 +5,7 @@
 // rows only; it never computes or displays a number itself.
 
 import { useEffect, useMemo, useState } from 'react';
-import {
-  Column,
-  Input,
-  Label,
-  Table,
-  TableBody,
-  TableHeader,
-  TextField,
-} from '../../components';
+import { Input, Label, TextField } from '../../components';
 import type { ValidationData } from '../../../validation/data';
 import { t } from '../../strings';
 import { ValidationEntryRow } from './ValidationEntry';
@@ -54,22 +46,59 @@ export function ValidationTable({ data }: { data: ValidationData }) {
       {entries.length === 0 && (
         <p className={styles.notice}>{t.validation.noMatches}</p>
       )}
-      <div className={styles.tableWrap}>
-        <Table caption={t.validation.caption} aria-label={t.validation.caption}>
-          <TableHeader>
-            <Column isRowHeader>{t.validation.statisticCol}</Column>
-            <Column>{t.validation.methodCol}</Column>
-            <Column>{t.validation.classCol}</Column>
-            <Column>{t.validation.referencesCol}</Column>
-            <Column>{t.validation.casesCol}</Column>
-            <Column>{t.validation.worstErrorCol}</Column>
-          </TableHeader>
-          <TableBody>
+      {/* The wrap scrolls horizontally on narrow viewports; the
+          scrollable region must be keyboard-reachable (axe
+          scrollable-region-focusable) — focusable and named by the
+          table's caption. */}
+      <div
+        className={styles.tableWrap}
+        role="region"
+        aria-labelledby="validation-table-caption"
+        tabIndex={0}
+      >
+        {/* A plain static table, not the interactive Epiora Table:
+            ~690 collection rows through React Aria made every row and
+            cell a tabbable, data-attributed node and axe's DOM walk
+            timed out the a11y e2e. `role="grid"` + the implicit
+            rowheader/gridcell roles keep the markup contract the
+            page's e2e locators use (`grid` named by the caption,
+            `gridcell` per data cell). */}
+        <table
+          className={styles.table}
+          role="grid"
+          aria-label={t.validation.caption}
+        >
+          <caption id="validation-table-caption" className={styles.caption}>
+            {t.validation.caption}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col" className={styles.column}>
+                {t.validation.statisticCol}
+              </th>
+              <th scope="col" className={styles.column}>
+                {t.validation.methodCol}
+              </th>
+              <th scope="col" className={styles.column}>
+                {t.validation.classCol}
+              </th>
+              <th scope="col" className={styles.column}>
+                {t.validation.referencesCol}
+              </th>
+              <th scope="col" className={styles.column}>
+                {t.validation.casesCol}
+              </th>
+              <th scope="col" className={styles.column}>
+                {t.validation.worstErrorCol}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
             {entries.map((entry) => (
               <ValidationEntryRow key={entry.id} entry={entry} />
             ))}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </div>
     </>
   );

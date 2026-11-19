@@ -5773,4 +5773,31 @@ calc worker like every other binding):
   precache glob so a bundled report survives offline like `/calc`.
 - `.gitignore` — `app/public/validation.json` is CI-generated; it
   must never be committed (a build without it is a supported state).
+
+Fix round (2026-11-19, PR #98 review + app CI run 44572039484):
+- `references.r` is omitted from the JSON whenever no covering
+  fixture recorded an `r_version`/`packages` (the plan's `"r"?` is
+  optional): `calc.random_numbers.values[]` is covered only by the
+  seeded `tests/golden/random_numbers.json` (no `source`, no R
+  generator), so it had been emitted as the empty `": "` shell.
+  `Row` gained `has_r_reference`; the Markdown `reference` column —
+  and so the whole Markdown report — stays byte-identical.
+- `app/src/ui/shell.module.css` — outside the task's Files block:
+  the new `/validation` nav link pushed the header past 320px
+  (scrollWidth 340 locally, 363 on CI), failing every route's
+  320px test. The nav now wraps (`flex-wrap: wrap`, row-gap
+  `--space-2`); horizontal spacing is unchanged.
+- `app/src/ui/screens/validation/{ValidationTable,ValidationEntry}.tsx`
+  and `app/src/ui/screens/validation/validation.module.css` are named
+  in the Files block by its brace shorthand; they now render a plain
+  `<table role="grid">` instead of the interactive Epiora Table —
+  ~690 React Aria collection rows made every row/cell tabbable
+  (4,824 `tabindex` nodes) and axe's `analyze()` exceeded the 30s
+  test timeout on all three engines. The implicit
+  columnheader/rowheader/gridcell roles keep the e2e role contract,
+  the `#<id>` anchor moved onto the `<th scope="row">` (no extra
+  element), and the scroll wrapper is a focusable `region` named by
+  the caption (`scrollable-region-focusable`). Measured locally on
+  the production build: axe `analyze()` 21,551 ms → 5,746 ms,
+  5,547 → 4,855 elements, 4,824 → 2 `tabindex` nodes, 0 violations.
 Supersedes: —

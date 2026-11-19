@@ -5,7 +5,6 @@
 // is a value the CI report's `statistics[]` entry carries; `—` is the
 // only placeholder, never an invented measurement.
 
-import { Cell, Row } from '../../components';
 import { formatNumber } from '../../format';
 import type { ValidationEntry } from '../../../validation/data';
 import { t } from '../../strings';
@@ -30,23 +29,23 @@ function classLabel(entry: ValidationEntry): string {
 export function ValidationEntryRow({ entry }: { entry: ValidationEntry }) {
   const refs = references(entry);
   return (
-    <Row>
-      <Cell>
-        {/* The `/validation#<id>` anchor (spec §7.4) — a real DOM id
-            inside the cell, since RAC Row's `id` is a collection key. */}
-        <span id={entry.id} className={styles.id}>
-          {entry.id}
-        </span>
-      </Cell>
-      <Cell>{entry.method}</Cell>
-      <Cell>{classLabel(entry)}</Cell>
-      <Cell>{refs === '' ? t.validation.notAvailable : refs}</Cell>
-      <Cell>{entry.cases}</Cell>
-      <Cell>
+    <tr>
+      {/* The `/validation#<id>` anchor (spec §7.4) lives on the row
+          header itself — no extra per-row element. */}
+      <th scope="row" id={entry.id} className={styles.id}>
+        {entry.id}
+      </th>
+      <td className={styles.cell}>{entry.method}</td>
+      <td className={styles.cell}>{classLabel(entry)}</td>
+      <td className={styles.cell}>
+        {refs === '' ? t.validation.notAvailable : refs}
+      </td>
+      <td className={styles.cell}>{entry.cases}</td>
+      <td className={styles.cell}>
         {typeof entry.worst_error === 'number'
           ? formatNumber(entry.worst_error)
           : t.validation.notAvailable}
-      </Cell>
-    </Row>
+      </td>
+    </tr>
   );
 }

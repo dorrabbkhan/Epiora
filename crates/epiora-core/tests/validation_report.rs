@@ -8,6 +8,25 @@ fn fixtures_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../../fixtures")
 }
 
+/// Whether any covering fixture recorded an `r_version` or a package
+/// — the same signal the report's `has_r_reference` collects. The
+/// seeded `random_numbers` golden carries no `source` at all, so its
+/// registry entry is the one row with no R reference (the plan's
+/// `"r"?` is optional).
+fn has_r_source(coverage: &epiora_core::validation::Coverage) -> bool {
+    coverage.fixtures.iter().any(|id| {
+        let path = fixtures_root().join(format!("{id}.json"));
+        let text = std::fs::read_to_string(&path)
+            .unwrap_or_else(|e| panic!("read {}: {e}", path.display()));
+        let fixture: serde_json::Value =
+            serde_json::from_str(&text).unwrap_or_else(|e| panic!("parse {}: {e}", path.display()));
+        fixture["source"]["r_version"].is_string()
+            || fixture["source"]["packages"]
+                .as_object()
+                .is_some_and(|p| !p.is_empty())
+    })
+}
+
 #[test]
 fn validation_report_has_every_registry_row() {
     let rows = build_rows(&fixtures_root()).expect("build report rows");
@@ -62,11 +81,19 @@ fn json_lists_every_registry_statistic() {
             "{}: no method",
             coverage.statistic
         );
-        assert!(
-            entry["references"]["r"].is_string(),
-            "{}: no R reference",
-            coverage.statistic
-        );
+        if has_r_source(coverage) {
+            assert!(
+                entry["references"]["r"].is_string(),
+                "{}: no R reference",
+                coverage.statistic
+            );
+        } else {
+            assert!(
+                entry["references"].get("r").is_none(),
+                "{}: unexpected R reference",
+                coverage.statistic
+            );
+        }
         assert_eq!(
             entry["cases"].as_u64(),
             Some(coverage.fixtures.len() as u64),
@@ -79,6 +106,17 @@ fn json_lists_every_registry_statistic() {
             coverage.statistic
         );
     }
+    // The seeded golden behind `calc.random_numbers.values[]` has no
+    // R generator — its entry must carry no `r` key rather than the
+    // empty `": "` shell.
+    let random_numbers = stats
+        .iter()
+        .find(|e| e["id"].as_str() == Some("calc.random_numbers.values[]"))
+        .expect("no calc.random_numbers.values[] entry");
+    assert!(
+        random_numbers["references"].get("r").is_none(),
+        "calc.random_numbers.values[] must not carry an R reference"
+    );
 }
 
 #[test]

@@ -11,14 +11,18 @@ use serde_json::{json, Value};
 use std::path::Path;
 
 /// One `statistics[]` entry: `id`, `method`, `class`, `references`
-/// (`r` always — every registry fixture is R-generated; `ei7` /
-/// `openepi` only when the check maps a label to the statistic),
-/// `cases` (the Markdown report's `Fixtures` column) and
-/// `worst_error` — absent when the statistic was not measured,
-/// `null` when a leaf could not be compared numerically (the
-/// Markdown report's `inf`).
+/// (`r` only when a covering fixture recorded an R version/package —
+/// the plan's `"r"?` is optional and the seeded `random_numbers`
+/// golden has no R generator; `ei7` / `openepi` only when the check
+/// maps a label to the statistic), `cases` (the Markdown report's
+/// `Fixtures` column) and `worst_error` — absent when the statistic
+/// was not measured, `null` when a leaf could not be compared
+/// numerically (the Markdown report's `inf`).
 fn entry(row: &Row) -> Value {
-    let mut references = json!({ "r": row.r_reference });
+    let mut references = json!({});
+    if row.has_r_reference {
+        references["r"] = json!(row.r_reference);
+    }
     if row.ei7 {
         references["ei7"] = json!("Epi Info 7");
     }
