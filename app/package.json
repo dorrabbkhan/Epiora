@@ -25,6 +25,7 @@
     "@tanstack/react-router": "^1.170.46",
     "@tauri-apps/api": "^2.12.4",
     "comlink": "^4.4.2",
+    "fflate": "^0.8.3",
     "react": "^19.3.1",
     "react-aria-components": "^1.22.1",
     "react-dom": "^19.3.1"

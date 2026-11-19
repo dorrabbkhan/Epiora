@@ -216,6 +216,58 @@ pub fn epi_info_command(procedure: &str, options_value: JsValue) -> Result<Strin
     epiora_core::export::epi_info_command(procedure, &opts).map_err(|e| js_error(&e))
 }
 
+/// An `RExport` as `{ script, dataCsv }` — `dataCsv` a `Uint8Array`
+/// for dataset runs, `null` for calculators (their inputs embed in
+/// the script).
+fn r_export_object(export: &epiora_core::export::RExport) -> Result<JsValue, JsValue> {
+    let obj = js_sys::Object::new();
+    Reflect::set(
+        &obj,
+        &JsValue::from_str("script"),
+        &JsValue::from_str(&export.script),
+    )
+    .map_err(|e| invalid_options(format!("{e:?}")))?;
+    let csv = match &export.data_csv {
+        Some(bytes) => js_sys::Uint8Array::from(bytes.as_slice()).into(),
+        None => JsValue::NULL,
+    };
+    Reflect::set(&obj, &JsValue::from_str("dataCsv"), &csv)
+        .map_err(|e| invalid_options(format!("{e:?}")))?;
+    Ok(obj.into())
+}
+
+/// The R export of one procedure run (v1.0 spec §8.2): `procedure` is
+/// `"freq"`, `"tables"` or `"means"`, `options` the canonical options
+/// the run took, `receiptSha` the run's sealed receipt hash.
+#[wasm_bindgen(js_name = exportR)]
+pub fn export_r(
+    handle: &DatasetHandle,
+    procedure: &str,
+    options_value: JsValue,
+    receipt_sha: &str,
+) -> Result<JsValue, JsValue> {
+    let opts: serde_json::Value = options(options_value)?;
+    let export =
+        epiora_core::export::export_r_procedure(&handle.dataset, procedure, &opts, receipt_sha)
+            .map_err(|e| js_error(&e))?;
+    r_export_object(&export)
+}
+
+/// The R export of one calculator run (v1.0 spec §8.2): `id` is the
+/// calculator's registry id, `inputs` the canonical inputs — the
+/// script embeds them, so `dataCsv` is always `null`.
+#[wasm_bindgen(js_name = exportRCalc)]
+pub fn export_r_calc(
+    id: &str,
+    inputs_value: JsValue,
+    receipt_sha: &str,
+) -> Result<JsValue, JsValue> {
+    let inputs: serde_json::Value = options(inputs_value)?;
+    let export = epiora_core::export::export_r_calculator(id, &inputs, receipt_sha)
+        .map_err(|e| js_error(&e))?;
+    r_export_object(&export)
+}
+
 /// The engine version stamped on receipts (spec §5.1).
 #[wasm_bindgen(js_name = engineVersion)]
 pub fn engine_version() -> String {

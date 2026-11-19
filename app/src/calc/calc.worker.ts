@@ -13,11 +13,13 @@ import initEngine, {
   calcRun,
   engineVersion,
   explainCalculator,
+  exportRCalc,
 } from '@engine/epiora_wasm';
 import engineUrl from '@engine/epiora_wasm_bg.wasm?url';
 import type { CalculatorDef } from '@engine-types/CalculatorDef';
 import type { Explanation } from '@engine-types/Explanation';
 import type { CalcOutput } from './api';
+import { zipRExport } from '../worker/export';
 import { throwWired } from '../worker/errors';
 import type { CalcApi } from './api';
 
@@ -57,6 +59,23 @@ const api: CalcApi = {
     await ready;
     try {
       return explainCalculator(id, inputs, statistic) as Explanation;
+    } catch (err) {
+      throwWired(err);
+    }
+  },
+
+  async exportR(
+    id,
+    inputs,
+    receipt,
+  ): Promise<{ name: string; bytes: Uint8Array<ArrayBuffer> }> {
+    await ready;
+    try {
+      const wasm = exportRCalc(id, inputs, receipt.receipt_sha256) as {
+        script: string;
+        dataCsv: Uint8Array | null;
+      };
+      return zipRExport(id, receipt.receipt_sha256, wasm, receipt);
     } catch (err) {
       throwWired(err);
     }

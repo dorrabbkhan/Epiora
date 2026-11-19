@@ -42,6 +42,11 @@ path = "src/bin/corpus-runner.rs"
 required-features = ["corpus"]
 
 [[bin]]
+name = "export-corpus"
+path = "src/bin/export-corpus.rs"
+required-features = ["corpus"]
+
+[[bin]]
 name = "validation-report"
 path = "src/bin/validation-report.rs"
 required-features = ["corpus"]

@@ -228,6 +228,7 @@ export function CalcScreen({ id }: { id: string }) {
             inputs={output.inputs}
             result={output.result}
             notes={output.notes}
+            receipt={output.receipt}
           />
           <CalcReceipt receipt={output.receipt} />
         </>

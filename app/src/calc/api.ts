@@ -32,5 +32,16 @@ export interface CalcApi {
     inputs: Record<string, unknown>,
     statistic: string,
   ): Promise<Explanation>;
+  /**
+   * "Export to R" (v1.0 Task 17, spec §8.2): `analysis.R` +
+   * `receipt.json` zipped in the worker (calculator exports have no
+   * `data.csv`). `random_numbers` rejects with
+   * `export_not_available` — no R reference exists for it.
+   */
+  exportR(
+    id: string,
+    inputs: Record<string, unknown>,
+    receipt: Receipt,
+  ): Promise<{ name: string; bytes: Uint8Array<ArrayBuffer> }>;
   newSeed(): Promise<number>;
 }

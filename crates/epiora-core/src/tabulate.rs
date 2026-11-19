@@ -13,7 +13,7 @@
 //! Yes/1 first in a 2×2; an unorientable two-level variable without
 //! `levels` is `AmbiguousLevels`, never a guess).
 
-mod categories;
+pub(crate) mod categories;
 mod groups;
 
 use crate::dataset::{ColumnData, Dataset};

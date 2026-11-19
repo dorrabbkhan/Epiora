@@ -5516,3 +5516,73 @@ change.
   three-engine e2e spec, is split into logic+unit tests and UI+e2e; no
   existing task split). And `docs/decisions.md` (this entry).
 Supersedes: —
+
+### v1.0 Task 17 — R export: verbatim corpus R, zip download, CI (2026-11-19)
+
+Decision: the exported `analysis.R` does not re-implement the
+statistics — it embeds the corpus's own MIT-licensed reference R and
+re-runs it. `fixtures/R/methods/*.R` ship verbatim whole-file (SPDX
+headers and top-level constants like `ss_levels` ride along), and the
+`*_write` drivers from `calc.R`, `twobytwo.R`, `stratified.R`,
+`rxc.R`, `freq.R`, `means.R`, `special.R`, `common.R` and `nchyper.R`
+are extracted by `name <- function` signature with a transitive
+identifier closure. The generator entry points `write_fixture` /
+`calc_write` / `pkg_versions` / `write_dataset` are shimmed to print
+`EPIORA <path> <value %.17g>` per leaf — `expected.json` and the
+script's stdout therefore share the corpus's path scheme and E7
+classes, and `scripts/r-export/compare.mjs` checks every line
+(`closed_form` 1e-9, `iterative` 1e-6). `random_numbers` refuses with
+`export_not_available`: its draws come from a seeded ChaCha stream R
+cannot replay. Dataset runs embed a deterministic `data.csv` whose
+missing markers are disambiguated per column against real text
+values; the corpus's `hostile_text` case round-trips every cell
+exactly. Local verification: `export-corpus` wrote 138 cases, all
+scripts ran under the renv-pinned R 4.6.2, `compare.mjs` verified
+8,879 statistics.
+
+- Files outside the task's Files block:
+  - `crates/epiora-core/src/error.rs` — `EngineError::ExportNotAvailable`
+    and its stable `export_not_available` code (spec §8's "every
+    failure is an `EngineError`"; the plan's `random_numbers` rule).
+  - `crates/epiora-core/src/export/mod.rs` — pre-existing Task 11
+    module; the plan's Create list names `csv.rs`/`r_script.rs`/
+    `r_snippets.rs` but module wiring lands here.
+  - `crates/epiora-core/src/export/r_emit.rs` — shared emit helpers
+    (the `epi_walk` prelude, JSON/matrix/table literals, the CSV
+    reader prelude, the `DATASETS` env builder, the `epitools` attach
+    detector).
+  - `crates/epiora-core/src/export/r_calc.rs` — the per-calculator
+    `<writer>(id, …)` dispatch `calc_call` runs (the Files block's
+    `r_script.rs` holds the public API; a single file would be ~800
+    lines, past the ~400-line rule).
+  - `crates/epiora-core/src/export/r_proc.rs` — the dataset drivers
+    (`tables`/`freq`/`means`) both the app export and the corpus
+    cases share.
+  - `crates/epiora-core/src/export/corpus_export.rs` — the
+    `corpus`-feature half of `export-corpus` (case drivers, expected
+    flattening); the bin stays a thin CLI.
+  - `crates/epiora-core/src/export/corpus_datasets.rs` — the built-in
+    `hostile_text` dataset and the dataset-echo case builder, split
+    out of `corpus_export.rs` for the ~400-line rule.
+  - `crates/epiora-core/src/tabulate.rs` — `categories` is now
+    `pub(crate)` so the TABLES driver's R literals reuse the engine's
+    level ordering (Yes-first, {0,1}→"1,0") instead of re-implementing
+    it.
+  - `app/package-lock.json` — mechanical `npm install fflate@0.8.3`
+    output (fflate is MIT; plan's Tech Stack).
+  - `app/src/worker/client.ts` — `wrapDataApi` mirrors every
+    `DataApi` method explicitly; `exportRun` needs its main-thread
+    twin.
+  - `app/src/worker/errors.ts` — the app's engine-error-code mirror
+    gains `export_not_available`; the contract test requires every
+    `EngineError::code()` to appear here and in `ui/strings.ts`.
+  - `app/src/calc/calc.worker.ts` — the `exportR` endpoint the Files
+    block's `app/src/calc/api.ts` declares (the worker is the wasm's
+    owner).
+  - `app/src/calc/client.ts` — same Comlink twin as `worker/client.ts`.
+  - `app/src/calc/strings.ts` — `exportR`/`exportRFailed` labels; the
+    calculator UI's strings live here, not in `app/src/ui/strings.ts`.
+  - `app/src/ui/routes/calc.tsx` — `CalculatorResult` needs the run's
+    `receipt` for `receipt.json` and the zip filename; the route owns
+    the `CalcOutput` and now passes it down.
+Supersedes: —

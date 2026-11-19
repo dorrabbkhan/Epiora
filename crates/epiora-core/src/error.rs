@@ -58,6 +58,11 @@ pub enum EngineError {
     /// that is not a statistic.
     #[error("unknown statistic for explain: {statistic}")]
     ExplainUnknown { statistic: String },
+    /// This run has no reproducible R reference (v1.0 spec §8.1) —
+    /// currently only `random_numbers`, whose engine draws come from
+    /// a seeded ChaCha stream R cannot replay.
+    #[error("R export not available: {reason}")]
+    ExportNotAvailable { reason: String },
 }
 
 impl EngineError {
@@ -78,6 +83,7 @@ impl EngineError {
             Self::CalcInputMissing { .. } => "calc_input_missing",
             Self::CalcInputOutOfRange { .. } => "calc_input_out_of_range",
             Self::ExplainUnknown { .. } => "explain_unknown",
+            Self::ExportNotAvailable { .. } => "export_not_available",
         }
     }
 }

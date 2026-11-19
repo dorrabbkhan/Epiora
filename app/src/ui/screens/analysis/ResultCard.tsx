@@ -83,6 +83,21 @@ export function ResultCard({
     mutationFn: () => dataApi.deleteRun(run.id),
     onSuccess: invalidate,
   });
+  // "Export to R" (v1.0 Task 17, spec §8.2): the worker returns the
+  // zip; turning bytes into a download is a main-thread job.
+  const exportR = useMutation({
+    mutationFn: () => dataApi.exportRun(run.id),
+    onSuccess: ({ name, bytes }) => {
+      const url = URL.createObjectURL(
+        new Blob([bytes], { type: 'application/zip' }),
+      );
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(url);
+    },
+  });
 
   return (
     <article aria-labelledby={titleId} className={styles.card}>
@@ -118,6 +133,12 @@ export function ResultCard({
       <CommandLine command={run.command} />
       <ReceiptPanel receipt={run.receipt} />
       <div className={styles.actions}>
+        <Button
+          onPress={() => exportR.mutate()}
+          isDisabled={exportR.isPending}
+        >
+          {t.analysis.exportR}
+        </Button>
         <Button onPress={() => del.mutate()} isDisabled={del.isPending}>
           {t.analysis.deleteResult}
         </Button>

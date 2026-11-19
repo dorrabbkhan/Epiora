@@ -54,6 +54,7 @@ export const ENGINE_ERROR_CODES = [
   'calc_input_missing',
   'calc_input_out_of_range',
   'explain_unknown',
+  'export_not_available',
 ] as const;
 
 /** `StoreError['code']` (app/src/store/types.ts). */

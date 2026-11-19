@@ -26,6 +26,7 @@ export function wrapCalcApi(worker: Worker): Remote<CalcApi> {
     listCalculators: () => call(r.listCalculators()),
     run: (id, inputs) => call(r.run(id, inputs)),
     explain: (id, inputs, statistic) => call(r.explain(id, inputs, statistic)),
+    exportR: (id, inputs, receipt) => call(r.exportR(id, inputs, receipt)),
     newSeed: () => call(r.newSeed()),
   } as Remote<CalcApi>;
 }
