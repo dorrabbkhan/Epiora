@@ -17,22 +17,22 @@ import type { SampleCtx } from './shared';
 export async function runImport(ctx: SampleCtx): Promise<void> {
   if (ctx.projectId === '') {
     skipScenario(ctx, scen(`import_${label}`), 'create_project failed');
-    return;
+  } else {
+    await runScenario(ctx, scen(`import_${label}`), async () => {
+      const poller = startOpfsPoller(ctx.page, ctx.growthLog);
+      try {
+        const imported = await importCsv(ctx.page, '/perf-csv/big', {
+          projectId: ctx.projectId,
+          datasetName: `perf-${label}.csv`,
+        });
+        ctx.datasetId = imported.datasetId;
+        return { ms: imported.ms };
+      } finally {
+        poller.stop();
+      }
+    });
+    ctx.growthLog.length = 0;
   }
-  await runScenario(ctx, scen(`import_${label}`), async () => {
-    const poller = startOpfsPoller(ctx.page, ctx.growthLog);
-    try {
-      const imported = await importCsv(ctx.page, '/perf-csv/big', {
-        projectId: ctx.projectId,
-        datasetName: `perf-${label}.csv`,
-      });
-      ctx.datasetId = imported.datasetId;
-      return { ms: imported.ms };
-    } finally {
-      poller.stop();
-    }
-  });
-  ctx.growthLog.length = 0;
 
   if (ctx.gatedOnly) return;
   if (ctx.datasetId === null) {
