@@ -5591,3 +5591,39 @@ scripts ran under the renv-pinned R 4.6.2, `compare.mjs` verified
     clippy in the copied workspace could not compile epiora-core
     without them.
 Supersedes: —
+### v1.0 Task 18 — means_1m measurement (2026-11-19)
+
+Decision: `perf.spec.ts` (702 lines, past the ~400-line rule the plan's
+split targets) is split by scenario under `app/perf/scenarios/`. The
+spec keeps the `perfPage` fixture, the per-sample loop and the owner
+gate test; every other line moved verbatim — `shared.ts` holds the
+environment knobs, the generated-CSV fixtures, `record()` /
+`runScenario()` / `skipScenario()` and the page-side failure
+diagnostics behind a `SampleCtx`; `store.ts` (`empty_store_opfs`,
+`create_project`), `import.ts` (`import_*`, `reimport_*`),
+`tables.ts` (`open_tables_*`) and `grid.ts` (both scrolls plus
+`scrollGrid`/`waitForGrid`) hold the scenario bodies. Recorded line
+order, skip reasons, `scen()` wrapping and the D7 `gatedOnly`
+conditionals are unchanged.
+
+`means_1m` (spec §10, plan: "time from `runMeans` call to resolve on
+the existing 1M-row perf dataset for `MEANS <Integer age column>
+<3-level Text column>`, after clearing the worker's handle LRU") runs
+after `open_tables_*`: `variable: 'age'`, `group_by: 'grp'`,
+`include_missing: false` (`grp` has no missing values, so the flag is
+inert; `false` matches the TABLES options). It is measured only —
+`gate-eval.ts`'s `GATES` gains the owner's number in Task 19 — and it
+does not run in the D7 throttled pass, which the job comment scopes
+to the two gated scenarios.
+
+- Files outside the task's Files block:
+  - `app/perf/scenarios/shared.ts`, `store.ts`, `import.ts`,
+    `tables.ts`, `grid.ts` — the Files block's `perf.spec.ts`
+    parenthetical requires the split into `app/perf/scenarios/*.ts`;
+    these files are the existing scenarios and plumbing moved
+    verbatim. `means.ts` (the listed Create) holds the new scenario.
+- `app/perf/summarise.mjs` (listed under Modify) is unchanged: its
+  scenario table is generic over recorded fields, so `means_1m`'s
+  `ms` median and p90 print with no code change (verified on a local
+  `PERF_ROWS=100000` run: `means_100k ms` 223.9).
+Supersedes: —

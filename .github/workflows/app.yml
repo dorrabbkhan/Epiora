@@ -355,7 +355,10 @@ jobs:
   # import_1m ≤ 89,550 ms and open_tables_1m ≤ 2,874 ms (median of
   # successful samples ≤ threshold); the second pass below is the D7
   # report — both scenarios under CPU throttling ×4, medians in the
-  # step summary, not gated.
+  # step summary, not gated. v1.0 Task 18 adds `means_1m` to the
+  # measured set (cold snapshot load + MEANS age/grp on the 1M
+  # dataset) — reported in the summary, gated only after the owner
+  # picks the threshold (Task 19).
   perf:
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
     runs-on: ubuntu-latest
