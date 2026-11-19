@@ -67,6 +67,10 @@ impl FreqRun {
         let u = || super::path::unknown(statistic);
 
         let total = table.total as f64;
+        // `proportions`'s denominator is the sum of the category
+        // counts — the non-missing total, not `table.total` (records
+        // in scope, which includes the missing count).
+        let n: f64 = table.categories.iter().map(|c| c.count as f64).sum();
         match segs {
             [s] if s.key == "total" && s.index.is_none() => {
                 Ok(closed(statistic, "data", vals(&[("value", total)]), est))
@@ -86,7 +90,7 @@ impl FreqRun {
                     "percent" => Ok(closed(
                         statistic,
                         "proportion_pct",
-                        vals(&[("x", k), ("n", total)]),
+                        vals(&[("x", k), ("n", n)]),
                         est,
                     )),
                     "cumulative_percent" => {
@@ -99,7 +103,7 @@ impl FreqRun {
                         Ok(closed(
                             statistic,
                             "cumulative_percent_pct",
-                            vals(&[("cumulative", cumulative), ("total", total)]),
+                            vals(&[("cumulative", cumulative), ("total", n)]),
                             est,
                         ))
                     }
@@ -123,7 +127,7 @@ impl FreqRun {
                         Ok(closed(
                             statistic,
                             formula,
-                            vals(&[("x", k), ("n", total), ("z", z_975())]),
+                            vals(&[("x", k), ("n", n), ("z", z_975())]),
                             est,
                         ))
                     }
@@ -131,7 +135,7 @@ impl FreqRun {
                         "lower" | "upper" => Ok(method(
                             statistic,
                             "method.clopper_pearson",
-                            vals(&[("x", k), ("n", total), ("conf", 95.0)]),
+                            vals(&[("x", k), ("n", n), ("conf", 95.0)]),
                             est,
                         )),
                         _ => Err(u()),

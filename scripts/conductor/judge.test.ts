@@ -167,6 +167,34 @@ describe("judge.ts (conductor efficiency plan Task 0a)", () => {
     assert.match(line(dots, "files-block")!, /^FLAG files-block .*src\/foo1test2ts/);
   });
 
+  it("Files-block `X.tsx` + `.module.css` entry names X.module.css", () => {
+    const r = judge("files-block-plus-css.diff", { task: "4" });
+    assert.match(line(r, "files-block")!, /^PASS files-block/);
+  });
+
+  it("decisions.md names an extra file by a path suffix", () => {
+    const r = judge("decisions-suffix.diff");
+    assert.match(line(r, "files-block")!, /^PASS files-block/);
+  });
+
+  it("new source file over 400 lines flags line-count", () => {
+    const r = judge("line-count-new-file.diff");
+    assert.equal(r.exitCode, 1);
+    assert.match(line(r, "line-count")!, /^FLAG line-count .*src\/big\.ts.*450 lines/);
+  });
+
+  it("file grown provably past 400 flags line-count (named-exception rule)", () => {
+    const r = judge("line-count-grew-past.diff");
+    assert.match(line(r, "line-count")!, /^FLAG line-count .*run_case\.rs.*409\+ lines.*grew by 17/);
+  });
+
+  it("file already over 400 that did not grow is exempt; non-source exempt", () => {
+    const r = judge("line-count-long-nogrow.diff");
+    assert.match(line(r, "line-count")!, /^PASS line-count/);
+    const x = judge("line-count-exempt.diff");
+    assert.match(line(x, "line-count")!, /^PASS line-count/);
+  });
+
   it("long reason is never cut mid-item", () => {
     const r = judge("long-reason.diff");
     assert.equal(r.exitCode, 1);

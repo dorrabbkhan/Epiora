@@ -68,6 +68,7 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
       call(r.runMeans(projectId, datasetId, version, options)),
     listRuns: (projectId) => call(r.listRuns(projectId)),
     rerun: (runId, version) => call(r.rerun(runId, version)),
+    explainRun: (runId, statistic) => call(r.explainRun(runId, statistic)),
     deleteRun: (runId) => call(r.deleteRun(runId)),
     engineVersion: () => call(r.engineVersion()),
     storageEstimate: () => call(r.storageEstimate()),

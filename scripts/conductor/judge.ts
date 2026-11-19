@@ -45,6 +45,7 @@ import {
 } from "./judge-checks.ts";
 import {
   checkLicences,
+  checkLineCount,
   checkOwnerGate,
   checkSpikeReport,
   type SpikeCheckResult,
@@ -218,6 +219,7 @@ export function runJudge(opts: JudgeOpts, deps: JudgeDeps = {}): JudgeResult {
       checkAssertions(files),
       checkSkips(files),
       checkFilesBlock(files, planText, opts.task),
+      checkLineCount(files),
       checkSpikesImport(files),
       checkLicences(files),
       checkSpikeReport(files, deps.runSpikeCheck ?? defaultSpikeCheck),

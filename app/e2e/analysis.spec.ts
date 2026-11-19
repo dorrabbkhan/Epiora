@@ -5,7 +5,7 @@
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import { expectNoA11yViolations } from './helpers/axe';
-import { formatNumber } from '../src/ui/screens/analysis/render-result';
+import { formatNumber } from '../src/ui/format';
 
 const OSWEGO = readFileSync(
   new URL('../../fixtures/data/oswego.csv', import.meta.url),

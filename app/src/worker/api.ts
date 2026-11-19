@@ -6,6 +6,7 @@
 // can reach a running commit. Every method wires thrown errors through
 // `throwWired` for revival on the client side.
 
+import type { Explanation } from '@engine-types/Explanation';
 import type { FreqOptions } from '@engine-types/FreqOptions';
 import type { FreqResult } from '@engine-types/FreqResult';
 import type { MeansOptions } from '@engine-types/MeansOptions';
@@ -155,6 +156,7 @@ export interface DataApi {
   ): Promise<RunRecord>;
   listRuns(projectId: string): Promise<RunRecord[]>;
   rerun(runId: string, version: number): Promise<RunRecord>;
+  explainRun(runId: string, statistic: string): Promise<Explanation>;
   deleteRun(runId: string): Promise<void>;
   engineVersion(): Promise<string>;
   storageEstimate(): Promise<StorageEstimate>;
@@ -260,6 +262,9 @@ export const api: DataApi = {
   ),
   listRuns: wire((projectId) => withStore((s) => analysis.listRuns(s, projectId))),
   rerun: wire((runId, version) => withStore((s) => analysis.rerun(s, runId, version))),
+  explainRun: wire((runId, statistic) =>
+    withStore((s) => analysis.explainRun(s, runId, statistic)),
+  ),
   deleteRun: wire((runId) => withStore((s) => analysis.deleteRun(s, runId))),
   engineVersion: wire(async () => (await engine()).engineVersion()),
   storageEstimate: wire(async () => {

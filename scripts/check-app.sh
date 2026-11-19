@@ -33,6 +33,11 @@ step "wasm packages (epiora-wasm, epiora-import-wasm)"
 "$root/scripts/wasm-build.sh" release epiora-wasm
 "$root/scripts/wasm-build.sh" release epiora-import-wasm
 
+# v1.0 Task 16 (Files-block deviation, docs/decisions.md): the explain
+# formula guard (app/src/explain/guard.test.ts) drives the corpus
+# through the Node wasm build — build pkg-parity before Vitest too.
+"$root/scripts/wasm-build.sh" parity epiora-wasm
+
 step "store-stdio binary (native conformance)"
 # Task 14: the native backend's TypeScript conformance suite runs
 # against the test-only store-stdio binary. The store crate is pure

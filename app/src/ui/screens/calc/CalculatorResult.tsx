@@ -7,21 +7,13 @@
 
 import { useState, type CSSProperties, type ReactNode } from 'react';
 import type { Estimate } from '@engine-types/Estimate';
-import type { Explanation } from '@engine-types/Explanation';
 import type { Note } from '@engine-types/Note';
-import { useQuery } from '@tanstack/react-query';
-import {
-  Button,
-  Dialog,
-  Heading,
-  Modal,
-  ModalOverlay,
-} from '../../components';
-import { RpcError } from '../../../worker/errors';
+import { Button } from '../../components';
+import { ExplainPanel } from '../../../explain/ExplainPanel';
 import { calcApi } from '../../../calc/client';
 import { ct } from '../../../calc/strings';
 import { t } from '../../strings';
-import { formatNumber } from '../analysis/render-result';
+import { formatNumber } from '../../format';
 import styles from './calc.module.css';
 
 const VISUALLY_HIDDEN: CSSProperties = {
@@ -190,56 +182,14 @@ function ExplainDialog({
   leaf: Leaf;
   onClose: () => void;
 }) {
-  const statistic = `calc.${calcId}.${leaf.path}`;
-  const explain = useQuery({
-    queryKey: ['calc-explain', calcId, statistic, JSON.stringify(inputs)],
-    queryFn: () => calcApi().explain(calcId, inputs, statistic),
-    staleTime: Number.POSITIVE_INFINITY,
-    retry: false,
-  });
-  const data = explain.data as Explanation | undefined;
   return (
-    <ModalOverlay isOpen onOpenChange={(open) => !open && onClose()} isDismissable>
-      <Modal>
-        <Dialog>
-          <Heading slot="title">{ct.explainTitle(leaf.label)}</Heading>
-          <p className={styles.hint}>{ct.pendingReview}</p>
-          {explain.isPending && <p>{ct.explainLoading}</p>}
-          {explain.isError && (
-            <p className={styles.error} role="alert">
-              {explain.error instanceof RpcError
-                ? explain.error.userMessage
-                : t.errors.internal_error}
-            </p>
-          )}
-          {data !== undefined && (
-            <table>
-              <caption>{ct.steps}</caption>
-              <thead>
-                <tr>
-                  <th scope="col">{ct.formulaCol}</th>
-                  <th scope="col">{ct.valuesCol}</th>
-                  <th scope="col">{ct.resultCol}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.steps.map((step, i) => (
-                  <tr key={i}>
-                    <th scope="row">
-                      <code>{step.formula}</code>
-                    </th>
-                    <td>
-                      <code>{JSON.stringify(step.values)}</code>
-                    </td>
-                    <td>{renderEstimate(step.result, false)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </Dialog>
-      </Modal>
-    </ModalOverlay>
+    <ExplainPanel
+      title={leaf.label}
+      stats={[{ path: `calc.${calcId}.${leaf.path}`, label: leaf.label }]}
+      fetchTrace={(statistic) => calcApi().explain(calcId, inputs, statistic)}
+      keyParts={['calc', calcId, JSON.stringify(inputs)]}
+      onClose={onClose}
+    />
   );
 }
 

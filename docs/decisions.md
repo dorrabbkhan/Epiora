@@ -5380,3 +5380,139 @@ group, then overall) plus each test block the engine returned.
   a command now. The hook nulls the column on a stored run, following
   the `__simulateQuotaOnNextWrite` / `__clearSnapshotCache` pattern.
 Supersedes: —
+### v1.0 Task 16 — Explain panel, MathML templates, formula guard (2026-11-19)
+
+Decision: one reusable `ExplainPanel` serves both surfaces. Every
+Analysis result row carries the concrete `explainProcedure` paths of
+the leaves it displays (estimate first, then CI bounds and p-value);
+when a row covers more than one leaf the panel's Select switches the
+traced statistic — labels stay digit-free so the "every number comes
+from the trace" rule holds. Words come first, "Show the maths" reveals
+the template's MathML with the trace's formatted values substituted,
+and `method.*` traces render words plus the inputs/result table only —
+no substituted mathematics.
+
+- Files outside the task's Files block:
+  - `crates/epiora-core/src/explain/freq.rs` — engine trace fix the
+    guard test made visible: the trace passed `table.total` (records
+    in scope, including missing) as the `n` denominator for
+    `percent`, `cumulative_percent` and both per-category CIs, but
+    the procedure divides by `nf = Σ counts`. The formula could not
+    reproduce the leaf it claims to explain; `n` is now the summed
+    category counts. No leaf values change — only trace inputs.
+  - `scripts/check-app.sh` — the guard test needs the Node parity
+    build (`pkg-parity`, target `nodejs`, `parity` feature); the app
+    gate now builds it next to the release packages so Vitest finds
+    it in CI and locally.
+  - `app/src/worker/client.ts` — `wrapDataApi` mirrors every
+    `DataApi` method explicitly; `explainRun` needs its main-thread
+    twin (same pattern as `rerun`/`deleteRun`).
+  - `app/src/ui/screens/analysis/ResultCard.tsx` — the plan's Modify
+    list names `render-result.tsx` but not the card that owns the
+    dialog state and calls `dataApi.explainRun`.
+  - `app/src/ui/screens/analysis/render-means.tsx` — `renderMeans`
+    lives in its own module (v1.0 Task 15); its descriptives and test
+    rows get the same `stats` mapping `render-result.tsx` gained.
+  - `app/src/ui/format.ts` — `formatNumber` moved out of
+    `render-result.tsx` into a leaf module with no React or stylesheet
+    imports: result rows now import the Epiora `Button`, and the e2e
+    specs import `formatNumber`, so keeping it in `render-result.tsx`
+    pulled a `.module.css` into Playwright's transform (which cannot
+    load CSS). Callers updated: `render-result.tsx`,
+    `render-result.test.tsx`,
+    `CalculatorResult.tsx`, `ExplainPanel.tsx`,
+    `e2e/analysis.spec.ts`, `e2e/explain.spec.ts`.
+  - Fix-round split under the ~400-line rule (AGENTS.md rule 8) —
+    pure move; no behaviour, template id, string or number changed:
+    - `app/src/ui/screens/analysis/stats-table.tsx` — `StatsTable`,
+      `StatRow`/`ExplainHandler`, `stat`, `ciStats`, `estimate` and
+      `interval` moved out of `render-result.tsx`, which re-exports
+      the public pieces so callers are unchanged.
+    - `app/src/ui/screens/analysis/render-freq.tsx` — the FREQ table
+      view and `renderFreq` (same sibling-module precedent as
+      `render-means.tsx`).
+    - `app/src/explain/templates/chiSquarePooled.ts` — the pooled
+      and homogeneity χ² templates; `chiSquare.ts` keeps the
+      single-table and paired forms and exports `CHI`, `SQ`, `MH`.
+    - `app/src/explain/templates/personTimeAdjusted.ts` — the
+      directly adjusted and pooled Mantel–Haenszel person-time
+      templates (with `directLn`/`rrLn`); `personTime.ts` exports
+      `RB`.
+    - `app/src/explain/templates/binomial.ts` — the one-sample z
+      test and binomial tail templates; `proportions.ts` keeps the
+      interval bounds. `app/src/explain/index.ts` merges
+      `CHI_SQUARE_POOLED`, `PERSON_TIME_ADJUSTED` and `BINOMIAL`.
+- `freq.*` statistic paths name no table, so the engine resolves them
+  against the run's first table only; `renderFreq` therefore offers
+  the explain affordance on `tables[0]`'s rows only (later tables get
+  no explain button rather than a wrong trace).
+Supersedes: —
+
+### Conductor process — review/task gate trimming (2026-11-18, owner-authorised in PR #91)
+
+Decision: the owner approved the conductor's recommendations on PR #91
+("do all your recos in the same PR"). This is a process change only — no
+app product code, fixture, tolerance, budget or Task 16 template/panel
+change.
+
+- Review prompt: CI is the gate. `gh pr checks` green (perf skipped on
+  PRs is by design) means the reviewer does not re-run
+  `./scripts/check.sh` or the full Playwright suite, does not fight
+  sandbox limits, reviews the diff against the plan and runs only
+  targeted tests for something it doubts; red/pending CI means review
+  the diff only. Escape hatch: the full gate runs only when the
+  conductor's extra instructions ask for it. Files:
+  `.devin/skills/epiora-review/SKILL.md` (step 5 replaced — it told the
+  reviewer to run `./scripts/check.sh`) and
+  `scripts/conductor/build-prompt.sh` (review mode prints the same
+  paragraph).
+- Task prompt: iterate on targeted tests (the task's named tests, tsc,
+  lint, the relevant vitest/`cargo -p` test); run the full
+  `./scripts/check.sh` at most once, immediately before the push; never
+  loop on the whole three-browser Playwright suite locally — CI re-runs
+  it. Files: `.devin/skills/epiora-task/SKILL.md` (step 8 — one rule,
+  replacing the old iterate-with-quick wording) and
+  `scripts/conductor/build-prompt.sh` (task mode prints it).
+- `line-count` judge check: flags an added or grown source file
+  provably over ~400 lines post-change (`*.md`, `*.json`, lockfiles,
+  `fixtures/**`, generated files and snapshots exempt; a file already
+  over on main that did not grow is exempt — `run_case.rs` and
+  `special/gamma.rs` follow the same rule). A diff does not carry a
+  modified file's total size, so the check uses the provable bound
+  `max(last shown new-side line, last shown old-side end + net growth)`
+  from the hunk headers — it catches every file the diff proves is past
+  the limit and cannot prove (never guesses) a mid-file-only growth.
+  `checkLineCount` lives in `scripts/conductor/judge-checks-gates.ts`
+  (placement deviation from the fix instructions: `judge-checks.ts`
+  would exceed the 400-line rule the check enforces). Also in
+  `judge-checks.ts`: `files-block` now resolves a
+  `` `X.tsx` + `.module.css` `` Files-block entry to `X.module.css`, and
+  a `docs/decisions.md` mention by unique path suffix
+  (`e2e/analysis.spec.ts` for `app/e2e/analysis.spec.ts`) counts as
+  named — both were false FLAGs on this PR. Files:
+  `scripts/conductor/judge-checks.ts`, `scripts/conductor/judge.ts`,
+  `scripts/conductor/judge.test.ts` (423 lines — the new cases were
+  required in this file; the check's bound does not reach it because no
+  hunk lands past line 400), `scripts/conductor/fixtures/judge/plan.md`
+  (fixture Task 4), `scripts/conductor/fixtures/judge/line-count-new-file.diff`,
+  `scripts/conductor/fixtures/judge/line-count-grew-past.diff`,
+  `scripts/conductor/fixtures/judge/line-count-long-nogrow.diff`,
+  `scripts/conductor/fixtures/judge/line-count-exempt.diff`,
+  `scripts/conductor/fixtures/judge/files-block-plus-css.diff`,
+  `scripts/conductor/fixtures/judge/decisions-suffix.diff`,
+  `docs/superpowers/plans/2026-11-17-epiora-v1.0-conductor-efficiency.md`
+  (`line-count` added as check 6, list renumbered — it enumerates check
+  ids).
+- Sharding the `app` job was tried in this PR and withdrawn by the owner
+  (shards failed on the deploy preview; no wall-time gain because
+  `app-gate` precedes the shards); it will be its own PR.
+- Found, not fixed: `app/playwright.config.ts:29` uses
+  `devices['Desktop WebKit']`, which does not exist (key is `Desktop
+  Safari`), so the webkit project runs chromium — to be handled by its
+  own task.
+- Task sizing note in
+  `docs/superpowers/plans/2026-11-12-epiora-v1.0-calculators-and-means.md`
+  (a UI task over ~12 files, or pairing a new component tree with a new
+  three-engine e2e spec, is split into logic+unit tests and UI+e2e; no
+  existing task split). And `docs/decisions.md` (this entry).
+Supersedes: —

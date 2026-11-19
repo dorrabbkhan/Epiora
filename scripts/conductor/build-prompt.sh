@@ -53,6 +53,7 @@ case "$KIND" in
       echo "Implement Task $N of the plan \`docs/superpowers/plans/${PLAN##*/}\` by following \`.devin/skills/epiora-task/SKILL.md\`."
       echo "This plan is not in the skill's version mapping; the plan file is the path given above."
     fi
+    echo "While iterating run targeted tests only — the task's named tests, tsc, lint, the relevant vitest/cargo -p test. Run the full ./scripts/check.sh at most once, immediately before the push; never loop on the whole three-browser Playwright suite locally — CI re-runs it."
     ;;
   review)
     need_pr
@@ -63,6 +64,7 @@ case "$KIND" in
       echo "This plan is not in the skill's version mapping; the plan file is the path given above."
     fi
     echo "This is a review session: do not modify files or push. Check the PR out in a separate \`git worktree\`, not in the main checkout."
+    echo "CI is the gate. When \`gh pr checks\` is all green (perf skipped on PRs is by design), do NOT re-run ./scripts/check.sh or the full Playwright suite and do not fight sandbox limits (cargo-deny, npm proxy, read-only ~/.cargo). Review the diff against the plan and run only targeted tests for something you doubt. If CI is red or pending, say so and review the diff only. Run the full gate only when the conductor's extra instructions ask for it."
     ;;
   fix)
     need_pr
