@@ -8,6 +8,8 @@ REPO="$BATS_TEST_DIRNAME/../.."
 setup() {
   cp "$REPO/Cargo.toml" "$REPO/rust-toolchain.toml" "$REPO/deny.toml" "$BATS_TEST_TMPDIR/"
   cp -r "$REPO/crates" "$BATS_TEST_TMPDIR/"
+  mkdir -p "$BATS_TEST_TMPDIR/fixtures"
+  cp -r "$REPO/fixtures/R" "$BATS_TEST_TMPDIR/fixtures/"
 }
 
 @test "std ln is rejected by clippy in epiora-core" {

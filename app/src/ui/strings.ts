@@ -180,6 +180,7 @@ export const t = {
     newerVersion: 'A newer dataset version exists.',
     rerunOn: (v: number) => `Rerun on v${v}`,
     deleteResult: 'Delete result',
+    exportR: 'Export to R',
     receipt: 'Receipt',
     copyReceipt: 'Copy receipt JSON',
     copied: 'Receipt JSON copied.',
@@ -360,6 +361,7 @@ export const t = {
     calc_input_missing: 'A required calculator input is missing.',
     calc_input_out_of_range: 'A calculator input is out of range.',
     explain_unknown: 'That statistic has no explanation.',
+    export_not_available: 'This analysis cannot be reproduced in R.',
     // StoreError codes
     migration_failed: 'The local database could not be upgraded.',
     tx_aborted: 'The database transaction was aborted.',

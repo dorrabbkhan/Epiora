@@ -336,6 +336,8 @@ export const ct = {
   backToIndex: 'All calculators',
   unknownCalculator: 'That calculator is not known.',
   runFailed: 'The calculation could not be run.',
+  exportR: 'Export to R',
+  exportRFailed: 'The R export could not be built.',
   errors: {
     missing: 'This input is required.',
     one_of: 'Provide exactly one of the grouped inputs.',

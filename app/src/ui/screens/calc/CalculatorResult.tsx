@@ -8,6 +8,7 @@
 import { useState, type CSSProperties, type ReactNode } from 'react';
 import type { Estimate } from '@engine-types/Estimate';
 import type { Note } from '@engine-types/Note';
+import type { Receipt } from '@engine-types/Receipt';
 import { Button } from '../../components';
 import { ExplainPanel } from '../../../explain/ExplainPanel';
 import { calcApi } from '../../../calc/client';
@@ -198,18 +199,54 @@ export function CalculatorResult({
   inputs,
   result,
   notes,
+  receipt,
 }: {
   calcId: string;
   /** The canonical inputs the run consumed (for explain traces). */
   inputs: Record<string, unknown>;
   result: unknown;
   notes: Note[];
+  /** The run's sealed receipt — feeds `receipt.json` in the export. */
+  receipt: Receipt;
 }) {
   const [explaining, setExplaining] = useState<Leaf | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
   const { root, sections } = sectionsOf(result);
+  // "Export to R" (v1.0 Task 17, spec §8.2): the zip is built in the
+  // calc worker; the page only turns its bytes into a download.
+  const exportToR = async () => {
+    setExporting(true);
+    setExportError(null);
+    try {
+      const { name, bytes } = await calcApi().exportR(calcId, inputs, receipt);
+      const url = URL.createObjectURL(
+        new Blob([bytes], { type: 'application/zip' }),
+      );
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      setExportError(e instanceof Error ? e.message : ct.exportRFailed);
+    } finally {
+      setExporting(false);
+    }
+  };
   return (
     <div className={styles.result}>
       <h2>{ct.results}</h2>
+      <div>
+        <Button onPress={() => void exportToR()} isDisabled={exporting}>
+          {ct.exportR}
+        </Button>
+        {exportError !== null && (
+          <p className={styles.error} role="alert">
+            {exportError}
+          </p>
+        )}
+      </div>
       <StatTable caption={null} rows={root} onExplain={setExplaining} />
       {sections.map((section) =>
         section.list !== null ? (

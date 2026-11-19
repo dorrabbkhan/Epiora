@@ -23,6 +23,7 @@ import type { ValueType } from '@import-types/ValueType';
 import * as analysis from './analysis';
 import * as commit from './commit';
 import { engine } from './engines';
+import * as rexport from './export';
 import { rpc, throwWired } from './errors';
 import * as importer from './importer';
 import { clearSnapshotCache, gridPage, loadEntry, storedSettings } from './snapshots';
@@ -157,6 +158,14 @@ export interface DataApi {
   listRuns(projectId: string): Promise<RunRecord[]>;
   rerun(runId: string, version: number): Promise<RunRecord>;
   explainRun(runId: string, statistic: string): Promise<Explanation>;
+  /**
+   * "Export to R" (v1.0 Task 17, spec §8.2): the stored run's
+   * `analysis.R` + `data.csv` + `receipt.json` zipped in the worker —
+   * the suggested filename's hash is the run's receipt hash prefix.
+   */
+  exportRun(
+    runId: string,
+  ): Promise<{ name: string; bytes: Uint8Array<ArrayBuffer> }>;
   deleteRun(runId: string): Promise<void>;
   engineVersion(): Promise<string>;
   storageEstimate(): Promise<StorageEstimate>;
@@ -265,6 +274,7 @@ export const api: DataApi = {
   explainRun: wire((runId, statistic) =>
     withStore((s) => analysis.explainRun(s, runId, statistic)),
   ),
+  exportRun: wire((runId) => withStore((s) => rexport.exportRun(s, runId))),
   deleteRun: wire((runId) => withStore((s) => analysis.deleteRun(s, runId))),
   engineVersion: wire(async () => (await engine()).engineVersion()),
   storageEstimate: wire(async () => {
