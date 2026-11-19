@@ -53,7 +53,7 @@ case "$KIND" in
       echo "Implement Task $N of the plan \`docs/superpowers/plans/${PLAN##*/}\` by following \`.devin/skills/epiora-task/SKILL.md\`."
       echo "This plan is not in the skill's version mapping; the plan file is the path given above."
     fi
-    echo "While iterating run targeted tests only — the task's named tests, tsc, lint, the relevant vitest/cargo -p test. Run the full ./scripts/check.sh at most once, immediately before the push; never loop on the whole three-browser Playwright suite locally — CI re-runs it."
+    echo "While iterating run targeted tests only — the task's named tests, tsc, lint, the relevant vitest/cargo -p test — and ./scripts/check.sh quick before the push. Never run the full ./scripts/check.sh or the three-browser Playwright suite locally: CI is the gate. End the session right after the push and gh pr create — no CI wait, no review pass (the conductor runs both in parallel)."
     ;;
   review)
     need_pr
@@ -70,6 +70,7 @@ case "$KIND" in
     need_pr
     echo "Fix round for PR #$PR (plan \`$VER\`, Task $N). Check out the PR's branch, work only on it and push to it (no new PR, no force-push)."
     echo "Do not re-implement the task; change only what the REQUIRED items below need. Show \`git diff --stat HEAD~1\` matching your claims."
+    echo "Run only the targeted tests for what you changed (plus ./scripts/check.sh quick); never the full gate or the whole Playwright suite locally. End the session right after the push — do not wait for CI; the conductor waits for it."
     ;;
   *) echo "usage: $0 <task|review|fix> <version> <task> [PR|-] [extra file]" >&2; exit 2 ;;
 esac

@@ -30,6 +30,30 @@ main() {
       note "could NOT restore $ORIG (left on $now); another worktree probably holds it"
     fi
   }
+  # Devin's sandbox can write only inside the checkout: ~/.cache, ~/.npm and
+  # ~/.cargo/registry are read-only there, and every session used to lose
+  # 10-30 minutes rediscovering that. Point the tools at caches kept in the
+  # checkout (excluded in .git/info/exclude) so they persist between sessions.
+  devin_caches() {
+    local c="$REPO_DIR"
+    export PLAYWRIGHT_BROWSERS_PATH="${PLAYWRIGHT_BROWSERS_PATH:-$c/.pw-browsers}"
+    export npm_config_cache="${npm_config_cache:-$c/.npm-cache}"
+    export CARGO_HOME="${CARGO_HOME:-$c/.cargo-home}"
+    export PATH="$c/.local-bin:$HOME/.cargo/bin:$PATH"
+    mkdir -p "$PLAYWRIGHT_BROWSERS_PATH" "$npm_config_cache" "$c/.local-bin"
+    # Seed the cargo home once with hard links to ~/.cargo/registry (same
+    # filesystem: instant, no extra space; cargo never rewrites those files).
+    if [ ! -d "$CARGO_HOME/registry" ] && [ -d "$HOME/.cargo/registry" ]; then
+      mkdir -p "$CARGO_HOME"
+      cp -al "$HOME/.cargo/registry" "$CARGO_HOME/registry" 2>/dev/null \
+        || cp -a "$HOME/.cargo/registry" "$CARGO_HOME/registry" || true
+    fi
+    local ex p
+    ex="$(git -C "$c" rev-parse --path-format=absolute --git-common-dir)/info/exclude"
+    for p in .pw-browsers/ .npm-cache/ .cargo-home/ .local-bin/; do
+      grep -qxF "$p" "$ex" 2>/dev/null || printf '%s\n' "$p" >>"$ex"
+    done
+  }
   run_devin() {
     set +e
     ( cd "$REPO_DIR" && "${DEVIN_CMD[@]}" --prompt-file "$PROMPT" ) >"$OUT" 2>&1
@@ -64,6 +88,7 @@ main() {
   source "$(dirname "$0")/app-env.sh"
   REPO_DIR="${REPO:-$(git -C "$(dirname "$0")" rev-parse --show-toplevel)}"
   ORIG="$(git -C "$REPO_DIR" symbolic-ref --short -q HEAD || git -C "$REPO_DIR" rev-parse HEAD)"
+  devin_caches
   OUT="$DIR/${KIND}-${STAMP}.out.md"
   if [ "${DEVIN_DETACH:-}" = "1" ]; then
     # A foreground tool call is capped at ~10 minutes and headless `claude
