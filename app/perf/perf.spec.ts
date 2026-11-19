@@ -1,13 +1,21 @@
-// Perf spec (v0.3 plan Tasks 16–17, spec §10.3) — Chromium only,
-// production build. Task 16 measured; Task 17 gates: the file's last
-// test enforces the owner-picked thresholds in GATES below (PR #52) —
-// a scenario passes when the median `ms` of its successful samples is
-// ≤ the threshold. Every other scenario is reported, never gated.
+// Perf spec (v0.3 plan Tasks 16–17, spec §10.3; v1.0 plan Task 18) —
+// Chromium only, production build. Task 16 measured; Task 17 gates:
+// the file's last test enforces the owner-picked thresholds in
+// gate-eval.ts's GATES (PR #52) — a scenario passes when the median
+// `ms` of its successful samples is ≤ the threshold. Every other
+// scenario (incl. Task 18's means_1m) is reported, never gated.
 //
 // Each `test()` is one sample in a fresh browser context, hence a
 // fresh OPFS store. Every scenario appends one JSON object per line to
 // PERF_OUT; perf/summarise.mjs turns the lines into median/p90 per
 // scenario plus the gzip -9 sizes.
+//
+// The scenario bodies live in perf/scenarios/*.ts (v1.0 Task 18 split
+// — the single file had grown past the ~400-line rule; behaviour is
+// unchanged). One sample runs, in order: empty_store_opfs,
+// create_project, import_1m, reimport_1m, open_tables_1m, means_1m,
+// grid_scroll_10k, grid_scroll_1m — each dependent records its own
+// skip when the scenario it needs failed.
 //
 // Run with EPIORA_PERF=1 (playwright.config.ts switches testDir to
 // ./perf). Environment: PERF_RUNS samples (5 on push to main; CI
@@ -33,19 +41,15 @@
 // recorded line carries `profile` so a results.jsonl from either
 // mode is self-describing.
 
-import { execFileSync } from 'node:child_process';
 import {
-  appendFileSync,
   existsSync,
-  mkdirSync,
   mkdtempSync,
   readFileSync,
   rmSync,
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { fileURLToPath } from 'node:url';
-import { dirname, join, resolve } from 'node:path';
+import { join } from 'node:path';
 import {
   chromium,
   expect,
@@ -54,385 +58,28 @@ import {
   type BrowserContextOptions,
   type Page,
 } from '@playwright/test';
-import { batchId, evaluateGates, type PerfLine } from './gate-eval';
-
-const PERF_DIR = dirname(fileURLToPath(import.meta.url));
-const WORK = fileURLToPath(new URL('../../target/perf', import.meta.url));
-const GEN = resolve(PERF_DIR, 'gen-csv.mjs');
-
-const ROWS = Number(process.env.PERF_ROWS ?? 1_000_000);
-const RUNS = Number(process.env.PERF_RUNS ?? 1);
-const PROFILE = process.env.PERF_PROFILE === 'ephemeral' ? 'ephemeral' : 'persistent';
-// D7 report (plan Task 17): PERF_CPU_THROTTLE=4 measures both gated
-// scenarios under Chromium CPU throttling ×4. Throttled samples record
-// `*_cpu<N>` scenario names so they can never contaminate the gated
-// `import_1m` / `open_tables_1m` medians.
-const CPU_THROTTLE = Number(process.env.PERF_CPU_THROTTLE ?? 1);
-const BIG_CSV = process.env.PERF_CSV ?? resolve(WORK, `perf-${ROWS}.csv`);
-const SMALL_CSV = process.env.PERF_CSV_10K ?? resolve(WORK, 'perf-10000.csv');
-const EDITED_CSV = `${BIG_CSV}.edited.csv`;
-const OUT = process.env.PERF_OUT ?? resolve(WORK, 'results.jsonl');
-const GATES_MD = resolve(dirname(OUT), 'gates.md');
-
-// Every recorded line carries the invocation's batch id so the gate
-// test evaluates this run's samples only — a stale results.jsonl
-// from an earlier local run can't pass or fail it. See batchId in
-// ./gate-eval.ts for why the id is the runner's (parent's) pid, not
-// the worker's.
-const BATCH = batchId(process.env, process);
-
-/** `1m` / `250k` / raw number — keeps scenario names honest at any
- *  PERF_ROWS. At the CI default the names are exactly the plan's
- *  `import_1m` / `open_tables_1m`. */
-const label =
-  ROWS === 1_000_000 ? '1m' : ROWS % 1000 === 0 ? `${ROWS / 1000}k` : String(ROWS);
-
-const SMALL_LABEL = '10k';
-
-/** The grid scroll's viewport stride visits every row's scroll
- *  position; the big grid uses a fixed step count instead — the
- *  carryover asks for "a larger dataset", not for 10,000 page loads,
- *  and every step's page loads pay the `items`-array rebuild that
- *  scales with `total`. */
-const BIG_GRID_STEPS = 150;
-
-/** Wall-clock cap per scroll pass. A pass that hits it returns
- *  `{incomplete: 1, stepsDone}` — at scale the DataGrid's per-page
- *  `items` rebuild makes an unbounded pass run past the test timeout
- *  (observed locally: >30 min on the 100k grid). */
-const SCROLL_BUDGET_MS = 300_000;
-
-function ensureCsv(path: string, rows: number): void {
-  if (!existsSync(path)) {
-    mkdirSync(dirname(path), { recursive: true });
-    execFileSync('node', [GEN, String(rows), path], { stdio: 'inherit' });
-  }
-}
-
-function ensureEditedCsv(): void {
-  if (existsSync(EDITED_CSV)) return;
-  // Carryover (v0.3 Task 9): "the biggest generated CSV with one
-  // field edited" — bump the first data row's age by one so the
-  // re-import diff reports a single updated record while `records`
-  // is still fully rewritten.
-  const csv = readFileSync(BIG_CSV, 'utf8');
-  const nl = csv.indexOf('\n');
-  const header = csv.slice(0, nl);
-  const rest = csv.slice(nl + 1);
-  const eol = rest.indexOf('\n');
-  const fields = rest.slice(0, eol).split(',');
-  fields[8] = String(Number(fields[8]) + 1); // age
-  writeFileSync(EDITED_CSV, `${header}\n${fields.join(',')}\n${rest.slice(eol + 1)}`);
-}
-
-function record(entry: Record<string, unknown>): void {
-  mkdirSync(dirname(OUT), { recursive: true });
-  appendFileSync(
-    OUT,
-    `${JSON.stringify({ profile: PROFILE, cpu: `x${CPU_THROTTLE}`, batch: BATCH, ...entry })}\n`,
-  );
-}
-
-/** Scenario name — carries the throttle tag (`import_1m_cpu4`) so the
- *  D7 pass's samples stay out of the gated medians. */
-const scen = (name: string): string =>
-  CPU_THROTTLE > 1 ? `${name}_cpu${CPU_THROTTLE}` : name;
-
-/** Streams a generated CSV to the page as `fetch(url)` — Playwright's
- *  route fulfilment reads from disk, so the ~80 MB never crosses the
- *  protocol as JSON. */
-async function routeCsv(page: Page): Promise<void> {
-  await page.route('**/perf-csv/big', (r) => r.fulfill({ path: BIG_CSV }));
-  await page.route('**/perf-csv/edited', (r) => r.fulfill({ path: EDITED_CSV }));
-  await page.route('**/perf-csv/small', (r) => r.fulfill({ path: SMALL_CSV }));
-}
-
-/** inspectFile (untimed) + timed commitImport of `url` — the plan's
- *  `import_*` definition is "time from commitImport call to resolve".
- *  The progress callback writes `stage done/total` onto
- *  `window.__perfProgress` so a failure mid-commit can report how far
- *  the transaction got. */
-async function importCsv(
-  page: Page,
-  url: string,
-  target: { projectId: string; datasetName: string } | { datasetId: string },
-): Promise<{ datasetId: string; ms: number }> {
-  return page.evaluate(
-    async ({ url, target }) => {
-      const api = window.dataApi;
-      const w = window as unknown as { __perfProgress?: string };
-      w.__perfProgress = '';
-      const bytes = await (await fetch(url)).arrayBuffer();
-      const { sessionId, inspection } = await api.inspectFile('perf.csv', bytes);
-      const t0 = performance.now();
-      const result = await api.commitImport(
-        sessionId,
-        target,
-        inspection.settings,
-        false,
-        (p) => {
-          w.__perfProgress = `${p.stage} ${p.done}/${p.total}`;
-        },
-      );
-      return { datasetId: result.datasetId, ms: performance.now() - t0 };
-    },
-    { url, target },
-  );
-}
-
-/** `<name>/<code>/<detail>/<resultCode>: <message>` — RpcError keeps
- *  `code`/`detail` across the Comlink wire, a sqlite error keeps
- *  `resultCode`; whichever survived is named. */
-function errorText(e: unknown): string {
-  if (!(e instanceof Error)) return String(e);
-  const x = e as { code?: unknown; detail?: unknown; resultCode?: unknown };
-  const tag = [e.name, x.code, x.detail, x.resultCode]
-    .filter((v): v is string | number => typeof v === 'string' || typeof v === 'number')
-    .join('/');
-  return `${tag}: ${e.message}`;
-}
-
-/** Samples OPFS usage + sahpool file sizes every 5 s into `log`. The
- *  curve is the evidence for where an IOERR stops (journal vs db vs
- *  quota): after a rollback the journal is gone, so only in-flight
- *  samples show what the transaction had grown to. */
-function startOpfsPoller(page: Page, log: string[]): { stop: () => void } {
-  const t0 = Date.now();
-  const timer = setInterval(() => {
-    void page
-      .evaluate(async () => {
-        const est = (await navigator.storage?.estimate?.()) ?? {};
-        const parts: string[] = [`usage=${est.usage ?? '?'}`];
-        try {
-          const dir = await (
-            await navigator.storage.getDirectory()
-          ).getDirectoryHandle('.opfs-sahpool');
-          const opaque = await dir.getDirectoryHandle('.opaque');
-          for await (const [, handle] of opaque.entries()) {
-            if (handle.kind !== 'file') continue;
-            let size: number | string = '?';
-            let assoc = '';
-            try {
-              const file = await (
-                handle as FileSystemFileHandle
-              ).getFile();
-              size = file.size;
-              const head = new Uint8Array(
-                await file.slice(0, 512).arrayBuffer(),
-              );
-              const nul = head.indexOf(0);
-              assoc = new TextDecoder().decode(
-                head.subarray(0, nul === -1 ? head.length : nul),
-              );
-            } catch {
-              // SAH-held files can refuse getFile(); name still lists.
-            }
-            if (assoc !== '') parts.push(`${assoc}=${size}`);
-          }
-        } catch {
-          // The pool directory may not exist yet.
-        }
-        return parts.join(' ');
-      })
-      .then((s) =>
-        log.push(`t+${Math.round((Date.now() - t0) / 1000)}s ${s}`),
-      )
-      .catch(() => {});
-  }, 5000);
-  return { stop: () => clearInterval(timer) };
-}
-
-/** Page-side evidence for a failed scenario: the last commitImport
- *  progress stage, storage usage/quota, the OPFS growth curve sampled
- *  while the transaction ran, and every OPFS file with its size — for
- *  `.opfs-sahpool` files the associated sqlite path (db, journal, …)
- *  is decoded from the 512-byte name field the VFS writes at offset 0.
- *  The worker's console tail rides along too: the sahpool VFS
- *  `console.error`s the DOMException a failed OPFS op threw, which is
- *  the only place the underlying error name still exists once the RPC
- *  layer has mapped it to `sql`. */
-async function failureDiagnostics(
-  page: Page,
-  consoleLines: string[],
-  growthLog: string[],
-): Promise<Record<string, unknown>> {
-  const diag: Record<string, unknown> = {
-    ua: await page
-      .evaluate(() => navigator.userAgent)
-      .catch(() => '(unavailable)'),
-    growth: growthLog.join(' | ') || '(none sampled)',
-    workerConsole:
-      consoleLines.slice(-25).join(' | ') || '(none captured)',
-  };
-  growthLog.length = 0;
-  try {
-    Object.assign(
-      diag,
-      await page.evaluate(async () => {
-        const out: Record<string, unknown> = {};
-        out.progress =
-          (window as unknown as { __perfProgress?: string }).__perfProgress ??
-          null;
-        const est = (await navigator.storage?.estimate?.()) ?? {};
-        out.usageBytes = est.usage ?? null;
-        out.quotaBytes = est.quota ?? null;
-        try {
-          const root = await navigator.storage.getDirectory();
-          const files: string[] = [];
-          const walk = async (
-            dir: FileSystemDirectoryHandle,
-            prefix: string,
-          ): Promise<void> => {
-            for await (const [name, handle] of dir.entries()) {
-              if (handle.kind === 'directory') {
-                await walk(
-                  handle as FileSystemDirectoryHandle,
-                  `${prefix}${name}/`,
-                );
-              } else {
-                const file = await (
-                  handle as FileSystemFileHandle
-                ).getFile();
-                let assoc = '';
-                try {
-                  const head = new Uint8Array(
-                    await file.slice(0, 512).arrayBuffer(),
-                  );
-                  const nul = head.indexOf(0);
-                  assoc = new TextDecoder().decode(
-                    head.subarray(0, nul === -1 ? head.length : nul),
-                  );
-                } catch {
-                  // Name field is best-effort; size alone still helps.
-                }
-                files.push(
-                  `${prefix}${name}${assoc === '' ? '' : ` (${assoc})`}=${file.size}`,
-                );
-              }
-            }
-          };
-          await walk(root, '');
-          out.opfs = files.join('; ') || '(empty)';
-        } catch (e) {
-          out.opfs = `(unavailable: ${e instanceof Error ? e.message : String(e)})`;
-        }
-        return out;
-      }),
-    );
-  } catch (e) {
-    diag.inPageDiag = `unavailable: ${errorText(e)}`;
-  }
-  return diag;
-}
-
-/** One scrolling pass over `[role="grid"]`, top to bottom. `steps = 0`
- *  strides one viewport (visits every scroll position); otherwise the
- *  pass is exactly `steps` evenly spaced scroll positions. Each step
- *  waits — bounded — for the bottom-most rendered row's first cell to
- *  fill, i.e. for its getVersionPage page to land.
- *
- *  A page crash (the DataGrid retains every loaded page and rebuilds
- *  the `items` array per page — the v0.3 Task 10 carryover) is a
- *  measurement, not a test failure: `{crashed: 1, stepsDone}` is
- *  recorded and the rest of the sample reports `page_crashed`. */
-async function scrollGrid(
-  page: Page,
-  steps: number,
-  budgetMs: number = SCROLL_BUDGET_MS,
-): Promise<Record<string, number>> {
-  let stepsDone = 0;
-  let stepsPlanned = steps;
-  let crashed = false;
-  const onConsole = (msg: { text: () => string }) => {
-    const m = /^perf-scroll-step (\d+)$/.exec(msg.text());
-    if (m !== null) stepsDone = Number(m[1]);
-    const p = /^perf-scroll-steps (\d+)$/.exec(msg.text());
-    if (p !== null) stepsPlanned = Number(p[1]);
-  };
-  const onCrash = () => {
-    crashed = true;
-  };
-  page.on('console', onConsole);
-  page.on('crash', onCrash);
-  try {
-    return await page.evaluate(async ({ steps, budgetMs }) => {
-      const grid = document.querySelector('[role="grid"]');
-      if (!(grid instanceof HTMLElement)) throw new Error('data grid not found');
-      const memory = (
-        performance as unknown as { memory?: { usedJSHeapSize: number } }
-      ).memory;
-      const heapStart = memory?.usedJSHeapSize ?? 0;
-      const raf = () => new Promise((r) => requestAnimationFrame(r));
-      const frames: number[] = [];
-      const t0 = performance.now();
-      const maxTop = Math.max(0, grid.scrollHeight - grid.clientHeight);
-      const n = steps > 0 ? steps : Math.max(1, Math.ceil(maxTop / grid.clientHeight));
-      console.log(`perf-scroll-steps ${n}`);
-      let done = 0;
-      let incomplete = 0;
-      for (let i = 1; i <= n; i++) {
-        console.log(`perf-scroll-step ${i}`);
-        grid.scrollTop = Math.round((maxTop * i) / n);
-        await raf();
-        const a = performance.now();
-        await raf();
-        frames.push(performance.now() - a);
-        const deadline = performance.now() + 1000;
-        for (;;) {
-          const rows = [...grid.querySelectorAll('[role="row"]')];
-          const firstCell = rows.at(-1)?.querySelector('[role="gridcell"]');
-          const ready =
-            rows.length > 1 &&
-            firstCell !== null &&
-            firstCell !== undefined &&
-            firstCell.textContent !== '';
-          if (ready || performance.now() >= deadline) break;
-          await new Promise((r) => setTimeout(r, 25));
-        }
-        done = i;
-        if (performance.now() - t0 > budgetMs) {
-          incomplete = 1;
-          break;
-        }
-      }
-      const ms = performance.now() - t0;
-      const heapEnd = memory?.usedJSHeapSize ?? 0;
-      frames.sort((x, y) => x - y);
-      const pick = (p: number) =>
-        frames.length === 0
-          ? 0
-          : frames[Math.min(frames.length - 1, Math.floor(p * frames.length))]!;
-      return {
-        ms,
-        stepsDone: done,
-        steps: n,
-        incomplete,
-        heapStartBytes: heapStart,
-        heapEndBytes: heapEnd,
-        frameMedianMs: pick(0.5),
-        frameP95Ms: pick(0.95),
-        frames: frames.length,
-        scrollHeightPx: maxTop,
-      };
-    }, { steps, budgetMs });
-  } catch (e) {
-    if (!crashed) throw e;
-    return { crashed: 1, stepsDone, steps: stepsPlanned };
-  } finally {
-    page.off('console', onConsole);
-    page.off('crash', onCrash);
-  }
-}
-
-/** Waits for the grid's first populated body cell — the initial
- *  getVersionPage(0) has landed — before measuring. */
-async function waitForGrid(page: Page): Promise<void> {
-  await page.waitForFunction(() =>
-    [...document.querySelectorAll('[role="gridcell"]')].some(
-      (c) => c.textContent !== '',
-    ),
-  );
-}
+import { evaluateGates, type PerfLine } from './gate-eval';
+import {
+  BATCH,
+  BIG_CSV,
+  CPU_THROTTLE,
+  ensureCsv,
+  ensureEditedCsv,
+  GATES_MD,
+  label,
+  OUT,
+  PROFILE,
+  routeCsv,
+  ROWS,
+  RUNS,
+  SMALL_CSV,
+} from './scenarios/shared';
+import type { SampleCtx } from './scenarios/shared';
+import { runStore } from './scenarios/store';
+import { runImport } from './scenarios/import';
+import { runTables } from './scenarios/tables';
+import { runMeans } from './scenarios/means';
+import { runGrid } from './scenarios/grid';
 
 /** One sample's page. `persistent` launches a persistent context on a
  *  fresh temp user-data dir (a real user's on-disk profile — the
@@ -494,7 +141,6 @@ for (let i = 0; i < RUNS; i++) {
     ensureEditedCsv();
     ensureCsv(SMALL_CSV, 10_000);
     await routeCsv(page);
-    const run = i + 1;
 
     // The worker's console (sahpool's `storeErr` console.errors the
     // DOMException a failed OPFS op threw) is the only place the
@@ -508,171 +154,24 @@ for (let i = 0; i < RUNS; i++) {
     });
     page.on('pageerror', (e) => consoleLines.push(`pageerror: ${e.message}`));
 
-    // OPFS growth samples taken while the big commits run; consumed by
-    // failureDiagnostics (and cleared) on the first failure.
-    const growthLog: string[] = [];
+    const ctx: SampleCtx = {
+      page,
+      run: i + 1,
+      consoleLines,
+      // OPFS growth samples taken while the big commits run; consumed
+      // by failureDiagnostics (and cleared) on the first failure.
+      growthLog: [],
+      projectId: '',
+      datasetId: null,
+      gatedOnly: CPU_THROTTLE > 1,
+    };
 
     await page.goto('/');
-
-    /** A scenario throwing is a measurement, not a test failure: the
-     *  error plus the page-side diagnostics the first dispatch lacked
-     *  are recorded and independent scenarios still run. Returns the
-     *  recorded entry, or null when the scenario failed. */
-    const runScenario = async (
-      scenario: string,
-      fn: () => Promise<Record<string, unknown> | undefined>,
-    ): Promise<Record<string, unknown> | null> => {
-      const t0 = Date.now();
-      try {
-        const entry = { run, scenario, ...((await fn()) ?? {}) };
-        record(entry);
-        return entry;
-      } catch (e) {
-        record({
-          run,
-          scenario,
-          error: errorText(e),
-          elapsedMs: Date.now() - t0,
-          ...(await failureDiagnostics(page, consoleLines, growthLog)),
-        });
-        return null;
-      }
-    };
-    const skip = (scenario: string, reason: string): void => {
-      record({ run, scenario, skipped: reason });
-    };
-
-    // The D7 throttled pass measures only the two gated scenarios.
-    const gatedOnly = CPU_THROTTLE > 1;
-
-    // Carryover (v0.3 Task 9): OPFS usage of an empty store — the
-    // store opens (migrations + sahpool reservation) on the first
-    // store RPC.
-    if (!gatedOnly) {
-      await runScenario('empty_store_opfs', async () => {
-        const empty = await page.evaluate(async () => {
-          const api = window.dataApi;
-          await api.listProjects();
-          return api.storageEstimate();
-        });
-        return { usageBytes: empty.usage, quotaBytes: empty.quota };
-      });
-    }
-
-    // Not a measured scenario — recorded only on failure.
-    let projectId = '';
-    try {
-      projectId = await page.evaluate(
-        async () => (await window.dataApi.createProject('Perf')).id,
-      );
-    } catch (e) {
-      record({
-        run,
-        scenario: 'create_project',
-        error: errorText(e),
-        ...(await failureDiagnostics(page, consoleLines, growthLog)),
-      });
-    }
-
-    let datasetId: string | null = null;
-    if (projectId === '') {
-      skip(scen(`import_${label}`), 'create_project failed');
-    } else {
-      await runScenario(scen(`import_${label}`), async () => {
-        const poller = startOpfsPoller(page, growthLog);
-        try {
-          const imported = await importCsv(page, '/perf-csv/big', {
-            projectId,
-            datasetName: `perf-${label}.csv`,
-          });
-          datasetId = imported.datasetId;
-          return { ms: imported.ms };
-        } finally {
-          poller.stop();
-        }
-      });
-      growthLog.length = 0;
-    }
-
-    if (datasetId === null) {
-      // The 1M dataset is the fixture for everything below; each
-      // dependent records its own skip rather than vanishing.
-      if (!gatedOnly) skip(`reimport_${label}`, `import_${label} failed`);
-      skip(scen(`open_tables_${label}`), `import_${label} failed`);
-    } else {
-      const did = datasetId;
-      // Carryover (v0.3 Task 9): re-import with one field edited —
-      // `records` is deleted and fully rewritten in the new file order.
-      if (!gatedOnly) {
-        await runScenario(`reimport_${label}`, async () => {
-          const poller = startOpfsPoller(page, growthLog);
-          try {
-            const reimported = await importCsv(page, '/perf-csv/edited', {
-              datasetId: did,
-            });
-            return { ms: reimported.ms };
-          } finally {
-            poller.stop();
-          }
-        });
-        growthLog.length = 0;
-      }
-
-      // The plan's open_tables_1m: cold snapshot load (handle LRU
-      // cleared) + hash check + 2×2 TABLES of the two binary columns.
-      await runScenario(scen(`open_tables_${label}`), async () => {
-        const ms = await page.evaluate(
-          async ({ projectId: pid, datasetId: dataset }) => {
-            const api = window.dataApi;
-            const { currentVersion } = await api.getDataset(dataset);
-            await api.__clearSnapshotCache();
-            const t0 = performance.now();
-            await api.runTables(pid, dataset, currentVersion, {
-              exposure: { name: 'exposure', levels: null },
-              outcome: { name: 'outcome', levels: null },
-              stratify_by: [],
-              include_missing: false,
-            });
-            return performance.now() - t0;
-          },
-          { projectId, datasetId: did },
-        );
-        return { ms };
-      });
-    }
-
-    if (!gatedOnly) {
-      // Carryover (v0.3 Task 10): JS heap + frame time scrolling the
-      // 10,000-row grid end to end (one viewport per step), and the
-      // same pass on the larger dataset.
-      let smallScroll: Record<string, unknown> | null = null;
-      if (projectId === '') {
-        skip(`grid_scroll_${SMALL_LABEL}`, 'create_project failed');
-      } else {
-        smallScroll = await runScenario(`grid_scroll_${SMALL_LABEL}`, async () => {
-          const small = await importCsv(page, '/perf-csv/small', {
-            projectId,
-            datasetName: 'perf-10k.csv',
-          });
-          await page.goto(`/p/${projectId}/d/${small.datasetId}`);
-          await waitForGrid(page);
-          return scrollGrid(page, 0);
-        });
-      }
-
-      if (datasetId === null) {
-        skip(`grid_scroll_${label}`, `import_${label} failed`);
-      } else if (smallScroll !== null && 'crashed' in smallScroll) {
-        skip(`grid_scroll_${label}`, 'page_crashed');
-      } else {
-        const did = datasetId;
-        await runScenario(`grid_scroll_${label}`, async () => {
-          await page.goto(`/p/${projectId}/d/${did}`);
-          await waitForGrid(page);
-          return scrollGrid(page, BIG_GRID_STEPS);
-        });
-      }
-    }
+    await runStore(ctx);
+    await runImport(ctx);
+    await runTables(ctx);
+    await runMeans(ctx);
+    await runGrid(ctx);
   });
 }
 
