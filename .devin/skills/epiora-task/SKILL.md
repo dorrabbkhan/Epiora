@@ -34,9 +34,11 @@ The matching spec is read from the plan's `**Spec:**` line, not hard-coded.
 6. Run them and confirm they fail for the expected reason. Show the output.
 7. Implement the minimum needed, using the exact names and signatures from **Interfaces → Produces**.
 8. Iterate with targeted checks only — the task's named tests, `tsc --noEmit`, lint, the relevant
-   `vitest run <path>` / `cargo test -p <crate>`. Run the full `./scripts/check.sh` at most once,
-   immediately before pushing; never loop on the whole three-browser Playwright suite locally — CI
-   re-runs it. Fix until everything is green.
+   `vitest run <path>` / `cargo test -p <crate>`, plus `./scripts/check.sh quick` before pushing. Do NOT
+   run the full `./scripts/check.sh` or the whole three-browser Playwright suite locally: CI runs the full
+   gate on the PR and the conductor waits for it. Never install browsers, cargo-deny or caches yourself —
+   devin.sh provides them (see the standing notes); if a tool is still missing, skip that step locally and
+   say so. Fix until the targeted checks are green.
    8a. For spikes: every number in the report links to the run or command that produced it. A failed run is
        recorded as a measurement, not hidden.
    8b. Compare `git diff --name-only main` with the task's Files block. For every file outside it, add a
@@ -45,11 +47,11 @@ The matching spec is read from the plan's `**Spec:**` line, not hard-coded.
 9. Commit with the message the task specifies, push the branch, and open a PR with `gh pr create` — title it
    with `[OWNER GATE]` or `[OWNER REVIEW]` if the Task Index marks the task so; the PR body is the final
    summary headings below.
-10. Start `scripts/epiora-loop.sh watch` so the check watch runs in the background, then run the
-    `/epiora-review` pass immediately — review overlaps CI, it does not wait for it. Block on
-    `scripts/epiora-loop.sh await` only before writing the final summary. Fix failures by pushing to the same
-    branch.
-11. Finish by reporting the PR URL and the check results, plus the summary under these headings: Task; Spec
+10. Stop right after the push and `gh pr create`. Do NOT wait for CI and do NOT run a review pass: the
+    conductor starts its own review session and its CI wait in parallel, and sends any failures back as a
+    fix round. (A task step that needs a workflow run's numbers — a `workflow_dispatch` measurement — is
+    the only exception: wait for that run only.)
+11. Finish by reporting the PR URL, plus the summary under these headings: Task; Spec
     sections; Tests added; Measurements (with run links); Decision reached; Ambiguities I resolved (or
     "None"); Follow-ups noticed.
 
