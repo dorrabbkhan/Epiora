@@ -3,10 +3,11 @@
 // columns on the 1M-row perf dataset. Split out of perf.spec.ts in
 // v1.0 Task 18; behaviour unchanged.
 
-import { label, runScenario, scen, skipScenario } from './shared';
+import { label, runScenario, scen, scenarioEnabled, skipScenario } from './shared';
 import type { SampleCtx } from './shared';
 
 export async function runTables(ctx: SampleCtx): Promise<void> {
+  if (!scenarioEnabled(`open_tables_${label}`)) return;
   if (ctx.datasetId === null) {
     skipScenario(ctx, scen(`open_tables_${label}`), `import_${label} failed`);
     return;

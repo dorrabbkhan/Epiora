@@ -4,11 +4,11 @@
 // `create_project` the import/table/mean scenarios depend on.
 // Split out of perf.spec.ts in v1.0 Task 18; behaviour unchanged.
 
-import { errorText, failureDiagnostics, record, runScenario } from './shared';
+import { errorText, failureDiagnostics, record, runScenario, scenarioEnabled } from './shared';
 import type { SampleCtx } from './shared';
 
 export async function runStore(ctx: SampleCtx): Promise<void> {
-  if (!ctx.gatedOnly) {
+  if (!ctx.gatedOnly && scenarioEnabled('empty_store_opfs')) {
     await runScenario(ctx, 'empty_store_opfs', async () => {
       const empty = await ctx.page.evaluate(async () => {
         const api = window.dataApi;

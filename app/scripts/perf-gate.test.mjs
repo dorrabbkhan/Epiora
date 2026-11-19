@@ -37,6 +37,8 @@ test('gate counts samples recorded by an earlier worker of the same invocation',
     { batch: recorded, profile: 'persistent', run: 2, scenario: 'import_1m', ms: 62_000 },
     { batch: recorded, profile: 'persistent', run: 1, scenario: 'open_tables_1m', ms: 2_000 },
     { batch: recorded, profile: 'persistent', run: 2, scenario: 'open_tables_1m', ms: 2_100 },
+    { batch: recorded, profile: 'persistent', run: 1, scenario: 'means_1m', ms: 2_100 },
+    { batch: recorded, profile: 'persistent', run: 2, scenario: 'means_1m', ms: 2_200 },
   ];
   const { markdown, failures } = evaluateGates(lines, {
     batch: gateBatch,
@@ -46,6 +48,7 @@ test('gate counts samples recorded by an earlier worker of the same invocation',
   assert.deepEqual(failures, [], failures.join('; '));
   assert.match(markdown, /\| import_1m \| 2 \|/);
   assert.match(markdown, /\| open_tables_1m \| 2 \|/);
+  assert.match(markdown, /\| means_1m \| 2 \|/);
 });
 
 test('batch id is per-invocation; stale runs are still excluded', () => {
@@ -58,6 +61,7 @@ test('batch id is per-invocation; stale runs are still excluded', () => {
   const lines = [
     { batch, profile: 'persistent', run: 1, scenario: 'import_1m', ms: 60_000 },
     { batch, profile: 'persistent', run: 1, scenario: 'open_tables_1m', ms: 2_000 },
+    { batch, profile: 'persistent', run: 1, scenario: 'means_1m', ms: 2_100 },
     // If this stale line were counted, import_1m's median would
     // move above the 89,550 ms threshold.
     { batch: batchId({}, nextInvocation), profile: 'persistent', run: 9, scenario: 'import_1m', ms: 9_000_000 },
@@ -76,5 +80,65 @@ test('PERF_BATCH overrides the invocation id', () => {
   assert.equal(
     batchId({ PERF_BATCH: 'ci-1-x1' }, { pid: 10, ppid: 100 }),
     'ci-1-x1',
+  );
+});
+
+test('filtered run reports a gated scenario it did not run instead of failing', () => {
+  // workflow_dispatch with `scenarios` set (owner instruction, v1.0
+  // Task 19): a gated scenario absent from results.jsonl is reported
+  // `not run (filtered)` — it is a skip of the dispatch, not a
+  // product failure. Scenarios that ran are evaluated normally.
+  const batch = 'ci-1-x1';
+  const lines = [
+    { batch, profile: 'persistent', run: 1, scenario: 'import_1m', ms: 60_000 },
+    { batch, profile: 'persistent', run: 1, scenario: 'open_tables_1m', ms: 2_000 },
+  ];
+  const { markdown, failures } = evaluateGates(lines, {
+    batch,
+    profile: 'persistent',
+    label: '1m',
+    filtered: true,
+  });
+  assert.deepEqual(failures, [], failures.join('; '));
+  assert.match(markdown, /\| means_1m \| — \| — \| — \| — \| 3173 \| not run \(filtered\) \|/);
+});
+
+test('unfiltered run fails a missing gated scenario, as before', () => {
+  // Push to main always measures everything; a missing gated
+  // scenario in the results can only mean it never ran, which is a
+  // real failure.
+  const batch = 'ci-1-x1';
+  const lines = [
+    { batch, profile: 'persistent', run: 1, scenario: 'import_1m', ms: 60_000 },
+    { batch, profile: 'persistent', run: 1, scenario: 'open_tables_1m', ms: 2_000 },
+  ];
+  const { failures } = evaluateGates(lines, {
+    batch,
+    profile: 'persistent',
+    label: '1m',
+  });
+  assert.deepEqual(failures, ['means_1m: no successful sample']);
+});
+
+test('filtered run still fails a scenario that ran but produced no success', () => {
+  // `import_1m` ran as means_1m's fixture but failed every sample:
+  // "ran" is any recorded line — only a scenario with no lines at all
+  // gets `not run (filtered)`.
+  const batch = 'ci-1-x1';
+  const lines = [
+    { batch, profile: 'persistent', run: 1, scenario: 'import_1m', error: 'sql: IOERR' },
+    { batch, profile: 'persistent', run: 2, scenario: 'import_1m', error: 'sql: IOERR' },
+    { batch, profile: 'persistent', run: 1, scenario: 'means_1m', skipped: 'import_1m failed' },
+  ];
+  const { failures } = evaluateGates(lines, {
+    batch,
+    profile: 'persistent',
+    label: '1m',
+    filtered: true,
+  });
+  assert.deepEqual(
+    failures,
+    ['import_1m: no successful sample', 'means_1m: no successful sample'].sort(),
+    failures.join('; '),
   );
 });

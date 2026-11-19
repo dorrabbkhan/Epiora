@@ -5627,3 +5627,40 @@ to the two gated scenarios.
   `ms` median and p90 print with no code change (verified on a local
   `PERF_ROWS=100000` run: `means_100k ms` 223.9).
 Supersedes: —
+### v1.0 Task 19 — means_1m gate; DataGrid 1M-row scroll (2026-11-19)
+
+Decision: `means_1m` is gated at the owner-picked **3,173 ms** (median
+of successful samples ≤ threshold — the Task 18 proposal, slowest
+attempt's p90 2,538.2 × 1.25, chosen on PR #94). The DataGrid no
+longer uses React Aria `Table`/`Virtualizer`: RAC materialises the
+full collection — all 1,000,000 `items` as Row/Cell elements in the
+hidden collection tree — which is what crashed the renderer at 1M
+rows (`Target crashed`, React error #520). The grid renders a window
+of rows itself (visible ± 1 page) with a roving-tabindex arrow-key
+model, and once `total × 48 px` exceeds an 8,000,000 px scroll span
+(every engine's element-height cap is ≥ ~17.9M px; Chromium clamps
+scrollTop at 2^25 ≈ row 698,900) the scroll space compresses: the
+scrollbar maps to a fractional first row and rendered rows re-anchor
+to it at real 48 px spacing.
+
+- Files outside the task's Files block, all under the owner's
+  2026-11-19 "faster perf measurement runs" instruction
+  (docs/conductor/notes/v1.0/task19.md):
+  - `app/perf/scenarios/shared.ts`, `import.ts`, `tables.ts`,
+    `store.ts`, `app/perf/perf.spec.ts` — the `scenarios` dispatch
+    input's `PERF_SCENARIOS` filter (fixture expansion: `import_*`
+    still runs when a dependent is listed; a filtered-out scenario
+    records nothing) and the `filtered` flag passed to the gate.
+  - `app/scripts/perf-gate.test.mjs` — unit tests for the filtered
+    (`not run (filtered)`) and unfiltered gate cases the instruction
+    requires, plus `means_1m` samples in the existing fixtures.
+- `.github/workflows/app.yml` also gains the `scenarios` and `cpu4`
+  dispatch inputs; push to main is unchanged (all scenarios + the D7
+  pass).
+- `grid_scrolls_to_last_row_of_1m` reports a 1,000,000-row dataset
+  through a patched `getVersionPage` rather than importing 1M rows:
+  an off-the-record e2e context cannot hold a real 1M-row store
+  (SQLITE_IOERR — the perf job's persistent profile exists for that
+  reason), and the renderer bug is a function of the row count the
+  grid materialises. The real-store 1M scroll is `grid_scroll_1m`.
+Supersedes: —

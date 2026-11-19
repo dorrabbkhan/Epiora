@@ -34,6 +34,16 @@ on:
         required: false
         type: number
         default: 1000000
+      scenarios:
+        description: 'perf job: comma-separated scenario names (empty = all)'
+        required: false
+        type: string
+        default: ''
+      cpu4:
+        description: 'perf job: also run the D7 CPU-throttled x4 report pass'
+        required: false
+        type: boolean
+        default: false
       validation_run:
         description: 'validation-report job: app-workflow run URL to read'
         required: false
@@ -355,16 +365,19 @@ jobs:
   # import_1m ≤ 89,550 ms and open_tables_1m ≤ 2,874 ms (median of
   # successful samples ≤ threshold); the second pass below is the D7
   # report — both scenarios under CPU throttling ×4, medians in the
-  # step summary, not gated. v1.0 Task 18 adds `means_1m` to the
+  # step summary, not gated. v1.0 Task 18 added `means_1m` to the
   # measured set (cold snapshot load + MEANS age/grp on the 1M
-  # dataset) — reported in the summary, gated only after the owner
-  # picks the threshold (Task 19).
+  # dataset); Task 19 gates it at the owner's 3,173 ms. The dispatch
+  # `scenarios` input (owner instruction 2026-11-19) restricts the
+  # measured set — fixture dependencies still run — and `cpu4` gates
+  # the D7 pass; push to main is unchanged and runs everything.
   perf:
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
     runs-on: ubuntu-latest
     env:
       PERF_SAMPLES: ${{ inputs.runs || 5 }}
       PERF_CSV_ROWS: ${{ inputs.rows || 1000000 }}
+      PERF_SCENARIOS: ${{ inputs.scenarios || '' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -488,9 +501,11 @@ jobs:
       # throttling ×4 — recorded as import_1m_cpu4 / open_tables_1m_cpu4
       # so they never touch the gated medians. 3 samples for a median;
       # reported in the step summary, not gated. `always()` so the
-      # report still lands when the gate failed.
+      # report still lands when the gate failed. On workflow_dispatch
+      # it runs only when the `cpu4` input is set (owner instruction,
+      # Task 19); on push to main it always runs.
       - name: D7 report — CPU throttling ×4
-        if: always()
+        if: always() && (github.event_name == 'push' || inputs.cpu4)
         run: >-
           EPIORA_PERF=1 PERF_RUNS=3
           PERF_ROWS=$PERF_CSV_ROWS

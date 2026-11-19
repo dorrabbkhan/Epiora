@@ -126,6 +126,72 @@ test('version_selector_switches_rows', async ({ page }) => {
   await expectNoA11yViolations(page, 'dataset grid on version 1');
 });
 
+test('grid_scrolls_to_last_row_of_1m', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.goto('/');
+  // A tiny real import, then `getVersionPage` is patched to report a
+  // 1,000,000-row dataset and serve synthetic `idN` rows for any
+  // offset. An off-the-record e2e context cannot hold a real 1M-row
+  // store (the perf job needs the persistent profile for exactly that
+  // reason — SQLITE_IOERR), and the v0.3 renderer crash this guards
+  // (run 44485826291, Target crashed / React error #520) is about the
+  // row *count* the grid materialises, not the bytes behind it. The
+  // real-store 1M scroll is covered by `grid_scroll_1m` in the perf
+  // spec. The patch has to land before `main.tsx` assigns
+  // `window.dataApi`, so it rides an init script — the setter shadows
+  // `getVersionPage` on the client proxy the moment it is created.
+  await page.addInitScript(() => {
+    let api: (typeof window)['dataApi'] | undefined;
+    Object.defineProperty(window, 'dataApi', {
+      configurable: true,
+      get: () => api,
+      set: (v) => {
+        const real = v.getVersionPage.bind(v) as (
+          datasetId: string,
+          version: number,
+          offset: number,
+          limit: number,
+        ) => Promise<{
+          columns: { name: string; type: string; missing: number }[];
+          rows: (string | null)[][];
+          total: number;
+        }>;
+        v.getVersionPage = async (
+          datasetId: string,
+          version: number,
+          offset: number,
+          limit: number,
+        ) => {
+          const meta = await real(datasetId, version, 0, 1);
+          return {
+            columns: meta.columns,
+            total: 1_000_000,
+            rows: Array.from(
+              { length: Math.min(limit, 1_000_000 - offset) },
+              (_, j) => [`id${offset + j}`, String(offset + j)],
+            ),
+          };
+        };
+        api = v;
+      },
+    });
+  });
+  const seed = await seedCsv(page, 'ID,V\nid0,0\n', 'one.csv');
+  await page.goto(datasetPath(seed));
+
+  const grid = page.getByRole('grid');
+  await expect(grid).toHaveAttribute('aria-rowcount', '1000000', {
+    timeout: 30_000,
+  });
+  await grid.evaluate((el) => {
+    el.scrollTop = el.scrollHeight;
+  });
+  await expect(
+    page.getByRole('gridcell', { name: 'id999999' }),
+  ).toBeVisible({ timeout: 30_000 });
+  await expectNoA11yViolations(page, 'scrolled 1m grid');
+});
+
 test('scrolls_to_last_row_of_10k', async ({ page }) => {
   test.setTimeout(120_000);
   await page.goto('/');
