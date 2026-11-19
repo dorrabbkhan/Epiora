@@ -274,6 +274,7 @@ export const ct = {
   indexTitle: 'Calculators',
   indexIntro:
     'Every calculator runs locally in this browser. Links carry the inputs, so a link computes on open.',
+  guideLink: 'Which calculator? A short guide picks one for you.',
   searchLabel: 'Search calculators',
   noMatches: 'No calculators match the search.',
   familyLabel: (family: Family): string => FAMILY_LABEL[family] ?? humanize(family),
@@ -334,6 +335,16 @@ export const ct = {
   unknownKeys: (keys: string): string =>
     `Unknown link parameters ignored: ${keys}.`,
   backToIndex: 'All calculators',
+  // "Which calculator?" guide (v1.0 plan Task 23, spec §6.1).
+  guide: {
+    title: 'Which calculator?',
+    intro: 'Answer a few questions to reach the right calculator.',
+    recommended: 'Recommended calculator',
+    open: (name: string): string => `Open ${name}`,
+    back: 'Back',
+    startOver: 'Start over',
+    navLabel: 'Guide navigation',
+  },
   unknownCalculator: 'That calculator is not known.',
   runFailed: 'The calculation could not be run.',
   exportR: 'Export to R',

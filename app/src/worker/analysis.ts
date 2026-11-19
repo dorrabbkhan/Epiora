@@ -9,6 +9,7 @@
 
 import type { DatasetHandle } from '@engine/epiora_wasm';
 import type { Explanation } from '@engine-types/Explanation';
+import type { Note } from '@engine-types/Note';
 import type { FreqOptions } from '@engine-types/FreqOptions';
 import type { FreqResult } from '@engine-types/FreqResult';
 import type { MeansOptions } from '@engine-types/MeansOptions';
@@ -44,6 +45,9 @@ function toRunRecord(
     command:
       run.command ??
       eng.epiInfoCommand(run.procedure, JSON.parse(run.options)),
+    // Pre-v3 rows carry NULL — the notes side channel did not exist
+    // when they ran, so their cards show none.
+    notes: run.notes === null ? [] : (JSON.parse(run.notes) as Note[]),
     createdAt: run.createdAt,
     newerVersion: currentVersion > run.datasetVersion ? currentVersion : null,
   };
@@ -88,6 +92,7 @@ async function run(
     receipt: JSON.stringify(out.receipt),
     receiptHash: out.receipt.receipt_sha256,
     command,
+    notes: JSON.stringify(out.notes),
     now: new Date().toISOString(),
   });
   return toRunRecord(row, dataset.currentVersion, eng);

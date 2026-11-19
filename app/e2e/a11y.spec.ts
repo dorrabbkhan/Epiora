@@ -25,6 +25,9 @@ const CALC_ROUTES = [
   '/calc/power_cohort',
   '/calc/random_numbers',
   '/calc/two_by_two?strata=10,11;4,20&conf_level=95',
+  // v1.0 Task 23: a result carrying an assumption note (sparse 2×2 →
+  // expected_count_below_5 under the Crude table).
+  '/calc/two_by_two?strata=1,2;3,8&conf_level=95',
 ] as const;
 
 for (const colorScheme of ['light', 'dark'] as const) {

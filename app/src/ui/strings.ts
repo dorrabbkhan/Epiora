@@ -328,6 +328,13 @@ export const t = {
     encryptionNote:
       "Your data is encrypted with a key kept in this computer's keychain. If the key is lost, the data cannot be recovered.",
   },
+  // Assumption notes under result tables (v1.0 plan Task 23, spec
+  // §6.1) — shared by the calculator and Analysis surfaces.
+  notes: {
+    suggest: 'Suggested:',
+    source: 'Source',
+    pendingReview: 'Note text is pending adviser review.',
+  },
   // User-facing message per RPC error detail code (spec §11): every
   // ImportError/EngineError/StoreError/worker code the worker can put
   // on the wire has an entry — the contract test enumerates the lists.

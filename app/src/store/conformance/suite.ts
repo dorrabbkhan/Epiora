@@ -18,6 +18,7 @@ import * as records from '../repo/records';
 import * as runs from '../repo/runs';
 import * as versions from '../repo/versions';
 import { StoreError } from '../types';
+import { migrationTests } from './migrations';
 
 const now = () => new Date().toISOString();
 
@@ -55,7 +56,7 @@ export function storeConformance(name: string, open: () => Promise<Store>): void
       const metaRows = await store.query('SELECT key, value FROM meta ORDER BY key');
       const keys = metaRows.map((r) => r.key);
       expect(keys).toEqual(['device_id', 'lamport', 'schema_version']);
-      expect(String(metaRows[2]!.value)).toBe('2');
+      expect(String(metaRows[2]!.value)).toBe('3');
 
       const tables = (
         await store.query("SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name")
@@ -77,56 +78,21 @@ export function storeConformance(name: string, open: () => Promise<Store>): void
       await store.close();
       store = await open();
       const again = await store.query("SELECT value FROM meta WHERE key = 'schema_version'");
-      expect(String(again[0]!.value)).toBe('2');
+      expect(String(again[0]!.value)).toBe('3');
     });
 
-    it('migration_0002_adds_command_on_both_backends', async () => {
-      // Rewind to the v1 shape: no `command` column and a run row
-      // written the old way. Reopening replays 0002 — the column is
-      // added and the old row survives with `command` NULL, while new
-      // rows store it.
-      const { project, dataset } = await makeDataset(store);
-      await store.exec('ALTER TABLE runs DROP COLUMN command');
-      await store.exec("UPDATE meta SET value = '1' WHERE key = 'schema_version'");
-      await store.exec(
-        'INSERT INTO runs (id, project_id, procedure, options, dataset_id, dataset_version, result, receipt, receipt_hash, created_at) ' +
-          'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        ['r-old', project.id, 'tables', '{}', dataset.id, 1, '{}', '{}', 'h', now()],
-      );
-      await store.close();
-      store = await open();
-
-      const columns = (
-        await store.query('PRAGMA table_info(runs)')
-      ).map((r) => r.name);
-      expect(columns).toContain('command');
-      const version = await store.query(
-        "SELECT value FROM meta WHERE key = 'schema_version'",
-      );
-      expect(String(version[0]!.value)).toBe('2');
-
-      const old = await runs.get(store, 'r-old');
-      expect(old).not.toBeNull();
-      expect(old!.command).toBeNull();
-
-      const added = await runs.insert(store, {
-        projectId: project.id,
-        procedure: 'means',
-        options: '{}',
-        datasetId: dataset.id,
-        datasetVersion: 1,
-        result: '{}',
-        receipt: '{}',
-        receiptHash: 'h',
-        command: 'MEANS AGE SEX',
-        now: now(),
-      });
-      expect((await runs.get(store, added.id))!.command).toBe('MEANS AGE SEX');
-
-      // Leave the database as empty as the test found it — later cases
-      // count rows globally.
-      await projects.remove(store, project.id);
-    });
+    // The schema-migration cases live in migrations.ts (the suite
+    // file grew past the ~400-line rule); they share this describe's
+    // store binding through the ref.
+    migrationTests(
+      {
+        get: () => store,
+        set: (s: Store) => {
+          store = s;
+        },
+      },
+      open,
+    );
 
     it('device_id_is_stable', async () => {
       const first = await meta.deviceId(store);
@@ -177,6 +143,7 @@ export function storeConformance(name: string, open: () => Promise<Store>): void
         receipt: '{}',
         receiptHash: 'cc',
         command: 'FREQ AGE',
+        notes: '[]',
         now: now(),
       });
 
@@ -356,6 +323,7 @@ export function storeConformance(name: string, open: () => Promise<Store>): void
         receipt: '{}',
         receiptHash: 'h',
         command: 'FREQ E',
+        notes: '[]',
       };
       const a = await runs.insert(store, { ...base, now: '2026-01-01T00:00:00.000Z' });
       await runs.insert(store, { ...base, now: '2026-01-02T00:00:00.000Z' });

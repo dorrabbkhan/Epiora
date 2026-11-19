@@ -13,6 +13,7 @@ import type { Ci } from '@engine-types/Ci';
 import type { Estimate } from '@engine-types/Estimate';
 import { Button } from '../../components';
 import { et, type ExplainStat } from '../../../explain';
+import { noteAnchor } from '../../../explain/notes';
 import { formatNumber } from '../../format';
 import { t } from '../../strings';
 
@@ -92,7 +93,16 @@ export function StatsTable({
       </thead>
       <tbody>
         {rows.map((r, i) => (
-          <tr key={i}>
+          // The id on a row with explainable leaves anchors a note's
+          // suggested alternative (v1.0 Task 23, spec §6.1).
+          <tr
+            key={i}
+            id={
+              r.stats !== undefined && r.stats.length > 0
+                ? noteAnchor(r.stats[0]!.path)
+                : undefined
+            }
+          >
             <th scope="row">{r.label}</th>
             <td>{r.estimate === undefined ? '' : estimate(r.estimate)}</td>
             <td>{r.ci === undefined ? '' : interval(r.ci)}</td>

@@ -3,7 +3,11 @@
 // as labelled rows under section captions, scalar arrays as lists —
 // every leaf carries an Explain affordance whose dialog shows the
 // engine's trace (pending-review text, steps of formula/values/
-// result), and the assumption notes render verbatim.
+// result). Assumption notes (v1.0 plan Task 23, spec §6.1) render in
+// words beneath the section their statistics belong to — `crude`
+// notes under the Crude table, a note carrying `stratum` under that
+// stratum's table — with the suggested alternative anchored to its
+// statistic row.
 
 import { useState, type CSSProperties, type ReactNode } from 'react';
 import type { Estimate } from '@engine-types/Estimate';
@@ -11,10 +15,12 @@ import type { Note } from '@engine-types/Note';
 import type { Receipt } from '@engine-types/Receipt';
 import { Button } from '../../components';
 import { ExplainPanel } from '../../../explain/ExplainPanel';
+import { groupNotes, noteAnchor } from '../../../explain/notes';
 import { calcApi } from '../../../calc/client';
 import { ct } from '../../../calc/strings';
 import { t } from '../../strings';
 import { formatNumber } from '../../format';
+import { NotesList, type NoteLink } from '../NotesList';
 import styles from './calc.module.css';
 
 const VISUALLY_HIDDEN: CSSProperties = {
@@ -37,6 +43,9 @@ interface Leaf {
 }
 
 interface Section {
+  /** The top-level result key the section renders (`crude`,
+   *  `strata[0]`, `ci`) — the block notes attach to. */
+  key: string;
   caption: string;
   rows: Leaf[];
   /** A scalar array renders as a list rather than a table. */
@@ -111,7 +120,7 @@ function sectionsOf(result: unknown): { root: Leaf[]; sections: Section[] } {
       root.push({ path: key, label: ct.statistic(key), value });
     } else if (Array.isArray(value)) {
       if (value.every((v) => isEstimate(v))) {
-        sections.push({ caption: ct.section(key), rows: [], list: value });
+        sections.push({ key, caption: ct.section(key), rows: [], list: value });
       } else {
         value.forEach((item, i) => {
           if (typeof item === 'object' && item !== null) {
@@ -122,14 +131,19 @@ function sectionsOf(result: unknown): { root: Leaf[]; sections: Section[] } {
               '',
               rows,
             );
-            sections.push({ caption: ct.item(key, i + 1), rows, list: null });
+            sections.push({
+              key: `${key}[${i}]`,
+              caption: ct.item(key, i + 1),
+              rows,
+              list: null,
+            });
           }
         });
       }
     } else if (typeof value === 'object' && value !== null) {
       const rows: Leaf[] = [];
       flattenObject(value as Record<string, unknown>, key, '', rows);
-      sections.push({ caption: ct.section(key), rows, list: null });
+      sections.push({ key, caption: ct.section(key), rows, list: null });
     }
   }
   return { root, sections };
@@ -157,7 +171,9 @@ function StatTable({
       </thead>
       <tbody>
         {rows.map((row) => (
-          <tr key={row.path}>
+          // The row id anchors a note's suggested alternative to the
+          // statistic that provides it.
+          <tr key={row.path} id={noteAnchor(row.path)}>
             <th scope="row">{row.label}</th>
             <td>{renderEstimate(row.value, isP(row.path))}</td>
             <td>
@@ -172,15 +188,35 @@ function StatTable({
   );
 }
 
+/** A note's `suggests` — a statistic id inside this run (`calc.<id>.<block>.<leaf>`,
+ *  `strata[]` a wildcard for the stratum the note flagged) or a
+ *  calculator id — resolved to a link: the row anchor that displays
+ *  the statistic, or the calculator's route. */
+function suggestLink(calcId: string, suggests: string): NoteLink | null {
+  if (!suggests.includes('.')) {
+    return { href: `/calc/${suggests}`, label: ct.calculator(suggests) };
+  }
+  const prefix = `calc.${calcId}.`;
+  const path = (
+    suggests.startsWith(prefix) ? suggests.slice(prefix.length) : suggests
+  ).replace('[]', '[0]');
+  // The label drops the block segment so it matches the row's own
+  // label (`crude.fisher_exact.p_2t` → "Fisher exact — p (2-sided)").
+  const label = ct.statistic(path.split('.').slice(1).join('.'));
+  return { href: `#${noteAnchor(path)}`, label };
+}
+
 function ExplainDialog({
   calcId,
   inputs,
   leaf,
+  notes,
   onClose,
 }: {
   calcId: string;
   inputs: Record<string, unknown>;
   leaf: Leaf;
+  notes: Note[];
   onClose: () => void;
 }) {
   return (
@@ -189,6 +225,7 @@ function ExplainDialog({
       stats={[{ path: `calc.${calcId}.${leaf.path}`, label: leaf.label }]}
       fetchTrace={(statistic) => calcApi().explain(calcId, inputs, statistic)}
       keyParts={['calc', calcId, JSON.stringify(inputs)]}
+      notes={notes}
       onClose={onClose}
     />
   );
@@ -213,6 +250,15 @@ export function CalculatorResult({
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const { root, sections } = sectionsOf(result);
+  // Notes under the section their statistics belong to; a block with
+  // no matching section renders once at the end.
+  const notesByBlock = groupNotes(notes);
+  const sectionKeys = new Set(sections.map((s) => s.key));
+  const leftover = [...notesByBlock.keys()]
+    .filter((key) => !sectionKeys.has(key))
+    .flatMap((key) => notesByBlock.get(key) ?? []);
+  const linkFor = (suggests: string): NoteLink | null =>
+    suggestLink(calcId, suggests);
   // "Export to R" (v1.0 Task 17, spec §8.2): the zip is built in the
   // calc worker; the page only turns its bytes into a download.
   const exportToR = async () => {
@@ -248,46 +294,43 @@ export function CalculatorResult({
         )}
       </div>
       <StatTable caption={null} rows={root} onExplain={setExplaining} />
-      {sections.map((section) =>
-        section.list !== null ? (
-          <table key={section.caption}>
-            <caption>{section.caption}</caption>
-            <tbody>
-              <tr>
-                <td>
-                  <ol className={styles.notes}>
-                    {section.list.map((v, i) => (
-                      <li key={i}>{renderEstimate(v, false)}</li>
-                    ))}
-                  </ol>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        ) : (
-          <StatTable
-            key={section.caption}
-            caption={section.caption}
-            rows={section.rows}
-            onExplain={setExplaining}
+      {sections.map((section) => (
+        <div key={section.key}>
+          {section.list !== null ? (
+            <table>
+              <caption>{section.caption}</caption>
+              <tbody>
+                <tr>
+                  <td>
+                    <ol className={styles.notes}>
+                      {section.list.map((v, i) => (
+                        <li key={i}>{renderEstimate(v, false)}</li>
+                      ))}
+                    </ol>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          ) : (
+            <StatTable
+              caption={section.caption}
+              rows={section.rows}
+              onExplain={setExplaining}
+            />
+          )}
+          <NotesList
+            notes={notesByBlock.get(section.key) ?? []}
+            linkFor={linkFor}
           />
-        ),
-      )}
-      {notes.length > 0 && (
-        <ul className={styles.notes}>
-          {notes.map((note, i) => (
-            <li key={i}>
-              <code>{note.code}</code>
-              {note.suggests ? ` — ${note.suggests}` : ''}
-            </li>
-          ))}
-        </ul>
-      )}
+        </div>
+      ))}
+      <NotesList notes={leftover} linkFor={linkFor} />
       {explaining !== null && (
         <ExplainDialog
           calcId={calcId}
           inputs={inputs}
           leaf={explaining}
+          notes={notes}
           onClose={() => setExplaining(null)}
         />
       )}

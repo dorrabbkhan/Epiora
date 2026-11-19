@@ -1,0 +1,32 @@
+/* Assumption-note list (v1.0 plan Task 23): compact text under the
+ *  table the notes concern — words, an optional suggested-alternative
+ *  link, the literature source and the pending-review marker. */
+
+.notes {
+  margin: var(--space-2) 0;
+}
+
+.notes ul {
+  margin: 0;
+  padding-left: var(--space-4);
+  color: var(--color-text);
+  font-size: var(--font-size2);
+}
+
+.words {
+  margin: var(--space-1) 0;
+  color: var(--color-text);
+}
+
+.meta {
+  margin: 0 0 var(--space-1) 0;
+  color: var(--color-textMuted);
+  font-size: var(--font-size1);
+}
+
+.review {
+  margin: var(--space-1) 0 0 0;
+  color: var(--color-textMuted);
+  font-size: var(--font-size1);
+  font-style: italic;
+}
