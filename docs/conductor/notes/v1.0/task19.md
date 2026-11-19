@@ -1,10 +1,10 @@
 # v1.0 Task 19 — conductor notes
 
-## Precondition
+## Owner decision: the `means_1m` threshold
 
-The `means_1m` threshold is the number the owner posts on PR #94 (Task 18). If no owner comment on #94
-names a number, STOP: `STOP: no owner means_1m threshold on PR #94`. Copy it exactly; never use the
-"proposal" in docs/perf/v1.0-measurement.md.
+The owner picked **`means_1m` ≤ 3,173 ms** (median of 5) on 2026-11-19. It is recorded on PR #94:
+https://github.com/dorrabbkhan/Epiora/pull/94 (the proposal in docs/perf/v1.0-measurement.md, slowest
+attempt's p90 2,538.2 × 1.25). Use exactly 3173; this note is the owner's number that Task 19 consumes.
 
 ## Add: faster perf measurement runs (owner, 2026-11-19, "much faster from now on")
 
