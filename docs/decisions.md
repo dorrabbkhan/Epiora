@@ -5585,4 +5585,9 @@ scripts ran under the renv-pinned R 4.6.2, `compare.mjs` verified
   - `app/src/ui/routes/calc.tsx` — `CalculatorResult` needs the run's
     `receipt` for `receipt.json` and the zip filename; the route owns
     the `CalcOutput` and now passes it down.
+  - `scripts/tests/float-ban.bats` (fix round 1) — `setup()` now also
+    copies `fixtures/R/` into `$BATS_TEST_TMPDIR`: `r_snippets.rs`
+    `include_str!`s `fixtures/R/*.R` and `fixtures/R/methods/*.R`, so
+    clippy in the copied workspace could not compile epiora-core
+    without them.
 Supersedes: —
