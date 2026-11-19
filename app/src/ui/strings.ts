@@ -6,6 +6,7 @@ export const t = {
     main: 'Main navigation',
     home: 'Projects',
     calculators: 'Calculators',
+    validation: 'Validation',
     settings: 'Settings',
   },
   common: {
@@ -327,6 +328,32 @@ export const t = {
     encryption: 'Encryption',
     encryptionNote:
       "Your data is encrypted with a key kept in this computer's keychain. If the key is lost, the data cannot be recovered.",
+  },
+  // The public validation page (v1.0 plan Task 24, spec §7.4): every
+  // registry statistic, its method, references, tolerance class and
+  // worst observed error from the CI `validation-report` run.
+  validation: {
+    title: 'Validation',
+    intro:
+      'Every statistic the engine emits, the reference it is checked against, its tolerance class, and the worst error observed in the CI validation run.',
+    notMeasured: 'observed errors not measured in this build',
+    engine: 'Engine',
+    commit: 'Commit',
+    run: 'CI run',
+    searchLabel: 'Search statistics',
+    noMatches: 'No statistics match.',
+    caption: 'Validation registry statistics',
+    statisticCol: 'Statistic',
+    methodCol: 'Method',
+    classCol: 'Tolerance class',
+    referencesCol: 'References',
+    casesCol: 'Cases',
+    worstErrorCol: 'Worst observed error',
+    classClosedForm: 'closed form',
+    classIterative: 'iterative',
+    notAvailable: '—',
+    error: 'The validation data could not be loaded.',
+    explainLink: "See this statistic's validation entry",
   },
   // Assumption notes under result tables (v1.0 plan Task 23, spec
   // §6.1) — shared by the calculator and Analysis surfaces.

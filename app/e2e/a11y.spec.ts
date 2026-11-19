@@ -1,4 +1,6 @@
 // axe on every route, light and dark (spec §9.3, Task 7 Step 2).
+// v1.0 Task 24: `/validation` is in ROUTES, so the loop below covers
+// the dossier in every project (three engines) and both schemes.
 import { expect, test } from '@playwright/test';
 import { expectNoA11yViolations } from './helpers/axe';
 import { ROUTES } from './routes';

@@ -156,6 +156,29 @@ pub fn calc_registry() -> Result<JsValue, JsValue> {
     js_sys::JSON::parse(&text).map_err(|e| invalid_options(format!("{e:?}")))
 }
 
+/// The validation registry (`validation::REGISTRY`) as plain
+/// `statistics[]` entries in the `validation-report --format json`
+/// shape (v1.0 spec §7.4): `id`, `method`, `class` and `cases` (the
+/// covering fixture count). The `/validation` page uses it as the
+/// fallback when no `validation.json` was bundled — `references` and
+/// `worst_error` are absent there because nothing measured the build.
+#[wasm_bindgen(js_name = validationRegistry)]
+pub fn validation_registry() -> Result<JsValue, JsValue> {
+    let entries: Vec<serde_json::Value> = epiora_core::validation::REGISTRY
+        .iter()
+        .map(|c| {
+            serde_json::json!({
+                "id": c.statistic,
+                "method": epiora_core::validation::method(c.statistic),
+                "class": c.class,
+                "cases": c.fixtures.len(),
+            })
+        })
+        .collect();
+    let text = serde_json::to_string(&entries).map_err(|e| invalid_options(e.to_string()))?;
+    js_sys::JSON::parse(&text).map_err(|e| invalid_options(format!("{e:?}")))
+}
+
 /// Runs calculator `id` on `inputs`; returns
 /// `{ result, receipt, notes }` as a plain object (v1.0 spec §5.3,
 /// receipt v3 of §5.4).

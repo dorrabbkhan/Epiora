@@ -140,6 +140,12 @@ jobs:
     # not ship — the store-opfs suite and e2e cannot launch WebKit there.
     # Revert to ubuntu-latest once Playwright supports resolute.
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      # v1.0 Task 24: the deploy build downloads the engine workflow's
+      # v1.0-validation-json artifact — cross-run artifact reads need
+      # actions: read.
+      actions: read
     steps:
       # Release runs the gate against the tagged tree, not main.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -283,6 +289,45 @@ jobs:
       # (secrets stay env-only, so a fork would have no token anyway).
       # The push trigger exists to warm the Rust cache on main; it
       # matches none of these steps.
+
+      # v1.0 Task 24 (spec §7.4): bundle the engine workflow's
+      # `validation-report --format json` output as
+      # `app/public/validation.json` so deploy builds ship the
+      # measured dossier. The same head SHA's run is preferred; the
+      # engine workflow runs in parallel so on PRs it may not have
+      # finished — then the newest green main run's artifact is used
+      # (the JSON names the commit and run that measured it). No
+      # artifact → no file → the page's registry fallback prints
+      # "observed errors not measured in this build".
+      - name: Fetch validation.json from the engine run
+        if: >-
+          github.event_name == 'release' || github.event_name == 'workflow_dispatch' ||
+          (github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sha="${{ github.event.pull_request.head.sha || github.sha }}"
+          run_id="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/engine.yml/runs?head_sha=$sha&status=success&per_page=1" \
+            --jq '.workflow_runs[0].id // empty')"
+          if [ -z "$run_id" ]; then
+            run_id="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/engine.yml/runs?branch=main&status=success&per_page=1" \
+              --jq '.workflow_runs[0].id // empty')"
+          fi
+          if [ -z "$run_id" ]; then
+            echo 'no successful engine.yml run; building without validation.json'
+            exit 0
+          fi
+          artifact="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/artifacts?per_page=100" \
+            --jq '.artifacts[] | select(.name == "v1.0-validation-json") | .id' | head -1)"
+          if [ -z "$artifact" ]; then
+            echo "engine run $run_id has no v1.0-validation-json artifact; building without it"
+            exit 0
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact/zip" > /tmp/validation-json.zip
+          unzip -o /tmp/validation-json.zip -d /tmp/validation-json
+          cp /tmp/validation-json/validation.json app/public/validation.json
+          echo "bundled validation.json from engine run $run_id"
 
       - name: Build production dist
         if: >-

@@ -2,6 +2,7 @@ import type { CalculatorDef } from '@engine-types/CalculatorDef';
 import type { Explanation } from '@engine-types/Explanation';
 import type { Note } from '@engine-types/Note';
 import type { Receipt } from '@engine-types/Receipt';
+import type { RegistryEntry } from '../validation/data';
 
 /**
  * What `calcRun` returns over the wasm boundary: the generic result
@@ -26,6 +27,12 @@ export interface CalcOutput {
  */
 export interface CalcApi {
   listCalculators(): Promise<CalculatorDef[]>;
+  /**
+   * The `validation::REGISTRY` entries as `statistics[]`-shaped
+   * objects (v1.0 plan Task 24, spec §7.4): the `/validation`
+   * page's fallback when the build bundled no `validation.json`.
+   */
+  validationRegistry(): Promise<RegistryEntry[]>;
   run(id: string, inputs: Record<string, unknown>): Promise<CalcOutput>;
   explain(
     id: string,

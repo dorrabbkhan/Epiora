@@ -16,6 +16,7 @@ import type { Explanation } from '@engine-types/Explanation';
 import type { ExplainStep } from '@engine-types/ExplainStep';
 import type { Note } from '@engine-types/Note';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
 import {
   Button,
   Dialog,
@@ -31,6 +32,7 @@ import {
   SelectValue,
 } from '../ui/components';
 import { RpcError } from '../worker/errors';
+import { t } from '../ui/strings';
 import { et, templateFor, type ExplainStat } from './index';
 import { NOTE_TEXT, noteValueLabel } from './notes';
 import { formatNumber } from '../ui/format';
@@ -216,6 +218,20 @@ export function ExplainPanel({
             data.steps.map((step, i) => (
               <StepView key={i} step={step} closed={closed} />
             ))}
+          {selected !== '' && (
+            <p className={styles.source}>
+              {/* v1.0 Task 24, spec §7.4: the selected statistic's
+                  `/validation#<id>` anchor. `path` is concrete
+                  (`freq.categories[0].percent`); the registry id it
+                  anchors to uses `[]` for array positions. */}
+              <Link
+                to="/validation"
+                hash={selected.replace(/\[\d+\]/g, '[]')}
+              >
+                {t.validation.explainLink}
+              </Link>
+            </p>
+          )}
         </Dialog>
       </Modal>
     </ModalOverlay>

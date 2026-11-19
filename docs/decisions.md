@@ -5729,3 +5729,48 @@ decisions entry this requires):
   describe with a `get`/`set` ref sharing its `store` binding. Test
   names, assertions and per-backend count are unchanged.
 Supersedes: —
+
+### v1.0 Task 24 — public validation page from the CI report (2026-11-19)
+
+Decision: `/validation` is a store-less, offline dossier fed by
+`validation-report --format json`: engine.yml's `validation-report`
+job uploads the JSON as the `v1.0-validation-json` artifact alongside
+the unchanged `v0.2-validation-md`, and app.yml's deploy build
+downloads the latest green engine run's copy into
+`app/public/validation.json` (same head SHA when that parallel run
+already finished, else newest green main — the document names its own
+`commit` and `run_url` either way). `Row` gained `method` plus a
+split `r_reference`/`ei7`/`openepi` so the JSON can emit the
+structured `references` object while the Markdown `reference`
+column — and the whole Markdown report — stays byte-identical; the
+`method` label itself (`OutputDef.method` for `calc.*`, the
+`fixtures/R/*.R` generator script per procedure family) lives in
+`validation::method` because `corpus` is feature-gated out of the
+wasm build. A build without the file shows the wasm binding's
+`validationRegistry()` entries plus "observed errors not measured in
+this build"; every rendered number is a `cases` count or a formatted
+`worst_error` from the JSON — the numeric tolerances are never shown,
+only the class names. ExplainPanel links the selected statistic to
+`/validation#<id>` with concrete `[n]` indices collapsed to the
+registry's `[]` anchor ids.
+
+Files outside the task's Files block — the transport the "registry
+entries from the wasm bindings" fallback cannot work without (the
+main thread never touches wasm, so the entries ride the store-less
+calc worker like every other binding):
+- `crates/epiora-wasm/src/lib.rs` — the `validationRegistry` export:
+  `REGISTRY` as `statistics[]`-shaped `{id, method, class, cases}`
+  objects (no `references`/`worst_error` — nothing measured the
+  build), serialized via `JSON.parse` like `calcRegistry`.
+- `crates/epiora-core/src/validation.rs` — `validation::method`, the
+  shared method-label source used by the report's JSON `method`
+  field and the wasm fallback (kept out of `corpus`, which is not in
+  the shipped binding).
+- `app/src/calc/api.ts`, `app/src/calc/client.ts`,
+  `app/src/calc/calc.worker.ts` — `validationRegistry()` on the
+  store-less `CalcApi` alongside `listCalculators`.
+- `app/vite.config.ts` — `validation.json` added to the workbox
+  precache glob so a bundled report survives offline like `/calc`.
+- `.gitignore` — `app/public/validation.json` is CI-generated; it
+  must never be committed (a build without it is a supported state).
+Supersedes: —

@@ -349,10 +349,24 @@ jobs:
             fixtures "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             > target/v0.2.md
           head -15 target/v0.2.md
+          # v1.0 Task 24 (spec §7.4): the same measurements as JSON for
+          # the app's /validation page — app.yml downloads this
+          # artifact into `app/public/validation.json` for deploy
+          # builds.
+          cargo run -p epiora-core --features corpus --bin validation-report -- \
+            fixtures "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --format json > target/validation.json
 
       - name: Upload validation report
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: v0.2-validation-md
           path: target/v0.2.md
+          if-no-files-found: error
+
+      - name: Upload validation JSON (v1.0 Task 24)
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: v1.0-validation-json
+          path: target/validation.json
           if-no-files-found: error

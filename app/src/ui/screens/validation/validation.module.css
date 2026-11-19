@@ -1,0 +1,51 @@
+/* Validation page (v1.0 plan Task 24, spec §7.4): tokens only —
+ * Stylelint bans raw colours and px on spacing/radius/font outside
+ * src/design. */
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size5);
+}
+
+.intro {
+  color: var(--color-textMuted);
+  margin: 0;
+}
+
+.meta {
+  color: var(--color-textMuted);
+  margin: 0;
+}
+
+.notice {
+  color: var(--color-textMuted);
+  margin: 0;
+}
+
+.error {
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.search {
+  max-width: 28rem;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2);
+  padding: var(--space-2);
+}
+
+.id {
+  font-family: var(--font-familyMono);
+  font-size: var(--font-size2);
+}

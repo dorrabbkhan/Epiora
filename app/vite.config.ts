@@ -55,7 +55,13 @@ export default defineConfig({
       injectRegister: null,
       manifest: false,
       workbox: {
-        globPatterns: ['**/*.{js,css,html,wasm,svg,png,webmanifest}'],
+        // `validation.json` (v1.0 Task 24, spec §7.4) is named
+        // explicitly — precaching every emitted *.json would also
+        // sweep in workbox's own manifest data.
+        globPatterns: [
+          '**/*.{js,css,html,wasm,svg,png,webmanifest}',
+          'validation.json',
+        ],
         // Updates must wait for the prompt: with clientsClaim on, a
         // waiting update auto-activated mid-session (the controller
         // changed under a live page), silently swapping versions.

@@ -24,6 +24,7 @@ export function wrapCalcApi(worker: Worker): Remote<CalcApi> {
   const r = Comlink.wrap<CalcApi>(worker);
   return {
     listCalculators: () => call(r.listCalculators()),
+    validationRegistry: () => call(r.validationRegistry()),
     run: (id, inputs) => call(r.run(id, inputs)),
     explain: (id, inputs, statistic) => call(r.explain(id, inputs, statistic)),
     exportR: (id, inputs, receipt) => call(r.exportR(id, inputs, receipt)),
