@@ -9,6 +9,7 @@ import {
   importCsv,
   label,
   runScenario,
+  scenarioEnabled,
   skipScenario,
   SMALL_LABEL,
 } from './shared';
@@ -139,20 +140,23 @@ async function waitForGrid(page: Page): Promise<void> {
 export async function runGrid(ctx: SampleCtx): Promise<void> {
   if (ctx.gatedOnly) return;
   let smallScroll: Record<string, unknown> | null = null;
-  if (ctx.projectId === '') {
-    skipScenario(ctx, `grid_scroll_${SMALL_LABEL}`, 'create_project failed');
-  } else {
-    smallScroll = await runScenario(ctx, `grid_scroll_${SMALL_LABEL}`, async () => {
-      const small = await importCsv(ctx.page, '/perf-csv/small', {
-        projectId: ctx.projectId,
-        datasetName: 'perf-10k.csv',
+  if (scenarioEnabled(`grid_scroll_${SMALL_LABEL}`)) {
+    if (ctx.projectId === '') {
+      skipScenario(ctx, `grid_scroll_${SMALL_LABEL}`, 'create_project failed');
+    } else {
+      smallScroll = await runScenario(ctx, `grid_scroll_${SMALL_LABEL}`, async () => {
+        const small = await importCsv(ctx.page, '/perf-csv/small', {
+          projectId: ctx.projectId,
+          datasetName: 'perf-10k.csv',
+        });
+        await ctx.page.goto(`/p/${ctx.projectId}/d/${small.datasetId}`);
+        await waitForGrid(ctx.page);
+        return scrollGrid(ctx.page, 0);
       });
-      await ctx.page.goto(`/p/${ctx.projectId}/d/${small.datasetId}`);
-      await waitForGrid(ctx.page);
-      return scrollGrid(ctx.page, 0);
-    });
+    }
   }
 
+  if (!scenarioEnabled(`grid_scroll_${label}`)) return;
   if (ctx.datasetId === null) {
     skipScenario(ctx, `grid_scroll_${label}`, `import_${label} failed`);
   } else if (smallScroll !== null && 'crashed' in smallScroll) {

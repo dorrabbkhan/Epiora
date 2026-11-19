@@ -7,16 +7,21 @@
 // Erasable syntax only: the node:test lane imports this file
 // directly and Node strips the types at load.
 
-// Owner-picked thresholds (PR #52 comment, 2026-11-11:
-// https://github.com/dorrabbkhan/Epiora/pull/52#issuecomment-6807191386)
-// — basis is p90 × 1.25 of the persistent-profile run 43025510601. A
-// scenario passes when the median `ms` of its successful samples is
+// Owner-picked thresholds. import_1m and open_tables_1m: PR #52
+// comment, 2026-11-11
+// (https://github.com/dorrabbkhan/Epiora/pull/52#issuecomment-6807191386)
+// — basis is p90 × 1.25 of the persistent-profile run 43025510601.
+// means_1m: the owner's pick recorded on PR #94 (2026-11-19, via
+// docs/conductor/notes/v1.0/task19.md) — the Task 18 proposal in
+// docs/perf/v1.0-measurement.md, slowest attempt's p90 2,538.2 × 1.25.
+// A scenario passes when the median `ms` of its successful samples is
 // ≤ the threshold; a scenario with no successful sample cannot pass.
 // The gates evaluate the `1m` scenario names only: a run at another
 // PERF_ROWS records `*_<label>` names the gate does not apply.
 export const GATES: Record<string, number> = {
   import_1m: 89_550, // p90 71,639.3 ms × 1.25
   open_tables_1m: 2_874, // p90 2,299.2 ms × 1.25
+  means_1m: 3_173, // p90 2,538.2 ms × 1.25 (owner pick, PR #94)
 };
 
 export type PerfLine = Record<string, unknown> & {
@@ -52,11 +57,21 @@ export function medianOf(samples: number[]): number {
 }
 
 /** Evaluates the owner gates against `lines` (a parsed
- *  results.jsonl) for the given batch/profile/label. Returns the
- *  gates.md markdown and the failure list — empty means pass. */
+ *  results.jsonl) for the given batch/profile/label. `filtered` is
+ *  true on a workflow_dispatch run with `scenarios` set (owner
+ *  instruction, v1.0 Task 19, 2026-11-19): a gated scenario that did
+ *  not run at all is reported `not run (filtered)` instead of FAIL.
+ *  A scenario that ran but produced no successful sample — or that is
+ *  missing on an unfiltered run — still FAILs. Returns the gates.md
+ *  markdown and the failure list — empty means pass. */
 export function evaluateGates(
   lines: PerfLine[],
-  opts: { batch: string; profile: string; label: string },
+  opts: {
+    batch: string;
+    profile: string;
+    label: string;
+    filtered?: boolean;
+  },
 ): { markdown: string; failures: string[] } {
   const mine = lines.filter(
     (l) => l.batch === opts.batch && l.profile === opts.profile,
@@ -73,7 +88,7 @@ export function evaluateGates(
   if (opts.label !== '1m') {
     out.push(
       `Not evaluated — scenarios are \`*_${opts.label}\`; the owner thresholds ` +
-        'apply to `import_1m` / `open_tables_1m` only.',
+        'apply to `import_1m` / `open_tables_1m` / `means_1m` only.',
     );
     return { markdown: `${out.join('\n')}\n`, failures };
   }
@@ -81,6 +96,13 @@ export function evaluateGates(
   out.push('| scenario | ok | failed | skipped | median ms | threshold ms | verdict |');
   out.push('|---|---|---|---|---|---|---|');
   for (const [name, limit] of Object.entries(GATES)) {
+    if (
+      opts.filtered === true &&
+      !mine.some((l) => l.scenario === name)
+    ) {
+      out.push(`| ${name} | — | — | — | — | ${limit} | not run (filtered) |`);
+      continue;
+    }
     const ok = mine
       .filter(
         (l) =>

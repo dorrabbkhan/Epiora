@@ -9,32 +9,35 @@ import {
   label,
   runScenario,
   scen,
+  scenarioEnabled,
   skipScenario,
   startOpfsPoller,
 } from './shared';
 import type { SampleCtx } from './shared';
 
 export async function runImport(ctx: SampleCtx): Promise<void> {
-  if (ctx.projectId === '') {
-    skipScenario(ctx, scen(`import_${label}`), 'create_project failed');
-  } else {
-    await runScenario(ctx, scen(`import_${label}`), async () => {
-      const poller = startOpfsPoller(ctx.page, ctx.growthLog);
-      try {
-        const imported = await importCsv(ctx.page, '/perf-csv/big', {
-          projectId: ctx.projectId,
-          datasetName: `perf-${label}.csv`,
-        });
-        ctx.datasetId = imported.datasetId;
-        return { ms: imported.ms };
-      } finally {
-        poller.stop();
-      }
-    });
-    ctx.growthLog.length = 0;
+  if (scenarioEnabled(`import_${label}`)) {
+    if (ctx.projectId === '') {
+      skipScenario(ctx, scen(`import_${label}`), 'create_project failed');
+    } else {
+      await runScenario(ctx, scen(`import_${label}`), async () => {
+        const poller = startOpfsPoller(ctx.page, ctx.growthLog);
+        try {
+          const imported = await importCsv(ctx.page, '/perf-csv/big', {
+            projectId: ctx.projectId,
+            datasetName: `perf-${label}.csv`,
+          });
+          ctx.datasetId = imported.datasetId;
+          return { ms: imported.ms };
+        } finally {
+          poller.stop();
+        }
+      });
+      ctx.growthLog.length = 0;
+    }
   }
 
-  if (ctx.gatedOnly) return;
+  if (ctx.gatedOnly || !scenarioEnabled(`reimport_${label}`)) return;
   if (ctx.datasetId === null) {
     // The 1M dataset is the fixture for the dependent scenarios; each
     // dependent records its own skip rather than vanishing.

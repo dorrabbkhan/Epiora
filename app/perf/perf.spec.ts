@@ -1,9 +1,14 @@
-// Perf spec (v0.3 plan Tasks 16–17, spec §10.3; v1.0 plan Task 18) —
-// Chromium only, production build. Task 16 measured; Task 17 gates:
-// the file's last test enforces the owner-picked thresholds in
-// gate-eval.ts's GATES (PR #52) — a scenario passes when the median
-// `ms` of its successful samples is ≤ the threshold. Every other
-// scenario (incl. Task 18's means_1m) is reported, never gated.
+// Perf spec (v0.3 plan Tasks 16–17, spec §10.3; v1.0 plan Tasks
+// 18–19) — Chromium only, production build. Task 16 measured; Task 17
+// gates: the file's last test enforces the owner-picked thresholds in
+// gate-eval.ts's GATES (PR #52; means_1m added by Task 19 with the
+// owner's PR #94 pick) — a scenario passes when the median `ms` of
+// its successful samples is ≤ the threshold. Every other scenario is
+// reported, never gated.
+//
+// PERF_SCENARIOS (the `scenarios` dispatch input, owner instruction
+// 2026-11-19) restricts which scenarios a sample runs — push to main
+// always runs everything. See shared.ts's scenarioEnabled.
 //
 // Each `test()` is one sample in a fresh browser context, hence a
 // fresh OPFS store. Every scenario appends one JSON object per line to
@@ -72,6 +77,7 @@ import {
   routeCsv,
   ROWS,
   RUNS,
+  SCENARIOS_FILTERED,
   SMALL_CSV,
 } from './scenarios/shared';
 import type { SampleCtx } from './scenarios/shared';
@@ -195,6 +201,7 @@ test('owner gates: medians meet the PR #52 thresholds', async () => {
     batch: BATCH,
     profile: PROFILE,
     label,
+    filtered: SCENARIOS_FILTERED,
   });
   writeFileSync(GATES_MD, markdown);
   expect(failures, failures.join('; ')).toEqual([]);

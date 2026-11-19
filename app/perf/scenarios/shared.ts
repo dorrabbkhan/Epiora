@@ -54,6 +54,36 @@ export const label =
 
 export const SMALL_LABEL = '10k';
 
+// Scenario filter (owner instruction, v1.0 Task 19, 2026-11-19 —
+// "much faster from now on"): PERF_SCENARIOS is a comma-separated
+// list of scenario names (the recorded `1m` names at CI defaults;
+// `*_${label}` at other PERF_ROWS) from the app.yml `scenarios`
+// dispatch input. Empty/unset — the push-to-main case — runs
+// everything. A scenario another needs as its fixture still runs:
+// `import_*` is the fixture for `reimport_*`, `open_tables_*`,
+// `means_*` and `grid_scroll_*` on the big CSV. A scenario the filter
+// leaves out is not run and records nothing at all — no skip line —
+// and the gate reports it `not run (filtered)`.
+const SCENARIO_LIST = (process.env.PERF_SCENARIOS ?? '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter((s) => s !== '');
+export const SCENARIOS_FILTERED = SCENARIO_LIST.length > 0;
+const SCENARIO_FIXTURES: Record<string, string[]> = {
+  [`reimport_${label}`]: [`import_${label}`],
+  [`open_tables_${label}`]: [`import_${label}`],
+  [`means_${label}`]: [`import_${label}`],
+  [`grid_scroll_${label}`]: [`import_${label}`],
+};
+const enabledScenarios = new Set(SCENARIO_LIST);
+for (const s of [...enabledScenarios]) {
+  for (const f of SCENARIO_FIXTURES[s] ?? []) enabledScenarios.add(f);
+}
+/** Whether the scenario named by its un-suffixed base name (no `_cpuN`
+ *  tag) runs in this invocation. Always true unfiltered. */
+export const scenarioEnabled = (name: string): boolean =>
+  !SCENARIOS_FILTERED || enabledScenarios.has(name);
+
 export function ensureCsv(path: string, rows: number): void {
   if (!existsSync(path)) {
     mkdirSync(dirname(path), { recursive: true });
