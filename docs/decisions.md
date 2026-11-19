@@ -5722,4 +5722,10 @@ decisions entry this requires):
   explainable stat path).
 - `app/src/explain/index.ts` — `et` additions (`note`,
   `noteValues`) — all panel strings live in `et` there.
+- `app/src/store/conformance/migrations.ts` (PR #97 fix round) —
+  `suite.ts` grew past the ~400-line rule with the new
+  `migration_0003_*` test, so the two `migration_*` cases moved here
+  behind `migrationTests(ref, open)`, called from `storeConformance`'s
+  describe with a `get`/`set` ref sharing its `store` binding. Test
+  names, assertions and per-backend count are unchanged.
 Supersedes: —

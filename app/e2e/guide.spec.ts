@@ -226,9 +226,19 @@ test('means_unequal_variances_note', async ({ page }) => {
 test('explain_shows_note_rule_and_values', async ({ page }) => {
   await page.goto(`/calc/two_by_two?${SPARSE}`);
   await expect(page.getByRole('heading', { name: 'Results' })).toBeVisible();
+  // The note's `statistics` name the crude block's χ² p-values (the
+  // Strata 1 row's `strata[0]` path never equals its `strata[]`
+  // wildcard), so the row must come from the Crude table. The label's
+  // first letter renders uppercased — 'χ' → 'Χ'.
   const row = page
-    .getByRole('row', { name: /χ² — uncorrected — p \(2-sided\)/ })
-    .first();
+    .getByRole('table', { name: 'Crude' })
+    .getByRole('row')
+    .filter({
+      has: page.getByRole('rowheader', {
+        name: 'Χ² — uncorrected — p (2-sided)',
+        exact: true,
+      }),
+    });
   await row.getByRole('button', { name: 'Explain' }).click();
   const dialog = page.getByRole('dialog', { name: /Explain/ });
   await expect(dialog).toBeVisible();
