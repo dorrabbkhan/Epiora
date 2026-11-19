@@ -43,7 +43,9 @@ export function CalcIndexScreen() {
   return (
     <div className={styles.layout}>
       <h1 className={styles.title}>{ct.indexTitle}</h1>
-      <p className={styles.intro}>{ct.indexIntro}</p>
+      <p className={styles.intro}>
+        {ct.indexIntro} <Link to="/calc/guide">{ct.guideLink}</Link>
+      </p>
       <TextField
         className={styles.search ?? ''}
         value={query}

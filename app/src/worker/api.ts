@@ -14,6 +14,7 @@ import type { MeansResult } from '@engine-types/MeansResult';
 import type { Receipt } from '@engine-types/Receipt';
 import type { TablesOptions } from '@engine-types/TablesOptions';
 import type { TablesResult } from '@engine-types/TablesResult';
+import type { Note } from '@engine-types/Note';
 import type { DiffSummary } from '@import-types/DiffSummary';
 import type { ImportSettings } from '@import-types/ImportSettings';
 import type { Inspection } from '@import-types/Inspection';
@@ -91,6 +92,10 @@ export interface RunRecord {
    *  stored for new runs; generated on load by `epiInfoCommand` for
    *  rows written before store schema v2 — never written back. */
   command: string;
+  /** The run's assumption notes (v1.0 Task 23, spec §6.1): stored at
+   *  insert for new runs; `[]` on rows written before store schema
+   *  v3 — the notes side channel did not exist when they ran. */
+  notes: Note[];
   createdAt: string;
   newerVersion: number | null;
 }

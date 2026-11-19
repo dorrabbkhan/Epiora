@@ -7,8 +7,11 @@
 // explainable leaves (v1.0 plan Task 16, spec §6).
 import type { ReactNode } from 'react';
 import type { MeansResult } from '@engine-types/MeansResult';
+import type { Note } from '@engine-types/Note';
 import { Button } from '../../components';
 import { et, type ExplainStat } from '../../../explain';
+import { groupNotes, statLink } from '../../../explain/notes';
+import { NotesList } from '../NotesList';
 import { t } from '../../strings';
 import { estimate, StatsTable, type ExplainHandler } from './render-result';
 
@@ -48,6 +51,7 @@ function tDiffStats(base: string): ExplainStat[] {
  *  engine returned (never an empty table for an absent test). */
 export function renderMeans(
   result: MeansResult,
+  notes: Note[] = [],
   onExplain?: ExplainHandler | undefined,
 ): ReactNode {
   const excluded = Object.entries(result.exclusions);
@@ -55,6 +59,18 @@ export function renderMeans(
   const a = result.anova ?? null;
   const b = result.bartlett ?? null;
   const kw = result.kruskal_wallis ?? null;
+  // Assumption notes (v1.0 Task 23, spec §6.1) sit under the test
+  // block their first flagged statistic lives in.
+  const groups = groupNotes(notes);
+  const known = [
+    'means.t_test',
+    'means.anova',
+    'means.bartlett',
+    'means.kruskal_wallis',
+  ];
+  const leftover = [...groups.keys()]
+    .filter((key) => !known.includes(key))
+    .flatMap((key) => groups.get(key) ?? []);
   const explainable = onExplain !== undefined;
   const groupRows = [...result.groups, result.overall];
   return (
@@ -167,6 +183,10 @@ export function renderMeans(
           ]}
         />
       )}
+      <NotesList
+        notes={groups.get('means.t_test') ?? []}
+        linkFor={statLink}
+      />
       {a !== null && (
         <StatsTable
           caption={t.analysis.anovaCaption}
@@ -224,6 +244,10 @@ export function renderMeans(
           ]}
         />
       )}
+      <NotesList
+        notes={groups.get('means.anova') ?? []}
+        linkFor={statLink}
+      />
       {b !== null && (
         <StatsTable
           caption={t.analysis.bartlettCaption}
@@ -246,6 +270,10 @@ export function renderMeans(
           ]}
         />
       )}
+      <NotesList
+        notes={groups.get('means.bartlett') ?? []}
+        linkFor={statLink}
+      />
       {kw !== null && (
         <StatsTable
           caption={t.analysis.kwCaption}
@@ -268,6 +296,11 @@ export function renderMeans(
           ]}
         />
       )}
+      <NotesList
+        notes={groups.get('means.kruskal_wallis') ?? []}
+        linkFor={statLink}
+      />
+      <NotesList notes={leftover} linkFor={statLink} />
       {excluded.length > 0 && <p>{t.analysis.exclusions(excluded)}</p>}
     </>
   );

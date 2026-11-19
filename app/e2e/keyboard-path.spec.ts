@@ -231,3 +231,47 @@ test('keyboard path: calculator', async ({ page }) => {
   ).toBeVisible();
   await expectNoA11yViolations(page, 'calc receipt (keyboard path)');
 });
+
+test('keyboard path: guide to a calculator result', async ({ page }) => {
+  // v1.0 Task 23: through the which-calculator guide by keyboard to a
+  // computed result — options are links, so Tab + Enter is the path.
+  await page.goto('/calc/guide');
+
+  const counts = page.getByRole('link', {
+    name: 'I have counts or a table',
+  });
+  await tabTo(page, counts, 'guide first option');
+  await page.keyboard.press('Enter');
+
+  const proportion = page.getByRole('link', {
+    name: 'One proportion — x out of n',
+  });
+  await tabTo(page, proportion, 'guide counts option');
+  await page.keyboard.press('Enter');
+
+  const estimate = page.getByRole('link', {
+    name: 'Estimate the proportion and its confidence interval',
+  });
+  await tabTo(page, estimate, 'guide proportion option');
+  await page.keyboard.press('Enter');
+
+  const open = page.getByRole('link', { name: 'Open Proportion' });
+  await tabTo(page, open, 'open suggested calculator');
+  await page.keyboard.press('Enter');
+  await expect(
+    page.getByRole('heading', { name: 'Proportion' }),
+  ).toBeVisible();
+
+  const numerator = page.getByLabel('Numerator');
+  await tabTo(page, numerator, 'Numerator field');
+  await page.keyboard.type('12');
+  const denominator = page.getByLabel('Denominator');
+  await tabTo(page, denominator, 'Denominator field');
+  await page.keyboard.type('40');
+
+  const calculate = page.getByRole('button', { name: 'Calculate' });
+  await tabTo(page, calculate, 'Calculate button');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { name: 'Results' })).toBeVisible();
+  await expectNoA11yViolations(page, 'guide to result (keyboard path)');
+});

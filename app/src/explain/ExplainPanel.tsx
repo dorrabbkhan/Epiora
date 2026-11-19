@@ -6,12 +6,15 @@
 // Method-kind traces have no closed form, so they show the method
 // words and the inputs/result table only. Every displayed number
 // comes from the engine's trace; nothing is recomputed for
-// display. All explain text is pending adviser review.
+// display. An assumption note (v1.0 plan Task 23, spec §6.1) naming
+// the selected statistic shows its rule and the engine-computed
+// values that fired it. All explain text is pending adviser review.
 
 import { useState } from 'react';
 import type { Estimate } from '@engine-types/Estimate';
 import type { Explanation } from '@engine-types/Explanation';
 import type { ExplainStep } from '@engine-types/ExplainStep';
+import type { Note } from '@engine-types/Note';
 import { useQuery } from '@tanstack/react-query';
 import {
   Button,
@@ -29,6 +32,7 @@ import {
 } from '../ui/components';
 import { RpcError } from '../worker/errors';
 import { et, templateFor, type ExplainStat } from './index';
+import { NOTE_TEXT, noteValueLabel } from './notes';
 import { formatNumber } from '../ui/format';
 import styles from './ExplainPanel.module.css';
 
@@ -108,11 +112,39 @@ function StepView({ step, closed }: { step: ExplainStep; closed: boolean }) {
   );
 }
 
+/** The note block for one selected statistic: the rule in words,
+ *  the engine-computed values that fired it and the literature
+ *  source — all pending adviser review like the rest of explain. */
+function NoteView({ note }: { note: Note }) {
+  const text = NOTE_TEXT[note.code];
+  if (text === undefined) return null;
+  return (
+    <section aria-label={et.note} className={styles.step}>
+      <p className={styles.words}>{text.rule}</p>
+      <table className={styles.inputs}>
+        <caption>{et.noteValues}</caption>
+        <tbody>
+          {Object.entries(note.values).map(([key, value]) => (
+            <tr key={key}>
+              <th scope="row">{noteValueLabel(key)}</th>
+              <td>{formatNumber(value)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className={styles.source}>
+        {et.source}: {text.source}
+      </p>
+    </section>
+  );
+}
+
 export function ExplainPanel({
   title,
   stats,
   fetchTrace,
   keyParts,
+  notes,
   onClose,
 }: {
   /** The row label — the dialog's accessible name. */
@@ -125,6 +157,9 @@ export function ExplainPanel({
    *  so two rows with the same statistic path never share a cached
    *  trace. */
   keyParts: readonly unknown[];
+  /** The run's assumption notes; those naming the selected statistic
+   *  show their rule and trigger values. */
+  notes?: Note[] | undefined;
   onClose: () => void;
 }) {
   const [selected, setSelected] = useState<string>(stats[0]?.path ?? '');
@@ -164,6 +199,11 @@ export function ExplainPanel({
               </Popover>
             </Select>
           )}
+          {(notes ?? [])
+            .filter((note) => note.statistics.includes(selected))
+            .map((note, i) => (
+              <NoteView key={i} note={note} />
+            ))}
           {query.isPending && <p>{et.loading}</p>}
           {query.isError && (
             <p className={styles.error} role="alert">

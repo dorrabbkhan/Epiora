@@ -6,6 +6,7 @@ import {
   Outlet,
 } from '@tanstack/react-router';
 import { AnalysisScreen } from './routes/analysis';
+import { CalcGuideScreen } from './routes/calc-guide';
 import { CalcIndexScreen } from './routes/calc-index';
 import { CalcScreen } from './routes/calc';
 import { DatasetScreen } from './routes/dataset';
@@ -108,6 +109,15 @@ const calcIndexRoute = createRoute({
   component: CalcIndexScreen,
 });
 
+// v1.0 Task 23: the "Which calculator?" guide — static so it wins
+// over the `$id` parameter for the literal `/calc/guide`.
+const calcGuideRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/calc/guide',
+  validateSearch: (search: Record<string, unknown>) => search,
+  component: CalcGuideScreen,
+});
+
 const calcRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/calc/$id',
@@ -126,6 +136,7 @@ const routeTree = rootRoute.addChildren([
   analysisRoute,
   settingsRoute,
   calcIndexRoute,
+  calcGuideRoute,
   calcRoute,
 ]);
 

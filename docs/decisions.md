@@ -5664,3 +5664,62 @@ to it at real 48 px spacing.
   reason), and the renderer bug is a function of the row count the
   grid materialises. The real-store 1M scroll is `grid_scroll_1m`.
 Supersedes: —
+### v1.0 Task 23 — which-calculator guide; assumption notes (2026-11-19)
+
+Decision: the guide is app-side data (`app/src/calc/guide.ts`) — a
+tree with no cycles whose leaves are registry calculator ids, each
+option one letter of `?path=a.b.c` link state, each leaf optionally
+carrying `prefill` inputs the calculator's own `decodeInputs` accepts
+(`two_by_two.study_type`, `power_cohort.design`). Notes render
+through `NOTE_TEXT` in `app/src/explain/notes.ts`: `words` under the
+table, `rule` + `source` + trigger values in explain. A note's block
+is the first statistic path segment after the run-surface prefix —
+calculator notes strip `calc.<id>.`, `strata[]` refines by the note's
+`stratum` value, `means.*` refines to its test block — so a note sits
+beneath the table it concerns; a block with no table renders once at
+the end. `suggests` resolves to an in-page `#note-` anchor on the
+row that displays the suggested statistic (calculator `strata[]` maps
+to `[0]`), or a `/calc/<id>` link when it names a calculator. All
+note wording is marked "pending adviser review", and receipts are
+untouched — notes stay the engine side channel Task 22 defined.
+
+Analysis notes persist: `runs.notes` (schema v3, migration
+`0003_run_notes.sql`, `ALTER TABLE` like Task 15's `command`). A card
+re-rendered from the store needs the notes the run emitted — `ProcOutput.notes`
+is otherwise discarded by the worker — so the worker writes
+`JSON.stringify(out.notes)` at insert and a pre-v3 row's NULL parses
+to `[]` (its card shows no notes: the side channel did not exist when
+it ran). NULL is never written back, matching `command`.
+
+Files outside the task's Files block — the analysis-side plumbing the
+"notes on result cards" requirement cannot work without (the
+decisions entry this requires):
+- `store/migrations/0003_run_notes.sql` — the new column (a
+  `store/migrations/` file was implied by `command`'s precedent in
+  Task 15, whose Files block did carry the store files).
+- `app/src/store/repo/runs.ts` — `notes` through the repo row type,
+  `COLUMNS`, `toRun` and `insert`.
+- `app/src/store/opfs.ts`, `app/src/store/relay.ts`,
+  `app/src/store/stdio.ts` — migration 3 registered in all three
+  backends' `MIGRATIONS` (schema version now 3).
+- `app/src/store/conformance/suite.ts` — schema version 3
+  expectations, `notes` on every `runs.insert` call, the 0002 test
+  rewound to the true v1 shape, and the new
+  `migration_0003_adds_notes_on_both_backends` test (runs on the
+  native and every OPFS browser backend).
+- `app/src/worker/api.ts` — `RunRecord.notes: Note[]`.
+- `app/src/worker/analysis.ts` — persists `out.notes`, reads it back
+  (NULL → `[]`).
+- `app/src/ui/screens/analysis/ResultCard.tsx` — passes `run.notes`
+  to the TABLES/MEANS renderers and to `ExplainPanel`.
+- `app/src/ui/screens/analysis/render-means.tsx` — the Files block's
+  `render-result.tsx` lists the shared entry point only; the MEANS
+  renderer lives in this sibling file (task block placement:
+  `means.bartlett`/`means.t_test`/`means.anova`/
+  `means.kruskal_wallis`).
+- `app/src/ui/screens/analysis/stats-table.tsx` — the `#note-` row
+  anchors the suggested-statistic links target (id on the row's first
+  explainable stat path).
+- `app/src/explain/index.ts` — `et` additions (`note`,
+  `noteValues`) — all panel strings live in `et` there.
+Supersedes: —

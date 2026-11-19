@@ -1,0 +1,50 @@
+/* "Which calculator?" guide step (v1.0 plan Task 23): a question,
+ *  its why line, and option cards as links; leaf steps show the
+ *  recommended calculator the same way. */
+
+.step {
+  margin: var(--space-2) 0;
+}
+
+.heading {
+  margin: 0 0 var(--space-1) 0;
+  font-size: var(--font-size4);
+}
+
+.why {
+  margin: 0 0 var(--space-3) 0;
+  color: var(--color-textMuted);
+  font-size: var(--font-size2);
+}
+
+.options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 32rem;
+}
+
+.option {
+  display: block;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2);
+  background: var(--color-surface);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.option:hover,
+.option:focus-visible {
+  border-color: var(--color-accent);
+}
+
+.nav {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  font-size: var(--font-size2);
+}

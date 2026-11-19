@@ -118,8 +118,8 @@ export function ResultCard({
         {run.procedure === 'freq'
           ? renderFreq(run.result as FreqResult, setExplaining)
           : run.procedure === 'means'
-            ? renderMeans(run.result as MeansResult, setExplaining)
-            : renderTables(run.result as TablesResult, setExplaining)}
+            ? renderMeans(run.result as MeansResult, run.notes, setExplaining)
+            : renderTables(run.result as TablesResult, run.notes, setExplaining)}
       </div>
       {explaining !== null && explaining.stats !== undefined && (
         <ExplainPanel
@@ -127,6 +127,7 @@ export function ResultCard({
           stats={explaining.stats}
           fetchTrace={(statistic) => dataApi.explainRun(run.id, statistic)}
           keyParts={['run', run.id]}
+          notes={run.notes}
           onClose={() => setExplaining(null)}
         />
       )}

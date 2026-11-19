@@ -11,10 +11,13 @@
 // stylesheet imports.
 import type { ReactNode } from 'react';
 import type { MantelHaenszel } from '@engine-types/MantelHaenszel';
+import type { Note } from '@engine-types/Note';
 import type { StratifiedStats } from '@engine-types/StratifiedStats';
 import type { TablesResult } from '@engine-types/TablesResult';
 import type { TwoByTwoStats } from '@engine-types/TwoByTwoStats';
 import type { ExplainStat } from '../../../explain';
+import { groupNotes, statLink } from '../../../explain/notes';
+import { NotesList, type NoteLink } from '../NotesList';
 import { t } from '../../strings';
 import {
   ciStats,
@@ -218,9 +221,36 @@ function mhRows(mh: MantelHaenszel, s: StratifiedStats): StatRow[] {
   ];
 }
 
-export function renderTables(result: TablesResult, onExplain?: ExplainHandler | undefined): ReactNode {
+/** The analysis-side `suggests` resolver (v1.0 Task 23, spec §6.1):
+ *  statistic ids anchor to the row that displays them. */
+const linkFor = (suggests: string): NoteLink => statLink(suggests);
+
+/** Notes whose block has no matching table render once at the end. */
+function tableNotes(
+  groups: Map<string, Note[]>,
+  keys: string[],
+): { found: Note[]; rest: Note[] } {
+  const found: Note[] = [];
+  const rest: Note[] = [];
+  for (const [key, list] of groups) {
+    if (keys.includes(key)) {
+      found.push(...list);
+    } else {
+      rest.push(...list);
+    }
+  }
+  return { found, rest };
+}
+
+export function renderTables(
+  result: TablesResult,
+  notes: Note[] = [],
+  onExplain?: ExplainHandler | undefined,
+): ReactNode {
+  const groups = groupNotes(notes);
   if ('rx_c' in result) {
     const r = result.rx_c;
+    const { found, rest } = tableNotes(groups, ['rxc']);
     return (
       <>
         <table>
@@ -267,6 +297,8 @@ export function renderTables(result: TablesResult, onExplain?: ExplainHandler | 
           ]}
         />
         {r.stats.low_expected && <p>{t.analysis.lowExpected}</p>}
+        <NotesList notes={found} linkFor={linkFor} />
+        <NotesList notes={rest} linkFor={linkFor} />
       </>
     );
   }
@@ -276,6 +308,11 @@ export function renderTables(result: TablesResult, onExplain?: ExplainHandler | 
   const [ill, well] = r.labels.outcome;
   const s = r.stratified ?? null;
   const excluded = s?.stats.excluded_strata ?? [];
+  const stratified = groups.get('stratified_two_by_two') ?? [];
+  const leftover = tableNotes(groups, [
+    'two_by_two',
+    'stratified_two_by_two',
+  ]).rest;
   return (
     <>
       <p>
@@ -292,6 +329,7 @@ export function renderTables(result: TablesResult, onExplain?: ExplainHandler | 
         onExplain={onExplain}
         rows={crudeRows(r.crude)}
       />
+      <NotesList notes={groups.get('two_by_two') ?? []} linkFor={linkFor} />
       {s !== null && (
         <>
           <p>{t.analysis.strata(s.strata_labels)}</p>
@@ -312,8 +350,10 @@ export function renderTables(result: TablesResult, onExplain?: ExplainHandler | 
             onExplain={onExplain}
             rows={mhRows(s.stats.mantel_haenszel, s.stats)}
           />
+          <NotesList notes={stratified} linkFor={linkFor} />
         </>
       )}
+      <NotesList notes={leftover} linkFor={linkFor} />
     </>
   );
 }

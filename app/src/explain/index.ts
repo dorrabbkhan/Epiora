@@ -83,4 +83,8 @@ export const et = {
   source: 'Source',
   statistic: 'Statistic',
   error: 'The trace could not be computed.',
+  // Assumption notes on the explained statistic (v1.0 Task 23, spec
+  // §6.1): the note's rule and the engine values that fired it.
+  note: 'Assumption note',
+  noteValues: 'Values that fired it',
 } as const;

@@ -3,6 +3,8 @@
 // (deleted_at), never a row removal. `command` (schema v2) is the
 // Epi Info command shown on the card — NULL on rows written before the
 // migration; the worker generates it on load and never writes it back.
+// `notes` (schema v3, v1.0 Task 23, spec §6.1) is the run's assumption
+// notes JSON — NULL on rows written before the notes side channel.
 
 import type { Row, Tx } from '../types';
 
@@ -18,6 +20,8 @@ export interface Run {
   receiptHash: string;
   /** The stored Epi Info command, or null on pre-v2 rows. */
   command: string | null;
+  /** The stored assumption notes JSON, or null on pre-v3 rows. */
+  notes: string | null;
   createdAt: string;
   deletedAt: string | null;
 }
@@ -34,13 +38,14 @@ function toRun(r: Row): Run {
     receipt: String(r.receipt),
     receiptHash: String(r.receipt_hash),
     command: r.command === null ? null : String(r.command),
+    notes: r.notes === null ? null : String(r.notes),
     createdAt: String(r.created_at),
     deletedAt: r.deleted_at === null ? null : String(r.deleted_at),
   };
 }
 
 const COLUMNS =
-  'id, project_id, procedure, options, dataset_id, dataset_version, result, receipt, receipt_hash, command, created_at, deleted_at';
+  'id, project_id, procedure, options, dataset_id, dataset_version, result, receipt, receipt_hash, command, notes, created_at, deleted_at';
 
 export async function insert(
   tx: Tx,
@@ -54,13 +59,14 @@ export async function insert(
     receipt: string;
     receiptHash: string;
     command: string;
+    notes: string;
     now: string;
   },
 ): Promise<Run> {
   const id = crypto.randomUUID();
   await tx.exec(
-    'INSERT INTO runs (id, project_id, procedure, options, dataset_id, dataset_version, result, receipt, receipt_hash, command, created_at) ' +
-      'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    'INSERT INTO runs (id, project_id, procedure, options, dataset_id, dataset_version, result, receipt, receipt_hash, command, notes, created_at) ' +
+      'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [
       id,
       r.projectId,
@@ -72,6 +78,7 @@ export async function insert(
       r.receipt,
       r.receiptHash,
       r.command,
+      r.notes,
       r.now,
     ],
   );
@@ -86,6 +93,7 @@ export async function insert(
     receipt: r.receipt,
     receiptHash: r.receiptHash,
     command: r.command,
+    notes: r.notes,
     createdAt: r.now,
     deletedAt: null,
   };

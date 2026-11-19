@@ -7,12 +7,14 @@
 
 import initSql from '../../../store/migrations/0001_init.sql?raw';
 import runCommandSql from '../../../store/migrations/0002_run_command.sql?raw';
+import runNotesSql from '../../../store/migrations/0003_run_notes.sql?raw';
 import { migrate } from './migrate';
 import { StoreError, type Row, type SqlValue, type Store, type Tx } from './types';
 
 const MIGRATIONS: { version: number; sql: string }[] = [
   { version: 1, sql: initSql },
   { version: 2, sql: runCommandSql },
+  { version: 3, sql: runNotesSql },
 ];
 
 export const RELAY_TAG = 'epiora-store-relay';
