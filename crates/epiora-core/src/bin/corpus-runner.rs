@@ -10,9 +10,9 @@
 //! per corpus line — the fixture id, its repo-relative path, the
 //! SHA-256 of the fixture bytes, the `inputs.dataset` file path and
 //! SHA-256 (or `-`), and the SHA-256 of the build-normalized parity
-//! line (the receipt's `engine.git_sha` pinned to `"unknown"` and
-//! `receipt_sha256` resealed — build metadata, spec §4.3) — the
-//! `results_unchanged` golden of v1.0 Task 10.
+//! line (the receipt's `engine.git_sha` and `engine.version` pinned
+//! to `"unknown"` and `receipt_sha256` resealed — build metadata,
+//! spec §4.3) — the `results_unchanged` golden of v1.0 Task 10.
 
 use epiora_core::corpus::{
     command_line, corpus_lines, corpus_lines_with, dataset_files, explain_line, explain_plan,

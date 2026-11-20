@@ -8,7 +8,7 @@ members = [".", "store"]
 exclude = ["vendor/libsqlite3-sys"]
 
 [workspace.package]
-version = "0.3.0"
+version = "1.0.0"
 edition = "2021"
 license = "AGPL-3.0-only"
 

@@ -10,7 +10,15 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { buildReport } from './validation-report.mjs';
+import { buildReport, buildReportV1 } from './validation-report.mjs';
+import {
+  buildV1Input,
+  V1_ENGINE_JSON,
+  V1_ENGINE_URL,
+  V1_R_EXPORT_URL,
+  V1_SHA,
+  V1_URL,
+} from './validation-report-v1.fixtures.mjs';
 
 const SOURCE_URL = 'https://github.com/dorrabbkhan/Epiora/actions/runs/43208388072';
 const SHA = 'e19042cdde36954b40461e390ebcbae5abfbbd0b';
@@ -265,4 +273,124 @@ test('report_states_earlier_attempt_facts', () => {
   assert.ok(report.includes('Attempt 2'));
   assert.ok(report.includes('101,633.1'));
   assert.ok(report.includes('2,769.6'));
+});
+
+// ---------- v1.0 (Task 21) ---------------------------------------------
+//
+// `buildReportV1(input)` renders docs/validation/v1.0.md: the gates the
+// plan's Interfaces list names (`means_1m`, the v0.3 gates, engine wasm
+// size, first load), the engine run's `validation-report --format json`
+// statistics, the EI7/OpenEpi check counts from its Markdown artifact,
+// the r-export run's compare line, the deferred Stata status, explain
+// coverage and the G5 pending sign-offs — every number from a run. The
+// sample inputs live in validation-report-v1.fixtures.mjs.
+
+const v1Report = buildReportV1(
+  buildV1Input({
+    generatedByUrl: GENERATED_BY,
+    summaryMd: SUMMARY_MD,
+    appJobLog: APP_JOB_LOG,
+  }),
+);
+
+test('report_lists_every_v1_gate', () => {
+  // The Task 21 Interfaces list: `means_1m`, the v0.3 gates, engine
+  // wasm size, first load — each with its threshold and the measured
+  // value read from the run.
+  const gates = [
+    { name: 'first load', threshold: '5,000,000', measured: '781,385' },
+    { name: 'import-wasm', threshold: '573,616', measured: '521,469' },
+    { name: 'engine wasm', threshold: '409,600', measured: '145,123' },
+    { name: 'import_1m', threshold: '89,550', measured: '71,621.8' },
+    { name: 'open_tables_1m', threshold: '2,874', measured: '2,263.3' },
+    { name: 'means_1m', threshold: '3,173', measured: '2,102.4' },
+  ];
+  for (const g of gates) {
+    const row = v1Report
+      .split('\n')
+      .find((l) => l.startsWith('|') && l.includes(g.name));
+    assert.ok(row !== undefined, `gate row for ${g.name} missing:\n${v1Report}`);
+    assert.ok(
+      row.includes(g.threshold),
+      `${g.name}: threshold ${g.threshold} missing from ${row}`,
+    );
+    assert.ok(
+      row.includes(g.measured),
+      `${g.name}: measured ${g.measured} missing from ${row}`,
+    );
+    assert.ok(row.includes('PASS'), `${g.name}: verdict missing from ${row}`);
+  }
+
+  // Provenance: source run, generating run and the commit.
+  assert.match(v1Report, /# Epiora v1\.0 validation report/);
+  assert.ok(v1Report.includes(V1_URL));
+  assert.ok(v1Report.includes(`\`${V1_SHA}\``));
+  assert.ok(v1Report.includes(GENERATED_BY));
+
+  // Every registry statistic from the JSON artifact, with its method,
+  // class, references and worst error (`inf` when not comparable).
+  for (const s of V1_ENGINE_JSON.statistics) {
+    const row = v1Report
+      .split('\n')
+      .find((l) => l.startsWith('|') && l.includes(s.id));
+    assert.ok(row !== undefined, `statistic row for ${s.id} missing`);
+    assert.ok(row.includes(s.class), `${s.id}: class missing from ${row}`);
+    assert.ok(
+      row.includes(`| ${s.cases} |`),
+      `${s.id}: cases missing from ${row}`,
+    );
+    for (const ref of Object.values(s.references)) {
+      assert.ok(row.includes(ref), `${s.id}: reference ${ref} missing`);
+    }
+  }
+  assert.ok(v1Report.includes('1.20e-10'), 'worst_error not rendered');
+  assert.ok(v1Report.includes('inf'), 'incomparable leaf not marked');
+
+  // EI7 and OpenEpi checks — zero mismatches at display tolerance.
+  const ei7 = v1Report
+    .split('\n')
+    .find((l) => l.startsWith('| Epi Info 7'));
+  assert.ok(ei7 !== undefined, 'Epi Info 7 check row missing');
+  assert.ok(ei7.includes('| 148 |') && ei7.includes('| 0 |'), ei7);
+  const openepi = v1Report
+    .split('\n')
+    .find((l) => l.startsWith('| OpenEpi'));
+  assert.ok(openepi !== undefined, 'OpenEpi check row missing');
+  assert.ok(openepi.includes('| 210 |') && openepi.includes('| 0 |'), openepi);
+
+  // R export: scripts run, leaves compared, 0 mismatches.
+  assert.ok(v1Report.includes('412'));
+  assert.ok(v1Report.includes('1,234'));
+  assert.ok(v1Report.includes(V1_R_EXPORT_URL));
+
+  // axe per engine.
+  for (const engine of ENGINES) {
+    const row = v1Report
+      .split('\n')
+      .find((l) => l.startsWith(`| ${engine} |`));
+    assert.ok(row !== undefined, `axe row for ${engine} missing`);
+    assert.ok(row.includes('| 6 | 2 | 12 | 0 |'), `axe counts wrong: ${row}`);
+  }
+});
+
+test('report_marks_signoff_pending', () => {
+  // G5: adviser sign-off and explain-text review stay pending — the
+  // report must never claim either is complete.
+  assert.match(v1Report, /adviser sign-off:\s*\**\s*pending/i);
+  assert.match(v1Report, /explain-text review:\s*\**\s*pending/i);
+  assert.ok(!/sign-off:\s*\**\s*(approved|complete|done|signed)/i.test(v1Report));
+  assert.ok(
+    !/explain-text review:\s*\**\s*(approved|complete|done|signed)/i.test(
+      v1Report,
+    ),
+  );
+
+  // Stata is deferred (v1.0 Task 20) — reported, never hidden.
+  assert.ok(v1Report.includes('Stata export'));
+  assert.ok(v1Report.includes('deferred'));
+
+  // Explain coverage: the engine's every_registry_statistic_explains
+  // and the app's template coverage, named with their runs.
+  assert.ok(v1Report.includes('every_registry_statistic_explains'));
+  assert.ok(v1Report.includes(V1_ENGINE_URL));
 });

@@ -249,10 +249,10 @@ fn iterative_statistics_are_method_kind() {
 /// whose fixture vanished from the run is reported; every unchanged
 /// row's parity hash must match, and at least one row compares. The
 /// hash is over `parity_line_normalized`: the receipt's
-/// `engine.git_sha` is build metadata fixed at compile time (spec
-/// §4.3), not a result, so it is pinned to `"unknown"` and
-/// `receipt_sha256` resealed before hashing — the comparison is
-/// build-environment independent.
+/// `engine.git_sha` and `engine.version` are build metadata fixed
+/// at compile time (spec §4.3), not results, so they are pinned to
+/// `"unknown"` and `receipt_sha256` resealed before hashing — the
+/// comparison is build-environment independent.
 #[test]
 fn results_unchanged() {
     let root = fixtures_root();

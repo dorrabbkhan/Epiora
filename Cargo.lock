@@ -464,7 +464,7 @@ dependencies = [
 
 [[package]]
 name = "epiora-core"
-version = "0.2.0"
+version = "1.0.0"
 dependencies = [
  "arbitrary",
  "criterion",
@@ -482,7 +482,7 @@ dependencies = [
 
 [[package]]
 name = "epiora-import"
-version = "0.2.0"
+version = "1.0.0"
 dependencies = [
  "arbitrary",
  "calamine",
@@ -501,7 +501,7 @@ dependencies = [
 
 [[package]]
 name = "epiora-import-wasm"
-version = "0.2.0"
+version = "1.0.0"
 dependencies = [
  "epiora-core",
  "epiora-import",
@@ -515,7 +515,7 @@ dependencies = [
 
 [[package]]
 name = "epiora-wasm"
-version = "0.2.0"
+version = "1.0.0"
 dependencies = [
  "epiora-core",
  "js-sys",
