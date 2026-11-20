@@ -5800,4 +5800,15 @@ Fix round (2026-11-19, PR #98 review + app CI run 44572039484):
   the caption (`scrollable-region-focusable`). Measured locally on
   the production build: axe `analyze()` 21,551 ms → 5,746 ms,
   5,547 → 4,855 elements, 4,824 → 2 `tabindex` nodes, 0 violations.
+
+### v1.0 Task 20 — Stata export deferred (2026-11-20)
+
+Decision: deferred. The owner has no Stata licence yet ("i dont have
+stata yet so defer that", `/conduct v1.0 20`, 2026-11-20) and
+`docs/decisions.md` records no FAU answer — the task's Step 1 deferral
+path. Deferred: `export_stata_procedure`, `scripts/stata/verify.sh`,
+`fixtures/stata/results.json`, the Stata CI job, `exportStata` and the
+ResultCard control. Resume trigger: the owner has Stata; re-run Task 20
+from Step 2. Carried forward as an open decision for Task 21 ("Stata
+status: deferred").
 Supersedes: —
