@@ -8,7 +8,10 @@
 //! jobs of `engine.yml`.
 
 mod ei7;
+mod json;
 mod openepi;
+
+pub use json::build_report_json;
 
 use super::compare::compare;
 use super::load_dataset_dir;
@@ -24,11 +27,29 @@ use std::path::Path;
 pub struct Row {
     /// Registry statistic id, e.g. `two_by_two.odds_ratio.cmle`.
     pub statistic: &'static str,
+    /// The method/source name (v1.0 Task 24, spec §7.4): the
+    /// `OutputDef.method` label for `calc.*` statistics, the
+    /// `fixtures/R/` generator script for procedure statistics — the
+    /// same convention `OutputDef.method` uses (`"fixtures/R/calc.R"`).
+    pub method: &'static str,
     /// Reference software: the R version and packages that generated
     /// the covering fixtures, plus `Epi Info 7` when the ei7 check
     /// maps a label to this statistic and `OpenEpi` when an
     /// `openepi/` capture value maps to it.
     pub reference: String,
+    /// The R part of `reference` — versions and packages only, no
+    /// `Epi Info 7`/`OpenEpi` suffixes (v1.0 Task 24's JSON `references.r`).
+    pub r_reference: String,
+    /// Whether any covering fixture recorded an `r_version` or a
+    /// package — the JSON report's `references.r` is optional in the
+    /// plan and is omitted when false (the seeded `random_numbers`
+    /// golden has no R generator, so its `r_reference` is the empty
+    /// `": "` shell, not a reference).
+    pub has_r_reference: bool,
+    /// `ei7/oswego.json` maps a label to this statistic.
+    pub ei7: bool,
+    /// An `openepi/` capture maps a value to this statistic.
+    pub openepi: bool,
     /// The tolerance class the fixtures assign to the leaf.
     pub class: ToleranceClass,
     /// Maximum `|actual − expected| / |expected|` over every leaf of
@@ -201,20 +222,29 @@ fn row(
             }
         }
     }
-    let mut reference = format!(
+    let has_r_reference = !r_versions.is_empty() || !packages.is_empty();
+    let r_reference = format!(
         "{}: {}",
         r_versions.into_iter().collect::<Vec<_>>().join(", "),
         packages.into_iter().collect::<Vec<_>>().join(", ")
     );
-    if ei7_stats.contains(coverage.statistic) {
+    let ei7 = ei7_stats.contains(coverage.statistic);
+    let openepi = openepi_stats.contains(coverage.statistic);
+    let mut reference = r_reference.clone();
+    if ei7 {
         reference.push_str("; Epi Info 7");
     }
-    if openepi_stats.contains(coverage.statistic) {
+    if openepi {
         reference.push_str("; OpenEpi");
     }
     Ok(Row {
         statistic: coverage.statistic,
+        method: crate::validation::method(coverage.statistic),
         reference,
+        r_reference,
+        has_r_reference,
+        ei7,
+        openepi,
         class: coverage.class,
         worst_error: errors.iter().copied().fold(0.0, f64::max),
         fixture_count: coverage.fixtures.len(),

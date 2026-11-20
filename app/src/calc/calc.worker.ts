@@ -14,11 +14,13 @@ import initEngine, {
   engineVersion,
   explainCalculator,
   exportRCalc,
+  validationRegistry,
 } from '@engine/epiora_wasm';
 import engineUrl from '@engine/epiora_wasm_bg.wasm?url';
 import type { CalculatorDef } from '@engine-types/CalculatorDef';
 import type { Explanation } from '@engine-types/Explanation';
 import type { CalcOutput } from './api';
+import type { RegistryEntry } from '../validation/data';
 import { zipRExport } from '../worker/export';
 import { throwWired } from '../worker/errors';
 import type { CalcApi } from './api';
@@ -40,6 +42,11 @@ const api: CalcApi = {
   async listCalculators(): Promise<CalculatorDef[]> {
     await ready;
     return calcRegistry() as CalculatorDef[];
+  },
+
+  async validationRegistry(): Promise<RegistryEntry[]> {
+    await ready;
+    return validationRegistry() as RegistryEntry[];
   },
 
   async run(id, inputs): Promise<CalcOutput> {

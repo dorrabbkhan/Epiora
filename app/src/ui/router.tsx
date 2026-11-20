@@ -14,6 +14,7 @@ import { ImportScreen } from './routes/import';
 import { ProjectsScreen } from './routes/index';
 import { ProjectScreen } from './routes/project';
 import { SettingsScreen } from './routes/settings';
+import { ValidationScreen } from './routes/validation';
 import { t } from './strings';
 import shell from './shell.module.css';
 
@@ -29,6 +30,9 @@ function Shell() {
           </Link>
           <Link to="/calc" className={shell.link}>
             {t.nav.calculators}
+          </Link>
+          <Link to="/validation" className={shell.link}>
+            {t.nav.validation}
           </Link>
           <Link to="/settings" className={shell.link}>
             {t.nav.settings}
@@ -128,6 +132,15 @@ const calcRoute = createRoute({
   },
 });
 
+// v1.0 Task 24: the public validation dossier — store-less and
+// offline like `/calc` (static `validation.json` + the calc worker's
+// registry fallback, spec §7.4).
+const validationRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/validation',
+  component: ValidationScreen,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   projectRoute,
@@ -138,6 +151,7 @@ const routeTree = rootRoute.addChildren([
   calcIndexRoute,
   calcGuideRoute,
   calcRoute,
+  validationRoute,
 ]);
 
 export const router = createRouter({

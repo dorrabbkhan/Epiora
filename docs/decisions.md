@@ -5729,6 +5729,78 @@ decisions entry this requires):
   describe with a `get`/`set` ref sharing its `store` binding. Test
   names, assertions and per-backend count are unchanged.
 Supersedes: —
+
+### v1.0 Task 24 — public validation page from the CI report (2026-11-19)
+
+Decision: `/validation` is a store-less, offline dossier fed by
+`validation-report --format json`: engine.yml's `validation-report`
+job uploads the JSON as the `v1.0-validation-json` artifact alongside
+the unchanged `v0.2-validation-md`, and app.yml's deploy build
+downloads the latest green engine run's copy into
+`app/public/validation.json` (same head SHA when that parallel run
+already finished, else newest green main — the document names its own
+`commit` and `run_url` either way). `Row` gained `method` plus a
+split `r_reference`/`ei7`/`openepi` so the JSON can emit the
+structured `references` object while the Markdown `reference`
+column — and the whole Markdown report — stays byte-identical; the
+`method` label itself (`OutputDef.method` for `calc.*`, the
+`fixtures/R/*.R` generator script per procedure family) lives in
+`validation::method` because `corpus` is feature-gated out of the
+wasm build. A build without the file shows the wasm binding's
+`validationRegistry()` entries plus "observed errors not measured in
+this build"; every rendered number is a `cases` count or a formatted
+`worst_error` from the JSON — the numeric tolerances are never shown,
+only the class names. ExplainPanel links the selected statistic to
+`/validation#<id>` with concrete `[n]` indices collapsed to the
+registry's `[]` anchor ids.
+
+Files outside the task's Files block — the transport the "registry
+entries from the wasm bindings" fallback cannot work without (the
+main thread never touches wasm, so the entries ride the store-less
+calc worker like every other binding):
+- `crates/epiora-wasm/src/lib.rs` — the `validationRegistry` export:
+  `REGISTRY` as `statistics[]`-shaped `{id, method, class, cases}`
+  objects (no `references`/`worst_error` — nothing measured the
+  build), serialized via `JSON.parse` like `calcRegistry`.
+- `crates/epiora-core/src/validation.rs` — `validation::method`, the
+  shared method-label source used by the report's JSON `method`
+  field and the wasm fallback (kept out of `corpus`, which is not in
+  the shipped binding).
+- `app/src/calc/api.ts`, `app/src/calc/client.ts`,
+  `app/src/calc/calc.worker.ts` — `validationRegistry()` on the
+  store-less `CalcApi` alongside `listCalculators`.
+- `app/vite.config.ts` — `validation.json` added to the workbox
+  precache glob so a bundled report survives offline like `/calc`.
+- `.gitignore` — `app/public/validation.json` is CI-generated; it
+  must never be committed (a build without it is a supported state).
+
+Fix round (2026-11-19, PR #98 review + app CI run 44572039484):
+- `references.r` is omitted from the JSON whenever no covering
+  fixture recorded an `r_version`/`packages` (the plan's `"r"?` is
+  optional): `calc.random_numbers.values[]` is covered only by the
+  seeded `tests/golden/random_numbers.json` (no `source`, no R
+  generator), so it had been emitted as the empty `": "` shell.
+  `Row` gained `has_r_reference`; the Markdown `reference` column —
+  and so the whole Markdown report — stays byte-identical.
+- `app/src/ui/shell.module.css` — outside the task's Files block:
+  the new `/validation` nav link pushed the header past 320px
+  (scrollWidth 340 locally, 363 on CI), failing every route's
+  320px test. The nav now wraps (`flex-wrap: wrap`, row-gap
+  `--space-2`); horizontal spacing is unchanged.
+- `app/src/ui/screens/validation/{ValidationTable,ValidationEntry}.tsx`
+  and `app/src/ui/screens/validation/validation.module.css` are named
+  in the Files block by its brace shorthand; they now render a plain
+  `<table role="grid">` instead of the interactive Epiora Table —
+  ~690 React Aria collection rows made every row/cell tabbable
+  (4,824 `tabindex` nodes) and axe's `analyze()` exceeded the 30s
+  test timeout on all three engines. The implicit
+  columnheader/rowheader/gridcell roles keep the e2e role contract,
+  the `#<id>` anchor moved onto the `<th scope="row">` (no extra
+  element), and the scroll wrapper is a focusable `region` named by
+  the caption (`scrollable-region-focusable`). Measured locally on
+  the production build: axe `analyze()` 21,551 ms → 5,746 ms,
+  5,547 → 4,855 elements, 4,824 → 2 `tabindex` nodes, 0 violations.
+
 ### v1.0 Task 20 — Stata export deferred (2026-11-20)
 
 Decision: deferred. The owner has no Stata licence yet ("i dont have

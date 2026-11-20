@@ -9,4 +9,5 @@ export const ROUTES = [
   '/calc',
   '/calc/guide',
   '/calc/two_by_two',
+  '/validation',
 ] as const;

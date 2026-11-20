@@ -70,6 +70,36 @@ const fn cov(
     }
 }
 
+/// The method/source label for a registry statistic (v1.0 Task 24,
+/// spec §7.4): `calc.*` ids carry their calculator `OutputDef.method`
+/// label; procedure statistics name the `fixtures/R/` script that
+/// generates their covering fixtures — the same convention
+/// `OutputDef.method` itself uses (`"fixtures/R/calc.R"`). The
+/// validation report's JSON `method` field and the `/validation`
+/// page's registry fallback (via `validationRegistry`) both name
+/// this source.
+pub fn method(statistic: &str) -> &'static str {
+    if let Some(rest) = statistic.strip_prefix("calc.") {
+        let id = rest.split('.').next().unwrap_or(rest);
+        if let Some(od) = crate::calc::REGISTRY
+            .iter()
+            .find(|d| d.id == id)
+            .and_then(|def| def.outputs.iter().find(|o| o.statistic == statistic))
+        {
+            return od.method;
+        }
+        return "fixtures/R/calc.R";
+    }
+    match statistic.split('.').next().unwrap_or(statistic) {
+        "freq" => "fixtures/R/freq.R",
+        "means" => "fixtures/R/means.R",
+        "rxc" => "fixtures/R/rxc.R",
+        "stratified_two_by_two" => "fixtures/R/stratified.R",
+        "two_by_two" => "fixtures/R/twobytwo.R",
+        _ => "fixtures/R/calc.R",
+    }
+}
+
 /// Every registry entry for `family` (the prefix before the first `.`).
 pub fn coverage_for(family: &str) -> Vec<&'static Coverage> {
     REGISTRY
