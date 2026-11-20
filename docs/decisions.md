@@ -5834,9 +5834,10 @@ https://github.com/dorrabbkhan/Epiora/actions/runs/44715067404,
 `validation_run` input overrides) plus the sibling `engine` run's
 `v1.0-validation-json` artifact for per-statistic worst errors; the
 `report_version` input keeps v0.3 reproducible from run 43208388072.
-Step 3 (committing the green run's `v1.0.md` artifact unchanged as
-`docs/validation/v1.0.md`) follows in a conductor fix round: the
-artifact exists only after this PR's CI run.
+`docs/validation/v1.0.md` is the unchanged artifact of run 44726281061
+(PR head 376743b), sha256
+`c9cf09f9755218a74c4ae811020dc4dc22f86dd175b7ec7e883754a5dcf94dd3`,
+rendered from source run 44715067404 (9448ab6, attempt 2).
 
 Versions: workspace and app bumped to `1.0.0`; `receipt_v1.json`
 regenerated (only `engine.version` and `receipt_sha256` differ).
@@ -5887,7 +5888,4 @@ Open decisions carried forward: epidemiologist adviser and sign-off
 (G5, pending); Stata export (deferred, Task 20 — resume when the
 owner has Stata); D10 SAS verification route (before v1.2); D11 DAG
 adjustment-set helper route (v1.2).
-
-Step 3 pending: commit `docs/validation/v1.0.md` from the green CI
-artifact (conductor fix round).
 Supersedes: —
