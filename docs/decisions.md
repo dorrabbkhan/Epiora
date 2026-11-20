@@ -5873,6 +5873,16 @@ doc comment); `crates/epiora-core/tests/explain.rs` (the
 owner-approved regeneration above). `crates/epiora-wasm/bindings/*.ts`
 needed no edit — they embed no version.
 
+Fix round 1: `app/src-tauri/tauri.conf.json`,
+`app/src-tauri/Cargo.toml` and `app/src-tauri/Cargo.lock` — the
+desktop app version followed `app/package.json` to `1.0.0` (the
+release checkpoint checks all four app-version files; the lock diff
+is version-only — `epiora-app` and `epiora-store-native`);
+`app/scripts/validation-report-v1.fixtures.mjs` (new: the v1.0
+sample inputs and `buildV1Input`, extracted from
+`validation-report.test.mjs` so both files stay under ~400 lines;
+assertions, test names and expected values unchanged).
+
 Open decisions carried forward: epidemiologist adviser and sign-off
 (G5, pending); Stata export (deferred, Task 20 — resume when the
 owner has Stata); D10 SAS verification route (before v1.2); D11 DAG
