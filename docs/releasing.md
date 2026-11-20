@@ -49,15 +49,15 @@ Do this once, before the first release.
 ## Phase 1 — automated pre-flight
 
 - [ ] `git checkout main && git pull --ff-only`
-- [ ] Run `./scripts/release/checkpoint.sh 0.3.0` and read
-  `target/release/v0.3.0/checkpoint.md`. **0 FAIL is required to
+- [ ] Run `./scripts/release/checkpoint.sh 1.0.0` and read
+  `target/release/v1.0.0/checkpoint.md`. **0 FAIL is required to
   continue.** Every row means:
 
   | row | what it means | fix |
   |---|---|---|
   | `app version` | one of `app/package.json`, `app/package-lock.json` (top **and** `packages[""]`), `app/src-tauri/tauri.conf.json`, `app/src-tauri/Cargo.toml` `[workspace.package]` ≠ the version | fix the field in a PR; do not touch the root `Cargo.toml` (engine version, see above) |
   | `on main` / `clean tree` / `up to date` | wrong branch, dirty tree or behind origin | checkout/pull/commit |
-  | `tag free` / `release free` / `draft` | `v0.3.0` already exists as tag or release | pick a higher version (e.g. `0.3.1`) or — owner decision — delete the draft |
+  | `tag free` / `release free` / `draft` | `v1.0.0` already exists as tag or release | pick a higher version (e.g. `1.0.1`) or — owner decision — delete the draft |
   | `owner gates merged` | an `[OWNER GATE]`/`[OWNER REVIEW]` PR is still open | merge it (owner) |
   | `validation report` / `closing record` | the version's closing task is not merged | merge the closing PR |
   | `* CI` | the named workflow's latest green main run is stale — its path-filtered files changed since | wait for the run on HEAD; if it ran and is red, the release is blocked |
@@ -102,7 +102,7 @@ of the *exact* commit the tag will point at (the checkpoint's HEAD).
   through the wizard (preview → confirm).
 - [ ] Run **FREQ** on a variable, then **TABLES** (e.g. AGE × NAME,
   levels alice/bob). Open the result's receipt — it shows the project
-  and the engine version (`0.2.0`, *not* the app version).
+  and the engine version (`1.0.0` — the same number as the app this release, but a separate field).
 - [ ] Reload — the output log survives.
 - [ ] Open a second tab — the lock message shows.
 - [ ] Switch themes, including high contrast; tab through the app
@@ -110,11 +110,11 @@ of the *exact* commit the tag will point at (the checkpoint's HEAD).
 
 ### Desktop (install the bundles `collect-assets.sh` collected — unsigned)
 
-- [ ] **Linux:** `chmod +x Epiora_0.3.0_amd64.AppImage && ./Epiora_0.3.0_amd64.AppImage`
-  (or `sudo apt install ./Epiora_0.3.0_amd64.deb`).
-- [ ] **Windows:** `Epiora_0.3.0_x64-setup.exe` → SmartScreen "Windows
+- [ ] **Linux:** `chmod +x Epiora_1.0.0_amd64.AppImage && ./Epiora_1.0.0_amd64.AppImage`
+  (or `sudo apt install ./Epiora_1.0.0_amd64.deb`).
+- [ ] **Windows:** `Epiora_1.0.0_x64-setup.exe` → SmartScreen "Windows
   protected your PC" → **More info → Run anyway**.
-- [ ] **macOS (arm64):** open `Epiora_0.3.0_aarch64.dmg`, drag to
+- [ ] **macOS (arm64):** open `Epiora_1.0.0_aarch64.dmg`, drag to
   Applications → Gatekeeper warns (unsigned) → right-click → **Open**,
   or `xattr -dr com.apple.quarantine /Applications/Epiora.app`.
 - [ ] On each: import the same fixture, run FREQ + TABLES, **restart the
@@ -129,20 +129,20 @@ of the *exact* commit the tag will point at (the checkpoint's HEAD).
 
 ## Phase 3 — create the release
 
-- [ ] `./scripts/release/collect-assets.sh 0.3.0` — downloads the three
+- [ ] `./scripts/release/collect-assets.sh 1.0.0` — downloads the three
   desktop artifacts of the verified run into
-  `target/release/v0.3.0/upload/` and writes `SHA256SUMS.txt`. It
+  `target/release/v1.0.0/upload/` and writes `SHA256SUMS.txt`. It
   refuses if the checkpoint had FAILs or a bundle's filename version ≠
-  `0.3.0`.
+  `1.0.0`.
 - [ ] **GitHub → Releases → Draft a new release**, values:
 
   | field | value |
   |---|---|
-  | Choose a tag | `v0.3.0` — **Create new tag: v0.3.0 on publish** |
-  | Target | `main` — confirm the commit shown is the checkpoint's `HEAD_SHA` (in `target/release/v0.3.0/ci.env`) |
-  | Release title | `Epiora v0.3.0 — App shell` |
-  | Description | paste `target/release/v0.3.0/release-notes.md` verbatim |
-  | Attach binaries | everything in `target/release/v0.3.0/upload/` (6 bundles + `SHA256SUMS.txt`) |
+  | Choose a tag | `v1.0.0` — **Create new tag: v1.0.0 on publish** |
+  | Target | `main` — confirm the commit shown is the checkpoint's `HEAD_SHA` (in `target/release/v1.0.0/ci.env`) |
+  | Release title | `Epiora v1.0.0 — Calculators and MEANS` |
+  | Description | paste `target/release/v1.0.0/release-notes.md` verbatim |
+  | Attach binaries | everything in `target/release/v1.0.0/upload/` (6 bundles + `SHA256SUMS.txt`) |
   | Set as a pre-release | **CHECKED** — 0.x internal foundation, unsigned desktop builds; a published pre-release still fires `published` and deploys |
   | Set as the latest release | n/a — GitHub does not offer it for a pre-release |
   | Create a discussion | unchecked |
@@ -154,17 +154,17 @@ CLI equivalent (prints the same thing — also printed by
 `collect-assets.sh`):
 
 ```bash
-gh release create v0.3.0 --draft --prerelease \
-  --target "$(grep '^HEAD_SHA' target/release/v0.3.0/ci.env | cut -d= -f2)" \
-  --title "Epiora v0.3.0 — App shell" \
-  --notes-file target/release/v0.3.0/release-notes.md \
-  target/release/v0.3.0/upload/*
-gh release edit v0.3.0 --draft=false   # publish
+gh release create v1.0.0 --draft --prerelease \
+  --target "$(grep '^HEAD_SHA' target/release/v1.0.0/ci.env | cut -d= -f2)" \
+  --title "Epiora v1.0.0 — Calculators and MEANS" \
+  --notes-file target/release/v1.0.0/release-notes.md \
+  target/release/v1.0.0/upload/*
+gh release edit v1.0.0 --draft=false   # publish
 ```
 
 ## Phase 4 — watch the deploy run
 
-Publishing `v0.3.0` fires `app.yml` on `release: [published]`; the `app`
+Publishing `v1.0.0` fires `app.yml` on `release: [published]`; the `app`
 job re-runs the full gate on the tagged tree, rebuilds without
 `VITE_TEST_HOOKS`, asserts the canary, then `netlify deploy --prod`.
 (The `perf` and desktop-bundle jobs do NOT run on release — desktop
@@ -191,32 +191,32 @@ bundles already shipped as the artifacts you attached.)
 - [ ] Tell the conductor: the release URL, the release-event `app.yml`
   run URL, and the Netlify deploy id (Netlify dashboard → site
   `epiora-dev` → Deploys → top deploy; the id is on its detail page).
-  The conductor writes the `### v0.3.0 released` entry in
+  The conductor writes the `### v1.0.0 released` entry in
   `docs/decisions.md` via a PR — you don't edit it by hand.
 
 ## Rollback
 
 - **Web app:** Netlify dashboard → site `epiora-dev` → Deploys →
   *Publish deploy* on a previous production deploy. For the **first**
-  release none exists — fix forward as `v0.3.1` instead.
+  release none exists — fix forward as `v1.0.1` instead.
 - **GitHub release:** edit it back to a draft
-  (`gh release edit v0.3.0 --draft=true`) or leave it marked
+  (`gh release edit v1.0.0 --draft=true`) or leave it marked
   pre-release. **Never delete the tag to "retry"** — deletion needs the
   ruleset bypass, and `deployed` history/trust is preserved by keeping
   it.
 
-## Values for v0.3.0
+## Values for v1.0.0
 
 | field | value |
 |---|---|
-| Version / tag | `0.3.0` / `v0.3.0` (create on publish) |
+| Version / tag | `1.0.0` / `v1.0.0` (create on publish) |
 | Target | `main` at the checkpoint `HEAD_SHA` |
-| Title | `Epiora v0.3.0 — App shell` |
+| Title | `Epiora v1.0.0 — Calculators and MEANS` |
 | Type | pre-release (`--draft --prerelease`, publish via `--draft=false` or the web form) |
 | Latest | n/a (pre-release) |
 | Discussion | none |
-| Description | `target/release/v0.3.0/release-notes.md` |
-| Assets | `target/release/v0.3.0/upload/`: `Epiora_0.3.0_amd64.AppImage`, `Epiora_0.3.0_amd64.deb`, `Epiora-0.3.0-1.x86_64.rpm`, `Epiora_0.3.0_x64-setup.exe`, `Epiora_0.3.0_x64_en-US.msi`, `Epiora_0.3.0_aarch64.dmg`, `SHA256SUMS.txt` |
+| Description | `target/release/v1.0.0/release-notes.md` |
+| Assets | `target/release/v1.0.0/upload/`: `Epiora_1.0.0_amd64.AppImage`, `Epiora_1.0.0_amd64.deb`, `Epiora-1.0.0-1.x86_64.rpm`, `Epiora_1.0.0_x64-setup.exe`, `Epiora_1.0.0_x64_en-US.msi`, `Epiora_1.0.0_aarch64.dmg`, `SHA256SUMS.txt` |
 | Production URL | `https://epiora-dev.netlify.app` |
 | Preview of release commit | `https://main--epiora-dev.netlify.app` (dispatch `app.yml` on `main`, `-f runs=1`) |
-| Engine version (unchanged) | `0.2.0` — appears in receipts |
+| Engine version | `1.0.0` — bumped by v1.0 Task 21 (#100); appears in receipts |
