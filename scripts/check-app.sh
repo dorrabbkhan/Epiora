@@ -80,7 +80,7 @@ step "licence check"
 # --excludePackages: the app package itself is not a dependency.
 npx license-checker-rseidelsohn --production \
   --onlyAllow "MIT;Apache-2.0;ISC;BSD-2-Clause;BSD-3-Clause;0BSD;Unlicense;CC0-1.0;BlueOak-1.0.0" \
-  --excludePackages 'epiora-app@0.3.0' \
+  --excludePackages 'epiora-app@1.0.0' \
   --summary
 
 [ "$mode" = quick ] && exit 0

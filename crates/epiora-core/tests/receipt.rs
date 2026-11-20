@@ -91,7 +91,7 @@ fn build_golden() -> Receipt {
     let mut receipt = tables(&ds, &opts, &ctx()).expect("tables").receipt;
     receipt.engine = EngineStamp {
         name: "epiora-core".into(),
-        version: "0.2.0".into(),
+        version: "1.0.0".into(),
         git_sha: "0000000".into(),
     };
     receipt.receipt_sha256 = receipt.sha256_hex();

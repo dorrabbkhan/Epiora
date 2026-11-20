@@ -1,22 +1,30 @@
 #!/usr/bin/env node
-// app/scripts/validation-report.mjs <run-url> — the v0.3 validation
-// report (v0.3 plan Task 18, spec §10.5). Renders
-// docs/validation/v0.3.md from the named `app` workflow run's
-// artifacts and job logs, fetched through `gh api`.
+// app/scripts/validation-report.mjs <run-url> [v0.3|v1.0] — the
+// validation reports. No version (or `v0.3`) renders
+// docs/validation/v0.3.md (v0.3 plan Task 18, spec §10.5) from the
+// named `app` workflow run's artifacts and job logs, fetched through
+// `gh api`. `v1.0` renders docs/validation/v1.0.md (v1.0 plan Task
+// 21, platform spec §12.10) — its renderer is
+// validation-report-v1.mjs so each report is a single-purpose file.
 //
 // Perf and desktop results exist only on main-push and manual runs,
 // so the report is generated from a `main` push run — for v0.3 the
-// e19042c run (attempt 3, the green one) — and also states the facts
-// of that run's earlier attempts from their job logs. Every number in
-// the output is parsed from CI output; nothing is typed in.
+// e19042c run (attempt 3, the green one), for v1.0 the 9448ab6 run —
+// and also states the facts of that run's earlier attempts from their
+// job logs. Every number in the output is parsed from CI output;
+// nothing is typed in.
 //
-// `buildReport(input)` is the pure renderer so the node:test suite
-// can exercise it without network access; `collect(runUrl)` in
-// collect-validation-run.mjs is the only part that talks to GitHub.
+// `buildReport(input)` / `buildReportV1(input)` are the pure
+// renderers so the node:test suite can exercise them without network
+// access; `collect(runUrl)` / `collectV1(runUrl)` in
+// collect-validation-run.mjs are the only parts that talk to GitHub.
 
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { collect } from './collect-validation-run.mjs';
+import { collect, collectV1 } from './collect-validation-run.mjs';
+import { buildReportV1 } from './validation-report-v1.mjs';
+
+export { buildReportV1 };
 
 // ---------- small helpers -------------------------------------------
 
@@ -27,6 +35,9 @@ const clean = (line) => stripTs(stripAnsi(line));
 const fmt = (x) =>
   Number(x).toLocaleString('en-US', { maximumFractionDigits: 1 });
 const cell = (v) => (/^-?[\d.]+$/.test(String(v)) ? fmt(v) : String(v));
+
+// Shared with validation-report-v1.mjs.
+export { clean, fmt, cell, parseGates, parseSummary, parseAxe, parseBudget, parseWasmLimit, parseAttemptFacts };
 
 // ---------- parsing the CI outputs -----------------------------------
 
@@ -376,9 +387,12 @@ const invoked = process.argv[1] !== undefined &&
   resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (invoked) {
   const url = process.argv[2];
-  if (url === undefined) {
-    console.error('usage: validation-report.mjs <run-url>');
+  const version = process.argv[3] ?? 'v0.3';
+  if (url === undefined || !['v0.3', 'v1.0'].includes(version)) {
+    console.error('usage: validation-report.mjs <run-url> [v0.3|v1.0]');
     process.exit(2);
   }
-  process.stdout.write(buildReport(collect(url)));
+  process.stdout.write(
+    version === 'v1.0' ? buildReportV1(collectV1(url)) : buildReport(collect(url)),
+  );
 }
