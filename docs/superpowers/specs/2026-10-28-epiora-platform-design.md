@@ -2,6 +2,7 @@
 
 **Status:** draft for owner review · **Date:** 2026-10-28 · **Owner:** Dorrabb
 **Revised:** 2026-11-13 roadmap review: user signals ([D9 scan, user signals](../../research/d9-competitor-scan.md#user-signals-repidemiology-thread-added-2026-11-13)), Phase 1 reordered (§14), v1.0 renumbering applied.
+**Revised:** 2026-11-22 roadmap review after v1.0.0: [competitor delta and viability](../../research/2026-11-22-competitor-delta-and-viability.md); "Epiora for AI" (local MCP server and CLI at v1.2, hosted calculator MCP at public launch, paid metered API at v2.0); public launch, adviser, pilot and DPG application deferred to v1.6; Phases 3–4 made funded tracks (§13–§16).
 **Name:** Epiora (chosen 2026-10-28; formal trademark clearance is open decision D1, §17).
 
 This is the platform-level spec: intent, decisions, architecture, modules, integrations,
@@ -128,6 +129,9 @@ bridges to R, SAS and Stata rather than replacing them. Against Excel the claim 
 Against R the claim is method guidance, no code, and offline use on cheap hardware. For buyers who need an
 accountable vendor (the "no one to sue" objection to open source), the claim is AGPL code plus a public
 validation dossier and a paid support agreement.
+Against general-purpose AI assistants (ChatGPT, Claude, Julius), which now choose the right test almost always but
+run it correctly only 46–92% of the time with silent errors (2026-11-22 delta), the claim is *checked*: Epiora is
+the validated engine an assistant calls through MCP or the API, and every number it returns carries a receipt.
 
 ## 6. Decisions
 
@@ -267,6 +271,19 @@ only to generate expected values; its code is not copied.
 - Providers: Anthropic, OpenAI, Azure OpenAI, local models via Ollama. Default sends form
   structure only, never records; admins control what is allowed.
 
+### 8.12 Epiora for AI (MCP server, CLI and API)
+- **Local MCP server and `epiora` CLI (open, v1.2).** The same validated engine (`epiora-wasm` on Node, started
+  with `npx`) exposed as MCP tools and a command line: every calculator, and on a local file the dataset
+  procedures that exist by then (import including Epi Info `.mdb`, data management, FREQ, TABLES, MEANS,
+  regression). Every tool result carries its receipt and, where one exists, the verified R script. Data stays
+  on the user's machine.
+- **Hosted calculator MCP (open, at the v1.6 public launch).** Calculators only, stateless, no data stored; on
+  the same host as the web app.
+- **Hosted API (closed, paid, v2.0).** Metered HTTP API over the engine for dataset procedures, with keys and
+  billing from the solo cloud. Side income; priced after v2.0 pilots.
+- The tool surface is designed once at v1.2, against a full pipeline (open → clean → analyse), and grows with
+  each later version's procedures.
+
 ## 9. Statistics strategy
 
 | Layer | What | Why |
@@ -394,6 +411,13 @@ $199/month; SurveyCTO $225–630/month. Epiora does not compete on collection pr
 | Education | Departments, training programmes | Course workspaces, LTI, assignments, instructor dashboards | $1–5k/year per department |
 | Enterprise / government | Ministries, agencies, large NGOs | SSO, data residency, SLA, compliance pack, DHIS2/FHIR/Go.Data, managed self-hosting | Custom, ~$10k–100k+/year |
 
+| Hosted API (from v2.0) | AI app builders, analysts, integrators | Metered engine API with receipts (§8.12); the local MCP server and CLI stay free | Usage-based, priced after v2.0 pilots |
+
+**Revenue order (2026-11-22 viability review).** The users Epiora wins first (LMIC ministries, FETPs, small
+health departments) have little budget, so revenue is expected to lead with grants from global-health
+digital-goods funders, migration and support services and the hosted API, with subscriptions after. The Team
+tier price is tested with pilots rather than assumed.
+
 Standing discount for nonprofits and low- and middle-income countries. Other revenue: legacy
 migration service with a validation report; a support agreement for validated releases, which
 gives buyers who need one a named, accountable vendor; training and certification; support contracts and
@@ -447,13 +471,15 @@ public validation page. *Hero USP 2 (receipts) in usable form.* (v1.0 spec.)
 **v1.1 Epi Info projects and data management (L).** `epiora-mdb`; `.prj`/`.mdb` and SQL Server project
 import (data, form metadata, value labels); data-management commands (select, sort, recode, define, assign,
 merge, relate); the `.pgm` compatibility interpreter for every command Epiora implements, with unsupported
-commands listed; a migration report with parity results against Epi Info 7. Public "home for Epi Info users"
-launch; apply for Digital Public Good listing. First field pilot.
+commands listed; a migration report with parity results against Epi Info 7. Ships as a pre-release; the public
+"home for Epi Info users" launch, the Digital Public Good application and the first field pilot wait for v1.6
+(owner, 2026-11-22: features and UI mature first).
 
 **v1.2 Regression and the collection bridge (L).** Linear and logistic regression with explain mode and R
 export; a DAG adjustment-set helper beside regression (D11); a read-only bridge from REDCap, KoboToolbox and
-ODK Central (§10); SAS and Stata script export where a verification route exists (D10). *Hero USP 1 (keep
-your collection tool) in first usable form.*
+ODK Central (§10); SAS and Stata script export where a verification route exists (D10); the local MCP server
+and `epiora` CLI over the whole pipeline (§8.12). *Hero USP 1 (keep your collection tool) in first usable form;
+Epiora for AI in first usable form.*
 
 **v1.3 Forms and entry (L).** Form Designer, the check-code language and translation of legacy check code
 from v1.1 projects, entry with validation and skip logic, child forms and grids, form versioning, XLSForm
@@ -469,13 +495,15 @@ CDC 2000) once D4 is resolved.
 
 **v1.6 Reports, interoperability, languages and polish (L).** Typst reports and templates; SPSS, Stata, SAS
 and Parquet import and export; the `epiora` R package (§8.8); French, Spanish and Portuguese UI; design-system
-pass; independent WCAG 2.1 AA audit. **🏠 Epi Info parity.**
+pass; independent WCAG 2.1 AA audit; hosted calculator MCP (§8.12). **🏠 Epi Info parity.** Public launch: the
+"home for Epi Info users" announcement, Digital Public Good application, epidemiologist adviser and first field
+pilot all start here (owner, 2026-11-22).
 
 ### Phase 2 — Field and teams (v2.0–v2.5)
 
 **v2.0 Sync and solo cloud (L).** `epiora-sync` with the conflict review queue (own spec);
 sync simulation suite; Tauri Android and iOS apps; device encryption; hosted solo cloud with
-backups; Paddle billing; DPA template and EU hosting. *First paid tier.*
+backups; Paddle billing; DPA template and EU hosting; hosted metered API (§8.12). *First paid tier.*
 
 **v2.1 Teams and privacy (M).** Roles with field-level permissions, audit log, comments, shared
 templates; de-identified export, small-cell suppression, tiered sharing. Team tier opens.
@@ -495,6 +523,10 @@ download by area; performance pass on the reference Android device. *Hero USP 4 
 instructor dashboards, a course pack of lab handouts. **🧭 Field-ready.**
 
 ### Phase 3 — Surveillance and intelligence (v3.0–v3.4)
+
+**Funded track (2026-11-22).** Phases 3 and 4 start only when revenue or a grant covers them. Certification
+work (SOC 2, HIPAA, ISO 27001, GovRAMP, FedRAMP) in particular is not begun on the developer's own time; each
+item is re-planned against the funding that pays for it.
 
 **v3.0 Surveillance (L).** EARS C1–C3 and CUSUM in Rust, Farrington via WebR or server R, R(t)
 by the Cori method, scheduled alerts by email, SMS and WhatsApp, scheduled sitreps.
@@ -538,9 +570,9 @@ around month 17–26 on these sizes; pilots start earlier (§15).
 
 | When | Track |
 |---|---|
-| Before v1.0 | Recruit an epidemiologist adviser, preferably from field epidemiology; competitor scan (D9, done) |
-| From v1.0 | A free teaching pack (calculator labs built on the calculators and explain mode); outreach to former Epi Info users, field epidemiology training programmes and MPH courses; university courses that teach alongside R |
-| From v1.1 | First pilot: an FETP, or an LMIC or local health department with legacy Epi Info projects; Digital Public Good application; migration-service offer |
+| Before v1.0 | Competitor scan (D9, done); adviser recruitment moved to v1.6 (owner, 2026-11-22) |
+| Monthly from v1.0 | Competitor watch: Epi Info AI, PublicHealth Tech Lab (EpiCalc/EpiStat/EpiLog), Epi Info 7 community forks (`jarz/Epi-Info-Workspace`), Statulator, MetricGate |
+| From v1.6 (owner, 2026-11-22) | Public launch; recruit an epidemiologist adviser; first pilot: an FETP, or an LMIC or local health department with legacy Epi Info projects; Digital Public Good application; migration-service offer; free teaching pack; outreach to former Epi Info users, FETPs and MPH courses |
 | After v1.2 | JOSS paper on the engine and validation |
 | From v2.0 | NGO and health-department pilots; price validation before each tier |
 | After v2.3 | Case study from a real outbreak investigation; conference demos (epidemiology and public-health informatics meetings) |
@@ -557,7 +589,10 @@ around month 17–26 on these sizes; pilots start earlier (§15).
 | A competitor copies the analysis layer | AGPL on the open core; the validation corpus and connectors take years to rebuild |
 | Sync bugs corrupt data | Own spec, simulation suite, conflict queue instead of silent merges |
 | WebR too heavy for phones | Measured in v0.1; fall back to hosted R for advanced methods on mobile |
-| Compliance cost before revenue | Self-hosting route first; certifications only when revenue covers them |
+| Compliance cost before revenue | Self-hosting route first; Phases 3–4 are funded tracks; certifications only when revenue or a grant covers them |
+| General-purpose AI makes casual analysis free (2026-11-22) | Compete on *checked*, not *available*: receipts, CI-proven R, public validation; be the engine assistants call (§8.12) |
+| Building to v1.6 with no users means late market feedback (owner chose maturity first, 2026-11-22) | Re-run the competitor watch monthly; the migration report and validation page are the launch evidence; re-plan Phase 2 after the first pilot |
+| Willingness to pay is low in the first segment | Revenue order in §13: grants, services and the hosted API before subscriptions |
 | Licensing surprises in data or dependencies | Licence checks recorded as decisions (A6, A7, D2, D4, D5) before use |
 
 ## 17. Open decisions
