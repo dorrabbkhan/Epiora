@@ -1,0 +1,31 @@
+Epi Info 7 reference sources
+============================
+
+The files under this directory are verbatim, unmodified copies of files from
+the Epi Info 7 Community Edition source repository:
+
+    Repository : https://github.com/Epi-Info/Epi-Info-Community-Edition
+    Commit     : 4cd353c62c40b78d9d1f013b0f5a2bb685a5fca6
+    Licence    : Apache License, Version 2.0 (license.md in that repository;
+                 see docs/spikes/d2-epi-info-licence.md, decision D2)
+    Copyright  : Centers for Disease Control and Prevention
+
+They are kept here as *reference material only*: the v1.1 command register
+(crates/epiora-lang/register.json) is checked against them by
+scripts/legacy/register-check.mjs, and later tasks author Epiora's own
+expression and check-code grammars against them (spec §5.2, §4.4). No Epi
+Info code is compiled into Epiora; "Epi Info" is a trademark of the CDC and
+is used descriptively only.
+
+Paths are preserved relative to the upstream repository root:
+
+    Epi.Core.Interpreter/grammar/EpiInfo.Analysis.Grammar.grm
+        GOLD-parser grammar for Classic Analysis (.pgm) commands.
+    Epi.Core.EnterInterpreter/grammar/EpiInfo.Enter.Grammar.grm
+        GOLD-parser grammar for Enter check code.
+    Epi.Core.Interpreter/Rules/EpiFunctions.cs
+        Classic Analysis function-name dispatch table.
+    Epi.Core.EnterInterpreter/Rules/EpiFunctions.cs
+        Enter check-code function-name dispatch table.
+    Epi.Core/Constants/MetaFieldType.cs
+        MakeView field-type enumeration.
