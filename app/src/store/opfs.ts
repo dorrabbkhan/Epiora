@@ -56,6 +56,21 @@ function getPool(): Promise<SAHPoolUtil> {
   return poolP;
 }
 
+/**
+ * Releases the pool's sync access handles without destroying data.
+ * `Store.close` only closes the database: the installed VFS keeps a
+ * handle open on every pool file until it is paused, so while this
+ * worker lives no other tab's worker can open the pool (the take-over
+ * bug fixed 2026-11-22). Called by `closeStore` on lock loss; a later
+ * `openOpfsStore` un-pauses the VFS.
+ */
+export async function releaseOpfsPool(): Promise<void> {
+  const pool = await poolP?.catch(() => null);
+  if (pool !== null && pool !== undefined && !pool.isPaused()) {
+    pool.pauseVfs();
+  }
+}
+
 function makeStore(sqlite3: Sqlite3Static, db: OpfsSAHPoolDatabase): Store {
   let closed = false;
   let failNextWrite = false;
@@ -156,6 +171,8 @@ export async function openOpfsStore(name: string): Promise<Store> {
   let db: OpfsSAHPoolDatabase;
   try {
     const pool = await getPool();
+    // A pool paused by releaseOpfsPool re-arms on the next open.
+    if (pool.isPaused()) await pool.unpauseVfs();
     // The pool's file slots are fixed and persistent across sessions
     // (default 6, journals included); ensure headroom before opening.
     await pool.reserveMinimumCapacity(64);
