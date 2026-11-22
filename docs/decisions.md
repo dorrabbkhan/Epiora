@@ -5930,4 +5930,15 @@ Supersedes: —
 - Files outside the Files block (`app/src/store`, `app/src/worker`,
   `app/e2e/tab-lock.spec.ts`): `docs/decisions.md` (this entry,
   required by the fix brief).
+- Follow-up fix (2026-11-22): RUSTSEC-2026-0592 "Stack overflow in
+  `Url::origin()` on nested `blob:` URLs", published the same day,
+  failed `cargo deny check` in the native-store and check-app CI jobs
+  on `url 2.5.8` (transitive, `app/src-tauri/Cargo.lock`). Bumped to
+  `url 2.5.9` via `cargo update -p url`; the only other lock changes
+  are `form_urlencoded` 1.2.2 → 1.2.3 (a direct dep of `url`, required
+  by cargo) and a re-resolved `syn` edge inside `cssparser-macros`
+  0.7.1 (version unchanged). No `deny.toml` ignore was added. It lands
+  in this PR because the advisory — not this PR's code — blocked CI
+  and the v1.0.0 release; `app/src-tauri/Cargo.lock` is outside this
+  PR's original scope.
 Supersedes: —
