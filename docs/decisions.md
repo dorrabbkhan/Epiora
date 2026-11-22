@@ -6021,3 +6021,50 @@ Files outside the Files block:
   grammar/dispatch/enum copies under D2 (Apache-2.0) so the check is hermetic;
   provenance recorded in reference/NOTICE.
 Supersedes: —
+
+### v1.1 Task 2 — legacy samples (D12) (2026-11-22)
+
+Decision: `fixtures/legacy/samples/ei7/` holds every `.prj`, `.mdb` and `.db`
+under `Epi.Core/Projects/` @ `4cd353c62c40b78d9d1f013b0f5a2bb685a5fca6`
+(46 files, 20 folders — KML_Example and Rates have no such files, listed in
+`fixtures/legacy/samples/README.md`; Apache-2.0, `ei7/NOTICE`). All project
+databases are JET4; `BeefPrevention.db` and `Sample/SampleDB.db` are SQLite.
+The 21 `.prj` of the D2 inventory are 19 project files + 2 ESRI shapefile
+projections in CommunityHealthAssessment (copied, flagged in the README).
+
+D12 verdict — Epi Info 3.5.4 tutorial samples: **redistributable** (OWNER
+REVIEW). Evidence: `fixtures/legacy/samples/ei3/` commits the contents of the
+CDC-hosted `EIHATProjectFiles.zip`
+(`https://www.cdc.gov/epiinfo/zipfiles/eihat/EIHATProjectFiles.zip`, live
+2026-11-22; SHA-256 9954794cc6d721c6c50030f284e7f3d0a4f53cbacee8cff0667a039b37a17dee;
+page `https://www.cdc.gov/epiinfo/support/downloads/eihat.html`, mirrored at
+restoredcdc.org). The ZIP contains no licence file. The companion tutorial
+document (EIHATFull.pdf, HHS/CDC/NCPHI, document version 2.0, October 2005,
+`https://www.cdc.gov/epiinfo/pdfs/eihat/EIHATFull.pdf` — fetched via the
+restoredcdc.org mirror; the cdc.gov path now serves a 404 page) states on its
+Copyright Information page: "Epi Info is a trademark of CDC. Epi Info™
+programs are provided in the public domain to promote public health.
+Programs may be freely translated, copied, or distributed. No warranty is
+made or implied for use of the software for any particular purpose." The
+files are a U.S.-government work product of HHS/CDC (17 U.S.C. §105);
+survey data "were created for the tutorial". Caveat recorded for the owner:
+the document credits "the collaborative efforts of the CDC, the Assessment
+Initiative (AI), and the New York State Department of Health (NYSDOH)" and
+"asthma data provided to the CDC by the NYSDOH" — a state-agency
+collaboration; if the owner prefers caution the fallback is
+`ei3/fetch.json` + `scripts/legacy/fetch-ei3.sh` (download-only), and if the
+files turn out unobtainable spec §8.2 ships EI3 "unvalidated".
+`ei3/censusage_files/` (saved-web-page CSS/JS/GIF chrome, not tutorial data)
+is the only ZIP member not committed.
+
+Views/records per project are inventoried in
+`fixtures/legacy/samples/README.md` (metaViews + mdbtools 1.0.1 native
+build, `mdb-tables`/`mdb-export`/`mdb-count`; SQLite via python3 sqlite3).
+`mojibake`/JET3 code-page coverage: six of the seven EI3 `.mdb`s are JET3
+(`albany_demogz.mdb` is JET4).
+
+Files outside the Files block:
+- fixtures/legacy/samples/SHA256SUMS — the step-1 "record SHA-256 of every
+  file" made machine-checkable (70 files, `sha256sum -c` verifiable);
+  keeping it out of the README table keeps the inventory readable.
+Supersedes: —

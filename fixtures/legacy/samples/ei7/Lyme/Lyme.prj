@@ -1,0 +1,7 @@
+<Project id="2277a2d9-9d89-05f3-b997-c443b1abf7c7" name="Lyme" location="Projects\Lyme" description="" schemaVersion="102" epiVersion="" createDate="11/23/2016 14:43:27" useMetadataDbForCollectedData="" useBackgroundOnAllPages="False">
+  <CollectedData>
+    <Database connectionString="zHDkaR2yI5Pbh2/LYHfZ7ljYKFwMFLb6TrxCvYEORi7csqJucXA0eUm4ILZ7oROEjrnivQAfaAQZGiX42PBxqOc/ISdltMDIF78MlJbPV6NUHl+xl434+9qaAdH4DckIZRs4DIy/4pdyPt4pdlp4E/S1egoqV59XMFDqr6y8N5k=" dataDriver="Epi.Data.Office.AccessDBFactory, Epi.Data.Office" />
+  </CollectedData>
+  <Metadata source="2" />
+  <EnterMakeviewInterpreter source="Epi.Core.EnterInterpreter" />
+</Project>

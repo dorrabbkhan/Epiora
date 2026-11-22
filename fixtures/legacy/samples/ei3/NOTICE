@@ -1,0 +1,41 @@
+Epi Info 3.5.4 tutorial project files (EIHAT)
+=============================================
+
+The files under this directory are verbatim, unmodified copies of the sample
+datasets and project files distributed by the CDC for the Epi Info™ Community
+Health Assessment Tutorial (Epi Info 3.5.4):
+
+    Archive    : EIHATProjectFiles.zip ("EIHAT Project Files" folder)
+    URL        : https://www.cdc.gov/epiinfo/zipfiles/eihat/EIHATProjectFiles.zip
+    Page       : https://www.cdc.gov/epiinfo/support/downloads/eihat.html
+                 (mirrored at https://restoredcdc.org/www.cdc.gov/epiinfo/support/downloads/eihat.html)
+    SHA-256    : 9954794cc6d721c6c50030f284e7f3d0a4f53cbacee8cff0667a039b37a17dee (the ZIP)
+    Publisher  : U.S. Department of Health and Human Services, Centers for
+                 Disease Control and Prevention, National Center for Public
+                 Health Informatics (tutorial document version 2.0,
+                 October 2005)
+
+Licence (decision D12 — verdict: redistributable, pending OWNER REVIEW):
+
+    The companion tutorial document (EIHATFull.pdf, "Copyright Information")
+    states: "Epi Info is a trademark of CDC. Epi Info™ programs are provided
+    in the public domain to promote public health. Programs may be freely
+    translated, copied, or distributed. No warranty is made or implied for
+    use of the software for any particular purpose."
+
+    The tutorial and its project files are a U.S. government work product
+    published by HHS/CDC; the ZIP itself contains no licence file. The
+    document notes production "by the collaborative efforts of the Centers
+    for Disease Control and Prevention (CDC), the Assessment Initiative (AI),
+    and the New York State Department of Health (NYSDOH)" and that it "has
+    been designed using asthma data provided to the CDC by the NYSDOH" — the
+    analysis data are synthetic sample data created for the tutorial. This
+    NYSDOH-collaboration caveat is recorded in docs/decisions.md under
+    "v1.1 Task 2 — legacy samples (D12)" for the owner's review.
+
+Omitted from this copy: `censusage_files/` — saved-web-page assets (CDC site
+CSS/JS/GIF chrome) accompanying `censusage.htm`; they are page scaffolding,
+not tutorial data, and are not needed by later tasks. Every other file in the
+archive is present and unmodified; SHA-256 of every file is recorded in
+../SHA256SUMS. "Epi Info" is a trademark of the CDC and is used descriptively
+only.

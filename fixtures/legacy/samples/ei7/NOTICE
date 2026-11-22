@@ -1,0 +1,28 @@
+Epi Info 7 bundled sample projects
+==================================
+
+The files under this directory are verbatim, unmodified copies of files from
+the Epi Info 7 Community Edition source repository:
+
+    Repository : https://github.com/Epi-Info/Epi-Info-Community-Edition
+    Commit     : 4cd353c62c40b78d9d1f013b0f5a2bb685a5fca6
+    Path       : Epi.Core/Projects/<Project>/<file>
+    Licence    : Apache License, Version 2.0 (license.md in that repository;
+                 see docs/spikes/d2-epi-info-licence.md, decision D2)
+    Copyright  : Centers for Disease Control and Prevention
+
+Copied unmodified, as permitted by D2 (Apache-2.0 §4 notice obligations are met
+by this file). "Epi Info" is a trademark of the CDC and is used descriptively
+only; the Apache licence does not grant trademark rights.
+
+Scope of the copy: every `.prj`, `.mdb` and `.db` file under
+`Epi.Core/Projects/` at the commit above — 46 files in 20 project folders
+(two folders, KML_Example and Rates, contain no `.prj`/`.mdb`/`.db` and are
+listed in ../README.md only). SHA-256 of every file is recorded in
+../SHA256SUMS. Files not copied (Excel sheets, shapefiles, canvases, maps,
+images, documents, .edp7 packages) may be added by a later task if a golden
+import or reference program needs them, under the same notice.
+
+Companion copies of some of these files already exist elsewhere in the repo
+(spikes/mdb-wasm/test/data/Sample.mdb); this directory is the canonical
+fixtures location for v1.1 legacy tasks.
