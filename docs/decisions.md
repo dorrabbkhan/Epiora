@@ -5988,3 +5988,36 @@ Supersedes: —
   foundation") and the rollback note ("for the first release none
   exists") were left over from v0.3.0; both are corrected in this PR.
 Supersedes: —
+
+### v1.1 Task 1 — command register (2026-11-22)
+
+Decision: `docs/v1.1-command-register.md` + `crates/epiora-lang/register.json`
+enumerate every Classic Analysis command (84 grammar-derived, plus spec-§5.3's
+non-grammar CANCEL READ and KEYVARS), 55 dispatch-listed functions, all 28
+`MetaFieldType` members and 20 module features from the Epi Info 7 source at
+4cd353c — each supported at a version or planned ≤ v1.6, or not_planned with a
+reason. Counts: commands — supported 37 (v1.0: 3, v1.1: 34), planned 37
+(v1.2: 2, v1.3: 24, v1.4: 2, v1.5: 2, v1.6: 7), not_planned 12; functions —
+supported 46 (v1.1), planned 3 (v1.3), not_planned 6; field types — 28 all at
+v1.1; module features — v1.0: 1, v1.3: 11, v1.4: 7, v1.5: 1.
+Roadmap gaps (not_planned, reasons in the register): EXECUTE/WAITFOR*,
+PYTHON/R blocks, SQLEXEC/RECORDSET/CONNECTION, COMMANDLINE, GEOCODE/
+GETCOORDINATES, IOCODE, SENDSMS, SYSBARCODE/SYSLATITUDE/SYSLONGITUDE/
+SYSALTITUDE, DEFINE DLLOBJECT/NETOBJECT, DELETE File/TABLES, READ file-spec
+forms. Proposed v1.1 additions beyond spec §5.3: UNDELETE, RUNPGM, QUIT, EXIT,
+SUMMARIZE, KEYVARS, CANCEL READ, plus the §6.1 note-only set — all subject to
+this OWNER REVIEW.
+Ambiguities resolved and recorded in the register doc: `version` is the
+Classic Analysis target for `grammar: "both"` entries (check-code targets in
+reason); COMMANDLINE, EXIT, FILEDIALOG, MAP, NEWPAGE, SYSINFO, WAITFOR* parse
+but have no Rule class at 4cd353c; DATEDIFF/DATEPART are undispatched helper
+classes, not callable functions; `working-menu.grm` is the .mnu grammar,
+covered by COMMANDLINE; `List` (MetaFieldType 27) takes spec §4.2's catch-all.
+Evidence: register-check `node scripts/legacy/register-check.mjs` → exit 0
+(86 commands, 55 functions, 28 field types, 20 module features).
+Files outside the Files block:
+- scripts/legacy/register-check.mjs — the check Step 3 creates and runs.
+- crates/epiora-lang/reference/ (5 files + NOTICE) — verbatim Epi Info 7
+  grammar/dispatch/enum copies under D2 (Apache-2.0) so the check is hermetic;
+  provenance recorded in reference/NOTICE.
+Supersedes: —
