@@ -5889,3 +5889,45 @@ Open decisions carried forward: epidemiologist adviser and sign-off
 owner has Stata); D10 SAS verification route (before v1.2); D11 DAG
 adjustment-set helper route (v1.2).
 Supersedes: —
+
+### Tab take-over releases the OPFS pool (2026-11-22)
+
+- Bug: "Use here" on the lock screen took the Web Lock and reloaded
+  the new tab, but its project list stayed "Loading…" forever — the
+  console repeated `opfs-sahpool` `NoModificationAllowedError`
+  (`createSyncAccessHandle` refuses while another context holds a sync
+  access handle). Reproduced by the conductor on the deployed build
+  (Chromium, 2026-11-22). The `use_here_takes_over` e2e missed it: it
+  only waited for the "Projects" heading, which renders while the list
+  is still loading.
+- Cause: on take-over the old tab's data worker ran `closeStore()`,
+  which closes the sqlite database — but the installed `opfs-sahpool`
+  VFS keeps a sync access handle on every pool file until
+  `SAHPoolUtil.pauseVfs()` runs or the worker is terminated. Nothing
+  did either, so the new tab's worker could never open the pool.
+- Fix: bundled `@sqlite.org/sqlite-wasm` 3.54.1-build1 supports
+  `pauseVfs`/`unpauseVfs`/`isPaused`, so no worker termination or new
+  API is needed. `closeStore` (`app/src/worker/store-backend.ts`) now
+  calls the new `releaseOpfsPool()` (`app/src/store/opfs.ts`) after the
+  store closes; `openOpfsStore` re-arms a paused pool via
+  `unpauseVfs()` so a release is never fatal to a later open. The old
+  tab still reports 'lost' and stays on the lock screen, and "Use
+  here" there works again (take-over is symmetric). No lock-protocol
+  messages changed; no dependency added.
+- Tests: `lock_takeover_releases_pool_for_next_worker` in
+  `app/src/worker/tab-lock.browser.test.ts` drives a real data
+  worker, posts the LockScreen's 'take-over' through `takeOver()`,
+  waits for the worker's 'lost' broadcast, then opens the same
+  database from a second worker and reads the project the first wrote
+  — with the first worker never terminated (fails before the fix:
+  "harness store did not open" on chromium, firefox and webkit).
+  `app/e2e/tab-lock.spec.ts` `use_here_takes_over` now creates the
+  'Oswego' project in the first tab, requires its rowheader and no
+  'Loading…' in the tab that took over (proves the same database
+  opened), and adds the A→B→A round trip back through "Use here" —
+  all three engines (fails before the fix: the rowheader never
+  renders).
+- Files outside the Files block (`app/src/store`, `app/src/worker`,
+  `app/e2e/tab-lock.spec.ts`): `docs/decisions.md` (this entry,
+  required by the fix brief).
+Supersedes: —

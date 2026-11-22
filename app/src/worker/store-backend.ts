@@ -11,7 +11,7 @@
 // The app's worker is named `epiora:<tab id>` (client.ts) — the part
 // after ':' is the tab identity used by the lock channel.
 
-import { openOpfsStore } from '../store/opfs';
+import { openOpfsStore, releaseOpfsPool } from '../store/opfs';
 import { openRelayStore } from '../store/relay';
 import { StoreError, type Store } from '../store/types';
 import { acquireStoreLock, storeLockState } from './tab-lock';
@@ -84,9 +84,13 @@ export function openStore(): Promise<Store> {
 }
 
 /**
- * Closes the shared connection. Called when the tab lock is stolen:
- * the store must be released before the new holder opens it. A later
- * `openStore` still refuses — the lock state gates every open.
+ * Closes the shared connection and releases the pool. Called when the
+ * tab lock is stolen: the sahpool must be freed before the new
+ * holder's worker opens it, and closing the db alone is not enough —
+ * the installed VFS holds a sync access handle on every pool file
+ * until `releaseOpfsPool` pauses it (the take-over bug fixed
+ * 2026-11-22). A later `openStore` still refuses — the lock state
+ * gates every open.
  */
 export async function closeStore(): Promise<void> {
   const p = storePromise;
@@ -96,6 +100,11 @@ export async function closeStore(): Promise<void> {
     await store?.close();
   } catch {
     // The connection may already be broken; the tab is locking anyway.
+  }
+  try {
+    await releaseOpfsPool();
+  } catch {
+    // The tab is locking anyway.
   }
 }
 
