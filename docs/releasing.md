@@ -143,7 +143,7 @@ of the *exact* commit the tag will point at (the checkpoint's HEAD).
   | Release title | `Epiora v1.0.0 — Calculators and MEANS` |
   | Description | paste `target/release/v1.0.0/release-notes.md` verbatim |
   | Attach binaries | everything in `target/release/v1.0.0/upload/` (6 bundles + `SHA256SUMS.txt`) |
-  | Set as a pre-release | **CHECKED** — 0.x internal foundation, unsigned desktop builds; a published pre-release still fires `published` and deploys |
+  | Set as a pre-release | **CHECKED** — adviser sign-off pending (v1.0 spec G5), unsigned desktop builds; a published pre-release still fires `published` and deploys |
   | Set as the latest release | n/a — GitHub does not offer it for a pre-release |
   | Create a discussion | unchecked |
 
@@ -197,8 +197,8 @@ bundles already shipped as the artifacts you attached.)
 ## Rollback
 
 - **Web app:** Netlify dashboard → site `epiora-dev` → Deploys →
-  *Publish deploy* on a previous production deploy. For the **first**
-  release none exists — fix forward as `v1.0.1` instead.
+  *Publish deploy* on the previous production deploy (v1.0.0's is
+  `6b03285b22cce3cc028c34f9`), or fix forward as the next patch release.
 - **GitHub release:** edit it back to a draft
   (`gh release edit v1.0.0 --draft=true`) or leave it marked
   pre-release. **Never delete the tag to "retry"** — deletion needs the

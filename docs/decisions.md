@@ -5941,3 +5941,50 @@ Supersedes: —
   pushed to #102's branch after #102 merged, so it lands as its own PR;
   the advisory — not #102's code — blocked CI and the v1.0.0 release.
 Supersedes: —
+
+### v1.0.0 released (2026-11-22)
+
+- Release: <https://github.com/dorrabbkhan/Epiora/releases/tag/v1.0.0>,
+  `Epiora v1.0.0 — Calculators and MEANS`, a pre-release published
+  2026-11-22 by the owner. Tag `v1.0.0` points at
+  `4de761f388ff7c168dce30aea18ef529694d1f92` (the #103 merge). It is a
+  pre-release because adviser sign-off and the explain-text review are
+  still pending (platform spec §1, v1.0 spec G5) and the desktop
+  builds are unsigned. To make it a full release later:
+  `gh release edit v1.0.0 --prerelease=false --latest` (no new tag).
+- Pre-release checkpoint: `scripts/release/checkpoint.sh 1.0.0` on
+  `4de761f` reported 0 FAIL (`collect-assets.sh` refuses on any FAIL).
+- Evidence (main push runs on `4de761f`): app
+  [45039095330](https://github.com/dorrabbkhan/Epiora/actions/runs/45039095330),
+  perf gate: `import_1m` median 53,050.9 ms ≤ 89,550,
+  `open_tables_1m` median 1,637.6 ms ≤ 2,874, `means_1m` median
+  1,365.3 ms ≤ 3,173; desktop
+  [45039095398](https://github.com/dorrabbkhan/Epiora/actions/runs/45039095398);
+  spikes
+  [45039095281](https://github.com/dorrabbkhan/Epiora/actions/runs/45039095281).
+  Earlier main pushes after the version bump hit the slow perf-runner
+  mode (`import_1m` about 99–101 s) and needed re-runs; the release
+  evidence is the `4de761f` run above.
+- Assets: the six unsigned desktop bundles from desktop run 45039095398
+  (AppImage, deb, rpm, NSIS setup exe, msi, dmg) plus `SHA256SUMS.txt`,
+  collected by `scripts/release/collect-assets.sh`.
+- Desktop hand checks: the owner checked the Linux bundles and the
+  Windows bundles (in a VM). The macOS `.dmg` is built in CI but **not
+  hand-tested**: no Mac is available.
+- Fixes merged between closing v1.0 (#100) and the release: #102 (the
+  tab-lock "Use here" take-over hung at "Loading…" because the old
+  worker kept the OPFS SAH-pool handles; `closeStore` now pauses the
+  pool) and #103 (`url` 2.5.9 for RUSTSEC-2026-0592).
+- Production deploy: release run
+  [45049416918](https://github.com/dorrabbkhan/Epiora/actions/runs/45049416918)
+  (success, 11m39s), Netlify deploy `6b03285b22cce3cc028c34f9`
+  (<https://6b03285b22cce3cc028c34f9--epiora-dev.netlify.app>), live at
+  <https://epiora-dev.netlify.app>.
+- Post-release check: `scripts/release/verify-deploy.py
+  https://epiora-dev.netlify.app` reported 38 checks, 0 FAIL. The owner
+  did the manual pass on production: first load, offline reload,
+  import, FREQ and TABLES.
+- `docs/releasing.md`: the pre-release reason ("0.x internal
+  foundation") and the rollback note ("for the first release none
+  exists") were left over from v0.3.0; both are corrected in this PR.
+Supersedes: —
