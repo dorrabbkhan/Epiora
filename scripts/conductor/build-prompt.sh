@@ -25,6 +25,7 @@ case "$VER" in
   v0.2) MAPPED="2026-10-31-epiora-v0.2-engine-core.md" ;;
   v0.3) MAPPED="2026-11-05-epiora-v0.3-app-shell.md" ;;
   v1.0) MAPPED="2026-11-12-epiora-v1.0-calculators-and-means.md" ;;
+  v1.1) MAPPED="2026-11-22-epiora-v1.1-epi-info-projects.md" ;;
   *)    MAPPED="" ;;
 esac
 

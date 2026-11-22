@@ -28,7 +28,8 @@ The matching spec is read from the plan's `**Spec:**` line, not hard-coded.
    - Only files listed in the task's Files block changed (plus lockfiles and `docs/decisions.md`).
    - Nothing under `fixtures/` changed except in a plan's fixture task, through its named generator or
      workflow output: v0.1 Task 5; v0.2 Tasks 2–3; v0.3 Task 2; v1.0 Task 2 (`fixtures/generate.R`), Task 3
-     (`openepi.yml` output or the owner's human-step capture) and Task 4 (`ei7.yml` output).
+     (`openepi.yml` output or the owner's human-step capture) and Task 4 (`ei7.yml` output); v1.1 Task 2
+     (sample projects or `fetch.json`), Task 3 (`ei7.yml` output) and Task 4 (`legacy-golden.yml` output).
    - Every test or check named in the task exists, with the plan's exact values and assertions.
    - No test was removed, skipped or loosened; no threshold or decision rule changed.
    - Names and signatures match the task's Interfaces block exactly.
