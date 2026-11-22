@@ -1,0 +1,1640 @@
+<?xml version = "1.0" encoding="windows-1252"?>
+<!DOCTYPE reportdata SYSTEM "C:\Epi_Info\epiresults.dtd">
+  <reportdata version="1.1">
+    <dataset>
+<datadescriptor>C:\Epi_Info\EIHA Tutorial\Asthma Survey 2005 Sample.mdb:viewPreInterventionSurvey</datadescriptor>
+<datadescriptor>(Deleted records excluded)</datadescriptor>
+      <command commandname="FREQ" commandline="FREQ  SchoolNum" pgmname="Interactive" pgmruntime="2005-09-08 03:33:29 PM">
+        <resultarray description="FREQ">
+          <result description="School Number">
+            <valuearray description="School Number">
+              <columnheaders>
+<columnheader>School Number</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Text">A</cell>
+<cell datatype="Number">196</cell>
+<cell datatype="Number">24.5</cell>
+<cell datatype="Number">24.5</cell>
+              </row>
+              <row>
+<cell datatype="Text">B</cell>
+<cell datatype="Number">205</cell>
+<cell datatype="Number">25.625</cell>
+<cell datatype="Number">50.125</cell>
+              </row>
+              <row>
+<cell datatype="Text">C</cell>
+<cell datatype="Number">208</cell>
+<cell datatype="Number">26</cell>
+<cell datatype="Number">76.125</cell>
+              </row>
+              <row>
+<cell datatype="Text">D</cell>
+<cell datatype="Number">191</cell>
+<cell datatype="Number">23.875</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">800</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : School Number">
+              <columnheaders>
+<columnheader>School Number</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Text">A</cell>
+<cell datatype="Number">0.215864975177374</cell>
+<cell datatype="Number">0.276623288008876</cell>
+              </row>
+              <row>
+<cell datatype="Text">B</cell>
+<cell datatype="Number">0.22661464545357</cell>
+<cell datatype="Number">0.288263123743043</cell>
+              </row>
+              <row>
+<cell datatype="Text">C</cell>
+<cell datatype="Number">0.230203741562345</cell>
+<cell datatype="Number">0.292137224707931</cell>
+              </row>
+              <row>
+<cell datatype="Text">D</cell>
+<cell datatype="Number">0.209904683140206</cell>
+<cell datatype="Number">0.270145025153803</cell>
+              </row>
+            </valuearray>
+          </result>
+        </resultarray>
+      </command>
+      <command commandname="FREQ" commandline="FREQ  Gender" pgmname="Interactive" pgmruntime="2005-09-08 03:33:30 PM">
+        <resultarray description="FREQ">
+          <result description="Gender">
+            <valuearray description="Gender">
+              <columnheaders>
+<columnheader>Gender</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Text">Female</cell>
+<cell datatype="Number">406</cell>
+<cell datatype="Number">50.75</cell>
+<cell datatype="Number">50.75</cell>
+              </row>
+              <row>
+<cell datatype="Text">Male</cell>
+<cell datatype="Number">394</cell>
+<cell datatype="Number">49.25</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">800</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Gender">
+              <columnheaders>
+<columnheader>Gender</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Text">Female</cell>
+<cell datatype="Number">0.472280055777866</cell>
+<cell datatype="Number">0.542646968306063</cell>
+              </row>
+              <row>
+<cell datatype="Text">Male</cell>
+<cell datatype="Number">0.457353031693937</cell>
+<cell datatype="Number">0.527719944222134</cell>
+              </row>
+            </valuearray>
+          </result>
+        </resultarray>
+      </command>
+      <command commandname="FREQ" commandline="FREQ  AsthmaticConditions" pgmname="Interactive" pgmruntime="2005-09-08 03:33:30 PM">
+        <resultarray description="FREQ">
+          <result description="Asthma">
+            <valuearray description="Asthma">
+              <columnheaders>
+<columnheader>Asthma</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">91</cell>
+<cell datatype="Number">11.375</cell>
+<cell datatype="Number">11.375</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">709</cell>
+<cell datatype="Number">88.625</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">800</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Asthma">
+              <columnheaders>
+<columnheader>Asthma</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">9.29991422720556E-02</cell>
+<cell datatype="Number">0.138296927177957</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.861703072822043</cell>
+<cell datatype="Number">0.907000857727944</cell>
+              </row>
+            </valuearray>
+          </result>
+          <result description="Reactive Airway Disease">
+            <valuearray description="Reactive Airway Disease">
+              <columnheaders>
+<columnheader>Reactive Airway Disease</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">93</cell>
+<cell datatype="Number">11.625</cell>
+<cell datatype="Number">11.625</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">707</cell>
+<cell datatype="Number">88.375</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">800</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Reactive Airway Disease">
+              <columnheaders>
+<columnheader>Reactive Airway Disease</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">9.52795145047913E-02</cell>
+<cell datatype="Number">0.140991021237159</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.859008978762841</cell>
+<cell datatype="Number">0.904720485495209</cell>
+              </row>
+            </valuearray>
+          </result>
+          <result description="Asthmatic Bronchitis
+or Wheezy Bronchitis">
+            <valuearray description="Asthmatic Bronchitis
+or Wheezy Bronchitis">
+              <columnheaders>
+<columnheader>Asthmatic Bronchitis
+or Wheezy Bronchitis</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">86</cell>
+<cell datatype="Number">10.75</cell>
+<cell datatype="Number">10.75</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">714</cell>
+<cell datatype="Number">89.25</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">800</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Asthmatic Bronchitis
+or Wheezy Bronchitis">
+              <columnheaders>
+<columnheader>Asthmatic Bronchitis
+or Wheezy Bronchitis</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">8.73130731762222E-02</cell>
+<cell datatype="Number">0.131547042890021</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.868452957109979</cell>
+<cell datatype="Number">0.912686926823778</cell>
+              </row>
+            </valuearray>
+          </result>
+          <result description="Wheezing">
+            <valuearray description="Wheezing">
+              <columnheaders>
+<columnheader>Wheezing</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">99</cell>
+<cell datatype="Number">12.375</cell>
+<cell datatype="Number">12.375</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">701</cell>
+<cell datatype="Number">87.625</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">800</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Wheezing">
+              <columnheaders>
+<columnheader>Wheezing</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">0.102139807654026</cell>
+<cell datatype="Number">0.149054386562817</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.850945613437183</cell>
+<cell datatype="Number">0.897860192345974</cell>
+              </row>
+            </valuearray>
+          </result>
+        </resultarray>
+      </command>
+      <command commandname="FREQ" commandline="FREQ  WMonth" pgmname="Interactive" pgmruntime="2005-09-08 03:33:30 PM">
+        <resultarray description="FREQ">
+          <result description="Select the month when your child's breathing was the worst?">
+            <valuearray description="Select the month when your child's breathing was the worst?">
+              <columnheaders>
+<columnheader>Select the month when your child's breathing was the worst?</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Text">1</cell>
+<cell datatype="Number">9</cell>
+<cell datatype="Number">4.63917525773196</cell>
+<cell datatype="Number">4.63917525773196</cell>
+              </row>
+              <row>
+<cell datatype="Text">10</cell>
+<cell datatype="Number">36</cell>
+<cell datatype="Number">18.5567010309278</cell>
+<cell datatype="Number">23.1958762886598</cell>
+              </row>
+              <row>
+<cell datatype="Text">11</cell>
+<cell datatype="Number">13</cell>
+<cell datatype="Number">6.70103092783505</cell>
+<cell datatype="Number">29.8969072164948</cell>
+              </row>
+              <row>
+<cell datatype="Text">12</cell>
+<cell datatype="Number">7</cell>
+<cell datatype="Number">3.60824742268041</cell>
+<cell datatype="Number">33.5051546391753</cell>
+              </row>
+              <row>
+<cell datatype="Text">2</cell>
+<cell datatype="Number">15</cell>
+<cell datatype="Number">7.7319587628866</cell>
+<cell datatype="Number">41.2371134020619</cell>
+              </row>
+              <row>
+<cell datatype="Text">3</cell>
+<cell datatype="Number">11</cell>
+<cell datatype="Number">5.67010309278351</cell>
+<cell datatype="Number">46.9072164948454</cell>
+              </row>
+              <row>
+<cell datatype="Text">4</cell>
+<cell datatype="Number">11</cell>
+<cell datatype="Number">5.67010309278351</cell>
+<cell datatype="Number">52.5773195876289</cell>
+              </row>
+              <row>
+<cell datatype="Text">5</cell>
+<cell datatype="Number">10</cell>
+<cell datatype="Number">5.15463917525773</cell>
+<cell datatype="Number">57.7319587628866</cell>
+              </row>
+              <row>
+<cell datatype="Text">6</cell>
+<cell datatype="Number">11</cell>
+<cell datatype="Number">5.67010309278351</cell>
+<cell datatype="Number">63.4020618556701</cell>
+              </row>
+              <row>
+<cell datatype="Text">7</cell>
+<cell datatype="Number">11</cell>
+<cell datatype="Number">5.67010309278351</cell>
+<cell datatype="Number">69.0721649484536</cell>
+              </row>
+              <row>
+<cell datatype="Text">8</cell>
+<cell datatype="Number">13</cell>
+<cell datatype="Number">6.70103092783505</cell>
+<cell datatype="Number">75.7731958762887</cell>
+              </row>
+              <row>
+<cell datatype="Text">9</cell>
+<cell datatype="Number">47</cell>
+<cell datatype="Number">24.2268041237113</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">194</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Select the month when your child's breathing was the worst?">
+              <columnheaders>
+<columnheader>Select the month when your child's breathing was the worst?</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Text">1</cell>
+<cell datatype="Number">2.14297314265893E-02</cell>
+<cell datatype="Number">8.62367142097221E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">10</cell>
+<cell datatype="Number">0.133483065973536</cell>
+<cell datatype="Number">0.247527288149409</cell>
+              </row>
+              <row>
+<cell datatype="Text">11</cell>
+<cell datatype="Number">3.61598329771818E-02</cell>
+<cell datatype="Number">0.11186381517429</cell>
+              </row>
+              <row>
+<cell datatype="Text">12</cell>
+<cell datatype="Number">1.46279340868264E-02</cell>
+<cell datatype="Number">7.29278071319994E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">2</cell>
+<cell datatype="Number">4.39197226850735E-02</cell>
+<cell datatype="Number">0.124320348131401</cell>
+              </row>
+              <row>
+<cell datatype="Text">3</cell>
+<cell datatype="Number">2.86415162922216E-02</cell>
+<cell datatype="Number">9.91874103163303E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">4</cell>
+<cell datatype="Number">2.86415162922216E-02</cell>
+<cell datatype="Number">9.91874103163303E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">5</cell>
+<cell datatype="Number">2.49920524032422E-02</cell>
+<cell datatype="Number">0.092750681430968</cell>
+              </row>
+              <row>
+<cell datatype="Text">6</cell>
+<cell datatype="Number">2.86415162922216E-02</cell>
+<cell datatype="Number">9.91874103163303E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">7</cell>
+<cell datatype="Number">2.86415162922216E-02</cell>
+<cell datatype="Number">9.91874103163303E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">8</cell>
+<cell datatype="Number">3.61598329771818E-02</cell>
+<cell datatype="Number">0.11186381517429</cell>
+              </row>
+              <row>
+<cell datatype="Text">9</cell>
+<cell datatype="Number">0.183767416449125</cell>
+<cell datatype="Number">0.308822715333746</cell>
+              </row>
+            </valuearray>
+          </result>
+        </resultarray>
+      </command>
+      <command commandname="FREQ" commandline="FREQ  Bronchitis STRATAVAR = SchoolNum" pgmname="Interactive" pgmruntime="2005-09-08 03:33:31 PM">
+        <resultarray description="FREQ">
+          <result description="Asthmatic Bronchitis
+or Wheezy Bronchitis">
+            <valuearray description="Asthmatic Bronchitis
+or Wheezy Bronchitis, School Number=A">
+              <columnheaders>
+<columnheader>Asthmatic Bronchitis
+or Wheezy Bronchitis</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">27</cell>
+<cell datatype="Number">13.7755102040816</cell>
+<cell datatype="Number">13.7755102040816</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">169</cell>
+<cell datatype="Number">86.2244897959184</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">196</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Asthmatic Bronchitis
+or Wheezy Bronchitis, School Number=A">
+              <columnheaders>
+<columnheader>Asthmatic Bronchitis
+or Wheezy Bronchitis</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">9.27841505724744E-02</cell>
+<cell datatype="Number">0.194063997549778</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.805936002450222</cell>
+<cell datatype="Number">0.907215849427526</cell>
+              </row>
+            </valuearray>
+            <valuearray description="Asthmatic Bronchitis
+or Wheezy Bronchitis, School Number=B">
+              <columnheaders>
+<columnheader>Asthmatic Bronchitis
+or Wheezy Bronchitis</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">24</cell>
+<cell datatype="Number">11.7073170731707</cell>
+<cell datatype="Number">11.7073170731707</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">181</cell>
+<cell datatype="Number">88.2926829268293</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">205</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Asthmatic Bronchitis
+or Wheezy Bronchitis, School Number=B">
+              <columnheaders>
+<columnheader>Asthmatic Bronchitis
+or Wheezy Bronchitis</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">7.64693544412213E-02</cell>
+<cell datatype="Number">0.169173102284515</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.830826897715485</cell>
+<cell datatype="Number">0.923530645558779</cell>
+              </row>
+            </valuearray>
+            <valuearray description="Asthmatic Bronchitis
+or Wheezy Bronchitis, School Number=C">
+              <columnheaders>
+<columnheader>Asthmatic Bronchitis
+or Wheezy Bronchitis</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">20</cell>
+<cell datatype="Number">9.61538461538462</cell>
+<cell datatype="Number">9.61538461538462</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">188</cell>
+<cell datatype="Number">90.3846153846154</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">208</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Asthmatic Bronchitis
+or Wheezy Bronchitis, School Number=C">
+              <columnheaders>
+<columnheader>Asthmatic Bronchitis
+or Wheezy Bronchitis</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">5.97272677342297E-02</cell>
+<cell datatype="Number">0.144592762598587</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.855407237401413</cell>
+<cell datatype="Number">0.94027273226577</cell>
+              </row>
+            </valuearray>
+            <valuearray description="Asthmatic Bronchitis
+or Wheezy Bronchitis, School Number=D">
+              <columnheaders>
+<columnheader>Asthmatic Bronchitis
+or Wheezy Bronchitis</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">15</cell>
+<cell datatype="Number">7.85340314136126</cell>
+<cell datatype="Number">7.85340314136126</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">176</cell>
+<cell datatype="Number">92.1465968586387</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">191</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Asthmatic Bronchitis
+or Wheezy Bronchitis, School Number=D">
+              <columnheaders>
+<columnheader>Asthmatic Bronchitis
+or Wheezy Bronchitis</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">4.46201724651387E-02</cell>
+<cell datatype="Number">0.126221765471405</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.873778234528595</cell>
+<cell datatype="Number">0.955379827534861</cell>
+              </row>
+            </valuearray>
+          </result>
+        </resultarray>
+      </command>
+      <command commandname="FREQ" commandline="FREQ  Asthma STRATAVAR = Gender" pgmname="Interactive" pgmruntime="2005-09-08 03:33:31 PM">
+        <resultarray description="FREQ">
+          <result description="Asthma">
+            <valuearray description="Asthma, Gender=Female">
+              <columnheaders>
+<columnheader>Asthma</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">43</cell>
+<cell datatype="Number">10.5911330049261</cell>
+<cell datatype="Number">10.5911330049261</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">363</cell>
+<cell datatype="Number">89.4088669950739</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">406</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Asthma, Gender=Female">
+              <columnheaders>
+<columnheader>Asthma</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">0.078515207089518</cell>
+<cell datatype="Number">0.140995571094691</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.859996159857526</cell>
+<cell datatype="Number">0.922284817382583</cell>
+              </row>
+            </valuearray>
+            <valuearray description="Asthma, Gender=Male">
+              <columnheaders>
+<columnheader>Asthma</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">48</cell>
+<cell datatype="Number">12.1827411167513</cell>
+<cell datatype="Number">12.1827411167513</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">346</cell>
+<cell datatype="Number">87.8172588832487</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">394</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Asthma, Gender=Male">
+              <columnheaders>
+<columnheader>Asthma</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">9.20166566424472E-02</cell>
+<cell datatype="Number">0.159225266843476</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.841735720393034</cell>
+<cell datatype="Number">0.908792357582267</cell>
+              </row>
+            </valuearray>
+          </result>
+        </resultarray>
+      </command>
+    </dataset>
+    <dataset>
+<datadescriptor>C:\Epi_Info\EIHA Tutorial\Asthma Survey 2005 Sample.mdb:viewPreInterventionSurvey</datadescriptor>
+<datadescriptor>RAD = (+) </datadescriptor>
+<datadescriptor>(Deleted records excluded)</datadescriptor>
+      <command commandname="FREQ" commandline="FREQ  Medication" pgmname="Interactive" pgmruntime="2005-09-08 03:33:32 PM">
+        <resultarray description="FREQ">
+          <result description="Has a health professional prescribed any medication to your child?">
+            <valuearray description="Has a health professional prescribed any medication to your child?">
+              <columnheaders>
+<columnheader>Has a health professional prescribed any medication to your child?</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">46</cell>
+<cell datatype="Number">49.4623655913978</cell>
+<cell datatype="Number">49.4623655913978</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">47</cell>
+<cell datatype="Number">50.5376344086022</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">93</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Has a health professional prescribed any medication to your child?">
+              <columnheaders>
+<columnheader>Has a health professional prescribed any medication to your child?</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">0.38928546307735</cell>
+<cell datatype="Number">0.600313611591472</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.399686388408528</cell>
+<cell datatype="Number">0.61071453692265</cell>
+              </row>
+            </valuearray>
+          </result>
+        </resultarray>
+      </command>
+    </dataset>
+    <dataset>
+<datadescriptor>C:\Epi_Info\EIHA Tutorial\Asthma Survey 2005 Sample.mdb:viewPreInterventionSurvey</datadescriptor>
+<datadescriptor>(Deleted records excluded)</datadescriptor>
+      <command commandname="FREQ" commandline="FREQ  Zip" pgmname="Interactive" pgmruntime="2005-09-08 03:33:32 PM">
+        <resultarray description="FREQ">
+          <result description="Zip Code">
+            <valuearray description="Zip Code">
+              <columnheaders>
+<columnheader>Zip Code</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Text">12007</cell>
+<cell datatype="Number">14</cell>
+<cell datatype="Number">1.75</cell>
+<cell datatype="Number">1.75</cell>
+              </row>
+              <row>
+<cell datatype="Text">12009</cell>
+<cell datatype="Number">31</cell>
+<cell datatype="Number">3.875</cell>
+<cell datatype="Number">5.625</cell>
+              </row>
+              <row>
+<cell datatype="Text">12023</cell>
+<cell datatype="Number">26</cell>
+<cell datatype="Number">3.25</cell>
+<cell datatype="Number">8.875</cell>
+              </row>
+              <row>
+<cell datatype="Text">12046</cell>
+<cell datatype="Number">66</cell>
+<cell datatype="Number">8.25</cell>
+<cell datatype="Number">17.125</cell>
+              </row>
+              <row>
+<cell datatype="Text">12047</cell>
+<cell datatype="Number">14</cell>
+<cell datatype="Number">1.75</cell>
+<cell datatype="Number">18.875</cell>
+              </row>
+              <row>
+<cell datatype="Text">12054</cell>
+<cell datatype="Number">31</cell>
+<cell datatype="Number">3.875</cell>
+<cell datatype="Number">22.75</cell>
+              </row>
+              <row>
+<cell datatype="Text">12055</cell>
+<cell datatype="Number">25</cell>
+<cell datatype="Number">3.125</cell>
+<cell datatype="Number">25.875</cell>
+              </row>
+              <row>
+<cell datatype="Text">12059</cell>
+<cell datatype="Number">19</cell>
+<cell datatype="Number">2.375</cell>
+<cell datatype="Number">28.25</cell>
+              </row>
+              <row>
+<cell datatype="Text">12067</cell>
+<cell datatype="Number">32</cell>
+<cell datatype="Number">4</cell>
+<cell datatype="Number">32.25</cell>
+              </row>
+              <row>
+<cell datatype="Text">12077</cell>
+<cell datatype="Number">28</cell>
+<cell datatype="Number">3.5</cell>
+<cell datatype="Number">35.75</cell>
+              </row>
+              <row>
+<cell datatype="Text">12084</cell>
+<cell datatype="Number">24</cell>
+<cell datatype="Number">3</cell>
+<cell datatype="Number">38.75</cell>
+              </row>
+              <row>
+<cell datatype="Text">12110</cell>
+<cell datatype="Number">1</cell>
+<cell datatype="Number">0.125</cell>
+<cell datatype="Number">38.875</cell>
+              </row>
+              <row>
+<cell datatype="Text">12120</cell>
+<cell datatype="Number">22</cell>
+<cell datatype="Number">2.75</cell>
+<cell datatype="Number">41.625</cell>
+              </row>
+              <row>
+<cell datatype="Text">12143</cell>
+<cell datatype="Number">44</cell>
+<cell datatype="Number">5.5</cell>
+<cell datatype="Number">47.125</cell>
+              </row>
+              <row>
+<cell datatype="Text">12147</cell>
+<cell datatype="Number">21</cell>
+<cell datatype="Number">2.625</cell>
+<cell datatype="Number">49.75</cell>
+              </row>
+              <row>
+<cell datatype="Text">12158</cell>
+<cell datatype="Number">38</cell>
+<cell datatype="Number">4.75</cell>
+<cell datatype="Number">54.5</cell>
+              </row>
+              <row>
+<cell datatype="Text">12159</cell>
+<cell datatype="Number">41</cell>
+<cell datatype="Number">5.125</cell>
+<cell datatype="Number">59.625</cell>
+              </row>
+              <row>
+<cell datatype="Text">12183</cell>
+<cell datatype="Number">9</cell>
+<cell datatype="Number">1.125</cell>
+<cell datatype="Number">60.75</cell>
+              </row>
+              <row>
+<cell datatype="Text">12186</cell>
+<cell datatype="Number">43</cell>
+<cell datatype="Number">5.375</cell>
+<cell datatype="Number">66.125</cell>
+              </row>
+              <row>
+<cell datatype="Text">12189</cell>
+<cell datatype="Number">13</cell>
+<cell datatype="Number">1.625</cell>
+<cell datatype="Number">67.75</cell>
+              </row>
+              <row>
+<cell datatype="Text">12193</cell>
+<cell datatype="Number">30</cell>
+<cell datatype="Number">3.75</cell>
+<cell datatype="Number">71.5</cell>
+              </row>
+              <row>
+<cell datatype="Text">12202</cell>
+<cell datatype="Number">10</cell>
+<cell datatype="Number">1.25</cell>
+<cell datatype="Number">72.75</cell>
+              </row>
+              <row>
+<cell datatype="Text">12203</cell>
+<cell datatype="Number">18</cell>
+<cell datatype="Number">2.25</cell>
+<cell datatype="Number">75</cell>
+              </row>
+              <row>
+<cell datatype="Text">12204</cell>
+<cell datatype="Number">25</cell>
+<cell datatype="Number">3.125</cell>
+<cell datatype="Number">78.125</cell>
+              </row>
+              <row>
+<cell datatype="Text">12205</cell>
+<cell datatype="Number">20</cell>
+<cell datatype="Number">2.5</cell>
+<cell datatype="Number">80.625</cell>
+              </row>
+              <row>
+<cell datatype="Text">12206</cell>
+<cell datatype="Number">14</cell>
+<cell datatype="Number">1.75</cell>
+<cell datatype="Number">82.375</cell>
+              </row>
+              <row>
+<cell datatype="Text">12207</cell>
+<cell datatype="Number">12</cell>
+<cell datatype="Number">1.5</cell>
+<cell datatype="Number">83.875</cell>
+              </row>
+              <row>
+<cell datatype="Text">12208</cell>
+<cell datatype="Number">12</cell>
+<cell datatype="Number">1.5</cell>
+<cell datatype="Number">85.375</cell>
+              </row>
+              <row>
+<cell datatype="Text">12209</cell>
+<cell datatype="Number">10</cell>
+<cell datatype="Number">1.25</cell>
+<cell datatype="Number">86.625</cell>
+              </row>
+              <row>
+<cell datatype="Text">12210</cell>
+<cell datatype="Number">19</cell>
+<cell datatype="Number">2.375</cell>
+<cell datatype="Number">89</cell>
+              </row>
+              <row>
+<cell datatype="Text">12211</cell>
+<cell datatype="Number">19</cell>
+<cell datatype="Number">2.375</cell>
+<cell datatype="Number">91.375</cell>
+              </row>
+              <row>
+<cell datatype="Text">12303</cell>
+<cell datatype="Number">35</cell>
+<cell datatype="Number">4.375</cell>
+<cell datatype="Number">95.75</cell>
+              </row>
+              <row>
+<cell datatype="Text">12469</cell>
+<cell datatype="Number">34</cell>
+<cell datatype="Number">4.25</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">800</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Zip Code">
+              <columnheaders>
+<columnheader>Zip Code</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Text">12007</cell>
+<cell datatype="Number">9.98515636096209E-03</cell>
+<cell datatype="Number">2.99333604094841E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12009</cell>
+<cell datatype="Number">0.026911177655972</cell>
+<cell datatype="Number">5.52002881436191E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12023</cell>
+<cell datatype="Number">2.17638454364248E-02</cell>
+<cell datatype="Number">4.79276360634386E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12046</cell>
+<cell datatype="Number">6.48143497743876E-02</cell>
+<cell datatype="Number">0.104305951549445</cell>
+              </row>
+              <row>
+<cell datatype="Text">12047</cell>
+<cell datatype="Number">9.98515636096209E-03</cell>
+<cell datatype="Number">2.99333604094841E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12054</cell>
+<cell datatype="Number">0.026911177655972</cell>
+<cell datatype="Number">5.52002881436191E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12055</cell>
+<cell datatype="Number">2.07476056833938E-02</cell>
+<cell datatype="Number">4.64605410596212E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12059</cell>
+<cell datatype="Number">0.014766633931301</cell>
+<cell datatype="Number">3.75483403904216E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12067</cell>
+<cell datatype="Number">2.79524125874702E-02</cell>
+<cell datatype="Number">5.66435933988214E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12077</cell>
+<cell datatype="Number">2.38102309493004E-02</cell>
+<cell datatype="Number">5.08486392022058E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12084</cell>
+<cell datatype="Number">1.97363547310618E-02</cell>
+<cell datatype="Number">0.044988728440145</cell>
+              </row>
+              <row>
+<cell datatype="Text">12110</cell>
+<cell datatype="Number">6.52516901759965E-05</cell>
+<cell datatype="Number">8.07799959495732E-03</cell>
+              </row>
+              <row>
+<cell datatype="Text">12120</cell>
+<cell datatype="Number">1.77300474496683E-02</cell>
+<cell datatype="Number">4.20298377565333E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12143</cell>
+<cell datatype="Number">4.06848531936227E-02</cell>
+<cell datatype="Number">0.073734863513087</cell>
+              </row>
+              <row>
+<cell datatype="Text">12147</cell>
+<cell datatype="Number">1.67356904013251E-02</cell>
+<cell datatype="Number">4.05421295563488E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12158</cell>
+<cell datatype="Number">3.42686899350203E-02</cell>
+<cell datatype="Number">6.52373614327549E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12159</cell>
+<cell datatype="Number">3.74656138546523E-02</cell>
+<cell datatype="Number">6.94968988050387E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12183</cell>
+<cell datatype="Number">5.49999236625224E-03</cell>
+<cell datatype="Number">2.20511884169643E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12186</cell>
+<cell datatype="Number">3.96094312944641E-02</cell>
+<cell datatype="Number">7.23244760075532E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12189</cell>
+<cell datatype="Number">9.0592866881326E-03</cell>
+<cell datatype="Number">2.83826016649973E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12193</cell>
+<cell datatype="Number">2.58736166023081E-02</cell>
+<cell datatype="Number">5.37534707026101E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12202</cell>
+<cell datatype="Number">6.36436011896611E-03</cell>
+<cell datatype="Number">2.36564197923674E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12203</cell>
+<cell datatype="Number">1.37929185628037E-02</cell>
+<cell datatype="Number">3.60413859571945E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12204</cell>
+<cell datatype="Number">2.07476056833938E-02</cell>
+<cell datatype="Number">4.64605410596212E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12205</cell>
+<cell datatype="Number">1.57477318705811E-02</cell>
+<cell datatype="Number">3.90484342321848E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12206</cell>
+<cell datatype="Number">9.98515636096209E-03</cell>
+<cell datatype="Number">2.99333604094841E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12207</cell>
+<cell datatype="Number">8.14611621884648E-03</cell>
+<cell datatype="Number">2.68204189653195E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12208</cell>
+<cell datatype="Number">8.14611621884648E-03</cell>
+<cell datatype="Number">2.68204189653195E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12209</cell>
+<cell datatype="Number">6.36436011896611E-03</cell>
+<cell datatype="Number">2.36564197923674E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12210</cell>
+<cell datatype="Number">0.014766633931301</cell>
+<cell datatype="Number">3.75483403904216E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12211</cell>
+<cell datatype="Number">0.014766633931301</cell>
+<cell datatype="Number">3.75483403904216E-02</cell>
+              </row>
+              <row>
+<cell datatype="Text">12303</cell>
+<cell datatype="Number">3.10966021116331E-02</cell>
+<cell datatype="Number">0.060953881265214</cell>
+              </row>
+              <row>
+<cell datatype="Text">12469</cell>
+<cell datatype="Number">3.00452692321129E-02</cell>
+<cell datatype="Number">5.95202557369778E-02</cell>
+              </row>
+            </valuearray>
+          </result>
+        </resultarray>
+      </command>
+    </dataset>
+    <dataset>
+<datadescriptor>C:\Epi_Info\EIHA Tutorial\Asthma Survey 2005 Sample.mdb:viewPreInterventionSurvey</datadescriptor>
+<datadescriptor>Zip = &quot;12046&quot; </datadescriptor>
+<datadescriptor>(Deleted records excluded)</datadescriptor>
+      <command commandname="FREQ" commandline="FREQ  AsthmaticConditions" pgmname="Interactive" pgmruntime="2005-09-08 03:33:33 PM">
+        <resultarray description="FREQ">
+          <result description="Asthma">
+            <valuearray description="Asthma">
+              <columnheaders>
+<columnheader>Asthma</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">8</cell>
+<cell datatype="Number">12.1212121212121</cell>
+<cell datatype="Number">12.1212121212121</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">58</cell>
+<cell datatype="Number">87.8787878787879</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">66</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Asthma">
+              <columnheaders>
+<columnheader>Asthma</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">5.38108618418648E-02</cell>
+<cell datatype="Number">0.224940155723158</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.775059844276842</cell>
+<cell datatype="Number">0.946189138158135</cell>
+              </row>
+            </valuearray>
+          </result>
+          <result description="Reactive Airway Disease">
+            <valuearray description="Reactive Airway Disease">
+              <columnheaders>
+<columnheader>Reactive Airway Disease</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">6</cell>
+<cell datatype="Number">9.09090909090909</cell>
+<cell datatype="Number">9.09090909090909</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">60</cell>
+<cell datatype="Number">90.9090909090909</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">66</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Reactive Airway Disease">
+              <columnheaders>
+<columnheader>Reactive Airway Disease</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">0.034097132771268</cell>
+<cell datatype="Number">0.187442651186473</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.812557348813527</cell>
+<cell datatype="Number">0.965902867228732</cell>
+              </row>
+            </valuearray>
+          </result>
+          <result description="Asthmatic Bronchitis
+or Wheezy Bronchitis">
+            <valuearray description="Asthmatic Bronchitis
+or Wheezy Bronchitis">
+              <columnheaders>
+<columnheader>Asthmatic Bronchitis
+or Wheezy Bronchitis</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">4</cell>
+<cell datatype="Number">6.06060606060606</cell>
+<cell datatype="Number">6.06060606060606</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">62</cell>
+<cell datatype="Number">93.9393939393939</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">66</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Asthmatic Bronchitis
+or Wheezy Bronchitis">
+              <columnheaders>
+<columnheader>Asthmatic Bronchitis
+or Wheezy Bronchitis</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">1.67582226981675E-02</cell>
+<cell datatype="Number">0.147967563945846</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.852032436054154</cell>
+<cell datatype="Number">0.983241777301832</cell>
+              </row>
+            </valuearray>
+          </result>
+          <result description="Wheezing">
+            <valuearray description="Wheezing">
+              <columnheaders>
+<columnheader>Wheezing</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">5</cell>
+<cell datatype="Number">7.57575757575758</cell>
+<cell datatype="Number">7.57575757575758</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">61</cell>
+<cell datatype="Number">92.4242424242424</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">66</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Wheezing">
+              <columnheaders>
+<columnheader>Wheezing</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Boolean">(+)</cell>
+<cell datatype="Number">2.50556129167229E-02</cell>
+<cell datatype="Number">0.168006590063717</cell>
+              </row>
+              <row>
+<cell datatype="Boolean">(-)</cell>
+<cell datatype="Number">0.831993409936283</cell>
+<cell datatype="Number">0.974944387083277</cell>
+              </row>
+            </valuearray>
+          </result>
+        </resultarray>
+      </command>
+    </dataset>
+    <dataset>
+<datadescriptor>C:\Epi_Info\EIHA Tutorial\Asthma Survey 2005 Sample.mdb:viewPreInterventionSurvey</datadescriptor>
+<datadescriptor>Asthma = (+) AND Bronchitis = (+) AND RAD = (+) AND Wheezing = (+) </datadescriptor>
+<datadescriptor>(Deleted records excluded)</datadescriptor>
+      <command commandname="FREQ" commandline="FREQ  Zip" pgmname="Interactive" pgmruntime="2005-09-08 03:33:34 PM">
+        <resultarray description="FREQ">
+          <result description="Zip Code">
+            <valuearray description="Zip Code">
+              <columnheaders>
+<columnheader>Zip Code</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Text">12009</cell>
+<cell datatype="Number">1</cell>
+<cell datatype="Number">6.25</cell>
+<cell datatype="Number">6.25</cell>
+              </row>
+              <row>
+<cell datatype="Text">12023</cell>
+<cell datatype="Number">1</cell>
+<cell datatype="Number">6.25</cell>
+<cell datatype="Number">12.5</cell>
+              </row>
+              <row>
+<cell datatype="Text">12046</cell>
+<cell datatype="Number">1</cell>
+<cell datatype="Number">6.25</cell>
+<cell datatype="Number">18.75</cell>
+              </row>
+              <row>
+<cell datatype="Text">12054</cell>
+<cell datatype="Number">1</cell>
+<cell datatype="Number">6.25</cell>
+<cell datatype="Number">25</cell>
+              </row>
+              <row>
+<cell datatype="Text">12055</cell>
+<cell datatype="Number">2</cell>
+<cell datatype="Number">12.5</cell>
+<cell datatype="Number">37.5</cell>
+              </row>
+              <row>
+<cell datatype="Text">12143</cell>
+<cell datatype="Number">2</cell>
+<cell datatype="Number">12.5</cell>
+<cell datatype="Number">50</cell>
+              </row>
+              <row>
+<cell datatype="Text">12158</cell>
+<cell datatype="Number">1</cell>
+<cell datatype="Number">6.25</cell>
+<cell datatype="Number">56.25</cell>
+              </row>
+              <row>
+<cell datatype="Text">12205</cell>
+<cell datatype="Number">1</cell>
+<cell datatype="Number">6.25</cell>
+<cell datatype="Number">62.5</cell>
+              </row>
+              <row>
+<cell datatype="Text">12208</cell>
+<cell datatype="Number">2</cell>
+<cell datatype="Number">12.5</cell>
+<cell datatype="Number">75</cell>
+              </row>
+              <row>
+<cell datatype="Text">12209</cell>
+<cell datatype="Number">1</cell>
+<cell datatype="Number">6.25</cell>
+<cell datatype="Number">81.25</cell>
+              </row>
+              <row>
+<cell datatype="Text">12210</cell>
+<cell datatype="Number">1</cell>
+<cell datatype="Number">6.25</cell>
+<cell datatype="Number">87.5</cell>
+              </row>
+              <row>
+<cell datatype="Text">12303</cell>
+<cell datatype="Number">2</cell>
+<cell datatype="Number">12.5</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">16</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : Zip Code">
+              <columnheaders>
+<columnheader>Zip Code</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Text">12009</cell>
+<cell datatype="Number">1.58111172276587E-03</cell>
+<cell datatype="Number">0.302320738434532</cell>
+              </row>
+              <row>
+<cell datatype="Text">12023</cell>
+<cell datatype="Number">1.58111172276587E-03</cell>
+<cell datatype="Number">0.302320738434532</cell>
+              </row>
+              <row>
+<cell datatype="Text">12046</cell>
+<cell datatype="Number">1.58111172276587E-03</cell>
+<cell datatype="Number">0.302320738434532</cell>
+              </row>
+              <row>
+<cell datatype="Text">12054</cell>
+<cell datatype="Number">1.58111172276587E-03</cell>
+<cell datatype="Number">0.302320738434532</cell>
+              </row>
+              <row>
+<cell datatype="Text">12055</cell>
+<cell datatype="Number">1.55136038154132E-02</cell>
+<cell datatype="Number">0.383476236849263</cell>
+              </row>
+              <row>
+<cell datatype="Text">12143</cell>
+<cell datatype="Number">1.55136038154132E-02</cell>
+<cell datatype="Number">0.383476236849263</cell>
+              </row>
+              <row>
+<cell datatype="Text">12158</cell>
+<cell datatype="Number">1.58111172276587E-03</cell>
+<cell datatype="Number">0.302320738434532</cell>
+              </row>
+              <row>
+<cell datatype="Text">12205</cell>
+<cell datatype="Number">1.58111172276587E-03</cell>
+<cell datatype="Number">0.302320738434532</cell>
+              </row>
+              <row>
+<cell datatype="Text">12208</cell>
+<cell datatype="Number">1.55136038154132E-02</cell>
+<cell datatype="Number">0.383476236849263</cell>
+              </row>
+              <row>
+<cell datatype="Text">12209</cell>
+<cell datatype="Number">1.58111172276587E-03</cell>
+<cell datatype="Number">0.302320738434532</cell>
+              </row>
+              <row>
+<cell datatype="Text">12210</cell>
+<cell datatype="Number">1.58111172276587E-03</cell>
+<cell datatype="Number">0.302320738434532</cell>
+              </row>
+              <row>
+<cell datatype="Text">12303</cell>
+<cell datatype="Number">1.55136038154132E-02</cell>
+<cell datatype="Number">0.383476236849263</cell>
+              </row>
+            </valuearray>
+          </result>
+        </resultarray>
+      </command>
+      <command commandname="FREQ" commandline="FREQ  SchoolNum" pgmname="Interactive" pgmruntime="2005-09-08 03:33:34 PM">
+        <resultarray description="FREQ">
+          <result description="School Number">
+            <valuearray description="School Number">
+              <columnheaders>
+<columnheader>School Number</columnheader>
+<columnheader>Frequency</columnheader>
+<columnheader>Percent</columnheader>
+<columnheader>Cum Percent</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Text">A</cell>
+<cell datatype="Number">5</cell>
+<cell datatype="Number">31.25</cell>
+<cell datatype="Number">31.25</cell>
+              </row>
+              <row>
+<cell datatype="Text">B</cell>
+<cell datatype="Number">4</cell>
+<cell datatype="Number">25</cell>
+<cell datatype="Number">56.25</cell>
+              </row>
+              <row>
+<cell datatype="Text">C</cell>
+<cell datatype="Number">4</cell>
+<cell datatype="Number">25</cell>
+<cell datatype="Number">81.25</cell>
+              </row>
+              <row>
+<cell datatype="Text">D</cell>
+<cell datatype="Number">3</cell>
+<cell datatype="Number">18.75</cell>
+<cell datatype="Number">100</cell>
+              </row>
+              <row>
+<cell datatype="Text">Total</cell>
+<cell datatype="Number">16</cell>
+<cell datatype="Number">100</cell>
+<cell datatype="Number">100</cell>
+              </row>
+            </valuearray>
+            <valuearray description="95% Confidence Intervals : School Number">
+              <columnheaders>
+<columnheader>School Number</columnheader>
+<columnheader>Lower</columnheader>
+<columnheader>Upper</columnheader>
+              </columnheaders>
+              <row>
+<cell datatype="Text">A</cell>
+<cell datatype="Number">0.110169954717115</cell>
+<cell datatype="Number">0.586620636451359</cell>
+              </row>
+              <row>
+<cell datatype="Text">B</cell>
+<cell datatype="Number">7.26620382528802E-02</cell>
+<cell datatype="Number">0.523770819896128</cell>
+              </row>
+              <row>
+<cell datatype="Text">C</cell>
+<cell datatype="Number">7.26620382528802E-02</cell>
+<cell datatype="Number">0.523770819896128</cell>
+              </row>
+              <row>
+<cell datatype="Text">D</cell>
+<cell datatype="Number">4.04737339059444E-02</cell>
+<cell datatype="Number">0.456456546231612</cell>
+              </row>
+            </valuearray>
+          </result>
+        </resultarray>
+      </command>
+</dataset>
+</reportdata>

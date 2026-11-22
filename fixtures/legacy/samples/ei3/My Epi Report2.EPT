@@ -1,0 +1,554 @@
+<HTML><HEAD><META NAME='Epi Report Version' Content='3.3'><meta http-equiv='Content-Type' content='text/html; charset=windows-1252'><TITLE></TITLE></HEAD><BODY id=BODY-1 style="FONT-SIZE: 10pt">
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<HR id=PGBRK-1 
+style="Z-INDEX: 102; LEFT: 0px; WIDTH: 700px; BORDER-TOP-STYLE: dotted; BORDER-RIGHT-STYLE: dotted; BORDER-LEFT-STYLE: dotted; POSITION: absolute; TOP: 599px; HEIGHT: 2px; BORDER-BOTTOM-STYLE: dotted; Design_Time_Lock: True" 
+color=#0000ff noShade>
+
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>
+<TABLE id=STBL-2 title=1 
+style="FONT-SIZE: 10pt; Z-INDEX: 113; LEFT: 124px; WIDTH: 513px; FONT-FAMILY: Times New Roman; POSITION: absolute; TOP: 760px; HEIGHT: 144px; TEXT-ALIGN: center" 
+borderColor=#000000 cellSpacing=0 cellPadding=0>
+  <TBODY style="TEXT-ALIGN: center">
+  <TR>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; TEXT-ALIGN: center; WORD-WRAP: break-word" 
+    bgColor=#ffe0c0><FONT style="BACKGROUND-COLOR: #ffe0c0" 
+      face=Verdana><STRONG>Symptoms&nbsp;</STRONG></FONT></TD>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word" 
+    bgColor=#ffe0c0><FONT style="BACKGROUND-COLOR: #ffe0c0" 
+      face=Verdana><STRONG>Total Missed Days per 
+Symptom&nbsp;</STRONG></FONT></TD>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word" 
+    bgColor=#ffe0c0><FONT style="BACKGROUND-COLOR: #ffe0c0" 
+      face=Verdana><STRONG>Average Missed Days per 
+    Symptom</STRONG></FONT>&nbsp;</TD></TR>
+  <TR>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word">Asthma&nbsp;</TD>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word">&nbsp;<SPAN 
+      id=SPAN-4 
+      style="FONT-SIZE: 10pt; LEFT: 197px; OVERFLOW: hidden; WIDTH: 100px; FONT-FAMILY: Times New Roman; TOP: 36px; HEIGHT: 20px" 
+      VarType="D">{MDAsthma.sMissDays_1}</SPAN></TD>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word"><SPAN 
+      id=SPAN-8 
+      style="FONT-SIZE: 10pt; LEFT: 284px; OVERFLOW: hidden; WIDTH: 100px; FONT-FAMILY: Times New Roman; TOP: 39px; HEIGHT: 20px" 
+      VarType="D">{MDAsthma.aMissDays_1}</SPAN>&nbsp;</TD></TR>
+  <TR>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word">Bronchitis&nbsp;</TD>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word"><SPAN 
+      id=SPAN-5 
+      style="FONT-SIZE: 10pt; LEFT: 167px; OVERFLOW: hidden; WIDTH: 100px; FONT-FAMILY: Times New Roman; TOP: 57px; HEIGHT: 20px" 
+      VarType="D">{MDBronchitis.sMissDays_1}</SPAN>&nbsp;</TD>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word"><SPAN 
+      id=SPAN-9 
+      style="FONT-SIZE: 10pt; LEFT: 308px; OVERFLOW: hidden; WIDTH: 100px; FONT-FAMILY: Times New Roman; TOP: 63px; HEIGHT: 20px" 
+      VarType="D">{MDBronchitis.aMissDays_1}</SPAN>&nbsp;</TD></TR>
+  <TR>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word">&nbsp;Reactive 
+      Airway Disease</TD>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word"><SPAN 
+      id=SPAN-6 
+      style="FONT-SIZE: 10pt; LEFT: 182px; OVERFLOW: hidden; WIDTH: 100px; FONT-FAMILY: Times New Roman; TOP: 85px; HEIGHT: 20px" 
+      VarType="D">{MDRad.sMissDays_1}</SPAN>&nbsp;</TD>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word"><SPAN 
+      id=SPAN-10 
+      style="FONT-SIZE: 10pt; LEFT: 316px; OVERFLOW: hidden; WIDTH: 100px; FONT-FAMILY: Times New Roman; TOP: 82px; HEIGHT: 20px" 
+      VarType="D">{MDRad.aMissDays_1}</SPAN>&nbsp;</TD></TR>
+  <TR>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; TEXT-ALIGN: center; WORD-WRAP: break-word">&nbsp;Wheezing</TD>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word"><SPAN 
+      id=SPAN-7 
+      style="FONT-SIZE: 10pt; LEFT: 170px; OVERFLOW: hidden; WIDTH: 100px; FONT-FAMILY: Times New Roman; TOP: 115px; HEIGHT: 20px" 
+      VarType="D">{MDWheeze.sMissDays_1}</SPAN>&nbsp;</TD>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 171px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word"><SPAN 
+      id=SPAN-11 
+      style="FONT-SIZE: 10pt; LEFT: 305px; OVERFLOW: hidden; WIDTH: 100px; FONT-FAMILY: Times New Roman; TOP: 111px; HEIGHT: 20px" 
+      VarType="D">{MDWheeze.aMissDays_1}</SPAN>&nbsp;</TD></TR></TBODY></TABLE></P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<HR id=PGBRK-2 
+style="Z-INDEX: 100; LEFT: 0px; WIDTH: 700px; BORDER-TOP-STYLE: dotted; BORDER-RIGHT-STYLE: dotted; BORDER-LEFT-STYLE: dotted; POSITION: absolute; TOP: 985px; HEIGHT: 2px; BORDER-BOTTOM-STYLE: dotted; Design_Time_Lock: True" 
+color=#0000ff noShade>
+
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>
+<TABLE id=LABELTABLE-3 title=1 
+style="FONT-SIZE: 10pt; Z-INDEX: 114; LEFT: 165px; WIDTH: 452px; FONT-FAMILY: Times New Roman; POSITION: absolute; TOP: 1000px; HEIGHT: 19px" 
+borderColor=#000000 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR>
+    <TD id=LABELTABLE-3 
+    style="WIDTH: 452px; HEIGHT: 15px; WORD-WRAP: break-word" vAlign=top><FONT 
+      face="Lucida Sans Unicode" color=#400080 size=5><STRONG>Absenteeism for 
+      School A- Age 9+</STRONG></FONT></TD></TR></TBODY></TABLE></P>
+<P>&nbsp;</P>
+<HR id=HR-3 
+style="Z-INDEX: 115; LEFT: 139px; WIDTH: 500px; POSITION: absolute; TOP: 1030px; HEIGHT: 2px" 
+align=left color=#000000 noShade>
+
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<HR id=HR-2 
+style="Z-INDEX: 111; LEFT: 175px; WIDTH: 426px; POSITION: absolute; TOP: 653px; HEIGHT: 5px" 
+align=left color=#00ffff noShade>
+
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>
+<TABLE id=LABELTABLE-2 title=1 
+style="FONT-SIZE: 10pt; Z-INDEX: 110; LEFT: 249px; WIDTH: 279px; FONT-FAMILY: Times New Roman; POSITION: absolute; TOP: 619px; HEIGHT: 29px" 
+borderColor=#000000 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR>
+    <TD id=LABELTABLE-2 
+    style="WIDTH: 279px; HEIGHT: 15px; WORD-WRAP: break-word" 
+      vAlign=top><STRONG><FONT style="BACKGROUND-COLOR: #ffff00" face=Verdana 
+      color=#8080ff size=5>County 
+Absenteeism</FONT></STRONG></TD></TR></TBODY></TABLE></P>
+<P>
+<TABLE id=GRPTBL-1 title=1 
+style="FONT-SIZE: 10pt; Z-INDEX: 116; LEFT: 129px; WIDTH: 505px; FONT-FAMILY: Times New Roman; POSITION: absolute; TOP: 1061px; HEIGHT: 131px" 
+borderColor=#000000 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR id=header>
+    <TD id=[AllSymptoms].[SchoolID]~header 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 71px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; TEXT-ALIGN: left; WORD-WRAP: break-word" 
+    bgColor=#e8e8e8><FONT 
+      face="Baskerville Old Face"><STRONG>SchoolID</STRONG></FONT></TD>
+    <TD id=[AllSymptoms].[Age]~header 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 41px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word" 
+    bgColor=#e8e8e8><FONT 
+      face="Baskerville Old Face"><STRONG>Age</STRONG></FONT></TD>
+    <TD id=[AllSymptoms].[Asthma]~header 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 62px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word" 
+    bgColor=#e8e8e8><FONT 
+      face="Baskerville Old Face"><STRONG>Asthma</STRONG></FONT></TD>
+    <TD id=[AllSymptoms].[Bronchitis]~header 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 76px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word" 
+    bgColor=#e8e8e8><FONT 
+      face="Baskerville Old Face"><STRONG>Bronchitis</STRONG></FONT></TD>
+    <TD id=[AllSymptoms].[Gender]~header 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 58px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word" 
+    bgColor=#e8e8e8><FONT 
+      face="Baskerville Old Face"><STRONG>Gender</STRONG></FONT></TD>
+    <TD id=[AllSymptoms].[MissDays]~header 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 76px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word" 
+    bgColor=#e8e8e8><FONT 
+      face="Baskerville Old Face"><STRONG>MissDays</STRONG></FONT></TD>
+    <TD id=[AllSymptoms].[RAD]~header 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 46px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word" 
+    bgColor=#e8e8e8><FONT 
+      face="Baskerville Old Face"><STRONG>RAD</STRONG></FONT></TD>
+    <TD id=[AllSymptoms].[Wheezing]~header 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 75px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word" 
+    bgColor=#e8e8e8><FONT 
+      face="Baskerville Old Face"><STRONG>Wheezing</STRONG></FONT></TD></TR>
+  <TR id=formatheader name="detail">
+    <TD id=[AllSymptoms].[SchoolID]~detail title="" 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 71px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word"><FONT 
+      face="Baskerville Old Face">&lt;SchoolID&gt;</FONT></TD>
+    <TD id=[AllSymptoms].[Age]~detail title=Number 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 41px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word"><FONT 
+      face="Baskerville Old Face">&lt;Age&gt;</FONT></TD>
+    <TD id=[AllSymptoms].[Asthma]~detail title="" 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 62px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; TEXT-ALIGN: left; WORD-WRAP: break-word"><FONT 
+      face="Baskerville Old Face">&lt;Asthma&gt;</FONT></TD>
+    <TD id=[AllSymptoms].[Bronchitis]~detail title="" 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 76px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word"><FONT 
+      face="Baskerville Old Face">&lt;Bronchitis&gt;</FONT></TD>
+    <TD id=[AllSymptoms].[Gender]~detail title="" 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 58px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; TEXT-ALIGN: left; WORD-WRAP: break-word"><FONT 
+      face="Baskerville Old Face">&lt;Gender&gt;</FONT></TD>
+    <TD id=[AllSymptoms].[MissDays]~detail title=Number 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 76px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word"><FONT 
+      face="Baskerville Old Face">&lt;MissDays&gt;</FONT></TD>
+    <TD id=[AllSymptoms].[RAD]~detail title="" 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 46px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word"><FONT 
+      face="Baskerville Old Face">&lt;RAD&gt;</FONT></TD>
+    <TD id=[AllSymptoms].[Wheezing]~detail title="" 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 75px; BORDER-BOTTOM: 1px solid; HEIGHT: 44px; WORD-WRAP: break-word"><FONT 
+      face="Baskerville Old Face">&lt;Wheezing&gt;</FONT></TD></TR>
+  <TR id=footer>
+    <TD style="WIDTH: 505px; HEIGHT: 44px; WORD-WRAP: break-word" 
+    colSpan=8>&nbsp;</TD></TR></TBODY></TABLE></P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>
+<TABLE id=STBL-1 title=1 
+style="FONT-SIZE: 10pt; Z-INDEX: 112; LEFT: 125px; WIDTH: 511px; FONT-FAMILY: Times New Roman; POSITION: absolute; TOP: 694px; HEIGHT: 47px; TEXT-ALIGN: center" 
+borderColor=#000000 cellSpacing=0 cellPadding=0>
+  <TBODY style="TEXT-ALIGN: center">
+  <TR>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 256px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; TEXT-ALIGN: center; WORD-WRAP: break-word" 
+    bgColor=#ffffc0><FONT style="BACKGROUND-COLOR: #ffffc0" 
+      face=MetropolitainesD><STRONG>&nbsp;Sum of Missed Days in the 
+      County</STRONG></FONT></TD>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; WIDTH: 256px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word" 
+    bgColor=#ffffc0><FONT style="BACKGROUND-COLOR: #ffffc0" 
+      face=MetropolitainesD><STRONG>Average&nbsp;of Missed Days per 
+      Student</STRONG></FONT>&nbsp;</TD></TR>
+  <TR>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 256px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word"><SPAN 
+      id=SPAN-2 
+      style="FONT-SIZE: 10pt; LEFT: 62px; OVERFLOW: hidden; WIDTH: 100px; FONT-FAMILY: Times New Roman; TOP: 33px; HEIGHT: 20px" 
+      VarType="D">{PreInterventionSurvey.sMissDays_1}</SPAN>&nbsp;</TD>
+    <TD 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 256px; BORDER-BOTTOM: 1px solid; HEIGHT: 17px; WORD-WRAP: break-word"><SPAN 
+      id=SPAN-3 
+      style="FONT-SIZE: 10pt; LEFT: 303px; OVERFLOW: hidden; WIDTH: 100px; FONT-FAMILY: Times New Roman; TOP: 41px; HEIGHT: 20px" 
+      VarType="D">{PreInterventionSurvey.aMissDays_1}</SPAN>&nbsp;</TD></TR></TBODY></TABLE></P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>
+<TABLE id=LABELTABLE-1 title=1 
+style="FONT-SIZE: 10pt; Z-INDEX: 103; LEFT: 193px; FONT-FAMILY: Times New Roman; POSITION: absolute; TOP: 16px" 
+borderColor=#000000 cellSpacing=0 cellPadding=0>
+  <TBODY>
+  <TR>
+    <TD id=LABELTABLE-1 
+    style="WIDTH: 385px; HEIGHT: 15px; WORD-WRAP: break-word" vAlign=top><FONT 
+      face=Verdana color=#008080 size=5><STRONG>Asthma Frequency 
+      Report</STRONG></FONT></TD></TR></TBODY></TABLE></P>
+<HR id=HR-1 
+style="Z-INDEX: 104; LEFT: 145px; WIDTH: 466px; POSITION: absolute; TOP: 54px; HEIGHT: 2px" 
+align=left color=#c000c0 noShade>
+<SPAN id=SPAN-1 
+style="FONT-SIZE: 10pt; Z-INDEX: 105; LEFT: 11px; OVERFLOW: hidden; WIDTH: 100px; FONT-FAMILY: Times New Roman; POSITION: absolute; TOP: 11px" 
+VarType="S">{Date}</SPAN> 
+<TABLE id=ANATBL-1 title=1 
+style="FONT-SIZE: 10pt; Z-INDEX: 106; LEFT: 129px; WIDTH: 500px; FONT-FAMILY: Times New Roman; POSITION: absolute; TOP: 75px; HEIGHT: 80px" 
+borderColor=#c04000 cellSpacing=1 cellPadding=0>
+  <TBODY>
+  <TR>
+    <TH 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 421px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center" 
+    colSpan=4><FONT face=Verdana>Asthma</FONT></TH></TR>
+  <TR>
+    <TH title=Boolean 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 83px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center"><FONT 
+      face=Verdana>Asthma</FONT></TH>
+    <TH title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 112px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center"><FONT 
+      face=Verdana>Frequency</FONT></TH>
+    <TH title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 85px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center"><FONT 
+      face=Verdana>Percent</FONT></TH>
+    <TH title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 141px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center"><FONT 
+      face=Verdana>Cum Percent</FONT></TH></TR>
+  <TR>
+    <TD title=Boolean 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 83px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="(+)"><FONT face=Verdana>(+)</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 112px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: left" 
+    OriginalValue="91"><FONT face=Verdana>91</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 85px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: left" 
+    OriginalValue="11.375"><FONT face=Verdana>11.375</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 141px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: left" 
+    OriginalValue="11.375"><FONT face=Verdana>11.375</FONT></TD></TR>
+  <TR>
+    <TD title=Boolean 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 83px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="(-)"><FONT face=Verdana>(-)</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 112px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: left" 
+    OriginalValue="709"><FONT face=Verdana>709</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 85px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="88.625"><FONT face=Verdana>88.625</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 141px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: left" 
+    OriginalValue="100"><FONT face=Verdana>100</FONT></TD></TR>
+  <TR>
+    <TD title=Text 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 83px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="Total"><FONT face=Verdana>Total</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 112px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: left" 
+    OriginalValue="800"><FONT face=Verdana>800</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 85px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="100"><FONT face=Verdana>100</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 141px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: left" 
+    OriginalValue="100"><FONT face=Verdana>100</FONT></TD></TR></TBODY></TABLE>
+<TABLE id=ANATBL-2 title=1 
+style="FONT-SIZE: 10pt; Z-INDEX: 107; LEFT: 128px; WIDTH: 500px; FONT-FAMILY: Times New Roman; POSITION: absolute; TOP: 194px; HEIGHT: 80px" 
+borderColor=#0000ff cellSpacing=1 cellPadding=0>
+  <TBODY>
+  <TR>
+    <TH 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 500px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center" 
+    colSpan=4><FONT face="Arial Greek">Asthmatic Bronchitis or Wheezy 
+      Bronchitis</FONT></TH></TR>
+  <TR>
+    <TH title=Boolean 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 291px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center"><FONT 
+      face="Arial Greek">Asthmatic Bronchitis or Wheezy Bronchitis</FONT></TH>
+    <TH title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 69px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center"><FONT 
+      face="Arial Greek">Frequency</FONT></TH>
+    <TH title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 53px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center"><FONT 
+      face="Arial Greek">Percent</FONT></TH>
+    <TH title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 87px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center"><FONT 
+      face="Arial Greek">Cum Percent</FONT></TH></TR>
+  <TR>
+    <TD title=Boolean 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 291px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="(+)"><FONT face="Arial Greek">(+)</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 69px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="86"><FONT face="Arial Greek">86</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 53px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="10.75"><FONT face="Arial Greek">10.75</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 87px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="10.75"><FONT face="Arial Greek">10.75</FONT></TD></TR>
+  <TR>
+    <TD title=Boolean 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 291px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="(-)"><FONT face="Arial Greek">(-)</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 69px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="714"><FONT face="Arial Greek">714</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 53px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="89.25"><FONT face="Arial Greek">89.25</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 87px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="100"><FONT face="Arial Greek">100</FONT></TD></TR>
+  <TR>
+    <TD title=Text 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 291px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="Total"><FONT face="Arial Greek">Total</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 69px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="800"><FONT face="Arial Greek">800</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 53px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="100"><FONT face="Arial Greek">100</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 87px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="100"><FONT 
+face="Arial Greek">100</FONT></TD></TR></TBODY></TABLE>
+<TABLE id=ANATBL-3 title=1 
+style="FONT-SIZE: 10pt; Z-INDEX: 108; LEFT: 128px; WIDTH: 500px; FONT-FAMILY: Times New Roman; POSITION: absolute; TOP: 321px; HEIGHT: 80px" 
+borderColor=#ff8000 cellSpacing=1 cellPadding=0>
+  <TBODY>
+  <TR>
+    <TH 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 500px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center" 
+    colSpan=4><FONT face=Gigi>Reactive Airway Disease</FONT></TH></TR>
+  <TR>
+    <TH title=Boolean 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 217px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center"><FONT 
+      face=Gigi>Reactive Airway Disease</FONT></TH>
+    <TH title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 93px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center"><FONT 
+      face=Gigi>Frequency</FONT></TH>
+    <TH title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 71px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center"><FONT 
+      face=Gigi>Percent</FONT></TH>
+    <TH title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 118px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center"><FONT 
+      face=Gigi>Cum Percent</FONT></TH></TR>
+  <TR>
+    <TD title=Boolean 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 217px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="(+)"><FONT face=Gigi>(+)</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 93px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="93"><FONT face=Gigi>93</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 71px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="11.625"><FONT face=Gigi>11.625</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 118px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="11.625"><FONT face=Gigi>11.625</FONT></TD></TR>
+  <TR>
+    <TD title=Boolean 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 217px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="(-)"><FONT face=Gigi>(-)</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 93px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="707"><FONT face=Gigi>707</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 71px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="88.375"><FONT face=Gigi>88.375</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 118px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="100"><FONT face=Gigi>100</FONT></TD></TR>
+  <TR>
+    <TD title=Text 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 217px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="Total"><FONT face=Gigi>Total</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 93px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="800"><FONT face=Gigi>800</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 71px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="100"><FONT face=Gigi>100</FONT></TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 118px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="100"><FONT face=Gigi>100</FONT></TD></TR></TBODY></TABLE>
+<TABLE id=ANATBL-4 title=1 
+style="FONT-SIZE: 10pt; Z-INDEX: 109; LEFT: 129px; WIDTH: 500px; FONT-FAMILY: Hobo BT; POSITION: absolute; TOP: 454px; HEIGHT: 80px" 
+borderColor=#c0c000 cellSpacing=1 cellPadding=0>
+  <TBODY>
+  <TR>
+    <TH 
+    style="BORDER-RIGHT: 1px solid; BORDER-TOP: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 489px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center" 
+    colSpan=4>Wheezing</TH></TR>
+  <TR>
+    <TH title=Boolean 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 120px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center">Wheezing</TH>
+    <TH title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 122px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center">Frequency</TH>
+    <TH title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 93px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center">Percent</TH>
+    <TH title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 154px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px; TEXT-ALIGN: center">Cum 
+      Percent</TH></TR>
+  <TR>
+    <TD title=Boolean 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 120px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="(+)">(+)</TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 122px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="99">99</TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 93px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="12.375">12.375</TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 154px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="12.375">12.375</TD></TR>
+  <TR>
+    <TD title=Boolean 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 120px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="(-)">(-)</TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 122px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="701">701</TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 93px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="87.625">87.625</TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 154px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="100">100</TD></TR>
+  <TR>
+    <TD title=Text 
+    style="BORDER-RIGHT: 1px solid; BORDER-LEFT: 1px solid; WIDTH: 120px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="Total">Total</TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 122px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="800">800</TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 93px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="100">100</TD>
+    <TD title=Number 
+    style="BORDER-RIGHT: 1px solid; WIDTH: 154px; BORDER-BOTTOM: 1px solid; HEIGHT: 15px" 
+    OriginalValue="100">100</TD></TR></TBODY></TABLE>
+<STYLE>P {
+	MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px
+}
+</STYLE>
+</BODY></HTML>
