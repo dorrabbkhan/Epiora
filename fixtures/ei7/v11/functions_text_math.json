@@ -1,0 +1,345 @@
+{
+  "source": {
+    "build": "7.2.7.0",
+    "zip_sha256": "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609",
+    "run_url": "https://github.com/dorrabbkhan/Epiora/actions/runs/45161983082",
+    "program": "functions_text_math.pgm",
+    "inputs": {
+      "Sample.mdb": "c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e",
+      "Nutrition.mdb": "310a87c6bbe591ea1afcfa5a8a534c5e944f3e294f9b8833ce8b743ff9c41ad8"
+    }
+  },
+  "steps": [
+    {
+      "line": 6,
+      "command": "READ '@WORK_DIR@/Nutrition.mdb':PatientVisits2",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 7,
+      "command": "ROUTEOUT \"@OUTPUT_HTML@\" REPLACE",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 8,
+      "command": "DEFINE UPNAME TEXTINPUT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 9,
+      "command": "ASSIGN UPNAME = UPPERCASE(Name)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 10,
+      "command": "DEFINE SUBNM TEXTINPUT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 11,
+      "command": "ASSIGN SUBNM = SUBSTRING(Name, 1, 3)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 12,
+      "command": "DEFINE NMLEN NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 13,
+      "command": "ASSIGN NMLEN = STRLEN(Name)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 14,
+      "command": "DEFINE PIDNUM NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 15,
+      "command": "ASSIGN PIDNUM = TXTTONUM(VisitPatientID)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 16,
+      "command": "DEFINE RNDAGE NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 17,
+      "command": "ASSIGN RNDAGE = ROUND(AgeMonths, 0)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 18,
+      "command": "DEFINE TRAGE NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 19,
+      "command": "ASSIGN TRAGE = TRUNC(-7.5)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 20,
+      "command": "DEFINE ABSZ NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 21,
+      "command": "ASSIGN ABSZ = ABS(0 - HeightInches)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 22,
+      "command": "DEFINE EXPLN NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 23,
+      "command": "ASSIGN EXPLN = EXP(LN(HeightInches))",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 24,
+      "command": "DEFINE SQV NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 25,
+      "command": "ASSIGN SQV = SQRT(HeightInches)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 26,
+      "command": "DEFINE FMTH TEXTINPUT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 27,
+      "command": "ASSIGN FMTH = FORMAT(HeightInches, \"0.00\")",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 28,
+      "command": "DEFINE FINDN NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 29,
+      "command": "ASSIGN FINDN = FINDTEXT(\"John\", Name)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 30,
+      "command": "LIST Name UPNAME SUBNM NMLEN PIDNUM RNDAGE TRAGE ABSZ EXPLN SQV FMTH FINDN",
+      "rows": [
+        [
+          "Name",
+          "UPNAME",
+          "SUBNM",
+          "NMLEN",
+          "PIDNUM",
+          "RNDAGE",
+          "TRAGE",
+          "ABSZ",
+          "EXPLN",
+          "SQV",
+          "FMTH",
+          "FINDN"
+        ],
+        [
+          "Doe, John",
+          "DOE, JOHN",
+          "Doe",
+          9,
+          1,
+          null,
+          -7,
+          54,
+          54,
+          7.3484692283,
+          54,
+          6
+        ],
+        [
+          "Doe, John",
+          "DOE, JOHN",
+          "Doe",
+          9,
+          1,
+          73,
+          -7,
+          46.1,
+          46.1,
+          6.7896980787,
+          46.1,
+          6
+        ],
+        [
+          "Doe, John",
+          "DOE, JOHN",
+          "Doe",
+          9,
+          1,
+          109,
+          -7,
+          53.3,
+          53.3,
+          7.3006848994,
+          53.3,
+          6
+        ],
+        [
+          "Doe, John",
+          "DOE, JOHN",
+          "Doe",
+          9,
+          1,
+          48,
+          -7,
+          40.3,
+          40.3,
+          6.3482280992,
+          40.3,
+          6
+        ],
+        [
+          "Doe, John",
+          "DOE, JOHN",
+          "Doe",
+          9,
+          1,
+          97,
+          -7,
+          51.1,
+          51.1,
+          7.1484264003,
+          51.1,
+          6
+        ],
+        [
+          "Doe, John",
+          "DOE, JOHN",
+          "Doe",
+          9,
+          1,
+          84,
+          -7,
+          48.6,
+          48.6,
+          6.9713700232,
+          48.6,
+          6
+        ],
+        [
+          "Doe, John",
+          "DOE, JOHN",
+          "Doe",
+          9,
+          1,
+          12,
+          -7,
+          31,
+          31,
+          5.5677643628,
+          31,
+          6
+        ],
+        [
+          "Doe, John",
+          "DOE, JOHN",
+          "Doe",
+          9,
+          1,
+          37,
+          -7,
+          38,
+          38,
+          6.164414003,
+          38,
+          6
+        ],
+        [
+          "Doe, John",
+          "DOE, JOHN",
+          "Doe",
+          9,
+          1,
+          61,
+          -7,
+          43.2,
+          43.2,
+          6.5726706901,
+          43.2,
+          6
+        ],
+        [
+          "Doe, John",
+          "DOE, JOHN",
+          "Doe",
+          9,
+          1,
+          25,
+          -7,
+          34.7,
+          34.7,
+          5.89067059,
+          34.7,
+          6
+        ],
+        [
+          "Doe, John",
+          "DOE, JOHN",
+          "Doe",
+          9,
+          1,
+          1,
+          -7,
+          22,
+          22,
+          4.6904157598,
+          22,
+          6
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 31,
+      "command": "CLOSEOUT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 32,
+      "command": "QUIT",
+      "rows": null,
+      "results": {}
+    }
+  ]
+}

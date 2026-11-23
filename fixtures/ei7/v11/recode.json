@@ -1,0 +1,621 @@
+{
+  "source": {
+    "build": "7.2.7.0",
+    "zip_sha256": "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609",
+    "run_url": "https://github.com/dorrabbkhan/Epiora/actions/runs/45161983082",
+    "program": "recode.pgm",
+    "inputs": {
+      "Sample.mdb": "c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e",
+      "Nutrition.mdb": "310a87c6bbe591ea1afcfa5a8a534c5e944f3e294f9b8833ce8b743ff9c41ad8"
+    }
+  },
+  "steps": [
+    {
+      "line": 7,
+      "command": "READ '@WORK_DIR@/Sample.mdb':Oswego12",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 8,
+      "command": "ROUTEOUT \"@OUTPUT_HTML@\" REPLACE",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 9,
+      "command": "DEFINE AGEGRP NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 10,
+      "command": "RECODE AGE TO AGEGRP",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 11,
+      "command": "LOVALUE - 17 = 1",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 12,
+      "command": "18 - 64 = 2",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 13,
+      "command": "65 - HIVALUE = 3",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 14,
+      "command": "END",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 15,
+      "command": "FREQ AGEGRP",
+      "rows": [
+        [
+          "AGEGRP",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          1,
+          23,
+          "30.67%",
+          "30.67%",
+          null
+        ],
+        [
+          2,
+          43,
+          "57.33%",
+          "88.00%",
+          null
+        ],
+        [
+          3,
+          9,
+          "12.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          75,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 23,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 30.67,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 30.67,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 43,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 57.33,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 88,
+          "decimals": 2
+        },
+        "freq.categories[2].count": {
+          "value": 9,
+          "decimals": 0
+        },
+        "freq.categories[2].percent": {
+          "value": 12,
+          "decimals": 2
+        },
+        "freq.categories[2].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 75,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 20.53,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 42.38,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 45.38,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 68.69,
+          "decimals": 2
+        },
+        "freq.categories[2].ci_95_clopper_pearson.lower": {
+          "value": 5.64,
+          "decimals": 2
+        },
+        "freq.categories[2].ci_95_clopper_pearson.upper": {
+          "value": 21.56,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 16,
+      "command": "DEFINE UNDER40 NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 17,
+      "command": "RECODE AGE TO UNDER40",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 18,
+      "command": "LOVALUE - 39 = 1",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 19,
+      "command": "40 - HIVALUE = 0",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 20,
+      "command": "END",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 21,
+      "command": "FREQ UNDER40",
+      "rows": [
+        [
+          "UNDER40",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          0,
+          32,
+          "42.67%",
+          "42.67%",
+          null
+        ],
+        [
+          1,
+          43,
+          "57.33%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          75,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 32,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 42.67,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 42.67,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 43,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 57.33,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 75,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 31.31,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 54.62,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 45.38,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 68.69,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 22,
+      "command": "DEFINE MPGRP NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 23,
+      "command": "RECODE MASHEDPOTA TO MPGRP",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 24,
+      "command": "0 = 0",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 25,
+      "command": "ELSE = 2",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 26,
+      "command": "END",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 27,
+      "command": "FREQ MPGRP",
+      "rows": [
+        [
+          "MPGRP",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          0,
+          37,
+          "50.00%",
+          "50.00%",
+          null
+        ],
+        [
+          2,
+          37,
+          "50.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          74,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 37,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 50,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 50,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 37,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 50,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 74,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 38.14,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 61.86,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 38.14,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 61.86,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 28,
+      "command": "DEFINE VANGRP NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 29,
+      "command": "RECODE VANILLA TO VANGRP",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 30,
+      "command": "0 = 2",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 31,
+      "command": "ELSE = 9",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 32,
+      "command": "END",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 33,
+      "command": "FREQ VANGRP",
+      "rows": [
+        [
+          "VANGRP",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          2,
+          21,
+          "28.00%",
+          "28.00%",
+          null
+        ],
+        [
+          9,
+          54,
+          "72.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          75,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 21,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 28,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 28,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 54,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 72,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 75,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 18.24,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 39.56,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 60.44,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 81.76,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 34,
+      "command": "DEFINE ILLTXT TEXTINPUT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 35,
+      "command": "RECODE ILL TO ILLTXT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 36,
+      "command": "0 = \"well\"",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 37,
+      "command": "1 = \"ill\"",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 38,
+      "command": "END",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 39,
+      "command": "FREQ ILLTXT",
+      "rows": [
+        [
+          "ILLTXT",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          "ill",
+          46,
+          "61.33%",
+          "61.33%",
+          null
+        ],
+        [
+          "well",
+          29,
+          "38.67%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          75,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 61.33,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 61.33,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 29,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 38.67,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 75,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 49.38,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 72.36,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 27.64,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 50.62,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 40,
+      "command": "CLOSEOUT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 41,
+      "command": "QUIT",
+      "rows": null,
+      "results": {}
+    }
+  ]
+}

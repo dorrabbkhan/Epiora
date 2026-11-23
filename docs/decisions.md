@@ -6069,6 +6069,62 @@ Files outside the Files block:
   keeping it out of the README table keeps the inventory readable.
 Supersedes: —
 
+### v1.1 Task 3 — EI7 reference corpus II (2026-11-23)
+
+Decision: `fixtures/ei7/v11/` commits seven Analysis programs and their
+workflow-produced outputs: `select_sort` (29 steps), `define_assign_if`
+(40), `recode` (35), `merge_relate` (20), `delete_set` (21),
+`functions_date` (34), `functions_text_math` (27). Each `<topic>.pgm`
+READs a scratch copy under `ei7-out/work/v11-data` (Epi Info MERGE writes
+into the destination file on disk), ROUTEOUTs to `<topic>.html`, and is
+parsed by `fixtures/ei7/parse.mjs --steps` into `{source, steps}` json —
+one step per non-comment source line; `rows` holds the first output table
+(LIST rows verbatim, header included), `results` holds registry-path
+numerics (positional `freq.*`, `means.*`, `two_by_two.*` via labels.json,
+`selection.record_count`, `selection.deleted_records_included`,
+`delete.records_deleted`, `undelete.records_restored`). Generating run:
+`45161983082` (all seven `run: OK`, jsons schema-valid, drift check
+green); development runs `45151708069`, `45156679205`, `45158293708`,
+`45159694424`, `45160531102` each produced measured failures that shaped
+the corpus (all recorded in `fixtures/ei7/v11/README.md`).
+
+Measured Epi Info 7.2.7.0 deviations from grammar/docs (each pinned or
+worked around in the corpus): `SET` requires `END-SET`; `DELETE`/`UNDELETE`
+need `RUNSILENT` headless; `UNDELETE` is a no-op on raw `.mdb` READs ("The
+current Read must be an Epi7 project", `records_restored: 0`, FREQ total
+stays 46 after `DELETE ILL = 0` removed 29 of 75); `MERGE`'s
+`APPEND`/`UPDATE`/`RELATE` option crashes in `Rule_Merge.SetMergeOpt`
+(IndexOutOfRange) — only bare `MERGE file:table key` match-or-insert is
+pinned (Nutrition1 grew 3 -> 13 rows across two merges); `DEFINE x = f()`
+rejects function calls as column lookups; `MINUTES(a,b)` and
+`NUMTODATE(y,m,d)`/`NUMTOTIME(h,m,s)` arities differ from classic Epi Info;
+`ABS`/`TRUNC` throw NullReferenceException on missing input (corpus uses
+the fully populated `HeightInches`); `LOG` is a reserved but unparseable
+token; FREQ excludes missing values including from Total
+(`SELECT MASHEDPOTA = (.)` -> record_count 1, FREQ Total 0); RELATE
+expands to 11 rows MATCHING / 13 ALL (all 11 PatientVisits2 belong to
+patient "1"); `SET MISSING=ON` adds a `Missing` FREQ category (24 of 46
+undeleted rows for TIMESUPPER). EI7 uppercases the ROUTEOUT filename
+(`DEFINE_ASSIGN_IF.HTML`); the committed corpus normalises names to
+lowercase, bytes unchanged.
+
+EI3 upgrade probe (nonblocking, `ei3_probe` dispatch input): run
+`45156679205` reached the probe's first stage (EI3 project loaded, 1
+view enumerated) before PowerShell's native-stderr handling killed the
+step; run `45159694424` built `Epi Info 7.sln` @ `4cd353c` Release and
+launched the `/platform:x86` probe — `Epi.Configuration` loaded, then
+`Epi.ImportExport.ProjectUpgradeManager.Import()` on
+`fixtures/legacy/samples/ei3/Asthma Survey 2005 Sample.mdb` — and the
+probe step was still running at commit time (>40 minutes on that one
+step, no staged output — a hang, most likely a modal on the unattended
+desktop, the same failure mode as the corpus programs before
+RUNSILENT/`END-SET`; the first attempt `45151708069` died at probe start
+on the anycpu build and uninitialised configuration). Verdict recorded
+for the owner: the headless EI3 -> EI7 project upgrade does not complete
+unattended in this harness; the corpus keeps it opt-in and nonblocking.
+
+Files outside the Files block: none.
+Supersedes: —
 ### v1.1 Task 5 — mdbtools wasm module and EPTB batches (2026-11-23)
 
 Decision: `crates/epiora-mdb` compiles vendored mdbtools 1.0.1 libmdb

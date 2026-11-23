@@ -64,14 +64,36 @@ Task 11 replays. Never edit either output by hand; regenerate via
 
 ## Runs
 
-_Generating runs and measurements are recorded here and in
-`docs/decisions.md` (`### v1.1 Task 3`) once the workflow_dispatch runs
-complete._
+Generating run:
+[`45161983082`](https://github.com/dorrabbkhan/Epiora/actions/runs/45161983082)
+(ei7.yml `workflow_dispatch`, all seven programs `run: OK`, every json
+schema-valid, `git diff --exit-code fixtures/ei7` clean). Development
+runs that produced the pinned runtime findings above: `45151708069`,
+`45156679205`, `45158293708`, `45159694424`, `45160531102` — a failed or
+partial run is a measurement; the program fixes each one motivated are
+in `docs/decisions.md` (`### v1.1 Task 3`).
+
+| Program | Steps | Output-producing steps |
+| --- | --- | --- |
+| `select_sort` | 29 | 5 FREQ, 6 LIST, 9 SELECT/CANCEL SELECT, 4 SORT, CANCEL SORT |
+| `define_assign_if` | 40 | 3 MEANS, 4 FREQ, DISPLAY DBVARIABLES |
+| `recode` | 35 | 5 FREQ |
+| `merge_relate` | 20 | DISPLAY TABLES, 4 LIST, 3 FREQ, 2 RELATE, 4 READ, 2 MERGE |
+| `delete_set` | 21 | 7 FREQ, 1 MEANS, 2 LIST, DELETE, UNDELETE |
+| `functions_date` | 34 | 7 FREQ, 1 MEANS, 2 LIST |
+| `functions_text_math` | 27 | 1 LIST |
 
 ## EI3 upgrade probe
 
 `ei7.yml`'s `ei3-upgrade-probe` job (dispatch input `ei3_probe`) drives
 `Epi.ImportExport.ProjectUpgradeManager` — the class behind MakeView's
 interactive Epi Info 3.x upgrade path — on the source-built route against
-`fixtures/legacy/samples/ei3/Asthma Survey 2005 Sample.mdb`. Result and
-run link are recorded in `docs/decisions.md`.
+`fixtures/legacy/samples/ei3/Asthma Survey 2005 Sample.mdb`. **Result:
+does not complete unattended.** Run `45156679205` reached the probe's
+first stage (EI3 project loaded, 1 view enumerated) before the harness
+died on stderr handling; run `45159694424` rebuilt the pinned source
+tree and launched the `/platform:x86` probe with `Epi.Configuration`
+loaded, then the probe step hung past 40 minutes with no staged output —
+the same modal-dialog failure mode the corpus programs showed before
+`RUNSILENT`/`END-SET`. Kept opt-in and nonblocking; full history in
+`docs/decisions.md` (`### v1.1 Task 3`).

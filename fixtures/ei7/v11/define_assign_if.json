@@ -1,0 +1,1462 @@
+{
+  "source": {
+    "build": "7.2.7.0",
+    "zip_sha256": "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609",
+    "run_url": "https://github.com/dorrabbkhan/Epiora/actions/runs/45161983082",
+    "program": "define_assign_if.pgm",
+    "inputs": {
+      "Sample.mdb": "c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e",
+      "Nutrition.mdb": "310a87c6bbe591ea1afcfa5a8a534c5e944f3e294f9b8833ce8b743ff9c41ad8"
+    }
+  },
+  "steps": [
+    {
+      "line": 6,
+      "command": "READ '@WORK_DIR@/Sample.mdb':Oswego12",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 7,
+      "command": "ROUTEOUT \"@OUTPUT_HTML@\" REPLACE",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 8,
+      "command": "DEFINE AGEX2 NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 9,
+      "command": "ASSIGN AGEX2 = AGE * 2",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 10,
+      "command": "MEANS AGEX2",
+      "rows": [
+        [
+          null,
+          "Obs",
+          "Total",
+          "Mean",
+          "Variance",
+          "Std Dev"
+        ],
+        [
+          null,
+          75,
+          5522,
+          73.6267,
+          1840.7236,
+          42.9037
+        ]
+      ],
+      "results": {
+        "means.overall.observations": {
+          "value": 75,
+          "decimals": 4
+        },
+        "means.overall.total": {
+          "value": 5522,
+          "decimals": 4
+        },
+        "means.overall.mean": {
+          "value": 73.6267,
+          "decimals": 4
+        },
+        "means.overall.variance": {
+          "value": 1840.7236,
+          "decimals": 4
+        },
+        "means.overall.std_dev": {
+          "value": 42.9037,
+          "decimals": 4
+        },
+        "means.overall.min": {
+          "value": 6,
+          "decimals": 4
+        },
+        "means.overall.p25": {
+          "value": 32,
+          "decimals": 4
+        },
+        "means.overall.median": {
+          "value": 72,
+          "decimals": 4
+        },
+        "means.overall.p75": {
+          "value": 116,
+          "decimals": 4
+        },
+        "means.overall.max": {
+          "value": 154,
+          "decimals": 4
+        },
+        "means.overall.mode": {
+          "value": 22,
+          "decimals": 4
+        }
+      }
+    },
+    {
+      "line": 11,
+      "command": "DEFINE DOUBLED = AGE + AGE",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 12,
+      "command": "MEANS DOUBLED",
+      "rows": [
+        [
+          null,
+          "Obs",
+          "Total",
+          "Mean",
+          "Variance",
+          "Std Dev"
+        ],
+        [
+          null,
+          75,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "results": {
+        "means.overall.observations": {
+          "value": 75,
+          "decimals": 4
+        },
+        "means.overall.total": {
+          "value": 0,
+          "decimals": 4
+        },
+        "means.overall.mean": {
+          "value": 0,
+          "decimals": 4
+        },
+        "means.overall.variance": {
+          "value": 0,
+          "decimals": 4
+        },
+        "means.overall.std_dev": {
+          "value": 0,
+          "decimals": 4
+        }
+      }
+    },
+    {
+      "line": 13,
+      "command": "DEFINE OVER60 NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 14,
+      "command": "IF AGE > 60 THEN",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 15,
+      "command": "ASSIGN OVER60 = AGE * 10",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 16,
+      "command": "ELSE",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 17,
+      "command": "ASSIGN OVER60 = 0",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 18,
+      "command": "END",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 19,
+      "command": "FREQ OVER60",
+      "rows": [
+        [
+          "OVER60",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          0,
+          60,
+          "80.00%",
+          "80.00%",
+          null
+        ],
+        [
+          620,
+          4,
+          "5.33%",
+          "85.33%",
+          null
+        ],
+        [
+          630,
+          1,
+          "1.33%",
+          "86.67%",
+          null
+        ],
+        [
+          640,
+          1,
+          "1.33%",
+          "88.00%",
+          null
+        ],
+        [
+          650,
+          3,
+          "4.00%",
+          "92.00%",
+          null
+        ],
+        [
+          680,
+          1,
+          "1.33%",
+          "93.33%",
+          null
+        ],
+        [
+          690,
+          1,
+          "1.33%",
+          "94.67%",
+          null
+        ],
+        [
+          700,
+          1,
+          "1.33%",
+          "96.00%",
+          null
+        ],
+        [
+          720,
+          1,
+          "1.33%",
+          "97.33%",
+          null
+        ],
+        [
+          740,
+          1,
+          "1.33%",
+          "98.67%",
+          null
+        ],
+        [
+          770,
+          1,
+          "1.33%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          75,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 60,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 80,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 80,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 4,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 5.33,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 85.33,
+          "decimals": 2
+        },
+        "freq.categories[2].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[2].percent": {
+          "value": 1.33,
+          "decimals": 2
+        },
+        "freq.categories[2].cumulative_percent": {
+          "value": 86.67,
+          "decimals": 2
+        },
+        "freq.categories[3].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[3].percent": {
+          "value": 1.33,
+          "decimals": 2
+        },
+        "freq.categories[3].cumulative_percent": {
+          "value": 88,
+          "decimals": 2
+        },
+        "freq.categories[4].count": {
+          "value": 3,
+          "decimals": 0
+        },
+        "freq.categories[4].percent": {
+          "value": 4,
+          "decimals": 2
+        },
+        "freq.categories[4].cumulative_percent": {
+          "value": 92,
+          "decimals": 2
+        },
+        "freq.categories[5].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[5].percent": {
+          "value": 1.33,
+          "decimals": 2
+        },
+        "freq.categories[5].cumulative_percent": {
+          "value": 93.33,
+          "decimals": 2
+        },
+        "freq.categories[6].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[6].percent": {
+          "value": 1.33,
+          "decimals": 2
+        },
+        "freq.categories[6].cumulative_percent": {
+          "value": 94.67,
+          "decimals": 2
+        },
+        "freq.categories[7].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[7].percent": {
+          "value": 1.33,
+          "decimals": 2
+        },
+        "freq.categories[7].cumulative_percent": {
+          "value": 96,
+          "decimals": 2
+        },
+        "freq.categories[8].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[8].percent": {
+          "value": 1.33,
+          "decimals": 2
+        },
+        "freq.categories[8].cumulative_percent": {
+          "value": 97.33,
+          "decimals": 2
+        },
+        "freq.categories[9].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[9].percent": {
+          "value": 1.33,
+          "decimals": 2
+        },
+        "freq.categories[9].cumulative_percent": {
+          "value": 98.67,
+          "decimals": 2
+        },
+        "freq.categories[10].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[10].percent": {
+          "value": 1.33,
+          "decimals": 2
+        },
+        "freq.categories[10].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 75,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 69.17,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 88.35,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 1.47,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 13.1,
+          "decimals": 2
+        },
+        "freq.categories[2].ci_95_clopper_pearson.lower": {
+          "value": 0.03,
+          "decimals": 2
+        },
+        "freq.categories[2].ci_95_clopper_pearson.upper": {
+          "value": 7.21,
+          "decimals": 2
+        },
+        "freq.categories[3].ci_95_clopper_pearson.lower": {
+          "value": 0.03,
+          "decimals": 2
+        },
+        "freq.categories[3].ci_95_clopper_pearson.upper": {
+          "value": 7.21,
+          "decimals": 2
+        },
+        "freq.categories[4].ci_95_clopper_pearson.lower": {
+          "value": 0.83,
+          "decimals": 2
+        },
+        "freq.categories[4].ci_95_clopper_pearson.upper": {
+          "value": 11.25,
+          "decimals": 2
+        },
+        "freq.categories[5].ci_95_clopper_pearson.lower": {
+          "value": 0.03,
+          "decimals": 2
+        },
+        "freq.categories[5].ci_95_clopper_pearson.upper": {
+          "value": 7.21,
+          "decimals": 2
+        },
+        "freq.categories[6].ci_95_clopper_pearson.lower": {
+          "value": 0.03,
+          "decimals": 2
+        },
+        "freq.categories[6].ci_95_clopper_pearson.upper": {
+          "value": 7.21,
+          "decimals": 2
+        },
+        "freq.categories[7].ci_95_clopper_pearson.lower": {
+          "value": 0.03,
+          "decimals": 2
+        },
+        "freq.categories[7].ci_95_clopper_pearson.upper": {
+          "value": 7.21,
+          "decimals": 2
+        },
+        "freq.categories[8].ci_95_clopper_pearson.lower": {
+          "value": 0.03,
+          "decimals": 2
+        },
+        "freq.categories[8].ci_95_clopper_pearson.upper": {
+          "value": 7.21,
+          "decimals": 2
+        },
+        "freq.categories[9].ci_95_clopper_pearson.lower": {
+          "value": 0.03,
+          "decimals": 2
+        },
+        "freq.categories[9].ci_95_clopper_pearson.upper": {
+          "value": 7.21,
+          "decimals": 2
+        },
+        "freq.categories[10].ci_95_clopper_pearson.lower": {
+          "value": 0.03,
+          "decimals": 2
+        },
+        "freq.categories[10].ci_95_clopper_pearson.upper": {
+          "value": 7.21,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 20,
+      "command": "DEFINE BIGAGE NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 21,
+      "command": "IF AGE > 60 THEN",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 22,
+      "command": "ASSIGN BIGAGE = AGE",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 23,
+      "command": "END",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 24,
+      "command": "DEFINE BIGPLUS NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 25,
+      "command": "ASSIGN BIGPLUS = BIGAGE + 1",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 26,
+      "command": "FREQ BIGAGE",
+      "rows": [
+        [
+          "BIGAGE",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          62,
+          4,
+          "26.67%",
+          "26.67%",
+          null
+        ],
+        [
+          63,
+          1,
+          "6.67%",
+          "33.33%",
+          null
+        ],
+        [
+          64,
+          1,
+          "6.67%",
+          "40.00%",
+          null
+        ],
+        [
+          65,
+          3,
+          "20.00%",
+          "60.00%",
+          null
+        ],
+        [
+          68,
+          1,
+          "6.67%",
+          "66.67%",
+          null
+        ],
+        [
+          69,
+          1,
+          "6.67%",
+          "73.33%",
+          null
+        ],
+        [
+          70,
+          1,
+          "6.67%",
+          "80.00%",
+          null
+        ],
+        [
+          72,
+          1,
+          "6.67%",
+          "86.67%",
+          null
+        ],
+        [
+          74,
+          1,
+          "6.67%",
+          "93.33%",
+          null
+        ],
+        [
+          77,
+          1,
+          "6.67%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          15,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 4,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 26.67,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 26.67,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 6.67,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 33.33,
+          "decimals": 2
+        },
+        "freq.categories[2].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[2].percent": {
+          "value": 6.67,
+          "decimals": 2
+        },
+        "freq.categories[2].cumulative_percent": {
+          "value": 40,
+          "decimals": 2
+        },
+        "freq.categories[3].count": {
+          "value": 3,
+          "decimals": 0
+        },
+        "freq.categories[3].percent": {
+          "value": 20,
+          "decimals": 2
+        },
+        "freq.categories[3].cumulative_percent": {
+          "value": 60,
+          "decimals": 2
+        },
+        "freq.categories[4].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[4].percent": {
+          "value": 6.67,
+          "decimals": 2
+        },
+        "freq.categories[4].cumulative_percent": {
+          "value": 66.67,
+          "decimals": 2
+        },
+        "freq.categories[5].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[5].percent": {
+          "value": 6.67,
+          "decimals": 2
+        },
+        "freq.categories[5].cumulative_percent": {
+          "value": 73.33,
+          "decimals": 2
+        },
+        "freq.categories[6].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[6].percent": {
+          "value": 6.67,
+          "decimals": 2
+        },
+        "freq.categories[6].cumulative_percent": {
+          "value": 80,
+          "decimals": 2
+        },
+        "freq.categories[7].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[7].percent": {
+          "value": 6.67,
+          "decimals": 2
+        },
+        "freq.categories[7].cumulative_percent": {
+          "value": 86.67,
+          "decimals": 2
+        },
+        "freq.categories[8].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[8].percent": {
+          "value": 6.67,
+          "decimals": 2
+        },
+        "freq.categories[8].cumulative_percent": {
+          "value": 93.33,
+          "decimals": 2
+        },
+        "freq.categories[9].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[9].percent": {
+          "value": 6.67,
+          "decimals": 2
+        },
+        "freq.categories[9].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 15,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 7.79,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 55.1,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 0.17,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 31.95,
+          "decimals": 2
+        },
+        "freq.categories[2].ci_95_clopper_pearson.lower": {
+          "value": 0.17,
+          "decimals": 2
+        },
+        "freq.categories[2].ci_95_clopper_pearson.upper": {
+          "value": 31.95,
+          "decimals": 2
+        },
+        "freq.categories[3].ci_95_clopper_pearson.lower": {
+          "value": 4.33,
+          "decimals": 2
+        },
+        "freq.categories[3].ci_95_clopper_pearson.upper": {
+          "value": 48.09,
+          "decimals": 2
+        },
+        "freq.categories[4].ci_95_clopper_pearson.lower": {
+          "value": 0.17,
+          "decimals": 2
+        },
+        "freq.categories[4].ci_95_clopper_pearson.upper": {
+          "value": 31.95,
+          "decimals": 2
+        },
+        "freq.categories[5].ci_95_clopper_pearson.lower": {
+          "value": 0.17,
+          "decimals": 2
+        },
+        "freq.categories[5].ci_95_clopper_pearson.upper": {
+          "value": 31.95,
+          "decimals": 2
+        },
+        "freq.categories[6].ci_95_clopper_pearson.lower": {
+          "value": 0.17,
+          "decimals": 2
+        },
+        "freq.categories[6].ci_95_clopper_pearson.upper": {
+          "value": 31.95,
+          "decimals": 2
+        },
+        "freq.categories[7].ci_95_clopper_pearson.lower": {
+          "value": 0.17,
+          "decimals": 2
+        },
+        "freq.categories[7].ci_95_clopper_pearson.upper": {
+          "value": 31.95,
+          "decimals": 2
+        },
+        "freq.categories[8].ci_95_clopper_pearson.lower": {
+          "value": 0.17,
+          "decimals": 2
+        },
+        "freq.categories[8].ci_95_clopper_pearson.upper": {
+          "value": 31.95,
+          "decimals": 2
+        },
+        "freq.categories[9].ci_95_clopper_pearson.lower": {
+          "value": 0.17,
+          "decimals": 2
+        },
+        "freq.categories[9].ci_95_clopper_pearson.upper": {
+          "value": 31.95,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 27,
+      "command": "MEANS BIGPLUS",
+      "rows": [
+        [
+          null,
+          "Obs",
+          "Total",
+          "Mean",
+          "Variance",
+          "Std Dev"
+        ],
+        [
+          null,
+          15,
+          1015,
+          67.6667,
+          23.0952,
+          4.8058
+        ]
+      ],
+      "results": {
+        "means.overall.observations": {
+          "value": 15,
+          "decimals": 4
+        },
+        "means.overall.total": {
+          "value": 1015,
+          "decimals": 4
+        },
+        "means.overall.mean": {
+          "value": 67.6667,
+          "decimals": 4
+        },
+        "means.overall.variance": {
+          "value": 23.0952,
+          "decimals": 4
+        },
+        "means.overall.std_dev": {
+          "value": 4.8058,
+          "decimals": 4
+        },
+        "means.overall.min": {
+          "value": 63,
+          "decimals": 4
+        },
+        "means.overall.p25": {
+          "value": 63,
+          "decimals": 4
+        },
+        "means.overall.median": {
+          "value": 66,
+          "decimals": 4
+        },
+        "means.overall.p75": {
+          "value": 71,
+          "decimals": 4
+        },
+        "means.overall.max": {
+          "value": 78,
+          "decimals": 4
+        },
+        "means.overall.mode": {
+          "value": 63,
+          "decimals": 4
+        }
+      }
+    },
+    {
+      "line": 28,
+      "command": "DEFINE TMISS NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 29,
+      "command": "IF TIMESUPPER = (.) THEN",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 30,
+      "command": "ASSIGN TMISS = 1",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 31,
+      "command": "ELSE",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 32,
+      "command": "ASSIGN TMISS = 0",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 33,
+      "command": "END",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 34,
+      "command": "FREQ TMISS",
+      "rows": [
+        [
+          "TMISS",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          0,
+          28,
+          "37.33%",
+          "37.33%",
+          null
+        ],
+        [
+          1,
+          47,
+          "62.67%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          75,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 28,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 37.33,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 37.33,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 47,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 62.67,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 75,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 26.43,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 49.27,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 50.73,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 73.57,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 35,
+      "command": "DEFINE SICKTXT TEXTINPUT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 36,
+      "command": "IF ILL = 1 THEN",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 37,
+      "command": "ASSIGN SICKTXT = \"yes\"",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 38,
+      "command": "ELSE",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 39,
+      "command": "ASSIGN SICKTXT = \"no\"",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 40,
+      "command": "END",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 41,
+      "command": "FREQ SICKTXT",
+      "rows": [
+        [
+          "SICKTXT",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          "NO",
+          29,
+          "38.67%",
+          "38.67%",
+          null
+        ],
+        [
+          "YES",
+          46,
+          "61.33%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          75,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 29,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 38.67,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 38.67,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 61.33,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 75,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 27.64,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 50.62,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 49.38,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 72.36,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 42,
+      "command": "UNDEFINE AGEX2",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 43,
+      "command": "DISPLAY DBVARIABLES",
+      "rows": [
+        [
+          "PageNumber",
+          "Prompt",
+          "Field Type",
+          "Variable",
+          "Value",
+          "Format/Value",
+          "Special Value",
+          "Table"
+        ],
+        [
+          null,
+          null,
+          "Number",
+          "BIGAGE",
+          null,
+          null,
+          "Standard",
+          "Defined"
+        ],
+        [
+          null,
+          null,
+          "Number",
+          "BIGPLUS",
+          null,
+          null,
+          "Standard",
+          "Defined"
+        ],
+        [
+          null,
+          null,
+          "Text",
+          "DOUBLED",
+          null,
+          null,
+          "Standard",
+          "Defined"
+        ],
+        [
+          null,
+          null,
+          "Number",
+          "OVER60",
+          null,
+          null,
+          "Standard",
+          "Defined"
+        ],
+        [
+          null,
+          null,
+          "Text",
+          "SICKTXT",
+          null,
+          null,
+          "Standard",
+          "Defined"
+        ],
+        [
+          null,
+          null,
+          "Number",
+          "TMISS",
+          null,
+          null,
+          "Standard",
+          "Defined"
+        ],
+        [
+          null,
+          "AGE",
+          "Number",
+          "AGE",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "BAKEDHAM",
+          "YesNo",
+          "BAKEDHAM",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "BROWNBREAD",
+          "YesNo",
+          "BROWNBREAD",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "CABBAGESAL",
+          "YesNo",
+          "CABBAGESAL",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "CAKES",
+          "YesNo",
+          "CAKES",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "CHOCOLATE",
+          "YesNo",
+          "CHOCOLATE",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "CODE_RW",
+          "Text",
+          "CODE_RW",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "COFFEE",
+          "YesNo",
+          "COFFEE",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "DATEONSET",
+          "DateTime",
+          "DATEONSET",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "FRUITSALAD",
+          "YesNo",
+          "FRUITSALAD",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "GlobalRecordId",
+          "Text",
+          "GlobalRecordId",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "ILL",
+          "YesNo",
+          "ILL",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "JELLO",
+          "YesNo",
+          "JELLO",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "MASHEDPOTA",
+          "YesNo",
+          "MASHEDPOTA",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "MILK",
+          "YesNo",
+          "MILK",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "Name",
+          "Text",
+          "Name",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "ROLLS",
+          "YesNo",
+          "ROLLS",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "SEX",
+          "Text",
+          "SEX",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "SPINACH",
+          "YesNo",
+          "SPINACH",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "TIMESUPPER",
+          "DateTime",
+          "TIMESUPPER",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "VANILLA",
+          "YesNo",
+          "VANILLA",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ],
+        [
+          null,
+          "WATER",
+          "YesNo",
+          "WATER",
+          null,
+          null,
+          "DataSource",
+          "OSWEGO12"
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 44,
+      "command": "CLOSEOUT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 45,
+      "command": "QUIT",
+      "rows": null,
+      "results": {}
+    }
+  ]
+}

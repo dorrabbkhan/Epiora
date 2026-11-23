@@ -1,0 +1,1391 @@
+{
+  "source": {
+    "build": "7.2.7.0",
+    "zip_sha256": "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609",
+    "run_url": "https://github.com/dorrabbkhan/Epiora/actions/runs/45161983082",
+    "program": "functions_date.pgm",
+    "inputs": {
+      "Sample.mdb": "c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e",
+      "Nutrition.mdb": "310a87c6bbe591ea1afcfa5a8a534c5e944f3e294f9b8833ce8b743ff9c41ad8"
+    }
+  },
+  "steps": [
+    {
+      "line": 6,
+      "command": "READ '@WORK_DIR@/Sample.mdb':Oswego12",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 7,
+      "command": "ROUTEOUT \"@OUTPUT_HTML@\" REPLACE",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 8,
+      "command": "DEFINE ONYEAR NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 9,
+      "command": "ASSIGN ONYEAR = YEAR(DATEONSET)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 10,
+      "command": "FREQ ONYEAR",
+      "rows": [
+        [
+          "ONYEAR",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          1940,
+          46,
+          "100.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          46,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 92.29,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 100,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 11,
+      "command": "DEFINE ONMONTH NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 12,
+      "command": "ASSIGN ONMONTH = MONTH(DATEONSET)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 13,
+      "command": "FREQ ONMONTH",
+      "rows": [
+        [
+          "ONMONTH",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          4,
+          46,
+          "100.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          46,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 92.29,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 100,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 14,
+      "command": "DEFINE ONDAY NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 15,
+      "command": "ASSIGN ONDAY = DAY(DATEONSET)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 16,
+      "command": "FREQ ONDAY",
+      "rows": [
+        [
+          "ONDAY",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          18,
+          20,
+          "43.48%",
+          "43.48%",
+          null
+        ],
+        [
+          19,
+          26,
+          "56.52%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          46,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 20,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 43.48,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 43.48,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 26,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 56.52,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 28.93,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 58.89,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 41.11,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 71.07,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 17,
+      "command": "DEFINE ONHOUR NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 18,
+      "command": "ASSIGN ONHOUR = HOUR(TIMESUPPER)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 19,
+      "command": "FREQ ONHOUR",
+      "rows": [
+        [
+          "ONHOUR",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          0,
+          1,
+          "3.57%",
+          "3.57%",
+          null
+        ],
+        [
+          11,
+          1,
+          "3.57%",
+          "7.14%",
+          null
+        ],
+        [
+          18,
+          2,
+          "7.14%",
+          "14.29%",
+          null
+        ],
+        [
+          19,
+          12,
+          "42.86%",
+          "57.14%",
+          null
+        ],
+        [
+          20,
+          1,
+          "3.57%",
+          "60.71%",
+          null
+        ],
+        [
+          22,
+          11,
+          "39.29%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          28,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 3.57,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 3.57,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 3.57,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 7.14,
+          "decimals": 2
+        },
+        "freq.categories[2].count": {
+          "value": 2,
+          "decimals": 0
+        },
+        "freq.categories[2].percent": {
+          "value": 7.14,
+          "decimals": 2
+        },
+        "freq.categories[2].cumulative_percent": {
+          "value": 14.29,
+          "decimals": 2
+        },
+        "freq.categories[3].count": {
+          "value": 12,
+          "decimals": 0
+        },
+        "freq.categories[3].percent": {
+          "value": 42.86,
+          "decimals": 2
+        },
+        "freq.categories[3].cumulative_percent": {
+          "value": 57.14,
+          "decimals": 2
+        },
+        "freq.categories[4].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[4].percent": {
+          "value": 3.57,
+          "decimals": 2
+        },
+        "freq.categories[4].cumulative_percent": {
+          "value": 60.71,
+          "decimals": 2
+        },
+        "freq.categories[5].count": {
+          "value": 11,
+          "decimals": 0
+        },
+        "freq.categories[5].percent": {
+          "value": 39.29,
+          "decimals": 2
+        },
+        "freq.categories[5].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 28,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 0.09,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 18.35,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 0.09,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 18.35,
+          "decimals": 2
+        },
+        "freq.categories[2].ci_95_clopper_pearson.lower": {
+          "value": 0.88,
+          "decimals": 2
+        },
+        "freq.categories[2].ci_95_clopper_pearson.upper": {
+          "value": 23.5,
+          "decimals": 2
+        },
+        "freq.categories[3].ci_95_clopper_pearson.lower": {
+          "value": 24.46,
+          "decimals": 2
+        },
+        "freq.categories[3].ci_95_clopper_pearson.upper": {
+          "value": 62.82,
+          "decimals": 2
+        },
+        "freq.categories[4].ci_95_clopper_pearson.lower": {
+          "value": 0.09,
+          "decimals": 2
+        },
+        "freq.categories[4].ci_95_clopper_pearson.upper": {
+          "value": 18.35,
+          "decimals": 2
+        },
+        "freq.categories[5].ci_95_clopper_pearson.lower": {
+          "value": 21.5,
+          "decimals": 2
+        },
+        "freq.categories[5].ci_95_clopper_pearson.upper": {
+          "value": 59.42,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 20,
+      "command": "DEFINE INCMIN NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 21,
+      "command": "ASSIGN INCMIN = MINUTES(TIMESUPPER, DATEONSET)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 22,
+      "command": "FREQ INCMIN",
+      "rows": [
+        [
+          "INCMIN",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          180,
+          10,
+          "45.45%",
+          "45.45%",
+          null
+        ],
+        [
+          240,
+          3,
+          "13.64%",
+          "59.09%",
+          null
+        ],
+        [
+          270,
+          2,
+          "9.09%",
+          "68.18%",
+          null
+        ],
+        [
+          330,
+          1,
+          "4.55%",
+          "72.73%",
+          null
+        ],
+        [
+          360,
+          3,
+          "13.64%",
+          "86.36%",
+          null
+        ],
+        [
+          390,
+          2,
+          "9.09%",
+          "95.45%",
+          null
+        ],
+        [
+          420,
+          1,
+          "4.55%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          22,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 10,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 45.45,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 45.45,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 3,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 13.64,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 59.09,
+          "decimals": 2
+        },
+        "freq.categories[2].count": {
+          "value": 2,
+          "decimals": 0
+        },
+        "freq.categories[2].percent": {
+          "value": 9.09,
+          "decimals": 2
+        },
+        "freq.categories[2].cumulative_percent": {
+          "value": 68.18,
+          "decimals": 2
+        },
+        "freq.categories[3].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[3].percent": {
+          "value": 4.55,
+          "decimals": 2
+        },
+        "freq.categories[3].cumulative_percent": {
+          "value": 72.73,
+          "decimals": 2
+        },
+        "freq.categories[4].count": {
+          "value": 3,
+          "decimals": 0
+        },
+        "freq.categories[4].percent": {
+          "value": 13.64,
+          "decimals": 2
+        },
+        "freq.categories[4].cumulative_percent": {
+          "value": 86.36,
+          "decimals": 2
+        },
+        "freq.categories[5].count": {
+          "value": 2,
+          "decimals": 0
+        },
+        "freq.categories[5].percent": {
+          "value": 9.09,
+          "decimals": 2
+        },
+        "freq.categories[5].cumulative_percent": {
+          "value": 95.45,
+          "decimals": 2
+        },
+        "freq.categories[6].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[6].percent": {
+          "value": 4.55,
+          "decimals": 2
+        },
+        "freq.categories[6].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 22,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 24.39,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 67.79,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 2.91,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 34.91,
+          "decimals": 2
+        },
+        "freq.categories[2].ci_95_clopper_pearson.lower": {
+          "value": 1.12,
+          "decimals": 2
+        },
+        "freq.categories[2].ci_95_clopper_pearson.upper": {
+          "value": 29.16,
+          "decimals": 2
+        },
+        "freq.categories[3].ci_95_clopper_pearson.lower": {
+          "value": 0.12,
+          "decimals": 2
+        },
+        "freq.categories[3].ci_95_clopper_pearson.upper": {
+          "value": 22.84,
+          "decimals": 2
+        },
+        "freq.categories[4].ci_95_clopper_pearson.lower": {
+          "value": 2.91,
+          "decimals": 2
+        },
+        "freq.categories[4].ci_95_clopper_pearson.upper": {
+          "value": 34.91,
+          "decimals": 2
+        },
+        "freq.categories[5].ci_95_clopper_pearson.lower": {
+          "value": 1.12,
+          "decimals": 2
+        },
+        "freq.categories[5].ci_95_clopper_pearson.upper": {
+          "value": 29.16,
+          "decimals": 2
+        },
+        "freq.categories[6].ci_95_clopper_pearson.lower": {
+          "value": 0.12,
+          "decimals": 2
+        },
+        "freq.categories[6].ci_95_clopper_pearson.upper": {
+          "value": 22.84,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 23,
+      "command": "DEFINE INCUB NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 24,
+      "command": "ASSIGN INCUB = DAYS(TIMESUPPER, DATEONSET)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 25,
+      "command": "MEANS INCUB",
+      "rows": [
+        [
+          null,
+          "Obs",
+          "Total",
+          "Mean",
+          "Variance",
+          "Std Dev"
+        ],
+        [
+          null,
+          22,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "results": {
+        "means.overall.observations": {
+          "value": 22,
+          "decimals": 4
+        },
+        "means.overall.total": {
+          "value": 0,
+          "decimals": 4
+        },
+        "means.overall.mean": {
+          "value": 0,
+          "decimals": 4
+        },
+        "means.overall.variance": {
+          "value": 0,
+          "decimals": 4
+        },
+        "means.overall.std_dev": {
+          "value": 0,
+          "decimals": 4
+        },
+        "means.overall.min": {
+          "value": 0,
+          "decimals": 4
+        },
+        "means.overall.p25": {
+          "value": 0,
+          "decimals": 4
+        },
+        "means.overall.median": {
+          "value": 0,
+          "decimals": 4
+        },
+        "means.overall.p75": {
+          "value": 0,
+          "decimals": 4
+        },
+        "means.overall.max": {
+          "value": 0,
+          "decimals": 4
+        },
+        "means.overall.mode": {
+          "value": 0,
+          "decimals": 4
+        }
+      }
+    },
+    {
+      "line": 26,
+      "command": "DEFINE NYRS NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 27,
+      "command": "ASSIGN NYRS = YEARS(DATEONSET, TXTTODATE(\"04/19/1940\"))",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 28,
+      "command": "FREQ NYRS",
+      "rows": [
+        [
+          "NYRS",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          0,
+          46,
+          "100.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          46,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 92.29,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 100,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 29,
+      "command": "DEFINE NMON NUMERIC",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 30,
+      "command": "ASSIGN NMON = MONTHS(DATEONSET, TXTTODATE(\"04/19/1940\"))",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 31,
+      "command": "FREQ NMON",
+      "rows": [
+        [
+          "NMON",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          0,
+          46,
+          "100.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          46,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 92.29,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 100,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 32,
+      "command": "DEFINE NDATE DATEFORMAT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 33,
+      "command": "ASSIGN NDATE = NUMTODATE(1940, 4, 19)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 34,
+      "command": "LIST NDATE",
+      "rows": [
+        [
+          "NDATE"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ],
+        [
+          "4/19/1940 12:00:00 AM"
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 35,
+      "command": "DEFINE NTIME TIMEFORMAT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 36,
+      "command": "ASSIGN NTIME = NUMTOTIME(18, 30, 0)",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 37,
+      "command": "LIST NTIME",
+      "rows": [
+        [
+          "NTIME"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ],
+        [
+          "18:30:00"
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 38,
+      "command": "CLOSEOUT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 39,
+      "command": "QUIT",
+      "rows": null,
+      "results": {}
+    }
+  ]
+}

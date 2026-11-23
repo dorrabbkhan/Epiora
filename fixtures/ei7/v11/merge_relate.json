@@ -1,0 +1,832 @@
+{
+  "source": {
+    "build": "7.2.7.0",
+    "zip_sha256": "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609",
+    "run_url": "https://github.com/dorrabbkhan/Epiora/actions/runs/45161983082",
+    "program": "merge_relate.pgm",
+    "inputs": {
+      "Sample.mdb": "c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e",
+      "Nutrition.mdb": "310a87c6bbe591ea1afcfa5a8a534c5e944f3e294f9b8833ce8b743ff9c41ad8"
+    }
+  },
+  "steps": [
+    {
+      "line": 15,
+      "command": "READ '@WORK_DIR@/Nutrition.mdb':Nutrition1",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 16,
+      "command": "ROUTEOUT \"@OUTPUT_HTML@\" REPLACE",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 17,
+      "command": "DISPLAY TABLES",
+      "rows": [
+        [
+          "DataTableName",
+          "Type",
+          "Number of Fields",
+          "Link",
+          "Primary Key",
+          "Description"
+        ],
+        [
+          "codesex",
+          "Code",
+          1,
+          null,
+          null,
+          null
+        ],
+        [
+          "codesurveygroup",
+          "Code",
+          1,
+          null,
+          null,
+          null
+        ],
+        [
+          "metaBackgrounds",
+          "Meta",
+          4,
+          null,
+          "BackgroundId",
+          null
+        ],
+        [
+          "metaDataTypes",
+          "Meta",
+          5,
+          null,
+          "DataTypeId",
+          null
+        ],
+        [
+          "metaDbInfo",
+          "Meta",
+          5,
+          null,
+          null,
+          null
+        ],
+        [
+          "metaFields",
+          "Meta",
+          47,
+          null,
+          "FieldId",
+          null
+        ],
+        [
+          "metaFieldTypes",
+          "Meta",
+          12,
+          null,
+          "FieldTypeId",
+          null
+        ],
+        [
+          "metaGridColumns",
+          "Meta",
+          20,
+          null,
+          "GridColumnId",
+          null
+        ],
+        [
+          "metaImages",
+          "Meta",
+          3,
+          null,
+          "ImageId",
+          null
+        ],
+        [
+          "metaLayerRenderTypes",
+          "Meta",
+          2,
+          null,
+          "LayerRenderTypeId",
+          null
+        ],
+        [
+          "metaLayers",
+          "Meta",
+          6,
+          null,
+          "LayerId",
+          null
+        ],
+        [
+          "metaLinks",
+          "Meta",
+          5,
+          null,
+          "LinkId",
+          null
+        ],
+        [
+          "metaMapLayers",
+          "Meta",
+          15,
+          null,
+          "MapLayerId",
+          null
+        ],
+        [
+          "metaMapPoints",
+          "Meta",
+          8,
+          null,
+          "MapPointId",
+          null
+        ],
+        [
+          "metaMaps",
+          "Meta",
+          3,
+          null,
+          "MapId",
+          null
+        ],
+        [
+          "metaPages",
+          "Meta",
+          7,
+          null,
+          "PageId",
+          null
+        ],
+        [
+          "metaPatterns",
+          "Meta",
+          5,
+          null,
+          "PatternId",
+          null
+        ],
+        [
+          "metaPrograms",
+          "Meta",
+          7,
+          null,
+          "ProgramId",
+          null
+        ],
+        [
+          "metaViews",
+          "Meta",
+          17,
+          null,
+          "ViewId",
+          null
+        ],
+        [
+          "Nutrition",
+          "Data",
+          4,
+          null,
+          "GlobalRecordId",
+          null
+        ],
+        [
+          "Nutrition1",
+          "Data",
+          13,
+          null,
+          "GlobalRecordId",
+          null
+        ],
+        [
+          "PatientVisits",
+          "Data",
+          4,
+          null,
+          "GlobalRecordId",
+          null
+        ],
+        [
+          "PatientVisits2",
+          "Data",
+          28,
+          null,
+          "GlobalRecordId",
+          null
+        ],
+        [
+          "sysDataTables",
+          "Data",
+          2,
+          null,
+          "TableName",
+          null
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 18,
+      "command": "LIST PatientID LastName FirstName",
+      "rows": [
+        [
+          "PatientID",
+          "LastName",
+          "FirstName"
+        ],
+        [
+          3,
+          "Smith",
+          "John"
+        ],
+        [
+          1,
+          "Doe",
+          "John"
+        ],
+        [
+          2,
+          "Doe",
+          "Jane"
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 19,
+      "command": "RELATE PatientVisits2 PatientID::VisitPatientID",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 11,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 20,
+      "command": "LIST PatientID VisitPatientID Name HeightInches",
+      "rows": [
+        [
+          "PatientID",
+          "VisitPatientID",
+          "Name",
+          "HeightInches"
+        ],
+        [
+          1,
+          1,
+          "Doe, John",
+          54
+        ],
+        [
+          1,
+          1,
+          "Doe, John",
+          46.1
+        ],
+        [
+          1,
+          1,
+          "Doe, John",
+          53.3
+        ],
+        [
+          1,
+          1,
+          "Doe, John",
+          40.3
+        ],
+        [
+          1,
+          1,
+          "Doe, John",
+          51.1
+        ],
+        [
+          1,
+          1,
+          "Doe, John",
+          48.6
+        ],
+        [
+          1,
+          1,
+          "Doe, John",
+          31
+        ],
+        [
+          1,
+          1,
+          "Doe, John",
+          38
+        ],
+        [
+          1,
+          1,
+          "Doe, John",
+          43.2
+        ],
+        [
+          1,
+          1,
+          "Doe, John",
+          34.7
+        ],
+        [
+          1,
+          1,
+          "Doe, John",
+          22
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 21,
+      "command": "FREQ PatientID",
+      "rows": [
+        [
+          "PATIENTID",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          1,
+          11,
+          "100.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          11,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 11,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 11,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 71.51,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 100,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 22,
+      "command": "READ '@WORK_DIR@/Nutrition.mdb':Nutrition1",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 3,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 23,
+      "command": "RELATE PatientVisits2 PatientID::VisitPatientID ALL",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 13,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 24,
+      "command": "LIST PatientID VisitPatientID HeightInches",
+      "rows": [
+        [
+          "PatientID",
+          "VisitPatientID",
+          "HeightInches"
+        ],
+        [
+          3,
+          null,
+          null
+        ],
+        [
+          1,
+          1,
+          54
+        ],
+        [
+          1,
+          1,
+          46.1
+        ],
+        [
+          1,
+          1,
+          53.3
+        ],
+        [
+          1,
+          1,
+          40.3
+        ],
+        [
+          1,
+          1,
+          51.1
+        ],
+        [
+          1,
+          1,
+          48.6
+        ],
+        [
+          1,
+          1,
+          31
+        ],
+        [
+          1,
+          1,
+          38
+        ],
+        [
+          1,
+          1,
+          43.2
+        ],
+        [
+          1,
+          1,
+          34.7
+        ],
+        [
+          1,
+          1,
+          22
+        ],
+        [
+          2,
+          null,
+          null
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 25,
+      "command": "FREQ VisitPatientID",
+      "rows": [
+        [
+          "VISITPATIENTID",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          1,
+          11,
+          "100.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          11,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 11,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 11,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 71.51,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 100,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 26,
+      "command": "READ '@WORK_DIR@/Nutrition.mdb':Nutrition1",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 3,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 27,
+      "command": "MERGE '@WORK_DIR@/Nutrition.mdb':PatientVisits2 PatientID::VisitPatientID",
+      "rows": [
+        [
+          "MERGE",
+          "MERGE"
+        ],
+        [
+          "COMMANDNAME",
+          "MERGE"
+        ],
+        [
+          "DESTINATIONFILENAME",
+          "'D:/a/Epiora/Epiora/ei7-out/work/v11-data/Nutrition.mdb'"
+        ],
+        [
+          "DESTINATIONTABLENAME",
+          "Nutrition1"
+        ],
+        [
+          "FROMFILENAME",
+          "'D:/a/Epiora/Epiora/ei7-out/work/v11-data/Nutrition.mdb'"
+        ],
+        [
+          "FROMTABLENAME",
+          "PatientVisits2"
+        ],
+        [
+          "NUMBERINSERTED",
+          0
+        ],
+        [
+          "NUMBERUPDATED",
+          11
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 28,
+      "command": "READ '@WORK_DIR@/Nutrition.mdb':Nutrition1",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 3,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 29,
+      "command": "LIST PatientID GlobalRecordId",
+      "rows": [
+        [
+          "PatientID",
+          "GlobalRecordId"
+        ],
+        [
+          3,
+          "5a92fd5c-ea2e-4675-a2f6-0073c46fb5f1"
+        ],
+        [
+          1,
+          "cd1f85a4-ba5d-468a-9bd6-be3462a0abd4"
+        ],
+        [
+          2,
+          "eb36c2e3-f086-4d15-9bdd-f6f648325272"
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 30,
+      "command": "MERGE '@WORK_DIR@/Nutrition.mdb':PatientVisits2 GlobalRecordId::GlobalRecordId",
+      "rows": [
+        [
+          "MERGE",
+          "MERGE"
+        ],
+        [
+          "COMMANDNAME",
+          "MERGE"
+        ],
+        [
+          "DESTINATIONFILENAME",
+          "'D:/a/Epiora/Epiora/ei7-out/work/v11-data/Nutrition.mdb'"
+        ],
+        [
+          "DESTINATIONTABLENAME",
+          "Nutrition1"
+        ],
+        [
+          "FROMFILENAME",
+          "'D:/a/Epiora/Epiora/ei7-out/work/v11-data/Nutrition.mdb'"
+        ],
+        [
+          "FROMTABLENAME",
+          "PatientVisits2"
+        ],
+        [
+          "NUMBERINSERTED",
+          10
+        ],
+        [
+          "NUMBERUPDATED",
+          1
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 31,
+      "command": "READ '@WORK_DIR@/Nutrition.mdb':Nutrition1",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 13,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 32,
+      "command": "FREQ PatientID",
+      "rows": [
+        [
+          "PATIENTID",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          1,
+          1,
+          "33.33%",
+          "33.33%",
+          null
+        ],
+        [
+          2,
+          1,
+          "33.33%",
+          "66.67%",
+          null
+        ],
+        [
+          3,
+          1,
+          "33.33%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          3,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 33.33,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 33.33,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 33.33,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 66.67,
+          "decimals": 2
+        },
+        "freq.categories[2].count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "freq.categories[2].percent": {
+          "value": 33.33,
+          "decimals": 2
+        },
+        "freq.categories[2].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 3,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 0.84,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 90.57,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 0.84,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 90.57,
+          "decimals": 2
+        },
+        "freq.categories[2].ci_95_clopper_pearson.lower": {
+          "value": 0.84,
+          "decimals": 2
+        },
+        "freq.categories[2].ci_95_clopper_pearson.upper": {
+          "value": 90.57,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 33,
+      "command": "CLOSEOUT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 34,
+      "command": "QUIT",
+      "rows": null,
+      "results": {}
+    }
+  ]
+}
