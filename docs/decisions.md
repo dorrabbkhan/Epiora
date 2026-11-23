@@ -6757,18 +6757,24 @@ block sketch:
 - `sqlserver_tables` lists `sys.tables WHERE is_ms_shipped = 0 ORDER
   BY object_id` — user tables in creation order, mirroring
   `mdb-tables`/`sqlite3 .tables`.
-- Row order is `ORDER BY %%physloc%%` on every table: the mapper
-  emits rows in source order and JET's physical order is not key
-  order (`epiora-mdb` shows `ADDFull.UniqueKey` starting 247, 277,
-  61…), so ordering by any key column permutes joined cells and
-  breaks `sqlserver_copy_matches_access_hashes`. `%%physloc%%` is
-  the physical slot order — insert order for the verbatim heap copy
-  (where it reproduces the `mdb-export` dump order the golden's rows
-  follow), leaf order on a clustered real project — and needs no
-  key-column assumption. Verified offline: the pinned mdbtools
-  `db.columns`/`db.rows` copy of `Sample.mdb`, run through the same
-  declared-type kind mapping and physloc-equivalent order, maps to
-  all 18 golden view hashes and all grid hashes identical.
+- Row order is physical slot order on every table: `CROSS APPLY
+  sys.fn_PhysLocCracker(%%physloc%%)` orders by numeric
+  (file_id, page_id, slot_id). The mapper emits rows in source
+  order and JET's physical order is not key order (`epiora-mdb`
+  shows `ADDFull.UniqueKey` starting 247, 277, 61…), so ordering by
+  any key column permutes joined cells and breaks
+  `sqlserver_copy_matches_access_hashes`. A bare
+  `ORDER BY %%physloc%%` is wrong: the rid's little-endian byte
+  packing scrambles tables spanning multiple pages (the first run
+  passed the data tables but still swapped `metaViews` rows, whose
+  CheckCode spans ~18 pages). Physical slot order is insert order
+  for the verbatim heap copy — reproducing the `mdb-export` dump
+  order the golden's rows follow — and leaf order on a clustered
+  real project, with no key-column assumption. Verified offline:
+  the pinned mdbtools `db.columns`/`db.rows` copy of `Sample.mdb`,
+  run through the same declared-type kind mapping and
+  physloc-equivalent order, maps to all 18 golden view hashes and
+  all grid hashes identical.
 - SQL Server projects are one-time imports (not refreshable): the
   reader emits no snapshots and no refresh machinery is wired —
   refreshability arrives with Task 15's import flow, which calls the

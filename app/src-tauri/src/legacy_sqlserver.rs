@@ -225,11 +225,15 @@ pub async fn sqlserver_batches(
     // Row order must match the file order the Access golden was built
     // from — the mapper emits rows in source order, and JET's physical
     // order is not key order (ADDFull's `UniqueKey` starts 247, 277,
-    // 61…). `%%physloc%%` sorts by physical slot: insert order for the
-    // verbatim heap copy, leaf order on a clustered real project — the
-    // only deterministic order that does not assume a key column.
+    // 61…). Order by physical slot via `fn_PhysLocCracker`: insert
+    // order for the verbatim heap copy (matching the `mdb-export`
+    // dump order the golden's rows follow), leaf order on a clustered
+    // real project. A raw `ORDER BY %%physloc%%` is wrong — the rid's
+    // little-endian byte packing scrambles multi-page tables.
     let sql = format!(
-        "SELECT {} FROM {} ORDER BY %%physloc%%",
+        "SELECT {0} FROM {1} CROSS APPLY \
+         sys.fn_PhysLocCracker(%%physloc%%) plc \
+         ORDER BY plc.file_id, plc.page_id, plc.slot_id",
         exprs.join(", "),
         bracket(table)
     );
