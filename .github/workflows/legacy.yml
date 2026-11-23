@@ -100,7 +100,7 @@ jobs:
         image: mcr.microsoft.com/mssql/server:2022-CU28-ubuntu-22.04
         env:
           ACCEPT_EULA: 'Y'
-          MSSQL_SA_PASSWORD: ${{ env.MSSQL_SA_PASSWORD }}
+          MSSQL_SA_PASSWORD: 'Ep1ora-CI-Str0ng!pass'
           MSSQL_PID: Developer
         ports:
           - 1433:1433
@@ -118,7 +118,7 @@ jobs:
       EPIORA_SQLSERVER_PORT: '1433'
       EPIORA_SQLSERVER_DATABASE: 'sample'
       EPIORA_SQLSERVER_USER: 'sa'
-      EPIORA_SQLSERVER_PASSWORD: ${{ env.MSSQL_SA_PASSWORD }}
+      EPIORA_SQLSERVER_PASSWORD: 'Ep1ora-CI-Str0ng!pass'
       EPIORA_SQLSERVER_TRUST_CERT: '1'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
