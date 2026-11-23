@@ -249,9 +249,9 @@ unsigned char *epiora_mdb_batch(int h, const char *table_name,
             skipped++;
             continue;
         }
-        r = row_count++;
-        if (r >= limit)
+        if (row_count >= limit)
             break;
+        r = row_count++;
         for (i = 0; i < n_cols; i++) {
             ColAcc *a = &accs[i];
             MdbColumn *col = a->col;

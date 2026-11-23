@@ -4,9 +4,10 @@ epiora-mdb test data provenance
 testV1997.mdb, testIndexCodesV1997.mdb
     From jackcess (Apache-2.0), commit
     be0a2139b087a227d14cafd4ea231306a5a3a862 — the same pin the
-    mdb-wasm spike used for testV1997.mdb.
+    mdb-wasm spike used for testV1997.mdb. Upstream paths:
+    src/test/data/V1997/{testV1997,testIndexCodesV1997}.mdb
       testV1997.mdb          SHA-256 27788b47e17412427830e80c2cb69366885aa11b12c61422de73029194bef135
-      testIndexCodesV1997.mdb SHA-256 ac96a660d650cd61a23f93bee804523cce7db70daabe932a5bbfc99c5c92b668
+      testIndexCodesV1997.mdb SHA-256 75c7b039f339e0cf364320ee988002811fd6c4e37e91033356fd16c7eb6a82b1
     testIndexCodesV1997.mdb (JET3, cp1252) is the code-page oracle:
     its Table1 `data` column holds "AA<byte>AA"-style cells covering
     the high half of cp1252, including the five bytes the page leaves
@@ -35,3 +36,13 @@ batches/sample/*.eptb
       crates/epiora-mdb/tests/data/batches/sample
     The app parity test (app/src/legacy/mdb.test.ts) requires the
     committed wasm module to produce byte-identical batches.
+
+batches/chunk7/*.eptb
+    Native-encoder oracle chunks of the Oswego12 table, 7 rows per
+    batch (`{name}.{row_offset}.eptb`). The app parity test requires
+    `mdb.batches("Oswego12", 7)` from the committed wasm module to be
+    byte-identical to them.
+    Regenerate: cargo run -p epiora-mdb --bin dump-batches -- \
+      fixtures/legacy/samples/ei7/Sample/Sample.mdb \
+      crates/epiora-mdb/tests/data/batches/chunk7 \
+      --table Oswego12 --chunk 7

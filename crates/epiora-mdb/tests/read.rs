@@ -208,6 +208,83 @@ fn jet3_cp1252_text_decodes() {
     assert!(table.decode_errors >= 5, "undefined bytes counted");
 }
 
+/// Rows in a decoded batch: every non-skipped column holds
+/// `row_count` entries.
+fn decoded_rows(t: &epiora_legacy::batch::RawTable) -> usize {
+    fn vals_len(d: &RawData) -> usize {
+        match d {
+            RawData::Int(v) => v.len(),
+            RawData::Float(v) => v.len(),
+            RawData::Text(v) => v.len(),
+            RawData::Bool(v) => v.len(),
+            RawData::DateTime(v) => v.len(),
+            RawData::BinarySkipped => 0,
+        }
+    }
+    t.columns
+        .iter()
+        .map(|c| vals_len(&c.data))
+        .max()
+        .unwrap_or(0)
+}
+
+/// A chunk's values must equal the full table's rows
+/// `[off, off + chunk_rows)` column by column.
+fn assert_rows_match(full: &RawData, chunk: &RawData, off: usize) {
+    match (full, chunk) {
+        (RawData::Int(f), RawData::Int(c)) => assert_eq!(&f[off..off + c.len()], &c[..]),
+        (RawData::Float(f), RawData::Float(c)) => assert_eq!(&f[off..off + c.len()], &c[..]),
+        (RawData::Text(f), RawData::Text(c)) => assert_eq!(&f[off..off + c.len()], &c[..]),
+        (RawData::Bool(f), RawData::Bool(c)) => assert_eq!(&f[off..off + c.len()], &c[..]),
+        (RawData::DateTime(f), RawData::DateTime(c)) => {
+            assert_eq!(&f[off..off + c.len()], &c[..])
+        }
+        (RawData::BinarySkipped, RawData::BinarySkipped) => {}
+        _ => panic!("column kind changed between batches"),
+    }
+}
+
+#[test]
+fn chunked_batches_concatenate_to_full_table() {
+    // Regression: the encoder used to count the row that tripped the
+    // limit in the header, so batch(0, 2) claimed 3 rows, encoded 2
+    // and failed to decode as truncated.
+    let mdb = Mdb::open(&sample_mdb()).expect("Sample.mdb opens");
+
+    let two = decode_batch(&mdb.batch("Oswego12", 0, 2).expect("batch")).expect("decodes");
+    assert_eq!(decoded_rows(&two), 2, "limit honoured exactly");
+
+    let full = decode_batch(&mdb.batch("Oswego12", 0, u32::MAX).expect("batch")).expect("decodes");
+    let full_rows = decoded_rows(&full);
+    assert_eq!(full_rows, 75, "Oswego12 row count");
+
+    let mut offset = 0usize;
+    let mut total = 0usize;
+    loop {
+        let chunk = decode_batch(&mdb.batch("Oswego12", offset as u32, 7).expect("batch"))
+            .expect("every batch decodes");
+        let n = decoded_rows(&chunk);
+        if n == 0 {
+            break;
+        }
+        assert!(n <= 7, "batch at offset {offset} exceeded the limit");
+        for (fc, cc) in full.columns.iter().zip(chunk.columns.iter()) {
+            assert_eq!(fc.name, cc.name, "column order stable");
+            assert_rows_match(&fc.data, &cc.data, offset);
+        }
+        total += n;
+        offset += 7;
+    }
+    assert_eq!(total, full_rows, "chunks add up to the full table");
+
+    let past_end = decode_batch(
+        &mdb.batch("Oswego12", (full_rows + 10) as u32, 7)
+            .expect("batch"),
+    )
+    .expect("decodes");
+    assert_eq!(decoded_rows(&past_end), 0, "offset past the end is empty");
+}
+
 #[test]
 fn truncated_file_is_mdb_truncated() {
     let bytes = std::fs::read(sample_mdb()).unwrap();

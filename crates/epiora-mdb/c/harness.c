@@ -229,7 +229,10 @@ char *epiora_mdb_tables(int h)
     for (i = 0; i < catalog->len; i++) {
         MdbCatalogEntry *entry = g_ptr_array_index(catalog, i);
         if (entry->object_type == MDB_TABLE && mdb_is_user_table(entry))
-            cap += strlen(entry->object_name) + 16;
+            /* json_escape expands to at most 6 bytes per source byte
+             * (the \u00XX form); the +3 covers the two quotes and a
+             * comma. The base cap covers the brackets and NUL. */
+            cap += strlen(entry->object_name) * 6 + 3;
     }
     out = malloc(cap);
     p = out;
@@ -251,6 +254,14 @@ char *epiora_mdb_tables(int h)
     *p = 0;
     last_error = EMDB_OK;
     return out;
+}
+
+/* Test hook for the native build only (not in the wasm export list):
+ * escape one catalog name exactly as epiora_mdb_tables does, so tests
+ * can drive the worst case without a crafted file. */
+char *epiora_mdb_test_json_escape(const char *s)
+{
+    return json_escape(s);
 }
 
 void epiora_mdb_close(int h)

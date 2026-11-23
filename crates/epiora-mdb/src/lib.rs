@@ -232,3 +232,31 @@ pub fn mdb_any(data: &[u8]) {
     }
     let _ = std::fs::remove_file(&path);
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    extern "C" {
+        /// C test hook (native build only — absent from the wasm
+        /// export list): escape one catalog name exactly as
+        /// `epiora_mdb_tables` does.
+        fn epiora_mdb_test_json_escape(s: *const c_char) -> *mut c_char;
+    }
+
+    /// A catalog name at the `MDB_MAX_OBJ_NAME` bound made only of
+    /// control bytes is the worst case for the table-list buffer:
+    /// every byte escapes to the 6-byte `\u00XX` form. The JSON must
+    /// parse and round-trip to the original name.
+    #[test]
+    fn json_escape_round_trips_all_control_byte_name() {
+        let name = "\u{1}".repeat(255);
+        let cname = CString::new(name.clone()).unwrap();
+        let raw = unsafe { epiora_mdb_test_json_escape(cname.as_ptr()) };
+        assert!(!raw.is_null());
+        let json = unsafe { CStr::from_ptr(raw) }.to_str().unwrap().to_owned();
+        unsafe { ffi::free(raw.cast()) };
+        let parsed: String = serde_json::from_str(&json).expect("escaped JSON parses");
+        assert_eq!(parsed, name, "round-trips to the original name");
+    }
+}

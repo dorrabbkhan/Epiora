@@ -6138,6 +6138,12 @@ Files outside the Files block:
 - `deny.toml` — a comment only: the LGPL C dep is outside
   cargo-deny's scope; all new Rust deps already hold allow-list
   licences, so no allow-list change was needed.
+- `crates/epiora-legacy/src/batch/tests.rs` — the batch decoder's
+  test module, split out of `batch.rs` in fix round 1 to keep the
+  file under the ~400-line rule; assertions unchanged.
+- `crates/epiora-mdb/tests/data/batches/chunk7/` — native chunked
+  oracle batches (`--chunk` mode of `dump-batches`, fix round 1) for
+  the wasm `batches(table, 7)` parity check.
 
 Evidence: `cargo test -p epiora-mdb` 7/7 pass (incl. proptest
 `random_bytes_never_panic`); `cargo test -p epiora-legacy` 2/2;
