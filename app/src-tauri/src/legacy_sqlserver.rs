@@ -223,28 +223,15 @@ pub async fn sqlserver_batches(
         accs.push(col_acc(&name, type_id));
     }
     // Row order must match the file order the Access golden was built
-    // from — `metaViews`, `metaLinks` and the `code*` lookup tables
-    // all feed order-sensitive output — while a heap `SELECT` has no
-    // guaranteed order at all. EI7's data/meta tables lead with the
-    // row key (`UniqueKey`/`XxxId`, int family): ordering by it is
-    // the key order both for the verbatim copy and for a real EI7
-    // project. Tables whose first column is not an integer (the
-    // `code*` lookups — text first column) get `%%physloc%%`: the
-    // physical slot order, i.e. insert order for a freshly loaded
-    // heap and key order on a clustered table.
-    let first = meta.first().ok_or(SqlServerError::QUERY)?;
-    let first_name = first.get::<&str, _>(0).ok_or(SqlServerError::QUERY)?;
-    let first_type = first.get::<u8, _>(1).ok_or(SqlServerError::QUERY)?;
-    let order = if eptb::is_int_type(first_type) {
-        format!(" ORDER BY {}", bracket(first_name))
-    } else {
-        " ORDER BY %%physloc%%".to_string()
-    };
+    // from — the mapper emits rows in source order, and JET's physical
+    // order is not key order (ADDFull's `UniqueKey` starts 247, 277,
+    // 61…). `%%physloc%%` sorts by physical slot: insert order for the
+    // verbatim heap copy, leaf order on a clustered real project — the
+    // only deterministic order that does not assume a key column.
     let sql = format!(
-        "SELECT {} FROM {}{}",
+        "SELECT {} FROM {} ORDER BY %%physloc%%",
         exprs.join(", "),
-        bracket(table),
-        order
+        bracket(table)
     );
     let mut stream = client
         .query(sql, &[])

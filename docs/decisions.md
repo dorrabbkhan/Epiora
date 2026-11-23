@@ -6756,8 +6756,19 @@ block sketch:
   hold datetimes as `NVARCHAR` text, the SQLite-proven path.
 - `sqlserver_tables` lists `sys.tables WHERE is_ms_shipped = 0 ORDER
   BY object_id` — user tables in creation order, mirroring
-  `mdb-tables`/`sqlite3 .tables`; rows stream un-`ORDER BY` like the
-  sqlite test source.
+  `mdb-tables`/`sqlite3 .tables`.
+- Row order is `ORDER BY %%physloc%%` on every table: the mapper
+  emits rows in source order and JET's physical order is not key
+  order (`epiora-mdb` shows `ADDFull.UniqueKey` starting 247, 277,
+  61…), so ordering by any key column permutes joined cells and
+  breaks `sqlserver_copy_matches_access_hashes`. `%%physloc%%` is
+  the physical slot order — insert order for the verbatim heap copy
+  (where it reproduces the `mdb-export` dump order the golden's rows
+  follow), leaf order on a clustered real project — and needs no
+  key-column assumption. Verified offline: the pinned mdbtools
+  `db.columns`/`db.rows` copy of `Sample.mdb`, run through the same
+  declared-type kind mapping and physloc-equivalent order, maps to
+  all 18 golden view hashes and all grid hashes identical.
 - SQL Server projects are one-time imports (not refreshable): the
   reader emits no snapshots and no refresh machinery is wired —
   refreshability arrives with Task 15's import flow, which calls the

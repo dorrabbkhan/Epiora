@@ -67,12 +67,6 @@ pub(crate) fn is_utf16_type(system_type_id: u8) -> bool {
     matches!(system_type_id, NVARCHAR | NCHAR | NTEXT)
 }
 
-/// Integer-family `system_type_id`s — the EI7 row-key types whose
-/// `ORDER BY` reproduces the JET file order.
-pub(crate) fn is_int_type(system_type_id: u8) -> bool {
-    matches!(system_type_id, TINYINT | SMALLINT | INT | BIGINT)
-}
-
 /// SQL Server `system_type_id` → the EPTB kind byte. `source_type`
 /// carries that id (the mapper compares it only for cross-chunk
 /// consistency, never for mapping decisions).
