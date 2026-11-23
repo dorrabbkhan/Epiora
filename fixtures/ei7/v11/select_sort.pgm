@@ -1,0 +1,35 @@
+*** select_sort.pgm — Epiora v1.1 Task 3 reference program.
+*** SELECT: repeated SELECTs AND-combine; missing values in comparisons
+*** (MASHEDPOTA has one missing cell in Oswego12); CANCEL SELECT.
+*** SORT: ascending, DESCENDING, multi-key, sort order of missing
+*** (TIMESUPPER is missing in 47 of 75 rows); CANCEL SORT.
+*** Pins spec §15.2: missing values in comparisons, sort order of missing.
+READ '@WORK_DIR@/Sample.mdb':Oswego12
+ROUTEOUT "@OUTPUT_HTML@" REPLACE
+FREQ MASHEDPOTA
+SELECT MASHEDPOTA = 1
+FREQ MASHEDPOTA
+CANCEL SELECT
+SELECT MASHEDPOTA <> 1
+FREQ MASHEDPOTA
+CANCEL SELECT
+SELECT MASHEDPOTA = (.)
+FREQ MASHEDPOTA
+CANCEL SELECT
+SELECT ILL = 1
+FREQ ILL
+SELECT AGE > 40
+LIST AGE ILL MASHEDPOTA
+CANCEL SELECT
+SORT AGE
+LIST AGE SEX
+SORT AGE DESCENDING
+LIST AGE SEX
+SORT SEX AGE
+LIST SEX AGE
+SORT TIMESUPPER
+LIST TIMESUPPER AGE
+CANCEL SORT
+LIST AGE SEX
+CLOSEOUT
+QUIT

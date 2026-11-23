@@ -5,9 +5,22 @@ name: ei7
 # the committed reference output fixtures/ei7/oswego.html + oswego.json.
 # The release ZIP is pinned by SHA-256; the bundled Sample.mdb's SHA-256 is
 # recorded in the run log and inside oswego.json's source block.
+#
+# v1.1 Task 3 (spec §8.1): the same route also runs every
+# fixtures/ei7/v11/*.pgm — reference programs over scratch copies of the
+# committed sample .mdb files (MERGE writes into the destination table's
+# file, so the committed fixtures are never written) — and parses each
+# html into fixtures/ei7/v11/<topic>.json (the steps corpus Task 11
+# replays). Dispatch with ei3_probe to also try, once, a headless
+# Epi Info 3 project upgrade on the source-built route (never blocking).
 
 on:
   workflow_dispatch:
+    inputs:
+      ei3_probe:
+        description: 'Also run the one-off headless Epi Info 3 project-upgrade probe on the source-built route (v1.1 Task 3)'
+        type: boolean
+        default: false
   schedule:
     - cron: '0 6 * * 1' # weekly, Monday 06:00 UTC
 
@@ -55,7 +68,7 @@ jobs:
             Write-Output "::warning::Sample.mdb SHA256 $hash differs from the fixture's c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e"
           }
 
-      - name: Run oswego.pgm through Analysis.exe
+      - name: Run oswego.pgm and the v11 corpus through Analysis.exe
         shell: pwsh
         run: ./fixtures/ei7/run.ps1 -Ei7Dir ei7-rel -OutputDir ei7-out
 
@@ -68,19 +81,67 @@ jobs:
           # git diff drift check below can go green. A run that produces
           # different output fails the diff and a new run_url is committed.
           $runUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          $oswegoUrl = $runUrl
           if (Test-Path fixtures/ei7/oswego.json) {
             $prev = Get-Content fixtures/ei7/oswego.json -Raw | ConvertFrom-Json
-            if ($prev.source.run_url) { $runUrl = $prev.source.run_url }
+            if ($prev.source.run_url) { $oswegoUrl = $prev.source.run_url }
           }
-          node fixtures/ei7/parse.mjs --html ei7-out/oswego.html --labels fixtures/ei7/labels.json --out fixtures/ei7/oswego.json --build "7.2.7.0" --zip-sha256 "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609" --sample-mdb-sha256 "${{ steps.mdb.outputs.sample_mdb_sha256 }}" --run-url "$runUrl"
+          node fixtures/ei7/parse.mjs --html ei7-out/oswego.html --labels fixtures/ei7/labels.json --out fixtures/ei7/oswego.json --build "7.2.7.0" --zip-sha256 "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609" --sample-mdb-sha256 "${{ steps.mdb.outputs.sample_mdb_sha256 }}" --run-url "$oswegoUrl"
+
+          # v11 corpus: one <topic>.html + <topic>.json per .pgm. The html is
+          # committed verbatim next to the parsed steps; each json's
+          # source.inputs records the SHA-256 of the .mdb files the program
+          # read (the scratch copies are byte-identical to the committed
+          # fixtures).
+          # Epi Info writes the ROUTEOUT target with its own casing —
+          # define_assign_if.html comes back as DEFINE_ASSIGN_IF.HTML. The
+          # committed corpus normalises to the program's lowercase name
+          # (bytes unchanged); upload-artifact globs are case-sensitive.
+          Copy-Item ei7-out/v11/*.html fixtures/ei7/v11/ -Force
+          Get-ChildItem fixtures/ei7/v11 -Filter "*.HTML" | ForEach-Object {
+            Rename-Item $_.FullName ($_.BaseName.ToLower() + ".html") -Force
+          }
+          # Epi Info stamps a wall-clock data-source banner
+          # (<i>Date:</i>&nbsp;&nbsp;<b>M/d/yyyy h:mm:ss tt</b>) into the
+          # html of programs that print one (merge_relate, select_sort).
+          # It is the only per-run byte difference in the corpus, so
+          # normalise it to a fixed token before parsing and before the
+          # drift check. Read/write raw bytes so no BOM is added and the
+          # CRLF line endings are preserved (files are ASCII + CRLF).
+          $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+          Get-ChildItem fixtures/ei7/v11 -Filter "*.html" | ForEach-Object {
+            $t = [IO.File]::ReadAllText($_.FullName)
+            $t = [regex]::Replace($t,
+              '<i>Date:</i>&nbsp;&nbsp;<b>\d{1,2}/\d{1,2}/\d{4} \d{1,2}:\d{2}:\d{2} [AP]M</b>',
+              '<i>Date:</i>&nbsp;&nbsp;<b>[run timestamp]</b>')
+            [IO.File]::WriteAllText($_.FullName, $t, $utf8NoBom)
+          }
+          $sampleSha = (Get-FileHash fixtures/legacy/samples/ei7/Sample/Sample.mdb -Algorithm SHA256).Hash.ToLower()
+          $nutritionSha = (Get-FileHash fixtures/legacy/samples/ei7/Nutrition/Nutrition.mdb -Algorithm SHA256).Hash.ToLower()
+          Get-ChildItem fixtures/ei7/v11 -Filter "*.pgm" | Sort-Object Name | ForEach-Object {
+            $name = $_.BaseName
+            $html = "fixtures/ei7/v11/$name.html"
+            $json = "fixtures/ei7/v11/$name.json"
+            if (-not (Test-Path $html)) { Write-Error "FAIL: $html was not produced"; exit 1 }
+            $u = $runUrl
+            if (Test-Path $json) {
+              $prev = Get-Content $json -Raw | ConvertFrom-Json
+              if ($prev.source.run_url) { $u = $prev.source.run_url }
+            }
+            node fixtures/ei7/parse.mjs --steps --pgm $_.FullName --html $html --labels fixtures/ei7/labels.json --out $json --build "7.2.7.0" --zip-sha256 "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609" --run-url "$u" --input "Sample.mdb=$sampleSha" --input "Nutrition.mdb=$nutritionSha"
+          }
 
       - name: Install validator tooling (npm ci, lockfile-pinned)
         working-directory: fixtures/tools
         run: npm ci
 
-      - name: Validate oswego.json against ei7.schema.json
+      - name: Validate oswego.json and v11 json against ei7.schema.json
         shell: bash
-        run: fixtures/tools/node_modules/.bin/ajv validate -s fixtures/schema/ei7.schema.json -d fixtures/ei7/oswego.json
+        run: |
+          fixtures/tools/node_modules/.bin/ajv validate -s fixtures/schema/ei7.schema.json -d fixtures/ei7/oswego.json
+          for f in fixtures/ei7/v11/*.json; do
+            fixtures/tools/node_modules/.bin/ajv validate -s fixtures/schema/ei7.schema.json -d "$f" || exit 1
+          done
 
       - name: Parser tests
         shell: bash
@@ -91,10 +152,243 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ei7-output
+          if-no-files-found: warn
           path: |
             fixtures/ei7/oswego.html
             fixtures/ei7/oswego.json
+            fixtures/ei7/v11/*.html
+            fixtures/ei7/v11/*.json
+            ei7-out/v11/*.html
 
       - name: No drift in fixtures/ei7
         shell: bash
         run: git diff --exit-code fixtures/ei7
+
+  ei3-upgrade-probe:
+    # v1.1 Task 3 step 3 (spec §8.1): try, once, a headless Epi Info 3
+    # project upgrade on the source-built route. Never blocks: it runs only
+    # when ei3_probe is ticked on dispatch and job failure is neutralised.
+    runs-on: windows-latest
+    timeout-minutes: 90
+    continue-on-error: true
+    if: github.event_name == 'workflow_dispatch' && inputs.ei3_probe == true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check out Epi Info 7 source (pinned to D2 commit)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Epi-Info/Epi-Info-Community-Edition
+          ref: 4cd353c62c40b78d9d1f013b0f5a2bb685a5fca6
+          path: ei7
+
+      - uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2
+
+      - uses: nuget/setup-nuget@d105a947828025cd7a980103c35ba2bfae586d0f # v2
+
+      - name: NuGet restore
+        run: nuget restore "ei7/Epi Info 7.sln"
+
+      - name: Build Epi Info 7.sln (Release)
+        run: msbuild "ei7/Epi Info 7.sln" /p:Configuration=Release /p:Platform="Mixed Platforms" /m /v:m
+
+      - name: Compile the headless upgrade probe
+        shell: powershell
+        run: |
+          # Drives Epi.ImportExport.ProjectUpgradeManager (the class behind
+          # MakeView's interactive "upgrade Epi Info 3.x project" path)
+          # against the source-built assemblies: load an EI3 .mdb, create a
+          # fresh EI7 project, call Import(). Written as C# because pwsh 7
+          # cannot host .NET Framework assemblies.
+          $code = @'
+          using System;
+          using System.IO;
+          using System.Collections.Generic;
+
+          public static class Ei3UpgradeProbe
+          {
+              private static string workDirPath;
+              private static string sourceMdbPath;
+              private static Epi.Epi2000.Project sourceProject;
+
+              public static int Main(string[] args)
+              {
+                  string srcPath = Path.GetFullPath(args[0]);
+                  workDirPath = Path.GetFullPath(args[1]);
+                  sourceMdbPath = srcPath;
+                  try
+                  {
+                      sourceProject = new Epi.Epi2000.Project(srcPath);
+                      sourceProject.LoadViews();
+                      Console.WriteLine("STAGE1 ei3 project loaded: views=" + sourceProject.Views.Count);
+                      foreach (var v in sourceProject.Views)
+                      {
+                          Console.WriteLine("  view " + v.Name + " table=" + v.TableName);
+                      }
+                  }
+                  catch (Exception ex)
+                  {
+                      Console.WriteLine("STAGE1 FAILED: " + ex);
+                      return 2;
+                  }
+                  try
+                  {
+                      // Same bootstrap as Epi.Windows.Analysis/EntryPoint.cs:
+                      // create a default config if needed, then Load() —
+                      // Project.CreateProject calls Configuration.GetNewInstance()
+                      // which throws "Configuration has not been loaded".
+                      string configFilePath = Epi.Configuration.DefaultConfigurationPath;
+                      string configDir = Path.GetDirectoryName(configFilePath);
+                      if (!Directory.Exists(configDir)) Directory.CreateDirectory(configDir);
+                      if (!File.Exists(configFilePath))
+                      {
+                          var defaultConfig = Epi.Configuration.CreateDefaultConfiguration();
+                          Epi.Configuration.Save(defaultConfig);
+                      }
+                      Epi.Configuration.Load(configFilePath);
+                      Console.WriteLine("STAGE2 configuration loaded: " + configFilePath);
+                      var shell = new Epi.Project();
+                      var csb = new System.Data.OleDb.OleDbConnectionStringBuilder();
+                      csb["Provider"] = "Microsoft.Jet.OLEDB.4.0";
+                      csb["Data Source"] = Path.Combine(workDirPath, "UpgradedProbe.mdb");
+                      var dbInfo = new Epi.Data.DbDriverInfo();
+                      dbInfo.DBCnnStringBuilder = csb;
+                      var dst = shell.CreateProject("UpgradedProbe",
+                          "v1.1 Task 3 ei3 upgrade probe", workDirPath,
+                          "Epi.Data.Office.AccessDBFactory, Epi.Data.Office", dbInfo);
+                      Console.WriteLine("STAGE2 target project created: " +
+                          (dst == null ? "null" : dst.FilePath));
+                      if (dst == null) return 3;
+                      var mgr = new Epi.ImportExport.ProjectUpgradeManager(sourceProject, dst);
+                      // Import() raises ImportEnded and then shows the modal
+                      // ImportMessagesDialog (ProjectUpgradeManager.cs ~lines
+                      // 346-352), which blocks forever on a headless runner.
+                      // The ImportEnded handler prints the upgraded row counts
+                      // and calls Environment.Exit(0) before the dialog opens.
+                      mgr.ImportStatus += new Epi.ImportExport.ImportStatusEventHandler(OnImportStatus);
+                      mgr.ImportEnded += new Epi.SimpleEventHandler(OnImportEnded);
+                      bool ok = mgr.Import();
+                      Console.WriteLine("STAGE3 Import() returned " + ok);
+                      return ok ? 0 : 4;
+                  }
+                  catch (Exception ex)
+                  {
+                      Console.WriteLine("STAGE2/3 FAILED: " + ex);
+                      return 5;
+                  }
+              }
+
+              private static void OnImportStatus(object o, Epi.MessageEventArgs e)
+              {
+                  Console.WriteLine("STATUS " + e.Message);
+              }
+
+              private static void OnImportEnded()
+              {
+                  Console.WriteLine("STAGE3 ImportEnded");
+                  try
+                  {
+                      string dest = FindDestMdb();
+                      Console.WriteLine("STAGE3 destination mdb: " + dest);
+                      PrintCounts(dest, false);
+                      PrintCounts(sourceMdbPath, true);
+                  }
+                  catch (Exception ex)
+                  {
+                      Console.WriteLine("COUNT FAILED: " + ex);
+                  }
+                  Console.Out.Flush();
+                  Environment.Exit(0);
+              }
+
+              private static string FindDestMdb()
+              {
+                  string direct = Path.Combine(workDirPath, "UpgradedProbe.mdb");
+                  if (File.Exists(direct)) return direct;
+                  string[] hits = Directory.GetFiles(workDirPath, "UpgradedProbe.mdb", SearchOption.AllDirectories);
+                  if (hits.Length > 0) return hits[0];
+                  return direct;
+              }
+
+              private static void PrintCounts(string mdbPath, bool source)
+              {
+                  var csb = new System.Data.OleDb.OleDbConnectionStringBuilder();
+                  csb["Provider"] = "Microsoft.Jet.OLEDB.4.0";
+                  csb["Data Source"] = mdbPath;
+                  using (var conn = new System.Data.OleDb.OleDbConnection(csb.ConnectionString))
+                  {
+                      conn.Open();
+                      var schema = conn.GetSchema("Tables");
+                      var names = new List<string>();
+                      foreach (System.Data.DataRow row in schema.Rows)
+                      {
+                          string type = row["TABLE_TYPE"].ToString();
+                          string name = row["TABLE_NAME"].ToString();
+                          if (type == "TABLE" && HasSourceTablePrefix(name)) names.Add(name);
+                      }
+                      names.Sort(StringComparer.OrdinalIgnoreCase);
+                      foreach (var name in names)
+                      {
+                          using (var cmd = conn.CreateCommand())
+                          {
+                              cmd.CommandText = "SELECT COUNT(*) FROM [" + name + "]";
+                              object n = cmd.ExecuteScalar();
+                              Console.WriteLine("COUNT " + (source ? "source " : "") + name + " " + n);
+                          }
+                      }
+                  }
+              }
+
+              private static bool HasSourceTablePrefix(string tableName)
+              {
+                  if (sourceProject == null || sourceProject.Views == null || sourceProject.Views.Count == 0)
+                  {
+                      return tableName.StartsWith("PreInterventionSurvey", StringComparison.OrdinalIgnoreCase);
+                  }
+                  foreach (var v in sourceProject.Views)
+                  {
+                      string t = v.TableName;
+                      if (!string.IsNullOrEmpty(t) && tableName.StartsWith(t, StringComparison.OrdinalIgnoreCase)) return true;
+                  }
+                  return false;
+              }
+          }
+          '@
+          Set-Content probe.cs $code -Encoding ASCII
+          $imp = Get-ChildItem ei7 -Recurse -Filter "Epi.ImportExport.dll" | Select-Object -First 1
+          if (-not $imp) { Write-Error "FAIL: Epi.ImportExport.dll not built"; exit 1 }
+          $buildDir = $imp.DirectoryName
+          Write-Host "probe: build dir $buildDir"
+          $refs = @("Epi.Core.dll", "Epi.ImportExport.dll", "Epi.Data.Office.dll") |
+              ForEach-Object { Join-Path $buildDir $_ } | Where-Object { Test-Path $_ }
+          $refArgs = $refs | ForEach-Object { "/reference:$_" }
+          $csc = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+          if (-not (Test-Path $csc)) { $csc = "C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe" }
+          # /platform:x86: .mdb access goes through Microsoft.Jet.OLEDB.4.0,
+          # which ships only as a 32-bit provider.
+          & $csc /nologo /platform:x86 "/out:$(Join-Path $buildDir 'probe.exe')" probe.cs $refArgs
+          if (-not (Test-Path (Join-Path $buildDir 'probe.exe'))) { Write-Error "FAIL: probe.exe not built"; exit 1 }
+          Write-Host "probe: compiled OK"
+
+      - name: Run the headless EI3 upgrade probe
+        shell: powershell
+        timeout-minutes: 20
+        run: |
+          $ErrorActionPreference = 'Continue'
+          New-Item -ItemType Directory -Force -Path ei3-probe | Out-Null
+          $exe = Get-ChildItem ei7 -Recurse -Filter "probe.exe" | Select-Object -First 1 -ExpandProperty FullName
+          # cmd /c with in-process redirection: Windows PowerShell 5.1 turns
+          # any native stderr line into a NativeCommandError that aborts the
+          # step before a tee could log it.
+          cmd /c "`"$exe`" `"fixtures\legacy\samples\ei3\Asthma Survey 2005 Sample.mdb`" `"ei3-probe`" > ei3-probe\probe.log 2>&1"
+          Write-Host "probe: exit $LASTEXITCODE"
+          Get-Content ei3-probe\probe.log -ErrorAction SilentlyContinue
+          Get-ChildItem ei3-probe -Recurse -File | ForEach-Object { Write-Host ("probe: {0} ({1} bytes)" -f $_.FullName, $_.Length) }
+
+      - name: Upload ei3-upgrade-probe artifact
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ei3-upgrade-probe
+          if-no-files-found: warn
+          path: ei3-probe/

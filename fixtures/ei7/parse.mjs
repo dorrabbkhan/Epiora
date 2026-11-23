@@ -36,6 +36,7 @@
 // No dependencies — the html is parsed with a small tag scanner.
 
 import { readFileSync, writeFileSync } from 'node:fs';
+import { buildStepsResult, parseSteps, stepsSource } from './steps.mjs';
 
 const ENTITIES = { nbsp: ' ', amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
 
@@ -44,7 +45,7 @@ function decodeEntities(s) {
     e[0] === '#' ? String.fromCodePoint(Number(e.slice(1))) : (ENTITIES[e] ?? m));
 }
 
-function stripTags(s) {
+export function stripTags(s) {
   return decodeEntities(s.replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim();
 }
 
@@ -53,7 +54,7 @@ function stripTags(s) {
 // optional "%" suffix, optional " (X)" method marker.
 const NUM_RE = /^([+-]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?),?(%?)(\s*\(([A-Za-z]+)\))?$/;
 
-function parseNumber(text) {
+export function parseNumber(text) {
   const m = NUM_RE.exec(text);
   if (!m) return null;
   const mantissa = m[1].replace(/,/g, '');
@@ -83,7 +84,7 @@ const NAME_VALUE_RE = /^(.+?)\s*=\s*(.+)$/;
 const NAMED_ROW_RE = /^(.*?)\s*=\s*$/;
 
 // Split html into balanced <table>...</table> blocks (handles nesting).
-function tableBlocks(html) {
+export function tableBlocks(html) {
   const blocks = [];
   const re = /<\/?table\b[^>]*>/gi;
   let depth = 0, start = -1, m;
@@ -99,7 +100,7 @@ function tableBlocks(html) {
 // before the first <tr> (Epi Info puts e.g. "Exact 95% Conf Limits" there)
 // and rows are lists of cells { text, span }. Cells are delimited by opening
 // <td>/<th> tags: Epi Info's html leaves some cells unclosed.
-function parseTable(block) {
+export function parseTable(block) {
   const rows = [];
   const trRe = /<tr\b[^>]*>/gi;
   const starts = [];
@@ -127,7 +128,7 @@ function parseTable(block) {
 
 // Expand a row's cells into per-column texts (a colspan writes into every
 // covered column).
-function rowColumns(cells, width) {
+export function rowColumns(cells, width) {
   const cols = new Array(width).fill('');
   let i = 0;
   for (const c of cells) {
@@ -242,40 +243,52 @@ function dedupeLabels(values) {
   }
 }
 
-export function parseHtml(html, labels = {}) {
-  const outputs = [];
-  // Sections are delimited by <h3> command captions.
+// Split html at its <h3> command captions into ordered sections.
+export function htmlSections(html) {
   const h3re = /<h3\b[^>]*>(.*?)<\/h3>/gi;
   const marks = [];
   let m;
   while ((m = h3re.exec(html))) marks.push({ command: stripTags(m[1]), start: m.index, end: h3re.lastIndex });
-  for (let s = 0; s < marks.length; s++) {
-    const segEnd = s + 1 < marks.length ? marks[s + 1].start : html.length;
-    const seg = html.slice(marks[s].end, segEnd);
-    const values = [];
-    let pos = 0;
-    let ctx = { stratum: '', block: '', caption: '' };
-    for (const [ts, te] of tableBlocks(seg)) {
-      // <P> elements between tables carry either note prose ("(For
-      // normally distributed data only)", the small-p-value hint) or a
-      // displayed value as "name = number" ("P-value = 0.99321"). The
-      // value paragraphs emit under the block they follow; all <P> text
-      // stays out of the caption so notes cannot pollute later labels.
-      const gap = seg.slice(pos, ts).replace(/<p\b[^>]*>(.*?)<\/p\s*>/gi, (m, inner) => {
-        const kv = NAME_VALUE_RE.exec(stripTags(inner));
-        const num = kv ? parseNumber(kv[2]) : null;
-        if (num) emit(values, ctx, kv[1], num);
-        return ' ';
-      });
-      ctx = updateContext(ctx, stripTags(gap));
-      const table = parseTable(seg.slice(ts, te));
-      if (isCrosstab(table.rows)) parseCrosstab(table, ctx, values);
-      else parseStatTable(table, ctx, values);
-      pos = te;
-    }
-    dedupeLabels(values);
-    outputs.push({ command: marks[s].command, values: values.map(v => ({ ...v, key: labels[v.label] ?? null })) });
+  return marks.map((mk, s) => ({
+    command: mk.command,
+    seg: html.slice(mk.end, s + 1 < marks.length ? marks[s + 1].start : html.length),
+  }));
+}
+
+// The labelled values of one <h3> section (every table plus the
+// "name = number" <P> elements between them).
+export function sectionValues(seg) {
+  const values = [];
+  let pos = 0;
+  let ctx = { stratum: '', block: '', caption: '' };
+  for (const [ts, te] of tableBlocks(seg)) {
+    // <P> elements between tables carry either note prose ("(For
+    // normally distributed data only)", the small-p-value hint) or a
+    // displayed value as "name = number" ("P-value = 0.99321"). The
+    // value paragraphs emit under the block they follow; all <P> text
+    // stays out of the caption so notes cannot pollute later labels.
+    const gap = seg.slice(pos, ts).replace(/<p\b[^>]*>(.*?)<\/p\s*>/gi, (m, inner) => {
+      const kv = NAME_VALUE_RE.exec(stripTags(inner));
+      const num = kv ? parseNumber(kv[2]) : null;
+      if (num) emit(values, ctx, kv[1], num);
+      return ' ';
+    });
+    ctx = updateContext(ctx, stripTags(gap));
+    const table = parseTable(seg.slice(ts, te));
+    if (isCrosstab(table.rows)) parseCrosstab(table, ctx, values);
+    else parseStatTable(table, ctx, values);
+    pos = te;
   }
+  dedupeLabels(values);
+  return values;
+}
+
+export function parseHtml(html, labels = {}) {
+  // Sections are delimited by <h3> command captions.
+  const outputs = htmlSections(html).map(({ command, seg }) => ({
+    command,
+    values: sectionValues(seg).map(v => ({ ...v, key: labels[v.label] ?? null })),
+  }));
   return { outputs };
 }
 
@@ -288,23 +301,44 @@ function arg(flag) {
   return i === -1 ? undefined : process.argv[i + 1];
 }
 
+function argsAll(flag) {
+  const out = [];
+  for (let i = 0; i < process.argv.length - 1; i++) {
+    if (process.argv[i] === flag) out.push(process.argv[i + 1]);
+  }
+  return out;
+}
+
 if (process.argv[1] && process.argv[1].endsWith('parse.mjs')) {
   const htmlPath = arg('--html'), labelsPath = arg('--labels'), outPath = arg('--out');
-  if (!htmlPath || !outPath) {
+  const pgmPath = arg('--pgm'), stepsMode = process.argv.includes('--steps');
+  if (!htmlPath || !outPath || (stepsMode && !pgmPath)) {
     console.error('usage: node parse.mjs --html <in.html> [--labels labels.json] --out <out.json> ' +
-      '[--build B] [--zip-sha256 H] [--sample-mdb-sha256 H] [--run-url U]');
+      '[--build B] [--zip-sha256 H] [--sample-mdb-sha256 H] [--run-url U]\n' +
+      '       node parse.mjs --steps --pgm <in.pgm> --html <in.html> --out <out.json> ' +
+      '[--input name=sha256 ...]');
     process.exit(2);
   }
   const labels = labelsPath ? JSON.parse(readFileSync(labelsPath, 'utf8')) : {};
-  const { outputs } = parseHtml(readFileSync(htmlPath, 'utf8'), labels);
-  const source = {
-    build: arg('--build') ?? 'unknown',
-    zip_sha256: arg('--zip-sha256') ?? 'unknown',
-    sample_mdb_sha256: arg('--sample-mdb-sha256') ?? 'unknown',
-    run_url: arg('--run-url') ?? 'unknown',
-  };
-  const unmapped = [...new Set(outputs.flatMap(o => o.values.filter(v => v.key === null).map(v => v.label)))];
-  console.error(`parse.mjs: ${outputs.length} command block(s), ${unmapped.length} unmapped label(s)`);
-  for (const l of unmapped) console.error(`  unmapped: ${l}`);
-  writeFileSync(outPath, JSON.stringify(buildResult(outputs, source), null, 2));
+  const html = readFileSync(htmlPath, 'utf8');
+  if (stepsMode) {
+    const source = stepsSource(pgmPath, arg('--build'), arg('--zip-sha256'), arg('--run-url'),
+      argsAll('--input'));
+    const { steps, warnings } = parseSteps(html, readFileSync(pgmPath, 'utf8'), labels);
+    console.error(`parse.mjs: ${steps.length} step(s)`);
+    for (const w of warnings) console.error(`  warning: ${w}`);
+    writeFileSync(outPath, JSON.stringify(buildStepsResult(steps, source), null, 2));
+  } else {
+    const source = {
+      build: arg('--build') ?? 'unknown',
+      zip_sha256: arg('--zip-sha256') ?? 'unknown',
+      sample_mdb_sha256: arg('--sample-mdb-sha256') ?? 'unknown',
+      run_url: arg('--run-url') ?? 'unknown',
+    };
+    const { outputs } = parseHtml(html, labels);
+    const unmapped = [...new Set(outputs.flatMap(o => o.values.filter(v => v.key === null).map(v => v.label)))];
+    console.error(`parse.mjs: ${outputs.length} command block(s), ${unmapped.length} unmapped label(s)`);
+    for (const l of unmapped) console.error(`  unmapped: ${l}`);
+    writeFileSync(outPath, JSON.stringify(buildResult(outputs, source), null, 2));
+  }
 }

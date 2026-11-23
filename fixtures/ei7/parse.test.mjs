@@ -8,6 +8,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseHtml } from './parse.mjs';
+import { parseSteps } from './steps.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const labels = JSON.parse(readFileSync(join(HERE, 'labels.json'), 'utf8'));
@@ -196,4 +197,52 @@ test('every value is finite and decimals >= 0', () => {
         `${v.label}: bad decimals ${v.decimals}`);
     }
   }
+});
+
+// ---------------------------------------------------------------------------
+// --steps mode (v1.1 Task 3): corpus steps correlate program lines with the
+// html's <h3> sections. The html excerpts below are byte-verbatim slices of
+// the ei7-out/v11 artifact of ei7.yml run 45158293708 (Epi Info 7.2.7.0).
+// ---------------------------------------------------------------------------
+
+// The "LIST AGE ILL MASHEDPOTA" block of select_sort.html (SELECT AGE > 40
+// leaves 22 records).
+const LIST_BLOCK = `<h3>LIST AGE ILL MASHEDPOTA </h3><hr/><table cellpadding="2"><tr><th>AGE</th><th>ILL</th><th>MASHEDPOTA</th></tr><tr><td align="right">59</td><td>1</td><td>0</td></tr><tr><td align="right">52</td><td>1</td><td>1</td></tr><tr><td align="right">77</td><td>1</td><td>0</td></tr><tr><td align="right">45</td><td>1</td><td>1</td></tr><tr><td align="right">72</td><td>1</td><td>0</td></tr><tr><td align="right">53</td><td>1</td><td>1</td></tr><tr><td align="right">50</td><td>1</td><td>0</td></tr><tr><td align="right">63</td><td>1</td><td>0</td></tr><tr><td align="right">74</td><td>1</td><td>1</td></tr><tr><td align="right">44</td><td>1</td><td>1</td></tr><tr><td align="right">65</td><td>1</td><td>1</td></tr><tr><td align="right">60</td><td>1</td><td>0</td></tr><tr><td align="right">48</td><td>1</td><td>1</td></tr><tr><td align="right">62</td><td>1</td><td>0</td></tr><tr><td align="right">70</td><td>1</td><td>1</td></tr><tr><td align="right">57</td><td>1</td><td>0</td></tr><tr><td align="right">58</td><td>1</td><td>1</td></tr><tr><td align="right">59</td><td>1</td><td>1</td></tr><tr><td align="right">68</td><td>1</td><td>1</td></tr><tr><td align="right">52</td><td>1</td><td>1</td></tr><tr><td align="right">52</td><td>1</td><td>1</td></tr><tr><td align="right">62</td><td>1</td><td>0</td></tr></table>`;
+
+test('parses_list_block', () => {
+  const pgm = `SELECT AGE > 40\nLIST AGE ILL MASHEDPOTA\nCANCEL SELECT\n`;
+  const html = `<h3></h3><hr/><i>Record Count:&nbsp;&nbsp;</i><b>22</b>&nbsp;<i>(Deleted Records Excluded)&nbsp;&nbsp;&nbsp;</i>${LIST_BLOCK}<h3></h3><hr/><i>Record Count:&nbsp;&nbsp;</i><b>75</b>`;
+  const { steps, warnings } = parseSteps(html, pgm, labels);
+  assert.deepEqual(warnings, []);
+  assert.equal(steps.length, 3);
+  const list = steps[1];
+  assert.equal(list.line, 2);
+  assert.equal(list.command, 'LIST AGE ILL MASHEDPOTA');
+  assert.equal(list.rows.length, 23); // header + 22 selected records
+  assert.deepEqual(list.rows[0], ['AGE', 'ILL', 'MASHEDPOTA']);
+  assert.deepEqual(list.rows[1], [59, 1, 0]);
+  assert.deepEqual(list.rows[22], [62, 1, 0]);
+  assert.deepEqual(list.results, {});
+  // The SELECT metadata section pins the working-view record count.
+  assert.deepEqual(steps[0].results['selection.record_count'], { value: 22, decimals: 0 });
+  assert.deepEqual(steps[0].results['selection.deleted_records_included'], { value: 0, decimals: 0 });
+});
+
+// The "MEANS AGEX2" block of DEFINE_ASSIGN_IF.HTML: DEFINE/ASSIGN produce no
+// section at all, so their steps keep rows:null and the following captioned
+// section still binds to its own line.
+const MEANS_BLOCK = `<h3>MEANS AGEX2</h3><hr/><TABLE ALIGN=CENTER><TR class='Stats'><TD  class='Stats' ALIGN=CENTER>&nbsp;</TD><TD  class='Stats' ALIGN=CENTER>Obs</TD><TD class='Stats' ALIGN=CENTER>Total</TD> <TD class='Stats' ALIGN=CENTER>Mean</TD><TD class='Stats'>Variance</TD><TD class='Stats' ALIGN=CENTER>Std Dev</TD></TR><TR><TD  class='Stats' ALIGN=CENTER></TD><TD class='Stats' ALIGN=RIGHT>75.0000</TD><TD class='Stats' ALIGN=RIGHT>5522.0000</TD><TD class='Stats' ALIGN=RIGHT>73.6267</TD><TD class='Stats' ALIGN=RIGHT>1840.7236</TD><TD class='Stats' ALIGN=RIGHT>42.9037</TD></TR></TABLE>`;
+
+test('parses_define_echo', () => {
+  const pgm = `DEFINE AGEX2 NUMERIC\nASSIGN AGEX2 = AGE * 2\nMEANS AGEX2\n`;
+  const { steps, warnings } = parseSteps(MEANS_BLOCK, pgm, labels);
+  assert.deepEqual(warnings, []);
+  assert.equal(steps.length, 3);
+  // DEFINE and ASSIGN echo nothing in the html: steps exist, rows stay null.
+  assert.deepEqual(steps[0], { line: 1, command: 'DEFINE AGEX2 NUMERIC', rows: null, results: {} });
+  assert.deepEqual(steps[1], { line: 2, command: 'ASSIGN AGEX2 = AGE * 2', rows: null, results: {} });
+  const means = steps[2];
+  assert.equal(means.line, 3);
+  assert.deepEqual(means.results['means.overall.observations'], { value: 75, decimals: 4 });
+  assert.deepEqual(means.results['means.overall.mean'], { value: 73.6267, decimals: 4 });
 });

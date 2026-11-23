@@ -1,0 +1,2190 @@
+{
+  "source": {
+    "build": "7.2.7.0",
+    "zip_sha256": "8440a628a28fd1c1993ebc8211fe0104fdb2572ae8bcb3427e07baceb08df609",
+    "run_url": "https://github.com/dorrabbkhan/Epiora/actions/runs/45161983082",
+    "program": "select_sort.pgm",
+    "inputs": {
+      "Sample.mdb": "c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e",
+      "Nutrition.mdb": "310a87c6bbe591ea1afcfa5a8a534c5e944f3e294f9b8833ce8b743ff9c41ad8"
+    }
+  },
+  "steps": [
+    {
+      "line": 7,
+      "command": "READ '@WORK_DIR@/Sample.mdb':Oswego12",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 8,
+      "command": "ROUTEOUT \"@OUTPUT_HTML@\" REPLACE",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 9,
+      "command": "FREQ MASHEDPOTA",
+      "rows": [
+        [
+          "MASHEDPOTA",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          0,
+          37,
+          "50.00%",
+          "50.00%",
+          null
+        ],
+        [
+          1,
+          37,
+          "50.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          74,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 37,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 50,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 50,
+          "decimals": 2
+        },
+        "freq.categories[1].count": {
+          "value": 37,
+          "decimals": 0
+        },
+        "freq.categories[1].percent": {
+          "value": 50,
+          "decimals": 2
+        },
+        "freq.categories[1].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 74,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 38.14,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 61.86,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.lower": {
+          "value": 38.14,
+          "decimals": 2
+        },
+        "freq.categories[1].ci_95_clopper_pearson.upper": {
+          "value": 61.86,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 10,
+      "command": "SELECT MASHEDPOTA = 1",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 37,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 11,
+      "command": "FREQ MASHEDPOTA",
+      "rows": [
+        [
+          "MASHEDPOTA",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          1,
+          37,
+          "100.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          37,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 37,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 37,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 90.51,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 100,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 12,
+      "command": "CANCEL SELECT",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 75,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 13,
+      "command": "SELECT MASHEDPOTA <> 1",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 38,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 14,
+      "command": "FREQ MASHEDPOTA",
+      "rows": [
+        [
+          "MASHEDPOTA",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          0,
+          37,
+          "100.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          37,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 37,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 37,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 90.51,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 100,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 15,
+      "command": "CANCEL SELECT",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 75,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 16,
+      "command": "SELECT MASHEDPOTA = (.)",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 1,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 17,
+      "command": "FREQ MASHEDPOTA",
+      "rows": [
+        [
+          "MASHEDPOTA",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          "Total",
+          0,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.total": {
+          "value": 0,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 18,
+      "command": "CANCEL SELECT",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 75,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 19,
+      "command": "SELECT ILL = 1",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 46,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 20,
+      "command": "FREQ ILL",
+      "rows": [
+        [
+          "ILL",
+          "Frequency",
+          "Percent",
+          "Cum. Percent",
+          null
+        ],
+        [
+          1,
+          46,
+          "100.00%",
+          "100.00%",
+          null
+        ],
+        [
+          "Total",
+          46,
+          "100.00%",
+          "100.00%",
+          null
+        ]
+      ],
+      "results": {
+        "freq.categories[0].count": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[0].percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.categories[0].cumulative_percent": {
+          "value": 100,
+          "decimals": 2
+        },
+        "freq.total": {
+          "value": 46,
+          "decimals": 0
+        },
+        "freq.categories[0].ci_95_clopper_pearson.lower": {
+          "value": 92.29,
+          "decimals": 2
+        },
+        "freq.categories[0].ci_95_clopper_pearson.upper": {
+          "value": 100,
+          "decimals": 2
+        }
+      }
+    },
+    {
+      "line": 21,
+      "command": "SELECT AGE > 40",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 22,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 22,
+      "command": "LIST AGE ILL MASHEDPOTA",
+      "rows": [
+        [
+          "AGE",
+          "ILL",
+          "MASHEDPOTA"
+        ],
+        [
+          59,
+          1,
+          0
+        ],
+        [
+          52,
+          1,
+          1
+        ],
+        [
+          77,
+          1,
+          0
+        ],
+        [
+          45,
+          1,
+          1
+        ],
+        [
+          72,
+          1,
+          0
+        ],
+        [
+          53,
+          1,
+          1
+        ],
+        [
+          50,
+          1,
+          0
+        ],
+        [
+          63,
+          1,
+          0
+        ],
+        [
+          74,
+          1,
+          1
+        ],
+        [
+          44,
+          1,
+          1
+        ],
+        [
+          65,
+          1,
+          1
+        ],
+        [
+          60,
+          1,
+          0
+        ],
+        [
+          48,
+          1,
+          1
+        ],
+        [
+          62,
+          1,
+          0
+        ],
+        [
+          70,
+          1,
+          1
+        ],
+        [
+          57,
+          1,
+          0
+        ],
+        [
+          58,
+          1,
+          1
+        ],
+        [
+          59,
+          1,
+          1
+        ],
+        [
+          68,
+          1,
+          1
+        ],
+        [
+          52,
+          1,
+          1
+        ],
+        [
+          52,
+          1,
+          1
+        ],
+        [
+          62,
+          1,
+          0
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 23,
+      "command": "CANCEL SELECT",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 75,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 24,
+      "command": "SORT AGE",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 75,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 25,
+      "command": "LIST AGE SEX",
+      "rows": [
+        [
+          "AGE",
+          "SEX"
+        ],
+        [
+          3,
+          "Male"
+        ],
+        [
+          7,
+          "Male"
+        ],
+        [
+          7,
+          "Male"
+        ],
+        [
+          8,
+          "Female"
+        ],
+        [
+          8,
+          "Male"
+        ],
+        [
+          9,
+          "Female"
+        ],
+        [
+          10,
+          "Male"
+        ],
+        [
+          11,
+          "Male"
+        ],
+        [
+          11,
+          "Male"
+        ],
+        [
+          11,
+          "Female"
+        ],
+        [
+          11,
+          "Female"
+        ],
+        [
+          12,
+          "Female"
+        ],
+        [
+          13,
+          "Female"
+        ],
+        [
+          13,
+          "Female"
+        ],
+        [
+          14,
+          "Female"
+        ],
+        [
+          15,
+          "Female"
+        ],
+        [
+          15,
+          "Male"
+        ],
+        [
+          15,
+          "Female"
+        ],
+        [
+          16,
+          "Female"
+        ],
+        [
+          17,
+          "Male"
+        ],
+        [
+          17,
+          "Male"
+        ],
+        [
+          17,
+          "Male"
+        ],
+        [
+          17,
+          "Female"
+        ],
+        [
+          18,
+          "Female"
+        ],
+        [
+          20,
+          "Male"
+        ],
+        [
+          20,
+          "Female"
+        ],
+        [
+          21,
+          "Female"
+        ],
+        [
+          24,
+          "Female"
+        ],
+        [
+          25,
+          "Male"
+        ],
+        [
+          25,
+          "Male"
+        ],
+        [
+          32,
+          "Female"
+        ],
+        [
+          33,
+          "Female"
+        ],
+        [
+          33,
+          "Female"
+        ],
+        [
+          35,
+          "Male"
+        ],
+        [
+          35,
+          "Female"
+        ],
+        [
+          35,
+          "Female"
+        ],
+        [
+          35,
+          "Female"
+        ],
+        [
+          36,
+          "Male"
+        ],
+        [
+          36,
+          "Female"
+        ],
+        [
+          36,
+          "Male"
+        ],
+        [
+          37,
+          "Male"
+        ],
+        [
+          37,
+          "Female"
+        ],
+        [
+          38,
+          "Female"
+        ],
+        [
+          40,
+          "Male"
+        ],
+        [
+          40,
+          "Female"
+        ],
+        [
+          44,
+          "Female"
+        ],
+        [
+          45,
+          "Female"
+        ],
+        [
+          48,
+          "Female"
+        ],
+        [
+          50,
+          "Female"
+        ],
+        [
+          50,
+          "Male"
+        ],
+        [
+          52,
+          "Female"
+        ],
+        [
+          52,
+          "Male"
+        ],
+        [
+          52,
+          "Female"
+        ],
+        [
+          53,
+          "Female"
+        ],
+        [
+          54,
+          "Female"
+        ],
+        [
+          57,
+          "Female"
+        ],
+        [
+          58,
+          "Male"
+        ],
+        [
+          59,
+          "Female"
+        ],
+        [
+          59,
+          "Female"
+        ],
+        [
+          60,
+          "Male"
+        ],
+        [
+          62,
+          "Female"
+        ],
+        [
+          62,
+          "Male"
+        ],
+        [
+          62,
+          "Female"
+        ],
+        [
+          62,
+          "Female"
+        ],
+        [
+          63,
+          "Female"
+        ],
+        [
+          64,
+          "Male"
+        ],
+        [
+          65,
+          "Male"
+        ],
+        [
+          65,
+          "Female"
+        ],
+        [
+          65,
+          "Male"
+        ],
+        [
+          68,
+          "Male"
+        ],
+        [
+          69,
+          "Female"
+        ],
+        [
+          70,
+          "Male"
+        ],
+        [
+          72,
+          "Female"
+        ],
+        [
+          74,
+          "Male"
+        ],
+        [
+          77,
+          "Male"
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 26,
+      "command": "SORT AGE DESCENDING",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 75,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 27,
+      "command": "LIST AGE SEX",
+      "rows": [
+        [
+          "AGE",
+          "SEX"
+        ],
+        [
+          77,
+          "Male"
+        ],
+        [
+          74,
+          "Male"
+        ],
+        [
+          72,
+          "Female"
+        ],
+        [
+          70,
+          "Male"
+        ],
+        [
+          69,
+          "Female"
+        ],
+        [
+          68,
+          "Male"
+        ],
+        [
+          65,
+          "Male"
+        ],
+        [
+          65,
+          "Female"
+        ],
+        [
+          65,
+          "Male"
+        ],
+        [
+          64,
+          "Male"
+        ],
+        [
+          63,
+          "Female"
+        ],
+        [
+          62,
+          "Female"
+        ],
+        [
+          62,
+          "Male"
+        ],
+        [
+          62,
+          "Female"
+        ],
+        [
+          62,
+          "Female"
+        ],
+        [
+          60,
+          "Male"
+        ],
+        [
+          59,
+          "Female"
+        ],
+        [
+          59,
+          "Female"
+        ],
+        [
+          58,
+          "Male"
+        ],
+        [
+          57,
+          "Female"
+        ],
+        [
+          54,
+          "Female"
+        ],
+        [
+          53,
+          "Female"
+        ],
+        [
+          52,
+          "Female"
+        ],
+        [
+          52,
+          "Male"
+        ],
+        [
+          52,
+          "Female"
+        ],
+        [
+          50,
+          "Female"
+        ],
+        [
+          50,
+          "Male"
+        ],
+        [
+          48,
+          "Female"
+        ],
+        [
+          45,
+          "Female"
+        ],
+        [
+          44,
+          "Female"
+        ],
+        [
+          40,
+          "Male"
+        ],
+        [
+          40,
+          "Female"
+        ],
+        [
+          38,
+          "Female"
+        ],
+        [
+          37,
+          "Male"
+        ],
+        [
+          37,
+          "Female"
+        ],
+        [
+          36,
+          "Male"
+        ],
+        [
+          36,
+          "Female"
+        ],
+        [
+          36,
+          "Male"
+        ],
+        [
+          35,
+          "Male"
+        ],
+        [
+          35,
+          "Female"
+        ],
+        [
+          35,
+          "Female"
+        ],
+        [
+          35,
+          "Female"
+        ],
+        [
+          33,
+          "Female"
+        ],
+        [
+          33,
+          "Female"
+        ],
+        [
+          32,
+          "Female"
+        ],
+        [
+          25,
+          "Male"
+        ],
+        [
+          25,
+          "Male"
+        ],
+        [
+          24,
+          "Female"
+        ],
+        [
+          21,
+          "Female"
+        ],
+        [
+          20,
+          "Male"
+        ],
+        [
+          20,
+          "Female"
+        ],
+        [
+          18,
+          "Female"
+        ],
+        [
+          17,
+          "Male"
+        ],
+        [
+          17,
+          "Male"
+        ],
+        [
+          17,
+          "Male"
+        ],
+        [
+          17,
+          "Female"
+        ],
+        [
+          16,
+          "Female"
+        ],
+        [
+          15,
+          "Female"
+        ],
+        [
+          15,
+          "Male"
+        ],
+        [
+          15,
+          "Female"
+        ],
+        [
+          14,
+          "Female"
+        ],
+        [
+          13,
+          "Female"
+        ],
+        [
+          13,
+          "Female"
+        ],
+        [
+          12,
+          "Female"
+        ],
+        [
+          11,
+          "Male"
+        ],
+        [
+          11,
+          "Male"
+        ],
+        [
+          11,
+          "Female"
+        ],
+        [
+          11,
+          "Female"
+        ],
+        [
+          10,
+          "Male"
+        ],
+        [
+          9,
+          "Female"
+        ],
+        [
+          8,
+          "Female"
+        ],
+        [
+          8,
+          "Male"
+        ],
+        [
+          7,
+          "Male"
+        ],
+        [
+          7,
+          "Male"
+        ],
+        [
+          3,
+          "Male"
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 28,
+      "command": "SORT SEX AGE",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 75,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 29,
+      "command": "LIST SEX AGE",
+      "rows": [
+        [
+          "SEX",
+          "AGE"
+        ],
+        [
+          "Female",
+          8
+        ],
+        [
+          "Female",
+          9
+        ],
+        [
+          "Female",
+          11
+        ],
+        [
+          "Female",
+          11
+        ],
+        [
+          "Female",
+          12
+        ],
+        [
+          "Female",
+          13
+        ],
+        [
+          "Female",
+          13
+        ],
+        [
+          "Female",
+          14
+        ],
+        [
+          "Female",
+          15
+        ],
+        [
+          "Female",
+          15
+        ],
+        [
+          "Female",
+          16
+        ],
+        [
+          "Female",
+          17
+        ],
+        [
+          "Female",
+          18
+        ],
+        [
+          "Female",
+          20
+        ],
+        [
+          "Female",
+          21
+        ],
+        [
+          "Female",
+          24
+        ],
+        [
+          "Female",
+          32
+        ],
+        [
+          "Female",
+          33
+        ],
+        [
+          "Female",
+          33
+        ],
+        [
+          "Female",
+          35
+        ],
+        [
+          "Female",
+          35
+        ],
+        [
+          "Female",
+          35
+        ],
+        [
+          "Female",
+          36
+        ],
+        [
+          "Female",
+          37
+        ],
+        [
+          "Female",
+          38
+        ],
+        [
+          "Female",
+          40
+        ],
+        [
+          "Female",
+          44
+        ],
+        [
+          "Female",
+          45
+        ],
+        [
+          "Female",
+          48
+        ],
+        [
+          "Female",
+          50
+        ],
+        [
+          "Female",
+          52
+        ],
+        [
+          "Female",
+          52
+        ],
+        [
+          "Female",
+          53
+        ],
+        [
+          "Female",
+          54
+        ],
+        [
+          "Female",
+          57
+        ],
+        [
+          "Female",
+          59
+        ],
+        [
+          "Female",
+          59
+        ],
+        [
+          "Female",
+          62
+        ],
+        [
+          "Female",
+          62
+        ],
+        [
+          "Female",
+          62
+        ],
+        [
+          "Female",
+          63
+        ],
+        [
+          "Female",
+          65
+        ],
+        [
+          "Female",
+          69
+        ],
+        [
+          "Female",
+          72
+        ],
+        [
+          "Male",
+          3
+        ],
+        [
+          "Male",
+          7
+        ],
+        [
+          "Male",
+          7
+        ],
+        [
+          "Male",
+          8
+        ],
+        [
+          "Male",
+          10
+        ],
+        [
+          "Male",
+          11
+        ],
+        [
+          "Male",
+          11
+        ],
+        [
+          "Male",
+          15
+        ],
+        [
+          "Male",
+          17
+        ],
+        [
+          "Male",
+          17
+        ],
+        [
+          "Male",
+          17
+        ],
+        [
+          "Male",
+          20
+        ],
+        [
+          "Male",
+          25
+        ],
+        [
+          "Male",
+          25
+        ],
+        [
+          "Male",
+          35
+        ],
+        [
+          "Male",
+          36
+        ],
+        [
+          "Male",
+          36
+        ],
+        [
+          "Male",
+          37
+        ],
+        [
+          "Male",
+          40
+        ],
+        [
+          "Male",
+          50
+        ],
+        [
+          "Male",
+          52
+        ],
+        [
+          "Male",
+          58
+        ],
+        [
+          "Male",
+          60
+        ],
+        [
+          "Male",
+          62
+        ],
+        [
+          "Male",
+          64
+        ],
+        [
+          "Male",
+          65
+        ],
+        [
+          "Male",
+          65
+        ],
+        [
+          "Male",
+          68
+        ],
+        [
+          "Male",
+          70
+        ],
+        [
+          "Male",
+          74
+        ],
+        [
+          "Male",
+          77
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 30,
+      "command": "SORT TIMESUPPER",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 75,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 31,
+      "command": "LIST TIMESUPPER AGE",
+      "rows": [
+        [
+          "TIMESUPPER",
+          "AGE"
+        ],
+        [
+          null,
+          33
+        ],
+        [
+          null,
+          62
+        ],
+        [
+          null,
+          8
+        ],
+        [
+          null,
+          11
+        ],
+        [
+          null,
+          9
+        ],
+        [
+          null,
+          77
+        ],
+        [
+          null,
+          45
+        ],
+        [
+          null,
+          11
+        ],
+        [
+          null,
+          72
+        ],
+        [
+          null,
+          64
+        ],
+        [
+          null,
+          35
+        ],
+        [
+          null,
+          38
+        ],
+        [
+          null,
+          25
+        ],
+        [
+          null,
+          65
+        ],
+        [
+          null,
+          36
+        ],
+        [
+          null,
+          40
+        ],
+        [
+          null,
+          36
+        ],
+        [
+          null,
+          74
+        ],
+        [
+          null,
+          13
+        ],
+        [
+          null,
+          65
+        ],
+        [
+          null,
+          11
+        ],
+        [
+          null,
+          62
+        ],
+        [
+          null,
+          32
+        ],
+        [
+          null,
+          21
+        ],
+        [
+          null,
+          24
+        ],
+        [
+          null,
+          17
+        ],
+        [
+          null,
+          7
+        ],
+        [
+          null,
+          37
+        ],
+        [
+          null,
+          25
+        ],
+        [
+          null,
+          7
+        ],
+        [
+          null,
+          54
+        ],
+        [
+          null,
+          48
+        ],
+        [
+          null,
+          36
+        ],
+        [
+          null,
+          35
+        ],
+        [
+          null,
+          62
+        ],
+        [
+          null,
+          3
+        ],
+        [
+          null,
+          35
+        ],
+        [
+          null,
+          35
+        ],
+        [
+          null,
+          57
+        ],
+        [
+          null,
+          37
+        ],
+        [
+          null,
+          58
+        ],
+        [
+          null,
+          59
+        ],
+        [
+          null,
+          68
+        ],
+        [
+          null,
+          52
+        ],
+        [
+          null,
+          52
+        ],
+        [
+          null,
+          62
+        ],
+        [
+          null,
+          69
+        ],
+        [
+          "4/18/1940 12:00:00 AM",
+          50
+        ],
+        [
+          "4/18/1940 11:00:00 AM",
+          8
+        ],
+        [
+          "4/18/1940 6:30:00 PM",
+          59
+        ],
+        [
+          "4/18/1940 6:30:00 PM",
+          65
+        ],
+        [
+          "4/18/1940 7:00:00 PM",
+          20
+        ],
+        [
+          "4/18/1940 7:00:00 PM",
+          33
+        ],
+        [
+          "4/18/1940 7:30:00 PM",
+          53
+        ],
+        [
+          "4/18/1940 7:30:00 PM",
+          17
+        ],
+        [
+          "4/18/1940 7:30:00 PM",
+          63
+        ],
+        [
+          "4/18/1940 7:30:00 PM",
+          18
+        ],
+        [
+          "4/18/1940 7:30:00 PM",
+          11
+        ],
+        [
+          "4/18/1940 7:30:00 PM",
+          44
+        ],
+        [
+          "4/18/1940 7:30:00 PM",
+          60
+        ],
+        [
+          "4/18/1940 7:30:00 PM",
+          10
+        ],
+        [
+          "4/18/1940 7:30:00 PM",
+          70
+        ],
+        [
+          "4/18/1940 7:30:00 PM",
+          40
+        ],
+        [
+          "4/18/1940 8:00:00 PM",
+          52
+        ],
+        [
+          "4/18/1940 10:00:00 PM",
+          20
+        ],
+        [
+          "4/18/1940 10:00:00 PM",
+          14
+        ],
+        [
+          "4/18/1940 10:00:00 PM",
+          15
+        ],
+        [
+          "4/18/1940 10:00:00 PM",
+          50
+        ],
+        [
+          "4/18/1940 10:00:00 PM",
+          13
+        ],
+        [
+          "4/18/1940 10:00:00 PM",
+          17
+        ],
+        [
+          "4/18/1940 10:00:00 PM",
+          17
+        ],
+        [
+          "4/18/1940 10:00:00 PM",
+          16
+        ],
+        [
+          "4/18/1940 10:00:00 PM",
+          15
+        ],
+        [
+          "4/18/1940 10:00:00 PM",
+          12
+        ],
+        [
+          "4/18/1940 10:00:00 PM",
+          15
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 32,
+      "command": "CANCEL SORT",
+      "rows": null,
+      "results": {
+        "selection.record_count": {
+          "value": 75,
+          "decimals": 0
+        },
+        "selection.deleted_records_included": {
+          "value": 1,
+          "decimals": 0
+        }
+      }
+    },
+    {
+      "line": 33,
+      "command": "LIST AGE SEX",
+      "rows": [
+        [
+          "AGE",
+          "SEX"
+        ],
+        [
+          20,
+          "Male"
+        ],
+        [
+          33,
+          "Female"
+        ],
+        [
+          62,
+          "Female"
+        ],
+        [
+          8,
+          "Female"
+        ],
+        [
+          11,
+          "Male"
+        ],
+        [
+          9,
+          "Female"
+        ],
+        [
+          14,
+          "Female"
+        ],
+        [
+          59,
+          "Female"
+        ],
+        [
+          52,
+          "Female"
+        ],
+        [
+          77,
+          "Male"
+        ],
+        [
+          45,
+          "Female"
+        ],
+        [
+          11,
+          "Male"
+        ],
+        [
+          72,
+          "Female"
+        ],
+        [
+          15,
+          "Female"
+        ],
+        [
+          53,
+          "Female"
+        ],
+        [
+          17,
+          "Male"
+        ],
+        [
+          64,
+          "Male"
+        ],
+        [
+          35,
+          "Male"
+        ],
+        [
+          38,
+          "Female"
+        ],
+        [
+          25,
+          "Male"
+        ],
+        [
+          65,
+          "Male"
+        ],
+        [
+          36,
+          "Male"
+        ],
+        [
+          50,
+          "Female"
+        ],
+        [
+          63,
+          "Female"
+        ],
+        [
+          40,
+          "Male"
+        ],
+        [
+          36,
+          "Female"
+        ],
+        [
+          74,
+          "Male"
+        ],
+        [
+          18,
+          "Female"
+        ],
+        [
+          11,
+          "Female"
+        ],
+        [
+          20,
+          "Female"
+        ],
+        [
+          44,
+          "Female"
+        ],
+        [
+          13,
+          "Female"
+        ],
+        [
+          13,
+          "Female"
+        ],
+        [
+          65,
+          "Female"
+        ],
+        [
+          17,
+          "Male"
+        ],
+        [
+          11,
+          "Female"
+        ],
+        [
+          62,
+          "Male"
+        ],
+        [
+          32,
+          "Female"
+        ],
+        [
+          8,
+          "Male"
+        ],
+        [
+          21,
+          "Female"
+        ],
+        [
+          65,
+          "Male"
+        ],
+        [
+          24,
+          "Female"
+        ],
+        [
+          17,
+          "Male"
+        ],
+        [
+          17,
+          "Female"
+        ],
+        [
+          7,
+          "Male"
+        ],
+        [
+          37,
+          "Male"
+        ],
+        [
+          25,
+          "Male"
+        ],
+        [
+          16,
+          "Female"
+        ],
+        [
+          60,
+          "Male"
+        ],
+        [
+          7,
+          "Male"
+        ],
+        [
+          54,
+          "Female"
+        ],
+        [
+          48,
+          "Female"
+        ],
+        [
+          15,
+          "Male"
+        ],
+        [
+          36,
+          "Male"
+        ],
+        [
+          35,
+          "Female"
+        ],
+        [
+          10,
+          "Male"
+        ],
+        [
+          62,
+          "Female"
+        ],
+        [
+          70,
+          "Male"
+        ],
+        [
+          3,
+          "Male"
+        ],
+        [
+          35,
+          "Female"
+        ],
+        [
+          35,
+          "Female"
+        ],
+        [
+          57,
+          "Female"
+        ],
+        [
+          12,
+          "Female"
+        ],
+        [
+          15,
+          "Female"
+        ],
+        [
+          50,
+          "Male"
+        ],
+        [
+          37,
+          "Female"
+        ],
+        [
+          58,
+          "Male"
+        ],
+        [
+          59,
+          "Female"
+        ],
+        [
+          68,
+          "Male"
+        ],
+        [
+          33,
+          "Female"
+        ],
+        [
+          52,
+          "Male"
+        ],
+        [
+          52,
+          "Female"
+        ],
+        [
+          40,
+          "Female"
+        ],
+        [
+          62,
+          "Female"
+        ],
+        [
+          69,
+          "Female"
+        ]
+      ],
+      "results": {}
+    },
+    {
+      "line": 34,
+      "command": "CLOSEOUT",
+      "rows": null,
+      "results": {}
+    },
+    {
+      "line": 35,
+      "command": "QUIT",
+      "rows": null,
+      "results": {}
+    }
+  ]
+}

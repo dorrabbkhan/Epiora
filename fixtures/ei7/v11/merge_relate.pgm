@@ -1,0 +1,34 @@
+*** merge_relate.pgm — Epiora v1.1 Task 3 reference program.
+*** RELATE one-to-many then FREQ: Nutrition1 has 3 patients keyed PatientID
+*** ("1","2","3"); all 11 PatientVisits2 rows carry VisitPatientID "1", so a
+*** MATCHING relate expands patient 1 to 11 rows and ALL adds the two
+*** unmatched parents. MERGE writes into the destination table (the
+*** current-read file), so this program runs on a scratch copy
+*** (@WORK_DIR@/Nutrition.mdb): the PatientID::VisitPatientID merge has 11
+*** duplicate source keys all updating destination row "1", and the
+*** GlobalRecordId::GlobalRecordId merge has no destination match so all 11
+*** source rows insert. MERGE's APPEND/UPDATE/RELATE option word is not
+*** usable in 7.2.7.0 (SetMergeOpt reads past the token's children — a
+*** hang-producing exception), so only the default match-or-insert merge
+*** path is pinned. Pins spec §15.2: RELATE one-to-many then FREQ, MERGE
+*** with duplicate keys.
+READ '@WORK_DIR@/Nutrition.mdb':Nutrition1
+ROUTEOUT "@OUTPUT_HTML@" REPLACE
+DISPLAY TABLES
+LIST PatientID LastName FirstName
+RELATE PatientVisits2 PatientID::VisitPatientID
+LIST PatientID VisitPatientID Name HeightInches
+FREQ PatientID
+READ '@WORK_DIR@/Nutrition.mdb':Nutrition1
+RELATE PatientVisits2 PatientID::VisitPatientID ALL
+LIST PatientID VisitPatientID HeightInches
+FREQ VisitPatientID
+READ '@WORK_DIR@/Nutrition.mdb':Nutrition1
+MERGE '@WORK_DIR@/Nutrition.mdb':PatientVisits2 PatientID::VisitPatientID
+READ '@WORK_DIR@/Nutrition.mdb':Nutrition1
+LIST PatientID GlobalRecordId
+MERGE '@WORK_DIR@/Nutrition.mdb':PatientVisits2 GlobalRecordId::GlobalRecordId
+READ '@WORK_DIR@/Nutrition.mdb':Nutrition1
+FREQ PatientID
+CLOSEOUT
+QUIT
