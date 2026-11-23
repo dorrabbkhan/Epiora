@@ -188,20 +188,25 @@ jobs:
           $code = @'
           using System;
           using System.IO;
+          using System.Collections.Generic;
 
           public static class Ei3UpgradeProbe
           {
+              private static string workDirPath;
+              private static string sourceMdbPath;
+              private static Epi.Epi2000.Project sourceProject;
+
               public static int Main(string[] args)
               {
                   string srcPath = Path.GetFullPath(args[0]);
-                  string workDir = Path.GetFullPath(args[1]);
-                  Epi.Epi2000.Project src = null;
+                  workDirPath = Path.GetFullPath(args[1]);
+                  sourceMdbPath = srcPath;
                   try
                   {
-                      src = new Epi.Epi2000.Project(srcPath);
-                      src.LoadViews();
-                      Console.WriteLine("STAGE1 ei3 project loaded: views=" + src.Views.Count);
-                      foreach (var v in src.Views)
+                      sourceProject = new Epi.Epi2000.Project(srcPath);
+                      sourceProject.LoadViews();
+                      Console.WriteLine("STAGE1 ei3 project loaded: views=" + sourceProject.Views.Count);
+                      foreach (var v in sourceProject.Views)
                       {
                           Console.WriteLine("  view " + v.Name + " table=" + v.TableName);
                       }
@@ -230,16 +235,23 @@ jobs:
                       var shell = new Epi.Project();
                       var csb = new System.Data.OleDb.OleDbConnectionStringBuilder();
                       csb["Provider"] = "Microsoft.Jet.OLEDB.4.0";
-                      csb["Data Source"] = Path.Combine(workDir, "UpgradedProbe.mdb");
+                      csb["Data Source"] = Path.Combine(workDirPath, "UpgradedProbe.mdb");
                       var dbInfo = new Epi.Data.DbDriverInfo();
                       dbInfo.DBCnnStringBuilder = csb;
                       var dst = shell.CreateProject("UpgradedProbe",
-                          "v1.1 Task 3 ei3 upgrade probe", workDir,
+                          "v1.1 Task 3 ei3 upgrade probe", workDirPath,
                           "Epi.Data.Office.AccessDBFactory, Epi.Data.Office", dbInfo);
                       Console.WriteLine("STAGE2 target project created: " +
                           (dst == null ? "null" : dst.FilePath));
                       if (dst == null) return 3;
-                      var mgr = new Epi.ImportExport.ProjectUpgradeManager(src, dst);
+                      var mgr = new Epi.ImportExport.ProjectUpgradeManager(sourceProject, dst);
+                      // Import() raises ImportEnded and then shows the modal
+                      // ImportMessagesDialog (ProjectUpgradeManager.cs ~lines
+                      // 346-352), which blocks forever on a headless runner.
+                      // The ImportEnded handler prints the upgraded row counts
+                      // and calls Environment.Exit(0) before the dialog opens.
+                      mgr.ImportStatus += new Epi.ImportExport.ImportStatusEventHandler(OnImportStatus);
+                      mgr.ImportEnded += new Epi.SimpleEventHandler(OnImportEnded);
                       bool ok = mgr.Import();
                       Console.WriteLine("STAGE3 Import() returned " + ok);
                       return ok ? 0 : 4;
@@ -249,6 +261,81 @@ jobs:
                       Console.WriteLine("STAGE2/3 FAILED: " + ex);
                       return 5;
                   }
+              }
+
+              private static void OnImportStatus(object o, Epi.MessageEventArgs e)
+              {
+                  Console.WriteLine("STATUS " + e.Message);
+              }
+
+              private static void OnImportEnded()
+              {
+                  Console.WriteLine("STAGE3 ImportEnded");
+                  try
+                  {
+                      string dest = FindDestMdb();
+                      Console.WriteLine("STAGE3 destination mdb: " + dest);
+                      PrintCounts(dest, false);
+                      PrintCounts(sourceMdbPath, true);
+                  }
+                  catch (Exception ex)
+                  {
+                      Console.WriteLine("COUNT FAILED: " + ex);
+                  }
+                  Console.Out.Flush();
+                  Environment.Exit(0);
+              }
+
+              private static string FindDestMdb()
+              {
+                  string direct = Path.Combine(workDirPath, "UpgradedProbe.mdb");
+                  if (File.Exists(direct)) return direct;
+                  string[] hits = Directory.GetFiles(workDirPath, "UpgradedProbe.mdb", SearchOption.AllDirectories);
+                  if (hits.Length > 0) return hits[0];
+                  return direct;
+              }
+
+              private static void PrintCounts(string mdbPath, bool source)
+              {
+                  var csb = new System.Data.OleDb.OleDbConnectionStringBuilder();
+                  csb["Provider"] = "Microsoft.Jet.OLEDB.4.0";
+                  csb["Data Source"] = mdbPath;
+                  using (var conn = new System.Data.OleDb.OleDbConnection(csb.ConnectionString))
+                  {
+                      conn.Open();
+                      var schema = conn.GetSchema("Tables");
+                      var names = new List<string>();
+                      foreach (System.Data.DataRow row in schema.Rows)
+                      {
+                          string type = row["TABLE_TYPE"].ToString();
+                          string name = row["TABLE_NAME"].ToString();
+                          if (type == "TABLE" && HasSourceTablePrefix(name)) names.Add(name);
+                      }
+                      names.Sort(StringComparer.OrdinalIgnoreCase);
+                      foreach (var name in names)
+                      {
+                          using (var cmd = conn.CreateCommand())
+                          {
+                              cmd.CommandText = "SELECT COUNT(*) FROM [" + name + "]";
+                              object n = cmd.ExecuteScalar();
+                              Console.WriteLine("COUNT " + (source ? "source " : "") + name + " " + n);
+                          }
+                      }
+                  }
+              }
+
+              private static bool HasSourceTablePrefix(string tableName)
+              {
+                  if (sourceProject == null || sourceProject.Views == null || sourceProject.Views.Count == 0)
+                  {
+                      return tableName.StartsWith("PreInterventionSurvey", StringComparison.OrdinalIgnoreCase);
+                  }
+                  foreach (var v in sourceProject.Views)
+                  {
+                      string t = v.TableName;
+                      if (!string.IsNullOrEmpty(t) && tableName.StartsWith(t, StringComparison.OrdinalIgnoreCase)) return true;
+                  }
+                  return false;
               }
           }
           '@
@@ -270,6 +357,7 @@ jobs:
 
       - name: Run the headless EI3 upgrade probe
         shell: powershell
+        timeout-minutes: 20
         run: |
           $ErrorActionPreference = 'Continue'
           New-Item -ItemType Directory -Force -Path ei3-probe | Out-Null
