@@ -101,6 +101,21 @@ jobs:
           Get-ChildItem fixtures/ei7/v11 -Filter "*.HTML" | ForEach-Object {
             Rename-Item $_.FullName ($_.BaseName.ToLower() + ".html") -Force
           }
+          # Epi Info stamps a wall-clock data-source banner
+          # (<i>Date:</i>&nbsp;&nbsp;<b>M/d/yyyy h:mm:ss tt</b>) into the
+          # html of programs that print one (merge_relate, select_sort).
+          # It is the only per-run byte difference in the corpus, so
+          # normalise it to a fixed token before parsing and before the
+          # drift check. Read/write raw bytes so no BOM is added and the
+          # CRLF line endings are preserved (files are ASCII + CRLF).
+          $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+          Get-ChildItem fixtures/ei7/v11 -Filter "*.html" | ForEach-Object {
+            $t = [IO.File]::ReadAllText($_.FullName)
+            $t = [regex]::Replace($t,
+              '<i>Date:</i>&nbsp;&nbsp;<b>\d{1,2}/\d{1,2}/\d{4} \d{1,2}:\d{2}:\d{2} [AP]M</b>',
+              '<i>Date:</i>&nbsp;&nbsp;<b>[run timestamp]</b>')
+            [IO.File]::WriteAllText($_.FullName, $t, $utf8NoBom)
+          }
           $sampleSha = (Get-FileHash fixtures/legacy/samples/ei7/Sample/Sample.mdb -Algorithm SHA256).Hash.ToLower()
           $nutritionSha = (Get-FileHash fixtures/legacy/samples/ei7/Nutrition/Nutrition.mdb -Algorithm SHA256).Hash.ToLower()
           Get-ChildItem fixtures/ei7/v11 -Filter "*.pgm" | Sort-Object Name | ForEach-Object {
