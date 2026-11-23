@@ -240,5 +240,6 @@
   "Bartlett's Test for Inequality of Population Variances: P value": "means.bartlett.p_value",
   "Mann-Whitney/Wilcoxon Two-Sample Test (Kruskal-Wallis test for two groups): Kruskal-Wallis H (equivalent to Chi square)": "means.kruskal_wallis.h",
   "Mann-Whitney/Wilcoxon Two-Sample Test (Kruskal-Wallis test for two groups): Degrees of freedom": "means.kruskal_wallis.df",
-  "Mann-Whitney/Wilcoxon Two-Sample Test (Kruskal-Wallis test for two groups): P value": "means.kruskal_wallis.p_value"
+  "Mann-Whitney/Wilcoxon Two-Sample Test (Kruskal-Wallis test for two groups): P value": "means.kruskal_wallis.p_value",
+  "Record Count": "selection.record_count"
 }

@@ -242,40 +242,52 @@ function dedupeLabels(values) {
   }
 }
 
-export function parseHtml(html, labels = {}) {
-  const outputs = [];
-  // Sections are delimited by <h3> command captions.
+// Split html at its <h3> command captions into ordered sections.
+function htmlSections(html) {
   const h3re = /<h3\b[^>]*>(.*?)<\/h3>/gi;
   const marks = [];
   let m;
   while ((m = h3re.exec(html))) marks.push({ command: stripTags(m[1]), start: m.index, end: h3re.lastIndex });
-  for (let s = 0; s < marks.length; s++) {
-    const segEnd = s + 1 < marks.length ? marks[s + 1].start : html.length;
-    const seg = html.slice(marks[s].end, segEnd);
-    const values = [];
-    let pos = 0;
-    let ctx = { stratum: '', block: '', caption: '' };
-    for (const [ts, te] of tableBlocks(seg)) {
-      // <P> elements between tables carry either note prose ("(For
-      // normally distributed data only)", the small-p-value hint) or a
-      // displayed value as "name = number" ("P-value = 0.99321"). The
-      // value paragraphs emit under the block they follow; all <P> text
-      // stays out of the caption so notes cannot pollute later labels.
-      const gap = seg.slice(pos, ts).replace(/<p\b[^>]*>(.*?)<\/p\s*>/gi, (m, inner) => {
-        const kv = NAME_VALUE_RE.exec(stripTags(inner));
-        const num = kv ? parseNumber(kv[2]) : null;
-        if (num) emit(values, ctx, kv[1], num);
-        return ' ';
-      });
-      ctx = updateContext(ctx, stripTags(gap));
-      const table = parseTable(seg.slice(ts, te));
-      if (isCrosstab(table.rows)) parseCrosstab(table, ctx, values);
-      else parseStatTable(table, ctx, values);
-      pos = te;
-    }
-    dedupeLabels(values);
-    outputs.push({ command: marks[s].command, values: values.map(v => ({ ...v, key: labels[v.label] ?? null })) });
+  return marks.map((mk, s) => ({
+    command: mk.command,
+    seg: html.slice(mk.end, s + 1 < marks.length ? marks[s + 1].start : html.length),
+  }));
+}
+
+// The labelled values of one <h3> section (every table plus the
+// "name = number" <P> elements between them).
+function sectionValues(seg) {
+  const values = [];
+  let pos = 0;
+  let ctx = { stratum: '', block: '', caption: '' };
+  for (const [ts, te] of tableBlocks(seg)) {
+    // <P> elements between tables carry either note prose ("(For
+    // normally distributed data only)", the small-p-value hint) or a
+    // displayed value as "name = number" ("P-value = 0.99321"). The
+    // value paragraphs emit under the block they follow; all <P> text
+    // stays out of the caption so notes cannot pollute later labels.
+    const gap = seg.slice(pos, ts).replace(/<p\b[^>]*>(.*?)<\/p\s*>/gi, (m, inner) => {
+      const kv = NAME_VALUE_RE.exec(stripTags(inner));
+      const num = kv ? parseNumber(kv[2]) : null;
+      if (num) emit(values, ctx, kv[1], num);
+      return ' ';
+    });
+    ctx = updateContext(ctx, stripTags(gap));
+    const table = parseTable(seg.slice(ts, te));
+    if (isCrosstab(table.rows)) parseCrosstab(table, ctx, values);
+    else parseStatTable(table, ctx, values);
+    pos = te;
   }
+  dedupeLabels(values);
+  return values;
+}
+
+export function parseHtml(html, labels = {}) {
+  // Sections are delimited by <h3> command captions.
+  const outputs = htmlSections(html).map(({ command, seg }) => ({
+    command,
+    values: sectionValues(seg).map(v => ({ ...v, key: labels[v.label] ?? null })),
+  }));
   return { outputs };
 }
 
@@ -283,28 +295,195 @@ export function buildResult(outputs, source) {
   return { source, outputs };
 }
 
+// ---------------------------------------------------------------------------
+// --steps mode (v1.1 Task 3): correlate a rendered program's source lines with
+// its ROUTEOUT html into per-command steps for the corpus json shape
+//   { "source": {...}, "steps": [ { "line", "command", "rows", "results" } ] }.
+//
+// Epi Info emits exactly one <h3> section per output-producing statement and
+// none for DEFINE/ASSIGN/RECODE rules/IF bodies/ROUTEOUT/CLOSEOUT/QUIT, so the
+// two lists walk in lockstep: a section with a caption binds to the next
+// unbound source line whose normalised text matches it, an empty-caption
+// section (READ/SELECT/SORT/RELATE/MERGE metadata) binds to the next unbound
+// source line, and lines never reached by a section keep rows:null.
+// ---------------------------------------------------------------------------
+
+const normCommand = s => s.replace(/\s+/g, ' ').trim().toUpperCase();
+
+// The non-comment, non-blank lines of a .pgm program (the commands Epi Info
+// executes; `***` lines are comments).
+function programCommands(pgmText) {
+  const cmds = [];
+  pgmText.split(/\r?\n/).forEach((raw, i) => {
+    const t = raw.trim();
+    if (t && !t.startsWith('***')) cmds.push({ line: i + 1, command: t });
+  });
+  return cmds;
+}
+
+// A displayed cell -> its json value: numbers become numbers (a bare
+// integer or decimal cell), "Missing" and empty cells become null, and
+// everything else (labels, percent cells, datetimes) stays displayed text.
+function cellValue(text) {
+  if (text === '' || text === 'Missing') return null;
+  const n = parseNumber(text);
+  if (n && !text.includes('%') && !n.marker) return n.value;
+  return text;
+}
+
+// The first table of a section as an array of cell arrays, header row
+// included, colspans expanded.
+function firstTableRows(seg) {
+  const blocks = tableBlocks(seg);
+  if (!blocks.length) return null;
+  const table = parseTable(seg.slice(blocks[0][0], blocks[0][1]));
+  const width = Math.max(...table.rows.map(r => r.reduce((a, c) => a + c.span, 0)));
+  return table.rows.map(r => rowColumns(r, width).map(cellValue));
+}
+
+// A FREQ table's header carries a "Frequency" column.
+function isFreqTable(rows) {
+  return !!rows && rows.length > 0 && rows[0].some(c => c === 'Frequency');
+}
+
+// FREQ blocks hold two tables: the frequency table itself and the "Exact 95%
+// Conf Limits" table. Categories map to freq.categories[k] in display order.
+function freqResults(seg, results) {
+  const blocks = tableBlocks(seg);
+  for (let t = 0; t < blocks.length; t++) {
+    const table = parseTable(seg.slice(blocks[t][0], blocks[t][1]));
+    const width = Math.max(...table.rows.map(r => r.reduce((a, c) => a + c.span, 0)));
+    const rows = table.rows.map(r => rowColumns(r, width));
+    if (t === 0) {
+      let k = 0;
+      for (const cols of rows.slice(1)) {
+        if (/^total$/i.test(cols[0])) {
+          const total = parseNumber(cols[1]);
+          if (total) results['freq.total'] = { value: total.value, decimals: total.decimals };
+          continue;
+        }
+        for (const [col, suffix] of [[1, 'count'], [2, 'percent'], [3, 'cumulative_percent']]) {
+          const n = parseNumber(cols[col] ?? '');
+          if (n) results[`freq.categories[${k}].${suffix}`] = { value: n.value, decimals: n.decimals };
+        }
+        k++;
+      }
+    } else if (/conf limits/i.test(table.caption)) {
+      let k = 0;
+      for (const cols of rows) {
+        const lo = parseNumber(cols[1] ?? '');
+        const hi = parseNumber(cols[2] ?? '');
+        if (!lo || !hi) continue;
+        results[`freq.categories[${k}].ci_95_clopper_pearson.lower`] = { value: lo.value, decimals: lo.decimals };
+        results[`freq.categories[${k}].ci_95_clopper_pearson.upper`] = { value: hi.value, decimals: hi.decimals };
+        k++;
+      }
+    }
+  }
+}
+
+// One command + its bound section -> a corpus step. LIST and DISPLAY sections
+// carry their data in rows; FREQ gets positional freq.* results; other
+// captioned sections (MEANS, TABLES, ...) map values through labels.json;
+// table-less metadata sections pin the working-view record count and the
+// deleted-records processing flag.
+function stepFor(cmd, block, labels) {
+  const step = { line: cmd.line, command: cmd.command, rows: null, results: {} };
+  if (!block) return step;
+  step.rows = firstTableRows(block.seg);
+  if (step.rows) {
+    if (isFreqTable(step.rows)) freqResults(block.seg, step.results);
+    else if (!/^(LIST|DISPLAY)\b/i.test(cmd.command)) {
+      for (const v of sectionValues(block.seg)) {
+        const key = labels[v.label];
+        if (key != null) step.results[key] = { value: v.value, decimals: v.decimals };
+      }
+    }
+  } else {
+    const text = stripTags(block.seg);
+    const rc = /Record Count:\s*([\d,]+)/i.exec(text);
+    if (rc) step.results[labels['Record Count'] ?? 'selection.record_count'] =
+      { value: Number(rc[1].replace(/,/g, '')), decimals: 0 };
+    step.results['selection.deleted_records_included'] =
+      { value: /Deleted Records Included/i.test(text) ? 1 : 0, decimals: 0 };
+  }
+  return step;
+}
+
+// Correlate program lines with the html's <h3> sections into corpus steps.
+// Returns { steps, warnings } — a warning is recorded for every captioned
+// section that matched no upcoming source line (it then binds in order).
+export function parseSteps(html, pgmText, labels = {}) {
+  const cmds = programCommands(pgmText);
+  const blocks = htmlSections(html);
+  const warnings = [];
+  const bound = new Map();
+  let ci = 0;
+  for (const block of blocks) {
+    if (ci >= cmds.length) { warnings.push(`extra section ${block.command || '(metadata)'} has no source line`); break; }
+    if (!block.command) { bound.set(ci, block); ci++; continue; }
+    const n = normCommand(block.command);
+    let j = cmds.findIndex((c, k) => k >= ci && normCommand(c.command) === n);
+    if (j === -1) { warnings.push(`section ${block.command} matched no source line — bound in order`); j = ci; }
+    bound.set(j, block);
+    ci = j + 1;
+  }
+  const steps = cmds.map((c, i) => stepFor(c, bound.get(i), labels));
+  return { steps, warnings };
+}
+
+export function buildStepsResult(steps, source) {
+  return { source, steps };
+}
+
 function arg(flag) {
   const i = process.argv.indexOf(flag);
   return i === -1 ? undefined : process.argv[i + 1];
 }
 
+function argsAll(flag) {
+  const out = [];
+  for (let i = 0; i < process.argv.length - 1; i++) {
+    if (process.argv[i] === flag) out.push(process.argv[i + 1]);
+  }
+  return out;
+}
+
 if (process.argv[1] && process.argv[1].endsWith('parse.mjs')) {
   const htmlPath = arg('--html'), labelsPath = arg('--labels'), outPath = arg('--out');
-  if (!htmlPath || !outPath) {
+  const pgmPath = arg('--pgm'), stepsMode = process.argv.includes('--steps');
+  if (!htmlPath || !outPath || (stepsMode && !pgmPath)) {
     console.error('usage: node parse.mjs --html <in.html> [--labels labels.json] --out <out.json> ' +
-      '[--build B] [--zip-sha256 H] [--sample-mdb-sha256 H] [--run-url U]');
+      '[--build B] [--zip-sha256 H] [--sample-mdb-sha256 H] [--run-url U]\n' +
+      '       node parse.mjs --steps --pgm <in.pgm> --html <in.html> --out <out.json> ' +
+      '[--input name=sha256 ...]');
     process.exit(2);
   }
   const labels = labelsPath ? JSON.parse(readFileSync(labelsPath, 'utf8')) : {};
-  const { outputs } = parseHtml(readFileSync(htmlPath, 'utf8'), labels);
+  const html = readFileSync(htmlPath, 'utf8');
   const source = {
     build: arg('--build') ?? 'unknown',
     zip_sha256: arg('--zip-sha256') ?? 'unknown',
-    sample_mdb_sha256: arg('--sample-mdb-sha256') ?? 'unknown',
     run_url: arg('--run-url') ?? 'unknown',
   };
-  const unmapped = [...new Set(outputs.flatMap(o => o.values.filter(v => v.key === null).map(v => v.label)))];
-  console.error(`parse.mjs: ${outputs.length} command block(s), ${unmapped.length} unmapped label(s)`);
-  for (const l of unmapped) console.error(`  unmapped: ${l}`);
-  writeFileSync(outPath, JSON.stringify(buildResult(outputs, source), null, 2));
+  if (stepsMode) {
+    const inputs = {};
+    for (const kv of argsAll('--input')) {
+      const eq = kv.indexOf('=');
+      if (eq > 0) inputs[kv.slice(0, eq)] = kv.slice(eq + 1);
+    }
+    source.program = pgmPath.replace(/\\/g, '/').split('/').pop();
+    source.inputs = inputs;
+    const { steps, warnings } = parseSteps(html, readFileSync(pgmPath, 'utf8'), labels);
+    console.error(`parse.mjs: ${steps.length} step(s)`);
+    for (const w of warnings) console.error(`  warning: ${w}`);
+    writeFileSync(outPath, JSON.stringify(buildStepsResult(steps, source), null, 2));
+  } else {
+    source.sample_mdb_sha256 = arg('--sample-mdb-sha256') ?? 'unknown';
+    const { outputs } = parseHtml(html, labels);
+    const unmapped = [...new Set(outputs.flatMap(o => o.values.filter(v => v.key === null).map(v => v.label)))];
+    console.error(`parse.mjs: ${outputs.length} command block(s), ${unmapped.length} unmapped label(s)`);
+    for (const l of unmapped) console.error(`  unmapped: ${l}`);
+    writeFileSync(outPath, JSON.stringify(buildResult(outputs, source), null, 2));
+  }
 }
