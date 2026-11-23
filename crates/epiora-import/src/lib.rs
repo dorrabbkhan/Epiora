@@ -29,7 +29,9 @@ mod summary;
 mod table;
 mod text;
 
-pub use diff::{diff, summarize, Diff, DiffSummary, FieldChange, SchemaChanges, TypeChange};
+pub use diff::{
+    diff, diff_datasets, summarize, Diff, DiffSummary, FieldChange, SchemaChanges, TypeChange,
+};
 pub use error::ImportError;
 pub use excel_date::serial_to_days;
 pub use keys::{key_candidates, record_ids, KeyCandidate};

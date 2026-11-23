@@ -158,6 +158,10 @@ int epiora_mdb_open(const char *path, const char *code_page)
             handles[i] = NULL;
             return fail(EMDB_CORRUPT);
         }
+        /* 4 MiB bind size: no MEMO/text value is truncated below
+         * 4194303 bytes. The golden fixtures are produced by an
+         * mdb-export built at this same bind size (owner decision 1A,
+         * PR #115), so bound values are byte-identical. */
         mdb_set_bind_size(mdb, 4 * 1024 * 1024);
         /* mdb_open reads only page 0; the catalog read is what detects
          * a truncated or damaged file. */

@@ -313,9 +313,12 @@ unsigned char *epiora_mdb_batch(int h, const char *table_name,
     put(&ext, "\x01", 1);
     put_u16(&ext, strlen(table_name));
     put(&ext, table_name, strlen(table_name));
-    put_u8(&ext, 2);
-    put_u16(&ext, strlen(e->code_page));
-    put(&ext, e->code_page, strlen(e->code_page));
+    if (e->jet_version == MDB_VER_JET3) {
+        /* tag 2 records the code page JET3 text was assumed to be. */
+        put_u8(&ext, 2);
+        put_u16(&ext, strlen(e->code_page));
+        put(&ext, e->code_page, strlen(e->code_page));
+    }
     put_u8(&ext, 3);
     put_u16(&ext, 4);
     put_u32(&ext, errors);
