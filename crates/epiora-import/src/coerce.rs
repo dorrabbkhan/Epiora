@@ -59,6 +59,8 @@ pub(crate) fn coerce_column(
         ValueType::Integer => coerce!(Integer, |s: &str| s.parse::<i64>().ok()),
         ValueType::Real => coerce!(Real, |s: &str| infer::parse_real(s, ctx.decimal)),
         ValueType::Date => coerce!(Date, |s: &str| infer::parse_date(s, ctx.date_format)),
+        ValueType::Time => coerce!(Time, |s: &str| infer::parse_time(s)),
+        ValueType::DateTime => coerce!(DateTime, |s: &str| infer::parse_datetime(s)),
         ValueType::Text => coerce!(Text, |s: &str| Some(s.to_string())),
     };
     Coerced {

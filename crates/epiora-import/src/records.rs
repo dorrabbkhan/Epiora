@@ -21,6 +21,8 @@ pub(crate) fn cell_value(data: &ColumnData, row: usize) -> Option<Value> {
         ColumnData::Text(v) => v.get(row).cloned().flatten().map(Value::Text),
         ColumnData::Boolean(v) => v.get(row).copied().flatten().map(Value::Boolean),
         ColumnData::Date(v) => v.get(row).copied().flatten().map(Value::Date),
+        ColumnData::Time(v) => v.get(row).copied().flatten().map(Value::Time),
+        ColumnData::DateTime(v) => v.get(row).copied().flatten().map(Value::DateTime),
     }
 }
 
@@ -125,6 +127,16 @@ pub fn dataset_from_records(
                 Value::Date(d) => Some(d),
                 _ => None,
             })?),
+            ValueType::Time => ColumnData::Time(read_cells(&parsed, name, *ty, |v| match v {
+                Value::Time(t) => Some(t),
+                _ => None,
+            })?),
+            ValueType::DateTime => {
+                ColumnData::DateTime(read_cells(&parsed, name, *ty, |v| match v {
+                    Value::DateTime(t) => Some(t),
+                    _ => None,
+                })?)
+            }
         };
         columns.push(Column {
             name: name.clone(),

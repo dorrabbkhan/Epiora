@@ -50,6 +50,37 @@ pub(crate) fn iso_date(z: i32) -> String {
     format!("{:04}-{:02}-{:02}", y + i64::from(m <= 2), m, d)
 }
 
+/// Seconds since midnight → `hh:mm:ss` — the `Time` display (v1.1
+/// spec §4.3), shared by the R-export dataset cells.
+pub(crate) fn clock_time(t: i32) -> String {
+    format!("{:02}:{:02}:{:02}", t / 3600, (t % 3600) / 60, t % 60)
+}
+
+/// Seconds since 1970-01-01 (no zone) → `YYYY-MM-DD hh:mm:ss` — the
+/// `DateTime` display (v1.1 spec §4.3). The day part is `i64` domain:
+/// extreme `DateTime` values exceed the `i32` day range.
+pub(crate) fn iso_datetime(t: i64) -> String {
+    let z = t.div_euclid(86_400) + 719468;
+    let era = if z >= 0 { z } else { z - 146096 } / 146097;
+    let doe = z - era * 146097;
+    let yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365;
+    let y = yoe + era * 400;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    let d = doy - (153 * mp + 2) / 5 + 1;
+    let m = if mp < 10 { mp + 3 } else { mp - 9 };
+    let s = t.rem_euclid(86_400);
+    format!(
+        "{:04}-{:02}-{:02} {:02}:{:02}:{:02}",
+        y + i64::from(m <= 2),
+        m,
+        d,
+        s / 3600,
+        (s % 3600) / 60,
+        s % 60
+    )
+}
+
 fn real(x: f64) -> String {
     ryu::Buffer::new().format_finite(x).to_string()
 }
@@ -120,6 +151,14 @@ pub fn dataset_csv(ds: &Dataset) -> Vec<u8> {
                 },
                 ColumnData::Date(v) => match v[i] {
                     Some(d) => iso_date(d),
+                    None => marker.clone(),
+                },
+                ColumnData::Time(v) => match v[i] {
+                    Some(t) => clock_time(t),
+                    None => marker.clone(),
+                },
+                ColumnData::DateTime(v) => match v[i] {
+                    Some(t) => iso_datetime(t),
                     None => marker.clone(),
                 },
             };

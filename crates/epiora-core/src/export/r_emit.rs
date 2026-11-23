@@ -263,6 +263,11 @@ pub fn col_reader(d: &ColumnData) -> &'static str {
         ColumnData::Text(_) => "epi_txt",
         ColumnData::Boolean(_) => "epi_bool",
         ColumnData::Date(_) => "epi_date",
+        // Cells carry raw seconds: `epi_int` for Time (≤ 86_399),
+        // `epi_num` for DateTime — its seconds overflow `as.integer`
+        // past 2038 (v1.1 spec §4.3).
+        ColumnData::Time(_) => "epi_int",
+        ColumnData::DateTime(_) => "epi_num",
     }
 }
 
@@ -273,6 +278,8 @@ fn col_type(d: &ColumnData) -> &'static str {
         ColumnData::Text(_) => "text",
         ColumnData::Boolean(_) => "boolean",
         ColumnData::Date(_) => "date",
+        ColumnData::Time(_) => "integer",
+        ColumnData::DateTime(_) => "real",
     }
 }
 

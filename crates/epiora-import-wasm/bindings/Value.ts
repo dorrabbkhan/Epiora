@@ -4,4 +4,4 @@
  * One cell value; adjacently tagged for JSON
  * (`{"type": "integer", "value": 5}`).
  */
-export type Value = { "type": "integer", "value": number } | { "type": "real", "value": number } | { "type": "text", "value": string } | { "type": "boolean", "value": boolean } | { "type": "date", "value": number };
+export type Value = { "type": "integer", "value": number } | { "type": "real", "value": number } | { "type": "text", "value": string } | { "type": "boolean", "value": boolean } | { "type": "date", "value": number } | { "type": "time", "value": number } | { "type": "date_time", "value": number };

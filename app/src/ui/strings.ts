@@ -386,6 +386,8 @@ export const t = {
     empty_dataset: 'The dataset has no rows.',
     invalid_column: 'A dataset column is invalid.',
     type_mismatch: 'A value does not match its column type.',
+    invalid_time: 'A time value is not a valid time of day.',
+    label_set_missing: 'A column refers to a value-label set that does not exist.',
     invalid_options: 'The analysis options are not valid.',
     corpus_format: 'The corpus file is not valid.',
     snapshot_decode: 'The stored dataset snapshot cannot be read.',

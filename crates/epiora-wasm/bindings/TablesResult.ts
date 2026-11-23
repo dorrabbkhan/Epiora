@@ -32,6 +32,16 @@ row_labels: Array<string>,
  */
 col_labels: Array<string>, 
 /**
+ * Stored-value labels for `row_labels`, aligned (v1.1
+ * spec §4.3); `""` when unlabelled.
+ */
+row_value_labels?: Array<string>, 
+/**
+ * Stored-value labels for `col_labels`, aligned; `""` when
+ * unlabelled.
+ */
+col_value_labels?: Array<string>, 
+/**
  * The pooled count table.
  */
 counts: Array<Array<number>>, 

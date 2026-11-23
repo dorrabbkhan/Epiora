@@ -11,4 +11,14 @@ exposure: Array<string>,
 /**
  * `[ill, well]`.
  */
-outcome: Array<string>, };
+outcome: Array<string>, 
+/**
+ * Stored-value labels for `exposure`, aligned (v1.1 spec §4.3);
+ * `""` when unlabelled.
+ */
+exposure_value_labels?: Array<string>, 
+/**
+ * Stored-value labels for `outcome`, aligned; `""` when
+ * unlabelled.
+ */
+outcome_value_labels?: Array<string>, };

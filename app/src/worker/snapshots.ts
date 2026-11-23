@@ -208,6 +208,8 @@ const TAG_TYPE: Record<number, ValueType> = {
   3: 'text',
   4: 'boolean',
   5: 'date',
+  6: 'time',
+  7: 'date_time',
 };
 
 interface ColumnSlice {
@@ -224,14 +226,34 @@ function daysToIso(days: number): string {
   return new Date(days * 86_400_000).toISOString().slice(0, 10);
 }
 
-/** Reads the header and per-column regions; the bytes were already
- *  verified against the stored hash by `loadEntry`. */
+/** Seconds since midnight → `hh:mm:ss` (the Time display, v1.1 §4.3). */
+function secsToClock(secs: number): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${pad(Math.floor(secs / 3600))}:${pad(Math.floor((secs % 3600) / 60))}:${pad(secs % 60)}`;
+}
+
+/** Seconds since 1970-01-01 (no zone) → `YYYY-MM-DD hh:mm:ss` (the
+ *  DateTime display, v1.1 §4.3). BigInt division keeps i64 inputs
+ *  exact; `daysToIso` handles the pre-epoch dates `Date` supports. */
+function secsToIso(secs: bigint): string {
+  const days = secs / 86_400n;
+  const rem = secs - days * 86_400n;
+  const s = rem < 0n ? rem + 86_400n : rem;
+  const d = rem < 0n ? days - 1n : days;
+  const pad = (n: bigint) => String(n).padStart(2, '0');
+  return `${daysToIso(Number(d))} ${pad(s / 3600n)}:${pad((s % 3600n) / 60n)}:${pad(s % 60n)}`;
+}
+
+/** Reads the header and per-column regions (formats 1 and 2; v1.1
+ *  spec §4.3); the bytes were already verified against the stored
+ *  hash by `loadEntry`. Format 2 adds a meta block per column and a
+ *  trailing label-set section the grid never pages. */
 function scan(bytes: Uint8Array): { rowCount: number; columns: ColumnSlice[] } {
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   const magic = utf8.decode(bytes.subarray(0, 4));
   const format = view.getUint8(4);
-  if (magic !== 'EPSN' || format !== 1) {
-    throw rpc('snapshot_unavailable', 'stored snapshot is not an EPSN v1 blob');
+  if (magic !== 'EPSN' || (format !== 1 && format !== 2)) {
+    throw rpc('snapshot_unavailable', `stored snapshot is not an EPSN blob (format ${format})`);
   }
   const colCount = view.getUint32(5, true);
   const rowCount = Number(view.getBigUint64(9, true));
@@ -246,7 +268,7 @@ function scan(bytes: Uint8Array): { rowCount: number; columns: ColumnSlice[] } {
     const tag = view.getUint8(pos);
     pos += 1;
     const type = TAG_TYPE[tag];
-    if (type === undefined) {
+    if (type === undefined || (format === 1 && tag > 5)) {
       throw rpc('snapshot_unavailable', `snapshot column ${name} has unknown type tag ${tag}`);
     }
     const bitmap = pos;
@@ -263,8 +285,20 @@ function scan(bytes: Uint8Array): { rowCount: number; columns: ColumnSlice[] } {
       const end = view.getUint32(values + rowCount * 4, true);
       pos += (rowCount + 1) * 4 + end;
     } else {
-      const width = { integer: 8, real: 8, boolean: 1, date: 4 }[type];
+      const width = { integer: 8, real: 8, boolean: 1, date: 4, time: 4, date_time: 8 }[type];
       pos += width * rowCount;
+    }
+    if (format === 2) {
+      // Meta block: a flag byte (bits 0–3 = prompt, legacy type,
+      // legacy name, label-set id) then each flagged `u32`+UTF-8 field.
+      const flags = view.getUint8(pos);
+      pos += 1;
+      for (let bit = 0; bit < 4; bit++) {
+        if ((flags & (1 << bit)) !== 0) {
+          const len = view.getUint32(pos, true);
+          pos += 4 + len;
+        }
+      }
     }
     columns.push({ name, type, missing, bitmap, values });
   }
@@ -308,6 +342,12 @@ export function gridPage(bytes: Uint8Array, offset: number, limit: number): Grid
           break;
         case 'date':
           row.push(daysToIso(view.getInt32(col.values + r * 4, true)));
+          break;
+        case 'time':
+          row.push(secsToClock(view.getInt32(col.values + r * 4, true)));
+          break;
+        case 'date_time':
+          row.push(secsToIso(view.getBigInt64(col.values + r * 8, true)));
           break;
       }
     }

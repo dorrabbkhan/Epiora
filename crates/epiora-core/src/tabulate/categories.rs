@@ -20,6 +20,10 @@ pub(crate) enum Key {
     T(String),
     B(bool),
     D(i32),
+    /// `Time` — seconds since midnight.
+    H(i32),
+    /// `DateTime` — seconds since 1970-01-01.
+    U(i64),
 }
 
 /// One variable's resolved categories and a cell→index lookup.
@@ -37,6 +41,8 @@ enum Index {
     T(HashMap<String, usize>),
     B([Option<usize>; 2]),
     D(HashMap<i32, usize>),
+    H(HashMap<i32, usize>),
+    U(HashMap<i64, usize>),
 }
 
 fn real_bits(x: f64) -> u64 {
@@ -55,6 +61,8 @@ fn key_cmp(a: &Key, b: &Key) -> Ordering {
         // Boolean category order is Yes, No (spec §3.3).
         (Key::B(x), Key::B(y)) => y.cmp(x),
         (Key::D(x), Key::D(y)) => x.cmp(y),
+        (Key::H(x), Key::H(y)) => x.cmp(y),
+        (Key::U(x), Key::U(y)) => x.cmp(y),
         (a, b) => rank(a).cmp(&rank(b)),
     }
 }
@@ -66,6 +74,8 @@ fn rank(k: &Key) -> u8 {
         Key::T(_) => 2,
         Key::B(_) => 3,
         Key::D(_) => 4,
+        Key::H(_) => 5,
+        Key::U(_) => 6,
     }
 }
 
@@ -77,14 +87,26 @@ fn label(key: &Key) -> String {
             .to_string(),
         Key::T(s) => s.clone(),
         Key::B(v) => if *v { "Yes" } else { "No" }.to_string(),
-        Key::D(d) => iso_date(*d),
+        Key::D(d) => iso_date(i64::from(*d)),
+        Key::H(t) => clock_time(i64::from(*t)),
+        Key::U(t) => format!(
+            "{} {}",
+            iso_date(t.div_euclid(86_400)),
+            clock_time(t.rem_euclid(86_400))
+        ),
     }
+}
+
+/// Seconds since midnight → `hh:mm:ss` (the Time display, v1.1 §4.3).
+fn clock_time(t: i64) -> String {
+    format!("{:02}:{:02}:{:02}", t / 3600, (t % 3600) / 60, t % 60)
 }
 
 /// Days since 1970-01-01 → `YYYY-MM-DD` (Howard Hinnant's
 /// `civil_from_days`, the inverse of the loader's `days_from_civil`).
-fn iso_date(z: i32) -> String {
-    let z = i64::from(z) + 719468;
+/// `i64` domain: `DateTime`'s day part can exceed the `i32` range.
+fn iso_date(z: i64) -> String {
+    let z = z + 719468;
     let era = if z >= 0 { z } else { z - 146096 } / 146097;
     let doe = z - era * 146097;
     let yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365;
@@ -154,6 +176,8 @@ pub(crate) fn collect(data: &ColumnData) -> (Vec<Key>, u64) {
         }
         ColumnData::Boolean(v) => uniques(v, Key::B),
         ColumnData::Date(v) => uniques(v, Key::D),
+        ColumnData::Time(v) => uniques(v, Key::H),
+        ColumnData::DateTime(v) => uniques(v, Key::U),
     };
     keys.sort_by(key_cmp);
     (keys, missing)
@@ -166,6 +190,21 @@ fn value_key(v: &Value) -> Key {
         Value::Text(s) => Key::T(s.clone()),
         Value::Boolean(b) => Key::B(*b),
         Value::Date(d) => Key::D(*d),
+        Value::Time(t) => Key::H(*t),
+        Value::DateTime(t) => Key::U(*t),
+    }
+}
+
+/// The `Value` a key stands for — the label-set lookup's input.
+pub(crate) fn key_value(k: &Key) -> Value {
+    match k {
+        Key::I(x) => Value::Integer(*x),
+        Key::R(b) => Value::Real(f64::from_bits(*b)),
+        Key::T(s) => Value::Text(s.clone()),
+        Key::B(b) => Value::Boolean(*b),
+        Key::D(d) => Value::Date(*d),
+        Key::H(t) => Value::Time(*t),
+        Key::U(t) => Value::DateTime(*t),
     }
 }
 
@@ -225,6 +264,24 @@ impl Cats {
                     })
                     .collect(),
             ),
+            ColumnData::Time(_) => Index::H(
+                keys.iter()
+                    .enumerate()
+                    .filter_map(|(i, k)| match k {
+                        Key::H(v) => Some((*v, i)),
+                        _ => None,
+                    })
+                    .collect(),
+            ),
+            ColumnData::DateTime(_) => Index::U(
+                keys.iter()
+                    .enumerate()
+                    .filter_map(|(i, k)| match k {
+                        Key::U(v) => Some((*v, i)),
+                        _ => None,
+                    })
+                    .collect(),
+            ),
         };
         Cats {
             labels,
@@ -244,6 +301,8 @@ impl Cats {
                 v[i].and_then(|b| if b { *t } else { *f })
             }
             (Index::D(m), ColumnData::Date(v)) => v[i].and_then(|x| m.get(&x).copied()),
+            (Index::H(m), ColumnData::Time(v)) => v[i].and_then(|x| m.get(&x).copied()),
+            (Index::U(m), ColumnData::DateTime(v)) => v[i].and_then(|x| m.get(&x).copied()),
             _ => None,
         }
     }

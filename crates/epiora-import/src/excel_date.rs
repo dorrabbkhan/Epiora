@@ -40,7 +40,13 @@ pub fn serial_to_days(serial: f64, is_1904: bool) -> Option<i32> {
 /// `civil_from_days`, the inverse of `infer::days_from_civil` — same
 /// formula as `epiora-core`'s `tabulate::categories::iso_date`).
 pub(crate) fn days_to_iso(z: i32) -> String {
-    let z = i64::from(z) + 719468;
+    days_wide_to_iso(i64::from(z))
+}
+
+/// Days since 1970-01-01 → `YYYY-MM-DD` on the `i64` domain — a
+/// `DateTime`'s day part can exceed `i32` (v1.1 spec §4.3).
+fn days_wide_to_iso(z: i64) -> String {
+    let z = z + 719468;
     let era = if z >= 0 { z } else { z - 146096 } / 146097;
     let doe = z - era * 146097;
     let yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365;
@@ -50,4 +56,23 @@ pub(crate) fn days_to_iso(z: i32) -> String {
     let d = doy - (153 * mp + 2) / 5 + 1;
     let m = if mp < 10 { mp + 3 } else { mp - 9 };
     format!("{:04}-{:02}-{:02}", y + i64::from(m <= 2), m, d)
+}
+
+/// Seconds since midnight → `hh:mm:ss` — a `Time` cell's display
+/// (v1.1 spec §4.3).
+pub(crate) fn secs_to_clock(t: i32) -> String {
+    format!("{:02}:{:02}:{:02}", t / 3600, (t % 3600) / 60, t % 60)
+}
+
+/// Seconds since 1970-01-01 (no zone) → `YYYY-MM-DD hh:mm:ss` — a
+/// `DateTime` cell's display (v1.1 spec §4.3).
+pub(crate) fn secs_to_iso_datetime(t: i64) -> String {
+    let s = t.rem_euclid(86_400);
+    format!(
+        "{} {:02}:{:02}:{:02}",
+        days_wide_to_iso(t.div_euclid(86_400)),
+        s / 3600,
+        (s % 3600) / 60,
+        s % 60
+    )
 }

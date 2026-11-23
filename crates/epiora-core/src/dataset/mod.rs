@@ -3,10 +3,16 @@
 //! bytes and the SHA-256 content hash (`hash`).
 
 mod hash;
+mod labels;
+mod meta;
 
 use crate::EngineError;
 use serde::{Deserialize, Serialize};
 use sha2::Digest;
+use std::collections::BTreeMap;
+
+pub use labels::LabelSet;
+pub use meta::{ColumnMeta, DatasetLink, LinkKind};
 
 /// Typed column storage. `None` is a missing value.
 #[derive(Clone, Debug, PartialEq)]
@@ -21,11 +27,17 @@ pub enum ColumnData {
     Boolean(Vec<Option<bool>>),
     /// Days since 1970-01-01.
     Date(Vec<Option<i32>>),
+    /// Seconds since midnight, `0..=86_399` (v1.1 spec §4.3).
+    Time(Vec<Option<i32>>),
+    /// Seconds since 1970-01-01, no time zone, as Epi Info stores it
+    /// (v1.1 spec §4.3).
+    DateTime(Vec<Option<i64>>),
 }
 
 /// The value type of a column; also the hash tag (spec §3.3).
 /// Serialized as the corpus spellings `integer|real|text|boolean|date`
-/// (v0.3 import settings `column_types`, spec §6.2).
+/// plus `time|date_time` (v0.3 import settings `column_types`, spec
+/// §6.2; v1.1 spec §4.3).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 #[cfg_attr(feature = "ts", derive(ts_rs::TS))]
@@ -40,6 +52,10 @@ pub enum ValueType {
     Boolean,
     /// Tag 5.
     Date,
+    /// Tag 6.
+    Time,
+    /// Tag 7.
+    DateTime,
 }
 
 /// One cell value; adjacently tagged for JSON
@@ -58,6 +74,20 @@ pub enum Value {
     Boolean(bool),
     /// Days since 1970-01-01.
     Date(i32),
+    /// Seconds since midnight.
+    Time(i32),
+    /// Seconds since 1970-01-01, no time zone.
+    DateTime(i64),
+}
+
+impl Value {
+    /// The canonical bytes of the `LBLS`/`snapshot v2` encoding: the
+    /// type tag (u8) then the same value bytes a present cell writes.
+    pub(crate) fn canonical_bytes(&self) -> Vec<u8> {
+        let mut out = Vec::new();
+        hash::write_value(&mut out, self);
+        out
+    }
 }
 
 /// A named, typed column.
@@ -69,12 +99,16 @@ pub struct Column {
     pub data: ColumnData,
 }
 
-/// A validated in-memory dataset (spec §3.3).
+/// A validated in-memory dataset (spec §3.3). `meta` is empty or one
+/// entry per column (set by `with_meta`); `label_sets` holds the
+/// value-label sets those metas reference (v1.1 spec §4.3).
 #[derive(Clone, Debug)]
 pub struct Dataset {
     id: String,
     version: u64,
     columns: Vec<Column>,
+    meta: Vec<ColumnMeta>,
+    label_sets: BTreeMap<String, LabelSet>,
 }
 
 impl ColumnData {
@@ -86,6 +120,8 @@ impl ColumnData {
             Self::Text(v) => v.len(),
             Self::Boolean(v) => v.len(),
             Self::Date(v) => v.len(),
+            Self::Time(v) => v.len(),
+            Self::DateTime(v) => v.len(),
         }
     }
 
@@ -102,6 +138,8 @@ impl ColumnData {
             Self::Text(_) => ValueType::Text,
             Self::Boolean(_) => ValueType::Boolean,
             Self::Date(_) => ValueType::Date,
+            Self::Time(_) => ValueType::Time,
+            Self::DateTime(_) => ValueType::DateTime,
         }
     }
 }
@@ -115,6 +153,8 @@ impl<'a> arbitrary::Arbitrary<'a> for ValueType {
             Self::Text,
             Self::Boolean,
             Self::Date,
+            Self::Time,
+            Self::DateTime,
         ])
         .copied()
     }
@@ -129,6 +169,8 @@ impl ValueType {
             Self::Text => 3,
             Self::Boolean => 4,
             Self::Date => 5,
+            Self::Time => 6,
+            Self::DateTime => 7,
         }
     }
 }
@@ -169,6 +211,13 @@ impl Dataset {
                     }
                 }
             }
+            if let ColumnData::Time(values) = &column.data {
+                for v in values.iter().flatten() {
+                    if !(0..=86_399).contains(v) {
+                        return Err(EngineError::InvalidTime { value: *v });
+                    }
+                }
+            }
         }
         for (i, column) in columns.iter().enumerate() {
             if columns[..i].iter().any(|c| c.name == column.name) {
@@ -179,6 +228,8 @@ impl Dataset {
             id: id.into(),
             version,
             columns,
+            meta: Vec::new(),
+            label_sets: BTreeMap::new(),
         })
     }
 
@@ -210,6 +261,103 @@ impl Dataset {
             .ok_or_else(|| EngineError::UnknownVariable {
                 name: name.to_string(),
             })
+    }
+
+    /// Attaches per-column metadata and value-label sets (v1.1 spec
+    /// §4.3). `meta` must hold exactly one entry per column; every
+    /// `label_set` id it names must be a key of `label_sets`
+    /// (`LabelSetMissing`), and every `Time` value inside a label set
+    /// must be in range (`InvalidTime`). Prompts, legacy types and
+    /// legacy names never enter the hash; label sets do (`LBLS`).
+    pub fn with_meta(
+        mut self,
+        meta: Vec<ColumnMeta>,
+        label_sets: BTreeMap<String, LabelSet>,
+    ) -> Result<Dataset, EngineError> {
+        if meta.len() != self.columns.len() {
+            return Err(EngineError::InvalidOptions {
+                reason: format!(
+                    "meta has {} entries for {} columns",
+                    meta.len(),
+                    self.columns.len()
+                ),
+            });
+        }
+        for m in &meta {
+            if let Some(id) = &m.label_set {
+                if !label_sets.contains_key(id) {
+                    return Err(EngineError::LabelSetMissing { id: id.clone() });
+                }
+            }
+        }
+        for set in label_sets.values() {
+            for (value, _) in &set.entries {
+                match value {
+                    Value::Time(t) if !(0..=86_399).contains(t) => {
+                        return Err(EngineError::InvalidTime { value: *t });
+                    }
+                    Value::Real(x) if !x.is_finite() => {
+                        return Err(EngineError::InvalidOptions {
+                            reason: format!("non-finite real in label set {:?}", set.id),
+                        });
+                    }
+                    _ => {}
+                }
+            }
+        }
+        self.meta = meta;
+        self.label_sets = label_sets;
+        Ok(self)
+    }
+
+    /// The per-column metadata; `[]` when the dataset has none.
+    pub fn meta(&self) -> &[ColumnMeta] {
+        &self.meta
+    }
+
+    /// The dataset's value-label sets, keyed by id.
+    pub fn label_sets(&self) -> &BTreeMap<String, LabelSet> {
+        &self.label_sets
+    }
+
+    /// The label `column`'s label set gives value `v`, or `None` when
+    /// the column has no label set or no entry matches (first entry
+    /// wins on a duplicated value).
+    pub fn label_for(&self, column: usize, v: &Value) -> Option<&str> {
+        let id = self.meta.get(column)?.label_set.as_deref()?;
+        self.label_sets.get(id)?.label_for(v)
+    }
+
+    /// The label set a named column's meta references (tabulate's
+    /// category-label lookup), or `None`.
+    pub(crate) fn label_set_for(&self, column_name: &str) -> Option<&LabelSet> {
+        let index = self.columns.iter().position(|c| c.name == column_name)?;
+        let id = self.meta.get(index)?.label_set.as_deref()?;
+        self.label_sets.get(id)
+    }
+
+    /// Whether the dataset carries anything the v1 encodings cannot
+    /// represent: a `Time`/`DateTime` column, any column meta or any
+    /// label set. Drives snapshot v2 selection.
+    pub(crate) fn has_v2_features(&self) -> bool {
+        !self.meta.is_empty()
+            || !self.label_sets.is_empty()
+            || self
+                .columns
+                .iter()
+                .any(|c| matches!(c.data, ColumnData::Time(_) | ColumnData::DateTime(_)))
+    }
+
+    /// Whether the `LBLS` section follows the v1 canonical bytes: a
+    /// `Time`/`DateTime` column or any stored label set (the plan's
+    /// "any `label_set` is set"). Prompts and legacy names alone do
+    /// not trigger it.
+    pub(crate) fn hash_needs_lbls(&self) -> bool {
+        !self.label_sets.is_empty()
+            || self
+                .columns
+                .iter()
+                .any(|c| matches!(c.data, ColumnData::Time(_) | ColumnData::DateTime(_)))
     }
 
     /// The canonical byte encoding of spec §3.3; `id` and `version` are

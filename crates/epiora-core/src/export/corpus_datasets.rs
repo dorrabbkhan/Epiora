@@ -152,6 +152,11 @@ cells <- list(
                 ColumnData::Text(v) => v[i].clone().map(Value::from),
                 ColumnData::Boolean(v) => v[i].map(Value::from),
                 ColumnData::Date(v) => v[i].map(|d| Value::from(super::csv::iso_date(d))),
+                // Time/DateTime reach R as their stored seconds — no
+                // `epi_time` reader exists and the unit is what MEANS
+                // groups and compares (v1.1 spec §4.3).
+                ColumnData::Time(v) => v[i].map(Value::from),
+                ColumnData::DateTime(v) => v[i].map(Value::from),
             };
             cells.insert(key, lit.unwrap_or(Value::Null));
         }

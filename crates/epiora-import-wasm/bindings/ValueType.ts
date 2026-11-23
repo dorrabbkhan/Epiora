@@ -3,6 +3,7 @@
 /**
  * The value type of a column; also the hash tag (spec §3.3).
  * Serialized as the corpus spellings `integer|real|text|boolean|date`
- * (v0.3 import settings `column_types`, spec §6.2).
+ * plus `time|date_time` (v0.3 import settings `column_types`, spec
+ * §6.2; v1.1 spec §4.3).
  */
-export type ValueType = "integer" | "real" | "text" | "boolean" | "date";
+export type ValueType = "integer" | "real" | "text" | "boolean" | "date" | "time" | "date_time";

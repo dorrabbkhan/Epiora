@@ -19,6 +19,13 @@ stratum?: string | null,
  */
 labels: Array<string>, 
 /**
+ * The stored value's label of each category, aligned with
+ * `labels` (v1.1 spec §4.3): `""` when the variable has no label
+ * set or no entry matches. Omitted from JSON when every entry is
+ * empty.
+ */
+value_labels?: Array<string>, 
+/**
  * The procedure's CI method label.
  */
 ci_method: ProportionCi, 

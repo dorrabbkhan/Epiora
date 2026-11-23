@@ -175,6 +175,12 @@ pub struct FreqTable {
     pub stratum: Option<String>,
     /// Category labels, `"(missing)"` last when present.
     pub labels: Vec<String>,
+    /// The stored value's label of each category, aligned with
+    /// `labels` (v1.1 spec §4.3): `""` when the variable has no label
+    /// set or no entry matches. Omitted from JSON when every entry is
+    /// empty.
+    #[serde(default, skip_serializing_if = "all_empty")]
+    pub value_labels: Vec<String>,
     /// The procedure's CI method label.
     pub ci_method: ProportionCi,
     /// Records in scope.
@@ -193,6 +199,14 @@ pub struct Labels2x2 {
     pub exposure: Vec<String>,
     /// `[ill, well]`.
     pub outcome: Vec<String>,
+    /// Stored-value labels for `exposure`, aligned (v1.1 spec §4.3);
+    /// `""` when unlabelled.
+    #[serde(default, skip_serializing_if = "all_empty")]
+    pub exposure_value_labels: Vec<String>,
+    /// Stored-value labels for `outcome`, aligned; `""` when
+    /// unlabelled.
+    #[serde(default, skip_serializing_if = "all_empty")]
+    pub outcome_value_labels: Vec<String>,
 }
 
 /// The stratified part of a `TwoByTwo` result.
@@ -230,11 +244,25 @@ pub enum TablesResult {
         row_labels: Vec<String>,
         /// Column categories.
         col_labels: Vec<String>,
+        /// Stored-value labels for `row_labels`, aligned (v1.1
+        /// spec §4.3); `""` when unlabelled.
+        #[serde(default, skip_serializing_if = "all_empty")]
+        row_value_labels: Vec<String>,
+        /// Stored-value labels for `col_labels`, aligned; `""` when
+        /// unlabelled.
+        #[serde(default, skip_serializing_if = "all_empty")]
+        col_value_labels: Vec<String>,
         /// The pooled count table.
         counts: Vec<Vec<u64>>,
         /// Pearson chi-square and the `low_expected` flag.
         stats: RxcStats,
     },
+}
+
+/// `skip_serializing_if` for the value-label lists: a column with no
+/// label set serializes exactly as before (v1.1 spec §4.3).
+fn all_empty(labels: &[String]) -> bool {
+    labels.iter().all(String::is_empty)
 }
 
 /// An empty timestamp is `InvalidOptions` (spec §4.1).
