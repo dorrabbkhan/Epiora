@@ -18,6 +18,7 @@ use std::rc::Rc;
 use epiora_core::dataset::LabelSet;
 
 use crate::error::LegacyError;
+use crate::plain_tables;
 use crate::project::{LegacyProgram, LegacyProject, SourceFormat};
 use crate::report::{ReportEntry, ReportKind};
 use crate::source::{LegacySource, TableData};
@@ -43,7 +44,7 @@ pub(crate) struct MapCtx<'a> {
 }
 
 impl<'a> MapCtx<'a> {
-    fn new(source: &'a mut dyn LegacySource, format: SourceFormat) -> Self {
+    pub(crate) fn new(source: &'a mut dyn LegacySource, format: SourceFormat) -> Self {
         let table_real = source
             .tables()
             .into_iter()
@@ -132,46 +133,12 @@ impl<'a> MapCtx<'a> {
 
     /// Whether any table batch declared a code page (JET3 →
     /// windows-1252, `code_page_assumed`).
-    fn any_code_page(&mut self) -> bool {
+    pub(crate) fn any_code_page(&mut self) -> bool {
         let names: Vec<String> = self.table_real.values().cloned().collect();
         names
             .into_iter()
             .any(|n| self.rows_of(&n).is_some_and(|t| t.code_page.is_some()))
     }
-}
-
-/// `detect` — layout detection only: the `LegacySource` carries table
-/// names, not the backend, so an EI7 layout reports `Ei7Access`; the
-/// caller supplies the true backend `SourceFormat` to [`map_ei7`].
-/// `view*` tables (and no `metaViews`) mean EI3; anything else is
-/// [`LegacyError::LayoutUnknown`] with the plain table list (spec §10).
-pub fn detect(source: &dyn LegacySource) -> Result<SourceFormat, LegacyError> {
-    let tables = source.tables();
-    if tables.iter().any(|t| t.eq_ignore_ascii_case("metaviews")) {
-        return Ok(SourceFormat::Ei7Access);
-    }
-    if tables
-        .iter()
-        .any(|t| t.get(..4).is_some_and(|p| p.eq_ignore_ascii_case("view")))
-    {
-        return Ok(SourceFormat::Ei3Access);
-    }
-    Err(LegacyError::LayoutUnknown {
-        tables: plain_tables(&tables),
-    })
-}
-
-/// The non-metadata tables an unknown-layout error offers for plain
-/// import (the golden's `unknownLayoutEntries` filter).
-fn plain_tables(tables: &[String]) -> Vec<String> {
-    tables
-        .iter()
-        .filter(|t| {
-            let lt = t.to_lowercase();
-            !lt.starts_with("meta") && !lt.starts_with("sqlite_")
-        })
-        .cloned()
-        .collect()
 }
 
 /// `map_ei7` — one EI7 project (Access or SQLite batches) →
