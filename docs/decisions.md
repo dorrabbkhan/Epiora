@@ -6418,8 +6418,12 @@ Layout readings where the format left room for choice:
 - EI3 `Lists` expressions (`C`, `W`, `L` forms) resolve through the
   `SOURCE` rows (`CODE*` names → datatables), not bare table names.
 - EI3 `MIRROR` fields import the source field's values and are reported
-  `field_imported_changed`. EI3 `RECSTATUS = 0` rows are counted as
-  deleted, not emitted.
+  `field_imported_changed`. Deleted rows are kept, not dropped, in both
+  mappers: rows with `RECSTATUS`/`RecStatus` = 0 stay in the emitted
+  dataset, the status column travels with them (EI3 as a verbatim
+  `RECSTATUS` system column, EI7 as the `RecStatus` metaField's integer
+  column), `deleted_records` counts them, and `records` counts every
+  emitted row, deleted rows included.
 - Sources with no view-definition tables (a JET4 `.mdb` without
   `metaViews`, a `.db` without it, an EI3 file without `view*` tables)
   report `legacy_layout_unknown` plus `table_not_imported` per plain
@@ -6449,6 +6453,9 @@ Files outside the Files block:
   `unknownLayoutEntries` shared by both mappers.
 - `fixtures/legacy/ei7-project.mjs` — the EI7 mapper `golden.mjs`
   orchestrates (kept separate to stay under the ~400-line cap).
+- `fixtures/legacy/ei7-grid.mjs` — the EI7 field-type tables and the
+  grid child-dataset builder, extracted from `ei7-project.mjs` (same
+  ~400-line cap).
 - `fixtures/legacy/ei3-project.mjs` — the EI3 mapper, same reason.
 - `fixtures/legacy/emit.mjs` — dataset.json v2 writing and the
   canonical dataset hash mirroring `epiora-core`'s encoding.
