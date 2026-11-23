@@ -6469,3 +6469,89 @@ Files outside the Files block:
   outputs inside the Files block's `reimport/` tree, listed because
   they are binary/generated.
 Supersedes: —
+### v1.1 Task 7 — EI7 mapper, refresh diff, report entries (2026-11-23)
+
+Decision: `epiora-legacy` maps Epi Info 7 Access/SQLite projects to a
+`LegacyProject` (views as dataset-v2 `Dataset`s, grid/relate children
+under `datasets`+`links`, programs and check code verbatim, plus the
+ordered report) whose structure is byte-comparable to the Task 4
+golden fixtures. `refresh_plan` diffs a remapped project against the
+committed view datasets on `GlobalRecordId` via the new
+`epiora_import::diff_datasets(previous, next, key)`.
+
+Interface notes where the golden oracle superseded the Interfaces
+block sketch:
+
+- The plan's hidden `__recstatus` column is not emitted: the golden
+  keeps the `RecStatus` metaField as a normal integer column in every
+  view dataset, so the mapper does the same; `deleted_records` counts
+  its `0` rows and they stay in the dataset.
+- `ReportKind` carries the golden's full emitted vocabulary
+  (`field_not_imported`, `field_imported_changed`,
+  `field_column_missing`, `column_not_imported`, `table_not_imported`,
+  `code_table_missing`, `view_data_missing`,
+  `record_links_not_imported`, `legacy_layout_unknown`,
+  `code_page_assumed`, `text_decoding`, `view_failed`) rather than the
+  sketch's subset — the golden report JSON is compared verbatim, so
+  every emitted kind must round-trip through `as_str()`.
+- `detect` also returns `SourceFormat::Plain` for a file with view-
+  definition-like `meta*`/`view*` tables that is not an EI7 or EI3
+  layout; a file with none of those tables is the
+  `legacy_layout_unknown` error carrying the plain table list
+  (Review Focus 2).
+- mdbtools' `mdb_date_to_tm` early-returns a zeroed `tm` for serials
+  `< 0` or `> 1e6`, which strftime renders as the literal
+  `"1900-01-00 00:00:00"`; the golden stores that text and normalizes
+  it to `days_from_civil(1900,1,0) = -25568`. The mapper reproduces
+  both halves, so out-of-range serials map to the degenerate date,
+  never to missing.
+
+Two `epiora-mdb` encoder behaviours were aligned with the `mdb-export`
+binary that produced the golden oracle:
+
+- `harness.c` now binds columns at `EXPORT_BIND_SIZE` (200000), not
+  4 MiB — `mdb-export` truncates MEMO text at that bind size, which is
+  what made HDCaseForm's `CheckCode` report 137 blocks rather than the
+  164 a full read yields. EPTB values are now byte-identical to the
+  golden's CSV route.
+- `eptb.c` emits the tag-2 code-page extension only for JET3 files:
+  the extension documents which JET3 code page text was decoded with,
+  JET4 text is UTF-8 by definition, and the golden only emits
+  `code_page_assumed` for JET3.
+
+Files outside the Files block:
+- `crates/epiora-legacy/src/ei7/{emit,page}.rs` — `ei7/` splits to
+  stay under the ~400-line cap: `emit.rs` is the `OutCol` → `Dataset`
+  emitter (`out_columns`/`finish_dataset`), `page.rs` the page-table
+  row indexes and `readField` port.
+- `crates/epiora-legacy/src/ei7/fuzz.rs` — the `legacy_meta_any`
+  harness (arbitrary bytes → generated meta/data tables → `detect` +
+  `map_ei7`, `Ok` or typed `Err`), feature-gated as `fuzzing`; the
+  fuzz target under `fuzz/` is a one-line call into it.
+- `crates/epiora-legacy/src/batch.rs` — the EPTB decoder's `unwrap`s
+  became `legacy_batch_invalid` so malformed batches are a typed
+  error, never a panic (the fuzz target exercises them).
+- `crates/epiora-legacy/tests/common/{mod,sources,encode,compare}.rs`
+  — the shared test harness: `MdbSource`/`SqliteSource` `LegacySource`
+  impls, the verbatim SQLite copy writer, the test EPTB encoder +
+  meta-source builders and the golden-JSON compare helpers (split for
+  the same ~400-line cap).
+- `crates/epiora-legacy/fuzz/{Cargo.toml,Cargo.lock,.gitignore,
+  rust-toolchain.toml,regressions/}` — the cargo-fuzz crate, same
+  shape as the other three fuzz crates (corpus/target/artifacts
+  ignored, `regressions/<target>/.gitkeep` committed, nightly
+  2026-10-15 pin).
+- `crates/epiora-import/src/lib.rs` — re-exports `diff_datasets`,
+  `Diff`, `DiffSchema` and `FieldChange` for `refresh_plan` and the
+  refresh tests.
+- `crates/epiora-mdb/c/harness.c` and `crates/epiora-mdb/c/eptb.c` —
+  the two mdb-export alignment changes above.
+- `.github/workflows/engine.yml` — `legacy_meta_any` added to the
+  60-second PR fuzz loop; `.github/workflows/fuzz-nightly.yml` — a
+  `fuzz-legacy` job running it for 1800 s (Step 3's PR and nightly
+  fuzz lists live in these workflows).
+- `Cargo.lock` — resolves `arbitrary` (the `fuzzing` feature) and
+  `rusqlite 0.41` (dev-only test SQLite source; 0.41 bundles
+  `libsqlite3-sys` 0.39 / SQLite 3.54, which RUSTSEC-2026-0459
+  requires — 0.34 resolved to the affected 0.32).
+Supersedes: —

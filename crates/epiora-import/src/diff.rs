@@ -107,19 +107,40 @@ pub struct DiffSummary {
 /// Key-column problems on either side refuse the diff:
 /// `DuplicateKey`, `MissingKey`, `InvalidKeyType` or `UnknownColumn`.
 pub fn diff(previous: &Dataset, next: &Imported, key: &RecordKey) -> Result<Diff, ImportError> {
-    let prev_ids = record_ids(previous.columns(), key)?;
-    let next_ids = record_ids(&next.columns, key)?;
+    diff_columns(previous.columns(), &next.columns, key)
+}
 
-    let prev_cols: HashMap<&str, &epiora_core::dataset::Column> = previous
-        .columns()
-        .iter()
-        .map(|c| (c.name.as_str(), c))
-        .collect();
+/// Diffs `next` against `previous`, both already-typed `Dataset`s,
+/// keyed by the record-key column `key` names (v1.1 spec §7.3: the
+/// legacy re-import path — `GlobalRecordId` for EI7, `UniqueKey` for
+/// EI3). `key` must name a keyable column on both sides; the same
+/// `RecordKey::Column` semantics and error codes as [`diff`] apply.
+pub fn diff_datasets(previous: &Dataset, next: &Dataset, key: &str) -> Result<Diff, ImportError> {
+    diff_columns(
+        previous.columns(),
+        next.columns(),
+        &RecordKey::Column {
+            name: key.to_string(),
+        },
+    )
+}
+
+/// The shared body of [`diff`] and [`diff_datasets`].
+fn diff_columns(
+    previous: &[epiora_core::dataset::Column],
+    next: &[epiora_core::dataset::Column],
+    key: &RecordKey,
+) -> Result<Diff, ImportError> {
+    let prev_ids = record_ids(previous, key)?;
+    let next_ids = record_ids(next, key)?;
+
+    let prev_cols: HashMap<&str, &epiora_core::dataset::Column> =
+        previous.iter().map(|c| (c.name.as_str(), c)).collect();
     let next_cols: HashMap<&str, &epiora_core::dataset::Column> =
-        next.columns.iter().map(|c| (c.name.as_str(), c)).collect();
+        next.iter().map(|c| (c.name.as_str(), c)).collect();
 
     let mut schema = SchemaChanges::default();
-    for c in previous.columns() {
+    for c in previous {
         match next_cols.get(c.name.as_str()) {
             None => schema.removed_columns.push(c.name.clone()),
             Some(n) if n.data.value_type() != c.data.value_type() => {
@@ -132,7 +153,7 @@ pub fn diff(previous: &Dataset, next: &Imported, key: &RecordKey) -> Result<Diff
             Some(_) => {}
         }
     }
-    for c in &next.columns {
+    for c in next {
         if !prev_cols.contains_key(c.name.as_str()) {
             schema.added_columns.push(c.name.clone());
         }
@@ -157,7 +178,7 @@ pub fn diff(previous: &Dataset, next: &Imported, key: &RecordKey) -> Result<Diff
             added.push(j as u32);
             continue;
         };
-        for nc in &next.columns {
+        for nc in next {
             let new = cell_value(&nc.data, j);
             match prev_cols.get(nc.name.as_str()) {
                 Some(pc) => {

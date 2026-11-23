@@ -158,7 +158,10 @@ int epiora_mdb_open(const char *path, const char *code_page)
             handles[i] = NULL;
             return fail(EMDB_CORRUPT);
         }
-        mdb_set_bind_size(mdb, 4 * 1024 * 1024);
+        /* Match upstream mdb-export's EXPORT_BIND_SIZE (200000): bound
+         * text/memo values truncate at 199999 bytes, exactly what the
+         * golden fixtures' mdb-export dumps produced. */
+        mdb_set_bind_size(mdb, 200000);
         /* mdb_open reads only page 0; the catalog read is what detects
          * a truncated or damaged file. */
         if (!mdb_read_catalog(mdb, MDB_TABLE)) {

@@ -304,6 +304,11 @@ jobs:
             echo "== fuzz $target"
             cargo fuzz run "$target" -- -max_total_time=60
           done
+          cd ../../epiora-legacy/fuzz
+          for target in legacy_meta_any; do
+            echo "== fuzz $target"
+            cargo fuzz run "$target" -- -max_total_time=60
+          done
 
       - name: Upload crash artifacts
         if: failure()
@@ -314,6 +319,7 @@ jobs:
             crates/epiora-core/fuzz/artifacts/
             crates/epiora-import/fuzz/artifacts/
             crates/epiora-mdb/fuzz/artifacts/
+            crates/epiora-legacy/fuzz/artifacts/
           if-no-files-found: ignore
 
   # Validation report (platform §12.10, v0.2 Task 13): runs the whole

@@ -5,5 +5,24 @@ edition.workspace = true
 license.workspace = true
 description = "Epi Info legacy project readers: EPTB batch decoding and the Epi Info 7 / 3.5.x mappers (v1.1)"
 
+[features]
+# `fuzzing` exposes the `legacy_meta_any` harness the cargo-fuzz target
+# under fuzz/ drives (arbitrary meta tables -> Ok or typed Err).
+fuzzing = ["dep:arbitrary"]
+
 [dependencies]
+arbitrary = { version = "1", optional = true, features = ["derive"] }
+epiora-core = { path = "../epiora-core" }
+epiora-import = { path = "../epiora-import" }
+libm = "0.2"
 thiserror = "2"
+
+[dev-dependencies]
+epiora-core = { path = "../epiora-core", features = ["corpus"] }
+epiora-mdb = { path = "../epiora-mdb" }
+# rusqlite is dev/test-only (plan Tech Stack): the shipped SQLite EPTB
+# source is sqlite-wasm in the worker. `0.41` bundles libsqlite3-sys
+# 0.39 / SQLite 3.54 — RUSTSEC-2026-0459 requires >= 0.39.0.
+rusqlite = { version = "0.41", features = ["bundled"] }
+serde_json = "1"
+sha2 = "0.11"

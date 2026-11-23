@@ -85,16 +85,24 @@ impl<'a> Cur<'a> {
         Ok(self.take(1)?[0])
     }
     fn u16(&mut self) -> Result<u16, LegacyError> {
-        Ok(u16::from_le_bytes(self.take(2)?.try_into().unwrap()))
+        let s = self.take(2)?;
+        Ok(u16::from_le_bytes([s[0], s[1]]))
     }
     fn u32(&mut self) -> Result<u32, LegacyError> {
-        Ok(u32::from_le_bytes(self.take(4)?.try_into().unwrap()))
+        let s = self.take(4)?;
+        Ok(u32::from_le_bytes([s[0], s[1], s[2], s[3]]))
     }
     fn f64(&mut self) -> Result<f64, LegacyError> {
-        Ok(f64::from_le_bytes(self.take(8)?.try_into().unwrap()))
+        let s = self.take(8)?;
+        let mut b = [0u8; 8];
+        b.copy_from_slice(s);
+        Ok(f64::from_le_bytes(b))
     }
     fn i64(&mut self) -> Result<i64, LegacyError> {
-        Ok(i64::from_le_bytes(self.take(8)?.try_into().unwrap()))
+        let s = self.take(8)?;
+        let mut b = [0u8; 8];
+        b.copy_from_slice(s);
+        Ok(i64::from_le_bytes(b))
     }
     fn utf8(&mut self, n: usize) -> Result<String, LegacyError> {
         String::from_utf8(self.take(n)?.to_vec()).map_err(|_| invalid("invalid UTF-8"))
