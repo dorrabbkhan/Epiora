@@ -38,6 +38,24 @@ fn every_ei7_sample_matches_golden() {
     }
 }
 
+/// `hdcaseform_check_code_is_not_truncated` — HDCaseForm's CheckCode
+/// MEMO is 271,820 bytes, over upstream mdb-export's 200000-byte bind
+/// size; the golden (regenerated at the product 4 MiB bind size in
+/// #115, owner decision 1A) pins 164 blocks. A truncated read reports
+/// 137, so this count fails if the bind size regresses.
+#[test]
+fn hdcaseform_check_code_is_not_truncated() {
+    let mdb = root().join("fixtures/legacy/samples/ei7/HansensDisease/HansensDisease.mdb");
+    let mut src = mdb_source(&mdb);
+    let project = map_ei7(&mut src, SourceFormat::Ei7Access).unwrap();
+    let check = project
+        .check_code
+        .iter()
+        .find(|c| c.view == "HDCaseForm")
+        .expect("HDCaseForm check code");
+    assert_eq!(check.blocks, 164, "HDCaseForm check_code blocks");
+}
+
 /// `sqlite_copy_matches_access` — a verbatim SQLite copy of the Access
 /// Sample maps to the same project (spec §8.2: the copy-tables check).
 #[test]

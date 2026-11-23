@@ -16,9 +16,6 @@ pub enum SourceFormat {
     Ei7SqlServer,
     /// Epi Info 3.5.x project (Task 8).
     Ei3Access,
-    /// A file with no view-definition tables — imported as plain
-    /// tables with `legacy_layout_unknown` on the report.
-    Plain,
 }
 
 /// A saved EI7 `metaPrograms` program: name + verbatim text. The store
