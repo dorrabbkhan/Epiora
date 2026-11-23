@@ -229,3 +229,28 @@ fn tx_op(
         },
     }
 }
+
+/* v1.1 Task 9 (spec §4.1, §4.5): the SQL Server one-time import. The
+ * connection parameters arrive per call and live only for that call —
+ * nothing here writes them to the store, settings or logs. Failures
+ * cross as the bare `sqlserver_*` code, no connection detail. */
+
+#[tauri::command]
+pub async fn legacy_sqlserver_tables(
+    conn: epiora_app::legacy_sqlserver::SqlServerConn,
+) -> Result<Vec<String>, String> {
+    epiora_app::legacy_sqlserver::sqlserver_tables(&conn)
+        .await
+        .map_err(|e| e.code().to_string())
+}
+
+#[tauri::command]
+pub async fn legacy_sqlserver_batches(
+    conn: epiora_app::legacy_sqlserver::SqlServerConn,
+    table: String,
+    chunk_rows: u32,
+) -> Result<Vec<Vec<u8>>, String> {
+    epiora_app::legacy_sqlserver::sqlserver_batches(&conn, &table, chunk_rows)
+        .await
+        .map_err(|e| e.code().to_string())
+}

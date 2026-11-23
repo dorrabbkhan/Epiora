@@ -6711,3 +6711,86 @@ Files outside the Files block:
   map context; `detect`/`plain_tables` moved out to `lib.rs` (above)
   and `map_ei7` now calls `crate::plain_tables`. No behaviour change.
 Supersedes: —
+
+### v1.1 Task 9 — SQL Server one-time import on desktop (2026-11-23)
+
+Decision: the desktop shell gains a `tiberius` SQL Server reader
+(`app/src-tauri/src/legacy_sqlserver.rs`) that turns every project
+table into EPTB v1 batches — the same intermediate form `epiora-mdb`
+and the sqlite-wasm worker emit — so `map_ei7` maps a SQL Server
+project once, as `SourceFormat::Ei7SqlServer`. Two Tauri commands
+(`legacy_sqlserver_tables`, `legacy_sqlserver_batches`) take
+`SqlServerConn` per call; credentials live only for that call, and
+`SqlServerError` carries just a code (`sqlserver_connect` /
+`sqlserver_auth` / `sqlserver_query`), so a rejected login cannot
+echo host, user or password (spec §4.5, §10, §15.7). `SqlServerConn`
+and `SqlServerAuth` deliberately derive neither `Debug` nor `Display`.
+CI gate: `legacy.yml`'s `sqlserver` job runs SQL Server 2022
+Developer edition as a service container (spec §13 — CI only, never
+distributed), loads the verbatim `copy-tables.mjs --tsql` copy of
+`Sample.mdb` with a pinned go-sqlcmd (v1.10.0, SHA-256 verified in
+the job; MIT per the release's licence), and runs
+`app/src-tauri/tests/sqlserver.rs`, which is env-gated so the
+`native-store` job and local runs skip it without `#[ignore]`.
+
+Interface notes where implementation superseded the Interfaces
+block sketch:
+
+- `tiberius` is pinned at **0.12.3** (2024-07), not the latest
+  0.13.0 — 0.13.0 shipped on crates.io 2026-11-20, three days before
+  task time, inside the ≥7-day supply-chain window the project
+  applies to new dependencies. Features `tds73` + `rustls` +
+  `winauth` (no OpenSSL; `winauth` is `cfg(windows)` inside tiberius).
+- `SqlServerAuth::Windows` resolves to `AuthMethod::Integrated` on
+  Windows builds only; elsewhere it is a typed `sqlserver_auth`
+  failure (tiberius gates `Integrated` on `all(windows, "winauth")`).
+- The batch `source_type` byte carries the TDS `ColumnType`
+  discriminant (the sqlite test source uses `0`; the mapper compares
+  it only for cross-chunk consistency, never for mapping decisions).
+- T-SQL type → EPTB kind: ints `int1/2/4/8`, `bit` → bool,
+  float/money/decimal → real, the `datetime` family → Access
+  serial-days (`datetime`/`smalldatetime` +2, `date`/`datetime2`
+  −693593; `smalldatetime`'s wire time part is *minutes* — the
+  tiberius field name is misleading), char/guid/xml → text,
+  binary/image/udt/variant → binary-skipped. Verbatim T-SQL copies
+  hold datetimes as `NVARCHAR` text, the SQLite-proven path.
+- `sqlserver_tables` lists `sys.tables WHERE is_ms_shipped = 0 ORDER
+  BY object_id` — user tables in creation order, mirroring
+  `mdb-tables`/`sqlite3 .tables`; rows stream un-`ORDER BY` like the
+  sqlite test source.
+- SQL Server projects are one-time imports (not refreshable): the
+  reader emits no snapshots and no refresh machinery is wired —
+  refreshability arrives with Task 15's import flow, which calls the
+  same `map_ei7` API the tests exercise.
+
+Dependencies added beyond the plan's named `tiberius, tokio-util`:
+`tokio` (`net` — `TcpStream` for `Client::connect`),
+`futures-util` (`std` only — `TryStreamExt` to iterate tiberius's
+row stream), `serde` (`derive` — the `SqlServerConn`/`SqlServerAuth`
+IPC shape), all licences inside the existing `deny.toml` allow list
+(`cargo deny check` passes, so `deny.toml` itself is unchanged).
+Licences recorded: tiberius MIT/Apache-2.0; tokio/tokio-util MIT;
+futures-util MIT OR Apache-2.0; serde MIT OR Apache-2.0; go-sqlcmd
+MIT.
+
+Files outside the Files block:
+
+- `app/src-tauri/Cargo.lock` — the mechanical lockfile update for the
+  dependency additions above.
+- `app/src-tauri/src/lib.rs` — **created** (the Files block says
+  "Modify"; no lib target existed). It exists so integration tests
+  can reach `legacy_sqlserver`; it carries the workspace's usual
+  `unwrap`/`expect`/`panic` clippy denies.
+- `app/src-tauri/src/legacy_sqlserver/eptb.rs` — the EPTB encoder half
+  of the reader, split out so `legacy_sqlserver.rs` stays inside the
+  ~400-line file-size rule; the Files-block file is the module root.
+- `app/src-tauri/src/commands.rs`, `app/src-tauri/src/main.rs` —
+  the Files block's "register command" lands here: `main.rs` owns the
+  `invoke_handler!` list, `commands.rs` holds the two `#[tauri::command]`
+  wrappers that translate `SqlServerError` to the bare code string.
+- `app/src/tauri/sqlserver.ts` — new file under the "Modify:
+  `app/src/tauri/*`" glob (the per-command bridge wrapper).
+- `.github/workflows/legacy.yml` — the `pull_request` `paths:` list
+  also gained `app/src-tauri/**` and `app/src/tauri/**` so the job
+  gates the files it covers.
+Supersedes: —

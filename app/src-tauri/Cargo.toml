@@ -38,6 +38,8 @@ serde = { version = "1", features = ["derive"] }
 tiberius = { version = "0.12.3", default-features = false, features = ["tds73", "rustls", "winauth"] }
 tokio-util = { version = "0.7", features = ["compat"] }
 tokio = { version = "1", features = ["net"] }
+# tiberius's row streams iterate through futures_util::TryStreamExt.
+futures-util = { version = "0.3", default-features = false, features = ["std"] }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
