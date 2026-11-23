@@ -61,6 +61,15 @@ Task 11 replays. Never edit either output by hand; regenerate via
 - Epi Info writes the ROUTEOUT target with the path's own casing —
   `define_assign_if.html` is produced as `DEFINE_ASSIGN_IF.HTML`; the
   committed corpus is normalised to lowercase names (bytes unchanged).
+- Programs that print a data-source banner stamp a wall-clock
+  `<i>Date:</i>&nbsp;&nbsp;<b>M/d/yyyy h:mm:ss tt</b>` into the html
+  (merge_relate, select_sort). It is the only per-run byte difference,
+  so `ei7.yml` normalises it to the literal token `[run timestamp]`
+  before parsing and before the drift check — proven by runs
+  [`45182109352`](https://github.com/dorrabbkhan/Epiora/actions/runs/45182109352)
+  (drift step showed only the stamp) and
+  [`45182452028`](https://github.com/dorrabbkhan/Epiora/actions/runs/45182452028)
+  (ei7 job green, "No drift in fixtures/ei7" clean).
 
 ## Runs
 

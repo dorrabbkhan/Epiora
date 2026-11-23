@@ -6140,8 +6140,13 @@ drift in fixtures/ei7" — the only diff is the `<i>Date:</i>` timestamp
 Epi Info stamps into each `.html` at generation (`11:08:08 AM` ->
 `12:44:51 PM`); the `.json` steps data is unchanged. The drift is
 pre-existing (the generating run `45161983082` passed because the v11
-outputs were still untracked) and is out of scope for this fix round:
-the `ei7` job and the committed fixtures were left untouched.
+outputs were still untracked). Resolved in fix round 3 (owner-approved
+option A): `ei7.yml` rewrites the banner to the literal token
+`<i>Date:</i>&nbsp;&nbsp;<b>[run timestamp]</b>` after the v11
+copy/rename and before parse.mjs (raw bytes, UTF-8 no BOM, CRLF kept);
+run `45182109352` proved the drift was only that stamp (its artifact
+re-committed the two html verbatim) and run `45182452028` went green
+including "No drift in fixtures/ei7".
 
 Files outside the Files block:
 - `fixtures/ei7/steps.mjs` — fix round 1: the `--steps` corpus half of
