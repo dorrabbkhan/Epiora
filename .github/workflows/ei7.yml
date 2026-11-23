@@ -135,6 +135,7 @@ jobs:
             fixtures/ei7/oswego.json
             fixtures/ei7/v11/*.html
             fixtures/ei7/v11/*.json
+            ei7-out/v11/*.html
 
       - name: No drift in fixtures/ei7
         shell: bash
@@ -204,6 +205,20 @@ jobs:
                   }
                   try
                   {
+                      // Same bootstrap as Epi.Windows.Analysis/EntryPoint.cs:
+                      // create a default config if needed, then Load() —
+                      // Project.CreateProject calls Configuration.GetNewInstance()
+                      // which throws "Configuration has not been loaded".
+                      string configFilePath = Epi.Configuration.DefaultConfigurationPath;
+                      string configDir = Path.GetDirectoryName(configFilePath);
+                      if (!Directory.Exists(configDir)) Directory.CreateDirectory(configDir);
+                      if (!File.Exists(configFilePath))
+                      {
+                          var defaultConfig = Epi.Configuration.CreateDefaultConfiguration();
+                          Epi.Configuration.Save(defaultConfig);
+                      }
+                      Epi.Configuration.Load(configFilePath);
+                      Console.WriteLine("STAGE2 configuration loaded: " + configFilePath);
                       var shell = new Epi.Project();
                       var csb = new System.Data.OleDb.OleDbConnectionStringBuilder();
                       csb["Provider"] = "Microsoft.Jet.OLEDB.4.0";
