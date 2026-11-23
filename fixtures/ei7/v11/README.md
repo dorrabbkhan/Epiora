@@ -22,10 +22,41 @@ Task 11 replays. Never edit either output by hand; regenerate via
 | `select_sort.pgm` | SELECT missing-value comparisons, repeated SELECT AND-combining, CANCEL SELECT; SORT asc/desc/multi-key, sort order of missing (TIMESUPPER), CANCEL SORT. |
 | `define_assign_if.pgm` | DEFINE typed and define-expression forms, ASSIGN, IF/THEN/ELSE/END, UNDEFINE; missing propagation in arithmetic (BIGAGE). |
 | `recode.pgm` | RECODE LOVALUE/HIVALUE and inner boundaries (AGE rows at 17/64/65), ELSE catching a missing source (MASHEDPOTA), numeric-to-text recode. |
-| `merge_relate.pgm` | RELATE one-to-many (Nutrition1 → PatientVisits2, 11 visits for patient "1") MATCHING then ALL; MERGE UPDATE and APPEND on a scratch copy, duplicate source keys. |
-| `delete_set.pgm` | DELETE/UNDELETE in the working view, SET PROCESS=DELETED/BOTH/UNDELETED, SET MISSING=ON/OFF, SET DELETED. |
-| `functions_date.pgm` | YEAR/MONTH/DAY/HOUR/MINUTES over real Access datetimes with missing cells, DAYS/YEARS/MONTHS, TXTTODATE, NUMTODATE, NUMTOTIME. |
-| `functions_text_math.pgm` | UPPERCASE, SUBSTRING, STRLEN, TXTTONUM, FINDTEXT, FORMAT; ROUND, TRUNC, ABS, EXP, LN, LOG, SQRT; missing propagation. |
+| `merge_relate.pgm` | RELATE one-to-many (Nutrition1 → PatientVisits2, 11 visits for patient "1") MATCHING then ALL; MERGE match-or-insert on a scratch copy: duplicate source keys update the destination row, a no-match key inserts. |
+| `delete_set.pgm` | DELETE/UNDELETE (RUNSILENT — both prompt otherwise) in the working view, SET PROCESS=BOTH/UNDELETED, SET MISSING=ON/OFF, SET DELETED. |
+| `functions_date.pgm` | YEAR/MONTH/DAY/HOUR over real Access datetimes with missing cells, MINUTES/DAYS/YEARS/MONTHS two-argument differences, TXTTODATE, NUMTODATE(y,m,d), NUMTOTIME(h,m,s). |
+| `functions_text_math.pgm` | UPPERCASE, SUBSTRING, STRLEN, TXTTONUM, FINDTEXT, FORMAT; ROUND, TRUNC, ABS, EXP, LN, SQRT; ROUND propagates missing (AgeMonths has one missing cell). |
+
+## Runtime findings (7.2.7.0, measured)
+
+- `SET <clause> END-SET` — the `END-SET` terminator is required.
+- `DEFINE x = <expr>` accepts column expressions (`AGE + AGE`) but a
+  function call is resolved as a column name ("Column 'X' does not belong
+  to table"); use a typed `DEFINE` plus `ASSIGN` for function results.
+- `MERGE`'s `APPEND`/`UPDATE`/`RELATE` option word crashes inside
+  `Rule_Merge.SetMergeOpt` (IndexOutOfRangeException — the option token's
+  child list is read past its end). Only the bare `MERGE file:table key`
+  form (default match-or-insert) runs headless; that is what the corpus
+  pins.
+- `DELETE <expr>` and `UNDELETE *` show a "Delete Records?" modal without
+  `RUNSILENT` — fatal headless.
+- `ABS`, `TRUNC` (and presumably the same family of numeric functions)
+  throw `NullReferenceException` on a missing input cell instead of
+  propagating missing; `ROUND`, `YEAR`/`MONTH`/`DAY`/`HOUR`, `MINUTES`,
+  `DAYS`, `YEARS`, `MONTHS`, `UPPERCASE`, `SUBSTRING`, `STRLEN`,
+  `TXTTONUM`, `FORMAT`, `FINDTEXT` propagate missing cleanly. The corpus
+  therefore exercises the crash-prone functions only on the fully
+  populated `HeightInches` column.
+- `MINUTES(a, b)` is a two-argument difference function, not a part
+  extractor; `NUMTODATE`/`NUMTOTIME` take three integer arguments.
+- `LOG` is reserved but rejected by the expression parser ("Unexpected
+  Token: LOG"); `LN` is the usable natural log.
+- FREQ excludes missing values from both the categories and the Total
+  (`SELECT MASHEDPOTA = (.)` selects the one missing row; FREQ then
+  reports Total 0).
+- Epi Info writes the ROUTEOUT target with the path's own casing —
+  `define_assign_if.html` is produced as `DEFINE_ASSIGN_IF.HTML`; the
+  committed corpus is normalised to lowercase names (bytes unchanged).
 
 ## Runs
 

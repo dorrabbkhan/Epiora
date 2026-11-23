@@ -92,7 +92,14 @@ jobs:
           # source.inputs records the SHA-256 of the .mdb files the program
           # read (the scratch copies are byte-identical to the committed
           # fixtures).
+          # Epi Info writes the ROUTEOUT target with its own casing —
+          # define_assign_if.html comes back as DEFINE_ASSIGN_IF.HTML. The
+          # committed corpus normalises to the program's lowercase name
+          # (bytes unchanged); upload-artifact globs are case-sensitive.
           Copy-Item ei7-out/v11/*.html fixtures/ei7/v11/ -Force
+          Get-ChildItem fixtures/ei7/v11 -Filter "*.HTML" | ForEach-Object {
+            Rename-Item $_.FullName ($_.BaseName.ToLower() + ".html") -Force
+          }
           $sampleSha = (Get-FileHash fixtures/legacy/samples/ei7/Sample/Sample.mdb -Algorithm SHA256).Hash.ToLower()
           $nutritionSha = (Get-FileHash fixtures/legacy/samples/ei7/Nutrition/Nutrition.mdb -Algorithm SHA256).Hash.ToLower()
           Get-ChildItem fixtures/ei7/v11 -Filter "*.pgm" | Sort-Object Name | ForEach-Object {
