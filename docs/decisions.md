@@ -6123,7 +6123,12 @@ on the anycpu build and uninitialised configuration). Verdict recorded
 for the owner: the headless EI3 -> EI7 project upgrade does not complete
 unattended in this harness; the corpus keeps it opt-in and nonblocking.
 
-Files outside the Files block: none.
+Files outside the Files block:
+- `fixtures/ei7/steps.mjs` — fix round 1: the `--steps` corpus half of
+  `parse.mjs` (program-line <-> <h3> correlation, step building and the
+  `--pgm`/`--input` source block) split out verbatim so both files stay
+  under the ~400-line rule (plan Global Constraints). Pure move: the
+  ei7.yml invocation, flags and produced json are unchanged.
 Supersedes: —
 ### v1.1 Task 5 — mdbtools wasm module and EPTB batches (2026-11-23)
 

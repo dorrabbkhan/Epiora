@@ -7,7 +7,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parseHtml, parseSteps } from './parse.mjs';
+import { parseHtml } from './parse.mjs';
+import { parseSteps } from './steps.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const labels = JSON.parse(readFileSync(join(HERE, 'labels.json'), 'utf8'));
