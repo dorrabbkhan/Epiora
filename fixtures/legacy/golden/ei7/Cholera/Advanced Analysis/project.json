@@ -1,0 +1,25 @@
+{
+  "name": "Advanced Analysis",
+  "legacy_id": null,
+  "source_format": "ei3_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/Cholera/Advanced Analysis.mdb",
+    "sha256": "0a8f8be18d65dabe67db22ecf86906f707925c11e7faa84b0d38fb36d48329a9"
+  },
+  "views": [],
+  "links": [],
+  "programs": [],
+  "check_code": [],
+  "report": [
+    {
+      "kind": "legacy_layout_unknown",
+      "item": "Advanced Analysis",
+      "reason": "no recognized view-definition tables"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "Mortality",
+      "reason": "layout_unknown: plain data table"
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "id": "SensoryTestingForm14Reaction_Followup_Grid",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "UniqueRowId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueRowId"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "Reaction_Followup_Grid_StartDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Start Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Reaction_Followup_Grid_EndDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "End Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Reaction_Followup_Grid_Dose",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Dose",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Reaction_Followup_Grid_Frequency",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Frequency",
+        "legacy_type": "LegalValues",
+        "label_set": "codereaction_followup_grid_frequency1"
+      }
+    },
+    {
+      "name": "Reaction_Followup_Grid_OtherFrequency",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other Frequency",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Reaction_Followup_Grid_Medication_Listed",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other Medication",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Reaction_Followup_Grid_Medication",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Medication",
+        "legacy_type": "LegalValues",
+        "label_set": "codereaction_followup_grid_medication1"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codereaction_followup_grid_frequency1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Daily"
+          },
+          "Daily"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Weekly"
+          },
+          "Weekly"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    },
+    {
+      "id": "codereaction_followup_grid_medication1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Prednisone"
+          },
+          "Prednisone"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Clofazamine"
+          },
+          "Clofazamine"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Thalidomide"
+          },
+          "Thalidomide"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Cyclosporine"
+          },
+          "Cyclosporine"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Azathioprine"
+          },
+          "Azathioprine"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Methotrexate"
+          },
+          "Methotrexate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    }
+  ]
+}

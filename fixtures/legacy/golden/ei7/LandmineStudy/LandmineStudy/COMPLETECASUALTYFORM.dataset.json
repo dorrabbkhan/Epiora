@@ -1,0 +1,2679 @@
+{
+  "id": "COMPLETECASUALTYFORM",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "InterName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* Interviewer Name:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PlcIntervi",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "3.  Place where interview was conducted:",
+        "legacy_type": "LegalValues",
+        "label_set": "codePlcIntervi"
+      }
+    },
+    {
+      "name": "DateInterv",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "* 4.  Date of Interview:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CaseIDNo",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Case ID No.",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Agencyaddress",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* Agency/Address:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "InterveeName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Name:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "InterveeAdd",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Address:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CasRelat",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "2.  Person giving the information",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCasRelat"
+      }
+    },
+    {
+      "name": "CurrentOccupation",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Current Occupation:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeOccupAcc"
+      }
+    },
+    {
+      "name": "OtherOccTimeAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OtherOccCurr",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CasName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 5.  Family Name:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "GivenName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 6.  Given Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OtherName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 7.  Other Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CurrAddVill",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 10.  Current Address Village/Town:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CurrSubDist",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Sub-district",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CurrDistrict",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "District",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CurrProvince",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Province",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "YNSameAdd",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "* Is the Current Address the Same as the Address at Time of Accident?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "VillTimeAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 11.  Address at Time of Accident \r\nVillage/Town (if different):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SubTimeAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Sub-district",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DistTimeAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "District",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ProvTimeAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Province",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "KnownDOB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "* 9.  Is Date of Birth Known:",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DateOfBirth",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "* Date of Birth:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "AgeOfAcc",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Age of Time of Accident:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Sex",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 8.  Sex:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeSex"
+      }
+    },
+    {
+      "name": "MaritalStatus",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "13.  Current Family Status:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeMaritalStatus"
+      }
+    },
+    {
+      "name": "NumberOfChildren",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "* Number of Children Under Age 16:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "OccupAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "14.  Occupation at Time \r\nof Accident:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeOccupAcc"
+      }
+    },
+    {
+      "name": "Status",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "12.  Home Status at time of accident:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeStatus"
+      }
+    },
+    {
+      "name": "CaseIDP2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Case ID No.",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "OtherAreaType",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CasualtyKnow",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 23.  Did the Casualty Know That There Were Mines/ERW in the Area:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCasualtyKnow"
+      }
+    },
+    {
+      "name": "KnownDOA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "* 15.  Is the Date of Accident Known?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "KnownYOA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "* Is the Year of Accident Known?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "AccYear",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "* What Year?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DateOfAcc",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date of Accident:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "KnownMOA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "* Is the Month of Accident Known?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "AccMonth",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "* What Month?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TimeOfAccident",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "16.  Time of Accident:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTimeOfAccident"
+      }
+    },
+    {
+      "name": "VillLocAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 17.  Name of Village/Town or \r\n       Closest Village to Accident Site:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SubLocAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Sub-district",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DistLocAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "District",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ProvLocAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Province",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "GeneralDirection",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "19.  Direction of Accident \r\nfrom Village/Town Center:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeGeneralDirection"
+      }
+    },
+    {
+      "name": "DistVill",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "20.  Distance of Accident Site From \r\nCentre of the Village/Town:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeDistVill"
+      }
+    },
+    {
+      "name": "SettingAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "22.  Area Type of Accident:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeWhereAccid"
+      }
+    },
+    {
+      "name": "AccOccur",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 18.  Did the Accident Occur Inside \r\nor Outside of Village/Town:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeDidTheAccident"
+      }
+    },
+    {
+      "name": "AreaAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 21.  Area Where Accident Occurred:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeAreaAcc"
+      }
+    },
+    {
+      "name": "LocatorCode",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Locator Code:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Longitude",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "Longitude:\r\n",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Latitude",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "Latitude:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CaseIDP3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Case ID No.",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "Intentionally",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Intentionally Touched Mine/ERW:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeIntentionally"
+      }
+    },
+    {
+      "name": "Accidentally",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Accidentally touched Mine/ERW:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeAccidentally"
+      }
+    },
+    {
+      "name": "MineClearArea",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "26. Was there any mine/ERW clearance in the area:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCasualtyKnow"
+      }
+    },
+    {
+      "name": "WhomMarked",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "By Whom:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeByWhom"
+      }
+    },
+    {
+      "name": "KnewDang",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 24.  If they Knew the Area was \r\nDangerous, Why Did They go There:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTheyKnewDang"
+      }
+    },
+    {
+      "name": "HowOftenGo",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 25. How Often did the Casualty go to the Area:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeHowOftenGo"
+      }
+    },
+    {
+      "name": "RiskEducation",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "28. Did the casualty receive formal mine risk education before the accident:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCasualtyKnow"
+      }
+    },
+    {
+      "name": "OtherDevice",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CaseIDP4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Case ID No.",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "OtherCas",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 33. Were Others Injured/Killed in the Accident:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCasualtyKnow"
+      }
+    },
+    {
+      "name": "ActivityAcc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 30. What was the Casualty Doing When the Accident Occurred:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeActAcc"
+      }
+    },
+    {
+      "name": "WhoDeton",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 31. Who activated the mine/ERW:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeWhoDeton"
+      }
+    },
+    {
+      "name": "TypeDevice",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 29. What Type of Device Caused the Accident:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTypeDevice"
+      }
+    },
+    {
+      "name": "AreaMarked",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "27.  Was the Accident Site Marked as Dangerous:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCasualtyKnow"
+      }
+    },
+    {
+      "name": "WhatKindMark",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What Kind of Marking:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeWhatKindMark"
+      }
+    },
+    {
+      "name": "HowManyInjured",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "* How Many Injured:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HowManyKilled",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "* How Many Killed:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Total",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Total:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PermBlindEye",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* Permanet Blindness:",
+        "legacy_type": "LegalValues",
+        "label_set": "codePermBlind"
+      }
+    },
+    {
+      "name": "RArm",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Arm",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RHand",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hand",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RFinger",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Finger",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RForearm",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Forearm",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RLeg",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Leg",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RAboveKnee",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Above Knee",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBelowKnee",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Below Knee",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RFoot",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Foot",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RToe",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Toe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "LFinger",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Finger",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "LArm",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Arm",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "LForearm",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Forearm",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "LHand",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hand",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "LLeg",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Leg",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "LAboveKnee",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Above Knee",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "LBelowKnee",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Below Knee",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "LFoot",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Foot",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "LToe",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Toe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Hours",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Hours",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Days",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Days",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Weeks",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Weeks",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "OtherMedCare",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HospAddress",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Address",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PermDeafEar",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* Permanent Deafness:",
+        "legacy_type": "LegalValues",
+        "label_set": "codePermDeaf"
+      }
+    },
+    {
+      "name": "WLowerBody",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Lower Body",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "WFace",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Face",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "WLowerLimb",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Lower Limb",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "WUpperBody",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Upper Body",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "WEntireBody",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Entire Body",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "WUpperLimb",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Upper Limb",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BLowerBody",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Lower Body",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BEntireBody",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Entire Body",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BUpperLimb",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Upper Limb",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BFace",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Face",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BUpperBody",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Upper Body",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BLowerLimb",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Lower Limb",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PUpperLimb",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Upper Limb",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PFace",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Face",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PUpperBody",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Upper Body",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PLowerLimb",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Lower Limb",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PLowerBody",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Lower Body",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PEntireBody",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Entire Body",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "WhatMedCare",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "38. What was the Highest Level of Medical Care the Casualty Received:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeWhatMedCare"
+      }
+    },
+    {
+      "name": "HowLongMed",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "39. How Long Before the Casualty Received FIRST Medical Care:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeHowLongMed"
+      }
+    },
+    {
+      "name": "InstantDeath",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "35. Did the Casualty die Instantly?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "LocCasDeath",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "36. If the Casualty Died, where did they die:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeLocCasDeath"
+      }
+    },
+    {
+      "name": "HospName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "40. Hospital/Clinic Name:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CasualKillInjur",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 34. From the Mine/ERW Accident, was the Casualty:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCasualKillInjur"
+      }
+    },
+    {
+      "name": "CaseIDP5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Case ID No.",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "Amputation",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "* 37. Did the Casualty Suffer Amputation:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCasualtyKnow"
+      }
+    },
+    {
+      "name": "CasFinanSuppt",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "41. Does the Casualty Receive Financial/In-Kind Support:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCasFinanSuppt"
+      }
+    },
+    {
+      "name": "CasProsthesis",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "42. Does the Casualty have a Prosthesis:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCasFinanSuppt"
+      }
+    },
+    {
+      "name": "CasWheelchr",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "43. Does the Casualty have a Wheelchair:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCasFinanSuppt"
+      }
+    },
+    {
+      "name": "WhoFinanSppt",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "From Whom:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeWhoFinanSppt"
+      }
+    },
+    {
+      "name": "CasOtherWalkAids",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "44. Does the Casualty have Other Walking Aids:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCasFinanSuppt"
+      }
+    },
+    {
+      "name": "AttendSchl",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "45. If the Casualty is Between 5-15 Years, is s/he Attending School:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeAttendSchl"
+      }
+    },
+    {
+      "name": "ReceiptDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Receipt Date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ReportChecked",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Report Checked By:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ComputerEntry",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Computer Entry By:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "EntryChecked",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Entry Checked By:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CaseIDP6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Case ID No.",
+        "legacy_type": "Mirror"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codePlcIntervi",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Casualty home"
+          },
+          "Casualty home"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Health Facility"
+          },
+          "Health Facility"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeCasRelat",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Casualty"
+          },
+          "Casualty"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Family or Relative"
+          },
+          "Family or Relative"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Friend"
+          },
+          "Friend"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Government"
+          },
+          "Government"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Witness"
+          },
+          "Witness"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Medical Staff"
+          },
+          "Medical Staff"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeOccupAcc",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "NGO"
+          },
+          "NGO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Government"
+          },
+          "Government"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Company"
+          },
+          "Company"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Farmer"
+          },
+          "Farmer"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Military"
+          },
+          "Military"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Fisher"
+          },
+          "Fisher"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Driver"
+          },
+          "Driver"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Homemaker"
+          },
+          "Homemaker"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Student"
+          },
+          "Student"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Police"
+          },
+          "Police"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Labourer"
+          },
+          "Labourer"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Shepard"
+          },
+          "Shepard"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Religious leader"
+          },
+          "Religious leader"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Deminer"
+          },
+          "Deminer"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Not working"
+          },
+          "Not working"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Not applicable"
+          },
+          "Not applicable"
+        ]
+      ]
+    },
+    {
+      "id": "codeSex",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Female"
+          },
+          "Female"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Male"
+          },
+          "Male"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeMaritalStatus",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Never Married"
+          },
+          "Never Married"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Married"
+          },
+          "Married"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Divorced or Separated"
+          },
+          "Divorced or Separated"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Widow or Widower"
+          },
+          "Widow or Widower"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeStatus",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "IDP"
+          },
+          "IDP"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Settled"
+          },
+          "Settled"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Refugee"
+          },
+          "Refugee"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Returnee"
+          },
+          "Returnee"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeCasualtyKnow",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Yes"
+          },
+          "Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "No"
+          },
+          "No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeTimeOfAccident",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Morning"
+          },
+          "Morning"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Afternoon"
+          },
+          "Afternoon"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Evening"
+          },
+          "Evening"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Night"
+          },
+          "Night"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeGeneralDirection",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "North"
+          },
+          "North"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Northeast"
+          },
+          "Northeast"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "East"
+          },
+          "East"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Southeast"
+          },
+          "Southeast"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "South"
+          },
+          "South"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Southwest"
+          },
+          "Southwest"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "West"
+          },
+          "West"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Northwest"
+          },
+          "Northwest"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeDistVill",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "<500m"
+          },
+          "<500m"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "500-2km"
+          },
+          "500-2km"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2-5km"
+          },
+          "2-5km"
+        ],
+        [
+          {
+            "type": "text",
+            "value": ">5km"
+          },
+          ">5km"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeWhereAccid",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Rural Area"
+          },
+          "Rural Area"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Urban Area"
+          },
+          "Urban Area"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeDidTheAccident",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Inside"
+          },
+          "Inside"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Outside"
+          },
+          "Outside"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeAreaAcc",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Building"
+          },
+          "Building"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Road, Path, Street"
+          },
+          "Road, Path, Street"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Agricultural Land"
+          },
+          "Agricultural Land"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Non-Argricultural Land"
+          },
+          "Non-Argricultural Land"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Bank of Waterway"
+          },
+          "Bank of Waterway"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Military Position"
+          },
+          "Military Position"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeIntentionally",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "To Move It"
+          },
+          "To Move It"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "To Make it Explode"
+          },
+          "To Make it Explode"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Play/Curiousity"
+          },
+          "Play/Curiousity"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "To Use metal/Explosives"
+          },
+          "To Use metal/Explosives"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "To Dismantle/Destroy"
+          },
+          "To Dismantle/Destroy"
+        ]
+      ]
+    },
+    {
+      "id": "codeAccidentally",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Stood/Drove Over It"
+          },
+          "Stood/Drove Over It"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Moved It"
+          },
+          "Moved It"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeByWhom",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "MAC"
+          },
+          "MAC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NGO"
+          },
+          "NGO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Army"
+          },
+          "Army"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Local people"
+          },
+          "Local people"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NSA"
+          },
+          "NSA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Company"
+          },
+          "Company"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeTheyKnewDang",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Economic necessity"
+          },
+          "Economic necessity"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "No other access"
+          },
+          "No other access"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Curiosity"
+          },
+          "Curiosity"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeHowOftenGo",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "First time"
+          },
+          "First time"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "A few times"
+          },
+          "A few times"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Often"
+          },
+          "Often"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeActAcc",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Playing or Recreation"
+          },
+          "Playing or Recreation"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Hunting"
+          },
+          "Hunting"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Fishing"
+          },
+          "Fishing"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Housework"
+          },
+          "Housework"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Farming"
+          },
+          "Farming"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Military Activity"
+          },
+          "Military Activity"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Construction"
+          },
+          "Construction"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Collecting Water"
+          },
+          "Collecting Water"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Grazing Animals"
+          },
+          "Grazing Animals"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Gathering Food or Wood"
+          },
+          "Gathering Food or Wood"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Scrap Metal Collection"
+          },
+          "Scrap Metal Collection"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Official Demining"
+          },
+          "Official Demining"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Local Demining"
+          },
+          "Local Demining"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Travelling on foot or bicycle"
+          },
+          "Travelling on foot or bicycle"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Travelling by Vehicle"
+          },
+          "Travelling by Vehicle"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeWhoDeton",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "The Casualty"
+          },
+          "The Casualty"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Someone Else"
+          },
+          "Someone Else"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Vehicle"
+          },
+          "Vehicle"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Animal"
+          },
+          "Animal"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeTypeDevice",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Anti-Personnel Mine"
+          },
+          "Anti-Personnel Mine"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Anti-Tank Mine"
+          },
+          "Anti-Tank Mine"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Booby-Trap"
+          },
+          "Booby-Trap"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Cluster Munition"
+          },
+          "Cluster Munition"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Fuse or Detonator"
+          },
+          "Fuse or Detonator"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other UXO"
+          },
+          "Other UXO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Improvised Explosive Device (IED)"
+          },
+          "Improvised Explosive Device (IED)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeWhatKindMark",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Unofficial"
+          },
+          "Unofficial"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Offical"
+          },
+          "Offical"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codePermBlind",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "One Eye"
+          },
+          "One Eye"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Both Eyes"
+          },
+          "Both Eyes"
+        ]
+      ]
+    },
+    {
+      "id": "codePermDeaf",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "One Ear"
+          },
+          "One Ear"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Both Ears"
+          },
+          "Both Ears"
+        ]
+      ]
+    },
+    {
+      "id": "codeWhatMedCare",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "None"
+          },
+          "None"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Traditional Doctor"
+          },
+          "Traditional Doctor"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Treated Self"
+          },
+          "Treated Self"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Hospital"
+          },
+          "Hospital"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Clinic"
+          },
+          "Clinic"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ambulance or Medic"
+          },
+          "Ambulance or Medic"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Community Member"
+          },
+          "Community Member"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeHowLongMed",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "<30 Minutes"
+          },
+          "<30 Minutes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "<60 Minutes"
+          },
+          "<60 Minutes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "< 2 Hours"
+          },
+          "< 2 Hours"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "> 2 Hours"
+          },
+          "> 2 Hours"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Not Needed"
+          },
+          "Not Needed"
+        ]
+      ]
+    },
+    {
+      "id": "codeLocCasDeath",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "At Place of Accident"
+          },
+          "At Place of Accident"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "In Health Facility or Hospital"
+          },
+          "In Health Facility or Hospital"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "On the Way to Health Facility or Hospital"
+          },
+          "On the Way to Health Facility or Hospital"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "After Leaving Health Facility or Hospital"
+          },
+          "After Leaving Health Facility or Hospital"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeCasualKillInjur",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Injured"
+          },
+          "Injured"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Killed"
+          },
+          "Killed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeCasFinanSuppt",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Yes"
+          },
+          "Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "No"
+          },
+          "No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Not Needed"
+          },
+          "Not Needed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeWhoFinanSppt",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "NGO"
+          },
+          "NGO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Government"
+          },
+          "Government"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Private or Family"
+          },
+          "Private or Family"
+        ]
+      ]
+    },
+    {
+      "id": "codeAttendSchl",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Yes"
+          },
+          "Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "No"
+          },
+          "No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Not Applicable"
+          },
+          "Not Applicable"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    }
+  ]
+}

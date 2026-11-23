@@ -1,0 +1,921 @@
+{
+  "id": "RHepatitis",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RecStatus",
+      "type": "integer",
+      "values": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "meta": {
+        "legacy_type": "RecStatus",
+        "legacy_name": "RECSTATUS"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [
+        "7664a926-1bd5-4d6b-935d-b7f03435c2c6",
+        "82f962a9-daa1-4f1c-b188-bce9186afb13",
+        "4c4ba07a-add6-4741-82b2-079bcce0a7f5",
+        "3a7cdbf5-b357-4f05-b54c-6f6efd26139d",
+        "357020d6-fd62-4d97-b67b-cd74845006d1"
+      ],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [
+        "993974ab-a5c8-4177-b81d-a060b2e5b9e1",
+        "5e8918d3-139f-4eb6-8d8a-0c14ceb9b50b",
+        "68686009-2b7d-424f-8901-1f47a6f72044",
+        "46febc64-6084-4a88-9912-0ffa84dcae90",
+        "e82885d4-8f49-4c95-8080-08262583061a"
+      ],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "DateOfDiagnosis",
+      "type": "date",
+      "values": [
+        "2007-01-05",
+        "2007-06-21",
+        "2007-09-17",
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Date of Diagnosis:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "WasThePatient",
+      "type": "boolean",
+      "values": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "meta": {
+        "prompt": "Was the Patient jaundiced?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "WasThePatients",
+      "type": "boolean",
+      "values": [
+        true,
+        true,
+        true,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Were the patient's liver enzymes elevated?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "WasThePatientHospitalized",
+      "type": "boolean",
+      "values": [
+        true,
+        true,
+        true,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Was the patient hospitalized for hepatitis?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DeathFromHepatitis",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        false,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Death from hepatitis?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "ForFemales",
+      "type": "boolean",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "For females with Hepatitis B - all codes, pregnant?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "CaseID",
+      "type": "text",
+      "values": [
+        "100",
+        "600",
+        "900",
+        "1500",
+        "1800"
+      ],
+      "meta": {
+        "prompt": "Case ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LastName",
+      "type": "text",
+      "values": [
+        "Smith",
+        "Stuckey",
+        "Clickstein",
+        "Hildebrandt",
+        "Kim"
+      ],
+      "meta": {
+        "prompt": "Last Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FirstName",
+      "type": "text",
+      "values": [
+        "John",
+        "Malcome (Moose)",
+        "Jared",
+        "Horace",
+        "Kenneth"
+      ],
+      "meta": {
+        "prompt": "First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Hbsag",
+      "type": "text",
+      "values": [
+        "Positive",
+        "Negative",
+        "Positive",
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "HBsAg:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTstresult"
+      }
+    },
+    {
+      "name": "IgmAntihbc",
+      "type": "text",
+      "values": [
+        "Negative",
+        "Positive",
+        "Negative",
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "IgM anti-HBc:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTstresult"
+      }
+    },
+    {
+      "name": "Hbeag",
+      "type": "text",
+      "values": [
+        "Negative",
+        "Negative",
+        "Unknown",
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "HBeAg:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTstresult"
+      }
+    },
+    {
+      "name": "IgmAntihav",
+      "type": "text",
+      "values": [
+        "Unknown",
+        "Negative",
+        "Positive",
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "IgM anti-HAV:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTstresult"
+      }
+    },
+    {
+      "name": "DeltaAbAntiHDV",
+      "type": "text",
+      "values": [
+        null,
+        "Negative",
+        "Negative",
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Delta Ab anti-HDV:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTstresult"
+      }
+    },
+    {
+      "name": "Bbcab",
+      "type": "text",
+      "values": [
+        "Positive",
+        "Negative",
+        "Positive",
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "BBcAb:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTstresult"
+      }
+    },
+    {
+      "name": "Hbsab",
+      "type": "text",
+      "values": [
+        "Positive",
+        "Positive",
+        "Negative",
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "HBsAb:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTstresult"
+      }
+    },
+    {
+      "name": "Hbeab",
+      "type": "text",
+      "values": [
+        "Negative",
+        "Negative",
+        "Unknown",
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "HBeAb:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTstresult"
+      }
+    },
+    {
+      "name": "HaAb",
+      "type": "text",
+      "values": [
+        null,
+        "Negative",
+        "Positive",
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "HA Ab:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTstresult"
+      }
+    },
+    {
+      "name": "HcvAb",
+      "type": "text",
+      "values": [
+        "Positive",
+        "Negative",
+        "Negative",
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "HCV Ab:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTstresult"
+      }
+    },
+    {
+      "name": "ChildOrEmployee",
+      "type": "boolean",
+      "values": [
+        false,
+        true,
+        false,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Child or employee in day care center?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "HouseholdContact",
+      "type": "boolean",
+      "values": [
+        false,
+        true,
+        false,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Household contact of a child/employee in day care?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "ContactOfA",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        false,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Contact of a confirmed Hepatitis A case?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "IfYesTypeOf",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "If yes type of contact:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeifyestypeof1"
+      }
+    },
+    {
+      "name": "ContactOfHepatitis",
+      "type": "boolean",
+      "values": [
+        true,
+        false,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Contact of Hepatitis B or non-A non-B case?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "IfYesTypeOfContact",
+      "type": "text",
+      "values": [
+        "Other",
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "If Yes, type of contact:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeifyestypeof1"
+      }
+    },
+    {
+      "name": "MedicalDental",
+      "type": "boolean",
+      "values": [
+        true,
+        true,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Medical/dental field employee?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "IfYesDegree",
+      "type": "text",
+      "values": [
+        "Frequent",
+        "Frequent",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "If yes, degree of blood contact",
+        "legacy_type": "LegalValues",
+        "label_set": "codeifyesdegree1"
+      }
+    },
+    {
+      "name": "EmployedAs",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Employed as a food handler?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DidThePatient",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Did the patient eat raw shellfish?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "SuspectedAs",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Suspected as part of common source outbreak?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DidThePatientTravel",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Did the patient travel outside U.S or Canada?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "IfYesWhere",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "If yes, where?",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DurationStay",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Duration of stay:",
+        "legacy_type": "CommentLegal",
+        "label_set": "codedurationstay1"
+      }
+    },
+    {
+      "name": "DentalWork",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Dental work or oral surgery?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "OtherSurgery",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Other surgery?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Acupuncture",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Acupuncture?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Tattooing",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Tattooing?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Accidental",
+      "type": "boolean",
+      "values": [
+        false,
+        true,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Accidental needle stick",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "TransTo",
+      "type": "date",
+      "values": [
+        "2006-12-15",
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Ending date of transfusion:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Dialysis",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Associated with dialysis or kidney transplant unit?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DialysisType",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "If yes, what dialysis type?",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DidThePatientUse",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Did the patient use needles for street drugs?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "SexPref",
+      "type": "text",
+      "values": [
+        "Heterosexual",
+        "Heterosexual",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "What was the patient's sexual preference?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeSexPref"
+      }
+    },
+    {
+      "name": "WhatWasThePatients",
+      "type": "text",
+      "values": [
+        "1",
+        "0",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "What was the patients number of sexual partners?",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TransFrom",
+      "type": "date",
+      "values": [
+        "2006-12-15",
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Beginning date of transfusion:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Transfusion",
+      "type": "boolean",
+      "values": [
+        true,
+        false,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Did the patient receive blood or blood products (transfusion)?",
+        "legacy_type": "YesNo"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeTstresult",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Positive"
+          },
+          "Positive"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Negative"
+          },
+          "Negative"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeifyestypeof1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Sexual"
+          },
+          "Sexual"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Household"
+          },
+          "Household"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeifyesdegree1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Frequent"
+          },
+          "Frequent"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unfrequent"
+          },
+          "Unfrequent"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codedurationstay1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "01-1 to 3 days"
+          },
+          "01-1 to 3 days"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "02-4 to 7 days"
+          },
+          "02-4 to 7 days"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "03-> than 7 days"
+          },
+          "03-> than 7 days"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "99-Unknown"
+          },
+          "99-Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeSexPref",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Heterosexual"
+          },
+          "Heterosexual"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Homosexual"
+          },
+          "Homosexual"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Bisexual"
+          },
+          "Bisexual"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    }
+  ]
+}

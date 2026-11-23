@@ -1,0 +1,255 @@
+{
+  "name": "Salmonellosis",
+  "legacy_id": "48C71AD6-2BE0-AA51-54DAFBC5D74D2096",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/Salmonellosis/Salmonellosis.mdb",
+    "sha256": "73f0afd4e500308e5667f759261b2c39351504cfc2adcbb7a389a8ae74b79357"
+  },
+  "views": [
+    {
+      "name": "Survey_NoCheckCode",
+      "dataset": "Survey_NoCheckCode.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "f4fa0ecc2616916aed276a231d88e9cfc155e9bed3d89780b645ea5320689744"
+    },
+    {
+      "name": "Survey_Final",
+      "dataset": "Survey_Final.dataset.json",
+      "records": 309,
+      "deleted_records": 0,
+      "hash": "159c10cdd87bd3920eb9a6015e912f18c8c790345c3749d83651bc390375751d"
+    }
+  ],
+  "links": [],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "Survey_Final",
+      "blocks": 18
+    }
+  ],
+  "report": [
+    {
+      "kind": "view_data_missing",
+      "item": "Survey_NoCheckCode",
+      "reason": "base table Survey_NoCheckCode is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Survey_NoCheckCode",
+      "reason": "page table Survey_NoCheckCode1 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Survey_NoCheckCode",
+      "reason": "page table Survey_NoCheckCode2 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Survey_NoCheckCode",
+      "reason": "page table Survey_NoCheckCode3 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/SalmonellosisCaseReportForm",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/DataSet",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Group_ProfileDetail",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Group_Clinical",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Group_Symptoms",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Whatsymptomsdidthepatientexperience",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Checkallthatapply",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Disclaimer1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Disclaimer2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Group_GeneralFoodHistory",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Group_RawMeats",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/DDF",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Checkallthatapply1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Group_FoodsEaten",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Didthepatientconsumeanyofthefollowingduringthe3dayexposureperiod",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Group_Event",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/Group_PicnicFoodsEaten",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_NoCheckCode/ThefollowingfoodswereservedatthepicnicSelectallthatwereconsumed",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/SalmonellosisCaseReportForm",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/FINALDataSet",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Group_ProfileDetail",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Group_Clinical",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Group_Symptoms",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Whatsymptomsdidthepatientexperience",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Checkallthatapply",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Disclaimer1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Disclaimer2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Group_GeneralFoodHistory",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Group_RawMeats",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/DDF",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Checkallthatapply1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Group_FoodsEaten",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Didthepatientconsumeanyofthefollowingduringthe3dayexposureperiod",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Group_Event",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/Group_PicnicFoodsEaten",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey_Final/ThefollowingfoodswereservedatthepicnicSelectallthatwereconsumed",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Survey_Final/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Survey_Final/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Survey_Final/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Survey_Final/LastSaveTime",
+      "reason": "no metaFields entry"
+    }
+  ]
+}

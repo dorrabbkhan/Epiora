@@ -1,0 +1,30 @@
+{
+  "name": "HospitalPoints",
+  "legacy_id": null,
+  "source_format": "ei3_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei3/HospitalPoints.mdb",
+    "sha256": "a72664e143443ba1bb927e743b45bd197f8cc5ea24b457e4316c222290ba5602"
+  },
+  "views": [],
+  "links": [],
+  "programs": [],
+  "check_code": [],
+  "report": [
+    {
+      "kind": "code_page_assumed",
+      "item": "HospitalPoints",
+      "reason": "JET3 text decoded as windows-1252 (MDB_JET3_CHARSET)"
+    },
+    {
+      "kind": "legacy_layout_unknown",
+      "item": "HospitalPoints",
+      "reason": "no recognized view-definition tables"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "hosppts",
+      "reason": "layout_unknown: plain data table"
+    }
+  ]
+}

@@ -1,0 +1,3777 @@
+{
+  "id": "Investigation",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "PulseNetID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "PulseNet ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State/Local/Other ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ClusterCode",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Cluster Code",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "InterviewDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date of Interview:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "IntAgency",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Agency or Organization:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TimesInt",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Before this interview, how many times has the case been interviewed about \r\ntheir illness by a public health representative?",
+        "legacy_type": "LegalValues",
+        "label_set": "codetimesint1"
+      }
+    },
+    {
+      "name": "TimesIntOtherSpec",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (specify):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Interviewer",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Name:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "IntLanguage",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Language Interview Conducted In:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeinterviewlanguage1"
+      }
+    },
+    {
+      "name": "LanguageOtherSpec",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (specify):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Respondent",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Respondent was:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeinterviewrespondent1"
+      }
+    },
+    {
+      "name": "RespondentOtherSpec",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (specify):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "State",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State",
+        "legacy_type": "LegalValues",
+        "label_set": "codeptstate1"
+      }
+    },
+    {
+      "name": "County",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "County",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BirthMon",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Birth month:",
+        "legacy_type": "LegalValues",
+        "label_set": "codebirthmon1"
+      }
+    },
+    {
+      "name": "BirthYear",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Birth year:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PtSex",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Sex:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeptsex1"
+      }
+    },
+    {
+      "name": "OnsetDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "What date did you first feel sick?",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Diarrhea",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did you (your child) have any diarrhea (defined as at least 3 loose stools in 24 hours)",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "DiarrheaRefused",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Refused",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "DiarrheaStart",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "What day did it start",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DiarrheaEnd",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "What day did it end",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Hospitalized",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Were {you/your child} admitted overnight to a hospital for this illness?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "HospRefused",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Refused",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "IllContact",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did you (your child) have close contact with anyone with diarrhea or vomiting?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "WhenIllContact",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "When did this person first become ill",
+        "legacy_type": "LegalValues",
+        "label_set": "codecontactdiarrheafirstill1"
+      }
+    },
+    {
+      "name": "HUS",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Were {you/your child} diagnosed with Hemolytic Uremic Syndrome (HUS)?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "HUSRefused",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Refused",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "StillSick",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Still Sick",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "DaysIll",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "How many days total were you sick?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AllTravel",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did you spend all, or some, of the 7 days before you were ill outside of your home state?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "StateTravel",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "List states:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DtStateTravel",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Dates of travel:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HotelStateTravel",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "List hotels/resorts stayed in during travel:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NoUSTravel",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did not travel outside state of residence",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "NoStateFood",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did not purchase or eat food outside state of residence",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "InterntlTravel",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "List countries:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DtInterntlTravel",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Dates of travel:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HotelIntlTravel",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "List hotels/resorts stayed in during travel:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NoIntlTravel",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did not travel outside of United States",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "NoIntlFood",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did not purchase or eat food outside United States",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Sec3Comments",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Travel Comments:",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Grocery",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Grocery stores or supermarkets",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrocDelivery",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Home delivery grocery services ",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "FishMeatShop",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fish or meat specialty shops",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Warehouse",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Warehouse stores",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "MealDelivery",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Meal delivery services",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "AnimalMarket",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Live animal markert, \r\ncustom slaughter facility",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "MiniMarket",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Small markets/mini markets",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HealthFood",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Health food stores or co-ops",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherFoodHome",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Any others?",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "EthnicMarket",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Ethnic specialty markets ",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "FarmersMarket",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Farmers' markets, roadside stands, etc",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "NoFoodAtHome",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did not eat any food at home",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Foodathome",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Record the store/retail names, locations, and dates",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "MemberCardYes",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Yes",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "MemberCardNo",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "No",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "MemberCardShareYes",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Yes",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "MemberCardShareNo",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "No",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "FAHAddtlLocations",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Section 4: Additional Store/Retail Names and Locations.",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "FastCasual",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fast casual",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "FastFood",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fast food",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Deli",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Sandwich shop, deli",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "JamCubCar",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Jamaican, Cuban, or Carribean",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "FoodTruck",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Food trucks, food stall/stands",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "FoodEvent",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "An event where food was served",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HispanicStyle",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Mexican, Salvadoria, other Hispanic/Latino-style",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ReadytoEat",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Ready-to-eat food grocery/deli",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "InstituteFood",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "School, hospital, senior center, etc",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "AsianStyle",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Chinese, Japanese, Vietnamese, Indian, other Asian",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Buffet",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "All-you-can-eat buffet",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "DinerCafe",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Breakfast, brunch, diner, or cafe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Mediterranean",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Middle Eastern, Greek, Arabic, Lebanese, African",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "DeliveryTakeOut",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Any delivery/take-out",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HealthyRestaurant",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Healthy restaurant ",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "SaladBar",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Salad bar at a grocery store or restaurant",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherFoodAway",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Any others?",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "NoFoodOutsideHome",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "No food sources outside the home",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "restaurantsaway",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Please record any restaurant names, locations, dates, and meal details:",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "OrgFood",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Do you make a point to select organic foods when you shop?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "DoNotEat",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Are there foods that you avoid eating or never eat due to restriction or preference?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "DoNotEatSpec",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, please specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DietSpecial",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Do you follow any of the following special or restricted diets?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "Kosher",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Kosher",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Halal",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Halal",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RawFoods",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Raw foods",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "LowCarb",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Low carb",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Paleo",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Paleo",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Veg",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Vegetarian/Vegan",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Dairyfree",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Dairy-free",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Glutenfree",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Gluten-free",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "WeightLoss",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Weight loss/low fat",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherDiet",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherDietDesc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Please describe",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Section6Comments",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Section 6 Comments",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "GroundBeef",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did you (your child) eat any ground beef, such as in hamburger patties, meatballs, \r\nmeatloaf, tacos, soup, or pasta sauces?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "GrdBfPchRaw",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Raw, fresh",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfPchFzn",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Raw, frozen",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfPchCooked",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Already cooked",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfPchUnk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Prepackagedgb",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pre-packaged",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ButcherMeatcoutergb",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Butcher/Meat counter",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Unknowngb",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfBloodPink",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Was the ground beef raw, bloody, pink or undercooked?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "HamburgerHm",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hamburger",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "MeatballsHm",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Meatballs",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "TacosHm",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Tacos",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfPreparedOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "(Specify)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MeatloafHm",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Meatloaf",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherBfHome",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other ",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfHomeLoc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Place purchased from (names, locations):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "GrdBfPurchaseDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Purchase date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "GrdBfPurchaseDateUnknown",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ALDIKirkwood",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "ALDI-Kirkwood",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "FredMeyer",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fred Meyer",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "KrogerHeritageFarm",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Kroger-Heritage Farm",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CostcoKirkland",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Costco-Kirkland",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Meijer",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Meijer",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PilgrimsPride",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pilgrim's Pride",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "SamsClubMemMark",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Sam's Club-Members Mark",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Perdue",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Perdue",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "StopandShop",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Stop and Shop",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "TraderJoes",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Trader Joes",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Tyson",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Tyson",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "TargetMarketPantry",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Target-Market Pantry",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "WalmartGreatValue",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Walmart-Great Value",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Wegmans",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Wegmans",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherBrand",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "WhlCkOtherBrandSpecify",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "(specify):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "UnknownBrand",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfOrganic",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Was it organic?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "GrdBfPackaged",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "How was the ground beef packaged?",
+        "legacy_type": "LegalValues",
+        "label_set": "codegrdbfpackaged1"
+      }
+    },
+    {
+      "name": "GrdBfPackagedOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "GrdBfLbs",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What was the size of the ground beef package? (lbs.)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "UnkGrBfSize",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfLeanFat",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What was the percent lean/fat?",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "UnkPctFat",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfBestByDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Best if used by date: ",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "WhlCkUSDAEstablishmentP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "USDA Establishment #P",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "GrdBfReceipt",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Is a receipt available from this purchase?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "GrdBfStillInHome",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Is any of the beef purchased still in your home?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "GrdBfOriginalPackaging",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, is it in its original packaging?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "GrdBfTesting",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Would you be willing to have the leftover product collected \r\nby health officials for testing if needed?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "GrdBfHandleAfterIllness",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did you handle the ground beef after illness began?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "NoGrdBfHome",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did not eat ground beef at home",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfAwayLoc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "List name(s) and location(s):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "GrdBfOutsideHomeMealdate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Meal date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "GrdBfOutsideHomeDish",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Describe the dish:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NoGrdBfAway",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did not eat ground beef outside the home",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfBloodPinkOutofHome",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Was the ground beef raw, bloody, pink, or undercooked?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "HandleGrdBf",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Even if you (your child) did not eat it, did you (your child) handle raw ground beef?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "GrdBfRawFresh",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Raw, fresh",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfRawFrozen",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Raw, frozen",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfAlreadyCooked",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Already cooked",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "UnknownBrand1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PreCutHomeLoc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Place purchased from (names, locations):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "GrdBfPurchaseDate1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Purchase date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "GrdBfPurchaseDateUnknown1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ALDIKirkwood1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "ALDI-Kirkwood",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CostcoKirkland1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Costco-Kirkland",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "FredMeyer1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fred Meyer",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "KrogerHeritageFarm1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Kroger-Heritage Farm",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Meijer1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Meijer",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Perdue1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Perdue",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PilgrimsPride1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pilgrim's Pride",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "SamsClubMemMark1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Sam's Club-Members Mark",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "StopandShop1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Stop and Shop",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "TargetMarketPantry1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Target-Market Pantry",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "TraderJoes1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Trader Joes",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Tyson1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Tyson",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "WalmartGreatValue1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Walmart-Great Value",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Wegmans1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Wegmans",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherBrand1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherBrandSpecify1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "(specify):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "UnknownBrand2",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBfHandleOrganic",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Was it organic?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "GrdBfPackagedHandled",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "How was the ground beef packaged?",
+        "legacy_type": "LegalValues",
+        "label_set": "codegrdbfpackaged1"
+      }
+    },
+    {
+      "name": "GrdBfSizeLbs",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What was the size of the ground beef package? (lbs.)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "GrdBfSizeUnknown",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrdBeefLean",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What was the percent lean/fat?",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "GrdBfHandleBestByDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Best if used by date: ",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "GrdBfUSDAEstablishmentP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "USDA Establishment #P",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "GrdBfHandleReceipt",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Is a receipt available from this purchase?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "GrdBfHandleStillInHome",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Is any of the ground beef purchased still in your home?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "GrdBfHandleOriginalPackaging",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, is it in its original packaging?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "GrdBfHandleTesting",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Would you be willing to have the leftover product collected by health officials for testing if needed?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "GrdBfAfterIllness",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did you handle the ground beef after illness began?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "SteakStewRoastVeal",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did you (your child) eat any steaks, stews, roasts, veal, or other similar items?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "StkPchRaw",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Raw, fresh",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "StkPchFrz",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Raw, frozen",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "StkPchCooked",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Already cooked",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "StkPchUnk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Prepackagedstk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pre-packaged",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ButcherMeatcounterstk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Butcher/Meat counter",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Unknownstk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CutUnk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Cut",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What type of cut of beef was purchased?",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BfLoc",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Place purchased from (names, locations):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BfPurchaseDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Purchase date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "BfPurchaseDateUnknown2",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ALDIKirkwood11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "ALDI-Kirkwood",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CostcoKirkland11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Costco-Kirkland",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "FredMeyer11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fred Meyer",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "KrogerHeritageFarm11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Kroger-Heritage Farm",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Meijer11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Meijer",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Perdue11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Perdue",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PilgrimsPride11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pilgrim's Pride",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "SamsClubMemMark11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Sam's Club-Members Mark",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "StopandShop11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Stop and Shop",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "TargetMarketPantry11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Target-Market Pantry",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "TraderJoes11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Trader Joes",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Tyson11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Tyson",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "WalmartGreatValue11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Walmart-Great Value",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Wegmans11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Wegmans",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherBrand11",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherBrandSpecify11",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "(specify):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "UnknownBrand21",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BfOrganic",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Was it organic?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "BfBestByDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Best if used by date: ",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "BfUSDAEstablishmentP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "USDA Establishment #P",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BfReceipt",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Is a receipt available from this purchase?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "BfStillInHome",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Is any of the beef purchased still in your home?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "BfInOriginalPackaging",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, is it in its original packaging?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "BfTesting",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Would you be willing to have the leftover product collected by health officials for testing if needed?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "BfHandleAfterIllness",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did you handle the beef after illness began?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "NoBfHome",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did not eat beef at home",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BfAway",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "List name(s) and location(s):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BfOutsideHomeMealDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Meal date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "BfOutsideHomeDish",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Describe the dish:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NoBfAway",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did not eat beef outside the home",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Section7BeefComments",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Section 7 Beef Comments",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "RBfWashRinse",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Do you wash or rinse your ground beef before cooking it?",
+        "legacy_type": "Option",
+        "label_set": "list:RBfWashRinse"
+      }
+    },
+    {
+      "name": "RBfWashWater",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Water rinse",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfWashOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "specify:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "RBfStoreOrgPkg",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Freeze in original packaging",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfStoreZipContain",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Freeze in zip lock bags or storage containers",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfStoreOrgPkgRefrg",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Refrigerate in original packaging",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfStoreZipContainRefrig",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Refrigerate in zip lock bags or storage containers",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfStoreOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "RBfDefrostRefrig",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "In Refrigerator",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfDefrostCounter",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "On Countertop",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfDefrostSink",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "In a sink with water",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfDefrostMW",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "In the microwave",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfDefrostCkFrmFrzn",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Don't defrost it - cook from frozen",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfDefrostCookFrsh",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Don't freeze chicken - cook it fresh",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfDefrostOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "specify:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BfMethodTaste",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Taste",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BfMethodAppear",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Appearance",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BfMethodTime",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cooking time",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BfMethodSmell",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Smell",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BfMethodTemp",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Temperature measured by a Meat Thermometer",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BfMethodTouch",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Touch/Firmness",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BfMethodOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BfMethodTempNum",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What temperature do you cook to?",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BfStorage",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "How long do you wait to store leftover meals containing ground beef, after it has been cooked?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeckstorage1"
+      }
+    },
+    {
+      "name": "RBfReadInstruct",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "When cooking raw ground beef do you read any cooking or safe handling instructions \r\non the original packaging?",
+        "legacy_type": "LegalValues",
+        "label_set": "coderckreadinstruct1"
+      }
+    },
+    {
+      "name": "RBfOtherInstruct",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "specify:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "RBfCookInstructOnly",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cooking Instructions only",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfSafeInstructOnly",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Safe handling instructions only",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfInstructBoth",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Both",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfTaste",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "While cooking raw ground beef do you ever taste it before it is completely cooked?",
+        "legacy_type": "LegalValues",
+        "label_set": "coderckreadinstruct1"
+      }
+    },
+    {
+      "name": "RBfMicrowave",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Microwave",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfOven",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Oven",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfToaster",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Toaster Oven",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfStoveTop",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Stove Top",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfGrill",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Grill",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfCookOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "RBfContinueCook",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Continue cooking",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfWipeHands",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Wipe hands",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfRinseWater",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Rinse hands with water",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfWashSoapWater",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Wash hands with soap and water",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfAfterHandleDontKnow",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Don't know",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RBfCuttingBoard",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "How often do you use a separate cutting board for raw beef and other \r\nfoods during meal preparation?",
+        "legacy_type": "LegalValues",
+        "label_set": "coderckcuttingboard1"
+      }
+    },
+    {
+      "name": "BfMethodCkOther",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RbfOtherCk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Rbfstoreck",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RbfStoreCkOther",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RbfInstCk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RbfCookHowCk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Dairy",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did you (your child) eat any dairy milk from a cow or other animal source?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "DairyOtherType",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What was the type",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Raworunpasteurized",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Raw or unpasteurized?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "DairyPlacePurchased",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Place purchased from (names, locations):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "RawMilkCheese",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did you (your child) eat any cheese made from unpasteurized or raw milk, \r\nincluding homemade, farm-fresh, and door-to-door cheeses?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "RawMilkCheeseBrand",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What was the type, variety, brand?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "RawMilkCheesePlacePurchased",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Place purchased from (names, locations):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LatinCheese",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did you (your child) eat any Mexican- or Latin-style cheese such as queso fresco or queso blanco",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "LatinCheeseBrand",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What was the type, variety, brand?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "LatinCheesePlacePurchased",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Place purchased from (names, locations):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DairyComments",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Section 9: Dairy Comments",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "ContactLiveCattle",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Live cattle?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "CattleSick",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, were any of the cattle sick?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "Farm",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Live/work/visit a farm with livestock \r\nlike cattle, sheep, goats, etc?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "FarmLiveWorkVisit",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, did you",
+        "legacy_type": "LegalValues",
+        "label_set": "codefarmliveworkvisit1"
+      }
+    },
+    {
+      "name": "FarmAndFeed",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Visit or work at an agricultural 'Farm and Feed' store, like Tractor Supply?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "FairsEvents",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Visit or work at county/state fairs, 4-H, or similar events where animals were present?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "PFRawPrePack",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Raw prepackaged pet food (refrigerated or frozen)?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "PFBrandName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Brand Name:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PFBrandUnk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PFDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Purchase date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "PFDateUnk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PFPlace",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Place purchased from (names):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PFAddress",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Address, city, state of purchase location:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PFRawPrePack1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Raw pet food including treats (including freeze dried or dehydrated)?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "PFBrandName1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Brand Name:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PFBrandUnk1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PFDate1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Purchase date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "PFDateUnk1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PFPlace1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Place purchased from (names):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PFAddress1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Address, city, state of purchase location:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PFHomePrep",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did you (your family) prepare your own raw pet food?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeselectorganic1"
+      }
+    },
+    {
+      "name": "PFHomeTurke",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Turkey",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PFHomeBeef",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Beef",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PFHomeOtherMeat",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PFHomeNoMeat",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "No Meat Used",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PFHomeCk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Chicken",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PFHomePoultryBrand",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If any poultry was used, brand/variety:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PFHomeDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Purchase date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "PFHomePlace",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Place purchased from (names):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PFHomeAddress",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Address, city, state of purchase location:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Section10Comments",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Section 10 Comments",
+        "legacy_type": "Multiline"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codetimesint1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "None"
+          },
+          "None"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Once"
+          },
+          "Once"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Twice"
+          },
+          "Twice"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    },
+    {
+      "id": "codeinterviewlanguage1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "English"
+          },
+          "English"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Spanish"
+          },
+          "Spanish"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    },
+    {
+      "id": "codeinterviewrespondent1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Self"
+          },
+          "Self"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Parent"
+          },
+          "Parent"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Spouse"
+          },
+          "Spouse"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    },
+    {
+      "id": "codeptstate1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "AL"
+          },
+          "AL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AK"
+          },
+          "AK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AZ"
+          },
+          "AZ"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AR"
+          },
+          "AR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CO"
+          },
+          "CO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CT"
+          },
+          "CT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DC"
+          },
+          "DC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DE"
+          },
+          "DE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FL"
+          },
+          "FL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GA"
+          },
+          "GA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HI"
+          },
+          "HI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ID"
+          },
+          "ID"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IL"
+          },
+          "IL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IN"
+          },
+          "IN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IA"
+          },
+          "IA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KS"
+          },
+          "KS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KY"
+          },
+          "KY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LA"
+          },
+          "LA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ME"
+          },
+          "ME"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MD"
+          },
+          "MD"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MA"
+          },
+          "MA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MI"
+          },
+          "MI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MN"
+          },
+          "MN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MS"
+          },
+          "MS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MO"
+          },
+          "MO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MT"
+          },
+          "MT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NE"
+          },
+          "NE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NV"
+          },
+          "NV"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NH"
+          },
+          "NH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NJ"
+          },
+          "NJ"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NM"
+          },
+          "NM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NY"
+          },
+          "NY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NC"
+          },
+          "NC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ND"
+          },
+          "ND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OH"
+          },
+          "OH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OK"
+          },
+          "OK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OR"
+          },
+          "OR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PA"
+          },
+          "PA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "RI"
+          },
+          "RI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SC"
+          },
+          "SC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SD"
+          },
+          "SD"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TN"
+          },
+          "TN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TX"
+          },
+          "TX"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UT"
+          },
+          "UT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VT"
+          },
+          "VT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VA"
+          },
+          "VA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WA"
+          },
+          "WA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WV"
+          },
+          "WV"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WI"
+          },
+          "WI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WY"
+          },
+          "WY"
+        ]
+      ]
+    },
+    {
+      "id": "codebirthmon1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Jan"
+          },
+          "Jan"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Feb"
+          },
+          "Feb"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Mar"
+          },
+          "Mar"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Apr"
+          },
+          "Apr"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "May"
+          },
+          "May"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Jun"
+          },
+          "Jun"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Jul"
+          },
+          "Jul"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Aug"
+          },
+          "Aug"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Sept"
+          },
+          "Sept"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Oct"
+          },
+          "Oct"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Nov"
+          },
+          "Nov"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Dec"
+          },
+          "Dec"
+        ]
+      ]
+    },
+    {
+      "id": "codeptsex1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Male"
+          },
+          "Male"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Female"
+          },
+          "Female"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeselectorganic1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Yes"
+          },
+          "Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Maybe"
+          },
+          "Maybe"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "No"
+          },
+          "No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Don't Know"
+          },
+          "Don't Know"
+        ]
+      ]
+    },
+    {
+      "id": "codecontactdiarrheafirstill1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "less than 24 hours before you"
+          },
+          "less than 24 hours before you"
+        ],
+        [
+          {
+            "type": "text",
+            "value": ">= 24 hours before you"
+          },
+          ">= 24 hours before you"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codegrdbfpackaged1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Bulk/tray"
+          },
+          "Bulk/tray"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Bulk/tube or chub"
+          },
+          "Bulk/tube or chub"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Patties"
+          },
+          "Patties"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "list:RBfWashRinse",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Always,Sometimes,Never,Dont know||.02362:.01538,.02362:.12821,.02362:.24103,.02362:.35385"
+          },
+          "Always,Sometimes,Never,Dont know||.02362:.01538,.02362:.12821,.02362:.24103,.02362:.35385"
+        ]
+      ]
+    },
+    {
+      "id": "codeckstorage1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Less than 2 hours"
+          },
+          "Less than 2 hours"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2-4 hours"
+          },
+          "2-4 hours"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4 hours or more"
+          },
+          "4 hours or more"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Don't know"
+          },
+          "Don't know"
+        ]
+      ]
+    },
+    {
+      "id": "coderckreadinstruct1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Always"
+          },
+          "Always"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Sometimes"
+          },
+          "Sometimes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Never"
+          },
+          "Never"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Prefer not to answer"
+          },
+          "Prefer not to answer"
+        ]
+      ]
+    },
+    {
+      "id": "coderckcuttingboard1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Always"
+          },
+          "Always"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Sometimes"
+          },
+          "Sometimes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Never"
+          },
+          "Never"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Don't know"
+          },
+          "Don't know"
+        ]
+      ]
+    },
+    {
+      "id": "codefarmliveworkvisit1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Live on"
+          },
+          "Live on"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Work at"
+          },
+          "Work at"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Visit"
+          },
+          "Visit"
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1890 @@
+{
+  "id": "CaseReport",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        1
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [
+        1
+      ],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [
+        "e238cf00-85d0-41b6-945c-d80f062010c6"
+      ],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "STID",
+      "type": "text",
+      "values": [
+        "77"
+      ],
+      "meta": {
+        "prompt": "State EPI ID:",
+        "legacy_type": "TextUppercase"
+      }
+    },
+    {
+      "name": "CDCID",
+      "type": "text",
+      "values": [
+        "88"
+      ],
+      "meta": {
+        "prompt": "CDC EPI ID (case):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID1",
+      "type": "text",
+      "values": [
+        "99"
+      ],
+      "meta": {
+        "prompt": "State lab specimen ID #1:",
+        "legacy_type": "TextUppercase"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID1",
+      "type": "text",
+      "values": [
+        "55"
+      ],
+      "meta": {
+        "prompt": "CDC Lab specimen ID #1:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID2",
+      "type": "text",
+      "values": [
+        "11"
+      ],
+      "meta": {
+        "prompt": "State lab specimen ID #2:",
+        "legacy_type": "TextUppercase"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID2",
+      "type": "text",
+      "values": [
+        "66"
+      ],
+      "meta": {
+        "prompt": "CDC Lab specimen ID #2:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "RepDate",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date reported to state/local health department:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "RepLast",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Last name:",
+        "legacy_type": "TextUppercase"
+      }
+    },
+    {
+      "name": "RepFirst",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "First name:",
+        "legacy_type": "TextUppercase"
+      }
+    },
+    {
+      "name": "RepPhone",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Phone number:",
+        "legacy_type": "PhoneNumber"
+      }
+    },
+    {
+      "name": "RepFax",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Fax number:",
+        "legacy_type": "PhoneNumber"
+      }
+    },
+    {
+      "name": "RepEMail",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "E-Mail:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ProbCase",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Probable",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ConfCase",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Confirmed",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "DOB",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date of Birth (mm/dd/yy):",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Race",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Race",
+        "legacy_type": "LegalValues",
+        "label_set": "codePHVS_RaceCategory_CDC"
+      }
+    },
+    {
+      "name": "Ethnicity",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Ethnicity",
+        "legacy_type": "LegalValues",
+        "label_set": "codePHVS_Ethnicity_CDC"
+      }
+    },
+    {
+      "name": "Sex",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Sex",
+        "legacy_type": "CommentLegal",
+        "label_set": "codephvs_administrativesex_hl7_2x"
+      }
+    },
+    {
+      "name": "Pregnant",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "If female, is this person pregnant?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeantiviral"
+      }
+    },
+    {
+      "name": "PregWeeks",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Weeks pregnant:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "StateReportingPII",
+      "type": "text",
+      "values": [
+        "AL-Alabama"
+      ],
+      "meta": {
+        "prompt": "Reporting State",
+        "legacy_type": "Codes",
+        "label_set": "codestatecounty1"
+      }
+    },
+    {
+      "name": "StateReportingFIPS",
+      "type": "text",
+      "values": [
+        "01"
+      ],
+      "meta": {
+        "prompt": "State FIPS Code",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CountyReportingPII",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Reporting County",
+        "legacy_type": "Codes",
+        "label_set": "codestatecounty1"
+      }
+    },
+    {
+      "name": "CountyReportingFIPS",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "County FIPS Code",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FluVaxDt1Unk",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "(If day unknown)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "FluVaxDt2Unk",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "(If day unknown)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "NFluDt1Unk",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "(If day unknown)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "NFluDt2Unk",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "(If day unknown)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OnsetDate",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date of symptom onset (mm/dd/yyyy):",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Fever",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Fever >37.8C (100 F)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "FeverTemp",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Fever temp max",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Feverish",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Feverish but temperature not taken",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Cough",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Cough",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Headache",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Headache",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Seizures",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Seizures",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Runnynose",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Rhinorrhea",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Sorethroat",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Sore throat",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Myalgias",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Myalgias",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "SOB",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Shortness of breath",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Diarrhea",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Diarrhea",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Vomit",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Vomiting",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherSx",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Other symptom(s)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OthersxSpecify",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Hospitalized",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Was the patient hospitalized?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeynunk"
+      }
+    },
+    {
+      "name": "ICU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Was the patient admitted to the intensive case unit?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeynunk"
+      }
+    },
+    {
+      "name": "Mechvent",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Did the patient require mechanical ventilation?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeynunk"
+      }
+    },
+    {
+      "name": "Outcome",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Did the patient die as a result of this illness?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCliIll"
+      }
+    },
+    {
+      "name": "FluVax",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Did the case-patient receive influenza vaccine beginning August 2009?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeynunk"
+      }
+    },
+    {
+      "name": "FluDoseNum",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "If yes, number of doses:",
+        "legacy_type": "CommentLegal",
+        "label_set": "codedosesnovelavax"
+      }
+    },
+    {
+      "name": "FluVaxTyp1",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Type of vaccine 1:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeLblVaxType"
+      }
+    },
+    {
+      "name": "FluVaxDt1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FluVaxTyp2",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Type of vaccine 2:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeLblVaxType"
+      }
+    },
+    {
+      "name": "FluVaxDt2",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "NFluVax",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Did the case-patient receive novel influenza A (H1N1) vaccine beginning October 2009?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoDontKnow"
+      }
+    },
+    {
+      "name": "NFluNum",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "If yes, number of doses:",
+        "legacy_type": "CommentLegal",
+        "label_set": "codedosesnovelavax"
+      }
+    },
+    {
+      "name": "NFluDt1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date of First Dose:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "NFluDt2",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date of Second Dose:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Asthma",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Asthma",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYNUnk"
+      }
+    },
+    {
+      "name": "LungDisease",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Other chronic lung disease",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYNUnk"
+      }
+    },
+    {
+      "name": "HeartDisease",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Heart or circulatory disease",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYNUnk"
+      }
+    },
+    {
+      "name": "Metabolic",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Metabolic disease (including diabetes mellitus)",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYNUnk"
+      }
+    },
+    {
+      "name": "Kidney",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Kidney disease",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYNUnk"
+      }
+    },
+    {
+      "name": "Cancer",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Cancer in the last 12 months",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYNUnk"
+      }
+    },
+    {
+      "name": "ImmunoSuppress",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Immunosuppresive condition (HIV infection, chronic corticosteroid, therapy, or organ transplant recipient)",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYNUnk"
+      }
+    },
+    {
+      "name": "Obese",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Obesity",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYNUnk"
+      }
+    },
+    {
+      "name": "ObeseSpecify",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "If yes, specify:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeObesity"
+      }
+    },
+    {
+      "name": "Neuro",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Neurological/neuromuscular disorder",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYNUnk"
+      }
+    },
+    {
+      "name": "OtherChronic",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Other chronic diseases",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYNUnk"
+      }
+    },
+    {
+      "name": "Avtreat",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Did the patient receive antiviral medications?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeAntiviral"
+      }
+    },
+    {
+      "name": "OseltInit1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Oseltamivir (Tamiflu)",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OseltDisc1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OseltDose1",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ZanaInit1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Zanamivir (Relenza)",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ZanaDisc1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ZanaDose1",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "RimantInit1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Rimantidine",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "RimantDisc1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "RimantDose1",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AmantInit1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Amantadine",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "AmantDisc1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "AmantDose1",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "OthAVSpec",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Other Specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Employment",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "What was the patient employment status?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeEmployment"
+      }
+    },
+    {
+      "name": "Travel",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Did the patient travel?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeantiviral"
+      }
+    },
+    {
+      "name": "IllTrvl",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "If yes, was the patient ill when travelling?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeantiviral"
+      }
+    },
+    {
+      "name": "EmpIndustry",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "What kind of business or industry was the patient employed in?",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HcTrvl",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "If yes, did the patient seek health care when travelling?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYNUnk"
+      }
+    },
+    {
+      "name": "EmpWorkType",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "What kind of work did the patient do?",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HcTrvl_Spec",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Specify:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PatWorkHCF",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Does the patient work in a health care facility or setting?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeantiviral"
+      }
+    },
+    {
+      "name": "Contact",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Has the patient had family members or close contacts with pneumonia or influenza-like illness?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeantiviral"
+      }
+    },
+    {
+      "name": "OthDose1",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "OthDisc1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Othinit1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": ".",
+        "legacy_type": "Date"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codePHVS_RaceCategory_CDC",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- White"
+          },
+          "1- White"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Black"
+          },
+          "2- Black"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Asian"
+          },
+          "3- Asian"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Native Hawaiian/Other Pacific Islander"
+          },
+          "4- Native Hawaiian/Other Pacific Islander"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- American Indian/Alaska Native"
+          },
+          "5- American Indian/Alaska Native"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- Multiracial"
+          },
+          "6- Multiracial"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unknown/Other"
+          },
+          "9- Unknown/Other"
+        ]
+      ]
+    },
+    {
+      "id": "codePHVS_Ethnicity_CDC",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Hispanic"
+          },
+          "1- Hispanic"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Non-Hispanic"
+          },
+          "2- Non-Hispanic"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unknown/Other"
+          },
+          "9- Unknown/Other"
+        ]
+      ]
+    },
+    {
+      "id": "codephvs_administrativesex_hl7_2x",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Male"
+          },
+          "1- Male"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Female"
+          },
+          "2- Female"
+        ]
+      ]
+    },
+    {
+      "id": "codeantiviral",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Yes"
+          },
+          "1- Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- No"
+          },
+          "2- No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unknown"
+          },
+          "9- Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codestatecounty1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "CO-Colorado"
+          },
+          "CO-Colorado"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CT-Connecticut"
+          },
+          "CT-Connecticut"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DE-Delaware"
+          },
+          "DE-Delaware"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DC-District of Columbia"
+          },
+          "DC-District of Columbia"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FL-Florida"
+          },
+          "FL-Florida"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OK-Oklahoma"
+          },
+          "OK-Oklahoma"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OR-Oregon"
+          },
+          "OR-Oregon"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SC-South Carolina"
+          },
+          "SC-South Carolina"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SD-South Dakota"
+          },
+          "SD-South Dakota"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TN-Tennessee"
+          },
+          "TN-Tennessee"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VA-Virginia"
+          },
+          "VA-Virginia"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TX-Texas"
+          },
+          "TX-Texas"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UT-Utah"
+          },
+          "UT-Utah"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PR-Puerto Rico"
+          },
+          "PR-Puerto Rico"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UM-U.S. Minor Outlying Islands"
+          },
+          "UM-U.S. Minor Outlying Islands"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VI-Virgin Islands"
+          },
+          "VI-Virgin Islands"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WI-Wisconsin"
+          },
+          "WI-Wisconsin"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NC-North Carolina"
+          },
+          "NC-North Carolina"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OH-Ohio"
+          },
+          "OH-Ohio"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CA-California"
+          },
+          "CA-California"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ND-North Dakota"
+          },
+          "ND-North Dakota"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WY-Wyoming"
+          },
+          "WY-Wyoming"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AS-American Samoa"
+          },
+          "AS-American Samoa"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GU-Guam"
+          },
+          "GU-Guam"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MP-Northern Mariana Islands"
+          },
+          "MP-Northern Mariana Islands"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NE-Nebraska"
+          },
+          "NE-Nebraska"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NV-Nevada"
+          },
+          "NV-Nevada"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NM-New Mexico"
+          },
+          "NM-New Mexico"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NY-New York"
+          },
+          "NY-New York"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GA-Georgia"
+          },
+          "GA-Georgia"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IL-Illinois"
+          },
+          "IL-Illinois"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IN-Indiana"
+          },
+          "IN-Indiana"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IA-Iowa"
+          },
+          "IA-Iowa"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KS-Kansas"
+          },
+          "KS-Kansas"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KY-Kentucky"
+          },
+          "KY-Kentucky"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ME-Maine"
+          },
+          "ME-Maine"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MD-Maryland"
+          },
+          "MD-Maryland"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MA-Massachusetts"
+          },
+          "MA-Massachusetts"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MO-Missouri"
+          },
+          "MO-Missouri"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PA-Pennsylvania"
+          },
+          "PA-Pennsylvania"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MI-Michigan"
+          },
+          "MI-Michigan"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WA-Washington"
+          },
+          "WA-Washington"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LA-Louisiana"
+          },
+          "LA-Louisiana"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HI-Hawaii"
+          },
+          "HI-Hawaii"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ID-Idaho"
+          },
+          "ID-Idaho"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MN-Minnesota"
+          },
+          "MN-Minnesota"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MS-Mississippi"
+          },
+          "MS-Mississippi"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WV-West Virginia"
+          },
+          "WV-West Virginia"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NJ-New Jersey"
+          },
+          "NJ-New Jersey"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MT-Montana"
+          },
+          "MT-Montana"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NH-New Hampshire"
+          },
+          "NH-New Hampshire"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AL-Alabama"
+          },
+          "AL-Alabama"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "RI-Rhode Island"
+          },
+          "RI-Rhode Island"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VT-Vermont"
+          },
+          "VT-Vermont"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AK-Alaska"
+          },
+          "AK-Alaska"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AZ-Arizona"
+          },
+          "AZ-Arizona"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AR-Arkansas"
+          },
+          "AR-Arkansas"
+        ]
+      ]
+    },
+    {
+      "id": "codeynunk",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Yes"
+          },
+          "1- Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- No"
+          },
+          "2- No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unknown"
+          },
+          "9- Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeCliIll",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-  No"
+          },
+          "1-  No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Yes"
+          },
+          "2- Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unknown"
+          },
+          "9- Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codedosesnovelavax",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-  One dose"
+          },
+          "1-  One dose"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Two doses"
+          },
+          "2- Two doses"
+        ]
+      ]
+    },
+    {
+      "id": "codeLblVaxType",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Inactivated (injectable)"
+          },
+          "1- Inactivated (injectable)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Live attenuated (spray)"
+          },
+          "2- Live attenuated (spray)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unknown"
+          },
+          "9- Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeYesNoDontKnow",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Yes"
+          },
+          "1- Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- No"
+          },
+          "2- No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Don't know"
+          },
+          "9- Don't know"
+        ]
+      ]
+    },
+    {
+      "id": "codeYNUnk",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Yes"
+          },
+          "1- Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- No"
+          },
+          "2- No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unknown"
+          },
+          "9- Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeObesity",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-Obese (BMI:30.0-39.9)"
+          },
+          "1-Obese (BMI:30.0-39.9)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Morbidly obese (BMI >40)"
+          },
+          "2- Morbidly obese (BMI >40)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9-Unknown"
+          },
+          "9-Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeAntiviral",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Yes"
+          },
+          "1- Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- No"
+          },
+          "2- No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unknown"
+          },
+          "9- Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeEmployment",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-  Employed for wages"
+          },
+          "1-  Employed for wages"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Self-Employed"
+          },
+          "2- Self-Employed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Out of work, retired, or unable to work"
+          },
+          "3- Out of work, retired, or unable to work"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Homemaker"
+          },
+          "4- Homemaker"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- Student"
+          },
+          "5- Student"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- Volunteer"
+          },
+          "6- Volunteer"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unknown"
+          },
+          "9- Unknown"
+        ]
+      ]
+    }
+  ]
+}

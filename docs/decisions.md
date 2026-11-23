@@ -6346,3 +6346,126 @@ variants force every exhaustive match workspace-wide):
   TABLES / MEANS dataset-v2 tests, split out of `dataset_v2.rs`
   verbatim to keep both files under the ~400-line cap.
 Supersedes: —
+
+### v1.1 Task 4 — golden imports (2026-11-23)
+
+Decision: `fixtures/legacy/golden/` commits the expected-import tree for
+every legacy sample, produced by `fixtures/legacy/golden.mjs` in the
+`legacy-golden` workflow and committed byte-identical to the workflow
+artifact. Producing run (all steps green, including the in-run
+second-run no-diff proof):
+https://github.com/dorrabbkhan/Epiora/actions/runs/45201754092
+Toolchain on the runner: mdbtools 1.0.1-0.1build1, sqlite3
+3.46.1-9ubuntu0.3, Node 22.23.4 (versions printed by the "Install
+mdbtools and sqlite3" step of that run).
+
+Per-project shape in the produced tree (views = `views[]` in
+project.json, links = grid/relate datasets, records = rows across all
+emitted datasets):
+
+| project | source_format | views | links | records |
+| --- | --- | ---: | ---: | ---: |
+| fixtures/legacy/golden/ei3/Asthma Final | ei3_access | 1 | 0 | 800 |
+| fixtures/legacy/golden/ei3/Asthma Survey 2005 | ei3_access | 1 | 0 | 10 |
+| fixtures/legacy/golden/ei3/Asthma Survey 2005 Sample | ei3_access | 1 | 0 | 800 |
+| fixtures/legacy/golden/ei3/HospitalPoints | ei3_access | 0 | 0 | 0 |
+| fixtures/legacy/golden/ei3/SchoolPoints | ei3_access | 0 | 0 | 0 |
+| fixtures/legacy/golden/ei3/SymptomsbyAgeSample | ei3_access | 0 | 0 | 0 |
+| fixtures/legacy/golden/ei3/albany_demogz | ei3_access | 0 | 0 | 0 |
+| fixtures/legacy/golden/ei7/BeefPrevention/BeefPrevention | ei7_sqlite | 1 | 0 | 0 |
+| fixtures/legacy/golden/ei7/Cholera/Advanced Analysis | ei3_access | 0 | 0 | 0 |
+| fixtures/legacy/golden/ei7/Cholera/Cholera_in_Rwenshama_2 | ei7_access | 3 | 0 | 66 |
+| fixtures/legacy/golden/ei7/Cholera/EpiChol | ei3_access | 0 | 0 | 0 |
+| fixtures/legacy/golden/ei7/CommunityHealthAssessment/CommunityHealthAssessment | ei7_access | 3 | 0 | 800 |
+| fixtures/legacy/golden/ei7/CommunityHealthAssessment/albany_demogz | ei3_access | 0 | 0 | 0 |
+| fixtures/legacy/golden/ei7/EColi/EColi | ei7_access | 2 | 0 | 359 |
+| fixtures/legacy/golden/ei7/H1N1ClinicalLongForm/H1N1ClinicalLongForm | ei7_access | 8 | 14 | 0 |
+| fixtures/legacy/golden/ei7/H1N1ClinicalShortForm/H1N1ShortForm | ei7_access | 3 | 8 | 2 |
+| fixtures/legacy/golden/ei7/H1N1ShortForm/H1N1ShortForm | ei7_access | 3 | 8 | 2 |
+| fixtures/legacy/golden/ei7/HIV/HIV | ei7_access | 1 | 0 | 359 |
+| fixtures/legacy/golden/ei7/HansensDisease/HansensDisease | ei7_access | 4 | 11 | 1 |
+| fixtures/legacy/golden/ei7/HuttYouthSurvey/HuttYouthSurvey | ei7_access | 1 | 0 | 0 |
+| fixtures/legacy/golden/ei7/JohnSnow/JohnSnow | ei7_access | 1 | 0 | 452 |
+| fixtures/legacy/golden/ei7/LandmineStudy/LandmineStudy | ei7_access | 1 | 0 | 0 |
+| fixtures/legacy/golden/ei7/Legionellosis/Legionellosis | ei7_access | 1 | 0 | 40 |
+| fixtures/legacy/golden/ei7/Lyme/Lyme | ei7_access | 1 | 0 | 1159 |
+| fixtures/legacy/golden/ei7/Mumps/Mumps | ei7_access | 1 | 0 | 45 |
+| fixtures/legacy/golden/ei7/Nutrition/Nutrition | ei7_access | 2 | 1 | 14 |
+| fixtures/legacy/golden/ei7/PHIN/PHINVS | ei3_access | 0 | 0 | 0 |
+| fixtures/legacy/golden/ei7/STEPS/STEPS_EI7 | ei7_access | 1 | 0 | 0 |
+| fixtures/legacy/golden/ei7/STEPS/Steps_EpiInfo | ei3_access | 0 | 0 | 0 |
+| fixtures/legacy/golden/ei7/Salmonellosis/Salmonellosis | ei7_access | 2 | 0 | 309 |
+| fixtures/legacy/golden/ei7/Sample/Sample | ei7_access | 18 | 3 | 4088 |
+| fixtures/legacy/golden/ei7/Sample/SampleDB | ei7_sqlite | 19 | 3 | 4585 |
+| fixtures/legacy/golden/reimport | ei7_sqlite | 19 | 3 | 4587 |
+
+33 projects, 98 views, 51 links, 18478 records (the reimport copy is
+SampleDB minus 1 removed record plus 3 added records: 4585 − 1 + 3 =
+4587).
+
+Layout readings where the format left room for choice:
+
+- EI7 view → base table: `metaFields.DataTableName` (first non-empty
+  value per ViewId), matching `Epi.Core`'s `GetDataTableName`. Page
+  tables are `<base><PageId>`, grid tables `<page table><FieldName>`;
+  `metaGridColumns` supplies grid columns, ordered by `GridColumnId`,
+  with `UniqueKey` prepended when the physical table has it (metadata
+  omits it in some projects).
+- Codes fields store display text in the field column plus a companion
+  code column; `SourceTableName`/`CodeColumnName`/`TextColumnName`
+  (trimmed — mdb cells can carry a leading space) or the inline `List`
+  expression become dataset `label_sets`.
+- EI3 `Lists` expressions (`C`, `W`, `L` forms) resolve through the
+  `SOURCE` rows (`CODE*` names → datatables), not bare table names.
+- EI3 `MIRROR` fields import the source field's values and are reported
+  `field_imported_changed`. Deleted rows are kept, not dropped, in both
+  mappers: rows with `RECSTATUS`/`RecStatus` = 0 stay in the emitted
+  dataset, the status column travels with them (EI3 as a verbatim
+  `RECSTATUS` system column, EI7 as the `RecStatus` metaField's integer
+  column), `deleted_records` counts them, and `records` counts every
+  emitted row, deleted rows included.
+- Sources with no view-definition tables (a JET4 `.mdb` without
+  `metaViews`, a `.db` without it, an EI3 file without `view*` tables)
+  report `legacy_layout_unknown` plus `table_not_imported` per plain
+  table; report `item` fields name the project stem or table, never a
+  path, so the Access and SQLite-copy goldens compare byte-for-byte
+  (`source`, `source_format` are the only provenance fields excluded by
+  `fixtures/legacy/compare-golden.mjs`).
+- `copy-tables.mjs --sqlite` emits text cells as `CAST(X'<hex>' AS
+  TEXT)`: the sqlite3 shell strips `\r` from scripts read line-wise, and
+  the copy contract is verbatim bytes (a `\r\n` prompt in Access equals
+  `\r\n` in the copy). `--tsql` keeps plain literals; Task 9 runs it.
+- The reimport fixture is fixed, not random: the first three Oswego
+  `GlobalRecordId`s (lexical) give 1 removed + 2 changed rows, three
+  fixed GUIDs (`a0000000-…-001`..`003`) are added, one `ReimportFlag`
+  column is added; `produced-ids.json` records which GUIDs were picked
+  and `expected-diff.json` (authored, verified identical to the run's
+  output) states the expected diff vocabulary.
+
+Files outside the Files block:
+- `fixtures/legacy/csv.mjs` — the `mdb-export` CSV reader (quoted NULL
+  vs empty string, embedded newlines) shared by the readers.
+- `fixtures/legacy/legacy-read.mjs` — the uniform table/schema/row
+  interface over `mdb-export`/`mdb-schema` (JET3/JET4) and `sqlite3
+  -json`.
+- `fixtures/legacy/legacy-values.mjs` — cell conversion, case-
+  insensitive lookup, check-code block counting, and
+  `unknownLayoutEntries` shared by both mappers.
+- `fixtures/legacy/ei7-project.mjs` — the EI7 mapper `golden.mjs`
+  orchestrates (kept separate to stay under the ~400-line cap).
+- `fixtures/legacy/ei7-grid.mjs` — the EI7 field-type tables and the
+  grid child-dataset builder, extracted from `ei7-project.mjs` (same
+  ~400-line cap).
+- `fixtures/legacy/ei3-project.mjs` — the EI3 mapper, same reason.
+- `fixtures/legacy/emit.mjs` — dataset.json v2 writing and the
+  canonical dataset hash mirroring `epiora-core`'s encoding.
+- `fixtures/legacy/golden.test.mjs` — the Step-1 unit tests
+  (`oswego_view_has_expected_columns`,
+  `code_table_becomes_label_set`).
+- `fixtures/legacy/compare-golden.mjs` — the cross-backend comparator
+  the workflow runs over every EI7 sample.
+- `fixtures/legacy/golden/reimport/SampleDB.db` and
+  `fixtures/legacy/golden/reimport/produced-ids.json` — workflow
+  outputs inside the Files block's `reimport/` tree, listed because
+  they are binary/generated.
+Supersedes: —

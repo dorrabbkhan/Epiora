@@ -1,0 +1,25 @@
+{
+  "name": "EpiChol",
+  "legacy_id": null,
+  "source_format": "ei3_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/Cholera/EpiChol.mdb",
+    "sha256": "37f2b1061b88249d627e56558dc4f3e99820c13d0605178c8e7714348eb15c57"
+  },
+  "views": [],
+  "links": [],
+  "programs": [],
+  "check_code": [],
+  "report": [
+    {
+      "kind": "legacy_layout_unknown",
+      "item": "EpiChol",
+      "reason": "no recognized view-definition tables"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "SURVEY",
+      "reason": "layout_unknown: plain data table"
+    }
+  ]
+}

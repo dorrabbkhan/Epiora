@@ -1,0 +1,38 @@
+{
+  "name": "JohnSnow",
+  "legacy_id": "EAD2B1F5-B650-CC2A-47D088C80DDF937C",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/JohnSnow/JohnSnow.mdb",
+    "sha256": "f1d887c2a246736127e8e6671c86b2de419afdefe8afe09e74481d9820bc7369"
+  },
+  "views": [
+    {
+      "name": "Survey",
+      "dataset": "Survey.dataset.json",
+      "records": 452,
+      "deleted_records": 0,
+      "hash": "28cbe96f6db759a2fdfe0ea53d5800fcd8d8c6b969fe3456c7420c4548523aaf"
+    }
+  ],
+  "links": [],
+  "programs": [],
+  "check_code": [],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "Survey/GetCoordinates",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey/ThereIs",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Survey/Invest",
+      "reason": "LabelTitle is form metadata"
+    }
+  ]
+}

@@ -1,0 +1,283 @@
+{
+  "name": "Legionellosis",
+  "legacy_id": "09D4D41C-5ED9-E178-040D90AED21D71CA",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/Legionellosis/Legionellosis.mdb",
+    "sha256": "3089aec5d5798494a0d4c5f58cc8df52d96c46cd687b289385e1c670894cd83d"
+  },
+  "views": [
+    {
+      "name": "CaseReport",
+      "dataset": "CaseReport.dataset.json",
+      "records": 40,
+      "deleted_records": 0,
+      "hash": "22b57c473f2d7f78d2a1060d0d62d6b400ada5b9a9ccd8fc6914e915dd8f541f"
+    }
+  ],
+  "links": [],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "CaseReport",
+      "blocks": 12
+    }
+  ],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LEGIONELLOSISTITLE",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/FORMSUBTITLE",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/PatientInformation",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Spacer",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/PossibleSourcesofExposure",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/INTHETWOWEEKSBEFOREONSETDIDPATIENT",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Ifyesgivecitiesandlogdgingwhereavailable",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/ContactCDC",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/FormbasedonCDC5256Rev022003",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Page1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LEGIONELLOSISCASEREPORT",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Spacer2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/FormbasedonCDC5256Rev0220031",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Page2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LEGIONELLOSISCASEREPORT1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/CaseDefinitionTitle",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/CaseBullet1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/isolationofLegionellaspeciesfromlungtissuerespiratorysecretionsp",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/CaseBullet2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/CaseBullet3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/CaseBullet4",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/demonstrationofLpneumophilaserogroup1inlungtissuerespiratorysecr",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/fourfoldorgreaterriseinimmunoflourescentantibodytitertoLpneumoph",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/detectionofLpneumophilaserogroup1antigeninurine",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/CaseDefinition",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/SmallSpacer1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/OtherInstructions",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/IfYesCulturePositive",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/IfYesDFAPositive",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/IfYesAntibodyTiter",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/IfYesAntigenPositive",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/ListSpeciesandSerogroupinassayused",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/PLEASECHECKALLMETHODSOFDIAGNOSISWHICHAPPLY",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/MethodOfDiagnosis",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LEGIONELLOSISTITLE2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/FORMSUBTITLE2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/ClinicalIllness",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Spacer3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/FormbasedonCDC5256Rev0220032",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Page3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LEGIONELLOSISCASEREPORT2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/InterviewerIdentification",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LocalHealthDeptPleasesubmitthisdocumentto",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/StateDHDSSSviayourCDreportingclerk",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/StateHealthDeptReturncompletedformto",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/CDCAddress",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/CDCUseOnly",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LEGIONELLOSISTITLE3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/FORMSUBTITLE3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codephvs_occupation_cdc",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codetravelorovernight",
+      "reason": "unreferenced code table"
+    }
+  ]
+}

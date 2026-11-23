@@ -1,0 +1,4076 @@
+{
+  "id": "CaseReport",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        37,
+        9,
+        14,
+        7,
+        36,
+        35,
+        32,
+        23,
+        8,
+        24,
+        6,
+        27,
+        33,
+        2,
+        29,
+        12,
+        16,
+        19,
+        22,
+        18,
+        25,
+        10,
+        26,
+        30,
+        5,
+        21,
+        1,
+        3,
+        34,
+        40,
+        38,
+        15,
+        39,
+        20,
+        28,
+        11,
+        4,
+        31,
+        17,
+        13
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RecStatus",
+      "type": "integer",
+      "values": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [
+        "0c411413-9a10-4617-aa3e-bb243ac74124",
+        "1330b00c-2a8a-4b3d-a2d6-5758bbc7d5a2",
+        "18d8d90d-ec7f-4ea5-b8f5-d487142657ab",
+        "38595066-8aee-43bd-8cc3-1fce8153189f",
+        "3ac308a8-cbc2-4d7b-ad7f-399c6431b585",
+        "41f45750-1027-4f2a-a330-09ae971e6927",
+        "4219c591-773e-4442-a34e-58c74c5b0164",
+        "49c0a49b-70c9-468e-998b-46b567ae3fb5",
+        "56934731-f00e-4db6-9195-019eac8008d6",
+        "57b942b7-5f9b-48ea-bc44-17d462e2f48e",
+        "61f76f43-bc32-4f78-8c6f-0e8d73ac1808",
+        "68117910-ae98-47da-a752-c1f8e9407247",
+        "6868af59-16a2-45a4-aa9c-5077067455f3",
+        "6e7a27b5-9173-4fb8-8851-38b43778dd70",
+        "70cd7ba8-1cb1-4473-ab25-be9da85d1b17",
+        "753dba5b-87b8-4d2f-81e6-fad4f037f863",
+        "76018615-161f-49eb-9fdc-4d71fcd4cb41",
+        "8ab9bcf7-4d3d-4730-b074-9cdb422e3048",
+        "8dc98c89-af69-43c8-9145-b59771c8bfcd",
+        "8dd98277-3ae1-48f2-b7a3-fad56d1f6c73",
+        "94590c92-52a3-48cc-ab18-649a26eb7017",
+        "9e2608d2-ef6c-4ae2-aaae-001c85d4389b",
+        "a49a1260-91b8-4463-9581-45e796670cae",
+        "aa7949ff-a6d6-4389-99cf-d1fdefe286d2",
+        "aaef2cf2-0937-41ce-9895-1451da62fa6e",
+        "ab9f24a3-e8e6-4531-be73-107d32a9faa7",
+        "b71a9aa2-1475-4044-99b3-7effb7d5e02b",
+        "b94d6275-bd3d-4d17-9b59-475db9b0f8a0",
+        "baffe23a-5a4d-4798-a72b-50a8c48cfb2c",
+        "cb91dd38-f463-4aa5-a59d-cf01e261dce1",
+        "cf8ce3fd-859c-4fcb-b89a-5b66639a31b4",
+        "d62ba5ac-fe9d-4022-8f8e-6da98f732aae",
+        "dc6f2876-bcf3-4570-8605-a62825b875df",
+        "e1556215-c292-49b2-a055-f122235fa91f",
+        "e205cf88-79ae-4b7f-88e6-e903fcd46a12",
+        "ea1a7767-9b7e-40f4-982a-3edbb2117605",
+        "ee3cabd2-d9e8-4b7e-82d0-a086cc395764",
+        "efdd921d-d998-4e98-94e8-fa4d17fedb01",
+        "f880d8b2-4661-4ecd-aa47-9e78b909cf05",
+        "fc42026a-d09f-40db-b1e2-30e743929e7d"
+      ],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "StateCaseID",
+      "type": "text",
+      "values": [
+        "MVNBC019845",
+        "QPLXC476802",
+        "QPLXF560237",
+        "LMVBY556820",
+        "GFTZL736514",
+        "OINBE952454",
+        "LKMQX09184",
+        "POTLY471289",
+        "QPTNB000120",
+        "YUIKJ783285",
+        "PQOUG457862",
+        "CDFEY011222",
+        "KKJHZ093451",
+        "PAZXD945511",
+        "VBNCE871230",
+        "QPLYN024570",
+        "QPBVN758932",
+        "QPLCV471239",
+        "QPERT540271",
+        "ADFYN558963",
+        "KJLOI721446",
+        "ZXLVQ785960",
+        "BNERY897621",
+        "HJLKM199544",
+        "QPDHY798532",
+        "QPLOU823655",
+        "XLWSD052910",
+        "BQPLD187611",
+        "ZXCLP865031",
+        "FFGQP934517",
+        "SWDPM876789",
+        "QQDSZ745021",
+        "DFZLP812317",
+        "QZSDP756128",
+        "POIYH109283",
+        "QPOIU751238",
+        "QPOLX751246",
+        "WAXZC77609",
+        "QWTYU771475",
+        "QPOTX745809"
+      ],
+      "meta": {
+        "prompt": "State Health Dept. Case No.",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ReportingState",
+      "type": "text",
+      "values": [
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA"
+      ],
+      "meta": {
+        "prompt": "Reporting State",
+        "legacy_type": "CommentLegal",
+        "label_set": "codereportingstate"
+      }
+    },
+    {
+      "name": "CaseNumber",
+      "type": "text",
+      "values": [
+        "2046971",
+        "1674829",
+        "6998820",
+        "6650976",
+        "6001497",
+        "7811456",
+        "3012748",
+        "0230014",
+        "7851987",
+        "9812547",
+        "5542091",
+        "5822146",
+        "7980142",
+        "8576621",
+        "6378412",
+        "1210036",
+        "2214698",
+        "7892110",
+        "0026778",
+        "5412660",
+        "6570147",
+        "4681237",
+        "6996365",
+        "4798135",
+        "4310923",
+        "5559850",
+        "5019203",
+        "0981903",
+        "3333254",
+        "4068465",
+        "6399801",
+        "6478500",
+        "6014702",
+        "4789985",
+        "9874563",
+        "4658297",
+        "6675319",
+        "8012007",
+        "3314597",
+        "4802674"
+      ],
+      "meta": {
+        "prompt": "Case Number (CDC Use Only)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "County",
+      "type": "text",
+      "values": [
+        "Fayette",
+        "DeKalb",
+        "DeKalb",
+        "Fulton",
+        "Rockdale",
+        "Douglas",
+        "Cherokee",
+        "Fulton",
+        "Fulton",
+        "Fulton",
+        "Fulton",
+        "Fulton",
+        "Cherokee",
+        "Fulton",
+        "Fulton",
+        "DeKalb",
+        "Cobb",
+        "Cobb",
+        "Gwinnett",
+        "Cobb",
+        "Fulton",
+        "DeKalb",
+        "Fulton",
+        "Butts",
+        "Fulton",
+        "Gwinnett",
+        "Fulton",
+        "Fulton",
+        "Paulding",
+        "Fulton",
+        "Fulton",
+        "Cobb",
+        "Heard",
+        "Gwinnett",
+        "Bartow",
+        "DeKalb",
+        "Fulton",
+        "Fulton",
+        "Cobb",
+        "DeKalb"
+      ],
+      "meta": {
+        "prompt": "County of Residence",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "State",
+      "type": "text",
+      "values": [
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA",
+        "GA"
+      ],
+      "meta": {
+        "prompt": "State of Residence",
+        "legacy_type": "CommentLegal",
+        "label_set": "codereportingstate"
+      }
+    },
+    {
+      "name": "Occupation",
+      "type": "text",
+      "values": [
+        null,
+        "Dog Trainer",
+        "Student",
+        "Lawn Care Technician",
+        "Journalist",
+        "Unemployed",
+        "Fireman",
+        "Accountant",
+        "Clerk",
+        "Unemployed",
+        "Painter",
+        "Student",
+        "Sales",
+        "Pilot",
+        "Dry Cleaner",
+        "Retired",
+        "Journalist",
+        "Computer Scientist",
+        "U.S. Army",
+        "Unemployed",
+        "Accountant",
+        "Business Owner",
+        null,
+        "Clerk",
+        "Factory Worker",
+        "IT Specialist",
+        "Metal Worker",
+        "Janitor",
+        "Unemployed",
+        "Nurse",
+        "Student",
+        "Public Health Advisor",
+        "Teacher",
+        "Student",
+        "Computer Scientist",
+        "Unemployed",
+        "Lawyer",
+        "Chef",
+        "Professor",
+        "Police Officer"
+      ],
+      "meta": {
+        "prompt": "Occupation",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DOB",
+      "type": "date",
+      "values": [
+        "1942-01-01",
+        "1983-01-01",
+        "2000-01-01",
+        "1981-01-01",
+        "1972-01-01",
+        "1971-01-01",
+        "1959-01-01",
+        "1984-01-01",
+        "1982-01-01",
+        "1989-01-01",
+        "1980-01-01",
+        "1995-01-01",
+        "1960-01-01",
+        "1990-01-01",
+        "1987-01-01",
+        "1970-01-01",
+        "1941-01-01",
+        "1950-01-01",
+        "1985-01-01",
+        "1946-01-01",
+        "1985-01-01",
+        "1983-01-01",
+        "1975-01-01",
+        "1988-01-01",
+        "1992-01-01",
+        "1984-01-01",
+        "1990-01-01",
+        "1991-01-01",
+        "1970-01-01",
+        "1967-01-01",
+        "1999-01-01",
+        "1940-01-01",
+        "1968-01-01",
+        "1983-01-01",
+        "1986-01-01",
+        "1983-01-01",
+        "1991-01-01",
+        "1958-01-01",
+        "1945-01-01",
+        "1965-01-01"
+      ],
+      "meta": {
+        "prompt": "Date of Birth",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Age",
+      "type": "integer",
+      "values": [
+        69,
+        28,
+        11,
+        30,
+        39,
+        40,
+        52,
+        27,
+        29,
+        22,
+        31,
+        16,
+        51,
+        21,
+        24,
+        41,
+        70,
+        61,
+        26,
+        65,
+        26,
+        28,
+        36,
+        23,
+        19,
+        27,
+        21,
+        20,
+        41,
+        44,
+        12,
+        71,
+        43,
+        28,
+        25,
+        28,
+        20,
+        53,
+        66,
+        46
+      ],
+      "meta": {
+        "prompt": "Age",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AgeType",
+      "type": "text",
+      "values": [
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "3"
+      ],
+      "meta": {
+        "prompt": "Age Type",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeagetype"
+      }
+    },
+    {
+      "name": "Sex",
+      "type": "text",
+      "values": [
+        "1",
+        "2",
+        "1",
+        "1",
+        "1",
+        "2",
+        "1",
+        "1",
+        "2",
+        "2",
+        "1",
+        "1",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "1",
+        "1",
+        "2",
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "1",
+        "1",
+        "2",
+        "2",
+        "1",
+        "2",
+        "2",
+        "2",
+        "2",
+        "1",
+        "2",
+        "2",
+        "1",
+        "2"
+      ],
+      "meta": {
+        "prompt": "Sex",
+        "legacy_type": "CommentLegal",
+        "label_set": "codesex"
+      }
+    },
+    {
+      "name": "Ethnicity",
+      "type": "text",
+      "values": [
+        "1",
+        "1",
+        "2",
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "2",
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "1",
+        "1"
+      ],
+      "meta": {
+        "prompt": "Ethnicity",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeethnicity"
+      }
+    },
+    {
+      "name": "Race",
+      "type": "text",
+      "values": [
+        "3",
+        "5",
+        "5",
+        "1",
+        "2",
+        "1",
+        "5",
+        "5",
+        "5",
+        "3",
+        "3",
+        "2",
+        "5",
+        "5",
+        "5",
+        "5",
+        "5",
+        "3",
+        "4",
+        "1",
+        "2",
+        "5",
+        "1",
+        "5",
+        "4",
+        "3",
+        "5",
+        "1",
+        "5",
+        "5",
+        "5",
+        "5",
+        "5",
+        "2",
+        "5",
+        "5",
+        "2",
+        "5",
+        "5",
+        "5"
+      ],
+      "meta": {
+        "prompt": "Race",
+        "legacy_type": "CommentLegal",
+        "label_set": "coderace"
+      }
+    },
+    {
+      "name": "TravelStayOvernight",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        null,
+        "1",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        "2",
+        "2",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "1",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Travel or stay overnight somewhere other than usual residence?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "City1",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "Atlanta, GA",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "Marietta, GA",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "City:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Lodging1",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "Acme Hotels",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "Acme Hotels",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Lodging:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "City2",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "City:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Lodging2",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Lodging:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "City3",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "City:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Lodging3",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Lodging:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DentalWork",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        null,
+        "1",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        "1",
+        "2",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "1",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Have dental work?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "Outpatient",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        null,
+        "2",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        "2",
+        "2",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Visit a hospital as an outpatient?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "WorkInHospital",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        null,
+        "2",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        "2",
+        "2",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Work in a hospital?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "DentalOffice",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "Acme Dental Company",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "Acme Dental Company",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "If Yes, name of dental office:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HospitalNameOutpatient",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "If Yes, name of hospital:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HospitalNameWork",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "If Yes, name of hospital:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HospitalRelated",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Was case hospital related (nosocomial)?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codehospitalrelated"
+      }
+    },
+    {
+      "name": "CaseHospitalRelatedOther",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Other (specify)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "InfectionType",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Was this patient’s legionella infection:",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeinfectiontype"
+      }
+    },
+    {
+      "name": "Location",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Specify location",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CulturePositive",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "meta": {
+        "prompt": "Culture Positive",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "DFAPositive",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "meta": {
+        "prompt": "DFA Positive",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "AntibodyTiter",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "meta": {
+        "prompt": "Fourfold rise in antibody titer:",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "UrineAntigenPositive",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "meta": {
+        "prompt": "Urine Antigen Positive",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CulturePositiveDate",
+      "type": "date",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DFAPositiveDate",
+      "type": "date",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "AntigenPositiveDate",
+      "type": "date",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CultureSerogroup",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Serogroup",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CultureSpecies",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Species",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DFASerogroup",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Serogroup",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DFASpecies",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Species",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "InitialTiter",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Initial (acute) titer 1:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ConvalescentTiter",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Convalescent titer 1:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "InitialTiterDate",
+      "type": "date",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ConvalescentTiterDate",
+      "type": "date",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "InitialTiterSerogroup",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Serogroup",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ConvalescentTiterSerogroup",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Serogroup",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "InitialTiterSpecies",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Species",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ConvalescentSpecies",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Species",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CultureSite",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Site",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeculturesite"
+      }
+    },
+    {
+      "name": "DFASite",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Site",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeculturesite"
+      }
+    },
+    {
+      "name": "Diagnosis",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Diagnosis",
+        "legacy_type": "CommentLegal",
+        "label_set": "codediagnosis"
+      }
+    },
+    {
+      "name": "DateOnset",
+      "type": "date",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Date of symptom onset",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Hospitalized",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Was patient hospitalized for Legionellosis?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "HospitalName",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Hospital Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HospitalAddress",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Hospital Address",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CaseOutcome",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Outcome of Illness",
+        "legacy_type": "CommentLegal",
+        "label_set": "codecaseoutcome"
+      }
+    },
+    {
+      "name": "InterviewerName",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Interviewer Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Affiliation",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Affiliation",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PhoneNumber",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Phone Number",
+        "legacy_type": "PhoneNumber"
+      }
+    },
+    {
+      "name": "DateOfInterview",
+      "type": "date",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Date of Interview",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CDCAnswer",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Select the appropriate answer",
+        "legacy_type": "CommentLegal",
+        "label_set": "codecdcanswer"
+      }
+    },
+    {
+      "name": "CDCSerogroup",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Serogroup",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Comments",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Comments",
+        "legacy_type": "Multiline"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codereportingstate",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "AL- Alabama"
+          },
+          "AL- Alabama"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AK- Alaska"
+          },
+          "AK- Alaska"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AZ- Arizona"
+          },
+          "AZ- Arizona"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AR- Arkansas"
+          },
+          "AR- Arkansas"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CA- California"
+          },
+          "CA- California"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CO- Colorado"
+          },
+          "CO- Colorado"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CT- Connecticut"
+          },
+          "CT- Connecticut"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DE- Delaware"
+          },
+          "DE- Delaware"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DC- District of Columbia"
+          },
+          "DC- District of Columbia"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FL- Florida"
+          },
+          "FL- Florida"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GA- Georgia"
+          },
+          "GA- Georgia"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HI- Hawaii"
+          },
+          "HI- Hawaii"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ID- Idaho"
+          },
+          "ID- Idaho"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IL- Illinois"
+          },
+          "IL- Illinois"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IN- Indiana"
+          },
+          "IN- Indiana"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IA- Iowa"
+          },
+          "IA- Iowa"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KS- Kansas"
+          },
+          "KS- Kansas"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KY- Kentucky"
+          },
+          "KY- Kentucky"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LA- Lousiana"
+          },
+          "LA- Lousiana"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ME- Maine"
+          },
+          "ME- Maine"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MD- Maryland"
+          },
+          "MD- Maryland"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MA- Massachusetts"
+          },
+          "MA- Massachusetts"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MI- Michigan"
+          },
+          "MI- Michigan"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MN- Minnesota"
+          },
+          "MN- Minnesota"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MS- Mississippi"
+          },
+          "MS- Mississippi"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MO- Missouri"
+          },
+          "MO- Missouri"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MT- Montana"
+          },
+          "MT- Montana"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NE- Nebraska"
+          },
+          "NE- Nebraska"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NV- Nevada"
+          },
+          "NV- Nevada"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NH- New Hampshire"
+          },
+          "NH- New Hampshire"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NJ- New Jersey"
+          },
+          "NJ- New Jersey"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NM- New Mexico"
+          },
+          "NM- New Mexico"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NY- New York"
+          },
+          "NY- New York"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NC- North Carolina"
+          },
+          "NC- North Carolina"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ND- North Dakota"
+          },
+          "ND- North Dakota"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OH- Ohio"
+          },
+          "OH- Ohio"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OK- Oklahoma"
+          },
+          "OK- Oklahoma"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OR- Oregon"
+          },
+          "OR- Oregon"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PA- Pennsylvania"
+          },
+          "PA- Pennsylvania"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "RI- Rhode Island"
+          },
+          "RI- Rhode Island"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SC- South Carolina"
+          },
+          "SC- South Carolina"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SD- South Dakota"
+          },
+          "SD- South Dakota"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TN- Tennessee"
+          },
+          "TN- Tennessee"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TX- Texas"
+          },
+          "TX- Texas"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UT- Utah"
+          },
+          "UT- Utah"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VT- Vermont"
+          },
+          "VT- Vermont"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VA- Virginia"
+          },
+          "VA- Virginia"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WA- Washington"
+          },
+          "WA- Washington"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WV- West Virginia"
+          },
+          "WV- West Virginia"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WI- Wisconsin"
+          },
+          "WI- Wisconsin"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WY- Wyoming"
+          },
+          "WY- Wyoming"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AS- American Samoa"
+          },
+          "AS- American Samoa"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GU- Guam"
+          },
+          "GU- Guam"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MP- Northern Mariana Islands"
+          },
+          "MP- Northern Mariana Islands"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PR- Puerto Rico"
+          },
+          "PR- Puerto Rico"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VI- Virgin Islands"
+          },
+          "VI- Virgin Islands"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UM- U.S. Minor Outlying Islands"
+          },
+          "UM- U.S. Minor Outlying Islands"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FM- Federated States of Micronesia"
+          },
+          "FM- Federated States of Micronesia"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MH- Marshall Islands"
+          },
+          "MH- Marshall Islands"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PW- Palau"
+          },
+          "PW- Palau"
+        ]
+      ]
+    },
+    {
+      "id": "codeagetype",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Days"
+          },
+          "1- Days"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Months"
+          },
+          "2- Months"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Years"
+          },
+          "3- Years"
+        ]
+      ]
+    },
+    {
+      "id": "codesex",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Male"
+          },
+          "1- Male"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Female"
+          },
+          "2- Female"
+        ]
+      ]
+    },
+    {
+      "id": "codeethnicity",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Hispanic/Latino"
+          },
+          "1- Hispanic/Latino"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Not Hispanic/Latino"
+          },
+          "2- Not Hispanic/Latino"
+        ]
+      ]
+    },
+    {
+      "id": "coderace",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- American Indian/Alaska Native"
+          },
+          "1- American Indian/Alaska Native"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Asian"
+          },
+          "2- Asian"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Black or African American"
+          },
+          "3- Black or African American"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Native Hawaiian or Other Pacific Islander"
+          },
+          "4- Native Hawaiian or Other Pacific Islander"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- White"
+          },
+          "5- White"
+        ]
+      ]
+    },
+    {
+      "id": "codeYesNo",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Yes"
+          },
+          "1- Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- No"
+          },
+          "2- No"
+        ]
+      ]
+    },
+    {
+      "id": "codehospitalrelated",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Definitely nosocomial"
+          },
+          "1- Definitely nosocomial"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Not nosocomial"
+          },
+          "2- Not nosocomial"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Possibly nosocomial"
+          },
+          "3- Possibly nosocomial"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8- Other (specify)"
+          },
+          "8- Other (specify)"
+        ]
+      ]
+    },
+    {
+      "id": "codeinfectiontype",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Associated with outbreak"
+          },
+          "1- Associated with outbreak"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Sporadic case"
+          },
+          "2- Sporadic case"
+        ]
+      ]
+    },
+    {
+      "id": "codeculturesite",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Lung biopsy"
+          },
+          "1- Lung biopsy"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Respiratory secretions"
+          },
+          "2- Respiratory secretions"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Pleural fluid"
+          },
+          "3- Pleural fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Blood"
+          },
+          "4- Blood"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8- Other"
+          },
+          "8- Other"
+        ]
+      ]
+    },
+    {
+      "id": "codediagnosis",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Legionnaires Disease (Pneumonia, X-ray diagnosed)"
+          },
+          "1- Legionnaires Disease (Pneumonia, X-ray diagnosed)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Pontiac fever (fever, myalgia without pneumonia)"
+          },
+          "2- Pontiac fever (fever, myalgia without pneumonia)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8- Other"
+          },
+          "8- Other"
+        ]
+      ]
+    },
+    {
+      "id": "codecaseoutcome",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Survived"
+          },
+          "1- Survived"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Died"
+          },
+          "2- Died"
+        ]
+      ]
+    },
+    {
+      "id": "codecdcanswer",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- L. pneumophila"
+          },
+          "1- L. pneumophila"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- L. bozemanii"
+          },
+          "2- L. bozemanii"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- L. dumoffii"
+          },
+          "3- L. dumoffii"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- L. gormanii"
+          },
+          "4- L. gormanii"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- L. micdadei"
+          },
+          "5- L. micdadei"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- L. feeleii"
+          },
+          "6- L. feeleii"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7- L. Iongbeachae"
+          },
+          "7- L. Iongbeachae"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8- Mixed: (specify)"
+          },
+          "8- Mixed: (specify)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "88- Other: (specify)"
+          },
+          "88- Other: (specify)"
+        ]
+      ]
+    }
+  ]
+}

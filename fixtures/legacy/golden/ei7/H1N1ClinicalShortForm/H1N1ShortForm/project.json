@@ -1,0 +1,537 @@
+{
+  "name": "H1N1ShortForm",
+  "legacy_id": "C1A370BF-5C16-85C7-78BA2ADEEA7460F7",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/H1N1ClinicalShortForm/H1N1ShortForm.mdb",
+    "sha256": "136237de74da46fa55f4f5e92306c1bc955fbfe58eaca04ddabf0a8098d62275"
+  },
+  "views": [
+    {
+      "name": "CaseReport",
+      "dataset": "CaseReport.dataset.json",
+      "records": 1,
+      "deleted_records": 0,
+      "hash": "e257d11c1f933e2d0dfebb874b531f86996bd7bdf8ec7b31677abc604b5f4398"
+    },
+    {
+      "name": "Household",
+      "dataset": "Household.dataset.json",
+      "records": 1,
+      "deleted_records": 0,
+      "hash": "8ab139d780542a039554274843a4be4b8f9d7ae35c9a429c2d7cf4ae92916a1f"
+    },
+    {
+      "name": "Laboratory",
+      "dataset": "Laboratory.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "bcfcc3596acce7a18756e3dfa0a14a3a07aa60d4f3fb9ef8ced3c7af404b52da"
+    }
+  ],
+  "links": [
+    {
+      "parent": "CaseReport",
+      "child": "Household",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "CaseReport",
+      "child": "Laboratory",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "CaseReport",
+      "child": "Household",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "CaseReport",
+      "child": "Laboratory",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "CaseReport",
+      "child": "Laboratory",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "CaseReport",
+      "child": "Household",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "CaseReport",
+      "child": "Household",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "CaseReport",
+      "child": "Laboratory",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    }
+  ],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "CaseReport",
+      "blocks": 57
+    },
+    {
+      "view": "Household",
+      "blocks": 81
+    },
+    {
+      "view": "Laboratory",
+      "blocks": 5
+    }
+  ],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Reportedby",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblPandemicTitle",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/RepName",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/RepCase",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/WwwSwineFlue",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Patientdemographicdata",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Cmd1Page2",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Cmd1Page3",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Cmd1Page4",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Clinicaldata",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Medicalhistory",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblSymptom",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblYNU1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblDied",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblYNU2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblYNU3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Cmd2Page3",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Cmd2Page4",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Cmd2Page1",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/MedicalHistorycontinuation",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblUnderlying",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblYNU4",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Cmd3Page4",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Cmd3Page1",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Cmd3Page2",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Treatment",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/EpidemiologicRiskFactors",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblYNU5",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblTreatment",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblDosages",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblDrug",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblInitiated",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblDatediscontinued",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblRisk1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/LblYesEmployment",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Cmd4Page1",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Cmd4Page2",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "CaseReport/Cmd4Page4",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "CaseReport/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "CaseReport/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "CaseReport/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "CaseReport/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/HouseholdTransmissionAhousehold",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblOnset",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblOnsetDate",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblSoreThroat",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblAgeyears",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblNosymptoms",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblMaxTemp",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblRunnyNose",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/PersonNo",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblCode",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblFeverish",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblDiarrhea",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblCough",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/Relationship1_spouse2_mother3_father",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/N_brother7_cousin8_aunt9_uncle10_grandmother",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblContactTracing",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Household/LblCaseDefinition",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Household/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Household/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Household/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Household/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Laboratory/DiagnosticLaboratoryfinding",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Laboratory/GeneralTest",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Laboratory/LblTest",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Laboratory/Abnormal",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Laboratory/LblYNU1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Laboratory/LblYNU2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Laboratory/Influenzatesting",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Laboratory/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Laboratory/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Laboratory/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Laboratory/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeclihospital",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codecliintensive",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codecliventilation",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codectscanresult",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codefluvax",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeisthispersonpregnant",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codephvs_county_fips_6_4",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codephvs_state_fips_5_2",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codepneumonia",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "coderespiratory",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "coderiskhealthfacility",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codetest2results",
+      "reason": "unreferenced code table"
+    }
+  ]
+}

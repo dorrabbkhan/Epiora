@@ -1,0 +1,788 @@
+{
+  "id": "RMeningitis",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [
+        "2383b93f-432c-4979-8071-074bdf33918e",
+        "4c7c571a-195f-4e3a-915e-90da62b2fd0f",
+        "c5c80241-3d48-4552-acaf-71bb60b8add8",
+        "5f9b1e05-012c-447f-b814-588449198c8a",
+        "0779060d-a070-4c84-a795-fdf42d8654e1"
+      ],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [
+        "294e4762-8f38-472c-b293-c3c0b7b81623",
+        "c18bfea3-6546-450d-89cd-5fcde54b025a",
+        "f366edb1-77be-4681-833c-bd0d69ea555a",
+        "c3b017fc-aafd-43e3-8615-c04487416dfa",
+        "57208aab-9605-4b61-a0e1-485fdf78a841"
+      ],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "CaseID",
+      "type": "text",
+      "values": [
+        "300",
+        "500",
+        "1100",
+        "1400",
+        "2000"
+      ],
+      "meta": {
+        "prompt": "Case ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LastName",
+      "type": "text",
+      "values": [
+        "Smythe",
+        "Adams",
+        "Vickar",
+        "Guttierez",
+        "Moroney"
+      ],
+      "meta": {
+        "prompt": "Last Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FirstName",
+      "type": "text",
+      "values": [
+        "Frances",
+        "Henry",
+        "Barrimore",
+        "John",
+        "Carly"
+      ],
+      "meta": {
+        "prompt": "First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DayCare",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        true,
+        false,
+        true
+      ],
+      "meta": {
+        "prompt": "Day care:",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Outcome",
+      "type": "text",
+      "values": [
+        "Survived",
+        "Died",
+        "Survived",
+        "Unknown",
+        null
+      ],
+      "meta": {
+        "prompt": "Outcome:",
+        "legacy_type": "LegalValues",
+        "label_set": "codeOutcome"
+      }
+    },
+    {
+      "name": "BacterialSpecies",
+      "type": "text",
+      "values": [
+        "02",
+        "04",
+        "12",
+        null,
+        "07"
+      ],
+      "meta": {
+        "prompt": "Bacterial species isolate:",
+        "legacy_type": "CommentLegal",
+        "label_set": "codebacterialspecies2"
+      }
+    },
+    {
+      "name": "OtherBacterial",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Other bacterial species:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DateFirstCulture",
+      "type": "date",
+      "values": [
+        "2007-02-09",
+        "2011-10-15",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Date of first positive culture:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Pregnant",
+      "type": "boolean",
+      "values": [
+        true,
+        null,
+        null,
+        null,
+        true
+      ],
+      "meta": {
+        "prompt": "Was patient pregnant?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "GestationalAge",
+      "type": "integer",
+      "values": [
+        2,
+        null,
+        null,
+        null,
+        8
+      ],
+      "meta": {
+        "prompt": "Gestational age:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "FetalOutcome",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        "Survived"
+      ],
+      "meta": {
+        "prompt": "Fetal outcome:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Specimen1",
+      "type": "text",
+      "values": [
+        "01",
+        "01",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Specimen (1):",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeSpecimen1"
+      }
+    },
+    {
+      "name": "Infection1",
+      "type": "text",
+      "values": [
+        "02",
+        "13",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Infection (1)",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeInfection1"
+      }
+    },
+    {
+      "name": "Specimen2",
+      "type": "text",
+      "values": [
+        "02",
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Specimen (2):",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeSpecimen1"
+      }
+    },
+    {
+      "name": "Infection2",
+      "type": "text",
+      "values": [
+        "02",
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Infection (2)",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeInfection1"
+      }
+    },
+    {
+      "name": "Specimen3",
+      "type": "text",
+      "values": [
+        "03",
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Specimen (3):",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeSpecimen1"
+      }
+    },
+    {
+      "name": "Infection3",
+      "type": "text",
+      "values": [
+        "03",
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Infection (3)",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeInfection1"
+      }
+    },
+    {
+      "name": "Sergroup",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Serogroup:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Sulfa",
+      "type": "boolean",
+      "values": [
+        true,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Was there resistance to Sulfa?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Rifampin",
+      "type": "boolean",
+      "values": [
+        false,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Was there resistance to Rifampin?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "SeroType",
+      "type": "text",
+      "values": [
+        "01",
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Sero type:",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeSeroType"
+      }
+    },
+    {
+      "name": "OtherSerotype",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Other serotype:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Amp",
+      "type": "boolean",
+      "values": [
+        false,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Was there resistance to Ampicillin?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "WasThereResistanceToChoramphenico",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Was there resistance to Choramphenico?",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "WasThereResistanceToRifamp",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Was there resistance to Rifamp?",
+        "legacy_type": "Text"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeOutcome",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Survived"
+          },
+          "Survived"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Died"
+          },
+          "Died"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codebacterialspecies2",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "01-Neisseria meningitidis"
+          },
+          "01-Neisseria meningitidis"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "02-Haemophilus influenzae"
+          },
+          "02-Haemophilus influenzae"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "03-Group B streptococcus"
+          },
+          "03-Group B streptococcus"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "04-Listeria monocytogenes"
+          },
+          "04-Listeria monocytogenes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "05-Streptococcus pneumoniae"
+          },
+          "05-Streptococcus pneumoniae"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "06-Escherichia coli"
+          },
+          "06-Escherichia coli"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "07-Staphylococcus aureus"
+          },
+          "07-Staphylococcus aureus"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "08-Staphylococcus epidermidis"
+          },
+          "08-Staphylococcus epidermidis"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "09-Klebsiella spp."
+          },
+          "09-Klebsiella spp."
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10-Enterobacter spp."
+          },
+          "10-Enterobacter spp."
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11-Serratia spp."
+          },
+          "11-Serratia spp."
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12-Actinobacter spp."
+          },
+          "12-Actinobacter spp."
+        ],
+        [
+          {
+            "type": "text",
+            "value": "13-Group A streptococcus"
+          },
+          "13-Group A streptococcus"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "14-Group D streptococcus"
+          },
+          "14-Group D streptococcus"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "15-Other streptococcus"
+          },
+          "15-Other streptococcus"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "16-Other"
+          },
+          "16-Other"
+        ]
+      ]
+    },
+    {
+      "id": "codeSpecimen1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "01-Blood"
+          },
+          "01-Blood"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "02-CSF"
+          },
+          "02-CSF"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "03-Pleural fluid"
+          },
+          "03-Pleural fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "04-Peritoneal fluid"
+          },
+          "04-Peritoneal fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "05-Pericardial fluid"
+          },
+          "05-Pericardial fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "06-Joint"
+          },
+          "06-Joint"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "07-Placenta"
+          },
+          "07-Placenta"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "08-Amniotic fluid"
+          },
+          "08-Amniotic fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "09-Other"
+          },
+          "09-Other"
+        ]
+      ]
+    },
+    {
+      "id": "codeInfection1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "01-Primary bacteremia"
+          },
+          "01-Primary bacteremia"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "02-Meningitis"
+          },
+          "02-Meningitis"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "03-Otitis media"
+          },
+          "03-Otitis media"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "04-Pneumonia"
+          },
+          "04-Pneumonia"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "05-Cellulitis"
+          },
+          "05-Cellulitis"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "06-Epiglottitis"
+          },
+          "06-Epiglottitis"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "07-Peritonitis"
+          },
+          "07-Peritonitis"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "08-Pericarditis"
+          },
+          "08-Pericarditis"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "09-Septic abortion"
+          },
+          "09-Septic abortion"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10-Amnionitis"
+          },
+          "10-Amnionitis"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11-Septic arthritis"
+          },
+          "11-Septic arthritis"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12-Conjunctivitis"
+          },
+          "12-Conjunctivitis"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "13-Other"
+          },
+          "13-Other"
+        ]
+      ]
+    },
+    {
+      "id": "codeSeroType",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "01-Type B"
+          },
+          "01-Type B"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "02-Not typable"
+          },
+          "02-Not typable"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "08-Other type"
+          },
+          "08-Other type"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "09-Not tested or unknown"
+          },
+          "09-Not tested or unknown"
+        ]
+      ]
+    }
+  ]
+}

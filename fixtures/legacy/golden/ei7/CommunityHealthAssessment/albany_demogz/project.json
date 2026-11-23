@@ -1,0 +1,30 @@
+{
+  "name": "albany_demogz",
+  "legacy_id": null,
+  "source_format": "ei3_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/CommunityHealthAssessment/albany_demogz.mdb",
+    "sha256": "fa95c2aebd49153da550b111fc9aaf76a29f3f6b5693d689d6376cc0063188f5"
+  },
+  "views": [],
+  "links": [],
+  "programs": [],
+  "check_code": [],
+  "report": [
+    {
+      "kind": "legacy_layout_unknown",
+      "item": "albany_demogz",
+      "reason": "no recognized view-definition tables"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "INCOME",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "RACEETHNICITY",
+      "reason": "layout_unknown: plain data table"
+    }
+  ]
+}

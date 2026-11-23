@@ -1,0 +1,40 @@
+{
+  "name": "Steps_EpiInfo",
+  "legacy_id": null,
+  "source_format": "ei3_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/STEPS/Steps_EpiInfo.mdb",
+    "sha256": "6a9f0ed7abd65d3cbeea09bd3c05850762ca3081b534a7f6faa4033c4d540368"
+  },
+  "views": [],
+  "links": [],
+  "programs": [],
+  "check_code": [],
+  "report": [
+    {
+      "kind": "legacy_layout_unknown",
+      "item": "Steps_EpiInfo",
+      "reason": "no recognized view-definition tables"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "JOSE",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "MasterDataSet",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "Programs",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "temp",
+      "reason": "layout_unknown: plain data table"
+    }
+  ]
+}

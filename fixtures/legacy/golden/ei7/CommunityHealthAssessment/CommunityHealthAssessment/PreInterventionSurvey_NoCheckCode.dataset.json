@@ -1,0 +1,1013 @@
+{
+  "id": "PreInterventionSurvey_NoCheckCode",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "ChildFirst",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Child's First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ChildLast",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Child's Last Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DOB",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Child's Date of Birth",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Age",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Age",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Sex",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Sex",
+        "legacy_type": "LegalValues",
+        "label_set": "codesex2"
+      }
+    },
+    {
+      "name": "ChildStreet",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Street",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ChildCity",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "City",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ChildZip",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Zip Code",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Ethnicitygroup",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Ethnicity group",
+        "legacy_type": "CommentLegal",
+        "label_set": "codephvs_ethnicitygroup_cdc"
+      }
+    },
+    {
+      "name": "AmericanIndian",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "American Indian or Alaska Native",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Asian",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Asian",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Black",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Black or African American",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "NativeHawaiian",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Native Hawaiian or Pacific Islander",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "White",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "White",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherRace",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "YourFirst",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Your First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "YourLast",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Your Last Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Relation",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Relationship to Child (HL7)",
+        "legacy_type": "CommentLegal",
+        "label_set": "codephvs_relationship_hl7_2x"
+      }
+    },
+    {
+      "name": "YourAge",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Age",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ParentStreet",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Street",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ParentCity",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "City",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ParentZip",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Zip Code",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Phone",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Home Phone Number",
+        "legacy_type": "PhoneNumber"
+      }
+    },
+    {
+      "name": "MaritalStatusHL7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Marital Status (HL7)",
+        "legacy_type": "CommentLegal",
+        "label_set": "codephvs_maritalstatus_hl7_2x"
+      }
+    },
+    {
+      "name": "TDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Survey Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HouseholdIncome",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Household Income",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "SchoolNum",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "School Code",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeschoolnum"
+      }
+    },
+    {
+      "name": "StudentID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Student ID Number",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Grade",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Grade",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "SchoolDistrict",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "School District",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Comments",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Comments",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Latitude",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Latitude",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Longitude",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Longitude",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "MirrorStudentID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Student ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "Asthma",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Asthma",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RAD",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Reactive Airway Disease",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Bronchitis",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Asthmatic Bronchitis or Wheezy Bronchitis",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Wheezing",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Wheezing",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Medication",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Has a health professional prescribed any medication to your child?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Emergency",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "How many times did your child have an emergency visit for breathing problems?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Overnight",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "How many times did your child have to stay overnight in the hospital for breathing problems?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DailyMed",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Does your child take medicine every day for breathing difficulties?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "WMonth",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "The month when your child's breathing was the worst",
+        "legacy_type": "LegalValues",
+        "label_set": "codewmonth"
+      }
+    },
+    {
+      "name": "MirrorStudentID1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Student ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "Whistle",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Wheeze or whistling in the chest?",
+        "legacy_type": "LegalValues",
+        "label_set": "codewhistle"
+      }
+    },
+    {
+      "name": "Cough",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have a cough?",
+        "legacy_type": "LegalValues",
+        "label_set": "codewhistle"
+      }
+    },
+    {
+      "name": "ShortB",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have shortness of breath?",
+        "legacy_type": "LegalValues",
+        "label_set": "codewhistle"
+      }
+    },
+    {
+      "name": "WakeUp",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Wake up at night?",
+        "legacy_type": "LegalValues",
+        "label_set": "codewhistle"
+      }
+    },
+    {
+      "name": "MissDays",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "How many days of school has your child missed due to asthma?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "MissSport",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Have breathing problems stopped your child from participating in sports?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "SpTimes",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If Yes, how many times in the past month?",
+        "legacy_type": "LegalValues",
+        "label_set": "codesptimes"
+      }
+    },
+    {
+      "name": "IllHome",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "How many people living in the home, including this child, have asthma?",
+        "legacy_type": "Number"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codesex2",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Male"
+          },
+          "Male"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Female"
+          },
+          "Female"
+        ]
+      ]
+    },
+    {
+      "id": "codephvs_ethnicitygroup_cdc",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "2135:2-Hispanic or Latino"
+          },
+          "2135:2-Hispanic or Latino"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2186:5-Not Hispanic or Latino"
+          },
+          "2186:5-Not Hispanic or Latino"
+        ]
+      ]
+    },
+    {
+      "id": "codephvs_relationship_hl7_2x",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "ASC-Associate"
+          },
+          "ASC-Associate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BRO-Brother"
+          },
+          "BRO-Brother"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CGV-Care giver"
+          },
+          "CGV-Care giver"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "EMC-Emergency contact"
+          },
+          "EMC-Emergency contact"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "EMR-Employer"
+          },
+          "EMR-Employer"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "EXF-Extended family"
+          },
+          "EXF-Extended family"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FTH-Father"
+          },
+          "FTH-Father"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FND-Friend"
+          },
+          "FND-Friend"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GRP-Grandparent"
+          },
+          "GRP-Grandparent"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GRD-Guardian"
+          },
+          "GRD-Guardian"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MGR-Manager"
+          },
+          "MGR-Manager"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MTH-Mother"
+          },
+          "MTH-Mother"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NON-None"
+          },
+          "NON-None"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OTH-Other"
+          },
+          "OTH-Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OAD-Other adult"
+          },
+          "OAD-Other adult"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PAR-Parent"
+          },
+          "PAR-Parent"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SEL-Self"
+          },
+          "SEL-Self"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SIB-Sibling"
+          },
+          "SIB-Sibling"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SIS-Sister"
+          },
+          "SIS-Sister"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TRA-Trainer"
+          },
+          "TRA-Trainer"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UNK-Unknown"
+          },
+          "UNK-Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codephvs_maritalstatus_hl7_2x",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "N-Annulled"
+          },
+          "N-Annulled"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "C-Common law"
+          },
+          "C-Common law"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "D-Divorced"
+          },
+          "D-Divorced"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "P-Domestic partner"
+          },
+          "P-Domestic partner"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "I-Interlocutory"
+          },
+          "I-Interlocutory"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "E-Legally Separated"
+          },
+          "E-Legally Separated"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "G-Living together"
+          },
+          "G-Living together"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "M-Married"
+          },
+          "M-Married"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "O-Other"
+          },
+          "O-Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "R-Registered domestic partner"
+          },
+          "R-Registered domestic partner"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "A-Separated"
+          },
+          "A-Separated"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "S-Single"
+          },
+          "S-Single"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "U-Unknown"
+          },
+          "U-Unknown"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "B-Unmarried"
+          },
+          "B-Unmarried"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "T-Unreported"
+          },
+          "T-Unreported"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "W-Widowed"
+          },
+          "W-Widowed"
+        ]
+      ]
+    },
+    {
+      "id": "codeschoolnum",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "A- 1"
+          },
+          "A- 1"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "B- 2"
+          },
+          "B- 2"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "C- 3"
+          },
+          "C- 3"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "D- 4"
+          },
+          "D- 4"
+        ]
+      ]
+    },
+    {
+      "id": "codewmonth",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- January"
+          },
+          "1- January"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- February"
+          },
+          "2- February"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- March"
+          },
+          "3- March"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- April"
+          },
+          "4- April"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- May"
+          },
+          "5- May"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- June"
+          },
+          "6- June"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7- July"
+          },
+          "7- July"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8- August"
+          },
+          "8- August"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- September"
+          },
+          "9- September"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10- October"
+          },
+          "10- October"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11- November"
+          },
+          "11- November"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12- December"
+          },
+          "12- December"
+        ]
+      ]
+    },
+    {
+      "id": "codewhistle",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Never"
+          },
+          "Never"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 times each week or less"
+          },
+          "2 times each week or less"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 to 6 times each week"
+          },
+          "3 to 6 times each week"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Every day but not all day"
+          },
+          "Every day but not all day"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Every day and all day"
+          },
+          "Every day and all day"
+        ]
+      ]
+    },
+    {
+      "id": "codesptimes",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "2 times a month or fewer"
+          },
+          "2 times a month or fewer"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 to 4 times a month"
+          },
+          "3 to 4 times a month"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1 to 3 times each week"
+          },
+          "1 to 3 times each week"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4 times each week or more"
+          },
+          "4 times each week or more"
+        ]
+      ]
+    }
+  ]
+}

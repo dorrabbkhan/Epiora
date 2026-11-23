@@ -1,0 +1,261 @@
+{
+  "id": "Nutrition",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        3,
+        1,
+        2
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RecStatus",
+      "type": "integer",
+      "values": [
+        1,
+        1,
+        1
+      ],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [
+        "5a92fd5c-ea2e-4675-a2f6-0073c46fb5f1",
+        "6d2456ea-2c5e-4501-b6f6-820125de65bc",
+        "eb36c2e3-f086-4d15-9bdd-f6f648325272"
+      ],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "LastName",
+      "type": "text",
+      "values": [
+        "Smith",
+        "Doe",
+        "Doe"
+      ],
+      "meta": {
+        "prompt": "Last Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FirstName",
+      "type": "text",
+      "values": [
+        "John",
+        "John",
+        "Jane"
+      ],
+      "meta": {
+        "prompt": "First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DOB",
+      "type": "date",
+      "values": [
+        "1999-09-12",
+        "2001-11-11",
+        "2005-04-09"
+      ],
+      "meta": {
+        "prompt": "Date of Birth",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Sex",
+      "type": "text",
+      "values": [
+        "M",
+        "M",
+        "F"
+      ],
+      "meta": {
+        "prompt": "Sex",
+        "legacy_type": "CommentLegal",
+        "label_set": "codesex"
+      }
+    },
+    {
+      "name": "Address",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Address",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Latitude",
+      "type": "integer",
+      "values": [
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Latitude",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Longitude",
+      "type": "integer",
+      "values": [
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Longitude",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PatientID",
+      "type": "text",
+      "values": [
+        "3",
+        "1",
+        "2"
+      ],
+      "meta": {
+        "prompt": "Patient ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "RecordCreatedDate",
+      "type": "date",
+      "values": [
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Record Created Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CreatedBy",
+      "type": "text",
+      "values": [
+        null,
+        "J. Doe",
+        null
+      ],
+      "meta": {
+        "prompt": "Created By:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SiteLocationClinic",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Site / Location / Clinic:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SurveyGroup",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Survey Group",
+        "legacy_type": "LegalValues",
+        "label_set": "codesurveygroup"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codesex",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "M- Male"
+          },
+          "M- Male"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "F- Female"
+          },
+          "F- Female"
+        ]
+      ]
+    },
+    {
+      "id": "codesurveygroup",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1"
+          },
+          "1"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2"
+          },
+          "2"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3"
+          },
+          "3"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4"
+          },
+          "4"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5"
+          },
+          "5"
+        ]
+      ]
+    }
+  ]
+}

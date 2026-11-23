@@ -1,0 +1,914 @@
+{
+  "id": "PreInterventionSurvey",
+  "version": 1,
+  "columns": [
+    {
+      "name": "SchoolNum",
+      "type": "text",
+      "values": [
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A"
+      ],
+      "meta": {
+        "legacy_type": "COMBO",
+        "label_set": "codeSchoolID1234#SchoolID->SchoolID"
+      }
+    },
+    {
+      "name": "StudentID",
+      "type": "text",
+      "values": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "meta": {
+        "legacy_type": "TEXTBOX"
+      }
+    },
+    {
+      "name": "Zip",
+      "type": "text",
+      "values": [
+        "12207",
+        "12210",
+        "12206",
+        "12183",
+        "12110",
+        "12047",
+        "12202",
+        "12209",
+        "12209",
+        "12208"
+      ],
+      "meta": {
+        "legacy_type": "TEXTBOX"
+      }
+    },
+    {
+      "name": "Gender",
+      "type": "text",
+      "values": [
+        "Male",
+        "Female",
+        "Male",
+        "Male",
+        "Male",
+        "Male",
+        "Male",
+        "Male",
+        "Male",
+        "Male"
+      ],
+      "meta": {
+        "legacy_type": "COMBO",
+        "label_set": "codeGender"
+      }
+    },
+    {
+      "name": "DOB",
+      "type": "date",
+      "values": [
+        "1994-01-29",
+        "1997-10-28",
+        "1995-06-23",
+        "1996-02-01",
+        "1994-04-03",
+        "1995-03-13",
+        "1998-07-21",
+        "1996-09-12",
+        "1997-09-05",
+        "1995-12-18"
+      ],
+      "meta": {
+        "legacy_type": "DATE"
+      }
+    },
+    {
+      "name": "Age",
+      "type": "integer",
+      "values": [
+        11,
+        7,
+        10,
+        9,
+        11,
+        10,
+        7,
+        9,
+        8,
+        9
+      ],
+      "meta": {
+        "legacy_type": "NUMBER"
+      }
+    },
+    {
+      "name": "Phone",
+      "type": "text",
+      "values": [
+        "555-555-5555",
+        "456-789-1234",
+        "456-878-4569",
+        "896-564-5489",
+        "156-489-4569",
+        "564-986-5325",
+        "569-784-5213",
+        "564-956-2316",
+        "564-896-5236",
+        "789-456-1561"
+      ],
+      "meta": {
+        "legacy_type": "PHONENUMBER"
+      }
+    },
+    {
+      "name": "PSNumber",
+      "type": "text",
+      "values": [
+        "123",
+        "123",
+        "123",
+        "123",
+        "123",
+        "123",
+        "123",
+        "123",
+        "123",
+        "123"
+      ],
+      "meta": {
+        "legacy_type": "TEXTBOX"
+      }
+    },
+    {
+      "name": "ChildLast",
+      "type": "text",
+      "values": [
+        "Smith",
+        "Sullivan",
+        "Lewis",
+        "Jones",
+        "Michaels",
+        "Logan",
+        "Rogers",
+        "Phillips",
+        "Sutton",
+        "Davidson"
+      ],
+      "meta": {
+        "legacy_type": "TEXTBOX"
+      }
+    },
+    {
+      "name": "ChildFirst",
+      "type": "text",
+      "values": [
+        "Randy",
+        "Brittany",
+        "Benji",
+        "Lee",
+        "Steve",
+        "Ken",
+        "Aaron",
+        "Larry",
+        "Brett",
+        "Mark"
+      ],
+      "meta": {
+        "legacy_type": "TEXTBOX"
+      }
+    },
+    {
+      "name": "YourFirst",
+      "type": "text",
+      "values": [
+        "Claire",
+        "Bill",
+        "Kim",
+        "Richard",
+        "Tara",
+        "Jim",
+        "Lynn",
+        "Martin",
+        "Cindy",
+        "Sheri"
+      ],
+      "meta": {
+        "legacy_type": "TEXTBOX"
+      }
+    },
+    {
+      "name": "Relation",
+      "type": "text",
+      "values": [
+        "Mother",
+        "Father",
+        "Mother",
+        "Brother",
+        "Aunt",
+        "Father",
+        "Mother",
+        "Father",
+        "Aunt",
+        "Mother"
+      ],
+      "meta": {
+        "legacy_type": "TEXTBOX"
+      }
+    },
+    {
+      "name": "Grade",
+      "type": "integer",
+      "values": [
+        6,
+        2,
+        4,
+        4,
+        6,
+        4,
+        1,
+        3,
+        2,
+        3
+      ],
+      "meta": {
+        "legacy_type": "NUMBER"
+      }
+    },
+    {
+      "name": "ID",
+      "type": "text",
+      "values": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "meta": {
+        "legacy_type": "MIRROR"
+      }
+    },
+    {
+      "name": "Asthma",
+      "type": "boolean",
+      "values": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "meta": {
+        "legacy_type": "CHECKBOX"
+      }
+    },
+    {
+      "name": "RAD",
+      "type": "boolean",
+      "values": [
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "meta": {
+        "legacy_type": "CHECKBOX"
+      }
+    },
+    {
+      "name": "Bronchitis",
+      "type": "boolean",
+      "values": [
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "meta": {
+        "legacy_type": "CHECKBOX"
+      }
+    },
+    {
+      "name": "Wheezing",
+      "type": "boolean",
+      "values": [
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "meta": {
+        "legacy_type": "CHECKBOX"
+      }
+    },
+    {
+      "name": "TDate",
+      "type": "date",
+      "values": [
+        "2005-10-25",
+        "2005-10-25",
+        "2005-10-25",
+        "2005-10-25",
+        "2005-10-25",
+        "2005-10-25",
+        "2005-10-25",
+        "2005-10-25",
+        "2005-10-25",
+        "2005-10-25"
+      ],
+      "meta": {
+        "legacy_type": "DATE"
+      }
+    },
+    {
+      "name": "Medication",
+      "type": "boolean",
+      "values": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "meta": {
+        "legacy_type": "YES/NO"
+      }
+    },
+    {
+      "name": "Emergency",
+      "type": "integer",
+      "values": [
+        0,
+        1,
+        2,
+        0,
+        0,
+        0,
+        2,
+        5,
+        1,
+        7
+      ],
+      "meta": {
+        "legacy_type": "NUMBER"
+      }
+    },
+    {
+      "name": "Overnight",
+      "type": "integer",
+      "values": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        2,
+        1,
+        3
+      ],
+      "meta": {
+        "legacy_type": "NUMBER"
+      }
+    },
+    {
+      "name": "Dailymed",
+      "type": "boolean",
+      "values": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "meta": {
+        "legacy_type": "YES/NO"
+      }
+    },
+    {
+      "name": "WMonth",
+      "type": "text",
+      "values": [
+        "9",
+        "10",
+        "10",
+        "9",
+        "1",
+        "9",
+        "9",
+        "10",
+        "10",
+        "9"
+      ],
+      "meta": {
+        "legacy_type": "COMBO",
+        "label_set": "codeWMonth"
+      }
+    },
+    {
+      "name": "MissDays",
+      "type": "integer",
+      "values": [
+        10,
+        11,
+        7,
+        14,
+        8,
+        10,
+        11,
+        10,
+        12,
+        13
+      ],
+      "meta": {
+        "legacy_type": "NUMBER"
+      }
+    },
+    {
+      "name": "MissSport",
+      "type": "boolean",
+      "values": [
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "meta": {
+        "legacy_type": "YES/NO"
+      }
+    },
+    {
+      "name": "SpTimes",
+      "type": "text",
+      "values": [
+        null,
+        "1 to 3 times each week",
+        null,
+        "2 times a month or fewer",
+        null,
+        null,
+        "3 to 4 times a month",
+        "3 to 4 times a month",
+        "1 to 3 times each week",
+        "1 to 3 times each week"
+      ],
+      "meta": {
+        "legacy_type": "COMBO",
+        "label_set": "codeSpTimes"
+      }
+    },
+    {
+      "name": "IllHome",
+      "type": "integer",
+      "values": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "meta": {
+        "legacy_type": "NUMBER"
+      }
+    },
+    {
+      "name": "ID2",
+      "type": "text",
+      "values": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "meta": {
+        "legacy_type": "MIRROR"
+      }
+    },
+    {
+      "name": "Whistle",
+      "type": "text",
+      "values": [
+        "2 times each week or less",
+        "2 times each week or less",
+        "2 times each week or less",
+        "2 times each week or less",
+        "Never",
+        "Never",
+        "3 to 6 times each week",
+        "3 to 6 times each week",
+        "3 to 6 times each week",
+        "Every day but not all day"
+      ],
+      "meta": {
+        "legacy_type": "COMBO",
+        "label_set": "codeWhistle"
+      }
+    },
+    {
+      "name": "Cough",
+      "type": "text",
+      "values": [
+        "Every day but not all day",
+        "3 to 6 times each week",
+        "Never",
+        "2 times each week or less",
+        "Never",
+        "Never",
+        "2 times each week or less",
+        "Every day but not all day",
+        "3 to 6 times each week",
+        "Every day but not all day"
+      ],
+      "meta": {
+        "legacy_type": "COMBO",
+        "label_set": "codeWhistle"
+      }
+    },
+    {
+      "name": "ShortB",
+      "type": "text",
+      "values": [
+        "Never",
+        "Never",
+        "2 times each week or less",
+        "2 times each week or less",
+        "Never",
+        "Never",
+        "2 times each week or less",
+        "3 to 6 times each week",
+        "3 to 6 times each week",
+        "Every day but not all day"
+      ],
+      "meta": {
+        "legacy_type": "COMBO",
+        "label_set": "codeWhistle"
+      }
+    },
+    {
+      "name": "WakeUp",
+      "type": "text",
+      "values": [
+        "2 times each week or less",
+        "Never",
+        "3 to 6 times each week",
+        "2 times each week or less",
+        "Never",
+        "Never",
+        "3 to 6 times each week",
+        "2 times each week or less",
+        "3 to 6 times each week",
+        "Every day but not all day"
+      ],
+      "meta": {
+        "legacy_type": "COMBO",
+        "label_set": "codeWhistle"
+      }
+    },
+    {
+      "name": "YourLast",
+      "type": "text",
+      "values": [
+        "Smith",
+        "Sullivan",
+        "Lewis",
+        "Jones",
+        "Michaels",
+        "Logan",
+        "Rogers",
+        "Phillips",
+        "Sutton",
+        "Davidson"
+      ],
+      "meta": {
+        "legacy_type": "TEXTBOX"
+      }
+    },
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "meta": {
+        "legacy_type": "RECSTATUS"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeSchoolID1234#SchoolID->SchoolID",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "A"
+          },
+          "A"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "B"
+          },
+          "B"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "C"
+          },
+          "C"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "D"
+          },
+          "D"
+        ]
+      ]
+    },
+    {
+      "id": "codeGender",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Female"
+          },
+          "Female"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Male"
+          },
+          "Male"
+        ]
+      ]
+    },
+    {
+      "id": "codeWMonth",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- January"
+          },
+          "1- January"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- February"
+          },
+          "2- February"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- March"
+          },
+          "3- March"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- April"
+          },
+          "4- April"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- May"
+          },
+          "5- May"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- June"
+          },
+          "6- June"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7- July"
+          },
+          "7- July"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8- August"
+          },
+          "8- August"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- September"
+          },
+          "9- September"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10- October"
+          },
+          "10- October"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11- November"
+          },
+          "11- November"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12- December"
+          },
+          "12- December"
+        ]
+      ]
+    },
+    {
+      "id": "codeSpTimes",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "2 times a month or fewer"
+          },
+          "2 times a month or fewer"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 to 4 times a month"
+          },
+          "3 to 4 times a month"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1 to 3 times each week"
+          },
+          "1 to 3 times each week"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4 times each week or more"
+          },
+          "4 times each week or more"
+        ]
+      ]
+    },
+    {
+      "id": "codeWhistle",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Never"
+          },
+          "Never"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 times each week or less"
+          },
+          "2 times each week or less"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 to 6 times each week"
+          },
+          "3 to 6 times each week"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Every day but not all day"
+          },
+          "Every day but not all day"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Every day and all day"
+          },
+          "Every day and all day"
+        ]
+      ]
+    }
+  ]
+}

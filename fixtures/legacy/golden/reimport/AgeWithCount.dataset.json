@@ -1,0 +1,123 @@
+{
+  "id": "AgeWithCount",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [
+        "7748be75-8058-45c1-889c-56ab2b5c750e",
+        "850b1405-b1f2-4e61-b343-3d102244b401",
+        "92466df1-a6f5-4699-a7e2-2bff0c9ba5f6",
+        "997807dd-c25c-41ed-92a4-934f6dcd23a0",
+        "a113463c-dcf8-4d44-9b47-cc102fb9e668",
+        "a348f055-4182-427a-b54f-e070462a4503",
+        "a5ef209d-6deb-4426-b56b-abb15345f6e7",
+        "aa5f7a83-dda9-411d-885f-d1d2f6edc20d",
+        "f28b90ca-496b-4b51-b1cb-8bdb1bfc7bb7",
+        "ff1fdf67-d570-4120-9d68-05408696642b"
+      ],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "RecordNumber",
+      "type": "text",
+      "values": [
+        "10",
+        "5",
+        "9",
+        "3",
+        "8",
+        "2",
+        "4",
+        "7",
+        "1",
+        "6"
+      ],
+      "meta": {
+        "prompt": "RecordNumber",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Age",
+      "type": "integer",
+      "values": [
+        10,
+        5,
+        9,
+        3,
+        8,
+        2,
+        4,
+        7,
+        1,
+        6
+      ],
+      "meta": {
+        "prompt": "Age",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Count",
+      "type": "integer",
+      "values": [
+        1,
+        20,
+        1,
+        19,
+        2,
+        11,
+        17,
+        3,
+        5,
+        6
+      ],
+      "meta": {
+        "prompt": "Count",
+        "legacy_type": "Number"
+      }
+    }
+  ]
+}

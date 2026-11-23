@@ -1,0 +1,1193 @@
+{
+  "id": "SpecimenInformation",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RecStatus",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "FLUINTERPRETATION3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUINTERPRETATION1"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Lab",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State Lab ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LabName3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUTESTPERFORMED4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "FLUTESTRESULTS4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "FLUINTERPRETATION4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUINTERPRETATION1"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Lab",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State Lab ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LabName4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECIMENTYPE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "1.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "TISSUESP1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECTYPEOTH1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUDATECOLLECTED1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FLUTESTPERFORMED1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "OTHTSTSP1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUTESTRESULTS1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "FLUINTERPRETATION1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUINTERPRETATION1"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Lab",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State Lab ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LabName1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUTSTNotes",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other Testing Notes",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "TISSUESP2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECIMENTYPE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "2.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "FLUSPECTYPEOTH2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUDATECOLLECTED2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FLUTESTPERFORMED2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "OTHTSTSP2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUTESTRESULTS2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "FLUINTERPRETATION2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUINTERPRETATION1"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Lab",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State Lab ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LabName2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECIMENTYPE3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "3.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "TISSUESP3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECTYPEOTH3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECIMENTYPE4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "4.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "TISSUESP4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECTYPEOTH4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUDATECOLLECTED3",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FLUDATECOLLECTED4",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FLUTESTPERFORMED3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "FLUTESTRESULTS3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "OTHTSTSP3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTHTSTSP4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCUniqueID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Unique ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "COUNTYID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECIMENTYPE5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "5.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "TISSUESP5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECTYPEOTH5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUDATECOLLECTED5",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FLUTESTPERFORMED5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "FLUTESTRESULTS5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "FLUINTERPRETATION5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUINTERPRETATION1"
+      }
+    },
+    {
+      "name": "OTHTSTSP5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Lab ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State Lab ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LabName5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECIMENTYPE6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "6.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "TISSUESP6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECTYPEOTH6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUDATECOLLECTED6",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FLUTESTPERFORMED6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "OTHTSTSP6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUTESTRESULTS6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "FLUINTERPRETATION6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUINTERPRETATION1"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Lab ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State Lab ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LabName6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECIMENTYPE7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "7.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "TISSUESP7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECTYPEOTH7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUDATECOLLECTED7",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FLUTESTPERFORMED7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "OTHTSTSP7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUTESTRESULTS7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "FLUINTERPRETATION7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUINTERPRETATION1"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Lab ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State Lab ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LabName7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECIMENTYPE8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "8.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "TISSUESP8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUSPECTYPEOTH8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUDATECOLLECTED8",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FLUTESTPERFORMED8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "OTHTSTSP8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FLUTESTRESULTS8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "FLUINTERPRETATION8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUINTERPRETATION1"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Lab ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State Lab ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LabName8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STATEID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "COUNTYID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CDCID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeFLUINTERPRETATION1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Flu A"
+          },
+          "1 - Flu A"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Flu B"
+          },
+          "2 - Flu B"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - Flu A/H1"
+          },
+          "3 - Flu A/H1"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4 - Flu A/H3"
+          },
+          "4 - Flu A/H3"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5 - Flu A unsubtypable"
+          },
+          "5 - Flu A unsubtypable"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6 - Flu A swine H1"
+          },
+          "6 - Flu A swine H1"
+        ]
+      ]
+    },
+    {
+      "id": "codeFLUTESTPERFORMED1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "88 - Other"
+          },
+          "88 - Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1 - DFA/IFA"
+          },
+          "1 - DFA/IFA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - PCR"
+          },
+          "2 - PCR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - Culture"
+          },
+          "3 - Culture"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4 - HI"
+          },
+          "4 - HI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5 - Rapid test"
+          },
+          "5 - Rapid test"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6 - Immunohist"
+          },
+          "6 - Immunohist"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7 - Serology"
+          },
+          "7 - Serology"
+        ]
+      ]
+    },
+    {
+      "id": "codeFLUTESTRESULTS1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Positive"
+          },
+          "1 - Positive"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Negative"
+          },
+          "2 - Negative"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - Indeterminate"
+          },
+          "3 - Indeterminate"
+        ]
+      ]
+    },
+    {
+      "id": "codeFLUSPECIMENTYPE1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Nasopharyngeal swab"
+          },
+          "1 - Nasopharyngeal swab"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Nasopharyngeal aspirate"
+          },
+          "2 - Nasopharyngeal aspirate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - Oropharyngeal/throat swab"
+          },
+          "3 - Oropharyngeal/throat swab"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4 - Nasal aspirate/swab"
+          },
+          "4 - Nasal aspirate/swab"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5 - Endotracheal aspirate"
+          },
+          "5 - Endotracheal aspirate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6 - Serum"
+          },
+          "6 - Serum"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7 - Broncheoalveolar lavage specimen (BAL)"
+          },
+          "7 - Broncheoalveolar lavage specimen (BAL)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8 - Sputum"
+          },
+          "8 - Sputum"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9 - Cerebrospinal fluid (CSF)"
+          },
+          "9 - Cerebrospinal fluid (CSF)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10 - Tissue"
+          },
+          "10 - Tissue"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11 - Stool"
+          },
+          "11 - Stool"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12 - Urine"
+          },
+          "12 - Urine"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "13 - Pleural fluid"
+          },
+          "13 - Pleural fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "14 - Peritoneal fluid"
+          },
+          "14 - Peritoneal fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "15 - Pericardial fluid"
+          },
+          "15 - Pericardial fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "16 - Chest fluid"
+          },
+          "16 - Chest fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "17 - Blood"
+          },
+          "17 - Blood"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "88 - Other"
+          },
+          "88 - Other"
+        ]
+      ]
+    }
+  ]
+}

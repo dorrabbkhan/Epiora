@@ -1,0 +1,653 @@
+{
+  "id": "PatientVisits",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        11,
+        7,
+        10,
+        5,
+        9,
+        8,
+        2,
+        4,
+        6,
+        3,
+        1
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RecStatus",
+      "type": "integer",
+      "values": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [
+        "01b5751b-3343-483e-8ba4-806c8a01def4",
+        "10a80d34-6ca2-404d-ad57-3b58a935c379",
+        "124e3ed3-c1d0-4490-87ec-c506fb9d4ab3",
+        "1cd26122-eb4b-49b7-8070-5dbf0dfe54f5",
+        "2fdf5af3-a410-4258-aea4-73db797d39a2",
+        "4988135e-3d00-4e22-9f03-60cc79bafff4",
+        "584b1d62-b73c-4799-9732-22df88ab29f9",
+        "8859ef19-429f-4c92-bc9d-aa6aae371eb5",
+        "89ece0e7-1917-4764-9f55-aa516b5df32a",
+        "c59fea06-df6b-41a4-9332-223889fab76e",
+        "cd1f85a4-ba5d-468a-9bd6-be3462a0abd4"
+      ],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [
+        "6d2456ea-2c5e-4501-b6f6-820125de65bc",
+        "6d2456ea-2c5e-4501-b6f6-820125de65bc",
+        "6d2456ea-2c5e-4501-b6f6-820125de65bc",
+        "6d2456ea-2c5e-4501-b6f6-820125de65bc",
+        "6d2456ea-2c5e-4501-b6f6-820125de65bc",
+        "6d2456ea-2c5e-4501-b6f6-820125de65bc",
+        "6d2456ea-2c5e-4501-b6f6-820125de65bc",
+        "6d2456ea-2c5e-4501-b6f6-820125de65bc",
+        "6d2456ea-2c5e-4501-b6f6-820125de65bc",
+        "6d2456ea-2c5e-4501-b6f6-820125de65bc",
+        "6d2456ea-2c5e-4501-b6f6-820125de65bc"
+      ],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "VisitPatientID",
+      "type": "text",
+      "values": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "meta": {
+        "prompt": "Patient ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "AgeMonths",
+      "type": "real",
+      "values": [
+        null,
+        73,
+        109,
+        48,
+        97,
+        84,
+        12,
+        37,
+        61,
+        25,
+        1
+      ],
+      "meta": {
+        "prompt": "Age (months)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HeightInches",
+      "type": "real",
+      "values": [
+        54,
+        46.1,
+        53.3,
+        40.3,
+        51.1,
+        48.6,
+        31,
+        38,
+        43.2,
+        34.7,
+        22
+      ],
+      "meta": {
+        "prompt": "Height (inches)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "WeightPounds",
+      "type": "real",
+      "values": [
+        null,
+        47.9,
+        87,
+        36.5,
+        73,
+        59,
+        23,
+        33,
+        41.7,
+        28.3,
+        11
+      ],
+      "meta": {
+        "prompt": "Weight (pounds)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Recumbent",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "meta": {
+        "prompt": "Recumbent",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Edema",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "meta": {
+        "prompt": "Edema",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HeadCircumInches",
+      "type": "real",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Head circumference (inches)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Comments",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Comments",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "HTforAgeP",
+      "type": "real",
+      "values": [
+        null,
+        59.1,
+        59.0954115144594,
+        51.2,
+        59.8706325684875,
+        62.17,
+        89.62,
+        59.48,
+        52.39,
+        59.87,
+        72.24
+      ],
+      "meta": {
+        "prompt": "HT for Age",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HTforAgeZ",
+      "type": "real",
+      "values": [
+        null,
+        0.23,
+        0.23,
+        0.03,
+        0.25,
+        0.31,
+        1.26,
+        0.24,
+        0.06,
+        0.25,
+        0.59
+      ],
+      "meta": {
+        "prompt": "- -",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "WTforAgeP",
+      "type": "real",
+      "values": [
+        null,
+        61.03,
+        93.8179822883617,
+        56.36,
+        90.9813503566561,
+        82.12,
+        76.42,
+        61.79,
+        55.57,
+        50.8,
+        79.67
+      ],
+      "meta": {
+        "prompt": "WT for Age",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "WTforAgeZ",
+      "type": "real",
+      "values": [
+        null,
+        0.28,
+        1.54,
+        0.16,
+        1.34,
+        0.92,
+        0.72,
+        0.3,
+        0.14,
+        0.02,
+        0.83
+      ],
+      "meta": {
+        "prompt": "- -",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "WTforHTP",
+      "type": "real",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        59.87,
+        null,
+        null,
+        null,
+        67.36
+      ],
+      "meta": {
+        "prompt": "WT for HT",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BMI",
+      "type": "real",
+      "values": [
+        null,
+        15.84488121173907,
+        21.52881667364805,
+        15.79930915158643,
+        19.65334078837014,
+        17.56,
+        16.82518210197711,
+        16.06578947368421,
+        15.708108281893,
+        16.52276823161059,
+        15.97727272727273
+      ],
+      "meta": {
+        "prompt": "BMI:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BMIP",
+      "type": "real",
+      "values": [
+        null,
+        62.93,
+        95.7258137126807,
+        55.57,
+        93.8179822883617,
+        86.65,
+        50.8,
+        53.19,
+        59.48,
+        50,
+        77.34
+      ],
+      "meta": {
+        "prompt": "- -",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BMIZ",
+      "type": "real",
+      "values": [
+        null,
+        0.33,
+        1.72,
+        0.14,
+        1.54,
+        1.11,
+        0.02,
+        0.08,
+        0.24,
+        0,
+        0.75
+      ],
+      "meta": {
+        "prompt": "- -",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "WTforHTZ",
+      "type": "real",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        0.25,
+        null,
+        null,
+        null,
+        0.45
+      ],
+      "meta": {
+        "prompt": "- -",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HeadCircumP",
+      "type": "real",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Head Circum.",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HeadCircumZ",
+      "type": "integer",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "- -",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HTforAgeF",
+      "type": "text",
+      "values": [
+        null,
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK"
+      ],
+      "meta": {
+        "prompt": "- -",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "WTforAgeF",
+      "type": "text",
+      "values": [
+        null,
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK"
+      ],
+      "meta": {
+        "prompt": "- -",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "WTforHTF",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "OK",
+        null,
+        null,
+        null,
+        "OK"
+      ],
+      "meta": {
+        "prompt": "- -",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BMIF",
+      "type": "text",
+      "values": [
+        null,
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK",
+        "OK"
+      ],
+      "meta": {
+        "prompt": "- -",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DateOfMeasurement",
+      "type": "date",
+      "values": [
+        null,
+        "2007-12-17",
+        "2010-12-21",
+        "2005-11-30",
+        "2009-12-18",
+        "2008-12-03",
+        "2002-12-03",
+        "2004-12-23",
+        "2006-12-13",
+        "2003-12-14",
+        "2001-12-15"
+      ],
+      "meta": {
+        "prompt": "Date of Measurement",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "values": [
+        "Doe, John",
+        "Doe, John",
+        "Doe, John",
+        "Doe, John",
+        "Doe, John",
+        "Doe, John",
+        "Doe, John",
+        "Doe, John",
+        "Doe, John",
+        "Doe, John",
+        "Doe, John"
+      ],
+      "meta": {
+        "prompt": "Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VisitSex",
+      "type": "text",
+      "values": [
+        "M",
+        "M",
+        "M",
+        "M",
+        "M",
+        "M",
+        "M",
+        "M",
+        "M",
+        "M",
+        "M"
+      ],
+      "meta": {
+        "prompt": "Sex",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VisitDOB",
+      "type": "date",
+      "values": [
+        "2001-11-11",
+        "2001-11-11",
+        "2001-11-11",
+        "2001-11-11",
+        "2001-11-11",
+        "2001-11-11",
+        "2001-11-11",
+        "2001-11-11",
+        "2001-11-11",
+        "2001-11-11",
+        "2001-11-11"
+      ],
+      "meta": {
+        "prompt": "DOB",
+        "legacy_type": "Date"
+      }
+    }
+  ]
+}

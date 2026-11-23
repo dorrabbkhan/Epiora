@@ -1,0 +1,30 @@
+{
+  "name": "albany_demogz",
+  "legacy_id": null,
+  "source_format": "ei3_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei3/albany_demogz.mdb",
+    "sha256": "65de50d0400c2214548ace01815bc800671f7f7202dec97413338b347e44233c"
+  },
+  "views": [],
+  "links": [],
+  "programs": [],
+  "check_code": [],
+  "report": [
+    {
+      "kind": "legacy_layout_unknown",
+      "item": "albany_demogz",
+      "reason": "no recognized view-definition tables"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "INCOME",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "RACEETHNICITY",
+      "reason": "layout_unknown: plain data table"
+    }
+  ]
+}

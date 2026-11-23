@@ -1,0 +1,153 @@
+{
+  "id": "HDCaseForm5Biopsy_Grid",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "UniqueRowId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueRowId"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "Biopsy_Grid_Location_on_Body",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Location on Body",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Biopsy_Grid_Date",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Procedure Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Biopsy_Grid_Results",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Results",
+        "legacy_type": "LegalValues",
+        "label_set": "codebiopsy_grid_results1"
+      }
+    },
+    {
+      "name": "Biopsy_Grid_Other_Result",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other Result",
+        "legacy_type": "Text"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codebiopsy_grid_results1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Normal"
+          },
+          "Normal"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Indeterminate"
+          },
+          "Indeterminate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TT"
+          },
+          "TT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BT"
+          },
+          "BT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BB"
+          },
+          "BB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BL"
+          },
+          "BL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LL"
+          },
+          "LL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other Diagnosis"
+          },
+          "Other Diagnosis"
+        ]
+      ]
+    }
+  ]
+}

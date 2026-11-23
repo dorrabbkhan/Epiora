@@ -1,0 +1,318 @@
+{
+  "name": "LandmineStudy",
+  "legacy_id": "5B7381F3-EB39-2BFD-F066CEEB5398A522",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/LandmineStudy/LandmineStudy.mdb",
+    "sha256": "3c9cbc798dcff4acecc22a7d5441af4bf47c5364dc576916c62a28db3c0dac30"
+  },
+  "views": [
+    {
+      "name": "COMPLETECASUALTYFORM",
+      "dataset": "COMPLETECASUALTYFORM.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "6947989eea9d069f6fedc43c94dda75975c82ba114077d24dae54fac65d2c98f"
+    }
+  ],
+  "links": [],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "COMPLETECASUALTYFORM",
+      "blocks": 12
+    }
+  ],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/LandmineErW",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/Administrative",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/Required",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/LabPerson",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/Interviewer",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/LandmineErWCasualty",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/CasualtyIdentification",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/CoreQuestions",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "COMPLETECASUALTYFORM/CaseIDP2",
+      "reason": "Mirror field imported as the value of CaseIDNo"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/Demographics",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/LandmineErWCasualtyForm",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/AccIdent",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/CoreQuestions2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/GpsCoord",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "COMPLETECASUALTYFORM/CaseIDP3",
+      "reason": "Mirror field imported as the value of CaseIDNo"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/AccidentDateTime",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/AccidentAdditionalInformation",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/Labelcause",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "COMPLETECASUALTYFORM/CaseIDP4",
+      "reason": "Mirror field imported as the value of CaseIDNo"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/CoreQuestions3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/AccCirc",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/LandmineErWCasualtyForm2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/Accident1",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/Burns",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/Wounds",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/RightsideAmputation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/Line",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/Paralysis",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/Line1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/RightSide",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/LowerLimbAmputation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/LeftSide",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "COMPLETECASUALTYFORM/CaseIDP5",
+      "reason": "Mirror field imported as the value of CaseIDNo"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/AccOutcom",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/CoreQuestions4",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/LandmineErWCasualty4",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/Outcome",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/OfficeUse",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/MedicalCare",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/LandmineErWCasualty6",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "COMPLETECASUALTYFORM/CaseIDP6",
+      "reason": "Mirror field imported as the value of CaseIDNo"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "COMPLETECASUALTYFORM/MedicalCare1",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "COMPLETECASUALTYFORM/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "COMPLETECASUALTYFORM/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "COMPLETECASUALTYFORM/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "COMPLETECASUALTYFORM/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "Programs",
+      "reason": "EI3-era programs table; metaPrograms is the EI7 program store"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeAmputation",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeMarkings",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeMine",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeUnexpOrd",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "DetailInJrTypes",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "InjuryType3",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "LimbAmputation",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "MonthCasualty",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "viewCOMPLETECASUALTYFORM",
+      "reason": "EI3-era view-definition table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "WeekCasualy",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "YearlyDataset",
+      "reason": "no view, field or code table claims it"
+    }
+  ]
+}

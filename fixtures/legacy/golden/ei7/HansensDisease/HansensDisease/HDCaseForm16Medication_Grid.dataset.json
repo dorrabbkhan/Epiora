@@ -1,0 +1,91 @@
+{
+  "id": "HDCaseForm16Medication_Grid",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "UniqueRowId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueRowId"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "Medication_Grid_Medication",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Medication",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Medication_Grid_DateStarted",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date Started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Medication_Grid_DateEnded",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date Ended",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Medication_Grid_Dose",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Dose",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Medication_Grid_Frequency",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Frequency",
+        "legacy_type": "Text"
+      }
+    }
+  ]
+}

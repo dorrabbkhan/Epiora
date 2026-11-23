@@ -1,0 +1,40 @@
+{
+  "name": "SymptomsbyAgeSample",
+  "legacy_id": null,
+  "source_format": "ei3_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei3/SymptomsbyAgeSample.mdb",
+    "sha256": "1aab0ae852a23d178f0b6829a6912a385bcb34ed71f06fe4d93ee26bc6c341b3"
+  },
+  "views": [],
+  "links": [],
+  "programs": [],
+  "check_code": [],
+  "report": [
+    {
+      "kind": "code_page_assumed",
+      "item": "SymptomsbyAgeSample",
+      "reason": "JET3 text decoded as windows-1252 (MDB_JET3_CHARSET)"
+    },
+    {
+      "kind": "legacy_layout_unknown",
+      "item": "SymptomsbyAgeSample",
+      "reason": "no recognized view-definition tables"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "ageandsymptom",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "AllSymptoms",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "Programs",
+      "reason": "layout_unknown: plain data table"
+    }
+  ]
+}

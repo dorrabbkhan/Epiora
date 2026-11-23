@@ -1,0 +1,30 @@
+{
+  "name": "SchoolPoints",
+  "legacy_id": null,
+  "source_format": "ei3_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei3/SchoolPoints.mdb",
+    "sha256": "d5edfcd7d9a2f01fac35632f533ea1939c51021afe9631d17ea407de32351a44"
+  },
+  "views": [],
+  "links": [],
+  "programs": [],
+  "check_code": [],
+  "report": [
+    {
+      "kind": "code_page_assumed",
+      "item": "SchoolPoints",
+      "reason": "JET3 text decoded as windows-1252 (MDB_JET3_CHARSET)"
+    },
+    {
+      "kind": "legacy_layout_unknown",
+      "item": "SchoolPoints",
+      "reason": "no recognized view-definition tables"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "pttable",
+      "reason": "layout_unknown: plain data table"
+    }
+  ]
+}

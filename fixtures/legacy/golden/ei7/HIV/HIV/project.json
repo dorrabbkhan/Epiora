@@ -1,0 +1,238 @@
+{
+  "name": "HIV",
+  "legacy_id": "D7D0C581-A02E-409D-715F31C70A816C15",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/HIV/HIV.mdb",
+    "sha256": "455b6a530be9c6d1006f07b2c984daff4e9e4de89ef70bc2332ba45caf32b83f"
+  },
+  "views": [
+    {
+      "name": "Case",
+      "dataset": "Case.dataset.json",
+      "records": 359,
+      "deleted_records": 0,
+      "hash": "d52d174bed12e1e9f58e1e70e333bc53474963679a31553762296a0f139cf0ff"
+    }
+  ],
+  "links": [],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "Case",
+      "blocks": 10
+    }
+  ],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "Case/DemographicInformation",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/Race",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/GetCoordinates",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/Alldatacontainedhereinisfictional",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/CommunityHIVTesting",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/Patients13yearsofageattimeofdiagnosis",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/USDEPARTMENTOFHEALTHHUMANSERVICES",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/CentersforDiseaseControlandPrevention",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/Spacer",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/FacilityofDiagnosos",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/AFTER1977ANDPRECEDINGTHEFIRSTPOSITIVEHIVANTIBODYTEST",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/HETEROSEXUALrelationswithanyofthefollowing",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/PatientHistory",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/Page1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/CDC50A45C",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/CDC50A45C1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/Page2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/LaboratoryData",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/N3DetectableViralLoadTest",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/N1HIVantibodytestsatdiagnosis",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/N2PositiveHIVdetectiontest",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/ATORCLOSESTTOCURRENTDIAGNOSTICSTATUS",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/First200uLor14",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/cellsuL1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/cellsuL11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/PercentSign1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/PercentSign11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/N4Immunologic",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/Spacer1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/CommunityHIVTesting1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/USDEPARTMENTOFHEALTHHUMANSERVICES1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/Patients13yearsofageattimeofdiagnosis1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Case/CentersforDiseaseControlandPrevention1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    }
+  ]
+}

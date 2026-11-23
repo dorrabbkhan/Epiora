@@ -1,0 +1,162 @@
+{
+  "name": "Asthma Survey 2005 Sample",
+  "legacy_id": null,
+  "source_format": "ei3_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei3/Asthma Survey 2005 Sample.mdb",
+    "sha256": "19b8112fbe0773d2459faa1226fab234573081d79fff754271ccd2b1b0186f69"
+  },
+  "views": [
+    {
+      "name": "PreInterventionSurvey",
+      "dataset": "PreInterventionSurvey.dataset.json",
+      "records": 800,
+      "deleted_records": 0,
+      "hash": "fc318ee72015f3f938d6078f1a52ef5131606dd8755a31c7f8c25f8f551d1ab7"
+    }
+  ],
+  "links": [],
+  "programs": [
+    {
+      "name": "Q/AFrequency",
+      "text_sha256": "ea1d71e55dc9c7087f7662d74105805b4fc1eb388b31de866c14d1843eac4127"
+    },
+    {
+      "name": "Q/AMeans",
+      "text_sha256": "b54e60a0de123c530913183ca9297f2aad17c38b7f3e8abab689bc6a58496cbb"
+    },
+    {
+      "name": "Q/ATables",
+      "text_sha256": "64601ec6a4868f90a5769ed24e7382b0da311434d6a9900c4f0f876524601bf9"
+    },
+    {
+      "name": "Lesson5",
+      "text_sha256": "e3ec560b724b3cbae5002beb9c3824ba80ff417278b45d092d9c169a5e3cf622"
+    },
+    {
+      "name": "monthsrecode",
+      "text_sha256": "5055ce69b398f102b6ba22276fc6ed1d74ea29fe3003e62ce1279638ebe671d7"
+    },
+    {
+      "name": "LineGraphSample",
+      "text_sha256": "21064488e567b403d50507dcf0a6719fadc400502efacb53a79266fedb5b3e89"
+    },
+    {
+      "name": "mapcode",
+      "text_sha256": "b826633ef2d36ab4710f950a69e389546b412e52c1563ee66680cc0092814bf2"
+    }
+  ],
+  "check_code": [
+    {
+      "view": "PreInterventionSurvey",
+      "blocks": 2
+    }
+  ],
+  "report": [
+    {
+      "kind": "code_page_assumed",
+      "item": "Asthma Survey 2005 Sample",
+      "reason": "JET3 text decoded as windows-1252 (MDB_JET3_CHARSET)"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/PreSurvey",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Condition",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PreInterventionSurvey/ID",
+      "reason": "MIRROR field imported as the value of StudentID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Symptoms",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Identification",
+      "reason": "EI3 field type GROUP is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/AsthmaticConditions",
+      "reason": "EI3 field type GROUP is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/MonthlyBreathing",
+      "reason": "EI3 field type GROUP is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Medtitle",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/PersonalInformation",
+      "reason": "EI3 field type GROUP is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PreInterventionSurvey/ID2",
+      "reason": "MIRROR field imported as the value of StudentID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Symptitle",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "ageandsymptom",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSchoolID",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSchoolID1",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSchoolID12",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSchoolID123",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "CountAsthma",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "CountBronchitis",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "DaysTable",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "symptomsbyage2",
+      "reason": "no view or code table claims it"
+    }
+  ]
+}

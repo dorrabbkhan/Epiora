@@ -1,0 +1,296 @@
+{
+  "name": "Analysis_Cholera_in_Rwenshama",
+  "legacy_id": "0EEF3672-4BF2-D84C-6785ED0FBFDDB949",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/Cholera/Cholera_in_Rwenshama_2.mdb",
+    "sha256": "fde91110e18a2fd596db3759163345dd354f390c1ffe72dbb5ba039ecf14d891"
+  },
+  "views": [
+    {
+      "name": "Questionnaire",
+      "dataset": "Questionnaire.dataset.json",
+      "records": 66,
+      "deleted_records": 0,
+      "hash": "37c17fea8842faf4498343d356e985dfde6c898fdafb6ac4852fb91876ffe434"
+    },
+    {
+      "name": "Questionnaire_NoCheckCode",
+      "dataset": "Questionnaire_NoCheckCode.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "46c5523d2a53c32f0ae627f6aff45a6edd6b54aa50e1af9ce31f0116e36a6f7e"
+    },
+    {
+      "name": "Questionnaire_DataEntry",
+      "dataset": "Questionnaire_DataEntry.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "46c5523d2a53c32f0ae627f6aff45a6edd6b54aa50e1af9ce31f0116e36a6f7e"
+    }
+  ],
+  "links": [],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "Questionnaire",
+      "blocks": 8
+    },
+    {
+      "view": "Questionnaire_DataEntry",
+      "blocks": 8
+    }
+  ],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Questionnaire",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/ifNotIllSkip",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/PERSONALSPECIFICATION1",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Illness",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/SelectAllThat",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/SymptomsOf",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/SignsOnPresentation",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/SelectAllThatApply",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/TreatmentGiven",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/RiskFactorS",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/FoodsEaten",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/RiskFactorSPage",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Cholera/OldUniqueKey",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Questionnaire_NoCheckCode",
+      "reason": "base table Questionnaire_NoCheckCode is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Questionnaire_NoCheckCode",
+      "reason": "page table Questionnaire_NoCheckCode5 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Questionnaire_NoCheckCode",
+      "reason": "page table Questionnaire_NoCheckCode6 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Questionnaire_NoCheckCode",
+      "reason": "page table Questionnaire_NoCheckCode7 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Questionnaire_NoCheckCode",
+      "reason": "page table Questionnaire_NoCheckCode8 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_NoCheckCode/Questionnaire",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_NoCheckCode/ifNotIllSkip",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_NoCheckCode/PERSONALSPECIFICATION1",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_NoCheckCode/SymptomsOf",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_NoCheckCode/TreatmentGiven",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_NoCheckCode/Illness",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_NoCheckCode/SelectAllThat",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_NoCheckCode/SelectAllThatApply",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_NoCheckCode/SignsOnPresentation",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_NoCheckCode/RiskFactorS",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_NoCheckCode/FoodsEaten",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_NoCheckCode/RiskFactorSPage",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_DataEntry/Questionnaire",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_DataEntry/ifNotIllSkip",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_DataEntry/PERSONALSPECIFICATION1",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_DataEntry/SymptomsOf",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_DataEntry/TreatmentGiven",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_DataEntry/Illness",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_DataEntry/SelectAllThat",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_DataEntry/SelectAllThatApply",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_DataEntry/SignsOnPresentation",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_DataEntry/RiskFactorS",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_DataEntry/FoodsEaten",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire_DataEntry/RiskFactorSPage",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Questionnaire_DataEntry/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Questionnaire_DataEntry/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Questionnaire_DataEntry/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Questionnaire_DataEntry/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "CholeraCases",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "CholeraControls",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeQ26Place",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "viewQuestionnaire",
+      "reason": "EI3-era view-definition table"
+    }
+  ]
+}

@@ -1,0 +1,779 @@
+{
+  "id": "FoodHistory_NoCheckCode",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "CaseID",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Case ID",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DateofInterview",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date of Interview",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FirstName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LastName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Last Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Sex",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Sex",
+        "legacy_type": "LegalValues",
+        "label_set": "codephvs_administrativesex_hl7_2x"
+      }
+    },
+    {
+      "name": "DOB",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "DOB",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Age",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Age",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EthnicityGroup",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Ethnicity Group",
+        "legacy_type": "LegalValues",
+        "label_set": "codephvs_ethnicitygroup_cdc"
+      }
+    },
+    {
+      "name": "White",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "White",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "NativeHawaiianOtherPacificIslander",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Native Hawaiian/Other Pacific Islander",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "UnknownOther",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unknown/Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Black",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Black",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "AmericanIndianAlaskanNative",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "American Indian/Alaskan Native",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Asian",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Asian",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Multiracial",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Multiracial",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PatientAddress",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Address",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "State",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Latitude",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Latitude:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Longitude",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Longitude",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Occupation",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Occupation",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "EmailAddress",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Email Address",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HomePhone",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Home Phone",
+        "legacy_type": "PhoneNumber"
+      }
+    },
+    {
+      "name": "ILL",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Was the patient ill?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "OnsetDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Symptom Onset Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OnsetWeek",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Onset Week",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "SymptomDuration",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Duration of Symptoms",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Headache",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Headache",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Fever",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fever",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Vomiting",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Vomiting",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BloodyDiarrhea",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Bloody diarrhea",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "NonBloodyDiarrhea",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Non-bloody diarrhea",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PoorFeeding",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Poor feeding",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Chills",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Chills",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Irritable",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Irritable",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Nausea",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Nausea",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Abdominalcramps",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Abdominal cramps",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "FeverTemp",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "Highest fever temp",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LooseStoolsPerDay",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If patient had diarrhea, how many loose stools per day?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeloosestoolsperday"
+      }
+    },
+    {
+      "name": "DoctorVisit",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Was the patient ill enough to require a doctor visit?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DoctorVisitDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Doctor visit date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Hospitalized",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Was the patient hospitalized?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "HospitalAdmissionDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Hospital admission date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Antibiotics",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Was the patient treated with antibiotics?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Died",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did the patient die?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DateOfDeath",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date of death:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Freshcelery",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fresh celery",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Grapes",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Grapes",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Blueberries",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Blueberries",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Breastmilk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Breast milk",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Skimmilk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Skim milk",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Cheddarcheese",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cheddar cheese",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Peaches",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Peaches",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Americancheese",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "American cheese",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Strawberries",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Strawberries",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Orangejuice",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Orange juice",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Applejuice",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Apple juice",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Freshtomatoes",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fresh tomatoes",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Beefjerkey",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Beef jerkey",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Sourcream",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Sour cream",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Viennasausages",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Vienna sausages",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "N2milk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "2% milk",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Icecream",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Ice cream",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Turkey",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Turkey",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Wholemilk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Whole milk",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Rawcarrots",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Raw carrots",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Beansprouts",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Bean sprouts",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Butter",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Butter",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Cookedbacon",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cooked bacon",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "BuyLastTenDays",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Where did you buy meat, vegetables or other groceries that were eaten in the 10 days before the patient got sick?",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "StoolSubmitted",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Stool sample submitted for enteric culture?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "StoolCollectionDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Collection date:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "O157H7isolated",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "O157:H7 isolated?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Lab",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Lab:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LabResults",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Lab results:",
+        "legacy_type": "Text"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codephvs_administrativesex_hl7_2x",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "F-Female"
+          },
+          "F-Female"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "M-Male"
+          },
+          "M-Male"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "U-Unknown"
+          },
+          "U-Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codephvs_ethnicitygroup_cdc",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "2135:2-Hispanic or Latino"
+          },
+          "2135:2-Hispanic or Latino"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2186:5-Not Hispanic or Latino"
+          },
+          "2186:5-Not Hispanic or Latino"
+        ]
+      ]
+    },
+    {
+      "id": "codeloosestoolsperday",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-3 per day"
+          },
+          "1-3 per day"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4-6 per day"
+          },
+          "4-6 per day"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7-10 per day"
+          },
+          "7-10 per day"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10+ per day"
+          },
+          "10+ per day"
+        ]
+      ]
+    }
+  ]
+}

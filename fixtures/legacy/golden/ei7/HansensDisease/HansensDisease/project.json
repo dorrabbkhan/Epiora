@@ -1,0 +1,1266 @@
+{
+  "name": "HansensDisease",
+  "legacy_id": "4D3B56F6-27A4-DE19-553AAD0457235ADC",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/HansensDisease/HansensDisease.mdb",
+    "sha256": "e37d26f0760f6ebba4f7b31a727960eef8b2cf994536646fa4e5ae3beb68acea"
+  },
+  "views": [
+    {
+      "name": "HDCaseForm",
+      "dataset": "HDCaseForm.dataset.json",
+      "records": 1,
+      "deleted_records": 0,
+      "hash": "49853cd7e41a643cac60a8f4744df608bb1dff3200ca48989e0c88b9a4c369ae"
+    },
+    {
+      "name": "HDContactForm",
+      "dataset": "HDContactForm.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "fd313762d8b7d8ea693efe5f144736acacf721f03361cc2ed888e50074b5d05d"
+    },
+    {
+      "name": "SensoryTestingForm",
+      "dataset": "SensoryTestingForm.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "ae35460fd7036d8f2d374549a901e8214ac34ae5412a840ac38b3c40746cdf70"
+    },
+    {
+      "name": "Images",
+      "dataset": "Images.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "205faa6c638de05c95a34ac9da72f780f1f63066124271937e8c0530de08cbc1"
+    }
+  ],
+  "links": [
+    {
+      "parent": "HDCaseForm",
+      "child": "HDContactForm",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "HDCaseForm",
+      "child": "SensoryTestingForm",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "HDCaseForm",
+      "child": "HDCaseForm5SlitSkinSmear_Grid",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "grid",
+      "dataset": "HDCaseForm5SlitSkinSmear_Grid.dataset.json",
+      "hash": "48bc2f7ae10777cda16df3570edde14c43ff6295a9c893db9db4d70ead216768"
+    },
+    {
+      "parent": "HDCaseForm",
+      "child": "HDCaseForm5Biopsy_Grid",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "grid",
+      "dataset": "HDCaseForm5Biopsy_Grid.dataset.json",
+      "hash": "78286015a000472c3541ad33d144b4ab5bbbd5bdb2ecef5e9c3105924cc2b68f"
+    },
+    {
+      "parent": "HDCaseForm",
+      "child": "SensoryTestingForm",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "HDCaseForm",
+      "child": "HDCaseForm16Medication_Grid",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "grid",
+      "dataset": "HDCaseForm16Medication_Grid.dataset.json",
+      "hash": "88964a7cee56bea59833ec98f9de6ce94bb1fe75627f9629ca2b1d59c5e70132"
+    },
+    {
+      "parent": "HDCaseForm",
+      "child": "Images",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "HDCaseForm",
+      "child": "SensoryTestingForm",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "HDContactForm",
+      "child": "HDContactForm3PEP_Dates_Grid",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "grid",
+      "dataset": "HDContactForm3PEP_Dates_Grid.dataset.json",
+      "hash": "34074c5e3c058ca86ce89760aa4595fa2a2a8cd14ce9559174a19694686d6c9d"
+    },
+    {
+      "parent": "HDContactForm",
+      "child": "HDContactForm3Contact_Exam_Grid",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "grid",
+      "dataset": "HDContactForm3Contact_Exam_Grid.dataset.json",
+      "hash": "a924224c7b0d0381639179c953bf13d41c63d002972a57d352b4aca7fb5dc416"
+    },
+    {
+      "parent": "SensoryTestingForm",
+      "child": "SensoryTestingForm14Reaction_Followup_Grid",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "grid",
+      "dataset": "SensoryTestingForm14Reaction_Followup_Grid.dataset.json",
+      "hash": "079a5853c8fbb0a864a9325b716f585f77efb3f449f13744f70d1fd4a90044df"
+    }
+  ],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "HDCaseForm",
+      "blocks": 137
+    },
+    {
+      "view": "HDContactForm",
+      "blocks": 12
+    },
+    {
+      "view": "SensoryTestingForm",
+      "blocks": 31
+    },
+    {
+      "view": "Images",
+      "blocks": 2
+    }
+  ],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/HansensDiseaseCaseForm",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page1DemographicsandCaseDescriptors",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Dash0",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Dash1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Dash2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page1Group2",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Slash0",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Comorbidities",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/VillageAtollIsland",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/HealthcareWorkerContactInformation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/VillageAtollIsland1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/VillageAtollIsland2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Get_Coordinates_Button",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page1NextPageButton",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/EstimatedCompletionDate_Date_Label",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/HDRidleyJoplingClassification_Classification_Label",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Prior_Treatment_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/CloseCommandButton5",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page1Group1",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PatientStatusLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/UponDiagnosisLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/RightSideUDLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/LeftSideUDLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/NerveLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/HansensDiseaseCaseForm1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page1DemographicsandCaseDescriptors1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/GreatAuricularLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/UlnarLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/RadialCutaneousLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/MedianLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/LateralPoplitealLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/UponDiagnosisLabel1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/RightSideUDLabel2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/LeftSideUDLabel2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/NerveLabel1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/UponDiagnosisLabel11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/RightSideUDLabel21",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/LeftSideUDLabel21",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/NerveLabel11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/HandsLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/FeetLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/EyesLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/LeftLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel12",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel13",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel14",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel15",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/RightLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/RightLabel2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/LeftLabel2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PhysicalDeformityLabel1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PhysicalDeformityLabel2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PhysicalDeformityLabel3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Upon_Diagnosis_Group_Page_2",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PhysicalDeformity",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page2NextPageButton",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page2PreviousPageButton",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/WHODisabilityGradingLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/EyeHandandFootEHFGradingLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/CloseCommandButton4",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/SlitSkinSmear_Label",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/SlitSkinSmear_Label1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page4PreviousPageButton",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/HansensDiseaseCaseFormLabel31",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page3WHOandEHFGrading1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PathologyResultsNextPageButton",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/CloseCommandButton3",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Medications_LabelOnSmearPage",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/HansensDiseaseCaseFormLabel311",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page3WHOandEHFGrading11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page4PreviousPageButton1",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page4NextPageButton1",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/CloseCommandButton2",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/HansensDiseaseCaseForm12",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page1DemographicsandCaseDescriptors11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Upon_Treatment_Completion_Group_Page_2",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/UponTreatmentCompletion",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/NerveLabel2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/RightSideUDLabel11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/LeftSideUDLabel11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/GreatAuricularLabel1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/UlnarLabel1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/RadialCutaneousLabel1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/MedianLabel1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/LateralPoplitealLabel1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel4",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/UponTreatmentCompletion1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/NerveLabel12",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/RightSideUDLabel3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/LeftSideUDLabel3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel31",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel21",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel16",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/UponTreatmentCompletion11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/NerveLabel111",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/RightSideUDLabel221",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/LeftSideUDLabel221",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel111",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel121",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel131",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel141",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PosteriorTibialLabel151",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/HandsLabel11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/FeetLabel11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/EyesLabel11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/RightLabel5",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/LeftLabel13",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/RightLabel31",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/LeftLabel111",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PhysicalDeformityLabel211",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PhysicalDeformityLabel111",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PhysicalDeformityLabel311",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/PhysicalDeformity11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page2bPreviousPageButton",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page2bNextPageButton",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/WHODisabilityGradingLabelTC",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/EyeHandandFootEHFGradingLabelTC",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/CloseCommandButton1",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/HansensDiseaseCaseFormLabel3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page3WHOandEHFGrading",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/Page3PreviousPageButton",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/CloseCommandButton",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "HDCaseForm/Mirror_DX_WHODisabilityGrade",
+      "reason": "Mirror field imported as the value of DX_WHODisabilityGrade"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "HDCaseForm/Mirror_TC_WHODisabilityGrade",
+      "reason": "Mirror field imported as the value of TC_WHODisabilityGrade"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "HDCaseForm/Mirror_DX_EHF_Sum_Score",
+      "reason": "Mirror field imported as the value of DX_EHFGrade__Sum_Score"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "HDCaseForm/Mirror_TC_EHF_Sum_Score",
+      "reason": "Mirror field imported as the value of TC_EHFGrade__Sum_Score"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/AtDiagnosis_Page6Label",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/AtDiagnosis_Page6Label1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDCaseForm/grpOutcome",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "HDCaseForm/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "HDCaseForm/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "HDCaseForm/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "HDCaseForm/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDContactForm/HansensDiseaseCaseForm",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDContactForm/Page2Group1",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDContactForm/AddNewContactButton",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDContactForm/BacktoCaseForm",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HDContactForm/HDCaseContact_Address_Get_Coordinates",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "HDContactForm/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "HDContactForm/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "HDContactForm/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "HDContactForm/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_First_Digit_Wrist_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_Fifth_Digit_Wrist_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_First_Digit_Wrist_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_First_Digit_Tip_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_First_Digit_Tip_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_Fifth_Digit_Base_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_Fifth_Digit_Base_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_Second_Digit_Base_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_Second_Digit_Base_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_Fifth_Digit_Tip_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_Fifth_Digit_Tip_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_Second_Digit_Tip_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_Second_Digit_Tip_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Foot_First_Digit_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Foot_First_Digit_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Foot_Fifth_Digit_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Foot_Fifth_Digit_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Foot_Inside_Ball_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Foot_Inside_Ball_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Foot_Outside_Ball_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Foot_Outside_Ball_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Foot_Outside_Arch_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Foot_Outside_Arch_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/HansensDiseaseCaseForm11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Page1DemographicsandCaseDescriptors2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_Fifth_Digit_Wrist_Diag",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_First_Digit_Wrist_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_First_Digit_Wrist_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_First_Digit_Tip_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_Second_Digit_Tip_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_Second_Digit_Base_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_Fifth_Digit_Base_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_Fifth_Digit_Tip_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_Fifth_Digit_Wrist_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_First_Digit_Tip_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_Second_Digit_Tip_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_Second_Digit_Base_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_Fifth_Digit_Tip_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Hand_Fifth_Digit_Base_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Hand_Fifth_Digit_Wrist_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Foot_First_Digit_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Foot_Fifth_Digit_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Foot_Outside_Ball_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Foot_Inside_Ball_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Right_Foot_Outside_Arch_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Foot_Outside_Arch_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Foot_First_Digit_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Foot_Fifth_Digit_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Foot_Outside_Ball_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Left_Foot_Inside_Ball_Group",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/HansensDiseaseCaseForm112",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Page1DemographicsandCaseDescriptors22",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/HansensDiseaseCaseForm111",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SensoryTestingForm/Page1DemographicsandCaseDescriptors21",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "SensoryTestingForm/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "SensoryTestingForm/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "SensoryTestingForm/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "SensoryTestingForm/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Images/Label_UploadPatientImages",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Images/Patient_Image",
+      "reason": "Image is form metadata (binary OLE data)"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Images/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Images/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Images/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Images/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codebiopsy_results1",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codecountrycode1",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeexam_ne_dx_r_ga1",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codehdcasenumberstatecode1",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codehdcontactexamyear1",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codereaction_follow_up_prednisone_therapy1",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codereaction_followup_grid_medication_listed1",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codestatecode1",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "HDCaseForm5Medications_Grid",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "HDCaseForm6Reaction_Follow_Up",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "HDCaseForm6Reaction_Follow_Up_Grid",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "HDCaseForm6Treatment_Follow_Up_Grid",
+      "reason": "no view, field or code table claims it"
+    }
+  ]
+}

@@ -1,0 +1,1968 @@
+{
+  "id": "ClinicalSignsandSymptoms",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RecStatus",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "COUGHSP_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "COUGHBLD_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "WHEEZ_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SOB_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CP_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "ABDP_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "VOMIT_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "DIARR_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "ABDP_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "VOMIT_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "DIARR_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "MYALG_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CMYALG_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "MYALG_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CMYALG_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "FEVERTEMP_C",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "FEVERTEMP_A",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CDCUniqueID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Unique ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STATEID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID#",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "COUNTYID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID#",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OnSetDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CDCID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID#",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FEVERISH_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FEVER_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CHILLS_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "WEAK_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HA_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ALTMS_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SZ_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CONJUNC_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "RNOSE_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SORETHRT_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FEVERTEMP_I",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "VOMIT_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "FEVERISH_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "FEVER_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CHILLS_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "WEAK_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "HA_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "ALTMS_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SZ_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "CONJUNC_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "RNOSE_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "SORETHRT_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "COUGH_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "COUGHSP_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "COUGHBLD_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "SOB_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "CP_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "ABDP_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "DIARR_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "MYALG_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "CMYALG_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "SZ_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CONJUNC_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "RNOSE_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SORETHRT_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "COUGH_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "COUGHSP_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "COUGHBLD_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "WHEEZ_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SOB_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CP_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABDP_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VOMIT_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DIARR_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "MYALG_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CMYALG_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FEVERISH_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "FEVER_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CHILLS_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "WEAK_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "HA_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "ALTMS_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SZ_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CONJUNC_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "RNOSE_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SORETHRT_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "COUGH_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "PRES_HOSP",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "If presentation of care=hospital admission, check \r\nhere and do NOT recopy symptoms in this column)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CAREDATE",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ADMDATE",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Admission Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FEVERISH_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "FEVER_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "CHILLS_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "HA_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "WEAK_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "ALTMS_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "WHEEZ_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "COUGH_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "COUGHSP_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "COUGHBLD_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "WHEEZ_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SOB_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CP_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - -",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "COUNTYID1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "STATEID1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "SX2SPEC",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (specify)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SX2OTH_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "SX2OTH_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CDCID1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "SX2OTH_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SX2OTH_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SX3SPEC",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (specify)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SX3OTH_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "SX3OTH_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SX1OTH_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SX3OTH_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SX3OTH_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "ClinSXNotes",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Clinical Notes:",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "SX1SPEC",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (specify)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SX1OTH_I",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "SX1OTH_ODT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SX1OTH_C",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "O2Use4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeO2Use"
+      }
+    },
+    {
+      "name": "GLUCOSE",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HTCM",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "cm",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HTINCH",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "or  Inches",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "WTKG",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "Kg",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "WTLB",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "or  Lbs.",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "VitalNotes",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Vital Notes",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "TMAXD",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "SLBPA",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DLBPA",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "SLBP1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DLBP1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DLBP4",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "SLBP5",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DLBP5",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "SLBP6",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DLBP6",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "SLBP7",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DLBP7",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXRRA",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXRR1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXRR2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXRR3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXRR4",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXRR5",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXRR6",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXRR7",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "O2Use5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeO2Use"
+      }
+    },
+    {
+      "name": "O2Use6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeO2Use"
+      }
+    },
+    {
+      "name": "O2Use7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeO2Use"
+      }
+    },
+    {
+      "name": "O2SATA",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "O2SAT1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "O2SAT2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "O2SAT3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "O2SAT4",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "O2SAT5",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "O2SAT6",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "O2SAT7",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "FIO2A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SLBP3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "SLBP2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DLBP2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DLBP3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "SLBP4",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "FIO21",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FIO22",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FIO23",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FIO24",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STATEID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "FIO25",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FIO26",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FIO27",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "EXHRA",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXHR1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXHR2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXHR3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXHR4",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXHR5",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXHR6",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EXHR7",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "O2Use1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeO2Use"
+      }
+    },
+    {
+      "name": "O2Use2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeO2Use"
+      }
+    },
+    {
+      "name": "O2Use3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeO2Use"
+      }
+    },
+    {
+      "name": "COUNTYID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CDCID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "O2USEA",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeMask"
+      }
+    },
+    {
+      "name": "ADMDATE1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "TMAX1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TMAX2",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HOSPDT1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HOSPDT2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HOSPDT3",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HOSPDT4",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HOSPDT5",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "TMAX3",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TMAX4",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HOSPDT6",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HOSPDT7",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DEFERVDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "TMAXA",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TMAX5",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TMAX6",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TMAX7",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeYesNoUnknown",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9 - Unknown"
+          },
+          "9 - Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeYesNo",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ]
+      ]
+    },
+    {
+      "id": "codeO2Use",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - O2 mask"
+          },
+          "1 - O2 mask"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Ventilator"
+          },
+          "2 - Ventilator"
+        ]
+      ]
+    },
+    {
+      "id": "codeMask",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - O2 Mask"
+          },
+          "1 - O2 Mask"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Ventilator"
+          },
+          "2 - Ventilator"
+        ]
+      ]
+    }
+  ]
+}
