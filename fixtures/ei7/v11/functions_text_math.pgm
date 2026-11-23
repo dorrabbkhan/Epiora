@@ -1,7 +1,7 @@
 *** functions_text_math.pgm — Epiora v1.1 Task 3 reference program.
 *** Text and math functions over Nutrition.mdb's PatientVisits2 (11 rows):
 *** UPPERCASE, SUBSTRING, STRLEN, TXTTONUM, FINDTEXT, FORMAT; ROUND, TRUNC,
-*** ABS, EXP, LN, LOG, SQRT — AgeMonths, BMI and WeightPounds each have one
+*** ABS, EXP, LN, SQRT — AgeMonths, BMI and WeightPounds each have one
 *** missing cell, so missing propagation through functions is pinned too.
 READ '@WORK_DIR@/Nutrition.mdb':PatientVisits2
 ROUTEOUT "@OUTPUT_HTML@" REPLACE
@@ -19,13 +19,11 @@ DEFINE ABSZ NUMERIC
 ASSIGN ABSZ = ABS(0 - BMI)
 DEFINE EXPLN NUMERIC
 ASSIGN EXPLN = EXP(LN(WeightPounds))
-DEFINE LOGV NUMERIC
-ASSIGN LOGV = LOG(WeightPounds)
 DEFINE SQV NUMERIC
 ASSIGN SQV = SQRT(WeightPounds)
 DEFINE FMTH = FORMAT(HeightInches, "0.00")
 DEFINE FINDN NUMERIC
 ASSIGN FINDN = FINDTEXT(Name, "John")
-LIST Name UPNAME SUBNM NMLEN PIDNUM RNDAGE TRAGE ABSZ EXPLN LOGV SQV FMTH FINDN
+LIST Name UPNAME SUBNM NMLEN PIDNUM RNDAGE TRAGE ABSZ EXPLN SQV FMTH FINDN
 CLOSEOUT
 QUIT

@@ -36,7 +36,10 @@ param(
     # Directory that receives the html outputs; asserted on by the workflow.
     [string]$OutputDir = "ei7-out",
     # Headless run guard: Analysis.exe is killed after this many seconds.
-    [int]$TimeoutSeconds = 300
+    # Kept short: a successful program exits in ~15s, a command error shows
+    # a modal and Analysis.exe would wait forever; 8 sequential timeouts at
+    # 300s would overrun the workflow job's 30-minute budget.
+    [int]$TimeoutSeconds = 120
 )
 
 $ErrorActionPreference = "Continue"

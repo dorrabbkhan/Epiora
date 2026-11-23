@@ -239,17 +239,25 @@ jobs:
           $refArgs = $refs | ForEach-Object { "/reference:$_" }
           $csc = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
           if (-not (Test-Path $csc)) { $csc = "C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe" }
-          & $csc /nologo /platform:anycpu "/out:$(Join-Path $buildDir 'probe.exe')" probe.cs $refArgs
+          # /platform:x86: .mdb access goes through Microsoft.Jet.OLEDB.4.0,
+          # which ships only as a 32-bit provider.
+          & $csc /nologo /platform:x86 "/out:$(Join-Path $buildDir 'probe.exe')" probe.cs $refArgs
           if (-not (Test-Path (Join-Path $buildDir 'probe.exe'))) { Write-Error "FAIL: probe.exe not built"; exit 1 }
           Write-Host "probe: compiled OK"
 
       - name: Run the headless EI3 upgrade probe
         shell: powershell
         run: |
+          $ErrorActionPreference = 'Continue'
           New-Item -ItemType Directory -Force -Path ei3-probe | Out-Null
           $exe = Get-ChildItem ei7 -Recurse -Filter "probe.exe" | Select-Object -First 1 -ExpandProperty FullName
-          & $exe "fixtures\legacy\samples\ei3\Asthma Survey 2005 Sample.mdb" "ei3-probe" 2>&1 | Tee-Object ei3-probe\probe.log
+          # cmd /c with in-process redirection: Windows PowerShell 5.1 turns
+          # any native stderr line into a NativeCommandError that aborts the
+          # step before a tee could log it.
+          cmd /c "`"$exe`" `"fixtures\legacy\samples\ei3\Asthma Survey 2005 Sample.mdb`" `"ei3-probe`" > ei3-probe\probe.log 2>&1"
           Write-Host "probe: exit $LASTEXITCODE"
+          Get-Content ei3-probe\probe.log -ErrorAction SilentlyContinue
+          Get-ChildItem ei3-probe -Recurse -File | ForEach-Object { Write-Host ("probe: {0} ({1} bytes)" -f $_.FullName, $_.Length) }
 
       - name: Upload ei3-upgrade-probe artifact
         if: always()
