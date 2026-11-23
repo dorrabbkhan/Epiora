@@ -8,7 +8,7 @@
 
 use tiberius::numeric::Numeric;
 use tiberius::time::{Date, DateTime, DateTime2, Time};
-use tiberius::{Column, ColumnData, ColumnType, Row};
+use tiberius::{ColumnData, Row};
 
 /// A value destined for one EPTB cell.
 enum CellVal {
@@ -23,43 +23,69 @@ pub(crate) struct ColAcc {
     name: String,
     source_type: u8,
     kind: u8,
+    /// Column selected as `CAST(x AS VARBINARY(MAX))`: the declared
+    /// type is unicode text but its bytes arrive raw — decoded as
+    /// UTF-16LE with U+FFFD substitution (a copied OLE cell is not
+    /// valid UTF-16; `String::from_utf16` inside tiberius would
+    /// abort the stream).
+    utf16_bytes: bool,
     /// Per-row missing flags, appended every row (bit set = missing).
     miss: Vec<bool>,
     vals: Vec<CellVal>,
 }
 
-/// TDS `ColumnType` → the EPTB kind byte. `source_type` carries the
-/// TDS discriminant (the mapper compares it only for cross-chunk
+// SQL Server `sys.columns.system_type_id` values.
+const TINYINT: u8 = 48;
+const SMALLINT: u8 = 52;
+const INT: u8 = 56;
+const REAL: u8 = 59;
+const MONEY: u8 = 60;
+const DATETIME: u8 = 61;
+const FLOAT: u8 = 62;
+const NTEXT: u8 = 99;
+const BIT: u8 = 104;
+const DECIMAL: u8 = 106;
+const NUMERIC: u8 = 108;
+const SMALLMONEY: u8 = 122;
+const BIGINT: u8 = 127;
+const SMALLDATETIME: u8 = 58;
+const UNIQUEIDENT: u8 = 36;
+const DATE: u8 = 40;
+const TIME: u8 = 41;
+const DATETIME2: u8 = 42;
+const DATETIMEOFFSET: u8 = 43;
+const TEXT: u8 = 35;
+const VARCHAR: u8 = 167;
+const CHAR: u8 = 175;
+const XML: u8 = 241;
+const NVARCHAR: u8 = 231; // also `sysname`
+const NCHAR: u8 = 239;
+
+/// The SELECT casts these to `VARBINARY(MAX)` so wire decode can
+/// never hit `Error::Utf16`; valid text decodes identically.
+pub(crate) fn is_utf16_type(system_type_id: u8) -> bool {
+    matches!(system_type_id, NVARCHAR | NCHAR | NTEXT)
+}
+
+/// SQL Server `system_type_id` → the EPTB kind byte. `source_type`
+/// carries that id (the mapper compares it only for cross-chunk
 /// consistency, never for mapping decisions).
-pub(crate) fn col_acc(c: &Column) -> ColAcc {
-    use ColumnType as T;
-    let kind = match c.column_type() {
-        T::Int1 | T::Int2 | T::Int4 | T::Int8 | T::Intn => 0,
-        T::Bit | T::Bitn => 3,
-        T::Float4 | T::Float8 | T::Floatn | T::Money | T::Money4 | T::Decimaln | T::Numericn => 1,
-        T::Datetime4
-        | T::Datetime
-        | T::Datetimen
-        | T::Daten
-        | T::Timen
-        | T::Datetime2
-        | T::DatetimeOffsetn => 4,
-        T::Guid
-        | T::NVarchar
-        | T::NChar
-        | T::BigVarChar
-        | T::BigChar
-        | T::Text
-        | T::NText
-        | T::Xml => 2,
-        // BigVarBin, BigBinary, Image, Udt, SSVariant, Null and
+pub(crate) fn col_acc(name: &str, system_type_id: u8) -> ColAcc {
+    let kind = match system_type_id {
+        TINYINT | SMALLINT | INT | BIGINT => 0,
+        BIT => 3,
+        REAL | MONEY | FLOAT | DECIMAL | NUMERIC | SMALLMONEY => 1,
+        DATETIME | SMALLDATETIME | DATE | TIME | DATETIME2 | DATETIMEOFFSET => 4,
+        TEXT | VARCHAR | CHAR | XML | UNIQUEIDENT | NVARCHAR | NCHAR | NTEXT => 2,
+        // varbinary, binary, image, timestamp, sql_variant, UDT and
         // anything new: the mdb reader's "binary/unknown" arm.
         _ => 5,
     };
     ColAcc {
-        name: c.name().to_string(),
-        source_type: c.column_type() as u8,
+        name: name.to_string(),
+        source_type: system_type_id,
         kind,
+        utf16_bytes: is_utf16_type(system_type_id),
         miss: Vec::new(),
         vals: Vec::new(),
     }
@@ -103,10 +129,36 @@ fn datetime2_serial(dt: DateTime2) -> f64 {
     date_serial(dt.date()) + time_serial(dt.time())
 }
 
+/// UTF-16LE bytes → a string, substituting U+FFFD for any unit the
+/// strict decode rejects (the mdb reader's rule: substitution, never
+/// abort). Returns the string plus whether substitution occurred.
+fn utf16le_lossy(bytes: &[u8]) -> (String, bool) {
+    let units: Vec<u16> = bytes
+        .as_chunks::<2>()
+        .0
+        .iter()
+        .map(|c| u16::from_le_bytes(*c))
+        .collect();
+    match String::from_utf16(&units) {
+        Ok(s) => (s, false),
+        Err(_) => (String::from_utf16_lossy(&units), true),
+    }
+}
+
 /// One cell's EPTB value for the column's declared kind; `None` means
-/// missing (NULL) or unreadable-as-declared (counted elsewhere).
-fn cell_val(kind: u8, data: &ColumnData) -> Option<CellVal> {
-    match (kind, data) {
+/// missing (NULL) or unreadable-as-declared (counted elsewhere). The
+/// second tuple member flags a substitution for `decode_errors`.
+fn cell_val(acc: &ColAcc, data: &ColumnData) -> (Option<CellVal>, bool) {
+    if acc.utf16_bytes {
+        return match data {
+            ColumnData::Binary(Some(b)) => {
+                let (s, substituted) = utf16le_lossy(b);
+                (Some(CellVal::S(s)), substituted)
+            }
+            _ => (None, false),
+        };
+    }
+    let v = match (acc.kind, data) {
         (0, ColumnData::U8(Some(v))) => Some(CellVal::I(i64::from(*v))),
         (0, ColumnData::I16(Some(v))) => Some(CellVal::I(i64::from(*v))),
         (0, ColumnData::I32(Some(v))) => Some(CellVal::I(i64::from(*v))),
@@ -120,7 +172,8 @@ fn cell_val(kind: u8, data: &ColumnData) -> Option<CellVal> {
         (2, ColumnData::Xml(Some(v))) => Some(CellVal::S(v.as_ref().to_string())),
         (4, d) => tds_serial(d).map(CellVal::F),
         _ => None,
-    }
+    };
+    (v, false)
 }
 
 fn numeric_f64(n: Numeric) -> f64 {
@@ -178,7 +231,11 @@ impl ChunkEncoder {
             if acc.kind == 5 {
                 continue;
             }
-            match cell_val(acc.kind, data) {
+            let (v, substituted) = cell_val(acc, data);
+            if substituted {
+                self.decode_errors += 1;
+            }
+            match v {
                 Some(v) => {
                     acc.miss.push(false);
                     acc.vals.push(v);

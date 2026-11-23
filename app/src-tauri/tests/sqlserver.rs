@@ -67,7 +67,6 @@ async fn import_project(conn: &SqlServerConn) -> epiora_legacy::LegacyProject {
     );
     let mut src = BatchSource::new();
     for t in &tables {
-        eprintln!("-- fetching {t}");
         for batch in sqlserver_batches(conn, t, 50_000).await.unwrap() {
             src.push(t, &batch).unwrap();
         }

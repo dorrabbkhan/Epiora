@@ -29,7 +29,7 @@ use tokio_util::compat::{Compat, TokioAsyncReadCompatExt};
 
 mod eptb;
 
-use eptb::{col_acc, ChunkEncoder, ColAcc};
+use eptb::{col_acc, is_utf16_type, ChunkEncoder, ColAcc};
 
 /// Connection parameters for one import call. Serialized over IPC per
 /// call (`camelCase` on the JS side) and never persisted. No `Debug`/
@@ -152,6 +152,10 @@ fn bracket(name: &str) -> String {
     format!("[{}]", name.replace(']', "]]"))
 }
 
+fn sql_lit(s: &str) -> String {
+    format!("N'{}'", s.replace('\'', "''"))
+}
+
 /// The project's tables in creation order (`sys.tables.object_id` is
 /// allocated at CREATE), mirroring `mdb-tables`/`sqlite3 .tables`.
 /// `is_ms_shipped = 0` keeps only user tables.
@@ -178,7 +182,12 @@ pub async fn sqlserver_tables(conn: &SqlServerConn) -> Result<Vec<String>, SqlSe
 /// One table as EPTB v1 chunks of at most `chunk_rows` rows each
 /// (always at least one chunk, so an empty table still describes its
 /// columns). `table` is a `sys.tables` name; it is bracket-quoted —
-/// identifiers can't be bound parameters.
+/// identifiers can't be bound parameters. Unicode text columns are
+/// selected as `CAST(x AS VARBINARY(MAX))`: a verbatim `0x`→nvarchar
+/// copy (or any byte pair that is not a valid UTF-16 sequence) would
+/// otherwise abort tiberius' strict `String::from_utf16` decode
+/// mid-stream; the bytes decode client-side with U+FFFD
+/// substitution — the mdb reader's contract.
 pub async fn sqlserver_batches(
     conn: &SqlServerConn,
     table: &str,
@@ -186,31 +195,42 @@ pub async fn sqlserver_batches(
 ) -> Result<Vec<Vec<u8>>, SqlServerError> {
     let chunk_rows = chunk_rows.max(1) as usize;
     let mut client = connect(conn).await?;
-    let mut stream = client
-        .query(format!("SELECT * FROM {}", bracket(table)), &[])
+    let meta = client
+        .simple_query(format!(
+            "SELECT c.name, c.system_type_id FROM sys.columns c \
+             WHERE c.object_id = OBJECT_ID({}, N'U') ORDER BY c.column_id",
+            sql_lit(table)
+        ))
         .await
-        .map_err(|e| {
-            eprintln!("dbg query {table}: {e:?}");
-            SqlServerError::QUERY
-        })?;
-    let accs: Vec<ColAcc> = {
-        // `columns()` is `Option`: a SELECT always carries metadata;
-        // nothing to map without it.
-        let cols = stream
-            .columns()
-            .await
-            .map_err(|e| {
-                eprintln!("dbg columns {table}: {e:?}");
-                SqlServerError::QUERY
-            })?
-            .unwrap_or(&[]);
-        cols.iter().map(col_acc).collect()
-    };
+        .map_err(|_| SqlServerError::QUERY)?
+        .into_first_result()
+        .await
+        .map_err(|_| SqlServerError::QUERY)?;
+    let mut exprs = Vec::with_capacity(meta.len());
+    let mut accs: Vec<ColAcc> = Vec::with_capacity(meta.len());
+    for row in &meta {
+        let name = row
+            .get::<&str, _>(0)
+            .ok_or(SqlServerError::QUERY)?
+            .to_string();
+        let type_id = row.get::<u8, _>(1).ok_or(SqlServerError::QUERY)?;
+        let q = bracket(&name);
+        exprs.push(if is_utf16_type(type_id) {
+            format!("CAST({q} AS VARBINARY(MAX)) AS {q}")
+        } else {
+            q
+        });
+        accs.push(col_acc(&name, type_id));
+    }
+    let mut stream = client
+        .query(
+            format!("SELECT {} FROM {}", exprs.join(", "), bracket(table)),
+            &[],
+        )
+        .await
+        .map_err(|_| SqlServerError::QUERY)?;
     let mut encoder = ChunkEncoder::new(table, accs);
-    while let Some(item) = stream.try_next().await.map_err(|e| {
-        eprintln!("dbg rows {table}: {e:?}");
-        SqlServerError::QUERY
-    })? {
+    while let Some(item) = stream.try_next().await.map_err(|_| SqlServerError::QUERY)? {
         let Some(row) = item.as_row() else { continue };
         encoder.push_row(row);
         if encoder.row_count == chunk_rows {
