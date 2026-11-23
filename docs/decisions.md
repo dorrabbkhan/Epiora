@@ -6469,3 +6469,11 @@ Files outside the Files block:
   outputs inside the Files block's `reimport/` tree, listed because
   they are binary/generated.
 Supersedes: —
+
+### RUSTSEC-2026-0594 `cookie` 0.18.3 (2026-11-23)
+
+Decision: bump `cookie` 0.18.2 → 0.18.3 in `app/src-tauri/Cargo.lock` via `cargo update -p cookie` (transitive through
+`tauri`, `tauri-runtime` and `wry`). RUSTSEC-2026-0594 (private-cookie key reuse after fork) failed `cargo deny check`
+in the `app` and `native-store` CI jobs on main and on every open PR (first seen on #113). It is the only lock change. No
+`deny.toml` ignore was added. Owner chose a separate PR (#113 escalation, 2026-11-23), as with #103.
+Supersedes: —
