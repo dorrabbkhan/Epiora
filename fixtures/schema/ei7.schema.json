@@ -128,13 +128,22 @@
                 "minLength": 1
               },
               "rows": {
-                "type": ["array", "null"],
-                "items": {
-                  "type": "array",
-                  "items": {
-                    "type": ["string", "number", "null"]
-                  }
-                }
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          { "type": "string" },
+                          { "type": "number" },
+                          { "type": "null" }
+                        ]
+                      }
+                    }
+                  },
+                  { "type": "null" }
+                ]
               },
               "results": {
                 "type": "object",

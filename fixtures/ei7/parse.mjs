@@ -461,25 +461,29 @@ if (process.argv[1] && process.argv[1].endsWith('parse.mjs')) {
   }
   const labels = labelsPath ? JSON.parse(readFileSync(labelsPath, 'utf8')) : {};
   const html = readFileSync(htmlPath, 'utf8');
-  const source = {
-    build: arg('--build') ?? 'unknown',
-    zip_sha256: arg('--zip-sha256') ?? 'unknown',
-    run_url: arg('--run-url') ?? 'unknown',
-  };
   if (stepsMode) {
-    const inputs = {};
+    const source = {
+      build: arg('--build') ?? 'unknown',
+      zip_sha256: arg('--zip-sha256') ?? 'unknown',
+      run_url: arg('--run-url') ?? 'unknown',
+      program: pgmPath.replace(/\\/g, '/').split('/').pop(),
+      inputs: {},
+    };
     for (const kv of argsAll('--input')) {
       const eq = kv.indexOf('=');
-      if (eq > 0) inputs[kv.slice(0, eq)] = kv.slice(eq + 1);
+      if (eq > 0) source.inputs[kv.slice(0, eq)] = kv.slice(eq + 1);
     }
-    source.program = pgmPath.replace(/\\/g, '/').split('/').pop();
-    source.inputs = inputs;
     const { steps, warnings } = parseSteps(html, readFileSync(pgmPath, 'utf8'), labels);
     console.error(`parse.mjs: ${steps.length} step(s)`);
     for (const w of warnings) console.error(`  warning: ${w}`);
     writeFileSync(outPath, JSON.stringify(buildStepsResult(steps, source), null, 2));
   } else {
-    source.sample_mdb_sha256 = arg('--sample-mdb-sha256') ?? 'unknown';
+    const source = {
+      build: arg('--build') ?? 'unknown',
+      zip_sha256: arg('--zip-sha256') ?? 'unknown',
+      sample_mdb_sha256: arg('--sample-mdb-sha256') ?? 'unknown',
+      run_url: arg('--run-url') ?? 'unknown',
+    };
     const { outputs } = parseHtml(html, labels);
     const unmapped = [...new Set(outputs.flatMap(o => o.values.filter(v => v.key === null).map(v => v.label)))];
     console.error(`parse.mjs: ${outputs.length} command block(s), ${unmapped.length} unmapped label(s)`);
