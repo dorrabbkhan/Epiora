@@ -1,0 +1,21 @@
+The epiora-mdb wasm module in this directory (mdb.js, mdb.wasm)
+contains libmdb from mdbtools 1.0.1, which is licensed under the GNU
+Lesser General Public License (the mdbtools COPYING.LIB is the
+LGPL-2.0 text; mdbtools source headers grant "version 2 or later",
+commonly labelled LGPL-2.1-or-later).
+
+The full licence text is reproduced verbatim at
+crates/epiora-mdb/LICENSE-mdbtools in this repository and from the
+Free Software Foundation:
+https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html
+
+Under LGPL §2(a): the module contains mdbtools unmodified except for
+the two patches recorded in crates/epiora-mdb/NOTICE
+(a `MdbColumn.is_null` field and the one-line `_mdb_attempt_bind`
+assignment that sets it). The files carrying those changes are
+prominently marked in that NOTICE, with this change dated to the
+v1.1 Task 5 implementation (2026-11-23).
+
+Under LGPL §6: this module is statically linked with libmdb. It is
+distributed alongside this source-offer (see SOURCE-OFFER next to
+this file) so it can be relinked against a modified libmdb.

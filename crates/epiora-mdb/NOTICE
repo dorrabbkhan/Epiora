@@ -1,0 +1,34 @@
+epiora-mdb vendored sources
+===========================
+
+vendor/mdbtools-1.0.1/
+    mdbtools 1.0.1 — the include/{mdbtools.h.in,mdbprivate.h,
+    mdbfakeglib.h,mdbver.h} headers and the src/libmdb/*.c library
+    sources, taken verbatim from the release tarball
+    https://github.com/mdbtools/mdbtools/releases/download/v1.0.1/mdbtools-1.0.1.tar.gz
+    SHA-256 ff9c425a88bc20bf9318a332eec50b17e77896eef65a0e69415ccb4e396d1812
+    except for two recorded patches (below). Tools, autoconf files,
+    docs and tests were not vendored.
+
+    Licence: GNU Lesser General Public License (the tarball's
+    COPYING.LIB, LGPL-2.0 text with the mdbtools source headers'
+    "version 2 or later" grant — the project is labelled
+    LGPL-2.1-or-later). The full licence text ships verbatim in
+    LICENSE-mdbtools in this directory. Upstream source:
+    https://github.com/mdbtools/mdbtools
+
+Local patches to the vendored sources (both needed because upstream
+drops per-cell null-ness inside _mdb_attempt_bind; the EPTB missing
+bitmap requires it):
+
+  * include/mdbtools.h.in — added `unsigned char is_null;` to
+    MdbColumn.
+  * src/libmdb/data.c — `_mdb_attempt_bind` sets `col->is_null =
+    isnull` before dispatching. For MDB_BOOL the JET null bit is the
+    value, never missingness (handled in c/eptb.c).
+
+c/codepages.c
+    Single-byte code-page tables for windows-874 and
+    windows-1250..windows-1258, generated from Python's `codecs`
+    module (WHATWG single-byte index equivalents); 0 marks bytes the
+    page leaves undefined.

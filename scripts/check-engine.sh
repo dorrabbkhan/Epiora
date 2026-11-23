@@ -149,6 +149,20 @@ if [ -d crates/epiora-import-wasm/tests/node ]; then
     node --test "crates/epiora-import-wasm/tests/node/"*.test.mjs
 else echo "skipped (arrives in v0.3 Task 6)"; fi
 
+step "epiora-mdb wasm module rebuild (reproducibility)"
+if [ -x crates/epiora-mdb/build-wasm.sh ]; then
+  if [ -x "${EMSDK:-/tmp/emsdk}/upstream/emscripten/emcc" ]; then
+    crates/epiora-mdb/build-wasm.sh
+    git diff --exit-code -- app/public/mdb/mdb.js app/public/mdb/mdb.wasm
+    if [ -n "$(git ls-files --others --exclude-standard -- app/public/mdb)" ]; then
+      echo "untracked files in app/public/mdb" >&2
+      exit 1
+    fi
+  else
+    echo "skipped (no pinned emsdk; .github/workflows/legacy.yml runs this gate)"
+  fi
+else echo "skipped (arrives in v1.1 Task 5)"; fi
+
 if [ "${E2E:-0}" = 1 ]; then
   step "chromium benchmark"
   if [ -x scripts/bench.sh ]; then scripts/bench.sh

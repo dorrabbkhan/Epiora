@@ -6068,3 +6068,86 @@ Files outside the Files block:
   file" made machine-checkable (70 files, `sha256sum -c` verifiable);
   keeping it out of the README table keeps the inventory readable.
 Supersedes: —
+
+### v1.1 Task 5 — mdbtools wasm module and EPTB batches (2026-11-23)
+
+Decision: `crates/epiora-mdb` compiles vendored mdbtools 1.0.1 libmdb
+(verbatim from the pinned tarball) plus `c/harness.c`/`c/eptb.c`/
+`c/codepages.c` natively via `cc` in build.rs and to wasm via
+`build-wasm.sh` (pinned emsdk 6.0.13). `build.rs` generates
+`mdbtools.h` from `mdbtools.h.in` (no autoconf: iconv and xlocale off,
+fake-glib in, `LOCALE_T=locale_t`, `TLS=_Thread_local` plus the
+configure DEFS). `epiora-legacy::batch::decode_batch` decodes EPTB v1;
+`app/src/legacy/mdb.ts` wraps the committed module in
+`app/public/mdb/` (LGPL notice + §6 source-offer beside it).
+
+Ambiguities resolved:
+- JET3 code-page test file: the task text names `testV1997.mdb` for
+  `jet3_cp1252_text_decodes`, but that file's four user tables contain
+  ASCII only. `testIndexCodesV1997.mdb` (same jackcess commit,
+  JET3/cp1252) holds `AA<byte>AA` cells covering the high half of the
+  page, including the five cp1252-undefined bytes stored raw — used
+  instead; provenance in `crates/epiora-mdb/tests/data/NOTICE`.
+- JET3 text decoding: the iconv-less build returns latin1-mapped UTF-8
+  for cp1252 files and raw bytes otherwise; `eptb.c` recovers the byte
+  stream and decodes with the caller's single-byte page
+  (windows-874/1250..1258, default windows-1252 per plan), undefined
+  bytes → U+FFFD counted in the batch's `decode_errors` extension.
+- `Mdb::batch` returns `Result<Vec<u8>, MdbError>` — the plan's
+  shorthand `-> Vec<u8>` omits the Result; spec rule that no input may
+  panic requires typed errors. Added internal codes
+  `mdb_no_table`/`mdb_encode`/`mdb_code_page_unsupported`/
+  `mdb_tables_json` alongside the four plan codes.
+- Password detection is a header sniff (jackcess JetFormat offsets:
+  JET3 20 bytes at 0x42; JET4 40 bytes at 0x42 masked by (int) of the
+  f64 header date at 0x72) because JET4 database passwords do not
+  encrypt pages — mdbtools reads such files happily.
+- ACE/`.accdb` files open as `mdb_unsupported_version` by header
+  version byte (mdbtools would treat them as JET4).
+- The five `data.c`/`mdbtools.h.in` patches (a `MdbColumn.is_null`
+  field and the one-line `_mdb_attempt_bind` assignment setting it)
+  are required for the EPTB missing bitmap — upstream discards
+  null-ness inside `_mdb_attempt_bind`; recorded in
+  `crates/epiora-mdb/NOTICE`. For MDB_BOOL the JET null bit is the
+  value, never missingness.
+- Thread-safety: the harness's last_error/last_format state is
+  `_Thread_local` and handle-slot allocation is CAS — parallel cargo
+  tests open several databases at once; `Mdb` is `!Send`/`!Sync`.
+- `epiora-legacy` scaffolding (Cargo.toml, `src/lib.rs`, `src/error.rs`
+  with `LegacyError`) is implied by the Files block's `src/batch.rs`;
+  mappers arrive in Tasks 7–8.
+- `mdb.test.ts` resolves fixtures via `process.cwd()` (vitest cwd =
+  app/) — `import.meta.url` is a dead dev-server URL under vitest.
+
+Files outside the Files block:
+- `crates/epiora-mdb/c/epiora_mdb.h`, `c/codepages.c` — shared
+  interface header and the generated single-byte code-page tables.
+- `crates/epiora-mdb/src/bin/dump-batches.rs` — regenerates the
+  native oracle batches under `tests/data/batches/sample/`.
+- `crates/epiora-mdb/vendor/mdbtools-1.0.1/` — the vendored libmdb
+  (the Files block's crate contents imply it; no registry crate for
+  libmdb exists).
+- `crates/epiora-mdb/fuzz/Cargo.toml`, `fuzz/rust-toolchain.toml` —
+  the `mdb_any` target needs the standalone fuzz crate
+  (same pattern as epiora-core/epiora-import).
+- `.github/workflows/engine.yml`, `fuzz-nightly.yml` — `mdb_any`
+  added to both fuzz lists (spec §6.5's "fuzz targets run in the
+  same PR" requires them registered).
+- `app/eslint.config.js` — `public/mdb/**` added to the ignore list:
+  the generated wasm glue must not be linted.
+- `deny.toml` — a comment only: the LGPL C dep is outside
+  cargo-deny's scope; all new Rust deps already hold allow-list
+  licences, so no allow-list change was needed.
+- `crates/epiora-legacy/src/batch/tests.rs` — the batch decoder's
+  test module, split out of `batch.rs` in fix round 1 to keep the
+  file under the ~400-line rule; assertions unchanged.
+- `crates/epiora-mdb/tests/data/batches/chunk7/` — native chunked
+  oracle batches (`--chunk` mode of `dump-batches`, fix round 1) for
+  the wasm `batches(table, 7)` parity check.
+
+Evidence: `cargo test -p epiora-mdb` 7/7 pass (incl. proptest
+`random_bytes_never_panic`); `cargo test -p epiora-legacy` 2/2;
+`npx vitest run src/legacy/mdb.test.ts` green — the committed wasm
+module's batches are byte-identical to the native encoder's for all
+93 Sample.mdb tables.
+Supersedes: —

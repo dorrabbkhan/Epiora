@@ -1,0 +1,9 @@
+[package]
+name = "epiora-legacy"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Epi Info legacy project readers: EPTB batch decoding and the Epi Info 7 / 3.5.x mappers (v1.1)"
+
+[dependencies]
+thiserror = "2"

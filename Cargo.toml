@@ -4,12 +4,20 @@ members = [
     "crates/epiora-core",
     "crates/epiora-import",
     "crates/epiora-import-wasm",
+    "crates/epiora-legacy",
+    "crates/epiora-mdb",
     "crates/epiora-wasm",
 ]
-# crates/epiora-core/fuzz (v0.2 Task 12) and crates/epiora-import/fuzz
-# (v0.3 Task 3) use cargo-fuzz on nightly and are never part of the
-# stable workspace.
-exclude = ["crates/epiora-core/fuzz", "crates/epiora-import/fuzz", "spikes", "app/src-tauri"]
+# crates/epiora-core/fuzz (v0.2 Task 12), crates/epiora-import/fuzz
+# (v0.3 Task 3) and crates/epiora-mdb/fuzz (v1.1 Task 5) use cargo-fuzz
+# on nightly and are never part of the stable workspace.
+exclude = [
+    "crates/epiora-core/fuzz",
+    "crates/epiora-import/fuzz",
+    "crates/epiora-mdb/fuzz",
+    "spikes",
+    "app/src-tauri",
+]
 
 [workspace.package]
 version = "1.0.0"

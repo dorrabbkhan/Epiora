@@ -514,6 +514,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "epiora-legacy"
+version = "1.0.0"
+dependencies = [
+ "thiserror",
+]
+
+[[package]]
+name = "epiora-mdb"
+version = "1.0.0"
+dependencies = [
+ "cc",
+ "csv",
+ "epiora-legacy",
+ "proptest",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
 name = "epiora-wasm"
 version = "1.0.0"
 dependencies = [

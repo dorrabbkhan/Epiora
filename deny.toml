@@ -34,6 +34,12 @@ allow = [
     # calamine) — v0.3 Task 4, epiora-import.
     "Zlib",
 ]
+# Non-Rust note: crates/epiora-mdb vendors mdbtools 1.0.1 libmdb
+# (LGPL-2.1-or-later) as C sources compiled by cc/emcc — outside
+# cargo-deny's scope; licence, patches and the LGPL source-offer are
+# recorded in crates/epiora-mdb/NOTICE and app/public/mdb/. All new
+# Rust deps of v1.1 Task 5 (cc, csv, proptest) carry allow-list
+# licences already.
 
 [sources]
 unknown-registry = "deny"

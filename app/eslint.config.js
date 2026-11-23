@@ -19,6 +19,9 @@ export default tseslint.config(
       'test-results/**',
       'lint-fixtures/**',
       'src-tauri/target/**',
+      // Generated wasm glue (v1.1 Task 5): built by
+      // crates/epiora-mdb/build-wasm.sh, never hand-edited.
+      'public/mdb/**',
     ],
   },
   ...tseslint.configs.recommended,
