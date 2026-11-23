@@ -222,11 +222,19 @@ pub async fn sqlserver_batches(
         });
         accs.push(col_acc(&name, type_id));
     }
+    // `ORDER BY` the first column: every EI7 table's first column is
+    // the row key (`UniqueKey`/`XxxId`), monotonic in JET order — the
+    // heap scan order the Access golden was built from. Without it
+    // SQL Server returns undefined order and `metaViews`/`metaLinks`
+    // permute.
+    let mut sql = format!("SELECT {} FROM {}", exprs.join(", "), bracket(table));
+    if let Some(first) = meta.first() {
+        if let Some(name) = first.get::<&str, _>(0) {
+            sql.push_str(&format!(" ORDER BY {}", bracket(name)));
+        }
+    }
     let mut stream = client
-        .query(
-            format!("SELECT {} FROM {}", exprs.join(", "), bracket(table)),
-            &[],
-        )
+        .query(sql, &[])
         .await
         .map_err(|_| SqlServerError::QUERY)?;
     let mut encoder = ChunkEncoder::new(table, accs);
