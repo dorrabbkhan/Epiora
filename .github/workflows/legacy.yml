@@ -1,0 +1,82 @@
+name: legacy
+
+# v1.1 Task 5: the legacy (.mdb/accdb) import gate. Rebuilds the
+# committed epiora-mdb wasm module with the pinned emsdk toolchain and
+# diffs it against app/public/mdb/ (reproducibility), verifies the
+# pinned test-data checksums, and runs the epiora-mdb / epiora-legacy
+# cargo tests. The wasm/native parity test itself is part of the app
+# gate (app/src/legacy/mdb.test.ts runs under vitest).
+
+on:
+  pull_request:
+    paths:
+      - 'crates/epiora-mdb/**'
+      - 'crates/epiora-legacy/**'
+      - 'app/public/mdb/**'
+      - 'app/src/legacy/**'
+      - 'fixtures/legacy/**'
+      - 'Cargo.*'
+      - 'deny.toml'
+      - '.github/workflows/legacy.yml'
+  workflow_dispatch:
+
+env:
+  EMSDK_COMMIT: 'd7b4130688bfa348392b921ab04015aa15c4f154'
+  EMSDK_VERSION: '6.0.13'
+  # emsdk install 6.0.13 on linux-x64 downloads these two archives into
+  # $EMSDK/downloads/ (kept via EMSDK_KEEP_DOWNLOADS); pinned by SHA-256.
+  EMSDK_KEEP_DOWNLOADS: '1'
+  EMSDK_SDK_SHA256: 'cda6801012ff3319a539111826ed02a9abd7eff135c2ef261c8941caf5a3763e'  # wasm-binaries.tar.xz
+  EMSDK_NODE_SHA256: '14b342e71204f811bde6153be8e04b62aef63c236fef92b55f9c83154b409647'  # node-v24.19.0-linux-x64.tar.xz
+  SAMPLE_MDB_SHA256: 'c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e'
+  JET3_MDB_SHA256: '27788b47e17412427830e80c2cb69366885aa11b12c61422de73029194bef135'
+  INDEXCODES_MDB_SHA256: 'ac96a660d650cd61a23f93bee804523cce7db70daabe932a5bbfc99c5c92b668'
+  PWDSET_MDB_SHA256: '9177af1f5c01c66a3d3be9b61a975856285c18ce6f481baa158bf176726519a5'
+  NATIVE_CSV_SHA256: 'ada2049737fcb31412692a979b1017ce11583a4c03d41d66b2b1ea7113d5de67'
+
+jobs:
+  mdb-wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Rust 1.99.0 (pinned)
+        run: |
+          rustup toolchain install 1.99.0 --profile minimal --component clippy --component rustfmt
+          rustup default 1.99.0
+          rustc --version
+
+      - name: Verify pinned test-data checksums
+        run: |
+          echo "$SAMPLE_MDB_SHA256  fixtures/legacy/samples/ei7/Sample/Sample.mdb" | sha256sum -c -
+          echo "$JET3_MDB_SHA256  crates/epiora-mdb/tests/data/testV1997.mdb" | sha256sum -c -
+          echo "$INDEXCODES_MDB_SHA256  crates/epiora-mdb/tests/data/testIndexCodesV1997.mdb" | sha256sum -c -
+          echo "$PWDSET_MDB_SHA256  crates/epiora-mdb/tests/data/pwd-set.mdb" | sha256sum -c -
+          echo "$NATIVE_CSV_SHA256  crates/epiora-mdb/tests/data/Oswego12.native.csv" | sha256sum -c -
+
+      - name: Install Emscripten (pinned commit + SDK version)
+        run: |
+          git clone --depth 1 https://github.com/emscripten-core/emsdk.git "$RUNNER_TEMP/emsdk"
+          git -C "$RUNNER_TEMP/emsdk" fetch --depth 1 origin "$EMSDK_COMMIT"
+          git -C "$RUNNER_TEMP/emsdk" checkout "$EMSDK_COMMIT"
+          "$RUNNER_TEMP/emsdk/emsdk" install "$EMSDK_VERSION"
+          "$RUNNER_TEMP/emsdk/emsdk" activate "$EMSDK_VERSION"
+          echo "EMSDK=$RUNNER_TEMP/emsdk" >> "$GITHUB_ENV"
+
+      - name: Verify emsdk-downloaded archive checksums
+        run: |
+          ls -l "$EMSDK/downloads/"
+          echo "$EMSDK_SDK_SHA256  $EMSDK/downloads/eb132757325583b787fe9414b09afea9442b72ad-wasm-binaries.tar.xz" | sha256sum -c -
+          echo "$EMSDK_NODE_SHA256  $EMSDK/downloads/node-v24.19.0-linux-x64.tar.xz" | sha256sum -c -
+
+      - name: Rebuild the wasm module and require it unchanged
+        run: |
+          crates/epiora-mdb/build-wasm.sh
+          git diff --exit-code -- app/public/mdb/mdb.js app/public/mdb/mdb.wasm
+          if [ -n "$(git ls-files --others --exclude-standard -- app/public/mdb)" ]; then
+            echo "untracked files in app/public/mdb" >&2
+            exit 1
+          fi
+
+      - name: cargo test epiora-mdb + epiora-legacy
+        run: cargo test -p epiora-mdb -p epiora-legacy

@@ -1,0 +1,27 @@
+SOURCE OFFER — epiora-mdb wasm module (LGPL, §6 written offer)
+==============================================================
+
+The files mdb.js and mdb.wasm in this directory were compiled from:
+
+  * mdbtools 1.0.1 libmdb (LGPL-2.1-or-later), vendored at
+    crates/epiora-mdb/vendor/mdbtools-1.0.1/ in this repository —
+    upstream: https://github.com/mdbtools/mdbtools, release tarball
+    SHA-256 ff9c425a88bc20bf9318a332eec50b17e77896eef65a0e69415ccb4e396d1812
+  * the Epiora harness sources at crates/epiora-mdb/c/
+    (AGPL-3.0-only with the rest of this repository)
+
+and are byte-for-byte reproducible by running, in this repository:
+
+    crates/epiora-mdb/build-wasm.sh
+
+with the pinned toolchain:
+
+  * emsdk at commit d7b4130688bfa348392b921ab04015aa15c4f154
+    (https://github.com/emscripten-core/emsdk), SDK version 6.0.13
+    (sdk-releases-eb132757325583b787fe9414b09afea9442b72ad-64bit)
+
+Corresponding source for the exact binaries shipped is therefore
+the repository commit these files were committed in. If you received
+the binaries without this repository, the same sources are public at
+the repository's upstream URL, and this offer remains valid for the
+LGPL-required period.

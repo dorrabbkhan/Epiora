@@ -1,0 +1,22 @@
+[package]
+name = "epiora-mdb"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "epiora-mdb: mdbtools libmdb native reader producing EPTB table batches (v1.1, tests and tooling only; the shipped module is the app/public/mdb wasm build)"
+
+[features]
+# `fuzzing` exposes `mdb_any` for the cargo-fuzz target under fuzz/.
+fuzzing = []
+
+[dependencies]
+serde_json = "1"
+thiserror = "2"
+
+[dev-dependencies]
+csv = "1.4"
+epiora-legacy = { path = "../epiora-legacy" }
+proptest = "1"
+
+[build-dependencies]
+cc = "1"
