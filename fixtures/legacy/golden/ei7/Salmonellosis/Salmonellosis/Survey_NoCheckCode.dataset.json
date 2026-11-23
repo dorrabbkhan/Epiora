@@ -1,0 +1,950 @@
+{
+  "id": "Survey_NoCheckCode",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "LastName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Last Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FirstName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ParentName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Parent Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Sex",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Sex",
+        "legacy_type": "LegalValues",
+        "label_set": "codesex"
+      }
+    },
+    {
+      "name": "DOB",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Birth Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DeathDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Death Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Age",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Age",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Race",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Race",
+        "legacy_type": "LegalValues",
+        "label_set": "coderace"
+      }
+    },
+    {
+      "name": "Ethnicity",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Ethnicity",
+        "legacy_type": "LegalValues",
+        "label_set": "codeethnicity"
+      }
+    },
+    {
+      "name": "Address",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Street Address",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Zip",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Zip",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "State",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State",
+        "legacy_type": "LegalValues",
+        "label_set": "codestate"
+      }
+    },
+    {
+      "name": "County",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "County",
+        "legacy_type": "LegalValues",
+        "label_set": "codecounty"
+      }
+    },
+    {
+      "name": "Phone",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Contact Phone",
+        "legacy_type": "PhoneNumber"
+      }
+    },
+    {
+      "name": "Ill",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Was the case ill?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Status",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Status",
+        "legacy_type": "LegalValues",
+        "label_set": "codestatus"
+      }
+    },
+    {
+      "name": "Investigated",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Investigated",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Interviewed",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Interviewed",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "SymptomaticAtInterview",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Symptomatic at Interview",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Outcome",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Final known outcome",
+        "legacy_type": "LegalValues",
+        "label_set": "codeoutcome"
+      }
+    },
+    {
+      "name": "OnsetDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date onset:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DiagDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date diagnosis",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LabReportDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Lab report date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CHDDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "CHD notified date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "AbdominalPain",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Abdominal pain",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Nausea",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Nausea",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherSymptom",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "OtherSymptomSpecify",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Diarrhea",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Diarrhea",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Vomiting",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Vomiting",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Fever",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fever/chills",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Asymptomatic",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Asymptomatic",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HandledRawMeat",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did the patient prepare or handle any raw meat during the 3 day exposure period?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "RawPoultry",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Poultry",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RawBeef",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Beef",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RawPork",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pork",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RawFish",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fish",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "RawShellfish",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Shellfish",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Poultry",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Poultry",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Beef",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Beef",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Pork",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pork",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Fish",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fish",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Shellfish",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Shellfish",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Eggs",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Eggs",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Nuts",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Nuts",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "PeanutButter",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Peanut butter",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "SpecialityButcher",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Food from speciality butcher/specialty market",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "FoodsWithRawEggs",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Foods with raw eggs (cake mix, salad dressings, etc.)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "FoodAtGroupMeal",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Food at a group meal (party, wedding, business meeting, potluck, etc.)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "FoodAtOutdoorSetting",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Food at an outdoor setting (picnic, barbecue, etc.)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "UnpasteurizedMilk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unpasteurized milk or milk products",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "UnpasteurizedCheese",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Raw or unpasteurized cheese (queso blanco, queso fresco, etc.)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "RawProduce",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Raw produce",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "UnpasteurizedJuice",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Unpasteurized juice or cider",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "ProduceStandOrVendor",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Food from produce stand, roadside vendor, mobile stand, concession stand, or truck",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "HomeGrownFood",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Home slaughtered/home grown food",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "UntreatedUnfilteredWater",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Untreated/unfiltered water",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "AttendPicnic",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did the patient attend the Acme Company picnic on May 5th, 2012?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "AteAtNoon",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Ate food served at 12:00 pm?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "AteAt2",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Ate food served at 2:00 pm?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "AttendeeType",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Attendee type",
+        "legacy_type": "LegalValues",
+        "label_set": "codeattendeetype"
+      }
+    },
+    {
+      "name": "ChefSalad",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Chef salad",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CaesarSalad",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Caesar salad",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GardenSalad",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Garden salad",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrilledCheese",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Grilled cheese sandwich",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "EggSaladSandwich",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Egg salad sandwich",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HamCheese",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Ham and cheese sandwich",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "GrilledChickenSandwich",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Grilled chicken sandwich",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PotatoChips",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Potato chips",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PBJ",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Peanut butter and jelly",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Reuben",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Reuben sandwich",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "IcedTea",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Iced tea",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Water",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Water",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ChocolateChipCookies",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Chocolate chip cookies",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "PeanutButterCookies",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Peanut butter cookies",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ArrivalTime",
+      "type": "time",
+      "values": [],
+      "meta": {
+        "prompt": "Arrival Time",
+        "legacy_type": "Time"
+      }
+    },
+    {
+      "name": "DepartureTime",
+      "type": "time",
+      "values": [],
+      "meta": {
+        "prompt": "Departure Time",
+        "legacy_type": "Time"
+      }
+    },
+    {
+      "name": "Comments",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Case Comments",
+        "legacy_type": "Multiline"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codesex",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Male"
+          },
+          "Male"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Female"
+          },
+          "Female"
+        ]
+      ]
+    },
+    {
+      "id": "coderace",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "American Indian/Alaska Native"
+          },
+          "American Indian/Alaska Native"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Asian/Pacific Islander"
+          },
+          "Asian/Pacific Islander"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Black"
+          },
+          "Black"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "White"
+          },
+          "White"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    },
+    {
+      "id": "codeethnicity",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Hispanic"
+          },
+          "Hispanic"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Non-Hispanic"
+          },
+          "Non-Hispanic"
+        ]
+      ]
+    },
+    {
+      "id": "codestate",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "GA"
+          },
+          "GA"
+        ]
+      ]
+    },
+    {
+      "id": "codecounty",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Morgan"
+          },
+          "Morgan"
+        ]
+      ]
+    },
+    {
+      "id": "codestatus",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Confirmed"
+          },
+          "Confirmed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Probable"
+          },
+          "Probable"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Suspect"
+          },
+          "Suspect"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeoutcome",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Died"
+          },
+          "Died"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ill at time of reporting"
+          },
+          "Ill at time of reporting"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Recovered"
+          },
+          "Recovered"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeattendeetype",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Company employee"
+          },
+          "Company employee"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Related to employee"
+          },
+          "Related to employee"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Friend of employee"
+          },
+          "Friend of employee"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Vendor or service worker"
+          },
+          "Vendor or service worker"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    }
+  ]
+}

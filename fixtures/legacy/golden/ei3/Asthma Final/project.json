@@ -1,0 +1,275 @@
+{
+  "name": "Asthma Final",
+  "legacy_id": null,
+  "source_format": "ei3_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei3/Asthma Final.mdb",
+    "sha256": "c56da6ae97f9755d9c1b28b8f6952434dfb8af227e5c19eb268119614cfc5762"
+  },
+  "views": [
+    {
+      "name": "PreInterventionSurvey",
+      "dataset": "PreInterventionSurvey.dataset.json",
+      "records": 800,
+      "deleted_records": 0,
+      "hash": "d073fc11a060353017500724e090f1aa5e57d94e82d7ed79d2c3cfa91642afb8"
+    }
+  ],
+  "links": [],
+  "programs": [
+    {
+      "name": "mortalityrate",
+      "text_sha256": "1d488aaf2bf60600e8e863fa3fa602c7258cdafc01b22dd38c77f24943d65943"
+    },
+    {
+      "name": "BRFSS2003",
+      "text_sha256": "ea076578069f8958648a4721e98f873143c119e74cd673b38d552fb73d368917"
+    },
+    {
+      "name": "Freq4Schools",
+      "text_sha256": "b253252b12c85e90ae24434fa2e9f7d376b7c7e67dbda53c774b302e0d4a1fdf"
+    },
+    {
+      "name": "countyprev",
+      "text_sha256": "b0762c54366aa46b8a226e803a1f8fc1e2f758f9c9fecff4ae817178f06f8258"
+    },
+    {
+      "name": "10YRgraph",
+      "text_sha256": "b17073516de2d2cca85119cb138513c4257e936d198532e4a684652565871474"
+    },
+    {
+      "name": "3YRgraph",
+      "text_sha256": "df49cd6f38047bc85fc54a8056e5e331bb823f4b60904488ec3c111ea4f09e6d"
+    },
+    {
+      "name": "MapRates",
+      "text_sha256": "12fe8f29711485a42afa1062fa97a242a59d0afddd7c6a122f08c45b983d3b5f"
+    },
+    {
+      "name": "scatterplot",
+      "text_sha256": "444846893129d87d910c066dd21c5fc508c355a818da8f436600c3f3c1dedbed"
+    },
+    {
+      "name": "RiskRatioZip",
+      "text_sha256": "9167f75e995391c25c124c9effaf3c6f02cb5611b617fca3dd6beedb8a88c53a"
+    }
+  ],
+  "check_code": [
+    {
+      "view": "PreInterventionSurvey",
+      "blocks": 3
+    }
+  ],
+  "report": [
+    {
+      "kind": "code_page_assumed",
+      "item": "Asthma Final",
+      "reason": "JET3 text decoded as windows-1252 (MDB_JET3_CHARSET)"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/PreSurvey",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Condition",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PreInterventionSurvey/ID",
+      "reason": "MIRROR field imported as the value of StudentID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Symptoms",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Identification",
+      "reason": "EI3 field type GROUP is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/AsthmaticConditions",
+      "reason": "EI3 field type GROUP is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/MonthlyBreathing",
+      "reason": "EI3 field type GROUP is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Medtitle",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/PersonalInformation",
+      "reason": "EI3 field type GROUP is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PreInterventionSurvey/ID2",
+      "reason": "MIRROR field imported as the value of StudentID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Symptitle",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "ageproxy",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "BRFSS2003",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "censusformat2",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "CensusLink2",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSchoolID",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSchoolID1",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSchoolID12",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSchoolID123",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "daystable",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "dis0103byzip",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "Dis3Yrs2",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "DischargesbyZip",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "DisCtyAge",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "GenderWT2",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "incomedata",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "MDAsthma",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "MDBronchitis",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "MDRad",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "MDWheeze",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "MissedDays2",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "numerators",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "NY3Yr",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "NYDisAge10Yr",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "population",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "ratebyzip",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "SurveyAgeSex2",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "symptomsbyage",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "wmonthfreq",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "zipsumsa",
+      "reason": "no view or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "zipsumsb",
+      "reason": "no view or code table claims it"
+    }
+  ]
+}

@@ -1,0 +1,605 @@
+{
+  "id": "Laboratory",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "STID_L",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State EPI ID:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCID_L",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC EPI ID:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID1_L",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Lab ID #1:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID1_L",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State lab specimen Id #1:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID2_L",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Lab ID #2:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID2_L",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State lab specimen Id # 2:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CXR",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Chest X-ray (yes/no)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXRResult",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes",
+        "legacy_type": "LegalValues",
+        "label_set": "codeCXRResult"
+      }
+    },
+    {
+      "name": "CTScan",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Chest CT scan (yes/no)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CTScanResult",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes",
+        "legacy_type": "LegalValues",
+        "label_set": "codecxrresult"
+      }
+    },
+    {
+      "name": "Pneumonia",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Was there evidence of pneumonia?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeantiviral"
+      }
+    },
+    {
+      "name": "ARDS",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Did this patient have acute respiratory distress syndrome (ARDS)?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeantiviral"
+      }
+    },
+    {
+      "name": "FluDateCollected1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Test 1:  Date collected",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FluSpecimenType1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Specimen Type",
+        "legacy_type": "LegalValues",
+        "label_set": "codeSpecimen"
+      }
+    },
+    {
+      "name": "FluTestPerformed1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Test Type",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTestType"
+      }
+    },
+    {
+      "name": "FluTestResults1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Results",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTest1Results"
+      }
+    },
+    {
+      "name": "FluInterpretation1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Influenza Type/Subtype",
+        "legacy_type": "LegalValues",
+        "label_set": "codeSubtype"
+      }
+    },
+    {
+      "name": "FluDateCollected2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Test 2:  Date collected",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FluSpecimenType2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Specimen Type",
+        "legacy_type": "LegalValues",
+        "label_set": "codeSpecimen"
+      }
+    },
+    {
+      "name": "FluTestPerformed2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Test Type",
+        "legacy_type": "LegalValues",
+        "label_set": "codeTestType"
+      }
+    },
+    {
+      "name": "FluTestResults2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Results",
+        "legacy_type": "LegalValues",
+        "label_set": "codetest1results"
+      }
+    },
+    {
+      "name": "FluInterpretation2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Influenza Type/Subtype",
+        "legacy_type": "LegalValues",
+        "label_set": "codeSubtype"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeCXRResult",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Normal"
+          },
+          "1- Normal"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Abnormal"
+          },
+          "2- Abnormal"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unknown"
+          },
+          "9- Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codecxrresult",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Normal"
+          },
+          "1- Normal"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Abnormal"
+          },
+          "2- Abnormal"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unknown"
+          },
+          "9- Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeantiviral",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Yes"
+          },
+          "1- Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- No"
+          },
+          "2- No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unknown"
+          },
+          "9- Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeSpecimen",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Nasopharyngeal swab"
+          },
+          "1- Nasopharyngeal swab"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Nasopharyngeal aspirate"
+          },
+          "2- Nasopharyngeal aspirate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Oropharyngeal/throat swab"
+          },
+          "3- Oropharyngeal/throat swab"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Nasal aspirate/throat swab"
+          },
+          "4- Nasal aspirate/throat swab"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- Endotracheal aspirate"
+          },
+          "5- Endotracheal aspirate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- Serum"
+          },
+          "6- Serum"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7- Broncheoalveolar lavage specimen (BAL)"
+          },
+          "7- Broncheoalveolar lavage specimen (BAL)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8- Sputum"
+          },
+          "8- Sputum"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Cerebrospinal fluid (CSF)"
+          },
+          "9- Cerebrospinal fluid (CSF)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10- Tissue"
+          },
+          "10- Tissue"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11- Stool"
+          },
+          "11- Stool"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12- Urine"
+          },
+          "12- Urine"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "13- Pleural fluid"
+          },
+          "13- Pleural fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "14- Peritoneal fluid"
+          },
+          "14- Peritoneal fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "15- Pericardial fluid"
+          },
+          "15- Pericardial fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "16- Chest fluid"
+          },
+          "16- Chest fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "17- Other"
+          },
+          "17- Other"
+        ]
+      ]
+    },
+    {
+      "id": "codeTestType",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- DFA/IFA "
+          },
+          "1- DFA/IFA "
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- RT-PCR/PCR"
+          },
+          "2- RT-PCR/PCR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Viral culture"
+          },
+          "3- Viral culture"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- HI"
+          },
+          "4- HI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- Rapid test"
+          },
+          "5- Rapid test"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- Immunohistochemistry"
+          },
+          "6- Immunohistochemistry"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7- Other"
+          },
+          "7- Other"
+        ]
+      ]
+    },
+    {
+      "id": "codeTest1Results",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Positive"
+          },
+          "1- Positive"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Negative"
+          },
+          "2- Negative"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Indeterminate"
+          },
+          "3- Indeterminate"
+        ]
+      ]
+    },
+    {
+      "id": "codeSubtype",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Influenza A"
+          },
+          "1- Influenza A"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Influenza B"
+          },
+          "2- Influenza B"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Influenza A/H1"
+          },
+          "3- Influenza A/H1"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Influenza A/H3"
+          },
+          "4- Influenza A/H3"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- Influenza A unsubtypable"
+          },
+          "5- Influenza A unsubtypable"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- novel Influenza H1N1"
+          },
+          "6- novel Influenza H1N1"
+        ]
+      ]
+    },
+    {
+      "id": "codetest1results",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Positive"
+          },
+          "1- Positive"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Negative"
+          },
+          "2- Negative"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Indeterminate"
+          },
+          "3- Indeterminate"
+        ]
+      ]
+    }
+  ]
+}

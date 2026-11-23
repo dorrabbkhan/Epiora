@@ -1,0 +1,250 @@
+{
+  "name": "EColi",
+  "legacy_id": "5DA2EB5C-1E47-2211-7BD28F839CB015E1",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/EColi/EColi.mdb",
+    "sha256": "254d3a7698a34b08ca68fd561a1adc3ed35e71a6d39bd8a111c1588453147ec1"
+  },
+  "views": [
+    {
+      "name": "FoodHistory",
+      "dataset": "FoodHistory.dataset.json",
+      "records": 359,
+      "deleted_records": 0,
+      "hash": "8b33c197019ea6e7f6c8bd4e936e90b7e0e2e4deb8dc06f147abc7688d03b557"
+    },
+    {
+      "name": "FoodHistory_NoCheckCode",
+      "dataset": "FoodHistory_NoCheckCode.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "676cfa90d09202c1d3bb1f55d2cf8a0c435f75c53f00c6d8d300ac57cbb82e49"
+    }
+  ],
+  "links": [],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "FoodHistory",
+      "blocks": 11
+    }
+  ],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/DemographicInformation",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/Race",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/GetCoordinates",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/Symptoms",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/FoodHistory",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/EColi",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/Alldatacontainedhereinisfictional",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/N_____",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/USDEPARTMENTOFHEALTHHUMANSERVICES",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/CentersforDiseaseControlandPrevention",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/FoodsEaten",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/EColi1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/FoodHistory1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory/LabTestingandResults",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "FoodHistory/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "FoodHistory/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "FoodHistory/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "FoodHistory/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "FoodHistory_NoCheckCode",
+      "reason": "base table FoodHistory_NoCheckCode is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "FoodHistory_NoCheckCode",
+      "reason": "page table FoodHistory_NoCheckCode3 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "FoodHistory_NoCheckCode",
+      "reason": "page table FoodHistory_NoCheckCode4 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/DemographicInformation",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/Race",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/GetCoordinates",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/Symptoms",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/Alldatacontainedhereinisfictional",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/USDEPARTMENTOFHEALTHHUMANSERVICES",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/CentersforDiseaseControlandPrevention",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/N_____",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/EColi",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/FoodHistory",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/FoodsEaten",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/LabTestingandResults",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/EColi1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "FoodHistory_NoCheckCode/FoodHistory1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "record_links_not_imported",
+      "item": "1→1",
+      "reason": "metaLinks record-level link (EWE); not a schema link"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeassignedarea",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codecamprole",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codevaccinated",
+      "reason": "unreferenced code table"
+    }
+  ]
+}

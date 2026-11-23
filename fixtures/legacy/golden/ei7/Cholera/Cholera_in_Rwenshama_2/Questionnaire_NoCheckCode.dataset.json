@@ -1,0 +1,891 @@
+{
+  "id": "Questionnaire_NoCheckCode",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "Question",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Questionnaire No.",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Date1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Q1Name",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Q2Age",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Age",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Q3Sex",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Sex",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeSex"
+      }
+    },
+    {
+      "name": "Q4Occup",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Occupation",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Q5Educ",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Education Level",
+        "legacy_type": "LegalValues",
+        "label_set": "codeEducationLevel"
+      }
+    },
+    {
+      "name": "Q6Villag",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Village",
+        "legacy_type": "LegalValues",
+        "label_set": "codeQ6Villag"
+      }
+    },
+    {
+      "name": "Q7House",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "No. of People in Household",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Q8Ill",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Ill?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Q9Onset",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date of onset",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Q10Diarr",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Diarrhea",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q11Vomit",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Vomiting",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q12Abdom",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cramps in abdomen",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q13Armle",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cramps in arms and legs",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q14Durat",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Duration of illness in days before reporting for treatment at the health unit",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Q15HomeT",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Treatment given at home before reporting",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q16Dehyd",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Dehydration",
+        "legacy_type": "LegalValues",
+        "label_set": "codeQ16Dehyd"
+      }
+    },
+    {
+      "name": "Q17Fever",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Fever",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Q18Sign",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (specify)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Q19Oral",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Oral Fluids",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q20Iv",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "I-V Fluids",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q21Tetra",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Tetracycline",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q22Cotri",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Co-trimoxazole",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q23UnitT",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (specify)",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q24Outco",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Outcome",
+        "legacy_type": "LegalValues",
+        "label_set": "codeQ24Outco"
+      }
+    },
+    {
+      "name": "Q25Eat",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "History of eating outside home within past 5 days",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Q26Place",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify",
+        "legacy_type": "LegalValues",
+        "label_set": "codeQ26Place1"
+      }
+    },
+    {
+      "name": "Q27Hmato",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hot matooke",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q28Cmato",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cold matooke",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q29Hswee",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hot sweet potatoes",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q30Cswee",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cold sweet potatoes",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q31Hrice",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hot rice",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q32Crice",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cold rice",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q33Hiris",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hot irish potatoes",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q34Ciris",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cold irish potatoes",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q35Hposh",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hot posho",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q36Cposh",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cold posho",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q37Hmand",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hot mandazi",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q38Cmand",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cold mandazi",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q39Hcass",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hot cassava",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q40Ccass",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cold cassava",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q41Hbean",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hot beans",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q42Cbean",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cold beans",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q43Hpeas",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hot peas",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q44Cpeas",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cold peas",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q45Hmeat",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hot meat",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q46Cmeat",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cold meat",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q47Hmilk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hot milk",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q48Cmilk",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cold milk",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q49Hfish",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hot fish",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q50Cfish",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cold fish",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q51Obush",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Obushera",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q52Sugar",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Sugar cane",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q53Banan",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Sweet bananas",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q54Salad",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Salads (raw cabbage, tomatoes)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q55Conta",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Diarrhoea contact at home in the last five days",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Q56Pit",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Availability of pit latrine in home",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Q57State",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, what is the state of the latrine",
+        "legacy_type": "LegalValues",
+        "label_set": "codeQ57State"
+      }
+    },
+    {
+      "name": "Q58Water",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Where does household get its water?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeQ58Water"
+      }
+    },
+    {
+      "name": "Q59Boil",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "How does household prepare its drinking water?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeQ59Boil"
+      }
+    },
+    {
+      "name": "Q60Wash",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Does household have facility for washing after latrine use?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Q61Rack",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Is there a rack for drying plates in the home?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Q62Clean",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Cleanliness around the home",
+        "legacy_type": "LegalValues",
+        "label_set": "codeQ62Clean"
+      }
+    },
+    {
+      "name": "Q63HEduc",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Did you attend health education sessions on diarrhoea or cholera in the last 2 years?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Q64Who",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, who gave it?",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q65How",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "In your opinion, how does one get cholera?",
+        "legacy_type": "Multiline"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeSex",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Male"
+          },
+          "Male"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Female"
+          },
+          "Female"
+        ]
+      ]
+    },
+    {
+      "id": "codeEducationLevel",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Nil"
+          },
+          "Nil"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Primary 1-4"
+          },
+          "Primary 1-4"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Primary 5-7"
+          },
+          "Primary 5-7"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Secondary"
+          },
+          "Secondary"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Tertiary"
+          },
+          "Tertiary"
+        ]
+      ]
+    },
+    {
+      "id": "codeQ6Villag",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Rwenshama"
+          },
+          "Rwenshama"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Rwebinyoni"
+          },
+          "Rwebinyoni"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ncwera"
+          },
+          "Ncwera"
+        ]
+      ]
+    },
+    {
+      "id": "codeQ16Dehyd",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Nil"
+          },
+          "Nil"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Some"
+          },
+          "Some"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Severe"
+          },
+          "Severe"
+        ]
+      ]
+    },
+    {
+      "id": "codeQ24Outco",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Died"
+          },
+          "Died"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Improved"
+          },
+          "Improved"
+        ]
+      ]
+    },
+    {
+      "id": "codeQ26Place1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "hotel"
+          },
+          "hotel"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "bar"
+          },
+          "bar"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "neighbor"
+          },
+          "neighbor"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "roadside"
+          },
+          "roadside"
+        ]
+      ]
+    },
+    {
+      "id": "codeQ57State",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "clean"
+          },
+          "clean"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "dirty"
+          },
+          "dirty"
+        ]
+      ]
+    },
+    {
+      "id": "codeQ58Water",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "lake"
+          },
+          "lake"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "river"
+          },
+          "river"
+        ]
+      ]
+    },
+    {
+      "id": "codeQ59Boil",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "boiling"
+          },
+          "boiling"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "not boiling"
+          },
+          "not boiling"
+        ]
+      ]
+    },
+    {
+      "id": "codeQ62Clean",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "good"
+          },
+          "good"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "fair"
+          },
+          "fair"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "poor"
+          },
+          "poor"
+        ]
+      ]
+    }
+  ]
+}

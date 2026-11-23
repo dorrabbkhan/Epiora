@@ -1,0 +1,916 @@
+{
+  "name": "Sample",
+  "legacy_id": "19EEE31C-1ADF-1A81-A55ED2BFA5EA94FA",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/Sample/Sample.mdb",
+    "sha256": "c3f70af4aef2de572aadeb127e74661667642b325d9f0f2792f1e60e00f9078e"
+  },
+  "views": [
+    {
+      "name": "ADDFull",
+      "dataset": "ADDFull.dataset.json",
+      "records": 359,
+      "deleted_records": 0,
+      "hash": "352fc87896dc292c09eea176ec6f337d3608242c207942c31e0dd67f64e89e56"
+    },
+    {
+      "name": "AgeWithCount",
+      "dataset": "AgeWithCount.dataset.json",
+      "records": 10,
+      "deleted_records": 0,
+      "hash": "e09dce27ddae945b6474e2c5ae21d52a44afe1d9b823a5c2528ada85bcfa658f"
+    },
+    {
+      "name": "BabyBloodPressure",
+      "dataset": "BabyBloodPressure.dataset.json",
+      "records": 16,
+      "deleted_records": 0,
+      "hash": "94fcde8ae93d3fe2932900af9586b57c928f2273b337ba81298ad5b48d655be1"
+    },
+    {
+      "name": "Epi1",
+      "dataset": "Epi1.dataset.json",
+      "records": 210,
+      "deleted_records": 0,
+      "hash": "5413675b020d48868ea440af60166e19a42cd138baad2de91f1c320489200e24"
+    },
+    {
+      "name": "Epi10",
+      "dataset": "Epi10.dataset.json",
+      "records": 2152,
+      "deleted_records": 0,
+      "hash": "c2cc180fedac9bb3cf7e4482cc52d87bab832ef8451b3128366059edbc1ec16e"
+    },
+    {
+      "name": "EstriolAndBirthweight",
+      "dataset": "EstriolAndBirthweight.dataset.json",
+      "records": 31,
+      "deleted_records": 0,
+      "hash": "a72d61d3164b0fe330de6d547de7d58fc50cf6e3b250990c19fc32438b2a5dde"
+    },
+    {
+      "name": "EvansCounty",
+      "dataset": "EvansCounty.dataset.json",
+      "records": 609,
+      "deleted_records": 0,
+      "hash": "82997ce3630a22658b49f186f4ca595573df0ffd3dd5eaa1129246d76f2737ac"
+    },
+    {
+      "name": "hmohiv",
+      "dataset": "hmohiv.dataset.json",
+      "records": 100,
+      "deleted_records": 0,
+      "hash": "3c72432463db4de1115c31e8294533fce9c69be6b981eda1511f2c519bcb3400"
+    },
+    {
+      "name": "Lasum",
+      "dataset": "Lasum.dataset.json",
+      "records": 25,
+      "deleted_records": 0,
+      "hash": "aceeec4326ff9c2cb767e0080767862045641fc88a6b419bdb16eb5fdb624176"
+    },
+    {
+      "name": "LEUKEM2",
+      "dataset": "LEUKEM2.dataset.json",
+      "records": 42,
+      "deleted_records": 0,
+      "hash": "1f7feaa23237fcae1daeca2e57c25fcec7b68aeff455229082c54228f7ee4ab5"
+    },
+    {
+      "name": "MexMap95",
+      "dataset": "MexMap95.dataset.json",
+      "records": 32,
+      "deleted_records": 0,
+      "hash": "fad293469a056e046ec689807d316914c024d64abc9d65192e577d0eaf8c55d1"
+    },
+    {
+      "name": "Oswego",
+      "dataset": "Oswego.dataset.json",
+      "records": 75,
+      "deleted_records": 0,
+      "hash": "1a4c771bcf787745c445a33fba348ffa6d7ca6ba48eb330103862a6fd10276ed"
+    },
+    {
+      "name": "Rely",
+      "dataset": "Rely.dataset.json",
+      "records": 56,
+      "deleted_records": 0,
+      "hash": "5afc601abe35413ddf0f313627ceefcad9fd6f685c6c4c97965836617f1219a8"
+    },
+    {
+      "name": "RHepatitis",
+      "dataset": "RHepatitis.dataset.json",
+      "records": 5,
+      "deleted_records": 0,
+      "hash": "f3594b8ef648a31433e5b5774d0432fecbeb18418356f306236a6ba275b987c1"
+    },
+    {
+      "name": "RLyme",
+      "dataset": "RLyme.dataset.json",
+      "records": 4,
+      "deleted_records": 0,
+      "hash": "275e3c62045d7f69374d4f2ed0ab810b51b15bc9ecbd2e2ec0faf9fc624b8eb2"
+    },
+    {
+      "name": "RMeningitis",
+      "dataset": "RMeningitis.dataset.json",
+      "records": 5,
+      "deleted_records": 0,
+      "hash": "4dfa9c8df629837e56caa4c1a6df7bc45d5beff109adeec328daea733985c11e"
+    },
+    {
+      "name": "Smoke",
+      "dataset": "Smoke.dataset.json",
+      "records": 337,
+      "deleted_records": 0,
+      "hash": "5859e62f5ff79011ea944b47a6954bff8094a5a4ed6a3a96a2d210bcbf02513a"
+    },
+    {
+      "name": "Surveillance",
+      "dataset": "Surveillance.dataset.json",
+      "records": 20,
+      "deleted_records": 0,
+      "hash": "0a553e48d963d12c249d0d2bc8609fe2e28622d2a26321b6615c3b5be710e7d9"
+    }
+  ],
+  "links": [
+    {
+      "parent": "Surveillance",
+      "child": "RLyme",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "Surveillance",
+      "child": "RHepatitis",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "Surveillance",
+      "child": "RMeningitis",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    }
+  ],
+  "programs": [
+    {
+      "name": "Statistics",
+      "text_sha256": "4ff24a75ef8999a30ed678eddb202e7dd6f50f5d3e1f1638f10484d9bd4f2311"
+    }
+  ],
+  "check_code": [
+    {
+      "view": "RHepatitis",
+      "blocks": 13
+    },
+    {
+      "view": "RLyme",
+      "blocks": 1
+    },
+    {
+      "view": "RMeningitis",
+      "blocks": 5
+    },
+    {
+      "view": "Surveillance",
+      "blocks": 17
+    }
+  ],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "ADDFull/AddFull",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ADDFull/ThisViewIs",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "ADDFull/OldUniqueKey",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "AgeWithCount/AgeWithCount",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "AgeWithCount/Description",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "BabyBloodPressure/InfantBlood",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "BabyBloodPressure/FromRosner",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "BabyBloodPressure/UsedInStatistics",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "BabyBloodPressure/Description",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "BabyBloodPressure/OldUniqueKey",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi1/Epi1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi1/ThisViewIs",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi1/WhetherOrNot",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi1/AnExampleOf",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi1/FromTheAnalysis",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi1/OrStepThrough",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi1/ComplexSurvey",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi1/Description",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Epi1/OldUniqueKey",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi10/Epi10",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi10/WhetherOrNot",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi10/StratumInWhich",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi10/Population",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi10/ThisViewContains",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi10/AnExampleOf",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Epi10/ExposureVariable",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Epi10/OldUniqueKey",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "EstriolAndBirthweight/EstriolInPregnant",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "EstriolAndBirthweight/ReprintedIn",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "EstriolAndBirthweight/ThisViewIs",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "EstriolAndBirthweight/ThatTeachPublic",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "EstriolAndBirthweight/OldUniqueKey",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "EvansCounty/EVANSCOUNT",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "EvansCounty/OldUniqueKey",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "hmohiv/Title",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "hmohiv/Description",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "hmohiv/DescText1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "hmohiv/OldUniqueKey",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Lasum/LaSum",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Lasum/EstrogenAnd",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Lasum/WeightedAnalysis",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Lasum/ThisViewIs",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Lasum/OldUniqueKey",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "LEUKEM2/Leukem2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "LEUKEM2/ThisViewIs",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "LEUKEM2/OldUniqueKey",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MexMap95/Mexmap95",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MexMap95/Desc1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MexMap95/Hint",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Oswego/QUESTIONNA",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Oswego/FOODHISTOR",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Oswego/FoodItems",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Oswego/Beverages",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Oswego/Desserts",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Oswego/AllFoods",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Rely/RelyTampons",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Rely/MatchedCaseControl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Rely/Description",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Rely/Desc1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Rely/OldUniqueKey",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RHepatitis/PersonalInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RHepatitis/ClinicalInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RHepatitis/Hepatitis",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RHepatitis/Laboratory",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RHepatitis/LabInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RHepatitis/Prior2To6Weeks",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RHepatitis/Prior1",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RHepatitis/RiskFactors",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RHepatitis/Prior6",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "RHepatitis/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "RHepatitis/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "RHepatitis/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "RHepatitis/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RLyme/LymeDisease",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RLyme/physicianDiagnosed",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RLyme/PersonalInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RLyme/DermInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RLyme/RheuInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RLyme/CardioInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RLyme/NeuroInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RLyme/WhereWasThe",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RLyme/PatientInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RLyme/SeroInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RLyme/TickInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "RLyme/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "RLyme/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "RLyme/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "RLyme/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RMeningitis/Meningitis",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RMeningitis/PregnancyRelated",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RMeningitis/PersonalInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RMeningitis/SeroInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RMeningitis/ResInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RMeningitis/SpecimenInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RMeningitis/SpecimenFrom",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RMeningitis/Group2note",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "RMeningitis/Group1note",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "RMeningitis/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "RMeningitis/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "RMeningitis/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "RMeningitis/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Smoke/SmokeTitle",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Smoke/ThisViewContains",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Smoke/YouCanExplore",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Smoke/ATelephone",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Smoke/OldUniqueKey",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/Demographic",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/Preliminary",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/AllNamesAddresses",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/PersonalInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/Surveillance",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Surveillance/CountyName",
+      "reason": "Codes field stores the COUNTY display value; the  COUNTYCODE code is kept in its label set"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Surveillance/Disease",
+      "reason": "Codes field stores the EVENTNAME display value; the  EVENT code is kept in its label set"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/cmdCaseDefinitions",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/SurveillanceDashboard",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Surveillance/CaseNumber",
+      "reason": "Mirror field imported as the value of CaseID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/HospitalInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/LabInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Surveillance/LastName1",
+      "reason": "Mirror field imported as the value of LastName"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Surveillance/FirstName1",
+      "reason": "Mirror field imported as the value of FirstName"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/AllNamesAddresses1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/ReportInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/CaseInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/LocalInfo",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Surveillance/LastName2",
+      "reason": "Mirror field imported as the value of LastName"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Surveillance/FirstName2",
+      "reason": "Mirror field imported as the value of FirstName"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Surveillance/CaseNumber2",
+      "reason": "Mirror field imported as the value of CaseID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/DiseaseSpecific",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Surveillance/AllNamesAddresses2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Surveillance/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Surveillance/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Surveillance/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Surveillance/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "Programs",
+      "reason": "EI3-era programs table; metaPrograms is the EI7 program store"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "Addicts",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "Anderson",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeBacterialSpecies",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeNumPart",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSpecies",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "RabiesTests2003",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "recgridRmeningitisImmunization",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "RMeningitis23",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "RMeningitis23Immunization",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "RmeningitisImmunization",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "SohoDead",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "SohoPump",
+      "reason": "no view, field or code table claims it"
+    }
+  ]
+}

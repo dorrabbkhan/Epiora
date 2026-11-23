@@ -1,0 +1,108 @@
+{
+  "name": "Asthma Survey 2005",
+  "legacy_id": null,
+  "source_format": "ei3_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei3/Asthma Survey 2005.mdb",
+    "sha256": "e267cde9aa30df9e6459f440d1f573cce4ab4d907696bc3bbe8342ba62a5f144"
+  },
+  "views": [
+    {
+      "name": "PreInterventionSurvey",
+      "dataset": "PreInterventionSurvey.dataset.json",
+      "records": 10,
+      "deleted_records": 0,
+      "hash": "cd0c407d239c864c532611774d4ac4068887e212c284e17910cc91216cb003da"
+    }
+  ],
+  "links": [],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "PreInterventionSurvey",
+      "blocks": 3
+    }
+  ],
+  "report": [
+    {
+      "kind": "code_page_assumed",
+      "item": "Asthma Survey 2005",
+      "reason": "JET3 text decoded as windows-1252 (MDB_JET3_CHARSET)"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/PreSurvey",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Condition",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PreInterventionSurvey/ID",
+      "reason": "MIRROR field imported as the value of StudentID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Symptoms",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Identification",
+      "reason": "EI3 field type GROUP is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/AsthmaticConditions",
+      "reason": "EI3 field type GROUP is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/MonthlyBreathing",
+      "reason": "EI3 field type GROUP is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Medtitle",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/PersonalInformation",
+      "reason": "EI3 field type GROUP is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PreInterventionSurvey/ID2",
+      "reason": "MIRROR field imported as the value of StudentID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Symptitle",
+      "reason": "EI3 field type TEXTONLY is form metadata"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSchoolID",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSchoolID1",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSchoolID12",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSchoolID123",
+      "reason": "unreferenced code table"
+    }
+  ]
+}

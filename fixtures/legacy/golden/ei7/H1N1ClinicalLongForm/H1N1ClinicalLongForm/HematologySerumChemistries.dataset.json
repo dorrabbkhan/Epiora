@@ -1,0 +1,1623 @@
+{
+  "id": "HematologySerumChemistries",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RecStatus",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "ADMDATE",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HOSPWK1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HOSPWK2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HOSPWK3",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DCDATE",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "WBC_A",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "NEUT_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BANDS_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LYMPH_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EOS_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HCT_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PLT_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CH1_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH2_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH3_A",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH1_AU",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH2_AU",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH3_AU",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH1SPEC",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other chemistry",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH2SPEC",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other chemistry",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH3SPEC",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other chemistry",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PT_A",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "INR_A",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "NA_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "K_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HCO3_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ALB_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CREAT_A",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ALT_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AST_A",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BILI_A",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AMM_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LDH_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LIPASE_A",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CK_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CRP_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ESR_A",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "WBC_WK1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "WBC_WK2",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "WBC_WK3",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "WBC_D",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "NEUT_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BANDS_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LYMPH_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EOS_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HCT_WK1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PLT_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PT_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "INR_WK1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "NA_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "K_WK1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HCO3_WK1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ALB_WK1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CREAT_WK1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "GLUC_WK1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ALT_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AST_WK1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BILI_WK1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AMM_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LDH_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LIPASE_WK1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CK_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CRP_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ESR_WK1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CH1_WK1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH2_WK1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH3_WK1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH1_WK1U",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH2_WK1U",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH3_WK1U",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NEUT_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BANDS_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LYMPH_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EOS_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HCT_WK2",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PLT_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PT_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "INR_WK2",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "NA_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "K_WK2",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HCO3_WK2",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ALB_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CREAT_WK2",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "GLUC_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ALT_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AST_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BILI_WK2",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AMM_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LDH_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LIPASE_WK2",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CK_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "NA_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "K_WK3",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HCO3_WK3",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ALB_WK3",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CREAT_WK3",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "GLUC_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ALT_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AST_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BILI_WK3",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AMM_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LDH_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LDH_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LIPASE_WK3",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LIPASE_D",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CK_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CK_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "NEUT_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BANDS_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LYMPH_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EOS_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HCT_D",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PLT_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PT_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "INR_D",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "NA_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "K_D",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HCO3_D",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ALB_D",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CREAT_D",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "GLUC_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ALT_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AST_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CRP_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ESR_WK2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CH1_WK2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH2_WK2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH3_WK2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH1_WK2U",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH2_WK2U",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH3_WK2U",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NEUT_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BANDS_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "LYMPH_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "EOS_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HCT_WK3",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PLT_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PT_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "INR_WK3",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CRP_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CRP_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CSR_WK3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ESR_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "CH1_WK3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH2_WK3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH3_WK3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH1_WK3U",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH2_WK3U",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH3_WK3U",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH1_D",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH2_D",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH3_D",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH1_DU",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH2_DU",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CH3_Du",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BILI_D",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AMM_D",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "StateID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCUniqueID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Unique ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "COUNTYID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LABOTH1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LABOTH2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LABOTH3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LABOTH1SP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LABOTH2SP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LABOTH3SP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LABOTH1DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LABOTH2DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LABOTH3DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LABOTH1RES",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LABOTH2RES",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LABOTH3RES",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HEMANOTES",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Additional laboratory notes",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "STATEID1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "COUNTYID1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CDCID1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    }
+  ]
+}

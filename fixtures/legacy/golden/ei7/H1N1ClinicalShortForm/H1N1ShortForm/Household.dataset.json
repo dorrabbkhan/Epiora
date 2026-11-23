@@ -1,0 +1,1331 @@
+{
+  "id": "Household",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        1
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [
+        1
+      ],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [
+        "89d31868-4859-49ba-bc4c-9da4ea5b8949"
+      ],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [
+        "e238cf00-85d0-41b6-945c-d80f062010c6"
+      ],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "CDCID_H",
+      "type": "text",
+      "values": [
+        "88"
+      ],
+      "meta": {
+        "prompt": "CDC EPI ID:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STID_H",
+      "type": "text",
+      "values": [
+        "77"
+      ],
+      "meta": {
+        "prompt": "State EPI ID:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID1_H",
+      "type": "text",
+      "values": [
+        "55"
+      ],
+      "meta": {
+        "prompt": "CDC Lab ID #1:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID1_H",
+      "type": "text",
+      "values": [
+        "99"
+      ],
+      "meta": {
+        "prompt": "State lab specimen ID # 1:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateSpecID2_H",
+      "type": "text",
+      "values": [
+        "11"
+      ],
+      "meta": {
+        "prompt": "State lab specimen ID #2:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCSpecimenLabID2_H",
+      "type": "text",
+      "values": [
+        "66"
+      ],
+      "meta": {
+        "prompt": "CDC Lab ID #2:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NumHouse",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "How many people live in the household (include patient in this number)?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HHRel1",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "1",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeRelationship"
+      }
+    },
+    {
+      "name": "HHAgeYr1",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HHNOSX1",
+      "type": "boolean",
+      "values": [
+        true
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHFever1",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHFeverish1",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHCough1",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHSoreThroat1",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHRunnyNose1",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHDiarrhea1",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ILLHHOnset1",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HHRel2",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "2",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeRelationship"
+      }
+    },
+    {
+      "name": "HHFever2",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHCough2",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHSoreThroat2",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHNOSX2",
+      "type": "boolean",
+      "values": [
+        true
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHRunnyNose2",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHAgeYr2",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HHDiarrhea2",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ILLHHOnset2",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HHFeverish2",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHFeverish3",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHFever3",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHCough3",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHREL3",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "3",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeRelationship"
+      }
+    },
+    {
+      "name": "HHSoreThroat3",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHAgeYr3",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HHRunnyNose3",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHDiarrhea3",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHNOSX3",
+      "type": "boolean",
+      "values": [
+        true
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ILLHHOnset3",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HHFeverish4",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHFever4",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHRel4",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "4",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeRelationship"
+      }
+    },
+    {
+      "name": "HHCough4",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHSoreThroat4",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHRunnyNose4",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHAgeYr4",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HHDiarrhea4",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ILLHHOnset4",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HHNOSX4",
+      "type": "boolean",
+      "values": [
+        true
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHFeverish5",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHFever5",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHCough5",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHSoreThroat5",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHRel5",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "5",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeRelationship"
+      }
+    },
+    {
+      "name": "HHRunnyNose5",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHAgeYr5",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HHDiarrhea5",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ILLHHOnset5",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HHNOSX5",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHFever6",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHCough6",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHSoreThroat6",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHRunnyNose6",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHDiarrhea6",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHRel6",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "6",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeRelationship"
+      }
+    },
+    {
+      "name": "ILLHHOnset6",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HHAgeYr6",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HHFeverish6",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHNOSX6",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHFever7",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHCough7",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHSoreThroat7",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHRel7",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "7",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeRelationship"
+      }
+    },
+    {
+      "name": "HHRunnyNose7",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHNOSX7",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHAgeYr7",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HHDiarrhea7",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHFeverish7",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ILLHHOnset7",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HHFeverish8",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHAgeYr8",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HHFever8",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHCough8",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHSoreThroat8",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHRel8",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "8",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeRelationship"
+      }
+    },
+    {
+      "name": "HHNOSX8",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHRunnyNose8",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHDiarrhea8",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ILLHHOnset8",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HHFever9",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHCough9",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHSoreThroat9",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHAgeYr9",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HHRel9",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "9",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeRelationship"
+      }
+    },
+    {
+      "name": "HHRunnyNose9",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHNOSX9",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHDiarrhea9",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ILLHHOnset9",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HHFeverish9",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHNOSX10",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHFever10",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHCough10",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHSoreThroat10",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHRel10",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "10",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeRelationship"
+      }
+    },
+    {
+      "name": "HHRunnyNose10",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HHAgeYr10",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HHDiarrhea10",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ILLHHOnset10",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HHFeverish10",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Checkbox"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeRelationship",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- spouse"
+          },
+          "1- spouse"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- mother"
+          },
+          "2- mother"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- father"
+          },
+          "3- father"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- child"
+          },
+          "4- child"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- sister"
+          },
+          "5- sister"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- brother"
+          },
+          "6- brother"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7- cousin"
+          },
+          "7- cousin"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8- aunt"
+          },
+          "8- aunt"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- uncle"
+          },
+          "9- uncle"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10- grandmother"
+          },
+          "10- grandmother"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11- grandfather"
+          },
+          "11- grandfather"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12- not related"
+          },
+          "12- not related"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "19- other"
+          },
+          "19- other"
+        ]
+      ]
+    }
+  ]
+}

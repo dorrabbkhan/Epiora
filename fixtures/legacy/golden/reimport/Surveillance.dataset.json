@@ -1,0 +1,4025 @@
+{
+  "id": "Surveillance",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [
+        "993974ab-a5c8-4177-b81d-a060b2e5b9e1",
+        "f3c31be1-e9e6-471a-a269-2358dc013ac9",
+        "294e4762-8f38-472c-b293-c3c0b7b81623",
+        "a5a9dba9-a9d0-4a95-8efc-a8423d65c5f9",
+        "c18bfea3-6546-450d-89cd-5fcde54b025a",
+        "5e8918d3-139f-4eb6-8d8a-0c14ceb9b50b",
+        "379e932d-18e5-46f3-8136-e327fdcce558",
+        "03288ff8-b991-419c-932d-cc4ef7c2207e",
+        "68686009-2b7d-424f-8901-1f47a6f72044",
+        "8a4eeff6-f7e5-4fd2-ac13-2854ec379e4b",
+        "f366edb1-77be-4681-833c-bd0d69ea555a",
+        "5cd39bea-cb0c-4058-be26-7f687b9004b6",
+        "ed9d4fe3-33ad-4476-8033-1f4c00ae48bc",
+        "c3b017fc-aafd-43e3-8615-c04487416dfa",
+        "46febc64-6084-4a88-9912-0ffa84dcae90",
+        "0012827d-c4ea-44eb-b507-d78190c6024c",
+        "7f1bfed8-ec7e-4446-abbb-a8267d0878e0",
+        "e82885d4-8f49-4c95-8080-08262583061a",
+        "762b29ad-9815-4ca6-9505-993b88068986",
+        "57208aab-9605-4b61-a0e1-485fdf78a841"
+      ],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "CaseID",
+      "type": "text",
+      "values": [
+        "100",
+        "200",
+        "300",
+        "400",
+        "500",
+        "600",
+        "700",
+        "800",
+        "900",
+        "1000",
+        "1100",
+        "1200",
+        "1300",
+        "1400",
+        "1500",
+        "1600",
+        "1700",
+        "1800",
+        "1900",
+        "2000"
+      ],
+      "meta": {
+        "prompt": "Case ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LastName",
+      "type": "text",
+      "values": [
+        "Smith",
+        "Littlefoott",
+        "Smythe",
+        "Ibrahim",
+        "Adams",
+        "Stuckey",
+        "Reagan",
+        "Crumley",
+        "Clickstein",
+        "Post",
+        "Vickar",
+        "Grant",
+        "Farmer",
+        "Gutierrez",
+        "Hildebrandt",
+        "Kwok",
+        "Thistlestem",
+        "Kim",
+        "Goreman",
+        "Moroney"
+      ],
+      "meta": {
+        "prompt": "Last Name *",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FirstName",
+      "type": "text",
+      "values": [
+        "John",
+        "Mortimer",
+        "Frances",
+        "Michael",
+        "Henry",
+        "Malcome (Moose)",
+        "Phillimena",
+        "Salmon",
+        "Jared",
+        "Amanda",
+        "Barrimore",
+        "Drew",
+        "Gabrielle",
+        "John",
+        "Horace",
+        "William",
+        "Sorrina",
+        "Kenneth",
+        "Howard",
+        "Carly"
+      ],
+      "meta": {
+        "prompt": "First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Mi",
+      "type": "text",
+      "values": [
+        "M.",
+        "T.",
+        "P.",
+        null,
+        "G.",
+        "T.",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "MI",
+        "legacy_type": "TextUppercase"
+      }
+    },
+    {
+      "name": "Address",
+      "type": "text",
+      "values": [
+        "5 Main Street",
+        "1616 N. Jefferson St.",
+        "7 Summit Ave.",
+        "63-A Capitol Avenue",
+        "4567 Shady Lane",
+        "14 Billoweo Ct. NE",
+        "14 Manillas Pl.",
+        "21 Pastureview Pl.",
+        "320 Hixon Hollow Way",
+        "80 Maple Sugar St.",
+        "2 Misty Mountain Rd",
+        "777 Villa Rica St.",
+        "98 Eucalyptus Cir.",
+        "65 3rd Avenue Apt-A",
+        "6547 Oakland Crest Rd.",
+        "2343 Bill Bizon Hwy",
+        "10 Apple Dumpling Rd",
+        "8 Camden-Little Lakes Freeway",
+        "78 Peachtree Trail",
+        "2287 Clairmont Ave"
+      ],
+      "meta": {
+        "prompt": "Address",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "City",
+      "type": "text",
+      "values": [
+        "Atlanta",
+        "Mansionville",
+        "Haverhill",
+        "Tulsa",
+        "Marietta",
+        "Palmer",
+        "Homer",
+        "Roseley Heights",
+        "Atlanta",
+        "Draperville",
+        "Little Lakes",
+        "Roseley Heights",
+        "Martintown",
+        "Dock Rail City",
+        "Riceland",
+        "Draperville",
+        "Bakerdale",
+        "Camden",
+        "Mansionville",
+        "Sumpter"
+      ],
+      "meta": {
+        "prompt": "City",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CountyName",
+      "type": "text",
+      "values": [
+        "FULTON",
+        "BALDWIN",
+        "RABUN",
+        "CHATTOOGA",
+        "COBB",
+        "CATOOSA",
+        "CHATTOOGA",
+        "FULTON",
+        "FULTON",
+        "DEKALB",
+        "CAMDEN",
+        "FULTON",
+        "DEKALB",
+        "ROCKDALE",
+        "CANDLER",
+        "DEKALB",
+        "APPLING",
+        "HART",
+        "BALDWIN",
+        "JENKINS"
+      ],
+      "meta": {
+        "prompt": "County",
+        "legacy_type": "Codes",
+        "label_set": "codeCntycode#COUNTYCODE->COUNTY"
+      }
+    },
+    {
+      "name": "County",
+      "type": "text",
+      "values": [
+        "60",
+        "5",
+        "119",
+        "27",
+        "33",
+        "23",
+        "27",
+        "60",
+        "60",
+        "44",
+        "20",
+        "60",
+        "44",
+        "122",
+        "21",
+        "44",
+        "1",
+        "73",
+        "5",
+        "82"
+      ],
+      "meta": {
+        "prompt": "County Code",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ZipCode",
+      "type": "text",
+      "values": [
+        "31061",
+        "31059",
+        "31287",
+        "30730",
+        "30060",
+        "30756",
+        "30730",
+        "31061",
+        "31061",
+        "30035",
+        "31558",
+        "31061",
+        "30035",
+        "30013",
+        "30451",
+        "30035",
+        "31563",
+        "30643",
+        "31062",
+        "30822"
+      ],
+      "meta": {
+        "prompt": "Zip Code",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Disease",
+      "type": "text",
+      "values": [
+        "HEP B",
+        "LYME",
+        "H. FLU",
+        "SALMONELLA",
+        "LISTERIOSIS",
+        "HEP C",
+        "BRUCELLOSIS",
+        "PERTUSSIS",
+        "HEP C",
+        "LYME",
+        "BACT MEN OTH",
+        "COCCIDIOIDOMY",
+        "E. COLI",
+        "H. FLU",
+        "HEP C",
+        "LYME",
+        "CHLAMYDIA,T",
+        "HEP C",
+        "LYME",
+        "MENINGOCL INF"
+      ],
+      "meta": {
+        "prompt": "Disease",
+        "legacy_type": "Codes",
+        "label_set": "codeDisCodes#EVENT->EVENTNAME"
+      }
+    },
+    {
+      "name": "EventCode",
+      "type": "text",
+      "values": [
+        "10100",
+        "11080",
+        "10590",
+        "11000",
+        "10640",
+        "10101",
+        "10020",
+        "10190",
+        "10101",
+        "11080",
+        "10650",
+        "11900",
+        "11560",
+        "10590",
+        "10101",
+        "11080",
+        "10274",
+        "10101",
+        "11080",
+        "10150"
+      ],
+      "meta": {
+        "prompt": "Event Code",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "EventDate",
+      "type": "date",
+      "values": [
+        "2007-01-03",
+        "2007-02-19",
+        "2007-03-07",
+        "2007-04-10",
+        "2007-05-05",
+        "2007-06-05",
+        "2007-07-27",
+        "2007-08-09",
+        "2007-09-17",
+        "2007-10-07",
+        "2007-11-06",
+        "2007-12-08",
+        "2007-01-22",
+        "2007-02-18",
+        "2007-03-20",
+        "2007-04-14",
+        "2007-05-29",
+        "2007-06-20",
+        "2007-07-25",
+        "2007-10-21"
+      ],
+      "meta": {
+        "prompt": "Event Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "EventType",
+      "type": "text",
+      "values": [
+        "1",
+        "4",
+        "2",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "3",
+        "1",
+        "1",
+        "1",
+        "5",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "meta": {
+        "prompt": "Event Type",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeEventType"
+      }
+    },
+    {
+      "name": "Week",
+      "type": "integer",
+      "values": [
+        1,
+        8,
+        10,
+        15,
+        18,
+        23,
+        30,
+        32,
+        38,
+        41,
+        45,
+        49,
+        4,
+        8,
+        12,
+        15,
+        22,
+        25,
+        30,
+        43
+      ],
+      "meta": {
+        "prompt": "Epi Week",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Year",
+      "type": "integer",
+      "values": [
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007,
+        2007
+      ],
+      "meta": {
+        "prompt": "Case Year",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "BirthDate",
+      "type": "date",
+      "values": [
+        "1968-05-20",
+        "1929-03-17",
+        "1985-09-27",
+        "2006-10-22",
+        "1956-04-08",
+        "1970-09-01",
+        "1967-03-20",
+        "2000-03-09",
+        "1948-04-03",
+        "1984-11-22",
+        "1956-03-16",
+        "1989-11-08",
+        "1934-05-13",
+        "1983-09-30",
+        "1999-07-14",
+        "1974-06-04",
+        "1969-11-08",
+        "1948-06-08",
+        "1961-02-21",
+        "1972-04-07"
+      ],
+      "meta": {
+        "prompt": "Birth Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Age",
+      "type": "integer",
+      "values": [
+        38,
+        77,
+        21,
+        3,
+        55,
+        36,
+        39,
+        7,
+        59,
+        22,
+        51,
+        18,
+        72,
+        30,
+        7,
+        32,
+        37,
+        59,
+        46,
+        35
+      ],
+      "meta": {
+        "prompt": "Age",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AgeType",
+      "type": "text",
+      "values": [
+        "Years",
+        "Years",
+        "Years",
+        "Months",
+        "Years",
+        "Years",
+        "Years",
+        "Years",
+        "Years",
+        "Years",
+        "Years",
+        "Years",
+        "Years",
+        "Years",
+        "Years",
+        "Years",
+        "Years",
+        "Years",
+        "Years",
+        "Years"
+      ],
+      "meta": {
+        "prompt": "Age Type",
+        "legacy_type": "LegalValues",
+        "label_set": "codeAgeType"
+      }
+    },
+    {
+      "name": "Race",
+      "type": "text",
+      "values": [
+        "WHITE",
+        "NATIVE AMERICAN",
+        "BLACK",
+        "OTHER",
+        "UNKNOWN",
+        "WHITE",
+        "WHITE",
+        "BLACK",
+        "WHITE",
+        "BLACK",
+        "WHITE",
+        "WHITE",
+        "NATIVE AMERICAN",
+        "WHITE",
+        "BLACK",
+        "ASIAN/PACIF.ISL",
+        "WHITE",
+        "ASIAN/PACIF.ISL",
+        "BLACK",
+        "NATIVE AMERICAN"
+      ],
+      "meta": {
+        "prompt": "Race",
+        "legacy_type": "LegalValues",
+        "label_set": "codeRace"
+      }
+    },
+    {
+      "name": "Ethnicity",
+      "type": "text",
+      "values": [
+        "H",
+        "N",
+        "H",
+        "U",
+        "H",
+        "N",
+        "N",
+        "H",
+        "N",
+        "N",
+        "N",
+        "N",
+        "N",
+        "H",
+        "H",
+        "N",
+        "H",
+        "U",
+        "H",
+        "N"
+      ],
+      "meta": {
+        "prompt": "Ethnicity",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeEthnic"
+      }
+    },
+    {
+      "name": "Sex",
+      "type": "text",
+      "values": [
+        "Male",
+        "Male",
+        "Female",
+        "Male",
+        "Male",
+        "Male",
+        "Male",
+        "Male",
+        "Male",
+        "Female",
+        "Male",
+        "Male",
+        "Female",
+        "Male",
+        "Male",
+        "Male",
+        "Female",
+        "Male",
+        "Male",
+        "Female"
+      ],
+      "meta": {
+        "prompt": "Sex",
+        "legacy_type": "LegalValues",
+        "label_set": "codeSex"
+      }
+    },
+    {
+      "name": "Pregnant",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true
+      ],
+      "meta": {
+        "prompt": "Pregnant?",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Occupation",
+      "type": "text",
+      "values": [
+        "Medical worker",
+        "Game ranger",
+        "Student",
+        "Dependent child",
+        "Metal Worker",
+        "Nurse",
+        "Food worker",
+        "Dependent child",
+        "Custodian",
+        "Student",
+        "Medical worker",
+        "Student",
+        "Retired",
+        "Student",
+        "Dependent child",
+        "Wetland surveyor",
+        "Unemployed",
+        "Self-employed",
+        "Drum maker",
+        "Student"
+      ],
+      "meta": {
+        "prompt": "Occupation",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Setting",
+      "type": "text",
+      "values": [
+        "Clinic",
+        "Upland Forest",
+        "College",
+        "Home",
+        "Auto-repair shop",
+        "Adult Daycare Center",
+        "Restaurant",
+        "Sunday school",
+        "Shelter",
+        "College",
+        "Clinic",
+        "High School",
+        "Nursing home",
+        "College",
+        "Daycare",
+        "Field work",
+        "Public park",
+        null,
+        "Workshop",
+        "College"
+      ],
+      "meta": {
+        "prompt": "Setting",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CaseNumber",
+      "type": "text",
+      "values": [
+        "100",
+        "200",
+        "300",
+        "400",
+        "500",
+        "600",
+        "700",
+        "800",
+        "900",
+        "1000",
+        "1100",
+        "1200",
+        "1300",
+        "1400",
+        "1500",
+        "1600",
+        "1700",
+        "1800",
+        "1900",
+        "2000"
+      ],
+      "meta": {
+        "prompt": "Case ID Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "LastName1",
+      "type": "text",
+      "values": [
+        "Smith",
+        "Littlefoott",
+        "Smythe",
+        "Ibrahim",
+        "Adams",
+        "Stuckey",
+        "Reagan",
+        "Crumley",
+        "Clickstein",
+        "Post",
+        "Vickar",
+        "Grant",
+        "Farmer",
+        "Gutierrez",
+        "Hildebrandt",
+        "Kwok",
+        "Thistlestem",
+        "Kim",
+        "Goreman",
+        "Moroney"
+      ],
+      "meta": {
+        "prompt": "Last Name *",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "FirstName1",
+      "type": "text",
+      "values": [
+        "John",
+        "Mortimer",
+        "Frances",
+        "Michael",
+        "Henry",
+        "Malcome (Moose)",
+        "Phillimena",
+        "Salmon",
+        "Jared",
+        "Amanda",
+        "Barrimore",
+        "Drew",
+        "Gabrielle",
+        "John",
+        "Horace",
+        "William",
+        "Sorrina",
+        "Kenneth",
+        "Howard",
+        "Carly"
+      ],
+      "meta": {
+        "prompt": "First Name",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "Hospitalized",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "meta": {
+        "prompt": "Hospitalized",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "HospitalCity",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        "Marietta",
+        "Atlanta",
+        "Atlanta",
+        "Decatur",
+        "Atlanta",
+        "Atlanta",
+        "Marietta",
+        "Decatur",
+        "Marietta",
+        "Decatur",
+        "Marietta",
+        "Decatur",
+        "Atlanta",
+        "Atlanta",
+        null,
+        "Atlanta",
+        "Atlanta",
+        "Atlanta"
+      ],
+      "meta": {
+        "prompt": "City",
+        "legacy_type": "Codes",
+        "label_set": "codeHospitals"
+      }
+    },
+    {
+      "name": "HospitalName",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        "SummitRidge Hospital",
+        "St. Mary's Hospital",
+        "Evans Memorial Hospital",
+        "DeKalb Medical",
+        "Liberty Medical Center",
+        "Liberty Medical Center",
+        "Laurel Heights Hospital",
+        "Walton Hospital",
+        "Crescent Pines Hospital",
+        "Walton Hospital",
+        "Laurel Heights Hospital",
+        "Doctors Hospital of Decatur",
+        "Evans Memorial Hospital",
+        "St. Mary's Hospital",
+        null,
+        "Liberty Medical Center",
+        "University Hospital",
+        "University Hospital"
+      ],
+      "meta": {
+        "prompt": "Hospital",
+        "legacy_type": "Codes",
+        "label_set": "codeHospitals"
+      }
+    },
+    {
+      "name": "DoctorsName",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        "Dr. Alexandra Mitchell",
+        "Dr. Mary Ann Matthews",
+        "Dr. Carlos Gutierrez",
+        "Dr. Brandon Mason",
+        "Dr. Rene Mora",
+        "Dr. Donald Marcus",
+        "Dr. John Freemayer",
+        "Dr. Jennifer Palmer",
+        "Dr. Angelique Carroll",
+        "Dr. Jennifer Palmer",
+        "Dr. John Freemayer",
+        "Dr. Albert Ma",
+        "Dr. Carlos Gutierrez",
+        "Dr. William Young",
+        null,
+        "Dr. Donald Marcus",
+        "Dr. Jennifer Marrino",
+        "Dr. Jessica Martin"
+      ],
+      "meta": {
+        "prompt": "Doctor's Name *",
+        "legacy_type": "LegalValues",
+        "label_set": "codeHospitals"
+      }
+    },
+    {
+      "name": "DateAdmitted",
+      "type": "date",
+      "values": [
+        null,
+        null,
+        "2007-03-12",
+        "2007-01-22",
+        null,
+        "2007-06-12",
+        null,
+        "2007-02-10",
+        null,
+        "2007-10-07",
+        "2007-11-26",
+        null,
+        null,
+        null,
+        null,
+        "2007-04-18",
+        null,
+        "2007-06-26",
+        "2007-07-28",
+        "2007-10-23"
+      ],
+      "meta": {
+        "prompt": "Date Admitted",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DateDischarged",
+      "type": "date",
+      "values": [
+        null,
+        null,
+        "2007-03-22",
+        null,
+        null,
+        "2007-06-20",
+        null,
+        "2007-02-26",
+        null,
+        "2007-10-17",
+        "2007-12-07",
+        null,
+        null,
+        null,
+        null,
+        "2007-05-02",
+        null,
+        "2007-07-19",
+        "2007-08-24",
+        "2007-12-20"
+      ],
+      "meta": {
+        "prompt": "Date Discharged",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Died",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        null,
+        false,
+        false,
+        null,
+        true,
+        null,
+        null,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "meta": {
+        "prompt": "Died",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "LabConfirmed",
+      "type": "boolean",
+      "values": [
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        null,
+        true,
+        null,
+        null,
+        true,
+        null,
+        null,
+        null,
+        null,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "meta": {
+        "prompt": "Lab Confirmed",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "LabDate",
+      "type": "date",
+      "values": [
+        null,
+        "2006-10-22",
+        "2007-02-04",
+        null,
+        null,
+        "2007-06-13",
+        null,
+        "2007-08-11",
+        null,
+        null,
+        "2007-11-26",
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2007-05-10",
+        "2007-07-10",
+        "2007-07-27",
+        "2007-10-26"
+      ],
+      "meta": {
+        "prompt": "Lab Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Specimen",
+      "type": "text",
+      "values": [
+        null,
+        "Borrelia burgdorferi",
+        "Haemophilus influenzae",
+        null,
+        null,
+        "Blood",
+        null,
+        "Mucus",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "Fluid",
+        "Blood",
+        "Blood",
+        "Spinal Fluid"
+      ],
+      "meta": {
+        "prompt": "Specimen",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CaseNumber2",
+      "type": "text",
+      "values": [
+        "100",
+        "200",
+        "300",
+        "400",
+        "500",
+        "600",
+        "700",
+        "800",
+        "900",
+        "1000",
+        "1100",
+        "1200",
+        "1300",
+        "1400",
+        "1500",
+        "1600",
+        "1700",
+        "1800",
+        "1900",
+        "2000"
+      ],
+      "meta": {
+        "prompt": "Case ID Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "LastName2",
+      "type": "text",
+      "values": [
+        "Smith",
+        "Littlefoott",
+        "Smythe",
+        "Ibrahim",
+        "Adams",
+        "Stuckey",
+        "Reagan",
+        "Crumley",
+        "Clickstein",
+        "Post",
+        "Vickar",
+        "Grant",
+        "Farmer",
+        "Gutierrez",
+        "Hildebrandt",
+        "Kwok",
+        "Thistlestem",
+        "Kim",
+        "Goreman",
+        "Moroney"
+      ],
+      "meta": {
+        "prompt": "Last Name *",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "FirstName2",
+      "type": "text",
+      "values": [
+        "John",
+        "Mortimer",
+        "Frances",
+        "Michael",
+        "Henry",
+        "Malcome (Moose)",
+        "Phillimena",
+        "Salmon",
+        "Jared",
+        "Amanda",
+        "Barrimore",
+        "Drew",
+        "Gabrielle",
+        "John",
+        "Horace",
+        "William",
+        "Sorrina",
+        "Kenneth",
+        "Howard",
+        "Carly"
+      ],
+      "meta": {
+        "prompt": "First Name",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "ReportedBy",
+      "type": "text",
+      "values": [
+        "S.S.C",
+        "KKG",
+        "O.Ibrahim",
+        "S. Clemens",
+        "O.D",
+        "CJ Craig",
+        "CJ Craig",
+        "GD Brown",
+        "HJohnson",
+        "O.D",
+        "HJohnson",
+        "O.Ibrahim",
+        "GD Brown",
+        "O.Ibrahim",
+        "GD Brown",
+        "BDJ8",
+        "GD Brown",
+        "HJohnson",
+        "O.Ibrahim",
+        "HJohnson"
+      ],
+      "meta": {
+        "prompt": "Reported By *",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ReportDate",
+      "type": "date",
+      "values": [
+        "2007-01-05",
+        "2009-10-30",
+        "2007-02-10",
+        "2007-02-05",
+        null,
+        null,
+        "2014-05-06",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2007-04-16",
+        null,
+        null,
+        "2007-07-29",
+        "2007-10-24"
+      ],
+      "meta": {
+        "prompt": "Report Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Reptphone",
+      "type": "text",
+      "values": [
+        "404-555-6559",
+        "404-555-8912",
+        "770-555-1221",
+        "678-655-0012",
+        "770-555-8744",
+        "678-555-5150",
+        "678-555-5150",
+        "877-555-9519",
+        "404-000-5285",
+        "770-555-8744",
+        "404-000-5285",
+        "770-555-1221",
+        "877-555-9519",
+        "770-555-1221",
+        "877-555-9519",
+        "404-999-3265",
+        "877-555-9519",
+        "404-000-5285",
+        "770-555-1221",
+        "404-000-5285"
+      ],
+      "meta": {
+        "prompt": "Reporter Phone",
+        "legacy_type": "PhoneNumber"
+      }
+    },
+    {
+      "name": "Attendname",
+      "type": "text",
+      "values": [
+        "Philip",
+        "Rubin P.",
+        "JC Berkle",
+        "G. Simmons",
+        "H. Smith",
+        "W Goldberg",
+        "U. Yang",
+        "JC Berkle",
+        "GGLiddy",
+        "GGLiddy",
+        "GGLiddy",
+        "U. Yang",
+        "U. Yang",
+        "Rubin P.",
+        "Rubin P.",
+        "PJ Summers",
+        "JC Berkle",
+        "GGLiddy",
+        "Rubin P.",
+        "JC Berkle"
+      ],
+      "meta": {
+        "prompt": "Attendant's Name *",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Attendphone",
+      "type": "text",
+      "values": [
+        "404-555-8755",
+        "478-555-6989",
+        "510-555-9696",
+        "404-555-2389",
+        "770-555-8746",
+        "510-555-9696",
+        "877-555-4791",
+        "770-555-8746",
+        "770-555-8746",
+        "510-555-9696",
+        "404-555-2389",
+        "770-555-8746",
+        "510-555-9696",
+        "404-555-2389",
+        "770-555-8746",
+        "404-555-2389",
+        "770-555-8746",
+        "404-555-2389",
+        "404-555-2389",
+        "404-555-2389"
+      ],
+      "meta": {
+        "prompt": "Attend. phone",
+        "legacy_type": "PhoneNumber"
+      }
+    },
+    {
+      "name": "ReceivedDate",
+      "type": "date",
+      "values": [
+        null,
+        "2007-11-07",
+        "2007-02-10",
+        "2007-02-08",
+        "2007-10-21",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "2007-04-16",
+        "2007-05-28",
+        null,
+        "2007-07-27",
+        "2007-10-23"
+      ],
+      "meta": {
+        "prompt": "Received Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Entered",
+      "type": "date",
+      "values": [
+        "2007-01-07",
+        "2014-06-24",
+        "2007-06-24",
+        "2014-06-24",
+        "2014-06-24",
+        "2014-07-02",
+        "2014-07-03",
+        "2014-07-03",
+        "2014-07-03",
+        "2014-07-03",
+        "2014-07-03",
+        "2014-07-03",
+        "2014-07-03",
+        "2014-07-03",
+        "2014-07-03",
+        "2014-07-03",
+        "2014-07-03",
+        "2014-07-03",
+        "2007-07-30",
+        "2007-10-24"
+      ],
+      "meta": {
+        "prompt": "Entered Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OutbreakAssocNo",
+      "type": "real",
+      "values": [
+        null,
+        null,
+        null,
+        3,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Outbreak Assoc. No.",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Suspectsource",
+      "type": "text",
+      "values": [
+        "Patient",
+        "GA woods",
+        null,
+        "Homemade ice cream",
+        null,
+        "Local",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Suspect Source",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Imported",
+      "type": "boolean",
+      "values": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        null,
+        false,
+        false,
+        null,
+        null,
+        null,
+        false,
+        null,
+        false,
+        false,
+        null,
+        false,
+        true
+      ],
+      "meta": {
+        "prompt": "Imported",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Status",
+      "type": "text",
+      "values": [
+        "Confirmed",
+        "Confirmed",
+        "Confirmed",
+        "Probable",
+        "Confirmed",
+        "Confirmed",
+        "Suspect",
+        null,
+        "Confirmed",
+        "Confirmed",
+        null,
+        null,
+        null,
+        "Probable",
+        null,
+        "Confirmed",
+        "Confirmed",
+        null,
+        "Suspect",
+        "Confirmed"
+      ],
+      "meta": {
+        "prompt": "Status",
+        "legacy_type": "LegalValues",
+        "label_set": "codeStatus"
+      }
+    },
+    {
+      "name": "Updated",
+      "type": "date",
+      "values": [
+        "2014-06-24",
+        "2014-06-24",
+        "2014-06-24",
+        "2014-06-24",
+        "2014-06-24",
+        "2014-07-02",
+        "2014-07-03",
+        null,
+        "2014-07-03",
+        "2014-07-03",
+        null,
+        null,
+        null,
+        "2014-07-03",
+        null,
+        "2014-07-03",
+        "2014-07-03",
+        null,
+        "2014-07-03",
+        "2014-07-03"
+      ],
+      "meta": {
+        "prompt": "Updated Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LocalHealth",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        "Chattooga County Clinic",
+        null,
+        "Catoosa County HD",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Local Health Dept.",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Comment",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        "see notes from Dr. Simmons",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Comment",
+        "legacy_type": "Multiline"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeCntycode#COUNTYCODE->COUNTY",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1"
+          },
+          "APPLING"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2"
+          },
+          "ATKINSON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3"
+          },
+          "BACON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4"
+          },
+          "BAKER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5"
+          },
+          "BALDWIN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6"
+          },
+          "BANKS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7"
+          },
+          "BARROW"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8"
+          },
+          "BARTOW"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9"
+          },
+          "BEN HILL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10"
+          },
+          "BERRIEN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11"
+          },
+          "BIBB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12"
+          },
+          "BLECKLEY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "13"
+          },
+          "BRANTLEY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "14"
+          },
+          "BROOKS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "15"
+          },
+          "BRYAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "16"
+          },
+          "BULLOCH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "17"
+          },
+          "BURKE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "18"
+          },
+          "BUTTS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "19"
+          },
+          "CALHOUN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "20"
+          },
+          "CAMDEN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "21"
+          },
+          "CANDLER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "22"
+          },
+          "CARROLL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "23"
+          },
+          "CATOOSA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "24"
+          },
+          "CHARLTON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "25"
+          },
+          "CHATHAM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "26"
+          },
+          "CHATTAHOOCHEE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "27"
+          },
+          "CHATTOOGA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "28"
+          },
+          "CHEROKEE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "29"
+          },
+          "CLARKE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "30"
+          },
+          "CLAY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "31"
+          },
+          "CLAYTON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "32"
+          },
+          "CLINCH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "33"
+          },
+          "COBB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "34"
+          },
+          "COFFEE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "35"
+          },
+          "COLQUITT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "36"
+          },
+          "COLUMBIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "37"
+          },
+          "COOK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "38"
+          },
+          "COWETA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "39"
+          },
+          "CRAWFORD"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "40"
+          },
+          "CRISP"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "41"
+          },
+          "DADE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "42"
+          },
+          "DAWSON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "43"
+          },
+          "DECATUR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "44"
+          },
+          "DEKALB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "45"
+          },
+          "DODGE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "46"
+          },
+          "DOOLY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "47"
+          },
+          "DOUGHERTY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "48"
+          },
+          "DOUGLAS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "49"
+          },
+          "EARLY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "50"
+          },
+          "ECHOLS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "51"
+          },
+          "EFFINGHAM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "52"
+          },
+          "ELBERT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "53"
+          },
+          "EMANUEL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "54"
+          },
+          "EVANS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "55"
+          },
+          "FANNIN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "56"
+          },
+          "FAYETTE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "57"
+          },
+          "FLOYD"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "58"
+          },
+          "FORSYTH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "59"
+          },
+          "FRANKLIN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "60"
+          },
+          "FULTON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "61"
+          },
+          "GILMER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "62"
+          },
+          "GLASCOCK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "63"
+          },
+          "GLYNN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "64"
+          },
+          "GORDON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "65"
+          },
+          "GRADY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "66"
+          },
+          "GREENE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "67"
+          },
+          "GWINNETT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "68"
+          },
+          "HABERSHAM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "69"
+          },
+          "HALL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "70"
+          },
+          "HANCOCK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "71"
+          },
+          "HARALSON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "72"
+          },
+          "HARRIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "73"
+          },
+          "HART"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "74"
+          },
+          "HEARD"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "75"
+          },
+          "HENRY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "76"
+          },
+          "HOUSTON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "77"
+          },
+          "IRWIN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "78"
+          },
+          "JACKSON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "79"
+          },
+          "JASPER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "80"
+          },
+          "JEFF DAVIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "81"
+          },
+          "JEFFERSON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "82"
+          },
+          "JENKINS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "83"
+          },
+          "JOHNSON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "84"
+          },
+          "JONES"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "85"
+          },
+          "LAMAR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "86"
+          },
+          "LANIER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "87"
+          },
+          "LAURENS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "88"
+          },
+          "LEE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "89"
+          },
+          "LIBERTY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "90"
+          },
+          "LINCOLN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "91"
+          },
+          "LONG"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "92"
+          },
+          "LOWNDES"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "93"
+          },
+          "LUMPKIN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "94"
+          },
+          "MACON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "95"
+          },
+          "MADISON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "96"
+          },
+          "MARION"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "97"
+          },
+          "MC DUFFIE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "98"
+          },
+          "MC INTOSH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "99"
+          },
+          "MERIWETHER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "100"
+          },
+          "MILLER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "101"
+          },
+          "MITCHELL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "102"
+          },
+          "MONROE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "103"
+          },
+          "MONTGOMERY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "104"
+          },
+          "MORGAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "105"
+          },
+          "MURRAY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "106"
+          },
+          "MUSCOGEE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "107"
+          },
+          "NEWTON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "108"
+          },
+          "OCONEE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "109"
+          },
+          "OGLETHORPE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "110"
+          },
+          "PAULDING"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "111"
+          },
+          "PEACH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "112"
+          },
+          "PICKENS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "113"
+          },
+          "PIERCE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "114"
+          },
+          "PIKE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "115"
+          },
+          "POLK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "116"
+          },
+          "PULASKI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "117"
+          },
+          "PUTNAM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "118"
+          },
+          "QUITMAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "119"
+          },
+          "RABUN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "120"
+          },
+          "RANDOLPH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "121"
+          },
+          "RICHMOND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "122"
+          },
+          "ROCKDALE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "123"
+          },
+          "SCHLEY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "124"
+          },
+          "SCREVEN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "125"
+          },
+          "SEMINOLE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "126"
+          },
+          "SPALDING"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "127"
+          },
+          "STEPHENS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "128"
+          },
+          "STEWART"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "129"
+          },
+          "SUMTER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "130"
+          },
+          "TALBOT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "131"
+          },
+          "TALIAFERRO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "132"
+          },
+          "TATTNALL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "133"
+          },
+          "TAYLOR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "134"
+          },
+          "TELFAIR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "135"
+          },
+          "TERRELL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "136"
+          },
+          "THOMAS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "137"
+          },
+          "TIFT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "138"
+          },
+          "TOOMBS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "139"
+          },
+          "TOWNS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "140"
+          },
+          "TREUTLEN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "141"
+          },
+          "TROUP"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "142"
+          },
+          "TURNER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "143"
+          },
+          "TWIGGS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "144"
+          },
+          "UNION"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "145"
+          },
+          "UPSON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "146"
+          },
+          "WALKER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "147"
+          },
+          "WALTON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "148"
+          },
+          "WARE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "149"
+          },
+          "WARREN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "150"
+          },
+          "WASHINGTON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "151"
+          },
+          "WAYNE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "152"
+          },
+          "WEBSTER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "153"
+          },
+          "WHEELER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "154"
+          },
+          "WHITE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "155"
+          },
+          "WHITFIELD"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "156"
+          },
+          "WILCOX"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "157"
+          },
+          "WILKES"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "158"
+          },
+          "WILKINSON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "159"
+          },
+          "WORTH"
+        ]
+      ]
+    },
+    {
+      "id": "codeDisCodes#EVENT->EVENTNAME",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "10560"
+          },
+          "AIDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11040"
+          },
+          "AMEBIASIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10350"
+          },
+          "ANTHRAX"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10010"
+          },
+          "ASEPTIC MENG"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "32020"
+          },
+          "ASTHMA WRKREL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12010"
+          },
+          "BABESIOSIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10650"
+          },
+          "BACT MEN OTH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10548"
+          },
+          "BOT OTHR UNSP"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10530"
+          },
+          "BOTULISM FDB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10540"
+          },
+          "BOTULISM INF"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10550"
+          },
+          "BOTULISM OTH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10549"
+          },
+          "BOTULISM WND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10020"
+          },
+          "BRUCELLOSIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11020"
+          },
+          "CAMPYLOBACTER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10273"
+          },
+          "CHANCROID"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10274"
+          },
+          "CHLAMYDIA,T"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10470"
+          },
+          "CHOLERA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11900"
+          },
+          "COCCIDIOIDOMY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10370"
+          },
+          "CONG.RUBELLA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11580"
+          },
+          "CRYPTOSPO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11575"
+          },
+          "CYCLOSPORA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10680"
+          },
+          "DENGUE FEVER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10685"
+          },
+          "DENGUE HEMO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10040"
+          },
+          "DIPHTHERIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11564"
+          },
+          "E COLI NO GRP"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11562"
+          },
+          "E COLI STX+"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11560"
+          },
+          "E. COLI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11087"
+          },
+          "EHRLICH OTHER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11085"
+          },
+          "EHRLICH. HGE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11086"
+          },
+          "EHRLICH. HME"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10058"
+          },
+          "ENC CACHE VAL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10070"
+          },
+          "ENC P/CPOX"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10080"
+          },
+          "ENC P/MUMPS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10090"
+          },
+          "ENC P/OTHER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10057"
+          },
+          "ENC POWASSAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10055"
+          },
+          "ENC VENEZUELA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10056"
+          },
+          "ENC WEST NILE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10050"
+          },
+          "ENCEPH PRIM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10052"
+          },
+          "ENCEPH WEST"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10054"
+          },
+          "ENCEPH, CAL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10053"
+          },
+          "ENCEPH, EAST"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10051"
+          },
+          "ENCEPH, ST L"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10570"
+          },
+          "FLU ACTIVITY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11060"
+          },
+          "FLU. ISOL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11570"
+          },
+          "GIARDIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10280"
+          },
+          "GONORRHEA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10276"
+          },
+          "GRANULOMA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10590"
+          },
+          "H. FLU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11590"
+          },
+          "HANTA PULM SY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11610"
+          },
+          "HANTAVIRUS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "42020"
+          },
+          "HEAD INJURY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11550"
+          },
+          "HEMOLYTIC URE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10110"
+          },
+          "HEP A"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10100"
+          },
+          "HEP B"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10104"
+          },
+          "HEP B PERINAT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10101"
+          },
+          "HEP C"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10102"
+          },
+          "HEP D"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10103"
+          },
+          "HEP E"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10480"
+          },
+          "HEP NANB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10120"
+          },
+          "HEP UNSP"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10562"
+          },
+          "HIV  ADULT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10561"
+          },
+          "HIV PEDIATRIC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10568"
+          },
+          "HTLV-I"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10569"
+          },
+          "HTLV-II"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11070"
+          },
+          "INFLU ISOL A"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11060"
+          },
+          "INFLU ISOL H"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "83170"
+          },
+          "INFLUENZA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "50000"
+          },
+          "KAWASAKI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "32010"
+          },
+          "LEAD"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10490"
+          },
+          "LEGIONELLA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10380"
+          },
+          "LEPROSY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10390"
+          },
+          "LEPTOSPIROSIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10306"
+          },
+          "LGV"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10640"
+          },
+          "LISTERIOSIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11080"
+          },
+          "LYME"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10130"
+          },
+          "MALARIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10140"
+          },
+          "MEASLES"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10150"
+          },
+          "MENINGOCL INF"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "42040"
+          },
+          "MOT VEH INJ"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10308"
+          },
+          "MPC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10180"
+          },
+          "MUMPS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10317"
+          },
+          "NEUROSYPHILIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10307"
+          },
+          "NGU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "42060"
+          },
+          "OTHER INJ"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10309"
+          },
+          "PELV INF DIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10190"
+          },
+          "PERTUSSIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10440"
+          },
+          "PLAGUE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10410"
+          },
+          "POLIO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10450"
+          },
+          "PSITTACOSIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10255"
+          },
+          "Q FEVER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10340"
+          },
+          "RABIES AN+"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10460"
+          },
+          "RABIES HUMAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11030"
+          },
+          "REYE SYNDR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11050"
+          },
+          "RHEUM.FEVER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10250"
+          },
+          "RMSF"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "89999"
+          },
+          "ROTA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10200"
+          },
+          "RUBELLA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11661"
+          },
+          "S AUREUS MRSA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11663"
+          },
+          "S AUREUS VISA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11665"
+          },
+          "S AUREUS VRSA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11000"
+          },
+          "SALMONELLA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11010"
+          },
+          "SHIGELLOSIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "50010"
+          },
+          "SIDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "32000"
+          },
+          "SILICOSIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11800"
+          },
+          "SMALLPOX"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "42010"
+          },
+          "SPINE CRD INJ"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11710"
+          },
+          "STREP INV GPA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11715"
+          },
+          "STREP INV GPB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11717"
+          },
+          "STREP PNE INV"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11720"
+          },
+          "STREP PNEU DR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11700"
+          },
+          "STREP TSS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "42050"
+          },
+          "SUICIDE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10316"
+          },
+          "SYPH CON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10313"
+          },
+          "SYPH EAR LAT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10314"
+          },
+          "SYPH LAT LAT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10318"
+          },
+          "SYPH LAT NN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10311"
+          },
+          "SYPH PRIM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10312"
+          },
+          "SYPH SECOND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10315"
+          },
+          "SYPH UNK LAT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10310"
+          },
+          "SYPHILIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10210"
+          },
+          "TETANUS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10520"
+          },
+          "TOXIC SHOCK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12020"
+          },
+          "TOXOPLASMOSIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10270"
+          },
+          "TRICHINOSIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10220"
+          },
+          "TUBERCULOSIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10230"
+          },
+          "TULAREMIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10240"
+          },
+          "TYPHOID FEVER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10260"
+          },
+          "TYPHUS MURINE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10030"
+          },
+          "VARICELLA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11541"
+          },
+          "VIBRIO PARAHA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11540"
+          },
+          "VIBRIO SPP"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11542"
+          },
+          "VIBRIO VULNIF"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10660"
+          },
+          "YELLOW FEV"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11565"
+          },
+          "YERSINIA"
+        ]
+      ]
+    },
+    {
+      "id": "codeEventType",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-Onset Date"
+          },
+          "1-Onset Date"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2-Diagnosis Date"
+          },
+          "2-Diagnosis Date"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3-Lab Test Date"
+          },
+          "3-Lab Test Date"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4-Report to County"
+          },
+          "4-Report to County"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5-Report to State"
+          },
+          "5-Report to State"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6-Unknown"
+          },
+          "6-Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeAgeType",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Years"
+          },
+          "Years"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Months"
+          },
+          "Months"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Days"
+          },
+          "Days"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Hours"
+          },
+          "Hours"
+        ]
+      ]
+    },
+    {
+      "id": "codeRace",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "NATIVE AMERICAN"
+          },
+          "NATIVE AMERICAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ASIAN/PACIF.ISL"
+          },
+          "ASIAN/PACIF.ISL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BLACK"
+          },
+          "BLACK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WHITE"
+          },
+          "WHITE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OTHER"
+          },
+          "OTHER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UNKNOWN"
+          },
+          "UNKNOWN"
+        ]
+      ]
+    },
+    {
+      "id": "codeEthnic",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "H-Hispanic"
+          },
+          "H-Hispanic"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "N-Not Hispanic"
+          },
+          "N-Not Hispanic"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "U-Unknown"
+          },
+          "U-Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeSex",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Male"
+          },
+          "Male"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Female"
+          },
+          "Female"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeHospitals",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Atlanta"
+          },
+          "Atlanta"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Decatur"
+          },
+          "Decatur"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Marietta"
+          },
+          "Marietta"
+        ]
+      ]
+    },
+    {
+      "id": "codeStatus",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Suspect"
+          },
+          "Suspect"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Probable"
+          },
+          "Probable"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Confirmed"
+          },
+          "Confirmed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    }
+  ]
+}

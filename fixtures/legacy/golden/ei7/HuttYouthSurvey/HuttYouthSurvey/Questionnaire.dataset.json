@@ -1,0 +1,2159 @@
+{
+  "id": "Questionnaire",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "ID",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "ID",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Q01Sex",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "1. Sex/Gender",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq1sex1"
+      }
+    },
+    {
+      "name": "Q02HuttSuburb",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "2. What suburb do you live in",
+        "legacy_type": "LegalValues",
+        "label_set": "codeSuburb"
+      }
+    },
+    {
+      "name": "Q02aOutsideHuttArea",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q03Age",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "3. How old are you?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq03age1"
+      }
+    },
+    {
+      "name": "Q04NZEuro",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "NZ European",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q04Maori",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "NZ Maori",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q04Samoan",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Samoan",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q04CookIsland",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Cook Island Maori",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q04Tongan",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Tongan",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q04Niuean",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Niuean",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q04Chinese",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Chinese",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q04Indian",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Indian",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q04OtherEth",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other: ",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q04OtherEthSpec",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (please specify)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Q04EthNotspec",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Not specificied",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q05aSchool",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "School",
+        "legacy_type": "LegalValues",
+        "label_set": "codeSchool"
+      }
+    },
+    {
+      "name": "Q05SchoolOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other School",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Q05bOtherEd",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other Provider",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Q05NotinEducation",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Do not go to school education/provider",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q06aHangingout",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hanging out with friends",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q06bSchoolWork7",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Doing school work",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q06cSports",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Sports",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q06dCultural",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Kapa haka or other cultural activities",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q06eArtsMusic",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Other arts and/or music",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q06fAwayHome",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Being away from home",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q06gNotEnjoy",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "I don't enjoy school at all",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q06LikeSchoolOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (please specify)",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "ID1",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "Q07LeavingSchool",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "7.Will you be finishing or leaving school this year?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq07leavingschool1"
+      }
+    },
+    {
+      "name": "Q08WhyLeaveSchool",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "8. If you are leaving/have left school, please explain why:",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q09Support",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "9. What support would be useful for people leaving school?",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q10Hang1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "10. Place 1",
+        "legacy_type": "LegalValues",
+        "label_set": "codeplace1"
+      }
+    },
+    {
+      "name": "Q10Where1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Where 1",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq10where11"
+      }
+    },
+    {
+      "name": "Q10Place2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "10.Place 2",
+        "legacy_type": "LegalValues",
+        "label_set": "codeplace1"
+      }
+    },
+    {
+      "name": "Q10Where2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Where 2",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq10where11"
+      }
+    },
+    {
+      "name": "Q10Place3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "10.Place 3",
+        "legacy_type": "LegalValues",
+        "label_set": "codeplace1"
+      }
+    },
+    {
+      "name": "Q10Where3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Where 3",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq10where11"
+      }
+    },
+    {
+      "name": "Q10Morethan3",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "More than 3 Places",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q11BestThings1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "1",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Q11BestThings2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "2",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Q11BestThings3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "3",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Q12Issue1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "1",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Q121ssue2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "2",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Q12Issue3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "3",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ID11",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "Q13addiction",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Addiction (drugs, alcohol etc)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q13MentalHealth",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Mental health issues (e.g. depression, grief, body image pressure)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q13PhysicalHealth",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Physical Health",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q13PhysicalViolence",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Physical Violence",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q13SelfHarm",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Deliberately (on purpose) hurting yourself",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q13SexualHealth",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Sexual Health",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q13LeavingSchool",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Knowing what to do after leaving school",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q14DoNotDrink",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Do not drink alcohol",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q14AlcWhereOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (please specify)",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q14Parties",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "At parties",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q14Mates",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "At a mate's house",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q14BarCafe",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "At a bar/pub/club or cafe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q14Park",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "In a park in the Hutt Valley",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q14Home",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "At home",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q14School",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "At school",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q14Street",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "On the street",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q14AnotherCity",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Another City (e.g. Wellington or Porirua)",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q15DoNotDrink",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Do not drink alcohol",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q15Buy",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "I buy it myself",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q15parents",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Parents/caregiver",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q15Friend",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Friend",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q15AlcfromOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (please specify)",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q16Nodrugs",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Do not take drugs",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q16DrugsOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (please specify)",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q16Parties",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "At parties",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q16Mates",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "At a mate's house",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q16Barcafe",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "At a bar/pub/club or cafe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q16Park",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "In a park in the Hutt Valley",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q16Home",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "At home",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q16School",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "At school",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q16Street",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "On the street",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q16OtherCity",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Another City (e.g. Wellington or Porirua",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ID111",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "PlacestoHangout",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Places to hang out",
+        "legacy_type": "LegalValues",
+        "label_set": "codeplacestohangout1"
+      }
+    },
+    {
+      "name": "LeisureOps",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Leisure opportunities",
+        "legacy_type": "LegalValues",
+        "label_set": "codejobs1"
+      }
+    },
+    {
+      "name": "Jobs",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Job opportunities",
+        "legacy_type": "LegalValues",
+        "label_set": "codejobs1"
+      }
+    },
+    {
+      "name": "FurtherEd",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Further Education",
+        "legacy_type": "LegalValues",
+        "label_set": "codejobs1"
+      }
+    },
+    {
+      "name": "HuttSafer",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Making the Hutt Valley Safer",
+        "legacy_type": "LegalValues",
+        "label_set": "codejobs1"
+      }
+    },
+    {
+      "name": "Pride",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Pride in being from the Hutt Valley",
+        "legacy_type": "LegalValues",
+        "label_set": "codejobs1"
+      }
+    },
+    {
+      "name": "Cheerful",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "I have felt cheerful and in good spirits",
+        "legacy_type": "LegalValues",
+        "label_set": "codecheerful1"
+      }
+    },
+    {
+      "name": "Calm",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "I have felt calm and relaxed",
+        "legacy_type": "LegalValues",
+        "label_set": "codecheerful1"
+      }
+    },
+    {
+      "name": "Active",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "I have felt active and vigorous",
+        "legacy_type": "LegalValues",
+        "label_set": "codecheerful1"
+      }
+    },
+    {
+      "name": "Dailylife",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "My daily life has been filled with things that interest me",
+        "legacy_type": "LegalValues",
+        "label_set": "codecheerful1"
+      }
+    },
+    {
+      "name": "Q18aAtnotime",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "At no time",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Fresh",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "I have felt fresh and rested",
+        "legacy_type": "LegalValues",
+        "label_set": "codecheerful1"
+      }
+    },
+    {
+      "name": "Q19GotHelp",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "19. Did you get help or advice when you felt like this?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Q20Wheregothelp",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "20. Where/who did you get help or advice from?",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q21GP1",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Family doctor, medical centre or GP clinic",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q21AfterHours",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "After-hours or 24 hour accident and medical centre",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q21Vibe",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Vibe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q21marae",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Marae",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q21AltHealth",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Alternative health worker",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q21School",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "School health centre",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q21HospAE",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hospital accident and emergency department",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q21FamilyPlanning",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Family planning or sexual health clinic",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q21TradHealer",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Traditional healer",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q21Nowhere",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "I don't go anywhere",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q21Donotknow",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Do not know where to go",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q21Healthother",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (please specify)",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "ID112",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "Q22Hangout",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Places to hang out",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq22hangout1"
+      }
+    },
+    {
+      "name": "Q22Jobs",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Job Opportunities",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq22hangout1"
+      }
+    },
+    {
+      "name": "Q22Safety",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Safety in the Hutt Valley",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq22hangout1"
+      }
+    },
+    {
+      "name": "Q22Pride",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Pride on being from the Hutt Valley",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq22hangout1"
+      }
+    },
+    {
+      "name": "Q22Leisure",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Leisure opportunities",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq22hangout1"
+      }
+    },
+    {
+      "name": "Q22Furthered",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Further education or training",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq22hangout1"
+      }
+    },
+    {
+      "name": "Q22Help",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Knowing where to go for help",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq22hangout1"
+      }
+    },
+    {
+      "name": "Q23Involved",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "23. Do you want to be more involved with activities in your school and/or community?",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq23involved1"
+      }
+    },
+    {
+      "name": "Q24time",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "I don't have spare time",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q24cost",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "It costs too much",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q24Gettingthere",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "I can't get there",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q24NotAvailable",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "The activity I want to do is not available to me",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q24Shy",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Would feel shy/nervous or embarrassed",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q24FamilyCultural",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Family cultural or religious reasons",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q24DontKnow",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "I don't know",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "Q24ActivityOther",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (please specify)",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q25Whatactivities",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "25. What activities would you like to do?",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q26AnyOtherComments",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "26. Is there anything else you would like to tell us about life as a young person in the Hutt Valley?",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Q10Hang4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "10. Place 4",
+        "legacy_type": "LegalValues",
+        "label_set": "codeplace1"
+      }
+    },
+    {
+      "name": "Q10Where4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Where 4",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq10where11"
+      }
+    },
+    {
+      "name": "Q10Place5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "10. Place 5",
+        "legacy_type": "LegalValues",
+        "label_set": "codeplace1"
+      }
+    },
+    {
+      "name": "Q10Where5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Where 5",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq10where11"
+      }
+    },
+    {
+      "name": "Q10Place6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "10. Place 6",
+        "legacy_type": "LegalValues",
+        "label_set": "codeplace1"
+      }
+    },
+    {
+      "name": "Q10Where6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Where 6",
+        "legacy_type": "LegalValues",
+        "label_set": "codeq10where11"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeq1sex1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Male"
+          },
+          "Male"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Female"
+          },
+          "Female"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NotRecorded"
+          },
+          "NotRecorded"
+        ]
+      ]
+    },
+    {
+      "id": "codeSuburb",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Alicetown"
+          },
+          "Alicetown"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Arakura"
+          },
+          "Arakura"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ava"
+          },
+          "Ava"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Avalon"
+          },
+          "Avalon"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Belmont"
+          },
+          "Belmont"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Boulcott"
+          },
+          "Boulcott"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Eastbourne"
+          },
+          "Eastbourne"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Epuni"
+          },
+          "Epuni"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Fairfield"
+          },
+          "Fairfield"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Glendale"
+          },
+          "Glendale"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Gracefield"
+          },
+          "Gracefield"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Harbour View"
+          },
+          "Harbour View"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Homedale"
+          },
+          "Homedale"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Kelson"
+          },
+          "Kelson"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Korokoro"
+          },
+          "Korokoro"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Manor Park"
+          },
+          "Manor Park"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Maungaraki"
+          },
+          "Maungaraki"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Melling"
+          },
+          "Melling"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Moera"
+          },
+          "Moera"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Naenae"
+          },
+          "Naenae"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Normandale"
+          },
+          "Normandale"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Parkway"
+          },
+          "Parkway"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Petone"
+          },
+          "Petone"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Pomare"
+          },
+          "Pomare"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Seaview"
+          },
+          "Seaview"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Stokes Valley"
+          },
+          "Stokes Valley"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Taitā"
+          },
+          "Taitā"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Tirohanga"
+          },
+          "Tirohanga"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Wainuiomata"
+          },
+          "Wainuiomata"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Waiwhetū"
+          },
+          "Waiwhetū"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Waterloo"
+          },
+          "Waterloo"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Wingate"
+          },
+          "Wingate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Woburn"
+          },
+          "Woburn"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Birchville"
+          },
+          "Birchville"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Brown Owl"
+          },
+          "Brown Owl"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Clouston Park"
+          },
+          "Clouston Park"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ebdentown"
+          },
+          "Ebdentown"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Elderslea"
+          },
+          "Elderslea"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Emerald Hill"
+          },
+          "Emerald Hill"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Heretaunga"
+          },
+          "Heretaunga"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Kingsley Heights"
+          },
+          "Kingsley Heights"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Mangaroa"
+          },
+          "Mangaroa"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Maoribank"
+          },
+          "Maoribank"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Maymorn"
+          },
+          "Maymorn"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Moonshine"
+          },
+          "Moonshine"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Parkdale"
+          },
+          "Parkdale"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Pinehaven"
+          },
+          "Pinehaven"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Riverstone Terraces"
+          },
+          "Riverstone Terraces"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Silverstream"
+          },
+          "Silverstream"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Te Marua"
+          },
+          "Te Marua"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Timberlea"
+          },
+          "Timberlea"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Totara Park"
+          },
+          "Totara Park"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Trentham"
+          },
+          "Trentham"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Upper Hutt  CBD"
+          },
+          "Upper Hutt  CBD"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Wallaceville"
+          },
+          "Wallaceville"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Whitemans Valley"
+          },
+          "Whitemans Valley"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeq03age1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "<12"
+          },
+          "<12"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12"
+          },
+          "12"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "13"
+          },
+          "13"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "14"
+          },
+          "14"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "15"
+          },
+          "15"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "16"
+          },
+          "16"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "17"
+          },
+          "17"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "18"
+          },
+          "18"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "19+"
+          },
+          "19+"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "unknown"
+          },
+          "unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeSchool",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Hutt Valley High School"
+          },
+          "Hutt Valley High School"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Naenae College"
+          },
+          "Naenae College"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Naenae Intermediate"
+          },
+          "Naenae Intermediate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Fergusson Intermediate"
+          },
+          "Fergusson Intermediate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Wainuiomata High School"
+          },
+          "Wainuiomata High School"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Wainuiomata High School – Rangitahi Unit"
+          },
+          "Wainuiomata High School – Rangitahi Unit"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Wainuiomata Intermediate"
+          },
+          "Wainuiomata Intermediate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Te Kura Correspondence School"
+          },
+          "Te Kura Correspondence School"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Chilton St. James"
+          },
+          "Chilton St. James"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Hutt Intermediate"
+          },
+          "Hutt Intermediate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Upper Hutt College"
+          },
+          "Upper Hutt College"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Heretaunga College"
+          },
+          "Heretaunga College"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Heretaunga College – Teen Parenting Unit"
+          },
+          "Heretaunga College – Teen Parenting Unit"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    },
+    {
+      "id": "codeq07leavingschool1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Yes"
+          },
+          "Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "No"
+          },
+          "No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "I have already left"
+          },
+          "I have already left"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Don't know"
+          },
+          "Don't know"
+        ]
+      ]
+    },
+    {
+      "id": "codeplace1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "House"
+          },
+          "House"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Neighbourhood"
+          },
+          "Neighbourhood"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Youth Centre"
+          },
+          "Youth Centre"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Church"
+          },
+          "Church"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Shopping Centre"
+          },
+          "Shopping Centre"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Video place"
+          },
+          "Video place"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Bar Cafe"
+          },
+          "Bar Cafe"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Recreation Area"
+          },
+          "Recreation Area"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "River"
+          },
+          "River"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Library"
+          },
+          "Library"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Marae"
+          },
+          "Marae"
+        ]
+      ]
+    },
+    {
+      "id": "codeq10where11",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Lower Hutt"
+          },
+          "Lower Hutt"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Upper Hutt"
+          },
+          "Upper Hutt"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Wellington"
+          },
+          "Wellington"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Wainuiomata"
+          },
+          "Wainuiomata"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Elsewhere"
+          },
+          "Elsewhere"
+        ]
+      ]
+    },
+    {
+      "id": "codeplacestohangout1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Positive change"
+          },
+          "Positive change"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "No change"
+          },
+          "No change"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Negative change"
+          },
+          "Negative change"
+        ]
+      ]
+    },
+    {
+      "id": "codejobs1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Positive change"
+          },
+          "Positive change"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "No change"
+          },
+          "No change"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Negative change"
+          },
+          "Negative change"
+        ]
+      ]
+    },
+    {
+      "id": "codecheerful1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "All of the time"
+          },
+          "All of the time"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Most of the time"
+          },
+          "Most of the time"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Half of the time"
+          },
+          "Half of the time"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Some of the time"
+          },
+          "Some of the time"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "At no time"
+          },
+          "At no time"
+        ]
+      ]
+    },
+    {
+      "id": "codeq22hangout1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Great as is"
+          },
+          "Great as is"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OK"
+          },
+          "OK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Needs Improvement"
+          },
+          "Needs Improvement"
+        ]
+      ]
+    },
+    {
+      "id": "codeq23involved1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Yes"
+          },
+          "Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "No"
+          },
+          "No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "I am already involved"
+          },
+          "I am already involved"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Not sure"
+          },
+          "Not sure"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    }
+  ]
+}

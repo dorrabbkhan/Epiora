@@ -1,0 +1,178 @@
+{
+  "id": "HDCaseForm5SlitSkinSmear_Grid",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "UniqueRowId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueRowId"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "Slit_Skin_Smear_Grid_Result",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Result",
+        "legacy_type": "LegalValues",
+        "label_set": "codeslit_skin_smear_result1"
+      }
+    },
+    {
+      "name": "Slit_Skin_Smear_Grid_Date",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Procedure Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Slit_Skin_Smear_Grid_Location_on_Body",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Location on Body",
+        "legacy_type": "LegalValues",
+        "label_set": "codeslit_skin_smear_grid_location_on_body1"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeslit_skin_smear_result1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Negative"
+          },
+          "Negative"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1+"
+          },
+          "1+"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2+"
+          },
+          "2+"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3+"
+          },
+          "3+"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4+"
+          },
+          "4+"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5+"
+          },
+          "5+"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6+"
+          },
+          "6+"
+        ]
+      ]
+    },
+    {
+      "id": "codeslit_skin_smear_grid_location_on_body1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Left Ear"
+          },
+          "Left Ear"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Right Ear"
+          },
+          "Right Ear"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Left Elbow"
+          },
+          "Left Elbow"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Right Elbow"
+          },
+          "Right Elbow"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Left Knee"
+          },
+          "Left Knee"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Right Knee"
+          },
+          "Right Knee"
+        ]
+      ]
+    }
+  ]
+}

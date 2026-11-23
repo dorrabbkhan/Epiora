@@ -1,0 +1,127 @@
+{
+  "name": "Nutrition",
+  "legacy_id": "D51396F0-A37E-1BA4-15073870DB11E445",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/Nutrition/Nutrition.mdb",
+    "sha256": "310a87c6bbe591ea1afcfa5a8a534c5e944f3e294f9b8833ce8b743ff9c41ad8"
+  },
+  "views": [
+    {
+      "name": "Nutrition",
+      "dataset": "Nutrition.dataset.json",
+      "records": 3,
+      "deleted_records": 0,
+      "hash": "3c272a0038d2160bdb2826f2540d2535417464a73e373e9f24cd68aee7a463ca"
+    },
+    {
+      "name": "PatientVisits",
+      "dataset": "PatientVisits.dataset.json",
+      "records": 11,
+      "deleted_records": 0,
+      "hash": "f8b4710f2bef205539b11924d2d30b3f15f7b2c24b88baf1331a0712cf3a8eaf"
+    }
+  ],
+  "links": [
+    {
+      "parent": "Nutrition",
+      "child": "PatientVisits",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    }
+  ],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "Nutrition",
+      "blocks": 4
+    },
+    {
+      "view": "PatientVisits",
+      "blocks": 7
+    }
+  ],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "Nutrition/H11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Nutrition/Title",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Nutrition/GetCoordinates",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Nutrition/PatientInformation",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Nutrition/RecordInformation",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Nutrition/Notice",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Nutrition/DateFormatLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PatientVisits/Title",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PatientVisits/H11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PatientVisits/Results",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PatientVisits/StatisticsNotice",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PatientVisits/Percentile",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PatientVisits/ZScore",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PatientVisits/Flag",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PatientVisits/DateFormatLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "sysDataTables",
+      "reason": "no view, field or code table claims it"
+    }
+  ]
+}

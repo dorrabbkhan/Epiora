@@ -1,0 +1,1928 @@
+{
+  "id": "PathAndHistology",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RecStatus",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other tissue type 3",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH3DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH4EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH4SP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other tissue type 4",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH2COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH3COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH4COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCUniqueID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Unique ID:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "COUNTYID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH3SP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other tissue type 2",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH2DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH2EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH2SP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TRACHBRONCH1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Submucosal congestion",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH11"
+      }
+    },
+    {
+      "name": "TRACHBRONCH2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Submucosal mononuclear inflammation",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "TRACHBRONCH3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Necrosis of bronchial epithelium",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "LUNG1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Mononuclear interstitial inflammation",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "LUNG2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Hyaline membranes",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "LUNG3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Intraaveolar hemorrhage",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "LUNG4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Neutrophilic bronchopneumonia",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "TRACHBRONCHOTH",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "LUNGOTH",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "LYMPH1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Hemophagocytosis",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "LYMPHOTH",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "HEART1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Myoctye necrosis and inflammation",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "HEARTOTH",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "SKELMUSC1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Rhabdomyolysis",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "SKELMUSCOTH",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "BRAIN1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Inflammation, edema",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "BRAINOTH",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other tissue type 1",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCH1"
+      }
+    },
+    {
+      "name": "AUTPERF",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Was an autopsy performed?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeAUTREP"
+      }
+    },
+    {
+      "name": "AUTREP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, is there an autopsy report?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeAUTREP"
+      }
+    },
+    {
+      "name": "TRACHBRONCHOTHSP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LUNGOTHSP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LYMPHOTHSP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HEARTOTHSP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SKELMUSCOTHSP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BRAINOTHSP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH1SP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TRACHBRONCH1DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "TRACHBRONCH2DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "TRACHBRONCH3DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "TRACHBRONCHOTHDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LUNG1DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LUNG2DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LUNG3DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LUNG4DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH4DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LYMPH1DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LYMPHOTHDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HEART1DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HEARTOTHDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SKELMUSC1DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SKELMUSCOTHDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "BRAIN1DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "BRAINOTHDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH1DT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "TRACHBRONCH1EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "TRACHBRONCH2EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH3EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "TRACHBRONCH3EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "TRACHBRONCHOTHEX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "LUNGOTHDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LUNG1EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "LUNG2EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "LUNG3EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "LUNG4EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "LUNGOTHEX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "LYMPH1EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "LYMPHOTHEX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "HEART1EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "HEARTOTHEX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "SKELMUSC1EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "SKELMUSCOTHEX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "BRAIN1EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "BRAINOTHEX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH1EX",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeTRACHBRONCHEX1"
+      }
+    },
+    {
+      "name": "TB1COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TB2COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TB3COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TBOTHCOMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LUNG1COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LUNG2COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LUNG3COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LUNG4COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LUNGOTHCOMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LYMPHCOMM1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LYMPHOTHCOMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HEART1COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HEARTOTHCOMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SKELMUSC1COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SKELMUSCOTHCOMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BRAIN1COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "BRAINOTHCOMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TISSUETYPEOTH1COMM",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-------------",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PATHNOTES",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other Pathology Notes:",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "SOIOTHER",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LIVERIMPINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "LIVERIMPENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "RENALFAILINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "RENALFAILENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ENCEPHINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ENCEPHENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SOIOTHERINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SOIOTHERENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STATEID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "COUNTYID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CDCID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "ARDSINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ARDSENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DICINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DICENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HEMOSYNINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HEMOSYNENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SEPSISINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SEPSISENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SHOCKINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "SHOCKENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "MCARDDYSINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "MCARDDYSENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "MCARDINFINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "MCARDINFENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ICU",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Admission to an intensive care unit",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "ICUADMDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date admitted",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ICUDISDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date discharged",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OXYGEN",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Supplemental oxygen",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "OXYINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OXYENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VENTSUPPORT",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Ventilatory support",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "VENTTYPE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify type",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeVENTTYPE"
+      }
+    },
+    {
+      "name": "VENTINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VENTENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VASOMED",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Vasopressor medications",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "VASOINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VASOENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DIALYSIS",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Dialysis",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "DIALYSISINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DIALYSISENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CPR",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Resuscitation, CPR",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CPRINITDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CPRENDDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date stopped",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ARDS",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Acute Respiratory Distress Syndrome (ARDS)",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "DIC",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Disseminated intravascular coagulopathy (DIC)",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "HEMOSYN",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Hemophagocytic syndrome",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SEPSIS",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Sepsis",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SHOCK",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Shock",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "MCARDDYS",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Myocardial dysfunction",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "MCARDINF",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Myocardial infarct",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "LIVERIMP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Liver impairment",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "RENALFAIL",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Renal failure",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "ENCEPH",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Encephalitis/ encephalopathy",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "SEVEREILLNOTES",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other notes",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "SHOCKTYPE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, specify type",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeSHOCKTYPE"
+      }
+    },
+    {
+      "name": "DISDATE",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date of hospital discharge",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DISCHSTATUS",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Current status",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeDISCHSTATUS"
+      }
+    },
+    {
+      "name": "DOD",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If died, date of death",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OUTCOMEPREG",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Pregnancy status",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeOUTCOMEPREG"
+      }
+    },
+    {
+      "name": "OUTCOMEPREGSP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If complicated labor and delivery, please specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FETALLOSSDT",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If Fetal loss, provide date of loss",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "FETALLOSSSP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If Fetal Loss, please specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OUTCOMENEO",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Neonatal outcome",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeOUTCOMENEO"
+      }
+    },
+    {
+      "name": "STATEID3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "COUNTYID3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CDCID3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "OUTCOMENEODOB",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Neonatal Date of Birth",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OUTCOMENEOSP",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If Ill newborn, please specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OUTCOMENEODOD",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If neonatal death, date of death",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OUTCOMENOTES",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other outcome notes",
+        "legacy_type": "Multiline"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeTRACHBRONCH1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9 - N/A"
+          },
+          "9 - N/A"
+        ]
+      ]
+    },
+    {
+      "id": "codeTRACHBRONCHEX1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Biopsy"
+          },
+          "1 - Biopsy"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Post Mortem"
+          },
+          "2 - Post Mortem"
+        ]
+      ]
+    },
+    {
+      "id": "codeTRACHBRONCH11",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No "
+          },
+          "2 - No "
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9 - N/A"
+          },
+          "9 - N/A"
+        ]
+      ]
+    },
+    {
+      "id": "codeAUTREP",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ]
+      ]
+    },
+    {
+      "id": "codeYesNoUnknown",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9 - Unknown"
+          },
+          "9 - Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeVENTTYPE",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Mechanical ventilation"
+          },
+          "1 - Mechanical ventilation"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - ECMO"
+          },
+          "2 - ECMO"
+        ]
+      ]
+    },
+    {
+      "id": "codeSHOCKTYPE",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Hypovolemic"
+          },
+          "1 - Hypovolemic"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Cardiogenic"
+          },
+          "2 - Cardiogenic"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - Septic"
+          },
+          "3 - Septic"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4 - Toxic"
+          },
+          "4 - Toxic"
+        ]
+      ]
+    },
+    {
+      "id": "codeDISCHSTATUS",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Transferred to another hopsital"
+          },
+          "1 - Transferred to another hopsital"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Currently hospitalized on ward"
+          },
+          "2 - Currently hospitalized on ward"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - Currently hospitalized in ICU"
+          },
+          "3 - Currently hospitalized in ICU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4 - Discharged to home"
+          },
+          "4 - Discharged to home"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5 - Discharged to chronic care/rehabilitation facility"
+          },
+          "5 - Discharged to chronic care/rehabilitation facility"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6 - Died"
+          },
+          "6 - Died"
+        ]
+      ]
+    },
+    {
+      "id": "codeOUTCOMEPREG",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Still pregnant"
+          },
+          "1 - Still pregnant"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Uncomplicated labor and delivery"
+          },
+          "2 - Uncomplicated labor and delivery"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - Complicated labor and delivery"
+          },
+          "3 - Complicated labor and delivery"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4 - Fetal loss"
+          },
+          "4 - Fetal loss"
+        ]
+      ]
+    },
+    {
+      "id": "codeOUTCOMENEO",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Healthy newborn"
+          },
+          "1 - Healthy newborn"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Ill newborn"
+          },
+          "2 - Ill newborn"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - Died"
+          },
+          "3 - Died"
+        ]
+      ]
+    }
+  ]
+}

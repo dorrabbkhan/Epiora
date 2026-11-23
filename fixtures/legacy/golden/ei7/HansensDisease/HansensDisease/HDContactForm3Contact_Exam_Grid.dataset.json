@@ -1,0 +1,102 @@
+{
+  "id": "HDContactForm3Contact_Exam_Grid",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "UniqueRowId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueRowId"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "Contact_Exam_Grid_Date",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Exam Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Contact_Exam_Grid_Results",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Results",
+        "legacy_type": "CommentLegal",
+        "label_set": "codehdcontactexamresulttypeid1"
+      }
+    },
+    {
+      "name": "Contact_Exam_Grid_Remarks",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Remarks",
+        "legacy_type": "Text"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codehdcontactexamresulttypeid1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-Positive"
+          },
+          "1-Positive"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2-Negative"
+          },
+          "2-Negative"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3-Suspect"
+          },
+          "3-Suspect"
+        ]
+      ]
+    }
+  ]
+}

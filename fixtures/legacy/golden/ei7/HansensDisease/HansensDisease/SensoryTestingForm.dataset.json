@@ -1,0 +1,719 @@
+{
+  "id": "SensoryTestingForm",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "Right_Hand_First_Digit_Wrist_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_Fifth_Digit_Wrist_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_First_Digit_Wrist_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Hand_First_Digit_Tip_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_First_Digit_Tip_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Hand_Fifth_Digit_Base_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_Fifth_Digit_Base_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Hand_Second_Digit_Base_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_Second_Digit_Base_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Hand_Fifth_Digit_Tip_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_Fifth_Digit_Tip_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Hand_Second_Digit_Tip_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_Second_Digit_Tip_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Foot_First_Digit_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Foot_First_Digit_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Foot_Fifth_Digit_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Foot_Fifth_Digit_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Foot_Inside_Ball_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Foot_Inside_Ball_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Foot_Outside_Ball_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Foot_Outside_Ball_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Foot_Outside_Arch_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Foot_Outside_Arch_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Hand_Fifth_Digit_Wrist_Diag_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SensoryTesting_ExaminersInitials",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Examiner",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CompositeCaseNumber",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "SensoryTestingDate",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Testing Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Right_Hand_First_Digit_Wrist_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Hand_First_Digit_Tip_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_First_Digit_Wrist_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Hand_Second_Digit_Tip_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Hand_Fifth_Digit_Wrist_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Hand_Second_Digit_Base_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Hand_Fifth_Digit_Tip_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Hand_Fifth_Digit_Base_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_Fifth_Digit_Wrist_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_Fifth_Digit_Base_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_Second_Digit_Base_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_First_Digit_Tip_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_Fifth_Digit_Tip_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Hand_Second_Digit_Tip_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Foot_First_Digit_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Foot_Inside_Ball_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Foot_Outside_Ball_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Foot_Outside_Arch_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Right_Foot_Fifth_Digit_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Foot_First_Digit_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Foot_Fifth_Digit_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Foot_Inside_Ball_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Foot_Outside_Ball_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Left_Foot_Outside_Arch_Color_Value",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Treatment_or_Non_Treatment_FU_Date",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date of Visit",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Treatment_or_Non_Treatment_FU_TX_Month",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "TX Month",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Treatment_or_Non_Treatment_FU_Blister_Pack_Number",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Blister Pack Number",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Treatment_or_Non_Treatment_FU_Next_Pick_Up_Date",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Next Pick Up Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Treatment_or_Non_Treatment_FU_Doses_Missed",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Number of Doses Missed",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Treatment_or_Non_Treatment_FU_Reaction",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Reaction",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Treatment_or_Non_Treatment_FU_EHF_Score",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "EHF Score",
+        "legacy_type": "LegalValues",
+        "label_set": "codereaction_follow_up_ehf_score1"
+      }
+    },
+    {
+      "name": "Treatment_or_Non_Treatment_FU_Notes",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Notes (Travel Plans, Dot, Comments, etc.)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CompositeCaseNumber1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Treatment_or_Non_Treatment_FU_Notes_ML",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Notes (Travel Plans, Dot, Comments, etc.)",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Reaction_FU_Date",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date of Visit",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Reaction_FU_Reaction_Type",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Reaction Type",
+        "legacy_type": "LegalValues",
+        "label_set": "codereaction_follow_up_reaction_type1"
+      }
+    },
+    {
+      "name": "Reaction_FU_Prednisone_Therapy",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Prednisone Therapy",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Reaction_FU_EHF_Score",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "EHF Score",
+        "legacy_type": "LegalValues",
+        "label_set": "codereaction_follow_up_ehf_score1"
+      }
+    },
+    {
+      "name": "Reaction_FU_Symptoms",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Symptoms",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CompositeCaseNumber2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Reaction_FU_Symptoms_ML",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Symptoms",
+        "legacy_type": "Multiline"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codereaction_follow_up_ehf_score1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "0"
+          },
+          "0"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1"
+          },
+          "1"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2"
+          },
+          "2"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3"
+          },
+          "3"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4"
+          },
+          "4"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5"
+          },
+          "5"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6"
+          },
+          "6"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7"
+          },
+          "7"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8"
+          },
+          "8"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9"
+          },
+          "9"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10"
+          },
+          "10"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11"
+          },
+          "11"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12"
+          },
+          "12"
+        ]
+      ]
+    },
+    {
+      "id": "codereaction_follow_up_reaction_type1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Type 1 Reversal Reaction"
+          },
+          "Type 1 Reversal Reaction"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Type 2 ENL"
+          },
+          "Type 2 ENL"
+        ]
+      ]
+    }
+  ]
+}

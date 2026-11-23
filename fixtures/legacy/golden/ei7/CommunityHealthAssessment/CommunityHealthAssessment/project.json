@@ -1,0 +1,490 @@
+{
+  "name": "CommunityHealthAssessment",
+  "legacy_id": "756C8ACB-AC9D-95BE-10913166BF1F1D1D",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/CommunityHealthAssessment/CommunityHealthAssessment.mdb",
+    "sha256": "45693920e9b7356e790a4464e5670d11cf92cb87b660790096974f550135f4dc"
+  },
+  "views": [
+    {
+      "name": "PreInterventionSurvey",
+      "dataset": "PreInterventionSurvey.dataset.json",
+      "records": 800,
+      "deleted_records": 0,
+      "hash": "1e55dc758bc4f453e5a5374499877e647a3e9b6244b17d99132cddffc6082d63"
+    },
+    {
+      "name": "PreInterventionSurvey_Merge",
+      "dataset": "PreInterventionSurvey_Merge.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "751c450daced4422a757ecb1365d5ec843af0aa150552e204cde052a05bc9329"
+    },
+    {
+      "name": "PreInterventionSurvey_NoCheckCode",
+      "dataset": "PreInterventionSurvey_NoCheckCode.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "ebefd74e0a4e2ea66c2421acf64aa56324523466937cf9483365067a967f9618"
+    }
+  ],
+  "links": [],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "PreInterventionSurvey",
+      "blocks": 10
+    },
+    {
+      "view": "PreInterventionSurvey_Merge",
+      "blocks": 10
+    },
+    {
+      "view": "PreInterventionSurvey_NoCheckCode",
+      "blocks": 10
+    }
+  ],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Disclaimer",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/DottedLine",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/ParentSchoolAsthmaPreInterventationSurvey",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/DottedLine1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/ChildDemographicInformation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/YourDemographicInformation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/YourDemographicInformation1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/DottedLine11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/GetCoordinates",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Page1of3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Race",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Disclaimer1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/ParentSchoolAsthmaPreInterventationSurvey1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PreInterventionSurvey/MirrorStudentID",
+      "reason": "Mirror field imported as the value of StudentID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/AsthmaticConditions",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Markalloftheconditionsthischildhas",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Page2of3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Disclaimer11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/ParentSchoolAsthmaPreInterventationSurvey11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PreInterventionSurvey/MirrorStudentID1",
+      "reason": "Mirror field imported as the value of StudentID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Duringtheirworstbreathingmonthselecthowoftenthefollowingsymptoms",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/MonthlyBreathingDifficulties",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey/Page3of3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "PreInterventionSurvey_Merge",
+      "reason": "base table PreInterventionSurvey_Merge is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "PreInterventionSurvey_Merge",
+      "reason": "page table PreInterventionSurvey_Merge4 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "PreInterventionSurvey_Merge",
+      "reason": "page table PreInterventionSurvey_Merge5 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "PreInterventionSurvey_Merge",
+      "reason": "page table PreInterventionSurvey_Merge6 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/Disclaimer",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/DottedLine",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/ParentSchoolAsthmaPreInterventationSurvey",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/DottedLine1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/ChildDemographicInformation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/YourDemographicInformation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/YourDemographicInformation1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/DottedLine11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/GetCoordinates",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/Page1of3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/Race",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/Disclaimer1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "PreInterventionSurvey_Merge/StudentID",
+      "reason": "no column in PreInterventionSurvey_Merge4"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PreInterventionSurvey_Merge/MirrorStudentID",
+      "reason": "Mirror field imported as the value of StudentID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/AsthmaticConditions",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/Markalloftheconditionsthischildhas",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/ParentSchoolAsthmaPreInterventationSurvey1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/Page2of3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/Disclaimer11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "PreInterventionSurvey_Merge/StudentID",
+      "reason": "no column in PreInterventionSurvey_Merge4"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PreInterventionSurvey_Merge/MirrorStudentID1",
+      "reason": "Mirror field imported as the value of StudentID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/MonthlyBreathingDifficulties",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/Duringtheirworstbreathingmonthselecthowoftenthefollowingsymptoms",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/ParentSchoolAsthmaPreInterventationSurvey11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_Merge/Page3of3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "PreInterventionSurvey_NoCheckCode",
+      "reason": "base table PreInterventionSurvey_NoCheckCode is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "PreInterventionSurvey_NoCheckCode",
+      "reason": "page table PreInterventionSurvey_NoCheckCode7 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "PreInterventionSurvey_NoCheckCode",
+      "reason": "page table PreInterventionSurvey_NoCheckCode8 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "PreInterventionSurvey_NoCheckCode",
+      "reason": "page table PreInterventionSurvey_NoCheckCode9 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/Page1of3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/Disclaimer",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/ParentSchoolAsthmaPreInterventationSurvey",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/ChildDemographicInformation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/Race",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/DottedLine",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/YourDemographicInformation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/DottedLine1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/YourDemographicInformation1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/DottedLine11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/GetCoordinates",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/Page2of3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/Disclaimer1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/ParentSchoolAsthmaPreInterventationSurvey1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "PreInterventionSurvey_NoCheckCode/StudentID",
+      "reason": "no column in PreInterventionSurvey_NoCheckCode7"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PreInterventionSurvey_NoCheckCode/MirrorStudentID",
+      "reason": "Mirror field imported as the value of StudentID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/AsthmaticConditions",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/Markalloftheconditionsthischildhas",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/Page3of3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/Disclaimer11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/ParentSchoolAsthmaPreInterventationSurvey11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "PreInterventionSurvey_NoCheckCode/StudentID",
+      "reason": "no column in PreInterventionSurvey_NoCheckCode7"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PreInterventionSurvey_NoCheckCode/MirrorStudentID1",
+      "reason": "Mirror field imported as the value of StudentID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/MonthlyBreathingDifficulties",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PreInterventionSurvey_NoCheckCode/Duringtheirworstbreathingmonthselecthowoftenthefollowingsymptoms",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codegender",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codephvs_birthcountry_cdc",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codephvs_productionclass_hl7_2x",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codephvs_racecategory_cdc",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeSex",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "HospitalPoints",
+      "reason": "no view, field or code table claims it"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "SchoolPoints",
+      "reason": "no view, field or code table claims it"
+    }
+  ]
+}

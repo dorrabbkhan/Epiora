@@ -1,0 +1,2249 @@
+{
+  "name": "H1N1ClinicalLongForm",
+  "legacy_id": "6CAE48D6-9593-09F0-E1DE675958B19587",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/H1N1ClinicalLongForm/H1N1ClinicalLongForm.mdb",
+    "sha256": "eb87e61f7e2976954fa851a54cba8e3f1fd09ab8189379d0dec7c504a9d73e69"
+  },
+  "views": [
+    {
+      "name": "ClinicalSignsandSymptoms",
+      "dataset": "ClinicalSignsandSymptoms.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "4d0b0ddf9cf81454710ea707666754faa1655adadaf53f684d1f31d3d61c3fdd"
+    },
+    {
+      "name": "SpecimenInformation",
+      "dataset": "SpecimenInformation.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "c21da3c07588facf83007d06a62f7b842fef113990e19648444457e400b20236"
+    },
+    {
+      "name": "ReportCaseID",
+      "dataset": "ReportCaseID.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "69b5d091e3e2a04fe6c49304e3465afab59c4276cde7521a5091d29b3166310d"
+    },
+    {
+      "name": "Radiology",
+      "dataset": "Radiology.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "a53fc5394b35c6a137bda50f1e40a1f8a126ab48fc476f5dd0472e8f1d899f11"
+    },
+    {
+      "name": "PathAndHistology",
+      "dataset": "PathAndHistology.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "465ce7b74a2d8d2b90278e4f5bfc9855e4674c1084c2c154608f22dc29467322"
+    },
+    {
+      "name": "MicrobiologyResults",
+      "dataset": "MicrobiologyResults.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "562dd1d6d3a637f220c833813db8cf167084035fc1e7d42df5b95282ee97f71e"
+    },
+    {
+      "name": "MedicationsandBloodProducts",
+      "dataset": "MedicationsandBloodProducts.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "f61d0df240c4aa7257f7acac905505d6e6a5c20a405d166d3c847560435b3796"
+    },
+    {
+      "name": "HematologySerumChemistries",
+      "dataset": "HematologySerumChemistries.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "c786f0541e47b0e12ec9d55512736baa676cfc9c9959a216d9209c2a14935714"
+    }
+  ],
+  "links": [
+    {
+      "parent": "ReportCaseID",
+      "child": "ClinicalSignsandSymptoms",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "HematologySerumChemistries",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "Radiology",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "MedicationsandBloodProducts",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "SpecimenInformation",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "MicrobiologyResults",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "PathAndHistology",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "HematologySerumChemistries",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "Radiology",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "MedicationsandBloodProducts",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "SpecimenInformation",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "MicrobiologyResults",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "PathAndHistology",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    },
+    {
+      "parent": "ReportCaseID",
+      "child": "ClinicalSignsandSymptoms",
+      "child_key": "FKEY",
+      "parent_key": "GlobalRecordId",
+      "kind": "relate"
+    }
+  ],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "ClinicalSignsandSymptoms",
+      "blocks": 30
+    },
+    {
+      "view": "SpecimenInformation",
+      "blocks": 35
+    },
+    {
+      "view": "ReportCaseID",
+      "blocks": 83
+    },
+    {
+      "view": "Radiology",
+      "blocks": 3
+    },
+    {
+      "view": "PathAndHistology",
+      "blocks": 46
+    },
+    {
+      "view": "MicrobiologyResults",
+      "blocks": 55
+    },
+    {
+      "view": "MedicationsandBloodProducts",
+      "blocks": 4
+    },
+    {
+      "view": "HematologySerumChemistries",
+      "blocks": 3
+    }
+  ],
+  "report": [
+    {
+      "kind": "view_data_missing",
+      "item": "ClinicalSignsandSymptoms",
+      "reason": "base table ClinicalSignsandSymptoms is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "ClinicalSignsandSymptoms",
+      "reason": "page table ClinicalSignsandSymptoms1 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "ClinicalSignsandSymptoms",
+      "reason": "page table ClinicalSignsandSymptoms2 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "ClinicalSignsandSymptoms",
+      "reason": "page table ClinicalSignsandSymptoms3 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblOnsetDT",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/ClinicalSignsandSymptoms",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Symptoms",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/InitialOnset",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/InitialPresentationofCare",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/PresentationofHospitalAdmission",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Feverlbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/subjective",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/measuredtemperature",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Chills",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Fatigueweakness",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Headache",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Alteredmentalstatus",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Dateofonset",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Seizure",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Redordrainingeyesconjunctivitis",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Runnynoserhinorrhea",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Sorethroat",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Cough",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/withsputumproduction",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Hemoptysisorbloodlysputum",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Wheezing",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Shortnessofbreathdifficultybrea",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Chestpain",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Abdominalpain",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Vomiting",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Diarrhea",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Muscleachesmyalgias",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Oflowerlegcalfmuscles",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ClinicalSignsandSymptoms/COUNTYID",
+      "reason": "no column in ClinicalSignsandSymptoms1"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ClinicalSignsandSymptoms/COUNTYID1",
+      "reason": "Mirror field imported as the value of COUNTYID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ClinicalSignsandSymptoms/STATEID",
+      "reason": "no column in ClinicalSignsandSymptoms1"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ClinicalSignsandSymptoms/STATEID1",
+      "reason": "Mirror field imported as the value of STATEID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblSymtoms1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblOnset",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Lbl3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/Lbl5",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ClinicalSignsandSymptoms/CDCID",
+      "reason": "no column in ClinicalSignsandSymptoms1"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ClinicalSignsandSymptoms/CDCID1",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblInitial",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblNGlucoseserum",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblNHeight",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblNWeight",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblBpresser",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblXRes",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblHeart",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblO2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblNFiO2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ClinicalSignsandSymptoms/STATEID",
+      "reason": "no column in ClinicalSignsandSymptoms1"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ClinicalSignsandSymptoms/STATEID2",
+      "reason": "Mirror field imported as the value of STATEID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ClinicalSignsandSymptoms/COUNTYID",
+      "reason": "no column in ClinicalSignsandSymptoms1"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ClinicalSignsandSymptoms/COUNTYID2",
+      "reason": "Mirror field imported as the value of COUNTYID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ClinicalSignsandSymptoms/CDCID",
+      "reason": "no column in ClinicalSignsandSymptoms1"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ClinicalSignsandSymptoms/CDCID2",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblMask",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ClinicalSignsandSymptoms/ADMDATE",
+      "reason": "no column in ClinicalSignsandSymptoms1"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ClinicalSignsandSymptoms/ADMDATE1",
+      "reason": "Mirror field imported as the value of ADMDATE"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblPrest",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblDay1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblDay2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblDay3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblDay4",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblDay5",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblDay6",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblDay7",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblResolutionoffever",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblVitalSigns",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblDate",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ClinicalSignsandSymptoms/LblMaxt",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "SpecimenInformation",
+      "reason": "base table SpecimenInformation is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "SpecimenInformation",
+      "reason": "page table SpecimenInformation23 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "SpecimenInformation",
+      "reason": "page table SpecimenInformation24 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/SPECIMENINFORMATION",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/Specimentype",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/CollectionDate",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/TestType",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/Result",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/InfluenzaTypeSubtype",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/SpecimenID",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/LabName",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/SpecimenInformationContinued",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/DCLBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/TTLBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/RESLBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/InfluenxaTypeSubtype",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/SPECIDLBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/LABNAMELBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SpecimenInformation/LblSpec",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "SpecimenInformation/StateID",
+      "reason": "no column in SpecimenInformation23"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SpecimenInformation/STATEID2",
+      "reason": "Mirror field imported as the value of StateID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "SpecimenInformation/COUNTYID",
+      "reason": "no column in SpecimenInformation23"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SpecimenInformation/COUNTYID2",
+      "reason": "Mirror field imported as the value of COUNTYID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "SpecimenInformation/CDCID",
+      "reason": "no column in SpecimenInformation23"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SpecimenInformation/CDCID2",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "ReportCaseID",
+      "reason": "page table ReportCaseID19 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "ReportCaseID",
+      "reason": "page table ReportCaseID20 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "ReportCaseID",
+      "reason": "page table ReportCaseID21 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "ReportCaseID",
+      "reason": "page table ReportCaseID22 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/ClinicalCaseReportFormforNovelInfluenza",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/ReportingandCaseIdentification",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Primaryhealthdepartmentcontactor",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/CaseEnrollmentInformation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Ifaresidentialaddressisnotavailable",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/MedicalCareFacilityIdentificati",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/A",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/A1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/C",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Note1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ReportCaseID/STATEID",
+      "reason": "no column in ReportCaseID19"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ReportCaseID/STATEID1",
+      "reason": "Mirror field imported as the value of STATEID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ReportCaseID/CountyID",
+      "reason": "no column in ReportCaseID19"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ReportCaseID/COUNTYID1",
+      "reason": "Mirror field imported as the value of CountyID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ReportCaseID/CDCID",
+      "reason": "no column in ReportCaseID19"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ReportCaseID/CDCID1",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Note",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblNote",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblVaccine",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblVaccType",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Dateofdose1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Dateofdose2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblQ2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblIfYes1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ReportCaseID/STATEID",
+      "reason": "no column in ReportCaseID19"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ReportCaseID/STATEID3",
+      "reason": "Mirror field imported as the value of STATEID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ReportCaseID/CountyID",
+      "reason": "no column in ReportCaseID19"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ReportCaseID/COUNTYID3",
+      "reason": "Mirror field imported as the value of CountyID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ReportCaseID/CDCID",
+      "reason": "no column in ReportCaseID19"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ReportCaseID/CDCID3",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LBL1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/N6ObesityLbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Lbl13",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Pastmedicalhistory",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblSei",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/ExcLbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Lblcog",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblNeu",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblSpecify2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblGuill",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblChro",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblSpecify3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblChro1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Lblchronc",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Lbl3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblDiag",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Lbl4",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/AsthmaLbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/PastIntubationsLbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Lbl5",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Lbal6",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Lbl7",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/Pasthospitalizationslbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/COPDlbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/ASthamaYesLbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/COPDYesLbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/PastLbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/PasthospiLbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "ReportCaseID/LblDiabetes",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ReportCaseID/STATEID",
+      "reason": "no column in ReportCaseID19"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ReportCaseID/STATEID4",
+      "reason": "Mirror field imported as the value of STATEID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ReportCaseID/CountyID",
+      "reason": "no column in ReportCaseID19"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ReportCaseID/COUNTYID4",
+      "reason": "Mirror field imported as the value of CountyID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "ReportCaseID/CDCID",
+      "reason": "no column in ReportCaseID19"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "ReportCaseID/CDCID4",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Radiology",
+      "reason": "base table Radiology is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Radiology",
+      "reason": "page table Radiology13 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Radiology",
+      "reason": "page table Radiology14 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Radiology",
+      "reason": "page table Radiology15 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Radiology",
+      "reason": "page table Radiology16 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Radiology",
+      "reason": "page table Radiology17 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "Radiology",
+      "reason": "page table Radiology18 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/RadiologyChestxray",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/AtPresentation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/Ifyescheckallthatapply",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/Checkallareasregionswithanyabno",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/RadiologyChestXray2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/Checkallthatapply",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/REGIONLBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/StateID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/STATEID2",
+      "reason": "Mirror field imported as the value of StateID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/COUNTYID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/COUNTYID2",
+      "reason": "Mirror field imported as the value of COUNTYID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/CDCID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/CDCID2",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/RadiologyChestXRay3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/APPLYLBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/LBL2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/StateID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/STATEID3",
+      "reason": "Mirror field imported as the value of StateID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/COUNTYID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/COUNTYID3",
+      "reason": "Mirror field imported as the value of COUNTYID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/CDCID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/CDCID3",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/RadiologyChestXRayPriortoDeathor",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/LBL3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/LBL4",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/StateID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/STATEID4",
+      "reason": "Mirror field imported as the value of StateID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/COUNTYID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/COUNTYID4",
+      "reason": "Mirror field imported as the value of COUNTYID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/CDCID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/CDCID4",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/RadiologyChestCTorMRI",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/LBL5",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/Checkallalveolarspaceswithanyab",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/StateID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/STATEID5",
+      "reason": "Mirror field imported as the value of StateID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/COUNTYID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/COUNTYID5",
+      "reason": "Mirror field imported as the value of COUNTYID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/CDCID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/CDCID5",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/LBL6",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/LBL7",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Radiology/LBL9",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/StateID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/STATEID6",
+      "reason": "Mirror field imported as the value of StateID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/COUNTYID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/COUNTYID6",
+      "reason": "Mirror field imported as the value of COUNTYID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "Radiology/CDCID",
+      "reason": "no column in Radiology13"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Radiology/CDCID6",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "PathAndHistology",
+      "reason": "base table PathAndHistology is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "PathAndHistology",
+      "reason": "page table PathAndHistology10 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "PathAndHistology",
+      "reason": "page table PathAndHistology11 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "PathAndHistology",
+      "reason": "page table PathAndHistology12 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/PathologyandHistopathology",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/TissueTypeandFindings",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLung",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLymphnodeslumphoid",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/Heart",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/Skeletalmuscle",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/Brain",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/Findingspresent",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/DateObtained",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblTracheaandBronchi",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/TypeofExam",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/Comments",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine01",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine02",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine04",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine05",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine06",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine07",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine08",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine09",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine10",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine15",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine14",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine13",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine12",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/LblLine16",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "PathAndHistology/StateID",
+      "reason": "no column in PathAndHistology10"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PathAndHistology/STATEID2",
+      "reason": "Mirror field imported as the value of StateID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "PathAndHistology/COUNTYID",
+      "reason": "no column in PathAndHistology10"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PathAndHistology/COUNTYID2",
+      "reason": "Mirror field imported as the value of COUNTYID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "PathAndHistology/CDCID",
+      "reason": "no column in PathAndHistology10"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PathAndHistology/CDCID2",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/SeverityofIllness",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/Atanytimeduringthecurrentillness",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/Ifthepatientwaspregnantatadmission",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "PathAndHistology/StateID",
+      "reason": "no column in PathAndHistology10"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PathAndHistology/STATEID3",
+      "reason": "Mirror field imported as the value of StateID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "PathAndHistology/COUNTYID",
+      "reason": "no column in PathAndHistology10"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PathAndHistology/COUNTYID3",
+      "reason": "Mirror field imported as the value of COUNTYID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "PathAndHistology/CDCID",
+      "reason": "no column in PathAndHistology10"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "PathAndHistology/CDCID3",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "PathAndHistology/Outcome",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "MicrobiologyResults",
+      "reason": "base table MicrobiologyResults is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "MicrobiologyResults",
+      "reason": "page table MicrobiologyResults8 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "MicrobiologyResults",
+      "reason": "page table MicrobiologyResults9 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/MicrobiologyResults",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/Spectypelabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/COLLDATELBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/TESTTYPELBL1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/Interpretation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/IfPositive",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/Organism1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/Organism2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/Organism3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/ClLbl1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/Lbl11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/MicrobiologyResultsContinued",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/LBL1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/LBL2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/LBL3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/LBL4",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/LBL5",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/LBL6",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/LBL7",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MicrobiologyResults/LBL8",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "MicrobiologyResults/StateID",
+      "reason": "no column in MicrobiologyResults8"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "MicrobiologyResults/STATEID2",
+      "reason": "Mirror field imported as the value of StateID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "MicrobiologyResults/COUNTYID",
+      "reason": "no column in MicrobiologyResults8"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "MicrobiologyResults/COUNTYID2",
+      "reason": "Mirror field imported as the value of COUNTYID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "MicrobiologyResults/CDCID",
+      "reason": "no column in MicrobiologyResults8"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "MicrobiologyResults/CDCID2",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "MedicationsandBloodProducts",
+      "reason": "base table MedicationsandBloodProducts is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "MedicationsandBloodProducts",
+      "reason": "page table MedicationsandBloodProducts6 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "MedicationsandBloodProducts",
+      "reason": "page table MedicationsandBloodProducts7 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/MedicationsandBloodProducts",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/Athopsitalpresentation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/DateStarted",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/Dosage",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/Duringhospitalization",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/StartLabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/DateStopped",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/Dosagelabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/LblText1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/OseltamivirTamiflu",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/ZanamivirRelenza",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/Amantadinenotforfirstlinetreatm",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/Rimantadinenotforfirstlinetreat",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/Route",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/LblMed1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/LblMed4",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/LblMed5",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/MedicationsandBloodProductsCont",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/OtherLbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/NOverthecountermedications",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/RTLBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/NHerbalnontraditionalmedication",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/Athospitalpresentation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/DHOSPLBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/DateStart",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/DOSLBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/DTSTLBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/DTSTOPLBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/DOSELBL",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/NoteLbl2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "MedicationsandBloodProducts/Lbl3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "MedicationsandBloodProducts/StateID",
+      "reason": "no column in MedicationsandBloodProducts6"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "MedicationsandBloodProducts/STATEID2",
+      "reason": "Mirror field imported as the value of StateID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "MedicationsandBloodProducts/CountyID",
+      "reason": "no column in MedicationsandBloodProducts6"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "MedicationsandBloodProducts/COUNTYID2",
+      "reason": "Mirror field imported as the value of CountyID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "MedicationsandBloodProducts/CDCID",
+      "reason": "no column in MedicationsandBloodProducts6"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "MedicationsandBloodProducts/CDCID2",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "HematologySerumChemistries",
+      "reason": "base table HematologySerumChemistries is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "HematologySerumChemistries",
+      "reason": "page table HematologySerumChemistries4 is not in the file"
+    },
+    {
+      "kind": "view_data_missing",
+      "item": "HematologySerumChemistries",
+      "reason": "page table HematologySerumChemistries5 is not in the file"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Athospitaldischargeordeath",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Duringhospitalizationextremehighest",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Date",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/HematologyandSerumChemistries",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/WhitebloodcellcountWBC",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Differential",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Neutrophils",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Bands",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Lymphocytes",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Eosinophils",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Hematocrit",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/PlateletsPlt",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/ProthrombintimePT",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/INR",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/SodiumNa",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/PotassiumK",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/BicarbonateHC03",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Serumalbumin",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Serumcreatinine",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Serumglucose",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/SGPTALT",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/SGOTAST",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Totalbilirubin",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Serumammonia",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/LactatedehydrogenaseLDH",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Lipase",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/CreatinekinaseCKorCPK",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/CreactiveproteinCRP",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/ErthrocytesedimentationrateESR",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Atpresentation",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Nstweek",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Nndweek",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Nrdweek",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Units",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Unitslbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/UNITSLBL2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Unitslbl3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Unitslbld",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/HematologyandSerumChemistriesCo",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/OthersignificantlabfindingsegCSF",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Typeoftest",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Specimentype",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Datelbl",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "HematologySerumChemistries/Result",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "HematologySerumChemistries/StateID",
+      "reason": "no column in HematologySerumChemistries4"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "HematologySerumChemistries/STATEID1",
+      "reason": "Mirror field imported as the value of StateID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "HematologySerumChemistries/COUNTYID",
+      "reason": "no column in HematologySerumChemistries4"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "HematologySerumChemistries/COUNTYID1",
+      "reason": "Mirror field imported as the value of COUNTYID"
+    },
+    {
+      "kind": "field_column_missing",
+      "item": "HematologySerumChemistries/CDCID",
+      "reason": "no column in HematologySerumChemistries4"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "HematologySerumChemistries/CDCID1",
+      "reason": "Mirror field imported as the value of CDCID"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "code",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeageunitvalues",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codecldtype",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codecogdystype",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codefeverish_c",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codefeverish_i",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeicu",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeneuromustype",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codephvs_county_fips_6_4",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codephvs_locationtype_cdc_om",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codephvs_nonpersonlivingsubjectdisposition_cdc_om",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codephvs_pam_address_type",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codephvs_postaladdressuse_hl7_v3",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codephvs_telecommunicationusecode_hl7_2x",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "codeselecttransferred",
+      "reason": "unreferenced code table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "metaFieldGroups",
+      "reason": "unhandled metadata table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "metaGroups",
+      "reason": "unhandled metadata table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "metaOptions",
+      "reason": "unhandled metadata table"
+    }
+  ]
+}

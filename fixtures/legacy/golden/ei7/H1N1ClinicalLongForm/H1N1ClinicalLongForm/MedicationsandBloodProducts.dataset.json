@@ -1,0 +1,1962 @@
+{
+  "id": "MedicationsandBloodProducts",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RecStatus",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "OTHR1START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTHR2START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OSELDOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ZANDOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "AMANDOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "RIMDOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTHR1DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTHR2DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OSELSTART2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ZANSTART2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTHR1NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTHR2NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ROUTE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "ROUTE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "OSELSTART1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - - - - - - - - - - - - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ZANSTART1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - - - - - - - - - - - - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "AMANSTART1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - - - - - - - - - - - - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "RIMSTART1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "- - - - - - - - - - - - - - - - - - - - - - - - - -",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "AMANSTART2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "RIMSTART2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTHRSTART2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTHR2START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OSELSTOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ZANSTOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "AMANSTOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "RIIMSTOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTHR1STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTHR2STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OSELDOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ZANDOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "AMANDOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "RIMDOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTHR1DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTHR2DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX1NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX2NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX3NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX4NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX1ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "ABX2ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "ABX3ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "ABX4ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "CDCID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCUniqueID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Unique ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STER1NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STER2NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STER3NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STER1ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "STER2ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "STER3ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "STAT1NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STAT2NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STAT3NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Statins",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "STAT1START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STAT2START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STAT3START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX5ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "ABX5START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX5DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX1START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX2START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX3START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX4START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX1DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX2DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX3DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX4DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STER1START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX5START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STER2START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STER3START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STAT1DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STAT2DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STAT3DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STER1DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STER2DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STER3DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX1START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX5STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX5DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX5NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX2START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX3START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX4START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STER1START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STER2START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STER3START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STAT1START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STAT2START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STAT3START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX1STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX2STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX3STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX4STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STER1STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STER2STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STER3STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STAT1STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STAT2STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "STAT3STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ABX1DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX2DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX3DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ABX4DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STER1DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STER2DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STER3DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STAT1DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STAT2DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STAT3DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "StateID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CountyID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Antivirals",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "Antimicrob",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "Steroids",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "ORX1NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX1ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "OTC1NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTC2NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTC3NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX2ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "ORX2NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX1DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX1START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC4NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTC1ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "OTC2ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "OTC3ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "OTC4ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "NTNAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NT2NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NT3NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NT1ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "NT2ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "NT3ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "OTC1START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC2START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC3START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC4START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "NT1START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "NT2START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "NT3START1",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC1DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTC2DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTC3DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTC4DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NT1DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NT2DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NT3DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTC1START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC2START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC3START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC4START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC1STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC2STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC3STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC4STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "OTC1DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTC2DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTC3DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OTC4DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NT1START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "NT2START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "NT3START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "NT1STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "NT2STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "NT3STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "NT1DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NT2DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NT3DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MedsNotes",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other Medication Notes",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "ORX1STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ORX1DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX3NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX3ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "ORX4ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "ORX5ROUTE",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeROUTE1"
+      }
+    },
+    {
+      "name": "ORX4NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX5NAME",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX2DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX3DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX4DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX5DOSE1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX2START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ORX3START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ORX4START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ORX5START2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ORX2STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ORX3STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ORX4STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ORX5STOP2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ORX2DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX3DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX4DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ORX5DOSE2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STATEID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "COUNTYID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CDCID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeROUTE1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Injection - IV"
+          },
+          "1 - Injection - IV"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Injection - IM"
+          },
+          "2 - Injection - IM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - Injection - Sub-q"
+          },
+          "3 - Injection - Sub-q"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4 - Other - Parenteral"
+          },
+          "4 - Other - Parenteral"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5 - Oral"
+          },
+          "5 - Oral"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6 - Topical"
+          },
+          "6 - Topical"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7 - Inhalation"
+          },
+          "7 - Inhalation"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8 - Rectal"
+          },
+          "8 - Rectal"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9 - Other"
+          },
+          "9 - Other"
+        ]
+      ]
+    },
+    {
+      "id": "codeYesNoUnknown",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9 - Unknown"
+          },
+          "9 - Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeYesNo",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ]
+      ]
+    }
+  ]
+}

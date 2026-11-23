@@ -1,0 +1,5131 @@
+{
+  "id": "SurveyInformation",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "COUNTRY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Country:",
+        "legacy_type": "CommentLegal",
+        "label_set": "codephvs_birthcountry_cdc"
+      }
+    },
+    {
+      "name": "Country_Site_Name1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Site  Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "I1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Cluster/Centre/Village ID:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "I2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Cluster/Centre/Village name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "I3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Interviewer ID:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "I4",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date of completion of the instrument",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "I5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Consent has been read and obtained:",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "I6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Interview Language:",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei61"
+      }
+    },
+    {
+      "name": "I7H",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Time of interview (hrs)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "I7M",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Time of interview (mins)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "I8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Family Surname",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "I9",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "I10",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Contact phone number where possible:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ParticipantId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "C1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Sex",
+        "legacy_type": "CommentLegal",
+        "label_set": "codec11"
+      }
+    },
+    {
+      "name": "C2",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "What is your date of birth?",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "C3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "How old are you?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "C4",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "In total, how many years have you spent at school and \r\nin fulltime study (excluding pre-school)? (in years)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "C5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What is the highest level of education you have completed?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codec51"
+      }
+    },
+    {
+      "name": "C6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What is your [insert relevant ethnic group / racial group / cultural\r\nsubgroup / others] background?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codec61"
+      }
+    },
+    {
+      "name": "C7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What is your marital status?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codec71"
+      }
+    },
+    {
+      "name": "c8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Which of the following best describes your main work status\r\nover the past 12 months?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codec81"
+      }
+    },
+    {
+      "name": "C9",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "How many people older than 18 years, including yourself, live in\r\nyour household?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "C10a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Per week:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "C10b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "OR per month:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "C10c",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "OR per year:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "C10d",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Enter 88 if Refused:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "C11",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Can you give an estimate of the annual household income if I\r\nread some options to you?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codec112"
+      }
+    },
+    {
+      "name": "C2_Unknown",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "don't know",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "T1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Do you currently smoke any tobacco products, such as\r\ncigarettes, cigars or pipes?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "T2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Do you currently smoke tobacco products daily?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "T3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "How old were you when you first started smoking (in years)?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T4a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "In Years",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T4b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "OR per Months:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T4c",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "OR in Weeks:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Manufactured cigarettes (DAILY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5aw",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "(WEEKLY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Hand-rolled cigarettes (DAILY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5bw",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "(WEEKLY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5bc",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Pipes full of tobacco (DAILY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5cw",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "(WEEKLY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5d",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Cigars, cheroots,\r\ncigarillos (DAILY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5dw",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "(WEEKLY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5e",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Number of Shisha\r\nsessions (DAILY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5ew",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "(WEEKLY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5f",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Other (DAILY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5fw",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "(WEEKLY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T5other",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (please specify):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "T6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 12 months, have you tried to stop\r\nsmoking?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "T7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During any visit to a doctor or other health worker in the\r\npast 12 months, were you advised to quit smoking\r\ntobacco?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codet71"
+      }
+    },
+    {
+      "name": "T8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "In the past, did you ever smoke any tobacco products?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "T9",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "In the past, did you ever smoke daily?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "T5otherw",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "(WEEKLY)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "T10",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "How old were you when you stopped smoking? \r\n(Don't know=77)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T11a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Years ago",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T11b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Months ago:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T11c",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Weeks ago:",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T12",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Do you currently use any smokeless tobacco products\r\nsuch as [snuff, chewing tobacco, betel]?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "T13",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Do you currently use smokeless tobacco products daily?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "T14a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Snuff, by mouth (DAILY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T14aw",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "(WEEKLY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T14b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Snuff, by nose (DAILY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T14bw",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "(WEEKLY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T14c",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Chewing tobacco (DAILY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T14cw",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "(WEEKLY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T14d",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Betel, quid (DAILY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T14dw",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "(WEEKLY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T14e",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Other (DAILY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T14ew",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "(WEEKLY)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "T14other",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (please specify)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "T15",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "In the past, did you EVER USE smokeless tobacco products\r\nsuch as [snuff, chewing tobacco, or betel]?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "T17",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 30 days, did someone smoke in your\r\nhome?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "T18",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 30 days, did someone smoke in closed\r\nareas in your workplace (in the building, in a work area or\r\na specific office)?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber11",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "T16",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "In the past, did you ever use smokeless tobacco products\r\nsuch as [snuff, chewing tobacco, or betel] DAILY?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "A1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever consumed any alcohol such as beer, wine, spirits\r\nor [add other local examples]?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "A2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you consumed any alcohol within the past 12 months?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "A3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you stopped drinking due to health reasons, such as a\r\nnegative impact on your health or on the advice of your doctor or\r\nother health worker?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "A4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 12 months, how frequently have you had at\r\nleast one standard alcoholic drink?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codea41"
+      }
+    },
+    {
+      "name": "A5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you consumed any alcohol within the past 30 days?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "A6",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 30 days, on how many occasions did you have\r\nat least one standard alcoholic drink?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A7",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 30 days, when you drank alcohol, how many\r\nstandard drinks on average did you have during one drinking\r\noccasion?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A8",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 30 days, what was the largest number of\r\nstandard drinks you had on a single occasion, counting all types\r\nof alcoholic drinks together?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A9",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 30 days, how many times did you have\r\nsix or more standard drinks in a single drinking occasion?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A10a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Monday",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A10b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Tuesday",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A10c",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Wednesday",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A10d",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Thursday",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A10e",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Friday",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A10f",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Saturday",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A10g",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Sunday",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber12",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "A11",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 7 days, did you consume any homebrewed\r\nalcohol, any alcohol brought over the border/from another\r\ncountry, any alcohol not intended for drinking or other\r\nuntaxed alcohol?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "A12a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Homebrewed spirits, e.g.\r\nmoonshine",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A12b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Homebrewed beer or wine,\r\ne.g. beer, palm or fruit wine",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A12c",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Alcohol brought over the\r\nborder/from another country",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A12d",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Alcohol not intended for drinking,\r\ne.g. alcohol-based medicines,\r\nperfumes, after shaves",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A12e",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Other untaxed alcohol in the\r\ncountry",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "A13",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 12 months, how often have you found that you\r\nwere not able to stop drinking once you had started?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codea131"
+      }
+    },
+    {
+      "name": "A14",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 12 months, how often have you failed to do\r\nwhat was normally expected from you because of drinking?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codea131"
+      }
+    },
+    {
+      "name": "A15",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 12 months, how often have you needed a first\r\ndrink in the morning to get yourself going after a heavy drinking\r\nsession?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codea131"
+      }
+    },
+    {
+      "name": "A16",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 12 months, have you had family problems or\r\nproblems with your partner due to someone else’s drinking?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codea131"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber121",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber122",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "D1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "In a typical week, on how many days do you eat fruit?\r\n(Number of Days)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "D2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "How many servings of fruit do you eat on one of those days?\r\n(Number of Servings)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "D3",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "In a typical week, on how many days do you eat vegetables?\r\n(Number of Days)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "D4",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "How many servings of vegetables do you eat on one of those\r\ndays?\r\n(Number of Servings)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "D5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "How often do you add salt or a salty sauce such as soya sauce\r\nto your food right before you eat it or as you are eating it?",
+        "legacy_type": "CommentLegal",
+        "label_set": "coded51"
+      }
+    },
+    {
+      "name": "D6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "How often is salt, salty seasoning or a salty sauce added in\r\ncooking or preparing foods in your household?",
+        "legacy_type": "CommentLegal",
+        "label_set": "coded51"
+      }
+    },
+    {
+      "name": "D7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "How often do you eat processed food high in salt?",
+        "legacy_type": "CommentLegal",
+        "label_set": "coded51"
+      }
+    },
+    {
+      "name": "D8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "How much salt or salty sauce do you think you consume?",
+        "legacy_type": "CommentLegal",
+        "label_set": "coded81"
+      }
+    },
+    {
+      "name": "D9",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "How important to you is lowering the salt in your diet?",
+        "legacy_type": "CommentLegal",
+        "label_set": "coded91"
+      }
+    },
+    {
+      "name": "D10",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Do you think that too much salt or salty sauce in your diet could\r\ncause a health problem?",
+        "legacy_type": "CommentLegal",
+        "label_set": "coded101"
+      }
+    },
+    {
+      "name": "D11a",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Limit consumption of processed foods",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "D11b",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Look at the salt or sodium content on food labels",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "D11c",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Buy low salt/sodium alternatives",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "D11d",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Use spices other than salt when cooking",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "D11e",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Avoid eating foods prepared outside of a home",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "D11f",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Do other things specifically to control your salt intake",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "D11other",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other (please specify):",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "D12",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "What type of oil or fat is most often used for meal\r\npreparation in your household?",
+        "legacy_type": "CommentLegal",
+        "label_set": "coded121"
+      }
+    },
+    {
+      "name": "D12other",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "D13",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "On average, how many meals per week do you eat that were\r\nnot prepared at a home? By meal, I mean breakfast, lunch and\r\ndinner.",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber123",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber124",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "P1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Does your work involve vigorous-intensity activity that causes\r\nlarge increases in breathing or heart rate like [carrying or lifting\r\nheavy loads, digging or construction work] for at least 10\r\nminutes continuously?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "P2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "In a typical week, on how many days do you do vigorousintensity\r\nactivities as part of your work? (Number of days)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P3a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "HOURS",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P3b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MINUTES",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Does your work involve moderate-intensity activity, that causes\r\nsmall increases in breathing or heart rate such as brisk walking\r\n[or carrying light loads] for at least 10 minutes continuously?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "P5",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "In a typical week, on how many days do you do moderateintensity\r\nactivities as part of your work?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P6a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "HOURS",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P6b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MINUTES",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber125",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "P7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Do you walk or use a bicycle (pedal cycle) for at least 10\r\nminutes continuously to get to and from places?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "P8",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "In a typical week, on how many days do you walk or bicycle for\r\nat least 10 minutes continuously to get to and from places?\r\n(Number of days)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P9a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "HOURS",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P9b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MINUTES",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P10",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Do you do any vigorous-intensity sports, fitness or recreational (leisure) activities that cause\r\nlarge increases in breathing or heart rate like [running or football]\r\nfor at least 10 minutes continuously?\r\n",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "P11",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "In a typical week, on how many days do you do vigorousintensity sports, fitness or recreational\r\n(leisure) activities?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P12a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "HOURS",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P12b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MINUTES",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P13",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Do you do any moderate-intensity sports, fitness or recreational (leisure) activities that cause\r\na small increase in breathing or heart rate such as brisk walking, [cycling, swimming, volleyball] \r\nfor at least 10 minutes continuously?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "P14",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "In a typical week, on how many days do you do moderate-intensity sports, fitness or\r\nrecreational (leisure) activities?",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P15a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "HOURS",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P15b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MINUTES",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P16a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "HOURS",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "P16b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MINUTES",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber126",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "H1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever had your blood pressure measured by a doctor or other health worker?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H2a",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever been told by a doctor or other health worker that you have\r\nraised blood pressure or hypertension?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H2b",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you been told in the past 12 months?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "In the past two weeks, have you taken any drugs (medication) for raised blood pressure prescribed \r\nby a doctor or other health worker?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever seen a traditional healer for raised blood pressure or hypertension?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Are you currently taking any herbal or traditional remedy for your raised blood pressure?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever had your blood sugar measured by a doctor or other health worker?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H7a",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever been told by a doctor or other health worker that you have raised\r\nblood sugar or diabetes?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H7b",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you been told in the past 12 months?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "In the past two weeks, have you taken any drugs (medication) for diabetes prescribed by \r\na doctor or other health worker?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H9",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Are you currently taking insulin for diabetes prescribed by a doctor or other health worker?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H10",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever seen a traditional healer for diabetes or raised blood sugar?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H11",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Are you currently taking any herbal or traditional remedy for your diabetes?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber127",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "H11a",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you received at least two HbA1C (glycated hemoglobin) tests in the\r\npast year as part of diabetes control?",
+        "legacy_type": "CommentLegal",
+        "label_set": "coded101"
+      }
+    },
+    {
+      "name": "H11b",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "When was the last time your eyes were examined as part of your diabetes control?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeh11b1"
+      }
+    },
+    {
+      "name": "H11c",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "When was the last time your feet were examined as part of your diabetes control?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeh11c1"
+      }
+    },
+    {
+      "name": "H12",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever had your cholesterol (fat levels in your blood) measured by a doctor \r\nor other health worker?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H13a",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever been told by a doctor or other health worker that you have raised cholesterol?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H13b",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you been told in the past 12 months?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H14",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "In the past two weeks, have you taken any oral treatment (medication) for raised total cholesterol\r\nprescribed by a doctor or other health worker?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H15",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever seen a traditional healer for raised cholesterol?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H16",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Are you currently taking any herbal or traditional remedy for your raised cholesterol?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H17",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever had a heart attack or chest pain from heart disease (angina) or a stroke \r\n(cerebrovascular accident or incident)?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H18",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Are you currently taking aspirin regularly to prevent or treat heart disease?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H19",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Are you currently taking statins (Lovastatin/Simvastatin/Atorvastatin or any other statin)\r\nregularly to prevent or treat heart disease?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber128",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber129",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "H20a",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Quit using tobacco or don’t start ",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H20b",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Reduce salt in your diet",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H20c",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Eat at least five servings of fruit and/or vegetables each day",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H20d",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Reduce fat in your diet ",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H20e",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Start or do more physical activity",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "H20f",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Maintain a healthy body weight or lose weight",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "CX1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever had a screening test for cervical cancer, using\r\nany of these methods described above?",
+        "legacy_type": "CommentLegal",
+        "label_set": "coded101"
+      }
+    },
+    {
+      "name": "S1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever had your feces examined to look for hidden blood? ",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "S2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever had a colonoscopy?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "S3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you ever had an examination of your prostate?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "S4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Have you been shown how to examine your breasts?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "S5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "When was the last time you had an examination of your breasts?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codes51"
+      }
+    },
+    {
+      "name": "S6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "When was the last time you had a mammogram?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codes51"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber1210",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "M1",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Interviewer ID",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M2",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Device ID for blood pressure",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Cuff size used",
+        "legacy_type": "CommentLegal",
+        "label_set": "codem31"
+      }
+    },
+    {
+      "name": "M4a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Systolic (mmHg)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M4b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Diastolic (mmHg)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M5a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Systolic (mmHg)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M5b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Diastolic (mmHg)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M6a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Systolic (mmHg)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M6b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Diastolic (mmHg)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During the past two weeks, have you been treated for raised blood pressure with drugs \r\n(medication) prescribed by a doctor or other health worker?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "M8",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "For women: Are you pregnant?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codei51"
+      }
+    },
+    {
+      "name": "M9",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Interviewer ID",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M10a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Height",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M10b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Weight ",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M11",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "Height \r\nin Centimetres (cm) ",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M12",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "Weight (If too large for scale 666.6)\r\nin Kilograms (kg)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber1211",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "M13",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Device ID for waist",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M14",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "Waist circumference",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M15",
+      "type": "real",
+      "values": [],
+      "meta": {
+        "prompt": "Hip circumference",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M16a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Beats per minute",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M16b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Beats per minute",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "M16c",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Beats per minute",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber1212",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "B1",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During the past 12 hours have you had anything to eat or drink, \r\nother than water?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeb11"
+      }
+    },
+    {
+      "name": "B2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Technician ID ",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "B3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Device ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "B4a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Hours",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B4b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Minutes",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B5a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MMOL/L",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B5b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MG/DL",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Today, have you taken insulin or other drugs (medication) that \r\nhave been prescribed by a doctor or other health worker for \r\nraised blood glucose? ",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeb61"
+      }
+    },
+    {
+      "name": "B7",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Device ID ",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "B8a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MMOL/L",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B8b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MG/DL",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B9",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "During the past two weeks, have you been treated for raised \r\ncholesterol with drugs (medication) prescribed by a doctor or \r\nother health worker?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeb91"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber1213",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "B10",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Had you been fasting prior to the urine collection?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeb101"
+      }
+    },
+    {
+      "name": "B11",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Technician ID",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B12",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Device ID",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B13a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Hours",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B13b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Minutes",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B14a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MMOL/L",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B15a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MMOL/L",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B16a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MMOL/L",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B16b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MG/DL",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B17a",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MMOL/L",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "B17b",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "MG/DL",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ParticipantIdentificationNumber1214",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Participant Identification Number",
+        "legacy_type": "Mirror"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codephvs_birthcountry_cdc",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "USA-UNITED STATES"
+          },
+          "USA-UNITED STATES"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AFG-AFGHANISTAN"
+          },
+          "AFG-AFGHANISTAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ALB-ALBANIA"
+          },
+          "ALB-ALBANIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DZA-ALGERIA"
+          },
+          "DZA-ALGERIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ASM-AMERICAN SAMOA"
+          },
+          "ASM-AMERICAN SAMOA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AND-ANDORRA"
+          },
+          "AND-ANDORRA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AGO-ANGOLA"
+          },
+          "AGO-ANGOLA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AIA-ANGUILLA"
+          },
+          "AIA-ANGUILLA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ATA-ANTARCTICA"
+          },
+          "ATA-ANTARCTICA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ATG-ANTIGUA AND BARBUDA"
+          },
+          "ATG-ANTIGUA AND BARBUDA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ARG-ARGENTINA"
+          },
+          "ARG-ARGENTINA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ARM-ARMENIA"
+          },
+          "ARM-ARMENIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ABW-ARUBA"
+          },
+          "ABW-ARUBA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AT-ASHMORE AND CARTIER ISL"
+          },
+          "AT-ASHMORE AND CARTIER ISL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AUS-AUSTRALIA"
+          },
+          "AUS-AUSTRALIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AUT-AUSTRIA"
+          },
+          "AUT-AUSTRIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AZE-AZERBAIJAN"
+          },
+          "AZE-AZERBAIJAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BHS-BAHAMAS, THE"
+          },
+          "BHS-BAHAMAS, THE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BHR-BAHRAIN"
+          },
+          "BHR-BAHRAIN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FQ-BAKER ISLAND"
+          },
+          "FQ-BAKER ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BGD-BANGLADESH"
+          },
+          "BGD-BANGLADESH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BRB-BARBADOS"
+          },
+          "BRB-BARBADOS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BS-BASSAS DA INDIA"
+          },
+          "BS-BASSAS DA INDIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BLR-BELARUS"
+          },
+          "BLR-BELARUS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BEL-BELGIUM"
+          },
+          "BEL-BELGIUM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BLZ-BELIZE"
+          },
+          "BLZ-BELIZE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BEN-BENIN"
+          },
+          "BEN-BENIN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BMU-BERMUDA"
+          },
+          "BMU-BERMUDA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BTN-BHUTAN"
+          },
+          "BTN-BHUTAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BOL-BOLIVIA"
+          },
+          "BOL-BOLIVIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BIH-BOSNIA AND HERCEGOVINA"
+          },
+          "BIH-BOSNIA AND HERCEGOVINA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BWA-BOTSWANA"
+          },
+          "BWA-BOTSWANA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BVT-BOUVET ISLAND"
+          },
+          "BVT-BOUVET ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IOT-BR INDIAN OCEAN TERR"
+          },
+          "IOT-BR INDIAN OCEAN TERR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BRA-BRAZIL"
+          },
+          "BRA-BRAZIL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VGB-BRITISH VIRGIN IS."
+          },
+          "VGB-BRITISH VIRGIN IS."
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BRN-BRUNEI"
+          },
+          "BRN-BRUNEI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BGR-BULGARIA"
+          },
+          "BGR-BULGARIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BFA-BURKINA (UPPER VOLTA)"
+          },
+          "BFA-BURKINA (UPPER VOLTA)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BUMM-BURMA"
+          },
+          "BUMM-BURMA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BDI-BURUNDI"
+          },
+          "BDI-BURUNDI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KHM-CAMBODIA"
+          },
+          "KHM-CAMBODIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CMR-CAMEROON"
+          },
+          "CMR-CAMEROON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CAN-CANADA"
+          },
+          "CAN-CANADA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CPV-CAPE VERDE"
+          },
+          "CPV-CAPE VERDE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CYM-CAYMAN ISLANDS"
+          },
+          "CYM-CAYMAN ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CAF-CENTRAL AFRICAN REP."
+          },
+          "CAF-CENTRAL AFRICAN REP."
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TCD-CHAD"
+          },
+          "TCD-CHAD"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CHL-CHILE"
+          },
+          "CHL-CHILE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CHN-CHINA"
+          },
+          "CHN-CHINA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CXR-CHRISTMAS ISLAND"
+          },
+          "CXR-CHRISTMAS ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IP-CLIPPERTON ISLAND"
+          },
+          "IP-CLIPPERTON ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CCK-COCOS (KEELING) ISLANDS"
+          },
+          "CCK-COCOS (KEELING) ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "COL-COLOMBIA"
+          },
+          "COL-COLOMBIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "COM-COMOROS"
+          },
+          "COM-COMOROS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "COG-CONGO"
+          },
+          "COG-CONGO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "COK-COOK ISLANDS"
+          },
+          "COK-COOK ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CR-CORAL SEA ISLANDS"
+          },
+          "CR-CORAL SEA ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CRI-COSTA RICA"
+          },
+          "CRI-COSTA RICA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HRV-CROATIA"
+          },
+          "HRV-CROATIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CUB-CUBA"
+          },
+          "CUB-CUBA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CYP-CYPRUS"
+          },
+          "CYP-CYPRUS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CZE-CZECH REPUBLIC"
+          },
+          "CZE-CZECH REPUBLIC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CSHH-CZECHOSLOVAKIA"
+          },
+          "CSHH-CZECHOSLOVAKIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DNK-DENMARK"
+          },
+          "DNK-DENMARK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DJI-DJIBOUTI"
+          },
+          "DJI-DJIBOUTI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DMA-DOMINICA"
+          },
+          "DMA-DOMINICA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DOM-DOMINICAN REPUBLIC"
+          },
+          "DOM-DOMINICAN REPUBLIC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ECU-ECUADOR"
+          },
+          "ECU-ECUADOR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "EGY-EGYPT"
+          },
+          "EGY-EGYPT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SLV-EL SALVADOR"
+          },
+          "SLV-EL SALVADOR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GNQ-EQUATORIAL GUINEA"
+          },
+          "GNQ-EQUATORIAL GUINEA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ERI-ERITREA"
+          },
+          "ERI-ERITREA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "EST-ESTONIA"
+          },
+          "EST-ESTONIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ETH-ETHIOPIA"
+          },
+          "ETH-ETHIOPIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "EU-EUROPA ISLAND"
+          },
+          "EU-EUROPA ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FLK-FALKLAND (IS MALVINAS)"
+          },
+          "FLK-FALKLAND (IS MALVINAS)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FRO-FAROE ISLANDS"
+          },
+          "FRO-FAROE ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FSM-FED STATES MICRONESIA"
+          },
+          "FSM-FED STATES MICRONESIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FJI-FIJI"
+          },
+          "FJI-FIJI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FIN-FINLAND"
+          },
+          "FIN-FINLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ATF-FR SO & ANTARCTIC LNDS"
+          },
+          "ATF-FR SO & ANTARCTIC LNDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FRA-FRANCE"
+          },
+          "FRA-FRANCE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GUF-FRENCH GUIANA"
+          },
+          "GUF-FRENCH GUIANA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PYF-FRENCH POLYNESIA"
+          },
+          "PYF-FRENCH POLYNESIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GAB-GABON"
+          },
+          "GAB-GABON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GMB-GAMBIA, THE"
+          },
+          "GMB-GAMBIA, THE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GZ-GAZA STRIP"
+          },
+          "GZ-GAZA STRIP"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GEO-GEORGIA"
+          },
+          "GEO-GEORGIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DEU-GERMANY"
+          },
+          "DEU-GERMANY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GHA-GHANA"
+          },
+          "GHA-GHANA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GIB-GIBRALTAR"
+          },
+          "GIB-GIBRALTAR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GO-GLORIOSO ISLANDS"
+          },
+          "GO-GLORIOSO ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GRC-GREECE"
+          },
+          "GRC-GREECE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GRL-GREENLAND"
+          },
+          "GRL-GREENLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GRD-GRENADA"
+          },
+          "GRD-GRENADA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GLP-GUADELOUPE"
+          },
+          "GLP-GUADELOUPE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GUM-GUAM"
+          },
+          "GUM-GUAM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GTM-GUATEMALA"
+          },
+          "GTM-GUATEMALA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GGY-GUERNSEY"
+          },
+          "GGY-GUERNSEY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GIN-GUINEA"
+          },
+          "GIN-GUINEA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GNB-GUINEA-BISSAU"
+          },
+          "GNB-GUINEA-BISSAU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GUY-GUYANA"
+          },
+          "GUY-GUYANA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HTI-HAITI"
+          },
+          "HTI-HAITI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HMD-HEARD IS&MCDONALD ISLS"
+          },
+          "HMD-HEARD IS&MCDONALD ISLS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HND-HONDURAS"
+          },
+          "HND-HONDURAS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HKG-HONG KONG"
+          },
+          "HKG-HONG KONG"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HQ-HOWLAND ISLAND"
+          },
+          "HQ-HOWLAND ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HUN-HUNGARY"
+          },
+          "HUN-HUNGARY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ISL-ICELAND"
+          },
+          "ISL-ICELAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IND-INDIA"
+          },
+          "IND-INDIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IDN-INDONESIA"
+          },
+          "IDN-INDONESIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IRN-IRAN"
+          },
+          "IRN-IRAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IRQ-IRAQ"
+          },
+          "IRQ-IRAQ"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NTHH-IRAQ-S ARABIA NEUTRAL Z"
+          },
+          "NTHH-IRAQ-S ARABIA NEUTRAL Z"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IRL-IRELAND"
+          },
+          "IRL-IRELAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ISR-ISRAEL"
+          },
+          "ISR-ISRAEL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ITA-ITALY"
+          },
+          "ITA-ITALY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CIV-IVORY COAST"
+          },
+          "CIV-IVORY COAST"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "JAM-JAMAICA"
+          },
+          "JAM-JAMAICA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "JN-JAN MAYEN"
+          },
+          "JN-JAN MAYEN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "JPN-JAPAN"
+          },
+          "JPN-JAPAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DQ-JARVIS ISLAND"
+          },
+          "DQ-JARVIS ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "JEY-JERSEY"
+          },
+          "JEY-JERSEY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "JQ-JOHNSTON ATOLL"
+          },
+          "JQ-JOHNSTON ATOLL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "JOR-JORDAN"
+          },
+          "JOR-JORDAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "JU-JUAN DE NOVA ISLAND"
+          },
+          "JU-JUAN DE NOVA ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KAZ-KAZAKHSTAN"
+          },
+          "KAZ-KAZAKHSTAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KEN-KENYA"
+          },
+          "KEN-KENYA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KQ-KINGMAN REEF"
+          },
+          "KQ-KINGMAN REEF"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KIR-KIRIBATI"
+          },
+          "KIR-KIRIBATI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KOR-KOREA, REPUBLIC OF"
+          },
+          "KOR-KOREA, REPUBLIC OF"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PRK-KOREA,DEM PEOPLES REP"
+          },
+          "PRK-KOREA,DEM PEOPLES REP"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KWT-KUWAIT"
+          },
+          "KWT-KUWAIT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KGZ-KYRGYZSTAN"
+          },
+          "KGZ-KYRGYZSTAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LAO-LAOS"
+          },
+          "LAO-LAOS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LVA-LATVIA"
+          },
+          "LVA-LATVIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LBN-LEBANON"
+          },
+          "LBN-LEBANON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LSO-LESOTHO"
+          },
+          "LSO-LESOTHO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LBR-LIBERIA"
+          },
+          "LBR-LIBERIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LBY-LIBYA"
+          },
+          "LBY-LIBYA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LIE-LIECHTENSTEIN"
+          },
+          "LIE-LIECHTENSTEIN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LTU-LITHUANIA"
+          },
+          "LTU-LITHUANIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LUX-LUXEMBOURG"
+          },
+          "LUX-LUXEMBOURG"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MAC-MACAU"
+          },
+          "MAC-MACAU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MKD-MACEDONIA"
+          },
+          "MKD-MACEDONIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MDG-MADAGASCAR"
+          },
+          "MDG-MADAGASCAR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MWI-MALAWI"
+          },
+          "MWI-MALAWI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MYS-MALAYSIA"
+          },
+          "MYS-MALAYSIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MDV-MALDIVES"
+          },
+          "MDV-MALDIVES"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MLI-MALI"
+          },
+          "MLI-MALI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MLT-MALTA"
+          },
+          "MLT-MALTA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IMN-MAN, ISLE OF"
+          },
+          "IMN-MAN, ISLE OF"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MHL-MARSHALL ISLANDS"
+          },
+          "MHL-MARSHALL ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MTQ-MARTINIQUE"
+          },
+          "MTQ-MARTINIQUE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MRT-MAURITANIA"
+          },
+          "MRT-MAURITANIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MUS-MAURITIUS"
+          },
+          "MUS-MAURITIUS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MYT-MAYOTTE"
+          },
+          "MYT-MAYOTTE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MEX-MEXICO"
+          },
+          "MEX-MEXICO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MIUM-MIDWAY ISLAND"
+          },
+          "MIUM-MIDWAY ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MDA-MOLDOVA"
+          },
+          "MDA-MOLDOVA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MCO-MONACO"
+          },
+          "MCO-MONACO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MNG-MONGOLIA"
+          },
+          "MNG-MONGOLIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MNE-MONTENEGRO"
+          },
+          "MNE-MONTENEGRO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MSR-MONTSERRAT"
+          },
+          "MSR-MONTSERRAT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MAR-MOROCCO"
+          },
+          "MAR-MOROCCO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MOZ-MOZAMBIQUE"
+          },
+          "MOZ-MOZAMBIQUE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NAM-NAMIBIA"
+          },
+          "NAM-NAMIBIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NRU-NAURU"
+          },
+          "NRU-NAURU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BQ-NAVASSA ISLAND"
+          },
+          "BQ-NAVASSA ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NPL-NEPAL"
+          },
+          "NPL-NEPAL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NLD-NETHERLANDS"
+          },
+          "NLD-NETHERLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ANT-NETHERLANDS ANTILLES"
+          },
+          "ANT-NETHERLANDS ANTILLES"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NCL-NEW CALEDONIA"
+          },
+          "NCL-NEW CALEDONIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NZL-NEW ZEALAND"
+          },
+          "NZL-NEW ZEALAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NIC-NICARAGUA"
+          },
+          "NIC-NICARAGUA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NER-NIGER"
+          },
+          "NER-NIGER"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NGA-NIGERIA"
+          },
+          "NGA-NIGERIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NIU-NIUE"
+          },
+          "NIU-NIUE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NFK-NORFOLK ISLAND"
+          },
+          "NFK-NORFOLK ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MNP-NORTHERN MARIANA IS"
+          },
+          "MNP-NORTHERN MARIANA IS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NOR-NORWAY"
+          },
+          "NOR-NORWAY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NI-NOT SPECIFIED"
+          },
+          "NI-NOT SPECIFIED"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OMN-OMAN"
+          },
+          "OMN-OMAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PAK-PAKISTAN"
+          },
+          "PAK-PAKISTAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PLW-PALAU"
+          },
+          "PLW-PALAU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LQ-PALMYRA ATOLL"
+          },
+          "LQ-PALMYRA ATOLL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PAN-PANAMA"
+          },
+          "PAN-PANAMA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PNG-PAPUA NEW GUINEA"
+          },
+          "PNG-PAPUA NEW GUINEA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PF-PARACEL ISLANDS"
+          },
+          "PF-PARACEL ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PRY-PARAGUAY"
+          },
+          "PRY-PARAGUAY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PER-PERU"
+          },
+          "PER-PERU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PHL-PHILIPPINES"
+          },
+          "PHL-PHILIPPINES"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PCN-PITCAIRN ISLANDS"
+          },
+          "PCN-PITCAIRN ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "POL-POLAND"
+          },
+          "POL-POLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PRT-PORTUGAL"
+          },
+          "PRT-PORTUGAL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TPTL-PORTUGUESE TIMOR"
+          },
+          "TPTL-PORTUGUESE TIMOR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PRI-PUERTO RICO"
+          },
+          "PRI-PUERTO RICO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "QAT-QATAR"
+          },
+          "QAT-QATAR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "REU-REUNION"
+          },
+          "REU-REUNION"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ROU-ROMANIA"
+          },
+          "ROU-ROMANIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "RUS-RUSSIA"
+          },
+          "RUS-RUSSIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "RWA-RWANDA"
+          },
+          "RWA-RWANDA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SGS-S.GEORGIA/S.SANDWIC IS"
+          },
+          "SGS-S.GEORGIA/S.SANDWIC IS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SMR-SAN MARINO"
+          },
+          "SMR-SAN MARINO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "STP-SAO TOME AND PRINCIPE"
+          },
+          "STP-SAO TOME AND PRINCIPE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SAU-SAUDI ARABIA"
+          },
+          "SAU-SAUDI ARABIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SEN-SENEGAL"
+          },
+          "SEN-SENEGAL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SRB-SERBIA"
+          },
+          "SRB-SERBIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SYC-SEYCHELLES"
+          },
+          "SYC-SEYCHELLES"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SLE-SIERRA LEONE"
+          },
+          "SLE-SIERRA LEONE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SGP-SINGAPORE"
+          },
+          "SGP-SINGAPORE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SVK-SLOVAK REPUBLIC"
+          },
+          "SVK-SLOVAK REPUBLIC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SVN-SLOVENIA"
+          },
+          "SVN-SLOVENIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SLB-SOLOMON ISLANDS"
+          },
+          "SLB-SOLOMON ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SOM-SOMALIA"
+          },
+          "SOM-SOMALIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ZAF-SOUTH AFRICA"
+          },
+          "ZAF-SOUTH AFRICA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SUHH-SOVIET UNION"
+          },
+          "SUHH-SOVIET UNION"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ESP-SPAIN"
+          },
+          "ESP-SPAIN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PG-SPRATLY ISLANDS"
+          },
+          "PG-SPRATLY ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LKA-SRI LANKA"
+          },
+          "LKA-SRI LANKA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LCA-ST LUCIA"
+          },
+          "LCA-ST LUCIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SHN-ST. HELENA"
+          },
+          "SHN-ST. HELENA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KNA-ST. KITTS AND NEVIS"
+          },
+          "KNA-ST. KITTS AND NEVIS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SPM-ST. PIERRE AND MIQUELON"
+          },
+          "SPM-ST. PIERRE AND MIQUELON"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VCT-ST. VINCENT/GRENADINES"
+          },
+          "VCT-ST. VINCENT/GRENADINES"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SDN-SUDAN"
+          },
+          "SDN-SUDAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SUR-SURINAME"
+          },
+          "SUR-SURINAME"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SJM-SVALBARD"
+          },
+          "SJM-SVALBARD"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SWZ-SWAZILAND"
+          },
+          "SWZ-SWAZILAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SWE-SWEDEN"
+          },
+          "SWE-SWEDEN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CHE-SWITZERLAND"
+          },
+          "CHE-SWITZERLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SYR-SYRIA"
+          },
+          "SYR-SYRIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TWN-TAIWAN"
+          },
+          "TWN-TAIWAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TJK-TAJIKISTAN"
+          },
+          "TJK-TAJIKISTAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TZA-TANZANIA, UNITED REP OF"
+          },
+          "TZA-TANZANIA, UNITED REP OF"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "THA-THAILAND"
+          },
+          "THA-THAILAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TLS-TIMOR-LESTE"
+          },
+          "TLS-TIMOR-LESTE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TGO-TOGO"
+          },
+          "TGO-TOGO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TKL-TOKELAU"
+          },
+          "TKL-TOKELAU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TON-TONGA"
+          },
+          "TON-TONGA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TTO-TRINIDAD AND TOBAGO"
+          },
+          "TTO-TRINIDAD AND TOBAGO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TE-TROMELIN ISLAND"
+          },
+          "TE-TROMELIN ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TUN-TUNISIA"
+          },
+          "TUN-TUNISIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TUR-TURKEY"
+          },
+          "TUR-TURKEY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TKM-TURKMENISTAN"
+          },
+          "TKM-TURKMENISTAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TCA-TURKS AND CAICOS ISL"
+          },
+          "TCA-TURKS AND CAICOS ISL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TUV-TUVALU"
+          },
+          "TUV-TUVALU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UMI-U.S. MINOR OUTLYING ISL"
+          },
+          "UMI-U.S. MINOR OUTLYING ISL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UGA-UGANDA"
+          },
+          "UGA-UGANDA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UKR-UKRAINE"
+          },
+          "UKR-UKRAINE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ARE-UNITED ARAB EMIRATES"
+          },
+          "ARE-UNITED ARAB EMIRATES"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GBR-UNITED KINGDOM"
+          },
+          "GBR-UNITED KINGDOM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "URY-URUGUAY"
+          },
+          "URY-URUGUAY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PUUM-US MISC PACIFIC ISLANDS"
+          },
+          "PUUM-US MISC PACIFIC ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UZB-UZBEKISTAN"
+          },
+          "UZB-UZBEKISTAN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VUT-VANUATU (NEW HEBRIDES)"
+          },
+          "VUT-VANUATU (NEW HEBRIDES)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VAT-VATICAN CITY"
+          },
+          "VAT-VATICAN CITY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VEN-VENEZUELA"
+          },
+          "VEN-VENEZUELA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VNM-VIETNAM"
+          },
+          "VNM-VIETNAM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VIR-VIRGIN ISLANDS"
+          },
+          "VIR-VIRGIN ISLANDS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WKUM-WAKE ISLAND"
+          },
+          "WKUM-WAKE ISLAND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WLF-WALLIS AND FUTUNA"
+          },
+          "WLF-WALLIS AND FUTUNA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WE-WEST BANK"
+          },
+          "WE-WEST BANK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ESH-WESTERN SAHARA"
+          },
+          "ESH-WESTERN SAHARA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WSM-WESTERN SAMOA"
+          },
+          "WSM-WESTERN SAMOA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "YEM-YEMEN"
+          },
+          "YEM-YEMEN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "YUCS-YUGOSLAVIA"
+          },
+          "YUCS-YUGOSLAVIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ZRCD-ZAIRE"
+          },
+          "ZRCD-ZAIRE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ZMB-ZAMBIA"
+          },
+          "ZMB-ZAMBIA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ZWE-ZIMBABWE"
+          },
+          "ZWE-ZIMBABWE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UNK - Unknown/Not Provided"
+          },
+          "UNK - Unknown/Not Provided"
+        ]
+      ]
+    },
+    {
+      "id": "codei51",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Yes"
+          },
+          "1- Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- No"
+          },
+          "2- No"
+        ]
+      ]
+    },
+    {
+      "id": "codei61",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- English"
+          },
+          "1- English"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Spanish"
+          },
+          "2- Spanish"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- French"
+          },
+          "3- French"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Chinese"
+          },
+          "4- Chinese"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- Cantonese"
+          },
+          "5- Cantonese"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- Bengali"
+          },
+          "6- Bengali"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7- German"
+          },
+          "7- German"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8- Arabic"
+          },
+          "8- Arabic"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "99- Other"
+          },
+          "99- Other"
+        ]
+      ]
+    },
+    {
+      "id": "codec11",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Male"
+          },
+          "1- Male"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Female"
+          },
+          "2- Female"
+        ]
+      ]
+    },
+    {
+      "id": "codec51",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- No formal schooling"
+          },
+          "1- No formal schooling"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Less than primary school"
+          },
+          "2- Less than primary school"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Primary school completed"
+          },
+          "3- Primary school completed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Secondary school completed"
+          },
+          "4- Secondary school completed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- High school completed"
+          },
+          "5- High school completed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- College/University completed"
+          },
+          "6- College/University completed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7- Post graduate degree"
+          },
+          "7- Post graduate degree"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "88- Refused"
+          },
+          "88- Refused"
+        ]
+      ]
+    },
+    {
+      "id": "codec61",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Background 1"
+          },
+          "1- Background 1"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Background 2"
+          },
+          "2- Background 2"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Background 3"
+          },
+          "3- Background 3"
+        ]
+      ]
+    },
+    {
+      "id": "codec71",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Never married"
+          },
+          "1- Never married"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Currently married"
+          },
+          "2- Currently married"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Separated"
+          },
+          "3- Separated"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Divorced"
+          },
+          "4- Divorced"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- Widowed"
+          },
+          "5- Widowed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- Cohabitating"
+          },
+          "6- Cohabitating"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "88- Refused"
+          },
+          "88- Refused"
+        ]
+      ]
+    },
+    {
+      "id": "codec81",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Government employee"
+          },
+          "1- Government employee"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Non-government employee"
+          },
+          "2- Non-government employee"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Self employed"
+          },
+          "3- Self employed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Non paid"
+          },
+          "4- Non paid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- Student"
+          },
+          "5- Student"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- Homemaker"
+          },
+          "6- Homemaker"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7- Retied"
+          },
+          "7- Retied"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8- Unemployed (able to work)"
+          },
+          "8- Unemployed (able to work)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9- Unemployed (unable to work)"
+          },
+          "9- Unemployed (unable to work)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "88- Refused"
+          },
+          "88- Refused"
+        ]
+      ]
+    },
+    {
+      "id": "codec112",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Less than or equal to Quintile (Q) 1"
+          },
+          "1- Less than or equal to Quintile (Q) 1"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- More than Q 1 and less than or equal to Quintile (Q) 2"
+          },
+          "2- More than Q 1 and less than or equal to Quintile (Q) 2"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- More than Q 2 and less than or equal to Quintile (Q) 3"
+          },
+          "3- More than Q 2 and less than or equal to Quintile (Q) 3"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- More than Q 3 and less than or equal to Quintile (Q) 4"
+          },
+          "4- More than Q 3 and less than or equal to Quintile (Q) 4"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- More than Q 4"
+          },
+          "5- More than Q 4"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "77- Don't know"
+          },
+          "77- Don't know"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "88- Refused"
+          },
+          "88- Refused"
+        ]
+      ]
+    },
+    {
+      "id": "codet71",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Yes"
+          },
+          "1- Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- No"
+          },
+          "2- No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- No visit during the past 12 months"
+          },
+          "3- No visit during the past 12 months"
+        ]
+      ]
+    },
+    {
+      "id": "codea41",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Daily"
+          },
+          "1- Daily"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- 5 to 6 days per week"
+          },
+          "2- 5 to 6 days per week"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- 3 to 4 days per week"
+          },
+          "3- 3 to 4 days per week"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- 1 to 2 days per week"
+          },
+          "4- 1 to 2 days per week"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- 1 to 3 days per month"
+          },
+          "5- 1 to 3 days per month"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- Less than once a month"
+          },
+          "6- Less than once a month"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7- Never"
+          },
+          "7- Never"
+        ]
+      ]
+    },
+    {
+      "id": "codea131",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Daily or almost daily"
+          },
+          "1- Daily or almost daily"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Weekly"
+          },
+          "2- Weekly"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Monthly"
+          },
+          "3- Monthly"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Less than monthly"
+          },
+          "4- Less than monthly"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- Never"
+          },
+          "5- Never"
+        ]
+      ]
+    },
+    {
+      "id": "coded51",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Always"
+          },
+          "1- Always"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Often"
+          },
+          "2- Often"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Sometimes"
+          },
+          "3- Sometimes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Rarely"
+          },
+          "4- Rarely"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- Never"
+          },
+          "5- Never"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "77- Don't know"
+          },
+          "77- Don't know"
+        ]
+      ]
+    },
+    {
+      "id": "coded81",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Far too much"
+          },
+          "1- Far too much"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Too much"
+          },
+          "2- Too much"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Just the right amount"
+          },
+          "3- Just the right amount"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Too little"
+          },
+          "4- Too little"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- Far too little"
+          },
+          "5- Far too little"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "77- Dont' know"
+          },
+          "77- Dont' know"
+        ]
+      ]
+    },
+    {
+      "id": "coded91",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Very important"
+          },
+          "1- Very important"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Somewhat important"
+          },
+          "2- Somewhat important"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Not at all important"
+          },
+          "3- Not at all important"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "77- Don't know"
+          },
+          "77- Don't know"
+        ]
+      ]
+    },
+    {
+      "id": "coded101",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Yes"
+          },
+          "1- Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- No"
+          },
+          "2- No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "77- Don't know"
+          },
+          "77- Don't know"
+        ]
+      ]
+    },
+    {
+      "id": "coded121",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Vegetable oil"
+          },
+          "1- Vegetable oil"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Lard or suet"
+          },
+          "2- Lard or suet"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Butter or ghee"
+          },
+          "3- Butter or ghee"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Margarine"
+          },
+          "4- Margarine"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5- Other"
+          },
+          "5- Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6- None in particular"
+          },
+          "6- None in particular"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7- None used"
+          },
+          "7- None used"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "77- Don't know"
+          },
+          "77- Don't know"
+        ]
+      ]
+    },
+    {
+      "id": "codeh11b1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Within the past 2 years"
+          },
+          "1- Within the past 2 years"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- More than 2 years ago"
+          },
+          "2- More than 2 years ago"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Never"
+          },
+          "3- Never"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "77- Don't know"
+          },
+          "77- Don't know"
+        ]
+      ]
+    },
+    {
+      "id": "codeh11c1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Within the past year"
+          },
+          "1- Within the past year"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- More than 1 year ago"
+          },
+          "2- More than 1 year ago"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Never"
+          },
+          "3- Never"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "77- Don't know"
+          },
+          "77- Don't know"
+        ]
+      ]
+    },
+    {
+      "id": "codes51",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- year or less"
+          },
+          "1- year or less"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Between 1 and 2 years"
+          },
+          "2- Between 1 and 2 years"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- More than 2 years"
+          },
+          "3- More than 2 years"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4- Never"
+          },
+          "4- Never"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "77- Don't know"
+          },
+          "77- Don't know"
+        ]
+      ]
+    },
+    {
+      "id": "codem31",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Small"
+          },
+          "1- Small"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2- Medium"
+          },
+          "2- Medium"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3- Large"
+          },
+          "3- Large"
+        ]
+      ]
+    },
+    {
+      "id": "codeb11",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ]
+      ]
+    },
+    {
+      "id": "codeb61",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1- Yes"
+          },
+          "1- Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ]
+      ]
+    },
+    {
+      "id": "codeb91",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ]
+      ]
+    },
+    {
+      "id": "codeb101",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ]
+      ]
+    }
+  ]
+}

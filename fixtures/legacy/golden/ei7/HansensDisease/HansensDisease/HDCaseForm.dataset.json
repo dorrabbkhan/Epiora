@@ -1,0 +1,3715 @@
+{
+  "id": "HDCaseForm",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        1
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [
+        1
+      ],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [
+        "69a24f1a-a7b5-4253-af0c-6177ec73caa3"
+      ],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "HDCase",
+      "type": "integer",
+      "values": [
+        2023
+      ],
+      "meta": {
+        "prompt": "Leprosy Case Number",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HDCaseNumberStateCode",
+      "type": "text",
+      "values": [
+        "AZ"
+      ],
+      "meta": {
+        "legacy_type": "Codes",
+        "label_set": "codehdcasenumbercountrycode1"
+      }
+    },
+    {
+      "name": "CaseNumberSuffix",
+      "type": "integer",
+      "values": [
+        490001
+      ],
+      "meta": {
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HDReportDate",
+      "type": "date",
+      "values": [
+        "2024-05-29"
+      ],
+      "meta": {
+        "prompt": "Date of Report",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "PatientRecordNumber",
+      "type": "text",
+      "values": [
+        "5866"
+      ],
+      "meta": {
+        "prompt": "Patient Record Number",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LastName",
+      "type": "text",
+      "values": [
+        "Johnaseen"
+      ],
+      "meta": {
+        "prompt": "Last Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FirstName",
+      "type": "text",
+      "values": [
+        "Veronica"
+      ],
+      "meta": {
+        "prompt": "First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MiddleInitial",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Middle Initial",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDPatientAge",
+      "type": "integer",
+      "values": [
+        25
+      ],
+      "meta": {
+        "prompt": "Age",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DateofBirth",
+      "type": "date",
+      "values": [
+        "1999-05-29"
+      ],
+      "meta": {
+        "prompt": "Date of Birth",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HDGenderID",
+      "type": "text",
+      "values": [
+        "F"
+      ],
+      "meta": {
+        "prompt": "Sex",
+        "legacy_type": "CommentLegal",
+        "label_set": "codehdgenderid1"
+      }
+    },
+    {
+      "name": "HDMaritalStatusID",
+      "type": "text",
+      "values": [
+        "Single"
+      ],
+      "meta": {
+        "prompt": "Marital Status",
+        "legacy_type": "LegalValues",
+        "label_set": "codehdmaritalstatusid1"
+      }
+    },
+    {
+      "name": "PhoneNumber",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Phone Number",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PlaceofBirth",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Place of Birth",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CurrentAddress",
+      "type": "text",
+      "values": [
+        "1600 CLifton Rd"
+      ],
+      "meta": {
+        "prompt": "Current Address",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "MigrantArrivalMonth",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "If Migrant, When Arrived",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "MigrantArrivalYear",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HDDetectionModeTypeID",
+      "type": "text",
+      "values": [
+        "Non-Healthcare Referral"
+      ],
+      "meta": {
+        "prompt": "Mode of Detection",
+        "legacy_type": "LegalValues",
+        "label_set": "codehddetectionmodetypeid1"
+      }
+    },
+    {
+      "name": "NumberofLesionsAffectedID",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Number of Lesions",
+        "legacy_type": "LegalValues",
+        "label_set": "codenumberoflesionsaffectedid1"
+      }
+    },
+    {
+      "name": "DurationofSymptoms",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Duration of Symptoms (Months)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "ReactionatPresentationYN",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Reaction at Presentation",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "HDCaseClassificationTypeID",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "WHO Classification",
+        "legacy_type": "CommentLegal",
+        "label_set": "codehdcaseclassificationtypeid1"
+      }
+    },
+    {
+      "name": "DateMDTStarted",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date MDT Started",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "EstimatedCompletionDate",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Estimated Completion",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HDCaseStatusTypeID",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Type of Case",
+        "legacy_type": "LegalValues",
+        "label_set": "codehdcasestatustypeid1"
+      }
+    },
+    {
+      "name": "ComorbidDiabetes",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Diabetes",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ComorbidHepatitis",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Hepatitis",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ComorbidHIV",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "HIV",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ComorbidTB",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "TB",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "ComorbidOther",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Other",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "HDCaseNumberCountryCode",
+      "type": "text",
+      "values": [
+        "US"
+      ],
+      "meta": {
+        "legacy_type": "Codes",
+        "label_set": "codehdcasenumbercountrycode1"
+      }
+    },
+    {
+      "name": "Healthcare_Worker_Contact_Name",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Healthcare Provider Last Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Healthcare_Worker_Contact_Phone_Number",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Telephone Number",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Healthcare_Worker_Contact_Address",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Address",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "ComorbidOther_Text",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Current_Address_Latitude",
+      "type": "real",
+      "values": [
+        31.31495103
+      ],
+      "meta": {
+        "prompt": "Latitude",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Current_Address_Longitude",
+      "type": "real",
+      "values": [
+        -92.87202695
+      ],
+      "meta": {
+        "prompt": "Longitude",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "RecordersInitials",
+      "type": "text",
+      "values": [
+        "JJA"
+      ],
+      "meta": {
+        "prompt": "Recorder's Initials",
+        "legacy_type": "TextUppercase"
+      }
+    },
+    {
+      "name": "HDDetectionModeTypeID_Other_Specify",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Other Mode of Detection",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDDetectionModeTypeID_Referral_Source",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Referral Source",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDDiagnosisDate",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date of Diagnosis",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HDRidleyJoplingClassification",
+      "type": "text",
+      "values": [
+        "Indeterminate"
+      ],
+      "meta": {
+        "prompt": "Ridley Jopling",
+        "legacy_type": "LegalValues",
+        "label_set": "codehdridleyjoplingclassification1"
+      }
+    },
+    {
+      "name": "Prior_HD_Treatment",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Prior Treatment for HD",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Prior_HD_Treatment_Where_When",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Type/Where/When",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Prior_HD_PEP",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Prior Post Exposure Prophylaxis",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Prior_HD_PEP_Where_When",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Where/When",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDDetectionModeHHContact_Name",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Contact Last Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDDetectionModeHHContact_ID",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Contact ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HistoryofContactwithHDCase",
+      "type": "text",
+      "values": [
+        "Yes"
+      ],
+      "meta": {
+        "prompt": "History of Contact with HD Case",
+        "legacy_type": "LegalValues",
+        "label_set": "codehistoryofcontactwithhdcase1"
+      }
+    },
+    {
+      "name": "TypeofHDCasefContact",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Type",
+        "legacy_type": "CommentLegal",
+        "label_set": "codehddistancecode1"
+      }
+    },
+    {
+      "name": "TransferredInFrom",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Transferred In From",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PriorCaseNumber",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Prior Case Number",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDDetectionModeHHContact_First_Name",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Contact First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Healthcare_Worker_Contact_First_Name",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HD_Case_FORM_Foreign_Born",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Foreign Born",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "HDCaseNotes",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Notes",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Race_Additional_Info",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Additional Race Information",
+        "legacy_type": "LegalValues"
+      }
+    },
+    {
+      "name": "Race",
+      "type": "text",
+      "values": [
+        "American Indian or Alaska Native"
+      ],
+      "meta": {
+        "prompt": "Race",
+        "legacy_type": "Codes",
+        "label_set": "coderace1"
+      }
+    },
+    {
+      "name": "Ethnicity",
+      "type": "text",
+      "values": [
+        "Hispanic or Latino"
+      ],
+      "meta": {
+        "prompt": "Ethnicity",
+        "legacy_type": "LegalValues",
+        "label_set": "codeethnicity1"
+      }
+    },
+    {
+      "name": "Prior_HD_PEP_Type_Duration",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Type and Duration",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "NameofHDCaseContact",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "PatientNumberofHDCaseContact",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Patient Number",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDCaseIsland",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Island",
+        "legacy_type": "LegalValues",
+        "label_set": "codehdcasenumbercountrycode1"
+      }
+    },
+    {
+      "name": "HDContactCaseClassification",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Contact Case Classification",
+        "legacy_type": "CommentLegal",
+        "label_set": "codehdcaseclassificationtypeid1"
+      }
+    },
+    {
+      "name": "HDCaseStatusTypeIdOther",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Specify Other",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Exam_NE_DX_R_GA",
+      "type": "text",
+      "values": [
+        "1"
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_DX_L_GA",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_DX_R_U",
+      "type": "text",
+      "values": [
+        "2"
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_DX_L_U",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_DX_R_RC",
+      "type": "text",
+      "values": [
+        "2"
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_DX_L_RC",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_DX_R_M",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_DX_L_M",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_DX_R_LP",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_DX_L_LP",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_DX_R_PT",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_DX_L_PT",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_ST_DX_R_Eye",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_st_dx_r_eye1"
+      }
+    },
+    {
+      "name": "Exam_ST_DX_L_Eye",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_st_dx_r_eye1"
+      }
+    },
+    {
+      "name": "Exam_ST_DX_R_Hand",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_st_dx_r_eye1"
+      }
+    },
+    {
+      "name": "Exam_ST_DX_L_Hand",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_st_dx_r_eye1"
+      }
+    },
+    {
+      "name": "Exam_ST_DX_R_Foot",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_st_dx_r_eye1"
+      }
+    },
+    {
+      "name": "Exam_ST_DX_L_Foot",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_st_dx_r_eye1"
+      }
+    },
+    {
+      "name": "Exam_MST_DX_R_TEC",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_DX_L_TEC",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_DX_R_LFO",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_DX_L_LFO",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_DX_R_TU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_DX_L_TU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_DX_R_WU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_DX_L_WU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_DX_R_FU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_DX_L_FU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "DX_VIS_DEF_R_HAND",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DX_VIS_DEF_L_HAND",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DX_VIS_DEF_R_FOOT",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DX_VIS_DEF_L_FOOT",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DX_BLINK_ABNORMAL_R_EYE",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DX_BLINK_ABNORMAL_L_EYE",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DX_VIS_ABNORMALITY_R_EYE",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "DX_VIS_ABNORMALITY_L_EYE",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "PatientExaminedUponDiagnosis",
+      "type": "boolean",
+      "values": [
+        true
+      ],
+      "meta": {
+        "prompt": "Patient Examined Upon Diagnosis",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "DiagnosisExamDate",
+      "type": "date",
+      "values": [
+        "2000-12-14"
+      ],
+      "meta": {
+        "prompt": "Diagnosis Exam Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "ExaminersInitials_Diag",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Examiner's Initials",
+        "legacy_type": "TextUppercase"
+      }
+    },
+    {
+      "name": "Notes_At_DX",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "List of Deformities",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CompositeCaseNumberP2a",
+      "type": "text",
+      "values": [
+        "2023-US-AZ-490001"
+      ],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DX_WHODisabilityGrade",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Grade",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DX_WHODisabilityDate",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "DX_EHFGrade__R_Eye",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Right Eye",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DX_EHFGrade__L_Eye",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Left Eye",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DX_EHFGrade__R_Hand",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Right Hand",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DX_EHFGrade__L_Hand",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Left Hand",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DX_EHFGrade__R_Foot",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Right Foot",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DX_EHFGrade__L_Foot",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Left Foot",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DX_EHFGrade__Sum_Score",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Sum Score",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "DX_EHFDate",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CompositeCaseNumberP4",
+      "type": "text",
+      "values": [
+        "2023-US-AZ-490001"
+      ],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CompositeCaseNumberFollowupVisitsPage",
+      "type": "text",
+      "values": [
+        "2023-US-AZ-490001"
+      ],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Followup_Page_Notes",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Notes",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "PatientExaminedUponTreatmentCompletion",
+      "type": "boolean",
+      "values": [
+        false
+      ],
+      "meta": {
+        "prompt": "Patient Examined Upon \r\nTreatment Completion",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "TreatmentCompletionExamDate",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Treatment Completion\r\nExam Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Exam_NE_TC_R_GA",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_TC_L_GA",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_TC_R_U",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_TC_L_U",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_TC_R_RC",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_TC_L_RC",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_TC_R_M",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_TC_L_M",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_TC_R_LP",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_TC_L_LP",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_TC_R_PT",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_NE_TC_L_PT",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_ne_dx_l_ga1"
+      }
+    },
+    {
+      "name": "Exam_ST_TC_R_Eye",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_st_dx_r_eye1"
+      }
+    },
+    {
+      "name": "Exam_ST_TC_L_Eye",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_st_dx_r_eye1"
+      }
+    },
+    {
+      "name": "Exam_ST_TC_R_Hand",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_st_dx_r_eye1"
+      }
+    },
+    {
+      "name": "Exam_ST_TC_L_Hand",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_st_dx_r_eye1"
+      }
+    },
+    {
+      "name": "Exam_ST_TC_R_Foot",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_st_dx_r_eye1"
+      }
+    },
+    {
+      "name": "Exam_ST_TC_L_Foot",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_st_dx_r_eye1"
+      }
+    },
+    {
+      "name": "Exam_MST_TC_R_TEC",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_TC_L_TEC",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_TC_R_LFO",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_TC_L_LFO",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_TC_R_TU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_TC_L_TU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_TC_R_WU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_TC_L_WU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_TC_R_FU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "Exam_MST_TC_L_FU",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "CommentLegal",
+        "label_set": "codeexam_mst_dx_r_tec1"
+      }
+    },
+    {
+      "name": "TC_BLINK_ABNORMAL_R_EYE",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "TC_BLINK_ABNORMAL_L_EYE",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "TC_VIS_DEF_R_HAND",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "TC_VIS_DEF_L_HAND",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "TC_VIS_DEF_R_FOOT",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "TC_VIS_DEF_L_FOOT",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "TC_VIS_ABNORMALITY_R_EYE",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "TC_VIS_ABNORMALITY_L_EYE",
+      "type": "boolean",
+      "values": [
+        null
+      ],
+      "meta": {
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "ExaminersInitials_TC",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Examiner's Initials",
+        "legacy_type": "TextUppercase"
+      }
+    },
+    {
+      "name": "Notes_At_TC",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "List of Deformities",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CompositeCaseNumberP2b",
+      "type": "text",
+      "values": [
+        "2023-US-AZ-490001"
+      ],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TC_WHODisabilityGrade",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Grade",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TC_WHODisabilityDate",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "TC_EHFGrade__R_Eye",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Right Eye",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TC_EHFGrade__L_Eye",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Left Eye",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TC_EHFGrade__R_Hand",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Right Hand",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TC_EHFGrade__L_Hand",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Left Hand",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TC_EHFGrade__R_Foot",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Right Foot",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TC_EHFGrade__L_Foot",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Left Foot",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TC_EHFGrade__Sum_Score",
+      "type": "integer",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Sum Score",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "TC_EHFDate",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CompositeCaseNumberP3",
+      "type": "text",
+      "values": [
+        "2023-US-AZ-490001"
+      ],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HD_Case_Treatment_Outcome",
+      "type": "text",
+      "values": [
+        "Transferred Out"
+      ],
+      "meta": {
+        "prompt": "Treatment Outcome",
+        "legacy_type": "LegalValues",
+        "label_set": "codehd_case_treatment_outcome1"
+      }
+    },
+    {
+      "name": "Treatment_Outcome_Date",
+      "type": "date",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Treatment Outcome Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Location_of_Transfer",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Location of Transfer",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Outcome_Defaulted_Actions_Taken",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Actions Taken (Call, etc.)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ContactInformation_If_Transferred",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Contact Information for Continued Care",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "Outcome_Defaulted_Reason",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Reason Patient Defaulted",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Mirror_DX_WHODisabilityGrade",
+      "type": "real",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "WHO Grade",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "Mirror_TC_WHODisabilityGrade",
+      "type": "real",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": " ",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "Mirror_DX_EHF_Sum_Score",
+      "type": "real",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "EHF Score",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "Mirror_TC_EHF_Sum_Score",
+      "type": "real",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": " ",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "HD_Case_Treatment_Outcome_Died_Cause",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Cause of Death",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HD_Case_Treatment_Outcome_Misdiagnosis_Actual",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Actual Diagnosis",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HD_Case_Followup_Plans",
+      "type": "text",
+      "values": [
+        null
+      ],
+      "meta": {
+        "prompt": "Follow-up Plans for Patient",
+        "legacy_type": "Multiline"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codehdcasenumbercountrycode1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "AL"
+          },
+          "AL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AK"
+          },
+          "AK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AZ"
+          },
+          "AZ"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AR"
+          },
+          "AR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CA"
+          },
+          "CA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CO"
+          },
+          "CO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CT"
+          },
+          "CT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DE"
+          },
+          "DE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DC"
+          },
+          "DC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "FL"
+          },
+          "FL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GA"
+          },
+          "GA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "HI"
+          },
+          "HI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ID"
+          },
+          "ID"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IL"
+          },
+          "IL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IN"
+          },
+          "IN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "IA"
+          },
+          "IA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KS"
+          },
+          "KS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "KY"
+          },
+          "KY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LA"
+          },
+          "LA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ME"
+          },
+          "ME"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MD"
+          },
+          "MD"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MA"
+          },
+          "MA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MI"
+          },
+          "MI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MN"
+          },
+          "MN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MS"
+          },
+          "MS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MO"
+          },
+          "MO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MT"
+          },
+          "MT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NE"
+          },
+          "NE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NV"
+          },
+          "NV"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NH"
+          },
+          "NH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NJ"
+          },
+          "NJ"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NM"
+          },
+          "NM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NY"
+          },
+          "NY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NC"
+          },
+          "NC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ND"
+          },
+          "ND"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OH"
+          },
+          "OH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OK"
+          },
+          "OK"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OR"
+          },
+          "OR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PA"
+          },
+          "PA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "RI"
+          },
+          "RI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SC"
+          },
+          "SC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SD"
+          },
+          "SD"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TN"
+          },
+          "TN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TX"
+          },
+          "TX"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "UT"
+          },
+          "UT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VT"
+          },
+          "VT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VA"
+          },
+          "VA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WA"
+          },
+          "WA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WV"
+          },
+          "WV"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WI"
+          },
+          "WI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "WY"
+          },
+          "WY"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PR"
+          },
+          "PR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Rota"
+          },
+          "Rota"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Saipan"
+          },
+          "Saipan"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Tinian"
+          },
+          "Tinian"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Kosrae"
+          },
+          "Kosrae"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Pohnpei"
+          },
+          "Pohnpei"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Chuuk"
+          },
+          "Chuuk"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Yap"
+          },
+          "Yap"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ebeye"
+          },
+          "Ebeye"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MAJ"
+          },
+          "MAJ"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ailinglaplap"
+          },
+          "Ailinglaplap"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ailuk"
+          },
+          "Ailuk"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Arno"
+          },
+          "Arno"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Aur"
+          },
+          "Aur"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ebon"
+          },
+          "Ebon"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Enewetak"
+          },
+          "Enewetak"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Jabat"
+          },
+          "Jabat"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Jaluit"
+          },
+          "Jaluit"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Kili"
+          },
+          "Kili"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Lae"
+          },
+          "Lae"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Lib"
+          },
+          "Lib"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Likiep"
+          },
+          "Likiep"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Maloelap"
+          },
+          "Maloelap"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Mejit"
+          },
+          "Mejit"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Mili"
+          },
+          "Mili"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Namdrik"
+          },
+          "Namdrik"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Namu"
+          },
+          "Namu"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ujae"
+          },
+          "Ujae"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Utrik"
+          },
+          "Utrik"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Wotho"
+          },
+          "Wotho"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Wotje"
+          },
+          "Wotje"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Eastern"
+          },
+          "Eastern"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Western"
+          },
+          "Western"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Manu'a"
+          },
+          "Manu'a"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ofu"
+          },
+          "Ofu"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Guam"
+          },
+          "Guam"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Agana Heights"
+          },
+          "Agana Heights"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Agat"
+          },
+          "Agat"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Asan-Maina"
+          },
+          "Asan-Maina"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Barrigada"
+          },
+          "Barrigada"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Chalan-Pago-Ordot"
+          },
+          "Chalan-Pago-Ordot"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Dededo"
+          },
+          "Dededo"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Hagatna"
+          },
+          "Hagatna"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Inarajan"
+          },
+          "Inarajan"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Mangilao"
+          },
+          "Mangilao"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Merizo"
+          },
+          "Merizo"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Mongmong-Toto-Maite"
+          },
+          "Mongmong-Toto-Maite"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Piti"
+          },
+          "Piti"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Santa Rita"
+          },
+          "Santa Rita"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Sanajana"
+          },
+          "Sanajana"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Talofofo"
+          },
+          "Talofofo"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Tamuning"
+          },
+          "Tamuning"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Umatac"
+          },
+          "Umatac"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Yigo"
+          },
+          "Yigo"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Yona"
+          },
+          "Yona"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Koror"
+          },
+          "Koror"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Airai"
+          },
+          "Airai"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ngchesar"
+          },
+          "Ngchesar"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Melkeok"
+          },
+          "Melkeok"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ngiwal"
+          },
+          "Ngiwal"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ngaraard"
+          },
+          "Ngaraard"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ngerchelong"
+          },
+          "Ngerchelong"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ngardmau"
+          },
+          "Ngardmau"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ngeremlengui"
+          },
+          "Ngeremlengui"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Ngatpang"
+          },
+          "Ngatpang"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Aimeliik"
+          },
+          "Aimeliik"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Kayangel"
+          },
+          "Kayangel"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Peleliu"
+          },
+          "Peleliu"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Angaur"
+          },
+          "Angaur"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Sonsorol"
+          },
+          "Sonsorol"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Hatohobei"
+          },
+          "Hatohobei"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "AG"
+          },
+          "AG"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BN"
+          },
+          "BN"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BS"
+          },
+          "BS"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CM"
+          },
+          "CM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CP"
+          },
+          "CP"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CH"
+          },
+          "CH"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "CL"
+          },
+          "CL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DF"
+          },
+          "DF"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "DU"
+          },
+          "DU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GT"
+          },
+          "GT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "GR"
+          },
+          "GR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "JA"
+          },
+          "JA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MX"
+          },
+          "MX"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MC"
+          },
+          "MC"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "MR"
+          },
+          "MR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NA"
+          },
+          "NA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "NL"
+          },
+          "NL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "OA"
+          },
+          "OA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "PU"
+          },
+          "PU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "QE"
+          },
+          "QE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "QR"
+          },
+          "QR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SL"
+          },
+          "SL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SI"
+          },
+          "SI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "SO"
+          },
+          "SO"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TB"
+          },
+          "TB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TM"
+          },
+          "TM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TL"
+          },
+          "TL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "VE"
+          },
+          "VE"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "YU"
+          },
+          "YU"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "ZA"
+          },
+          "ZA"
+        ]
+      ]
+    },
+    {
+      "id": "codehdgenderid1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "F-Female"
+          },
+          "F-Female"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "M-Male"
+          },
+          "M-Male"
+        ]
+      ]
+    },
+    {
+      "id": "codehdmaritalstatusid1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Single"
+          },
+          "Single"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Married"
+          },
+          "Married"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Divorced"
+          },
+          "Divorced"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Widowed"
+          },
+          "Widowed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Legally Separated"
+          },
+          "Legally Separated"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Common-law Partner"
+          },
+          "Common-law Partner"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Annulled Marriage"
+          },
+          "Annulled Marriage"
+        ]
+      ]
+    },
+    {
+      "id": "codehddetectionmodetypeid1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Voluntary"
+          },
+          "Voluntary"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Non-Healthcare Referral"
+          },
+          "Non-Healthcare Referral"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Household Contact Exam"
+          },
+          "Household Contact Exam"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Mass Screening"
+          },
+          "Mass Screening"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "School Survey"
+          },
+          "School Survey"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Non-physician healthcare worker"
+          },
+          "Non-physician healthcare worker"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Physician -- Primary Care"
+          },
+          "Physician -- Primary Care"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Physician -- Dermatologist"
+          },
+          "Physician -- Dermatologist"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    },
+    {
+      "id": "codenumberoflesionsaffectedid1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "0"
+          },
+          "0"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1"
+          },
+          "1"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2"
+          },
+          "2"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3"
+          },
+          "3"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4"
+          },
+          "4"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5"
+          },
+          "5"
+        ],
+        [
+          {
+            "type": "text",
+            "value": ">5"
+          },
+          ">5"
+        ]
+      ]
+    },
+    {
+      "id": "codehdcaseclassificationtypeid1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-Adult MB"
+          },
+          "1-Adult MB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2-Adult PB"
+          },
+          "2-Adult PB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3-Child MB"
+          },
+          "3-Child MB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4-Child PB"
+          },
+          "4-Child PB"
+        ]
+      ]
+    },
+    {
+      "id": "codehdcasestatustypeid1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "New"
+          },
+          "New"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Return after Loss to Follow-up/Default"
+          },
+          "Return after Loss to Follow-up/Default"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Transfer In"
+          },
+          "Transfer In"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Relapse"
+          },
+          "Relapse"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Reclassification"
+          },
+          "Reclassification"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other (specify)"
+          },
+          "Other (specify)"
+        ]
+      ]
+    },
+    {
+      "id": "codehdridleyjoplingclassification1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Indeterminate"
+          },
+          "Indeterminate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "TT"
+          },
+          "TT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BT"
+          },
+          "BT"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BB"
+          },
+          "BB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "BL"
+          },
+          "BL"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "LL"
+          },
+          "LL"
+        ]
+      ]
+    },
+    {
+      "id": "codehistoryofcontactwithhdcase1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Yes"
+          },
+          "Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "No"
+          },
+          "No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown"
+          },
+          "Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codehddistancecode1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-Household"
+          },
+          "1-Household"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2-Neighbor"
+          },
+          "2-Neighbor"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3-Social Contact"
+          },
+          "3-Social Contact"
+        ]
+      ]
+    },
+    {
+      "id": "coderace1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "American Indian or Alaska Native"
+          },
+          "American Indian or Alaska Native"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Asian"
+          },
+          "Asian"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Black or African American"
+          },
+          "Black or African American"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Pacific Islander"
+          },
+          "Pacific Islander"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "White"
+          },
+          "White"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unreported"
+          },
+          "Unreported"
+        ]
+      ]
+    },
+    {
+      "id": "codeethnicity1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Hispanic or Latino"
+          },
+          "Hispanic or Latino"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Not Hispanic or Latino"
+          },
+          "Not Hispanic or Latino"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Unknown by patient"
+          },
+          "Unknown by patient"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Declined to answer"
+          },
+          "Declined to answer"
+        ]
+      ]
+    },
+    {
+      "id": "codeexam_ne_dx_l_ga1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-Normal"
+          },
+          "1-Normal"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2-Enlarged"
+          },
+          "2-Enlarged"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3-Tender"
+          },
+          "3-Tender"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4-Enlarged and Tender"
+          },
+          "4-Enlarged and Tender"
+        ]
+      ]
+    },
+    {
+      "id": "codeexam_st_dx_r_eye1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-Sensation Intact"
+          },
+          "1-Sensation Intact"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2-Loss of Sensation"
+          },
+          "2-Loss of Sensation"
+        ]
+      ]
+    },
+    {
+      "id": "codeexam_mst_dx_r_tec1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-Strong"
+          },
+          "1-Strong"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2-Weak"
+          },
+          "2-Weak"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3-Paralyzed"
+          },
+          "3-Paralyzed"
+        ]
+      ]
+    },
+    {
+      "id": "codehd_case_treatment_outcome1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Treatment Completed Within Standard Duration"
+          },
+          "Treatment Completed Within Standard Duration"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Loss to Follow-up/Defaulted"
+          },
+          "Loss to Follow-up/Defaulted"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Transferred Out"
+          },
+          "Transferred Out"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Died"
+          },
+          "Died"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Reclassified"
+          },
+          "Reclassified"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Misdiagnosed"
+          },
+          "Misdiagnosed"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Insufficient/Unsatisfactory Clinical Response to Treatment"
+          },
+          "Insufficient/Unsatisfactory Clinical Response to Treatment"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Treatment Completed Beyond Standard Duration/Still on Treatment Beyond Standard Duration"
+          },
+          "Treatment Completed Beyond Standard Duration/Still on Treatment Beyond Standard Duration"
+        ]
+      ]
+    }
+  ]
+}

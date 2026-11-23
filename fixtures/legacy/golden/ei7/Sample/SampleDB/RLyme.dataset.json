@@ -1,0 +1,408 @@
+{
+  "id": "RLyme",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [
+        "efbbf4d9-04b4-4444-801e-2922e1031227",
+        "649ff78e-d760-481e-96e3-16f550fd0193",
+        "5171ce1b-2420-4d57-a8d3-83b1aa1f4674",
+        "5620e0e7-989a-4ec4-83de-8140be0cf7e5"
+      ],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [
+        "f3c31be1-e9e6-471a-a269-2358dc013ac9",
+        "8a4eeff6-f7e5-4fd2-ac13-2854ec379e4b",
+        "0012827d-c4ea-44eb-b507-d78190c6024c",
+        "762b29ad-9815-4ca6-9505-993b88068986"
+      ],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "CaseID",
+      "type": "text",
+      "values": [
+        "200",
+        "1000",
+        "1600",
+        "1900"
+      ],
+      "meta": {
+        "prompt": "Case ID",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "LastName",
+      "type": "text",
+      "values": [
+        "Littlefoott",
+        "Post",
+        "Kwok",
+        "Goreman"
+      ],
+      "meta": {
+        "prompt": "Last Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "FirstName",
+      "type": "text",
+      "values": [
+        "Mortimer",
+        "Emily",
+        "William",
+        "Howard"
+      ],
+      "meta": {
+        "prompt": "First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "ErythmiaMigrans",
+      "type": "boolean",
+      "values": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "meta": {
+        "prompt": "Erythema Migrans",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "ArthritisCharacterized",
+      "type": "boolean",
+      "values": [
+        true,
+        true,
+        true,
+        null
+      ],
+      "meta": {
+        "prompt": "Arthritis Characterized by brief attacks of joint swelling? (Y/N)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "2ndOr3rdDegree",
+      "type": "boolean",
+      "values": [
+        null,
+        null,
+        false,
+        null
+      ],
+      "meta": {
+        "prompt": "2nd or 3rd degree atrioventricular block? (Y/N)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "OtherCliniCAL",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Other clinical:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "DateDiagnosis",
+      "type": "date",
+      "values": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Date Diagnosis:",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "BellsPalsy",
+      "type": "boolean",
+      "values": [
+        true,
+        null,
+        true,
+        null
+      ],
+      "meta": {
+        "prompt": "Bell's palsy or other cranial neuritis? (Y/N)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Radiculoneuropathy",
+      "type": "boolean",
+      "values": [
+        true,
+        null,
+        false,
+        null
+      ],
+      "meta": {
+        "prompt": "Radiculoneuropathy? (Y/N)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "Lymphocytic",
+      "type": "boolean",
+      "values": [
+        true,
+        null,
+        false,
+        null
+      ],
+      "meta": {
+        "prompt": "Lymphocytic Meningitis? (Y/N)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "EncephalitisEncephalomyelitis",
+      "type": "boolean",
+      "values": [
+        false,
+        null,
+        true,
+        null
+      ],
+      "meta": {
+        "prompt": "Encephalitis/Encephalomyelitis? (Y/N)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "CsfTestedFor",
+      "type": "boolean",
+      "values": [
+        true,
+        null,
+        true,
+        null
+      ],
+      "meta": {
+        "prompt": "CSF tested for antibodies to B. burgdorferi? (Y/N)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "AntibodyTo",
+      "type": "boolean",
+      "values": [
+        false,
+        null,
+        false,
+        null
+      ],
+      "meta": {
+        "prompt": "Antibody to B. Burdoferi higher in CSF than in serum? (Y/N)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "State",
+      "type": "text",
+      "values": [
+        "Georgia",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "State:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "County",
+      "type": "text",
+      "values": [
+        "Baldwin",
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "County:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "TickbiteYnU",
+      "type": "boolean",
+      "values": [
+        true,
+        null,
+        true,
+        null
+      ],
+      "meta": {
+        "prompt": "Tickbite? (Y/N)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "PatientHosipitalized",
+      "type": "boolean",
+      "values": [
+        false,
+        null,
+        true,
+        null
+      ],
+      "meta": {
+        "prompt": "Patient hospitalized for current episode?  (Y/N)",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "NameOfAntibiotic",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Name of Antibiotic in use for this episode?",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "UseOfAntibiotic",
+      "type": "integer",
+      "values": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Use of Antibiotic in days",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "WasThePatient",
+      "type": "boolean",
+      "values": [
+        null,
+        null,
+        false,
+        null
+      ],
+      "meta": {
+        "prompt": "Was the patient pregnant at time of illness?",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "SerologicResults",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Serologic Results:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Culture",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Culture:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "OtherSpecify",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Other (specify)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Results",
+      "type": "text",
+      "values": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "meta": {
+        "prompt": "Results:",
+        "legacy_type": "Text"
+      }
+    }
+  ]
+}

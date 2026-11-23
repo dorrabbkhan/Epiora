@@ -1,0 +1,2145 @@
+{
+  "name": "PHINVS",
+  "legacy_id": null,
+  "source_format": "ei3_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/PHIN/PHINVS.mdb",
+    "sha256": "33c1f632edc514af1a235f0049f7c6dd23aa002203a680a8b37cad78d5531110"
+  },
+  "views": [],
+  "links": [],
+  "programs": [],
+  "check_code": [],
+  "report": [
+    {
+      "kind": "legacy_layout_unknown",
+      "item": "PHINVS",
+      "reason": "no recognized view-definition tables"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "Domains",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AbnormalChestXRayFinding_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AbnormalFlag_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AcknowledgmentCode_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ActNoImmunizationReason_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AcuteConvalescentIgGDiff_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AcuteIllnessComplications_PediatricFlu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AdditiveOrPreservative_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AddressType_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AddressType_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AdministrationDevice_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AdministrationMethod_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AdministrativeGender_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AdministrativeSex_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AdmissionLevelOfCareCode_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AdmissionType_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AdmitSource_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AdvanceDirectiveType_HL7_CCD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AdverseEventConsequence_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AdverseEventPreviouslyReported_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AgeGroup_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AgeUnit_UCUM",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AllergenType_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AllergyOrAdverseEventType_HITSP",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AllergySeverity_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AmplificationAndExtractionKit_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AnimalAgeCategory_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AnimalSpecies_AnimalRabies",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AnimalType_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AntibioticReceived_Pertussis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AntimicrobialAgent_IPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_AntimicrobialSuceptiblilityTestMethod_IPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BacterialInfectionSyndrome_IPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BatSpecies_AnimalRabies",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BioSenseRTObservations_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BirthAttendees_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BirthCountry_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BirthCountry_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BirthLocation_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BirthOutcome_Rubella",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BirthOutcome_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BloodContactFrequency_Hepatitis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BloodOrBodyFluidExposureEvent_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BloodOrBodyFluidExposureFrequency_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BloodorBodyFluidExposureRelatedProcedure_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BloodPressureUnit_UCUM",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BodyRegion_Tetanus",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BodySite_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BotulinumToxinType_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Botulism_like_Syndrome_BT",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_BotulismFoodSourceType_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CaseClassificationExposureSource_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CaseClassStatus_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CaseConfirmationMethod_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CaseContactSignsSymptoms_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CaseCountStatus_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CaseDetectionMethod_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CaseInvestigationClosureReason_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CaseInvestigationStatus_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CaseTracedToCarrier_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CaseTransmissionMode_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CaseVerification_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CauseOfDeathRelatedTo_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ChangePattern_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ChestXRayResult_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CholeraRiskFactor_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CholeraSequelae_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CholeraSignsSymptoms_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ClinicalSyndrome_Arbovirus",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CommentType_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CompletionStatusForValidValues_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Complications_Malaria",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ConfidentialityCode_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ContactRole_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ContactType_HepatitisA",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ContactType_HepatitisB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ContactType_HepatitisBandC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ContactType_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CorrectionalFacilityType_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CountGroupType_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Country_ISO_3166_1",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CoverageRoleType_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_CyclosporiasisSignsSymptoms_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DayCareType_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DeafnessType_Mumps",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DeathLocation_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DiagnosedBy_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DiagnosedPneumoniaBy_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DiagnosisPriority_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DiagnosisType_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DiagnosticServiceSectionID_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DirectlyObservedTherapy_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DirectlyObservedTherapySite_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DischargeDisposition_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DiseaseAcquiredJurisdiction_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DiseaseType_AcuteHepatitisB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DiseaseType_Anthrax",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DiseaseType_Hepatitis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DiseaseType_STD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DiseaseType_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DiseaseType_Tularemia",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DocumentClass_HITSP",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_DwellingType_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_EducationLevel_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_EmergencyDepartmentAcuity_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_EmploymentStatus_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_EmploymentStatus_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Encoding_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_EncounterPurpose_CRA",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_EncounterType_CRA",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_EntityHandling_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_EnvironmentalInvestigationReason_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_EosinUnits_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_EpilinkedCaseType_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ErrorSeverity_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Ethnicity_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_EthnicityGroup_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_EthnicityGroup_CDC_Unk",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ExpandedYesNo_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ExposureLocation_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ExtendedPriorityCodes_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_FamilyMember_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_FetalNeonatallnfectionType_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_FetalNeonatalSpecimenType_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Fever_Syndrome_BT",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_FinanciallyResponsibleParty_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_FoodCookingMethod_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_FoodProcessingMethod_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_FreshBerries_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_FreshHerbs_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_FreshProduce_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Gastrointestinal_Syndrome_BT",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_GeneralConditionStatus_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_GeographicLocationHistory_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_gpELISAManufacturer_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_HealthCarePracticeType_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_HeightUnit_UCUM",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_HemorrhagicIllness_Syndrome_BT",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_HistorySource_CRA",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_HIVDiagnosisBasedOn_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_HIVStatus_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_HIVStatusQualitativeResult_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_IdentifierType_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_IdentityReliabilityCode_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_IgGTestType_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_IgMTestType_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ImmigrationStatus_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ImmunizationBodySite_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ImmunizationInformationSource_CRS",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ImmunizationInformationSource_HITSP",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ImmunizationServiceFundingEligibility_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_IncarcerationType_Hepatitis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_InformationSource_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_InjuryOccurredEnvironment_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_InjuryType_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_InterviewStatus_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_IsolateAvailabilityEIPTesting_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_IsolateNotAvailableEIPTestReason_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_IsolateNotReceivedReason_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_IsolateNotSentToNARMSReason_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabResult_Pertussis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabResult_Rubella",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestFinding_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestInterpretation_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestInterpretation_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestInterpretation_PediatricFlu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestInterpretation_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestMethod_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestOrder_PHLIP_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestProcedure_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestProcedure_Malaria",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestProcedure_Measles",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestProcedure_Mumps",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestProcedure_PediatricFlu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestProcedure_Rubella",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestResult_PHLIP_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestResultName_AcuteHepatitisB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestResultName_Anthrax",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestResultName_Hepatitis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestResultName_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LabTestResultName_Tularemia",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LanguageAbilityMode_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LettuceType_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LiveBirthOutcome_Rubella",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_LongTermCareFacilityType_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Lymphadenitis_Syndrome_BT",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MajorDiseaseSite_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MaritalStatus_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MaritalStatus_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MaternalInfection_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MeatPurchaseInfo_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MedicationFillStatus_HITSP",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MedicationMissedReason_Malaria",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MedicationProphylaxis_Malaria",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MedicationReceived__VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MedicationTreatment_Anthrax",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MedicationTreatment_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MedicationTreatment_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MedicationTreatment_Malaria",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MedicationTreatment_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MedicationTreatment_Tularemia",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MedicationType_HITSP",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MedicationVehicle_HITSP",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MessageErrorConditionCodes_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MicrobiologicalStrain_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Microorganism_Hepatitis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Microorganism_PediatricFlu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MicroscopicExamType_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MIME_MediaType_IANA",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_MissingLabResult_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NameType_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NationallyNotifiableInfectiousDisease_CDC_NNDSS",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NationalReportingJurisdiction_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NatureOfAbnormalTesting_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NoCaseReason_CRS",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NonLiveBirthOutcome_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NonPaintLeadSource_PB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NonPaintLeadSourceHobby_PB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NonPorkType_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NonSterileSpecimen_PediatricFlu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NotifiableCondition_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NotifiableConditions_Hepatitis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NotifiableEvent_Disease_Condition_CDC_NNDSS",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NotifiableEventCondition_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NotificationSectionHeader_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NullFlavor_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NumberOfLesions_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_NumOfSexPartners_Hepatitis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ObesitySeverity_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ObservationInterpretation_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ObservationResultStatus_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Occupation_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_OccupationRiskCategory_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_OrderControlCodes_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_OrderStatus_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_OtherRelatedCases_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_OutbreakType_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_OutbreakType_Hepatitis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_OxacillinInterpretation_IPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ParotitisLaterality_Mumps",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PassFailUnk_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PatientClass_HITSP_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PatientClass_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PatientLocationStatusAtSpecimenCollection",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PCRPerformedLabLocation_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PCRSpecimenSource_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PersonalRelationshipRoleType_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PharmacyOrderType_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_AnimalRabies",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_ArboNet",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_CRS",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_Flu_Summary",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_Generic",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_Hepatitis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_LeadCase",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_LeadEnvironmental",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_LeadLabReport",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_Malaria",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_Measles",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_Mumps",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_PediatricFlu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_Rubella",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_StrepPneumo",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_Summary",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHINQuestions_Varicella",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PHLIP_Questions_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PorkType_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PosNegUnk_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PosNegUnkNotDone_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PreferredMethodOfContact_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PregnancyOutcome_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PregnancyTrimester_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PrenatalCareProvider_Rubella",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PresentAbsentUnkNotExamined_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PreviousVaccinationHistory_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PrimaryReasonForEvaluation_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ProblemSeverity_HITSP",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ProblemType_HITSP",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ProcessingID_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ProcessingMode_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ProductionClass_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ProviderRole_HITSP",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PublicHealthCaseRecordType_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_PublicPrivateLab_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Race_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_RaceCategory_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_RadiologyLabTest_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Rash_Syndrome_BT",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_RashDistribution_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_RashLocationFirstNoted_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ReasonForTest_Hepatitis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ReasonTherapyStopped_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_RecreationalWater_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ReferralDisposition_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ReferralPriority_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ReferralReason_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ReferralStatus_CRA",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Relationship_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Relationship_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Relationship_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Religion_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ReligiousAffiliation_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ReportingArea_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ReportingLabType_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ReportingSourceType_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Respiratory_Syndrome_BT",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ResponseFlag_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ResultedLabTestName_PHLIP_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ResultStatus_HITSP_HL7_V3",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ResultStatus_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_RiskCategory_CRA",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_RiskFactor_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_RiskFactors_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_RouteOfAdministration_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_RVCTLinkReason_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SeafoodPurchaseInfo_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SeafoodType_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SerologyPerformedLabLocation_Pertussis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SerotypeMethod_IPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SevereIllnessOrDeath_Syndrome_BT",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Sex_MFU",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SignsSymptoms_AcuteHepatitisB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SignsSymptoms_Anthrax",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SignsSymptoms_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SignsSymptoms_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SignsSymptoms_Tularemia",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SkinExposure_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SkinExposureActivity_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SocialHistoryType_HITSP",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SocioBehavioralRiskFactor_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SourceOfComment_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecialtyType_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Species_Malaria",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Specimen_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenAppropriateness_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenChildRole_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenCollectionMethod_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenCollectionMethod_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenCondition_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenQuality_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenRejectReason_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenReshipmentReason_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenRisk_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenRole_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenShipped_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenSource_CRS",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenSource_Measles",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenSource_Mumps",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenSource_PHLIP",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenSource_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenTreatment_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SpecimenType_Malaria",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SputumCultureConversionNotDocumentedReason_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_State_FIPS_5_2",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SterileSpecimen_IPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SterileSpecimen_PediatricFlu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_StrainType_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SubstanceAdministered_CRA",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SubstanceBatchDeactivationReason_CRA",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SubstanceTreatmentRefusalReason_CRA",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SurveillanceMethod_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SusceptibilityResult_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SuspectedFoodConsumed_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_SwimmingPoolType_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TapWaterSource_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TattooObtainedFrom_Hepatitis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TelecommunicationEquipmentType_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TelecommunicationUseCode_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TemperatureUnit_UCUM",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TestMethodEIAIgM_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TetanusType_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_Therapy7DaysPriorOrAfterIllnessOnset_PediatricFlu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TherapyAfterIllnessOnset_PediatricFlu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TherapyExtendedReason_TB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TherapyPriorIllnessOnset_PediatricFlu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TimeFrameDailyWeekly_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TimingPriorToIllnessOnset_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TransmissionSetting_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TransplantOrgan_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TravelDestinationType_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TravelersHealthInfoSource_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TravelMode_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TravelPurpose_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TravelReason_Malaria",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TreatmentOutcomeTetanus_VPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TreatmentStatus_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TrichinellosisSignsSymptoms_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TrueFalse_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_TyphoidSignsSymptoms_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_UnderlyingConditions_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_UnderlyingConditions_IPD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_UnderlyingConditions_PediatricFlu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_UnitsOfMeasureVolume_UCUM",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_UniversalIdType_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VaccinatedAtLocation_CRA",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VaccineAdministered_HepatitisB",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VaccineContraindications_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VaccineDoseNumber_Hepatitis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VaccineDosesReceived_Pertussis",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VaccineDosesReceived_Tetanus",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VaccineManufacturer_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VaccineNotGivenReasons_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VaccinePurchasedWithFunds_CRA",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VaccinesAdministered_Flu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VaccinesAdministered_PediatricFlu",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VaccinesAdministered_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_ValueType_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VirusType_ArboviralDisease",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VirusVariantType_AnimalRabies",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_VitalSignResult_HITSP",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_WaterSalinity_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_WeightUnit_UCUM",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_WellWaterTreatment_FDD",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_WholeCellELISAManufacturer_VZ",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_WoundHistory_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_XRayBasedPatientCondition_NND",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_YesNo_HL7_2x",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_YesNoUnkNotDone_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_YesNoUnknown_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "PHVS_YesNoUnknownNoAnswer_CDC",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "ValueSets",
+      "reason": "layout_unknown: plain data table"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "ValueSets_Domains",
+      "reason": "layout_unknown: plain data table"
+    }
+  ]
+}

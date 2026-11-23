@@ -1,0 +1,1797 @@
+{
+  "id": "Radiology",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RecStatus",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "CXRA",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "1.  Did the patient have a chest x-ray?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CXRDTA",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date of first chest x-ray",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CXRABNA",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Any abnormal findings?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CXR_RES1A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Single lobar infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_Res5A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pneumothorax",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES9A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Enlarged epiglottis",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES13A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Enlarged heart",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES2A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Multi-lobar infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES6A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pneumomediastinum",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES10A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Tracheal narrowing",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES14A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pleural effusion",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES3A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Complete opacification",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES7A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Widened mediastinum",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES11A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pulmonary cavity or blebs",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES15A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Granuloma",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES4A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Interstitial infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES8A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hilar adenopathy",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES12A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Consolidation",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_LULOBEA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left upper lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RULOBEA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right upper lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_LLINGULAA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left lingula",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RMLOBEA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right middle lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_LLLOBEA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left lower lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RLLOBEA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right lower lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_MEDHXA",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Are any findings consistent with the patient's pre-existing medical history?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CXR_EXPLAIN",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, please explain",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CXR_REPA",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Summarize impression",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "CXRTOCDCA",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Will a digital image of this chest x-ray be sent to the CDC?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "StateID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "State ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCUniqueID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Unique ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "COUNTYID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CXRB",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "2. Did the patient have another chest x-ray with significantly different findings?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CXRDTB",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date of chest x-ray",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CXRABNB",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Any abnormal findings",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CXR_REPB",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Summarize impression",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "CXRTOCDCB",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Will a digital image of this chest x-ray be sent to the CDC?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "CXR_RES1B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Single lobar infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES2B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Multi-lobar infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES3B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Complete opacification",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES4B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Interstitial infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES5B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pneumothorax",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES6B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pneumomediastinum",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES7B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Widened mediastinum",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES8B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hilar adenopathy",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES9B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Enlarged epiglottis",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES10B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Tracheal narrowing",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES11B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pulmonary cavity or blebs",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES12B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Consolidation",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES13B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Enlarged heart",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES14B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pleural effusion",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES15B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Granuloma",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_LULOBEB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left upper lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_LLINGULAB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left lingual",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_LLLOBEB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left lower lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RULOBEB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right upper lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RMLOBEB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right middle lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RLLOBEB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right lower lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "STATEID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "COUNTYID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CDCID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CXRC",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "3. Did the patient have another chest x-ray with significantly different findings?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CXRDTC",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date of chest x-ray",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CXRABNC",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Any abnormal findings",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CXR_REPC",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Summarize impression",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "CXRTOCDCC",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Will a digital image of this chest x-ray be sent to the CDC?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "CXR_LULOBEC",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left upper lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RULOBEC",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right upper lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_LLINGULAC",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left lingula",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RMLOBEC",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right middle lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_LLLOBEC",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left lower lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RLLOBEC",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right lower lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES1C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Single lobar infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES2C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Multi-lobar infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES3C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Complete opacification",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES4C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Interstitial infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES5C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pneumothorax",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES6C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pneumomediastinum",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES7C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Widened mediastinum",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES8C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hilar adenopathy",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES9C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Enlarged epiglottis",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES10C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Tracheal narrowing",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES11C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pulmonary cavity or blebs",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES12C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Consolidation",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES13C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Enlarged heart",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES14C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pleural effusion",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES15C",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Granuloma",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "STATEID3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "COUNTYID3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CDCID3",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CXRD",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "4. Did the patient have a chest x-ray prior to death or discharge?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CXRDTD",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, date of chest x-ray",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CXRABND",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Any abnormal findings",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CXR_REPD",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Summarize impression",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "CXRTOCDCD",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Will a digital image of this chest x-ray be sent to the CDC?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "CXRNOTES",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Additional Radiology Notes",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "CRX_LULOBED",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left upper lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RULOBED",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right upper lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_LLINGULAD",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left lingula",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RMLOBED",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right middle lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_LLLOBED",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left lower lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RLLOBED",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right lower lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES1D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Single lobar infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES2D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Multi-lobar infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES3D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Complete opacification",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES4D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Interstitial infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES5D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pneumothorax",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES6D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pneumomediastinum",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES7D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Widened mediastinum",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES8D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hilar adenopathy",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES9D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Enlarged epiglottis",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES10D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Tracheal narrowing",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES11D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pulmonary cavity or blebs",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES12D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Consolidation",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES13D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Enlarged heart",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES14D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pleural effusion",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CXR_RES15D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Granuloma",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "STATEID4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "COUNTYID4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CDCID4",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CTSCANA",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "1. Did the patient have a chest CT/MRI scan?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CTSCANTYPEA",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, select one",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeCTSCANTYPEA"
+      }
+    },
+    {
+      "name": "CTSCANDTA",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date of Scan",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CTABNA",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Any abnormal findings",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CT_REPA",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Summarize impression \r\n(include any pertinent non-pulmonary findings)",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "CTTOCDCA",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Will a digital image of this CT/MRI be sent to the CDC?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "CT_LULOBEA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left upper lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RULOBEA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right upper lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_LLINGULAA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left lingula",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RMLOBEA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right middle lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_LLLOBEA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left lower lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RLLOBEA",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right lower lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES1A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Single lobar infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES2A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Multi-lobar infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES3A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Complete opacification",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES4D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Interstitial infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES5A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pneumothorax",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES6D",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pneumomediastinum",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES7A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Widened mediastinum",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES8A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hilar adenopathy",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES9A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Enlarged epiglottis",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES10A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Tracheal narrowing",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES11A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pulmonary cavity or blebs",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES12A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Granuloma",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES13A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Enlarged heart",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES14A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pleural effusion",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES15A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Empyema",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES16A",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Consolidation",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "STATEID5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "COUNTYID5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CDCID5",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CTSCANB",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "2. Did the patient have another chest CT or MRI scan?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CTSCANTYPEB",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If yes, select one",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeCTSCANTYPEB"
+      }
+    },
+    {
+      "name": "CTSCANDTB",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date of Scan",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "CTABNB",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Any abnormal findings",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "CT_REPB",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Summarize impression \r\n(include any pertinent \r\nnon-pulmonary findings)",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "CTTOCDCB",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Will a digital image of this CT/MRI be sent to the CDC?",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNo"
+      }
+    },
+    {
+      "name": "CTNOTES",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Additional CT/MRI Notes",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "CT_LULOBEB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left upper lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RULOBEB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right upper lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_LLINGULAB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left lingula",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RMLOBEB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right middle lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_LLLOBEB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Left lower lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RLLOBEB",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Right lower lobe",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES1B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Single lobar infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES2B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Multi-lobar infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES3B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Complete opacification",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES4B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Interstitial infiltrate",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES5B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pneumothorax",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES6B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pneumomediastinum",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES7B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Widened mediastinum",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES8B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Hilar adenopathy",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES9B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Enlarged epiglottis",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES10B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Tracheal narrowing",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES11B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pulmonary cavity or blebs",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES12B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Granuloma",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES13B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Enlarged heart",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES14B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Pleural effusion",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES15B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Empyema",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "CT_RES16B",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "Consolidation",
+        "legacy_type": "Checkbox"
+      }
+    },
+    {
+      "name": "STATEID6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "COUNTYID6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CDCID6",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeYesNoUnknown",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9 - Unknown"
+          },
+          "9 - Unknown"
+        ]
+      ]
+    },
+    {
+      "id": "codeYesNo",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ]
+      ]
+    },
+    {
+      "id": "codeCTSCANTYPEA",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - CT-contrast"
+          },
+          "1 - CT-contrast"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - CT-non contrast"
+          },
+          "2 - CT-non contrast"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - MRI"
+          },
+          "3 - MRI"
+        ]
+      ]
+    },
+    {
+      "id": "codeCTSCANTYPEB",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - CT-contrast"
+          },
+          "1 - CT-contrast"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - CT-non contrast"
+          },
+          "2 - CT-non contrast"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - MRI"
+          },
+          "3 - MRI"
+        ]
+      ]
+    }
+  ]
+}

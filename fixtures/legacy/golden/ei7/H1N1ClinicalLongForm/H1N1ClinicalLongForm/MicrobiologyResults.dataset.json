@@ -1,0 +1,1567 @@
+{
+  "id": "MicrobiologyResults",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RecStatus",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "StateID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "CDCUniqueID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC Unique ID #:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALSITE01",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "1.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "VIRALDATE01",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALTYPE01",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALINTERP01",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALORG011",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG012",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG013",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROTISSSP01",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP01",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALSITE02",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "2.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "VIRALSITE03",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "3.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "VIRALSITE04",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "4.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "VIRALSITE05",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "5.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "VIRALSITE06",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "6.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "MICROTISSSP02",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROTISSSP03",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROTISSSP04",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROTISSSP05",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROTISSSP06",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP02",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP03",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP04",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP05",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP06",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALDATE02",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALDATE03",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALDATE04",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALDATE05",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALDATE06",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALTYPE02",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALTYPE03",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALTYPE04",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALTYPE05",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALTYPE06",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALINTERP02",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALINTERP03",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALINTERP04",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALINTERP05",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALINTERP06",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALORG031",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG041",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG051",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG061",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG021",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG022",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG032",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG042",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG052",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG062",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG063",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG053",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG043",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG033",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG023",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALSITE07",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "7.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "MICROTISSSP07",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP07",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALDATE07",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALTYPE07",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALINTERP07",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALORG071",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG072",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG073",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MOTHTSTSP01",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MOTHTSTSP02",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MOTHTSTSP03",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MOTHTSTSP04",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MOTHTSTSP05",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MOTHTSTSP06",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MOTHTSTSP07",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "COUNTYID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID#:",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Bloodcx",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeYesNoUnknown"
+      }
+    },
+    {
+      "name": "VIRALSITE08",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "8.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "VIRALSITE09",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "9.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "VIRALSITE10",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "10.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "VIRALSITE11",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "11.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "VIRALSITE12",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "12.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "VIRALSITE13",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "13.",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUSPECIMENTYPE1"
+      }
+    },
+    {
+      "name": "MICROTISSSP08",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP08",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROTISSSP09",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP09",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROTISSSP10",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP10",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROTISSSP11",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP11",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROTISSSP12",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP12",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROTISSSP13",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If tissue, specify site",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICROOTHSP13",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALDATE08",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALDATE09",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALDATE10",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALDATE11",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALDATE12",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALDATE13",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "VIRALTYPE08",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALTYPE09",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALTYPE10",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALTYPE11",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALTYPE12",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALTYPE13",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTPERFORMED1"
+      }
+    },
+    {
+      "name": "VIRALINTERP08",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALINTERP09",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALINTERP10",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALINTERP11",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALINTERP12",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALINTERP13",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "CommentLegal",
+        "label_set": "codeFLUTESTRESULTS1"
+      }
+    },
+    {
+      "name": "VIRALORG091",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG101",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG111",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG081",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG121",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG131",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG082",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG083",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG092",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG093",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG102",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG103",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG112",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG113",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG122",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG123",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG132",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "VIRALORG133",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "-",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MICRONOTES",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Additional Microbiology Notes:",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "MOTHTSTSP08",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MOTHTSTSP09",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MOTHTSTSP10",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MOTHTSTSP11",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MOTHTSTSP12",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "MOTHTSTSP13",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "If other, specify",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "STATEID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "STATE ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "COUNTYID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "COUNTY ID",
+        "legacy_type": "Mirror"
+      }
+    },
+    {
+      "name": "CDCID2",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "CDC ID",
+        "legacy_type": "Mirror"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codeFLUSPECIMENTYPE1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Nasopharyngeal swab"
+          },
+          "1 - Nasopharyngeal swab"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Nasopharyngeal aspirate"
+          },
+          "2 - Nasopharyngeal aspirate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - Oropharyngeal/throat swab"
+          },
+          "3 - Oropharyngeal/throat swab"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4 - Nasal aspirate/swab"
+          },
+          "4 - Nasal aspirate/swab"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5 - Endotracheal aspirate"
+          },
+          "5 - Endotracheal aspirate"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6 - Serum"
+          },
+          "6 - Serum"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7 - Broncheoalveolar lavage specimen (BAL)"
+          },
+          "7 - Broncheoalveolar lavage specimen (BAL)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8 - Sputum"
+          },
+          "8 - Sputum"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9 - Cerebrospinal fluid (CSF)"
+          },
+          "9 - Cerebrospinal fluid (CSF)"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10 - Tissue"
+          },
+          "10 - Tissue"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11 - Stool"
+          },
+          "11 - Stool"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12 - Urine"
+          },
+          "12 - Urine"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "13 - Pleural fluid"
+          },
+          "13 - Pleural fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "14 - Peritoneal fluid"
+          },
+          "14 - Peritoneal fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "15 - Pericardial fluid"
+          },
+          "15 - Pericardial fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "16 - Chest fluid"
+          },
+          "16 - Chest fluid"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "17 - Blood"
+          },
+          "17 - Blood"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "88 - Other"
+          },
+          "88 - Other"
+        ]
+      ]
+    },
+    {
+      "id": "codeFLUTESTPERFORMED1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "88 - Other"
+          },
+          "88 - Other"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "1 - DFA/IFA"
+          },
+          "1 - DFA/IFA"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - PCR"
+          },
+          "2 - PCR"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - Culture"
+          },
+          "3 - Culture"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4 - HI"
+          },
+          "4 - HI"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5 - Rapid test"
+          },
+          "5 - Rapid test"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6 - Immunohist"
+          },
+          "6 - Immunohist"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7 - Serology"
+          },
+          "7 - Serology"
+        ]
+      ]
+    },
+    {
+      "id": "codeFLUTESTRESULTS1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Positive"
+          },
+          "1 - Positive"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - Negative"
+          },
+          "2 - Negative"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3 - Indeterminate"
+          },
+          "3 - Indeterminate"
+        ]
+      ]
+    },
+    {
+      "id": "codeYesNoUnknown",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1 - Yes"
+          },
+          "1 - Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2 - No"
+          },
+          "2 - No"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9 - Unknown"
+          },
+          "9 - Unknown"
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,737 @@
+{
+  "id": "HDContactForm",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "HDCase",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Case Number",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDCaseContactID_Last_Name",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Contact Last Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDContactAge",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Age of Contact",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HDContactRelationshipTypeID",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Relationship of Contact",
+        "legacy_type": "LegalValues",
+        "label_set": "codehdcontactrelationshiptypeid1"
+      }
+    },
+    {
+      "name": "HDContactRelationshipSpecify",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Relationship (if \"Other\" is chosen)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDContactPostExposureProphylaxis",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Post Exposure Prophylaxis",
+        "legacy_type": "LegalValues",
+        "label_set": "codehdcontactpostexposureprophylaxis1"
+      }
+    },
+    {
+      "name": "HDContactDistanceCode",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Type of Contact",
+        "legacy_type": "CommentLegal",
+        "label_set": "codehddistancecode1"
+      }
+    },
+    {
+      "name": "HDContactSex",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Sex",
+        "legacy_type": "CommentLegal",
+        "label_set": "codehdgenderid1"
+      }
+    },
+    {
+      "name": "PatientName",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Patient Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDContactPostExposureProphylaxis_No_Reason",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Reason for no PEP",
+        "legacy_type": "LegalValues",
+        "label_set": "codehdcontactpostexposureprophylaxis_no_reason1"
+      }
+    },
+    {
+      "name": "HDContactPostExposureProphylaxis_Yes_Type",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Type of PEP",
+        "legacy_type": "LegalValues",
+        "label_set": "codehdcontactpostexposureprophylaxis_yes_type1"
+      }
+    },
+    {
+      "name": "PEP_Dosage_MG",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Dosage in mg",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PEP_Dosage_Count",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Number of Doses",
+        "legacy_type": "LegalValues",
+        "label_set": "codepep_dosage_count1"
+      }
+    },
+    {
+      "name": "PEP_Dosage_Frequency",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Frequency of Doses",
+        "legacy_type": "LegalValues",
+        "label_set": "codepep_dosage_frequency1"
+      }
+    },
+    {
+      "name": "PEP_Dosage_Frequency_Other",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other Dose Frequency",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDCaseContactID_First_Name",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Contact First Name",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDContactBCGVaccination",
+      "type": "boolean",
+      "values": [],
+      "meta": {
+        "prompt": "BCG Vaccination",
+        "legacy_type": "YesNo"
+      }
+    },
+    {
+      "name": "HDContactDOB",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Contact DOB",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "HDCaseContact_Address",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Contact Address and/or Telephone/Cell Phone Number",
+        "legacy_type": "Multiline"
+      }
+    },
+    {
+      "name": "PEP_Dosage_Duration",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Duration",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "PEP_Dosage_Duration_Units",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Duration Units",
+        "legacy_type": "LegalValues",
+        "label_set": "codepep_dosage_duration_units1"
+      }
+    },
+    {
+      "name": "HDCaseContact_OtherPEPType",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Other PEP Type",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "HDCaseContact_Address_Latitude",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Latitude",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "HDCaseContact_Address_Longitude",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "prompt": "Longitude",
+        "legacy_type": "Number"
+      }
+    }
+  ],
+  "label_sets": [
+    {
+      "id": "codehdcontactrelationshiptypeid1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Spouse"
+          },
+          "Spouse"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Son"
+          },
+          "Son"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Daughter"
+          },
+          "Daughter"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Father"
+          },
+          "Father"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Mother"
+          },
+          "Mother"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Brother"
+          },
+          "Brother"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Sister"
+          },
+          "Sister"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Grandson"
+          },
+          "Grandson"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Granddaughter"
+          },
+          "Granddaughter"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Grandfather"
+          },
+          "Grandfather"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Grandmother"
+          },
+          "Grandmother"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Cousin"
+          },
+          "Cousin"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Uncle"
+          },
+          "Uncle"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Aunt"
+          },
+          "Aunt"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Niece"
+          },
+          "Niece"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Nephew"
+          },
+          "Nephew"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    },
+    {
+      "id": "codehdcontactpostexposureprophylaxis1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Yes"
+          },
+          "Yes"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "No"
+          },
+          "No"
+        ]
+      ]
+    },
+    {
+      "id": "codehddistancecode1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1-Household"
+          },
+          "1-Household"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2-Neighbor"
+          },
+          "2-Neighbor"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3-Social Contact"
+          },
+          "3-Social Contact"
+        ]
+      ]
+    },
+    {
+      "id": "codehdgenderid1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "F-Female"
+          },
+          "F-Female"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "M-Male"
+          },
+          "M-Male"
+        ]
+      ]
+    },
+    {
+      "id": "codehdcontactpostexposureprophylaxis_no_reason1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Refusal"
+          },
+          "Refusal"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Pregnancy"
+          },
+          "Pregnancy"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Suspect of Leprosy"
+          },
+          "Suspect of Leprosy"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Rifampicin Treated"
+          },
+          "Rifampicin Treated"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Age under 2 years"
+          },
+          "Age under 2 years"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Liver or Renal Disease"
+          },
+          "Liver or Renal Disease"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Registered contact of another case"
+          },
+          "Registered contact of another case"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Rifampicin Allergy"
+          },
+          "Rifampicin Allergy"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Possible TB"
+          },
+          "Possible TB"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "No PEP Program"
+          },
+          "No PEP Program"
+        ]
+      ]
+    },
+    {
+      "id": "codehdcontactpostexposureprophylaxis_yes_type1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Single Dose Rifampicin"
+          },
+          "Single Dose Rifampicin"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Multi-dose Rifampicin"
+          },
+          "Multi-dose Rifampicin"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Single Dose ROM"
+          },
+          "Single Dose ROM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Multi-dose ROM"
+          },
+          "Multi-dose ROM"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Rif/Mox"
+          },
+          "Rif/Mox"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    },
+    {
+      "id": "codepep_dosage_count1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "1"
+          },
+          "1"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "2"
+          },
+          "2"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "3"
+          },
+          "3"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "4"
+          },
+          "4"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "5"
+          },
+          "5"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "6"
+          },
+          "6"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "7"
+          },
+          "7"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "8"
+          },
+          "8"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "9"
+          },
+          "9"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "10"
+          },
+          "10"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "11"
+          },
+          "11"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "12"
+          },
+          "12"
+        ]
+      ]
+    },
+    {
+      "id": "codepep_dosage_frequency1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Daily"
+          },
+          "Daily"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Weekly"
+          },
+          "Weekly"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Monthly"
+          },
+          "Monthly"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Annually"
+          },
+          "Annually"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Other"
+          },
+          "Other"
+        ]
+      ]
+    },
+    {
+      "id": "codepep_dosage_duration_units1",
+      "entries": [
+        [
+          {
+            "type": "text",
+            "value": "Days"
+          },
+          "Days"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Weeks"
+          },
+          "Weeks"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Months"
+          },
+          "Months"
+        ],
+        [
+          {
+            "type": "text",
+            "value": "Years"
+          },
+          "Years"
+        ]
+      ]
+    }
+  ]
+}

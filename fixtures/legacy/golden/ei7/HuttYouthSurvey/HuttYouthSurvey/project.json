@@ -1,0 +1,203 @@
+{
+  "name": "HuttYouthSurvey",
+  "legacy_id": "5732B08D-5CEB-C6C0-04581E2E20E3DFBF",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/HuttYouthSurvey/HuttYouthSurvey.mdb",
+    "sha256": "7a3fb7b793918783a6f7a11802ed7373667b33fc07645a5971a337ae323f74de"
+  },
+  "views": [
+    {
+      "name": "Questionnaire",
+      "dataset": "Questionnaire.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "79e743b77079e23b7c25ffbaffb46e01a2f2cdfc1d372d428bf9090bdd20b845"
+    }
+  ],
+  "links": [],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "Questionnaire",
+      "blocks": 45
+    }
+  ],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Page1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/HuttYouthSurvey",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Ethnicity",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/XSchoollabel",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Q06EnjoySchool",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Page2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/HuttYouthSurvey1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Questionnaire/ID1",
+      "reason": "Mirror field imported as the value of ID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Q10THREEplaces",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Bestthings",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/BiggestIssues",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Page3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/HuttYouthSurvey11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Questionnaire/ID11",
+      "reason": "Mirror field imported as the value of ID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/GetHelp",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/WhereDrink",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Wheregetalcohol",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/DrugsWhereUse",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Page4",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/HuttYouthSurvey111",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Questionnaire/ID111",
+      "reason": "Mirror field imported as the value of ID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/N17Doyouthinktherehasbeenapositiveoranegativechangeinthepastyear",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/N18Overthelasttwoweeks",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Goforhealthcare",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Page5",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/HuttYouthSurvey112",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "Questionnaire/ID112",
+      "reason": "Mirror field imported as the value of ID"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/RateHuttValley",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Q24WhatInvolved",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/GotoNextRecord",
+      "reason": "CommandButton is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "Questionnaire/Q10THREEplaces1",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Questionnaire/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Questionnaire/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Questionnaire/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "Questionnaire/LastSaveTime",
+      "reason": "no metaFields entry"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "id": "Images",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "FKEY",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "ForeignKey"
+      }
+    },
+    {
+      "name": "CompositeCaseNumber",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Image_Upload_Date",
+      "type": "date",
+      "values": [],
+      "meta": {
+        "prompt": "Date",
+        "legacy_type": "Date"
+      }
+    },
+    {
+      "name": "Image_FilePath",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "File and Path (eg. C:\\Documents\\Pictures\\Image1.jpg)",
+        "legacy_type": "Text"
+      }
+    },
+    {
+      "name": "Image_Description",
+      "type": "text",
+      "values": [],
+      "meta": {
+        "prompt": "Description",
+        "legacy_type": "Multiline"
+      }
+    }
+  ]
+}

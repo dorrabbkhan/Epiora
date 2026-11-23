@@ -1,0 +1,528 @@
+{
+  "name": "STEPSInterviewMASTER",
+  "legacy_id": "B454BD3B-D3C4-BA6C-29922803EB434AA2",
+  "source_format": "ei7_access",
+  "source": {
+    "path": "fixtures/legacy/samples/ei7/STEPS/STEPS_EI7.mdb",
+    "sha256": "f76a94188a78d6f9a56a4734350e0e0a604500795211feeb2cab77d1d7ade5f8"
+  },
+  "views": [
+    {
+      "name": "SurveyInformation",
+      "dataset": "SurveyInformation.dataset.json",
+      "records": 0,
+      "deleted_records": 0,
+      "hash": "bd82095ae80ce2f694defbd54f66b33209a907dabfee74eaf45269a96e243f07"
+    }
+  ],
+  "links": [],
+  "programs": [],
+  "check_code": [
+    {
+      "view": "SurveyInformation",
+      "blocks": 49
+    }
+  ],
+  "report": [
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Lb_PanAmericanSTEPSInstrument",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_LocationandDate",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_Consent",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_Demographic",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblC10",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_TobaccoUse1",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/T3lDontKnow",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblC101",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_ProductsSmoke",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblTobaccoUse",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber1",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_TobaccoUse11",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblC1011",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_T14",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber11",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_Alcohol",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblQA10",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber12",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_Alcohol_Continued",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblAlcohol2",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblA12",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber121",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber122",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_COREDiet",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblD1",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_Dietarysalt",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblDietarySalt",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblProcessed",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_EXPANDEDDiet",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblD11",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblD12",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber123",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber124",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_COREPhysicalActivity",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblPhysicalActivity",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblP3",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblP6",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber125",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_TraveltoFromPlaces",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_Travel",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/LbP9",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_RecActivities",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblRecreationalActivities",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Lb_P12",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Lb_P15",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_EXPANDEDPhysicalActivity",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblP16a",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblP16",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber126",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_RaisedBloodPressure",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_DiabetesHistory",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber127",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_PANAM_CORE_DiabetesHistory",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_RaisedCholesterol",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_CardiovascularDiseases",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber128",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber129",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_LifeStyleAdvice",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_CervicalCancerScreening",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblCervical",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_HealthScreening_OptionalMod",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Lb_PanAmOptionalModule",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber1210",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblWomen",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/lblMen",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_BloodPressure",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Reading1",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Reading2",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Reading3",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_HeightandWeight",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Lb_Step2PhysicalMeasurements",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/DeviceIDsforheightandweight",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber1211",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_Waist",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_HipCircumferenceHeartRate",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/HeartRate",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Reading1_HeartRate1",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Reading2_HeartRate2",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Reading3_HeartRate3",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber1212",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Lb_Step3BiochemicalMeasurements",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_BloodGlucose",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/B4",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/B5",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_BloodLipids",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/B8",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber1213",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_UrinarySodium",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/B13",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/B14",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/B15",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/Grp_Triglycerides",
+      "reason": "Group is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/B16",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_not_imported",
+      "item": "SurveyInformation/B17",
+      "reason": "LabelTitle is form metadata"
+    },
+    {
+      "kind": "field_imported_changed",
+      "item": "SurveyInformation/ParticipantIdentificationNumber1214",
+      "reason": "Mirror field imported as the value of ParticipantId"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "SurveyInformation/FirstSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "SurveyInformation/FirstSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "SurveyInformation/LastSaveLogonName",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "column_not_imported",
+      "item": "SurveyInformation/LastSaveTime",
+      "reason": "no metaFields entry"
+    },
+    {
+      "kind": "table_not_imported",
+      "item": "temp",
+      "reason": "no view, field or code table claims it"
+    }
+  ]
+}

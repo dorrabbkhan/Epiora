@@ -1,0 +1,185 @@
+{
+  "id": "BabyBloodPressure",
+  "version": 1,
+  "columns": [
+    {
+      "name": "UniqueKey",
+      "type": "integer",
+      "values": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "meta": {
+        "legacy_type": "UniqueKey"
+      }
+    },
+    {
+      "name": "RECSTATUS",
+      "type": "integer",
+      "values": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "meta": {
+        "legacy_type": "RecStatus"
+      }
+    },
+    {
+      "name": "GlobalRecordId",
+      "type": "text",
+      "values": [
+        "0304ae8c-6db3-4039-b5a2-e94c4d4b6082",
+        "1664c8d0-4bf8-4c7a-9980-7fb4c7ede653",
+        "1770eea1-c977-411d-a969-05917a5d328f",
+        "1bc97318-c20f-4a8e-9731-a5166faade22",
+        "1f332f9e-2038-41ee-9446-a410390d3d75",
+        "58a3fb41-3220-4a16-b8a0-e98ff61a260b",
+        "7d4bfb37-8863-4ae8-b852-de2684a50c26",
+        "884b4b78-eb45-4610-bf33-3d21821149d9",
+        "b44726fb-0ef0-42ff-9035-d50b103c8ecb",
+        "c0a00864-4299-482b-831f-5ceee839405b",
+        "ccd407ff-de03-47bc-b21d-9eb2335a1ffd",
+        "cd750d82-0d0b-41fc-83a4-f88486487ee5",
+        "d77c5490-4311-47bf-bf25-cd074e0f4d6a",
+        "dddbeb72-7b98-4576-a58b-e0a40642d752",
+        "e299594e-e546-4919-85d2-bf5dd981a114",
+        "e80a847c-ad72-4652-91d8-982172798276"
+      ],
+      "meta": {
+        "legacy_type": "GlobalRecordId"
+      }
+    },
+    {
+      "name": "Observation",
+      "type": "integer",
+      "values": [
+        2,
+        7,
+        16,
+        9,
+        3,
+        11,
+        8,
+        1,
+        14,
+        10,
+        15,
+        5,
+        13,
+        12,
+        4,
+        6
+      ],
+      "meta": {
+        "prompt": "Observation Number",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "Birthweight",
+      "type": "integer",
+      "values": [
+        120,
+        125,
+        125,
+        120,
+        100,
+        120,
+        105,
+        135,
+        150,
+        90,
+        160,
+        130,
+        120,
+        95,
+        105,
+        125
+      ],
+      "meta": {
+        "prompt": "Birthweight in Ounces (X1)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "AgeInDays",
+      "type": "integer",
+      "values": [
+        4,
+        2,
+        3,
+        5,
+        3,
+        2,
+        3,
+        3,
+        4,
+        4,
+        3,
+        4,
+        3,
+        3,
+        2,
+        5
+      ],
+      "meta": {
+        "prompt": "Age in Days(X2)",
+        "legacy_type": "Number"
+      }
+    },
+    {
+      "name": "SystolicBlood",
+      "type": "integer",
+      "values": [
+        90,
+        82,
+        88,
+        96,
+        83,
+        80,
+        85,
+        89,
+        97,
+        95,
+        92,
+        92,
+        86,
+        79,
+        77,
+        98
+      ],
+      "meta": {
+        "prompt": "Systolic Blood Pressure (mm Hg)(Y)",
+        "legacy_type": "Number"
+      }
+    }
+  ]
+}
