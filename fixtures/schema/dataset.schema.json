@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Epiora corpus dataset",
-  "description": "Engine input dataset written by fixtures/R/data.R and read by the corpus loader (spec §3.3).",
+  "description": "Engine input dataset, v2 (spec §3.3, v1.1 Task 6): adds time and date_time columns, per-column provenance metadata and named label sets. v1 documents stay valid — meta and label_sets are optional.",
   "type": "object",
   "required": ["id", "version", "columns"],
   "additionalProperties": false,
@@ -20,9 +20,101 @@
       "items": {
         "$ref": "#/definitions/column"
       }
+    },
+    "label_sets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "entries"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": [
+                { "$ref": "#/definitions/typed_value" },
+                { "type": "string" }
+              ]
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "typed_value": {
+      "type": "object",
+      "required": ["type", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": ["integer", "real", "text", "boolean", "date", "time", "date_time"]
+        },
+        "value": {}
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "integer" } }, "required": ["type"] },
+          "then": { "properties": { "value": { "type": "integer" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "real" } }, "required": ["type"] },
+          "then": { "properties": { "value": { "type": "number" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "text" } }, "required": ["type"] },
+          "then": { "properties": { "value": { "type": "string" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "boolean" } }, "required": ["type"] },
+          "then": { "properties": { "value": { "type": "boolean" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "date" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "value": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "time" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "value": { "type": "string", "pattern": "^[0-9]{2}:[0-9]{2}:[0-9]{2}$" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "type": { "const": "date_time" } }, "required": ["type"] },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "string",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "column_meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "prompt": { "type": "string" },
+        "legacy_type": { "type": "string" },
+        "legacy_name": { "type": "string" },
+        "label_set": { "type": "string" }
+      }
+    },
     "column": {
       "type": "object",
       "required": ["name", "type", "values"],
@@ -33,10 +125,13 @@
           "minLength": 1
         },
         "type": {
-          "enum": ["integer", "real", "text", "boolean", "date"]
+          "enum": ["integer", "real", "text", "boolean", "date", "time", "date_time"]
         },
         "values": {
           "type": "array"
+        },
+        "meta": {
+          "$ref": "#/definitions/column_meta"
         }
       },
       "allOf": [
@@ -120,6 +215,54 @@
                     {
                       "type": "string",
                       "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+                    },
+                    { "type": "null" }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "time" }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[0-9]{2}:[0-9]{2}:[0-9]{2}$"
+                    },
+                    { "type": "null" }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": { "const": "date_time" }
+            },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "values": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
                     },
                     { "type": "null" }
                   ]

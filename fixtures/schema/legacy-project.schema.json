@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Epiora golden legacy import",
+  "description": "project.json written by fixtures/legacy/golden.mjs for each legacy Epi Info project (v1.1 Task 4). Task 7 compares the mapper's imported project structurally against this document.",
+  "type": "object",
+  "required": ["name", "legacy_id", "source_format", "source", "views", "links", "programs", "check_code", "report"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "legacy_id": {
+      "type": ["string", "null"]
+    },
+    "source_format": {
+      "enum": ["ei7_access", "ei7_sqlite", "ei3_access"]
+    },
+    "source": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "views": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "dataset", "records", "deleted_records", "hash"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "dataset": { "type": "string", "pattern": "\\.dataset\\.json$" },
+          "records": { "type": "integer", "minimum": 0 },
+          "deleted_records": { "type": "integer", "minimum": 0 },
+          "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["parent", "child", "child_key", "parent_key", "kind"],
+        "additionalProperties": false,
+        "properties": {
+          "parent": { "type": "string" },
+          "child": { "type": "string" },
+          "child_key": { "type": "string" },
+          "parent_key": { "type": "string" },
+          "kind": { "enum": ["relate", "grid"] },
+          "dataset": { "type": "string", "pattern": "\\.dataset\\.json$" },
+          "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    },
+    "programs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "text_sha256"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "text_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    },
+    "check_code": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["view", "blocks"],
+        "additionalProperties": false,
+        "properties": {
+          "view": { "type": "string" },
+          "blocks": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "report": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "item", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "legacy_layout_unknown",
+              "code_page_assumed",
+              "view_data_missing",
+              "field_column_missing",
+              "field_not_imported",
+              "field_imported_changed",
+              "column_not_imported",
+              "table_not_imported",
+              "code_table_missing",
+              "record_links_not_imported"
+            ]
+          },
+          "item": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    }
+  }
+}

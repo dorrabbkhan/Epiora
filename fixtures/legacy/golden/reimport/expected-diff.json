@@ -1,0 +1,42 @@
+{
+  "view": "Oswego",
+  "key": "GlobalRecordId",
+  "previous": "fixtures/legacy/golden/ei7/Sample/SampleDB/Oswego.dataset.json",
+  "next": "fixtures/legacy/golden/reimport/Oswego.dataset.json",
+  "note": "Expected re-import diff of the Sample SQLite project against its golden copy. The reimport copy was produced by fixtures/legacy/golden.mjs --reimport: three appended records, two edited records, one removed record and one added field. Uses the spec 4.4 diff vocabulary: records keyed by GlobalRecordId, fields compared by value; a new column's populated values surface as field changes with old null.",
+  "added_records": [
+    "a0000000-0000-4000-8000-000000000001",
+    "a0000000-0000-4000-8000-000000000002",
+    "a0000000-0000-4000-8000-000000000003"
+  ],
+  "removed_records": [
+    "00a9eb4f-c2d4-45f7-a0bc-edfd44b97772"
+  ],
+  "changed_records": [
+    {
+      "record_id": "0672b138-2bb7-44c1-8144-14f26098354d",
+      "fields": {
+        "AGE": { "old": 33, "new": 99 },
+        "ReimportFlag": { "old": null, "new": "edited" }
+      }
+    },
+    {
+      "record_id": "07826724-372f-4026-a3e2-ab193e3ae63e",
+      "fields": {
+        "ILL": { "old": false, "new": true },
+        "ReimportFlag": { "old": null, "new": "edited" }
+      }
+    }
+  ],
+  "schema_changes": {
+    "added_columns": ["ReimportFlag"],
+    "removed_columns": [],
+    "type_changes": []
+  },
+  "counts": {
+    "added": 3,
+    "removed": 1,
+    "changed": 2,
+    "added_columns": 1
+  }
+}

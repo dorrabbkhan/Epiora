@@ -1,0 +1,99 @@
+name: legacy-golden
+
+# v1.1 Task 4 (spec §8.2): produce the golden imports for every
+# fixtures/legacy/samples project with native mdbtools / sqlite3 dumps
+# (independent of epiora-legacy), verify the verbatim Access→SQLite
+# copies produce the same golden, run the golden unit tests, prove a
+# second run is byte-identical, and upload fixtures/legacy/golden/ as
+# the artifact that gets committed.
+#
+# GitHub registers `workflow_dispatch` handlers only for workflow files
+# on the default branch, so the producing run for a brand-new workflow
+# is fired by the `push` trigger below (scoped to v1.1 task branches
+# that touch the fixture surface). After merge, `workflow_dispatch`
+# regenerates the same artifact on demand.
+
+on:
+  push:
+    branches:
+      - 'v1.1/**'
+    paths:
+      - '.github/workflows/legacy-golden.yml'
+      - 'fixtures/legacy/**'
+      - 'fixtures/schema/**'
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '22.23.4'
+
+jobs:
+  golden:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install mdbtools and sqlite3 from apt (record versions)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends mdbtools sqlite3
+          apt-cache policy mdbtools sqlite3 | grep -E 'Installed|mdbtools|sqlite3'
+          mdb-ver --version || true
+          sqlite3 --version
+
+      - name: Install validator tooling (npm ci, lockfile-pinned)
+        working-directory: fixtures/tools
+        run: npm ci
+
+      - name: Produce the golden imports
+        run: node fixtures/legacy/golden.mjs --samples fixtures/legacy/samples --out fixtures/legacy/golden
+
+      - name: Produce the reimport copy and its golden
+        run: node fixtures/legacy/golden.mjs --reimport --samples fixtures/legacy/samples --out fixtures/legacy/golden/reimport
+
+      - name: Run the golden unit tests
+        run: node --test "fixtures/legacy/*.test.mjs"
+
+      - name: Validate every produced document against the schemas
+        run: |
+          set -e
+          find fixtures/legacy/golden -name project.json | while read -r f; do
+            fixtures/tools/node_modules/.bin/ajv validate -s fixtures/schema/legacy-project.schema.json -d "$f" || exit 1
+          done
+          find fixtures/legacy/golden -name '*.dataset.json' | while read -r f; do
+            fixtures/tools/node_modules/.bin/ajv validate -s fixtures/schema/dataset.schema.json -d "$f" || exit 1
+          done
+
+      - name: Verify Access→SQLite copies produce the same golden
+        run: |
+          set -e
+          # EI7 only: Epi Info 3 is Access-only (its JET3 code-page
+          # assumption has no SQLite counterpart), while every EI7
+          # project must golden identically under both backends.
+          find fixtures/legacy/samples/ei7 -name '*.mdb' | sort | while read -r f; do
+            rel="${f#fixtures/legacy/samples/ei7/}"
+            copy="/tmp/copies/${rel%.mdb}.db"
+            out="/tmp/copy-golden/${rel%.mdb}"
+            mkdir -p "$(dirname "$copy")"
+            node fixtures/legacy/copy-tables.mjs --mdb "$f" --sqlite "$copy"
+            node fixtures/legacy/golden.mjs --db "$copy" --out "$out"
+            orig="fixtures/legacy/golden/ei7/${rel%.mdb}"
+            node fixtures/legacy/compare-golden.mjs --a "$orig" --b "$out" || { echo "cross-backend mismatch: $rel"; exit 1; }
+          done
+
+      - name: Prove a second run produces no diff
+        run: |
+          node fixtures/legacy/golden.mjs --samples fixtures/legacy/samples --out /tmp/golden-run2
+          node fixtures/legacy/golden.mjs --reimport --samples fixtures/legacy/samples --out /tmp/reimport-run2
+          diff -r fixtures/legacy/golden/ei7 /tmp/golden-run2/ei7
+          diff -r fixtures/legacy/golden/ei3 /tmp/golden-run2/ei3
+          diff -r fixtures/legacy/golden/reimport /tmp/reimport-run2 -x expected-diff.json
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: legacy-golden
+          path: fixtures/legacy/golden/
