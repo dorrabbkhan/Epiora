@@ -40,6 +40,10 @@ Task 11 replays. Never edit either output by hand; regenerate via
   pins.
 - `DELETE <expr>` and `UNDELETE *` show a "Delete Records?" modal without
   `RUNSILENT` — fatal headless.
+- `UNDELETE` is a no-op on a raw `.mdb` READ: Epi Info prints "The current
+  Read must be an Epi7 project. 0 items marked as deleted." and deleted
+  records stay deleted (pinned: `undelete.records_restored: 0`, FREQ
+  totals unchanged).
 - `ABS`, `TRUNC` (and presumably the same family of numeric functions)
   throw `NullReferenceException` on a missing input cell instead of
   propagating missing; `ROUND`, `YEAR`/`MONTH`/`DAY`/`HOUR`, `MINUTES`,

@@ -406,6 +406,15 @@ function stepFor(cmd, block, labels) {
       { value: Number(rc[1].replace(/,/g, '')), decimals: 0 };
     step.results['selection.deleted_records_included'] =
       { value: /Deleted Records Included/i.test(text) ? 1 : 0, decimals: 0 };
+    // DELETE reports "Number of records deleted: 29"; UNDELETE reports
+    // "0 items marked as deleted" (a no-op on raw .mdb reads — the working
+    // set is not an Epi7 project).
+    const del = /Number of records deleted:\s*([\d,]+)/i.exec(text);
+    if (del) step.results['delete.records_deleted'] =
+      { value: Number(del[1].replace(/,/g, '')), decimals: 0 };
+    const undel = /([\d,]+)\s+items marked as deleted/i.exec(text);
+    if (undel) step.results['undelete.records_restored'] =
+      { value: Number(undel[1].replace(/,/g, '')), decimals: 0 };
   }
   return step;
 }
