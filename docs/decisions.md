@@ -6109,19 +6109,39 @@ undeleted rows for TIMESUPPER). EI7 uppercases the ROUTEOUT filename
 lowercase, bytes unchanged.
 
 EI3 upgrade probe (nonblocking, `ei3_probe` dispatch input): run
-`45156679205` reached the probe's first stage (EI3 project loaded, 1
-view enumerated) before PowerShell's native-stderr handling killed the
-step; run `45159694424` built `Epi Info 7.sln` @ `4cd353c` Release and
-launched the `/platform:x86` probe — `Epi.Configuration` loaded, then
-`Epi.ImportExport.ProjectUpgradeManager.Import()` on
-`fixtures/legacy/samples/ei3/Asthma Survey 2005 Sample.mdb` — and the
-probe step was still running at commit time (>40 minutes on that one
-step, no staged output — a hang, most likely a modal on the unattended
-desktop, the same failure mode as the corpus programs before
-RUNSILENT/`END-SET`; the first attempt `45151708069` died at probe start
-on the anycpu build and uninitialised configuration). Verdict recorded
-for the owner: the headless EI3 -> EI7 project upgrade does not complete
-unattended in this harness; the corpus keeps it opt-in and nonblocking.
+`45177072437` completes unattended — all 800 source rows land in each of
+the four upgraded page tables (probe.log verbatim tail):
+
+    STATUS Started updating image fields in [PreInterventionSurvey]...
+    STATUS No image fields found to update in [PreInterventionSurvey].
+    STATUS Converting Form Relations...
+    STAGE3 ImportEnded
+    STAGE3 destination mdb: D:\a\Epiora\Epiora\ei3-probe\UpgradedProbe\UpgradedProbe.mdb
+    COUNT PreInterventionSurvey 800
+    COUNT PreInterventionSurvey1 800
+    COUNT PreInterventionSurvey2 800
+    COUNT PreInterventionSurvey3 800
+    COUNT source PreInterventionSurvey 800
+
+The earlier hang was the modal `ImportMessagesDialog`, not the upgrade:
+`ProjectUpgradeManager.Import()` calls `RaiseEventImportEnded()` and
+then `new ImportMessagesDialog().ShowDialog()`
+(`Epi.ImportExport/ProjectUpgradeManager.cs` ~lines 346-352 @ `4cd353c`),
+which blocks forever headless — run `45159694424`'s artifact already
+held the fully upgraded `UpgradedProbe\UpgradedProbe.mdb`. The probe now
+subscribes `ImportStatus` (logged as `STATUS`) and `ImportEnded`, counts
+rows over OleDb inside the handler and calls `Environment.Exit(0)`
+before the dialog opens; the probe step is capped at
+`timeout-minutes: 20`. Earlier attempts: `45156679205` reached stage 1
+before PowerShell's native-stderr handling killed the step;
+`45151708069` died at probe start on the anycpu build and uninitialised
+configuration. Note: run `45177072437`'s `ei7` corpus job failed "No
+drift in fixtures/ei7" — the only diff is the `<i>Date:</i>` timestamp
+Epi Info stamps into each `.html` at generation (`11:08:08 AM` ->
+`12:44:51 PM`); the `.json` steps data is unchanged. The drift is
+pre-existing (the generating run `45161983082` passed because the v11
+outputs were still untracked) and is out of scope for this fix round:
+the `ei7` job and the committed fixtures were left untouched.
 
 Files outside the Files block:
 - `fixtures/ei7/steps.mjs` — fix round 1: the `--steps` corpus half of

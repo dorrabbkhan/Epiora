@@ -89,11 +89,37 @@ in `docs/decisions.md` (`### v1.1 Task 3`).
 `Epi.ImportExport.ProjectUpgradeManager` — the class behind MakeView's
 interactive Epi Info 3.x upgrade path — on the source-built route against
 `fixtures/legacy/samples/ei3/Asthma Survey 2005 Sample.mdb`. **Result:
-does not complete unattended.** Run `45156679205` reached the probe's
-first stage (EI3 project loaded, 1 view enumerated) before the harness
-died on stderr handling; run `45159694424` rebuilt the pinned source
-tree and launched the `/platform:x86` probe with `Epi.Configuration`
-loaded, then the probe step hung past 40 minutes with no staged output —
-the same modal-dialog failure mode the corpus programs showed before
-`RUNSILENT`/`END-SET`. Kept opt-in and nonblocking; full history in
-`docs/decisions.md` (`### v1.1 Task 3`).
+completes unattended once the probe exits on `ImportEnded`.** Run
+[`45177072437`](https://github.com/dorrabbkhan/Epiora/actions/runs/45177072437)
+upgraded all 800 source rows into four page tables — probe.log verbatim
+head and tail (the elided middle is per-field `STATUS` lines plus
+`Processed 1..800 of 800 unique record identifiers in
+PreInterventionSurvey`):
+
+    STAGE1 ei3 project loaded: views=1
+      view viewPreInterventionSurvey table=PreInterventionSurvey
+    STAGE2 configuration loaded: D:\a\Epiora\Epiora\ei7\build\Release\Configuration\EpiInfo.Config.xml
+    STAGE2 target project created: D:\a\Epiora\Epiora\ei3-probe\UpgradedProbe\UpgradedProbe.prj
+    STATUS viewPreInterventionSurvey...
+    ...
+    STATUS Started updating image fields in [PreInterventionSurvey]...
+    STATUS No image fields found to update in [PreInterventionSurvey].
+    STATUS Converting Form Relations...
+    STAGE3 ImportEnded
+    STAGE3 destination mdb: D:\a\Epiora\Epiora\ei3-probe\UpgradedProbe\UpgradedProbe.mdb
+    COUNT PreInterventionSurvey 800
+    COUNT PreInterventionSurvey1 800
+    COUNT PreInterventionSurvey2 800
+    COUNT PreInterventionSurvey3 800
+    COUNT source PreInterventionSurvey 800
+
+The run-`45159694424` hang was not the upgrade: `Import()` raises
+`ImportEnded` and *then* shows the modal `ImportMessagesDialog`
+(`Epi.ImportExport/ProjectUpgradeManager.cs` ~lines 346-352 @ `4cd353c`),
+which blocks forever on a headless desktop — that run's artifact already
+held the fully upgraded `UpgradedProbe\UpgradedProbe.mdb`. The probe now
+subscribes `ImportStatus` (logged as `STATUS`) and `ImportEnded`, prints
+the row counts inside the handler and calls `Environment.Exit(0)` before
+the dialog opens; the step is capped at `timeout-minutes: 20` so a hang
+can never again use the whole 90-minute job. Kept opt-in and
+nonblocking; full history in `docs/decisions.md` (`### v1.1 Task 3`).
