@@ -6639,3 +6639,75 @@ Decision: bump `cookie` 0.18.2 → 0.18.3 in `app/src-tauri/Cargo.lock` via `car
 in the `app` and `native-store` CI jobs on main and on every open PR (first seen on #113). It is the only lock change. No
 `deny.toml` ignore was added. Owner chose a separate PR (#113 escalation, 2026-11-23), as with #103.
 Supersedes: —
+
+### v1.1 Task 8 — EI3 (Epi Info 3.5.x) mapper (2026-11-23)
+
+Decision: `epiora-legacy::map_ei3` maps an Epi Info 3.5.x Access
+project — one `view<Name>` field-definition table per view, `SOURCE`
+rows naming the data table (`DATA\d*`) and code tables (`CODE*`),
+fields with `PageNumber > 0`, `UniqueKey` record identity and
+`RECSTATUS = 0` deleted rows — to a `LegacyProject` whose structure
+equals the Task 4 golden `project.json` files for all twelve
+`ei3_access` fixtures (seven under `golden/ei3/`, five JET4 `.mdb`s
+under `golden/ei7/`). The module is a port of the independently
+written `fixtures/legacy/ei3-project.mjs`; the Epi Info upgrade code
+`Epi.ImportExport/Epi2000/` (`{Project,View,Page,MetadataDbProvider,
+CollectedDataProvider,ProjectAnalyzer}.cs`) and
+`Epi.ImportExport/ProjectUpgradeManager.cs` at
+`4cd353c62c40b78d9d1f013b0f5a2bb685a5fca6` (Apache-2.0, D2) is cited
+in `ei3/mod.rs` as the plan's method source.
+
+Interface notes where the golden oracle superseded the Interfaces
+block sketch:
+
+- `map_ei3` is `map_ei3(source, name: &str)`, not `map_ei3(source)`:
+  the golden burns `opts.stem` into `project.name` and the
+  `code_page_assumed`/`legacy_layout_unknown` report items, and an
+  EI3 file carries no project-name table — viewless files (9 of the
+  12 goldens) offer no in-file name at all. The caller passes the
+  file stem, mirroring `map_ei7`'s caller-supplied `format`.
+- `ei3::EI3_VALIDATED` (`pub const bool = true`) is the product-side
+  record of the D12 verdict (Task 2: redistributable). The plan's
+  conditional — D12 `unavailable` → every EI3 project's report gets
+  `ReportEntry { Unvalidated, <project>, "Epi Info 3.5.x support is
+  not validated against sample projects (D12)" }` — is implemented
+  behind it; the test's dormant branch reads the verdict from
+  `fixtures/legacy/samples/README.md` and asserts that entry instead
+  of the golden comparison.
+- `detect` moved from `ei7/mod.rs` to `lib.rs` (the Files block's
+  `lib.rs` (`detect`) change): it routes between both mappers, so it
+  lives in the crate root rather than under `ei7/`; behaviour is
+  unchanged (`metaViews` → `Ei7Access`, else `view*` → `Ei3Access`,
+  else `LayoutUnknown` carrying the plain table list).
+- `deleted_records` counts `Number(RECSTATUS) === 0` with JS
+  semantics: a missing, empty or whitespace `RECSTATUS` cell is `0`
+  (`Number(null)`/`Number('')`), hence deleted — matching the
+  golden's `data.filter(...)` verbatim.
+- `check_code.text` stores the non-blank `Checkcode` field texts
+  joined by a blank line (the golden pins only the `blocks` count —
+  the number of field rows with a non-blank `Checkcode`, not the
+  EI7 `BLOCK_RE` header count — so `text` keeps the raw corpus for
+  v1.3's translator like Task 7 did).
+- `legacy_id` is `""` (golden `null`): EI3 projects have no project
+  GUID. `key_column` is `UniqueKey` (the plan's key column; EI3 has
+  no `GlobalRecordId`).
+- Mirror fields read their source through the *untrimmed* `Name`
+  cell (`String(ci(srcField,'Name'))` in the golden), so a trailing
+  space in a field name mirrors the same lookup miss the golden has;
+  `MIRROR` columns land as `text` with the `field_imported_changed`
+  report entry.
+- The EI3 report emits none of `program_imported`,
+  `check_code_stored`, `records_deleted` or `text_decoding`: the
+  golden's report vocabulary for EI3 is `code_page_assumed`,
+  `field_not_imported`, `field_imported_changed`,
+  `field_column_missing`, `view_data_missing`, `code_table_missing`,
+  `table_not_imported`, `legacy_layout_unknown` and (when D12 is
+  unavailable) `unvalidated`, and the report JSON is compared
+  verbatim.
+
+Files outside the Files block:
+- `crates/epiora-legacy/src/ei7/mod.rs` — `MapCtx::new` and
+  `any_code_page` widened to `pub(crate)` so `ei3` reuses the shared
+  map context; `detect`/`plain_tables` moved out to `lib.rs` (above)
+  and `map_ei7` now calls `crate::plain_tables`. No behaviour change.
+Supersedes: —
