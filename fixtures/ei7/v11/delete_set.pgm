@@ -1,0 +1,27 @@
+*** delete_set.pgm — Epiora v1.1 Task 3 reference program.
+*** DELETE marks records in the working view (never the file); SET
+*** PROCESS=BOTH includes deleted records in output again and UNDELETE
+*** restores them. SET MISSING=ON/OFF pins missing-value inclusion in FREQ
+*** over TIMESUPPER (missing in 47 of 75 rows). Pins spec §15.2: SET
+*** missing-value inclusion.
+READ '@WORK_DIR@/Sample.mdb':Oswego12
+ROUTEOUT "@OUTPUT_HTML@" REPLACE
+FREQ ILL
+DELETE ILL = 0
+FREQ ILL
+MEANS AGE
+LIST ILL AGE
+SET PROCESS=BOTH
+FREQ ILL
+LIST ILL AGE
+SET PROCESS=UNDELETED
+UNDELETE *
+FREQ ILL
+SET MISSING=ON
+FREQ TIMESUPPER
+SET MISSING=OFF
+FREQ TIMESUPPER
+SET DELETED=ON
+FREQ ILL
+CLOSEOUT
+QUIT

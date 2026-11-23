@@ -1,34 +1,45 @@
-# run.ps1 — run fixtures/ei7/oswego.pgm through Epi Info 7 Classic Analysis.
+# run.ps1 — run fixtures/ei7/oswego.pgm and every fixtures/ei7/v11/*.pgm
+# through Epi Info 7 Classic Analysis.
 #
 # Epiora v0.2 Task 3. Promoted from spikes/ei7-windows/run-pgm.ps1 and
 # narrowed to the single route the ei7.yml workflow uses: the official
 # 7.2.7.0 Analysis.exe and the Sample.mdb inside the release ZIP (the
 # .prj-view and source-built routes of the spike are not repeated here —
 # see docs/spikes/ei7-windows.md for why .prj READs cannot work on CI).
+# v1.1 Task 3 added the v11/ corpus loop.
 #
 # Locates Analysis.exe under -Ei7Dir (the extracted release ZIP) or honours
-# EI7_ANALYSIS_EXE, renders oswego.pgm into a *.pgm7 file with absolute
+# EI7_ANALYSIS_EXE, renders each .pgm into a *.pgm7 file with absolute
 # paths — Analysis.exe's command-line scan only accepts arguments whose
 # file name contains ".pgm7" — then runs it. The program's own QUIT
 # statement closes the application, so a timeout is a headless-run
 # failure, not normal.
 #
-# Paths substituted into the program use forward slashes: inside .pgm
+# Substitution tokens:
+#   @SAMPLE_MDB@   Sample.mdb inside the release ZIP (oswego.pgm)
+#   @WORK_DIR@     ei7-out/work/v11-data — holds SCRATCH COPIES of the
+#                  committed fixture .mdb files, because Epi Info's MERGE
+#                  writes into the destination table's file on disk; the
+#                  committed fixtures must never be written.
+#   @OUTPUT_HTML@  the program's ROUTEOUT target under -OutputDir.
+#
+# Paths substituted into programs use forward slashes: inside .pgm
 # BraceString and String literals a backslash escapes the next character.
 #
-# Exit code 0 only if -OutputDir contains oswego.html afterwards.
+# Every program is attempted even if an earlier one fails; exit code 0 only
+# if every expected html exists afterwards.
 
 [CmdletBinding()]
 param(
     # Root searched recursively for Analysis.exe (extracted release ZIP).
     [string]$Ei7Dir = "ei7-rel",
-    # Directory that receives oswego.html; asserted on by the workflow.
+    # Directory that receives the html outputs; asserted on by the workflow.
     [string]$OutputDir = "ei7-out",
     # Headless run guard: Analysis.exe is killed after this many seconds.
     [int]$TimeoutSeconds = 300
 )
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
 $ei7 = Join-Path $repoRoot $Ei7Dir
 $outDir = Join-Path $repoRoot $OutputDir
@@ -58,18 +69,27 @@ $mdbHash = (Get-FileHash $mdb -Algorithm SHA256).Hash.ToLower()
 Write-Host "run: Sample.mdb=$mdb"
 Write-Host "run: Sample.mdb SHA256=$mdbHash"
 
-# --- 3. Render the .pgm7 ----------------------------------------------------
+# --- 3. Prepare output and the v11 scratch-data directory --------------------
 New-Item -ItemType Directory -Force -Path $outDir | Out-Null
 $workDir = Join-Path $outDir "work"
 New-Item -ItemType Directory -Force -Path $workDir | Out-Null
-$outHtml = Join-Path $outDir "oswego.html"
-$pgmText = Get-Content (Join-Path $PSScriptRoot "oswego.pgm") -Raw
-$pgmText = $pgmText.Replace("@SAMPLE_MDB@", ($mdb -replace '\\', '/'))
-$pgmText = $pgmText.Replace("@OUTPUT_HTML@", ($outHtml -replace '\\', '/'))
-$pgm7 = Join-Path $workDir "oswego.pgm7"
-Set-Content -Path $pgm7 -Value $pgmText -Encoding ASCII
-Write-Host "run: rendered $pgm7"
-Get-Content $pgm7 | Write-Host
+$v11Data = Join-Path $workDir "v11-data"
+New-Item -ItemType Directory -Force -Path $v11Data | Out-Null
+$v11Out = Join-Path $outDir "v11"
+New-Item -ItemType Directory -Force -Path $v11Out | Out-Null
+
+foreach ($fixture in @(
+        "fixtures\legacy\samples\ei7\Sample\Sample.mdb",
+        "fixtures\legacy\samples\ei7\Nutrition\Nutrition.mdb")) {
+    $src = Join-Path $repoRoot $fixture
+    if (-not (Test-Path $src)) {
+        Write-Error "run: fixture $src not found"
+        exit 1
+    }
+    Copy-Item $src $v11Data -Force
+    $h = (Get-FileHash (Join-Path $v11Data (Split-Path $src -Leaf)) -Algorithm SHA256).Hash.ToLower()
+    Write-Host "run: v11-data $(Split-Path $src -Leaf) SHA256=$h"
+}
 
 # --- 4. Diagnostics for a hung run ------------------------------------------
 function Write-WindowDiagnostics {
@@ -118,26 +138,69 @@ function Write-WindowDiagnostics {
         }
 }
 
-# --- 5. Run Analysis.exe and wait for QUIT ----------------------------------
-$proc = Start-Process -FilePath $analysis -ArgumentList "`"$pgm7`"" `
-    -WorkingDirectory $exeDir -PassThru
-Write-Host "run: started PID $($proc.Id), waiting up to ${TimeoutSeconds}s"
-if (-not $proc.WaitForExit($TimeoutSeconds * 1000)) {
-    $proc.Refresh()
-    Write-Host "run: timeout — MainWindowTitle='$($proc.MainWindowTitle)' Responding=$($proc.Responding)"
-    Write-WindowDiagnostics -ProcessId $proc.Id
-    $proc.Kill()
-    Write-Error "run: Analysis.exe did not exit within ${TimeoutSeconds}s"
+# --- 5. Render + run one program ---------------------------------------------
+# Returns $true when the program's html exists at $outHtml afterwards.
+function Invoke-AnalysisProgram {
+    param(
+        [string]$PgmPath,
+        [string]$OutHtml,
+        [hashtable]$Substitutions,
+        [string]$Pgm7
+    )
+    $pgmText = Get-Content $PgmPath -Raw
+    foreach ($key in $Substitutions.Keys) {
+        $pgmText = $pgmText.Replace($key, ($Substitutions[$key] -replace '\\', '/'))
+    }
+    Set-Content -Path $Pgm7 -Value $pgmText -Encoding ASCII
+    Write-Host "run: rendered $Pgm7"
+    Get-Content $Pgm7 | Write-Host
+
+    $proc = Start-Process -FilePath $analysis -ArgumentList "`"$Pgm7`"" `
+        -WorkingDirectory $exeDir -PassThru
+    Write-Host "run: started PID $($proc.Id), waiting up to ${TimeoutSeconds}s"
+    if (-not $proc.WaitForExit($TimeoutSeconds * 1000)) {
+        $proc.Refresh()
+        Write-Host "run: timeout — MainWindowTitle='$($proc.MainWindowTitle)' Responding=$($proc.Responding)"
+        Write-WindowDiagnostics -ProcessId $proc.Id
+        $proc.Kill()
+        Write-Error "run: Analysis.exe did not exit within ${TimeoutSeconds}s for $Pgm7"
+        return $false
+    }
+    Write-Host "run: Analysis.exe exited with code $($proc.ExitCode)"
+    $deadline = (Get-Date).AddSeconds(15)
+    while (-not (Test-Path $OutHtml) -and (Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 500
+    }
+    if (-not (Test-Path $OutHtml)) {
+        Write-Error "run: $OutHtml was not produced"
+        return $false
+    }
+    Write-Host "run: OK — $OutHtml ($((Get-Item $OutHtml).Length) bytes)"
+    return $true
+}
+
+$failures = @()
+
+# --- 6. oswego.pgm ------------------------------------------------------------
+$outHtml = Join-Path $outDir "oswego.html"
+$ok = Invoke-AnalysisProgram -PgmPath (Join-Path $PSScriptRoot "oswego.pgm") `
+    -OutHtml $outHtml -Pgm7 (Join-Path $workDir "oswego.pgm7") `
+    -Substitutions @{ '@SAMPLE_MDB@' = $mdb; '@OUTPUT_HTML@' = $outHtml }
+if (-not $ok) { $failures += "oswego" }
+
+# --- 7. v11/*.pgm corpus ------------------------------------------------------
+Get-ChildItem (Join-Path $PSScriptRoot "v11") -Filter "*.pgm" | Sort-Object Name | ForEach-Object {
+    $name = $_.BaseName
+    $vHtml = Join-Path $v11Out "$name.html"
+    $ok = Invoke-AnalysisProgram -PgmPath $_.FullName -OutHtml $vHtml `
+        -Pgm7 (Join-Path $workDir "$name.pgm7") `
+        -Substitutions @{ '@WORK_DIR@' = $v11Data; '@OUTPUT_HTML@' = $vHtml }
+    if (-not $ok) { $failures += $name }
+}
+
+if ($failures.Count -gt 0) {
+    Write-Error "run: failed program(s): $($failures -join ', ')"
     exit 1
 }
-Write-Host "run: Analysis.exe exited with code $($proc.ExitCode)"
-$deadline = (Get-Date).AddSeconds(15)
-while (-not (Test-Path $outHtml) -and (Get-Date) -lt $deadline) {
-    Start-Sleep -Milliseconds 500
-}
-if (-not (Test-Path $outHtml)) {
-    Write-Error "run: $outHtml was not produced"
-    exit 1
-}
-Write-Host "run: OK — $outHtml ($((Get-Item $outHtml).Length) bytes)"
+Write-Host "run: all programs produced output"
 exit 0

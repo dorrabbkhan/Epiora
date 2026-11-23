@@ -1,0 +1,41 @@
+*** recode.pgm — Epiora v1.1 Task 3 reference program.
+*** RECODE at range boundaries: Oswego12 AGE min 3 max 77, with rows at
+*** exactly 17 (4 rows), 64 (1), 65 (3) — LOVALUE/HIVALUE and inner
+*** boundaries pinned. ELSE catches a missing source (MASHEDPOTA has one
+*** missing cell) and a numeric-to-text recode. Pins spec §15.2: RECODE at
+*** range boundaries and with ELSE.
+READ '@WORK_DIR@/Sample.mdb':Oswego12
+ROUTEOUT "@OUTPUT_HTML@" REPLACE
+DEFINE AGEGRP NUMERIC
+RECODE AGE TO AGEGRP
+LOVALUE - 17 = 1
+18 - 64 = 2
+65 - HIVALUE = 3
+END
+FREQ AGEGRP
+DEFINE UNDER40 NUMERIC
+RECODE AGE TO UNDER40
+LOVALUE - 39 = 1
+40 - HIVALUE = 0
+END
+FREQ UNDER40
+DEFINE MPGRP NUMERIC
+RECODE MASHEDPOTA TO MPGRP
+0 = 0
+ELSE = 2
+END
+FREQ MPGRP
+DEFINE VANGRP NUMERIC
+RECODE VANILLA TO VANGRP
+0 = 2
+ELSE = 9
+END
+FREQ VANGRP
+DEFINE ILLTXT TEXTINPUT
+RECODE ILL TO ILLTXT
+0 = "well"
+1 = "ill"
+END
+FREQ ILLTXT
+CLOSEOUT
+QUIT
