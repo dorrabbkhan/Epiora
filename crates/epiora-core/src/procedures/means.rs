@@ -1,7 +1,8 @@
 //! `means` — Epi Info's MEANS (spec §4.2): per-group and overall
-//! descriptives of one numeric (Integer/Real/Date) variable, and for
-//! grouped runs the pooled and Welch (Satterthwaite) t-tests, one-way
-//! ANOVA, Bartlett's test and the tie-corrected Kruskal–Wallis H.
+//! descriptives of one numeric (Integer/Real/Date; v1.1 also Time and
+//! DateTime, values in their unit) variable, and for grouped runs the
+//! pooled and Welch (Satterthwaite) t-tests, one-way ANOVA, Bartlett's
+//! test and the tie-corrected Kruskal–Wallis H.
 
 use super::{build_receipt, check_ctx, options_json};
 use super::{MeansOptions, MeansResult, ProcOutput, RunContext};

@@ -87,6 +87,7 @@ fn table(
         variable: variable.to_string(),
         stratum,
         labels: counts.labels.clone(),
+        value_labels: counts.value_labels.clone(),
         ci_method,
         total: counts.total,
         missing: counts.missing,

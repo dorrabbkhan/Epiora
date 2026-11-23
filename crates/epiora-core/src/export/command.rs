@@ -58,6 +58,10 @@ fn cell_text(v: &CellValue) -> String {
         CellValue::Text(s) => s.clone(),
         CellValue::Boolean(b) => b.to_string(),
         CellValue::Date(d) => d.to_string(),
+        // Seconds in their unit — TABLES never takes Time/DateTime
+        // levels, so these arms are unreachable in practice.
+        CellValue::Time(t) => t.to_string(),
+        CellValue::DateTime(t) => t.to_string(),
     }
 }
 

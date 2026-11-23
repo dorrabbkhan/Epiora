@@ -145,6 +145,35 @@ pub(crate) fn parse_date(s: &str, format: DateFormat) -> Option<i32> {
     }
 }
 
+/// Strict `hh:mm:ss` → seconds since midnight (v1.1 spec §4.3); a
+/// `Time` column's text coercion accepts only this spelling.
+pub(crate) fn parse_time(s: &str) -> Option<i32> {
+    let b = s.as_bytes();
+    if b.len() != 8 || b[2] != b':' || b[5] != b':' {
+        return None;
+    }
+    let (h, m, sec) = (
+        fixed_num(&s[0..2])?,
+        fixed_num(&s[3..5])?,
+        fixed_num(&s[6..8])?,
+    );
+    if !(0..=23).contains(&h) || !(0..=59).contains(&m) || !(0..=59).contains(&sec) {
+        return None;
+    }
+    i32::try_from(h * 3600 + m * 60 + sec).ok()
+}
+
+/// Strict `YYYY-MM-DD hh:mm:ss` → seconds since 1970-01-01, no time
+/// zone (v1.1 spec §4.3).
+pub(crate) fn parse_datetime(s: &str) -> Option<i64> {
+    if s.len() != 19 || s.as_bytes()[10] != b' ' {
+        return None;
+    }
+    let days = i64::from(parse_date(&s[..10], DateFormat::Iso)?);
+    let secs = i64::from(parse_time(&s[11..])?);
+    days.checked_mul(86_400)?.checked_add(secs)
+}
+
 fn parse_dmy_mdy(s: &str, dmy: bool) -> Option<i32> {
     for sep in ['/', '-', '.'] {
         let parts: Vec<&str> = s.split(sep).collect();

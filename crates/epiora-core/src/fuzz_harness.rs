@@ -46,16 +46,20 @@ enum FuzzData {
     Text(Vec<Option<String>>),
     Boolean(Vec<Option<bool>>),
     Date(Vec<Option<i32>>),
+    Time(Vec<Option<i32>>),
+    DateTime(Vec<Option<i64>>),
 }
 
 impl<'a> Arbitrary<'a> for FuzzData {
     fn arbitrary(u: &mut Unstructured<'a>) -> Result<Self> {
-        Ok(match u.arbitrary::<u8>()? % 5 {
+        Ok(match u.arbitrary::<u8>()? % 7 {
             0 => Self::Integer(u.arbitrary()?),
             1 => Self::Real(u.arbitrary()?),
             2 => Self::Text(u.arbitrary()?),
             3 => Self::Boolean(u.arbitrary()?),
-            _ => Self::Date(u.arbitrary()?),
+            4 => Self::Date(u.arbitrary()?),
+            5 => Self::Time(u.arbitrary()?),
+            _ => Self::DateTime(u.arbitrary()?),
         })
     }
 }
@@ -101,6 +105,14 @@ fn to_column(raw: FuzzColumn) -> Column {
             v.truncate(MAX_ROWS);
             ColumnData::Date(v)
         }
+        FuzzData::Time(mut v) => {
+            v.truncate(MAX_ROWS);
+            ColumnData::Time(v)
+        }
+        FuzzData::DateTime(mut v) => {
+            v.truncate(MAX_ROWS);
+            ColumnData::DateTime(v)
+        }
     };
     Column { name, data }
 }
@@ -140,16 +152,20 @@ enum FuzzValue {
     Text(String),
     Boolean(bool),
     Date(i32),
+    Time(i32),
+    DateTime(i64),
 }
 
 impl<'a> Arbitrary<'a> for FuzzValue {
     fn arbitrary(u: &mut Unstructured<'a>) -> Result<Self> {
-        Ok(match u.arbitrary::<u8>()? % 5 {
+        Ok(match u.arbitrary::<u8>()? % 7 {
             0 => Self::Integer(u.arbitrary()?),
             1 => Self::Real(u.arbitrary()?),
             2 => Self::Text(u.arbitrary()?),
             3 => Self::Boolean(u.arbitrary()?),
-            _ => Self::Date(u.arbitrary()?),
+            4 => Self::Date(u.arbitrary()?),
+            5 => Self::Time(u.arbitrary()?),
+            _ => Self::DateTime(u.arbitrary()?),
         })
     }
 }
@@ -162,6 +178,8 @@ impl From<FuzzValue> for Value {
             FuzzValue::Text(x) => Self::Text(x.chars().take(MAX_TEXT).collect()),
             FuzzValue::Boolean(x) => Self::Boolean(x),
             FuzzValue::Date(x) => Self::Date(x),
+            FuzzValue::Time(x) => Self::Time(x),
+            FuzzValue::DateTime(x) => Self::DateTime(x),
         }
     }
 }

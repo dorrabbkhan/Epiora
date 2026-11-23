@@ -6,3 +6,4 @@ export * as changes from './changes';
 export * as imports from './imports';
 export * as runs from './runs';
 export * as meta from './meta';
+export * as legacy from './legacy';

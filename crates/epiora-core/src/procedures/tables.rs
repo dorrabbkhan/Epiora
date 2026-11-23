@@ -94,6 +94,8 @@ pub fn tables(
                 labels: Labels2x2 {
                     exposure: xt.row_labels.clone(),
                     outcome: xt.col_labels.clone(),
+                    exposure_value_labels: xt.row_value_labels.clone(),
+                    outcome_value_labels: xt.col_value_labels.clone(),
                 },
                 crude,
                 stratified,
@@ -114,6 +116,8 @@ pub fn tables(
             TablesResult::RxC {
                 row_labels: xt.row_labels.clone(),
                 col_labels: xt.col_labels.clone(),
+                row_value_labels: xt.row_value_labels.clone(),
+                col_value_labels: xt.col_value_labels.clone(),
                 counts,
                 stats: stats.clone(),
             },

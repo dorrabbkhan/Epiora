@@ -35,6 +35,8 @@ fn numeric(data: &ColumnData, i: usize) -> Option<f64> {
         ColumnData::Integer(v) => v[i].map(|x| x as f64),
         ColumnData::Real(v) => v[i],
         ColumnData::Date(v) => v[i].map(f64::from),
+        ColumnData::Time(v) => v[i].map(f64::from),
+        ColumnData::DateTime(v) => v[i].map(|x| x as f64),
         ColumnData::Text(_) | ColumnData::Boolean(_) => None,
     }
 }
@@ -42,14 +44,20 @@ fn numeric(data: &ColumnData, i: usize) -> Option<f64> {
 fn is_numeric(data: &ColumnData) -> bool {
     matches!(
         data,
-        ColumnData::Integer(_) | ColumnData::Real(_) | ColumnData::Date(_)
+        ColumnData::Integer(_)
+            | ColumnData::Real(_)
+            | ColumnData::Date(_)
+            | ColumnData::Time(_)
+            | ColumnData::DateTime(_)
     )
 }
 
 /// Buckets `variable`'s values by `group_by` (v1.0 spec §4.2). Dates
-/// convert to days since 1970-01-01. `NotNumericVariable` on a Text or
-/// Boolean analysis variable; `TooManyGroups` above
-/// [`MAX_MEANS_GROUPS`] distinct categories.
+/// convert to days since 1970-01-01; `Time` and `DateTime` keep their
+/// units (seconds since midnight, seconds since 1970-01-01) as Epi
+/// Info's MEANS over a time field does (v1.1 spec §4.3).
+/// `NotNumericVariable` on a Text or Boolean analysis variable;
+/// `TooManyGroups` above [`MAX_MEANS_GROUPS`] distinct categories.
 pub fn group_numeric(
     ds: &Dataset,
     variable: &str,

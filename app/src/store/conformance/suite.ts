@@ -56,17 +56,22 @@ export function storeConformance(name: string, open: () => Promise<Store>): void
       const metaRows = await store.query('SELECT key, value FROM meta ORDER BY key');
       const keys = metaRows.map((r) => r.key);
       expect(keys).toEqual(['device_id', 'lamport', 'schema_version']);
-      expect(String(metaRows[2]!.value)).toBe('3');
+      expect(String(metaRows[2]!.value)).toBe('4');
 
       const tables = (
         await store.query("SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name")
       ).map((r) => r.name);
       for (const t of [
         'changes',
+        'check_code',
+        'dataset_links',
         'dataset_versions',
         'datasets',
         'imports',
+        'legacy_projects',
         'meta',
+        'migration_reports',
+        'programs',
         'projects',
         'records',
         'runs',
@@ -78,7 +83,7 @@ export function storeConformance(name: string, open: () => Promise<Store>): void
       await store.close();
       store = await open();
       const again = await store.query("SELECT value FROM meta WHERE key = 'schema_version'");
-      expect(String(again[0]!.value)).toBe('3');
+      expect(String(again[0]!.value)).toBe('4');
     });
 
     // The schema-migration cases live in migrations.ts (the suite

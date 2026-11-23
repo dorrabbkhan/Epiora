@@ -69,6 +69,28 @@ fn data_of(ty: ValueType, cells: Vec<Option<Value>>) -> ColumnData {
                 })
                 .collect(),
         ),
+        ValueType::Time => ColumnData::Time(
+            cells
+                .into_iter()
+                .map(|c| {
+                    c.and_then(|v| match v {
+                        Value::Time(t) => Some(t),
+                        _ => None,
+                    })
+                })
+                .collect(),
+        ),
+        ValueType::DateTime => ColumnData::DateTime(
+            cells
+                .into_iter()
+                .map(|c| {
+                    c.and_then(|v| match v {
+                        Value::DateTime(t) => Some(t),
+                        _ => None,
+                    })
+                })
+                .collect(),
+        ),
     }
 }
 
@@ -83,6 +105,8 @@ fn atom(ty: ValueType) -> BoxedStrategy<Value> {
             .boxed(),
         ValueType::Boolean => any::<bool>().prop_map(Value::Boolean).boxed(),
         ValueType::Date => (-30_000i32..40_000).prop_map(Value::Date).boxed(),
+        ValueType::Time => (0i32..86_400).prop_map(Value::Time).boxed(),
+        ValueType::DateTime => (0i64..1_800_000_000).prop_map(Value::DateTime).boxed(),
     }
 }
 

@@ -63,6 +63,14 @@ pub enum EngineError {
     /// a seeded ChaCha stream R cannot replay.
     #[error("R export not available: {reason}")]
     ExportNotAvailable { reason: String },
+    /// A `Time` cell or label-set value is outside `0..=86_399`
+    /// (v1.1 spec §4.3).
+    #[error("invalid time value: {value}")]
+    InvalidTime { value: i32 },
+    /// A column's meta names a label set the dataset does not hold
+    /// (v1.1 spec §4.3).
+    #[error("label set missing: {id}")]
+    LabelSetMissing { id: String },
 }
 
 impl EngineError {
@@ -84,6 +92,8 @@ impl EngineError {
             Self::CalcInputOutOfRange { .. } => "calc_input_out_of_range",
             Self::ExplainUnknown { .. } => "explain_unknown",
             Self::ExportNotAvailable { .. } => "export_not_available",
+            Self::InvalidTime { .. } => "invalid_time",
+            Self::LabelSetMissing { .. } => "label_set_missing",
         }
     }
 }

@@ -1,9 +1,12 @@
-//! Loader for `fixtures/data/*.dataset.json` (spec §3.3), used by tests
-//! and `corpus-runner` only — not a product importer. Malformed JSON or
-//! a schema violation is `CorpusFormat`; `Dataset::new` rules keep their
-//! own errors.
+//! Loader for `fixtures/data/*.dataset.json` (spec §3.3) and the v1.1
+//! dataset JSON v2 (`columns[].type` adds `time`/`date_time` as
+//! `hh:mm:ss` / `YYYY-MM-DD hh:mm:ss` strings; `columns[].meta`;
+//! `label_sets`), used by tests and `corpus-runner` only — not a
+//! product importer. Malformed JSON or a schema violation is
+//! `CorpusFormat`; `Dataset::new`/`with_meta` rules keep their own
+//! errors.
 
-use crate::dataset::{Column, ColumnData, Dataset};
+use crate::dataset::{Column, ColumnData, ColumnMeta, Dataset, LabelSet};
 use crate::EngineError;
 use serde::Deserialize;
 use serde_json::Value;
@@ -11,6 +14,8 @@ use std::collections::BTreeMap;
 use std::path::Path;
 
 /// Parses one `*.dataset.json` document into a validated `Dataset`.
+/// A document without `meta` or `label_sets` builds the same v1
+/// dataset as before.
 pub fn load_dataset(json: &str) -> Result<Dataset, EngineError> {
     let raw: DatasetJson =
         serde_json::from_str(json).map_err(|e| corpus(format!("malformed JSON: {e}")))?;
@@ -27,7 +32,41 @@ pub fn load_dataset(json: &str) -> Result<Dataset, EngineError> {
             data: column_data(column)?,
         });
     }
-    Dataset::new(raw.id, raw.version, columns)
+    let ds = Dataset::new(raw.id, raw.version, columns)?;
+    let has_meta = raw.columns.iter().any(|c| c.meta.is_some());
+    if !has_meta && raw.label_sets.is_none() {
+        return Ok(ds);
+    }
+    let metas: Vec<ColumnMeta> = raw
+        .columns
+        .iter()
+        .map(|c| c.meta.clone().unwrap_or_default())
+        .collect();
+    let mut label_sets = BTreeMap::new();
+    for set in raw.label_sets.iter().flatten() {
+        if set.id.is_empty() {
+            return Err(corpus("label set id must not be empty"));
+        }
+        let mut entries = Vec::with_capacity(set.entries.len());
+        for (i, (value, label)) in set.entries.iter().enumerate() {
+            let value = serde_json::from_value::<crate::dataset::Value>(value.clone())
+                .map_err(|e| corpus(format!("label set {:?}: entry {i}: {e}", set.id)))?;
+            entries.push((value, label.clone()));
+        }
+        if label_sets
+            .insert(
+                set.id.clone(),
+                LabelSet {
+                    id: set.id.clone(),
+                    entries,
+                },
+            )
+            .is_some()
+        {
+            return Err(corpus(format!("duplicate label set id {:?}", set.id)));
+        }
+    }
+    ds.with_meta(metas, label_sets)
 }
 
 /// Loads every `*.dataset.json` in `dir`, keyed by dataset id.
@@ -71,6 +110,8 @@ struct DatasetJson {
     id: String,
     version: u64,
     columns: Vec<ColumnJson>,
+    /// v2: value-label sets the column metas reference.
+    label_sets: Option<Vec<LabelSetJson>>,
 }
 
 #[derive(Deserialize)]
@@ -80,6 +121,18 @@ struct ColumnJson {
     #[serde(rename = "type")]
     kind: String,
     values: Vec<Value>,
+    /// v2: per-column metadata; never hashed but `label_set` names a
+    /// set that is.
+    meta: Option<ColumnMeta>,
+}
+
+/// One `label_sets[]` element: `[{"type": ..., "value": ...}, label]`
+/// pairs in source order.
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct LabelSetJson {
+    id: String,
+    entries: Vec<(Value, String)>,
 }
 
 fn column_data(column: &ColumnJson) -> Result<ColumnData, EngineError> {
@@ -99,6 +152,12 @@ fn column_data(column: &ColumnJson) -> Result<ColumnData, EngineError> {
         })?)),
         "date" => Ok(ColumnData::Date(convert(name, &column.values, |v| {
             v.as_str().and_then(|s| parse_iso_date(s).ok())
+        })?)),
+        "time" => Ok(ColumnData::Time(convert(name, &column.values, |v| {
+            v.as_str().and_then(|s| parse_iso_time(s).ok())
+        })?)),
+        "date_time" => Ok(ColumnData::DateTime(convert(name, &column.values, |v| {
+            v.as_str().and_then(|s| parse_iso_datetime(s).ok())
         })?)),
         other => Err(corpus(format!("column {name}: unknown type {other:?}"))),
     }
@@ -157,6 +216,42 @@ fn parse_iso_date(s: &str) -> Result<i32, EngineError> {
         return Err(bad());
     }
     i32::try_from(days_from_civil(year, month, day)).map_err(|_| bad())
+}
+
+/// Strict `hh:mm:ss` → seconds since midnight (v1.1 spec §4.3).
+fn parse_iso_time(s: &str) -> Result<i32, EngineError> {
+    let bad = || corpus(format!("invalid time {s:?}"));
+    let b = s.as_bytes();
+    if b.len() != 8 || b[2] != b':' || b[5] != b':' {
+        return Err(bad());
+    }
+    let num = |from: usize, to: usize| -> Result<i64, EngineError> {
+        match s.get(from..to) {
+            Some(sub) if sub.bytes().all(|c| c.is_ascii_digit()) => {
+                sub.parse::<i64>().map_err(|_| bad())
+            }
+            _ => Err(bad()),
+        }
+    };
+    let (h, m, sec) = (num(0, 2)?, num(3, 5)?, num(6, 8)?);
+    if !(0..=23).contains(&h) || !(0..=59).contains(&m) || !(0..=59).contains(&sec) {
+        return Err(bad());
+    }
+    i32::try_from(h * 3600 + m * 60 + sec).map_err(|_| bad())
+}
+
+/// Strict `YYYY-MM-DD hh:mm:ss` → seconds since 1970-01-01, no time
+/// zone (v1.1 spec §4.3).
+fn parse_iso_datetime(s: &str) -> Result<i64, EngineError> {
+    let bad = || corpus(format!("invalid date-time {s:?}"));
+    if s.len() != 19 || s.as_bytes()[10] != b' ' {
+        return Err(bad());
+    }
+    let days = i64::from(parse_iso_date(&s[..10])?);
+    let secs = i64::from(parse_iso_time(&s[11..])?);
+    days.checked_mul(86_400)
+        .and_then(|d| d.checked_add(secs))
+        .ok_or_else(bad)
 }
 
 fn is_leap(year: i64) -> bool {

@@ -19,7 +19,7 @@ mod groups;
 use crate::dataset::{ColumnData, Dataset};
 use crate::procedures::VarSpec;
 use crate::EngineError;
-use categories::{collect, orient, resolved, Cats};
+use categories::{collect, key_value, orient, resolved, Cats, Key};
 use std::collections::BTreeMap;
 
 pub use groups::{group_numeric, Groups};
@@ -34,6 +34,10 @@ const MAX_DENSE_CELLS: usize = 1_048_576;
 pub struct FreqCounts {
     /// Category labels; `"(missing)"` last when present.
     pub labels: Vec<String>,
+    /// The stored value's label of each category, aligned with
+    /// `labels` (v1.1 spec §4.3): `""` when the variable has no label
+    /// set or no entry matches — and for `"(missing)"`.
+    pub value_labels: Vec<String>,
     /// Count per category, aligned with `labels`.
     pub counts: Vec<u64>,
     /// Records with a missing value (also counted in the `"(missing)"`
@@ -63,6 +67,10 @@ pub struct CrossTab {
     pub row_labels: Vec<String>,
     /// Column categories in orientation order (2×2: ill, well).
     pub col_labels: Vec<String>,
+    /// Stored-value labels of `row_labels`, aligned; `""` when none.
+    pub row_value_labels: Vec<String>,
+    /// Stored-value labels of `col_labels`, aligned; `""` when none.
+    pub col_value_labels: Vec<String>,
     /// Combined stratum labels in category order.
     pub strata_labels: Vec<String>,
     /// `counts[stratum][row][col]`.
@@ -70,6 +78,43 @@ pub struct CrossTab {
     /// Excluded records per used variable: `exclusions[v]` counts
     /// excluded records where `v` is missing.
     pub exclusions: BTreeMap<String, u64>,
+}
+
+/// The stored-value label each category key carries in `var`'s label
+/// set (v1.1 spec §4.3): the label rides beside the stored value's
+/// label, never replaces it. `""` per unlabelled category and the
+/// appended `"(missing)"`.
+fn value_labels(ds: &Dataset, var: &str, keys: &[Key], missing_appended: bool) -> Vec<String> {
+    let set = ds.label_set_for(var);
+    let mut out: Vec<String> = keys
+        .iter()
+        .map(|k| {
+            set.and_then(|s| s.label_for(&key_value(k)))
+                .unwrap_or_default()
+                .to_string()
+        })
+        .collect();
+    if missing_appended {
+        out.push(String::new());
+    }
+    out
+}
+
+/// TABLES rejects `Time`/`DateTime` variables (`TypeMismatch`, v1.1
+/// spec §4.3): a category per second is never a meaningful table;
+/// Epi Info treats both as continuous.
+fn check_categorical(data: &ColumnData, name: &str) -> Result<(), EngineError> {
+    match data {
+        ColumnData::Time(_) | ColumnData::DateTime(_) => Err(EngineError::TypeMismatch {
+            variable: name.to_string(),
+            expected: "integer, real, text, boolean or date".to_string(),
+            found: match data {
+                ColumnData::Time(_) => "time".to_string(),
+                _ => "date_time".to_string(),
+            },
+        }),
+        _ => Ok(()),
+    }
 }
 
 /// `cross` — one pass counting `row × col` per stratum (spec §4.2).
@@ -89,6 +134,11 @@ pub fn cross(
         .iter()
         .map(|n| ds.column(n).map(|c| &c.data))
         .collect::<Result<_, _>>()?;
+    check_categorical(rdata, &row.name)?;
+    check_categorical(cdata, &col.name)?;
+    for (d, n) in sdata.iter().zip(strata) {
+        check_categorical(d, n)?;
+    }
 
     let (mut rkeys, rmiss) = resolved(&row.name, rdata, row.levels.as_ref())?;
     let (mut ckeys, cmiss) = resolved(&col.name, cdata, col.levels.as_ref())?;
@@ -201,6 +251,8 @@ pub fn cross(
         (labels, sparse.into_values().collect())
     };
     Ok(CrossTab {
+        row_value_labels: value_labels(ds, &row.name, &rkeys, rcats.missing_idx.is_some()),
+        col_value_labels: value_labels(ds, &col.name, &ckeys, ccats.missing_idx.is_some()),
         row_labels: rcats.labels,
         col_labels: ccats.labels,
         strata_labels,
@@ -227,6 +279,7 @@ pub fn frequency(
         }
     }
     Ok(FreqCounts {
+        value_labels: value_labels(ds, var, &keys, cats.missing_idx.is_some()),
         labels: cats.labels,
         counts,
         missing: cats.missing,
@@ -263,6 +316,7 @@ pub fn frequency_stratified(
         .chain(strata.iter().map(String::as_str))
         .map(|n| (n.to_string(), 0))
         .collect();
+    let var_labels = value_labels(ds, var, &keys, cats.missing_idx.is_some());
     let mut tables: BTreeMap<Vec<usize>, FreqCounts> = BTreeMap::new();
     for i in 0..ds.row_count() {
         let mut skey = Vec::with_capacity(scats.len());
@@ -286,6 +340,7 @@ pub fn frequency_stratified(
         }
         let table = tables.entry(skey).or_insert_with(|| FreqCounts {
             labels: cats.labels.clone(),
+            value_labels: var_labels.clone(),
             counts: vec![0; cats.labels.len()],
             missing: 0,
             total: 0,

@@ -44,14 +44,29 @@ fn cell_id(data: &ColumnData, row: usize) -> Option<String> {
             .flatten()
             .map(|b| if b { "true" } else { "false" }.to_string()),
         ColumnData::Date(v) => v.get(row).copied().flatten().map(days_to_iso),
+        ColumnData::Time(v) => v
+            .get(row)
+            .copied()
+            .flatten()
+            .map(crate::excel_date::secs_to_clock),
+        ColumnData::DateTime(v) => v
+            .get(row)
+            .copied()
+            .flatten()
+            .map(crate::excel_date::secs_to_iso_datetime),
     }
 }
 
-/// Whether the column's type can provide record ids (spec §4.4).
+/// Whether the column's type can provide record ids (spec §4.4;
+/// `Time`/`DateTime` key like `Date`, v1.1 spec §4.3).
 fn keyable(data: &ColumnData) -> bool {
     matches!(
         data,
-        ColumnData::Integer(_) | ColumnData::Text(_) | ColumnData::Date(_)
+        ColumnData::Integer(_)
+            | ColumnData::Text(_)
+            | ColumnData::Date(_)
+            | ColumnData::Time(_)
+            | ColumnData::DateTime(_)
     )
 }
 
