@@ -1,5 +1,5 @@
 *** delete_set.pgm — Epiora v1.1 Task 3 reference program.
-*** DELETE marks records in the working view (never the file); SET
+*** DELETE (RUNSILENT: it prompts otherwise) marks records in the working view (never the file); SET
 *** PROCESS=BOTH includes deleted records in output again and UNDELETE
 *** restores them. SET MISSING=ON/OFF pins missing-value inclusion in FREQ
 *** over TIMESUPPER (missing in 47 of 75 rows). Pins spec §15.2: SET
@@ -7,7 +7,7 @@
 READ '@WORK_DIR@/Sample.mdb':Oswego12
 ROUTEOUT "@OUTPUT_HTML@" REPLACE
 FREQ ILL
-DELETE ILL = 0
+DELETE ILL = 0 RUNSILENT
 FREQ ILL
 MEANS AGE
 LIST ILL AGE
@@ -15,7 +15,7 @@ SET PROCESS=BOTH END-SET
 FREQ ILL
 LIST ILL AGE
 SET PROCESS=UNDELETED END-SET
-UNDELETE *
+UNDELETE * RUNSILENT
 FREQ ILL
 SET MISSING=ON END-SET
 FREQ TIMESUPPER
