@@ -1,0 +1,6 @@
+[toolchain]
+# The fuzz crate is excluded from the stable workspace and builds on
+# this dated nightly (same pin as crates/epiora-core/fuzz,
+# crates/epiora-import/fuzz and crates/epiora-mdb/fuzz); both fuzz CI
+# workflows install exactly this channel.
+channel = "nightly-2026-10-15"
