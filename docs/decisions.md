@@ -6469,6 +6469,7 @@ Files outside the Files block:
   outputs inside the Files block's `reimport/` tree, listed because
   they are binary/generated.
 Supersedes: —
+
 ### v1.1 Task 7 — EI7 mapper, refresh diff, report entries (2026-11-23)
 
 Decision: `epiora-legacy` maps Epi Info 7 Access/SQLite projects to a
@@ -6554,4 +6555,58 @@ Files outside the Files block:
   `rusqlite 0.41` (dev-only test SQLite source; 0.41 bundles
   `libsqlite3-sys` 0.39 / SQLite 3.54, which RUSTSEC-2026-0459
   requires — 0.34 resolved to the affected 0.32).
+Supersedes: —
+
+### v1.1 Task 4 — golden regenerated at the product 4 MiB bind size (2026-11-23)
+
+Decision: owner decision 1A — fix the oracle, not the product.
+Upstream `mdb-export` binds text/MEMO columns at its compile-time
+`EXPORT_BIND_SIZE` = 200000 (`src/util/mdb-export.c`), so every bound
+value over 199,999 bytes (bind size minus the NUL) was silently
+truncated in the committed golden. `legacy-golden.yml` now rebuilds
+`mdb-export` from the upstream mdbtools 1.0.1 release tarball (URL
+pinned, SHA-256
+`ff9c425a88bc20bf9318a332eec50b17e77896eef65a0e69415ccb4e396d1812`,
+licence read from the tarball itself at run time: GPL-2.0 utilities
+`COPYING`, LGPL-2.0 libmdb `COPYING.LIB`), patched to
+`EXPORT_BIND_SIZE` 4194304 — the product reader's bind size
+(`crates/epiora-mdb/c/harness.c`: `mdb_set_bind_size(mdb, 4 * 1024 *
+1024)`) — and exports `MDB_EXPORT` into `$GITHUB_ENV` so
+`golden.mjs`, `copy-tables.mjs` (the Access→SQLite copies) and
+`golden.test.mjs` all call the patched binary via `legacy-read.mjs`.
+`mdb-tables`/`mdb-schema`/`mdb-ver` still come from apt — they never
+bind column data. Nothing under `crates/` is built or modified; the
+golden stays independent of the product.
+
+Producing run (all steps green, including the in-run second-run
+byte-identical proof):
+https://github.com/dorrabbkhan/Epiora/actions/runs/45240078404
+
+Golden files changed by the regeneration (`git diff --stat` verbatim):
+
+     fixtures/legacy/golden/ei7/HansensDisease/HansensDisease/project.json | 2 +-
+     1 file changed, 1 insertion(+), 1 deletion(-)
+
+Changed values, before → after:
+- `check_code` block count for view `HDCaseForm`: 137 → 164. The
+  underlying `metaViews.CheckCode` MEMO was truncated at 199,999
+  bytes; a full read yields 271,820 bytes as exported.
+- Nothing else: every dataset file, program `text_sha256`, label set
+  and the `reimport/` tree are byte-identical. The only bound values
+  over 200 KB in the corpus were this MEMO and OLE blobs, which
+  `mdb-export` reads via `mdb_ole_read_full`, never the bound buffer.
+- New-bound truncation check: the largest field the patched binary
+  exports across every `.mdb` sample is 2,204,672 bytes (hex OLE in
+  `HansensDisease` `metaImages`); no golden value is still truncated
+  at 4,194,303 bytes (bind 4194304 minus NUL).
+
+Ambiguities resolved:
+- None — the owner notes scope this PR to the oracle fix only;
+  `RecStatus` stays a normal integer column (owner item 3), and no
+  `crates/`, `app/` or `spikes/` file is touched (fixture guard).
+
+Files outside the Files block:
+- None. `.github/workflows/legacy-golden.yml`,
+  `fixtures/legacy/golden/**` and `docs/decisions.md` are all inside
+  the Task 4 Files block.
 Supersedes: —
