@@ -189,19 +189,28 @@ pub async fn sqlserver_batches(
     let mut stream = client
         .query(format!("SELECT * FROM {}", bracket(table)), &[])
         .await
-        .map_err(|_| SqlServerError::QUERY)?;
+        .map_err(|e| {
+            eprintln!("dbg query {table}: {e:?}");
+            SqlServerError::QUERY
+        })?;
     let accs: Vec<ColAcc> = {
         // `columns()` is `Option`: a SELECT always carries metadata;
         // nothing to map without it.
         let cols = stream
             .columns()
             .await
-            .map_err(|_| SqlServerError::QUERY)?
+            .map_err(|e| {
+                eprintln!("dbg columns {table}: {e:?}");
+                SqlServerError::QUERY
+            })?
             .unwrap_or(&[]);
         cols.iter().map(col_acc).collect()
     };
     let mut encoder = ChunkEncoder::new(table, accs);
-    while let Some(item) = stream.try_next().await.map_err(|_| SqlServerError::QUERY)? {
+    while let Some(item) = stream.try_next().await.map_err(|e| {
+        eprintln!("dbg rows {table}: {e:?}");
+        SqlServerError::QUERY
+    })? {
         let Some(row) = item.as_row() else { continue };
         encoder.push_row(row);
         if encoder.row_count == chunk_rows {

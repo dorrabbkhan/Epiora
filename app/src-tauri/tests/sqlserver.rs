@@ -67,6 +67,7 @@ async fn import_project(conn: &SqlServerConn) -> epiora_legacy::LegacyProject {
     );
     let mut src = BatchSource::new();
     for t in &tables {
+        eprintln!("-- fetching {t}");
         for batch in sqlserver_batches(conn, t, 50_000).await.unwrap() {
             src.push(t, &batch).unwrap();
         }
@@ -183,10 +184,7 @@ async fn connection_not_persisted() {
             .exec("CREATE TABLE settings (k TEXT PRIMARY KEY, v TEXT)", &[])
             .unwrap();
         store
-            .exec(
-                "INSERT INTO settings (k, v) VALUES ('theme', 'dark')",
-                &[],
-            )
+            .exec("INSERT INTO settings (k, v) VALUES ('theme', 'dark')", &[])
             .unwrap();
     }
     std::fs::write(
