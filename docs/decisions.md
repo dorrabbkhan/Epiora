@@ -6711,3 +6711,148 @@ Files outside the Files block:
   map context; `detect`/`plain_tables` moved out to `lib.rs` (above)
   and `map_ei7` now calls `crate::plain_tables`. No behaviour change.
 Supersedes: —
+
+### v1.1 Task 9 — SQL Server one-time import on desktop (2026-11-23)
+
+Decision: the desktop shell gains a `tiberius` SQL Server reader
+(`app/src-tauri/src/legacy_sqlserver.rs`) that turns every project
+table into EPTB v1 batches — the same intermediate form `epiora-mdb`
+and the sqlite-wasm worker emit — so `map_ei7` maps a SQL Server
+project once, as `SourceFormat::Ei7SqlServer`. Two Tauri commands
+(`legacy_sqlserver_tables`, `legacy_sqlserver_batches`) take
+`SqlServerConn` per call; credentials live only for that call, and
+`SqlServerError` carries just a code (`sqlserver_connect` /
+`sqlserver_auth` / `sqlserver_query`), so a rejected login cannot
+echo host, user or password (spec §4.5, §10, §15.7). `SqlServerConn`
+and `SqlServerAuth` deliberately derive neither `Debug` nor `Display`.
+CI gate: `legacy.yml`'s `sqlserver` job runs SQL Server 2022
+Developer edition as a service container (spec §13 — CI only, never
+distributed), loads the verbatim `copy-tables.mjs --tsql` copy of
+`Sample.mdb` with a pinned go-sqlcmd (v1.10.0, SHA-256 verified in
+the job; MIT per the release's licence), and runs
+`app/src-tauri/tests/sqlserver.rs`, which is env-gated so the
+`native-store` job and local runs skip it without `#[ignore]`; the
+job also sets `EPIORA_SQLSERVER_REQUIRED=1` so a missing
+`EPIORA_SQLSERVER_HOST` fails the tests instead of passing silently
+(fix round 1).
+
+Interface notes where implementation superseded the Interfaces
+block sketch:
+
+- `tiberius` is **0.13** (0.13.0, crates.io 2026-11-20 — the latest
+  release; the owner prefers the latest version of a tool over an
+  older pin. Fix round 1 moved off the task-time 0.12.3 pin).
+  Features `tds73` + `rustls` + `winauth` (no OpenSSL; `winauth` is
+  `cfg(windows)` inside tiberius). The `rustls` feature resolves to
+  tokio-rustls 0.26 / rustls 0.23 / rustls-webpki 0.103, replacing
+  0.12's tokio-rustls 0.24 / rustls 0.21 / rustls-webpki 0.101 and
+  its RUSTSEC-2026-0104 / RUSTSEC-2026-0382 advisories. 0.13's
+  `trust_cert`, auth constructors, row streaming, `ColumnData` and
+  the time/numeric types are API-compatible for this reader —
+  `legacy_sqlserver.rs`/`eptb.rs` needed no changes; the new
+  `handshake_timeout` (15 s) / `command_timeout` (30 s) defaults
+  bound only a stalled server round-trip, not a lazy row stream.
+  Resolved (fix round 2, owner decision A — PR #119 comment
+  7118845674): `rand 0.7.3` via `winauth 0.0.5` (`cfg(windows)`-only,
+  required for `AuthMethod::Integrated` on Windows builds, used for
+  the NTLM client nonce) is flagged by RUSTSEC-2026-0097 (unsound;
+  the trigger needs a custom `log` logger, which the app does not
+  install). `winauth` pins `rand = "0.7"` and 0.0.5 is the latest
+  release — no safe upgrade exists, so the owner approved adding
+  RUSTSEC-2026-0097 to `app/src-tauri/deny.toml`'s `ignore` list
+  (the recorded v0.3 Task 14 pattern) and keeping Windows
+  integrated auth.
+- `SqlServerAuth::Windows` resolves to `AuthMethod::Integrated` on
+  Windows builds only; elsewhere it is a typed `sqlserver_auth`
+  failure (tiberius gates `Integrated` on `all(windows, "winauth")`).
+- The batch `source_type` byte carries the TDS `ColumnType`
+  discriminant (the sqlite test source uses `0`; the mapper compares
+  it only for cross-chunk consistency, never for mapping decisions).
+- T-SQL type → EPTB kind: ints `int1/2/4/8`, `bit` → bool,
+  float/money/decimal → real, the `datetime` family → Access
+  serial-days (`datetime`/`smalldatetime` +2, `date`/`datetime2`
+  −693593; `smalldatetime`'s wire time part is *minutes* — the
+  tiberius field name is misleading), char/guid/xml → text,
+  binary/image/udt/variant → binary-skipped. Verbatim T-SQL copies
+  hold datetimes as `NVARCHAR` text, the SQLite-proven path.
+- `sqlserver_tables` lists `sys.tables WHERE is_ms_shipped = 0 ORDER
+  BY object_id` — user tables in creation order, mirroring
+  `mdb-tables`/`sqlite3 .tables`.
+- Row order is split by table kind, both halves verified against a
+  local `mcr.microsoft.com/mssql/server:2022-CU28-ubuntu-22.04`
+  container loaded with the verbatim `copy-tables.mjs --tsql` copy
+  of `Sample.mdb` (93 tables). The mapper emits rows in source
+  order and JET's physical order is not key order (`epiora-mdb`
+  shows `ADDFull.UniqueKey` starting 247, 277, 61…), so ordering by
+  any key column permutes joined cells and breaks
+  `sqlserver_copy_matches_access_hashes`.
+  - `meta*` tables: `ORDER BY` their first column. In the mdb every
+    `meta*` table's first column is a monotonic id in file order
+    (`metaViews.ViewId` 1…18, `metaFields.FieldId` 1…534,
+    `metaPages.PageId` 1…27; verified via `epiora-mdb` on all 17
+    `meta*` tables), and for a real EI7 SQL Server project the
+    first column is the id EI7 enumerates by. Physical order cannot
+    be trusted here: `meta*` rows are variable-size (CheckCode up
+    to ~13 KB) and SQL Server's heap backfills earlier pages — the
+    container shows `metaViews` rows 15, 17, 18 backfilling
+    page 896 while rows 14 and 16 each occupy later pages — so
+    physical order ≠ insert order for these tables, and insert
+    order is unrecoverable from a heap (`%%xact_seqno%%` is not
+    valid syntax; `%%seqno%%` is per-page).
+  - every other table: `CROSS APPLY
+    sys.fn_PhysLocCracker(%%physloc%%) ORDER BY plc.file_id,
+    plc.page_id, plc.slot_id` — physical slot order, which is
+    insert order for the verbatim heap copy (verified on all 76
+    non-`meta*` tables: 58 with a unique first column — including
+    `EvansCounty7`, `hmohiv`, `hmohiv8`, `LEUKEM210` re-checked
+    after a parse artifact — 15 by a unique secondary column,
+    `Addicts`/`Anderson` all-REAL fixed-size, `SohoDead` by a
+    full-row `ADDRESS` diff), the `mdb-export` dump order the
+    golden's rows follow, and leaf order on a clustered real
+    project — no key-column assumption.
+    A bare `ORDER BY %%physloc%%` is wrong: the rid's little-endian
+    byte packing scrambles tables spanning multiple pages.
+  Verified offline: the pinned mdbtools `db.columns`/`db.rows`
+  copy of `Sample.mdb`, run through the same declared-type kind
+  mapping and this split ordering, maps to all 18 golden view
+  hashes and all grid hashes identical.
+- SQL Server projects are one-time imports (not refreshable): the
+  reader emits no snapshots and no refresh machinery is wired —
+  refreshability arrives with Task 15's import flow, which calls the
+  same `map_ei7` API the tests exercise.
+
+Dependencies added beyond the plan's named `tiberius, tokio-util`:
+`tokio` (`net` — `TcpStream` for `Client::connect`),
+`futures-util` (`std` only — `TryStreamExt` to iterate tiberius's
+row stream), `serde` (`derive` — the `SqlServerConn`/`SqlServerAuth`
+IPC shape), all licences inside the existing `deny.toml` allow list.
+`app/src-tauri/deny.toml` gains the owner-approved RUSTSEC-2026-0097
+ignore recorded above (fix round 2); `cargo deny check` passes.
+Licences recorded: tiberius MIT/Apache-2.0; tokio/tokio-util MIT;
+futures-util MIT OR Apache-2.0; serde MIT OR Apache-2.0; go-sqlcmd
+MIT.
+
+Files outside the Files block:
+
+- `app/src-tauri/Cargo.lock` — the mechanical lockfile update for the
+  dependency additions above.
+- `app/src-tauri/src/lib.rs` — **created** (the Files block says
+  "Modify"; no lib target existed). It exists so integration tests
+  can reach `legacy_sqlserver`; it carries the workspace's usual
+  `unwrap`/`expect`/`panic` clippy denies.
+- `app/src-tauri/src/legacy_sqlserver/eptb.rs` — the EPTB encoder half
+  of the reader, split out so `legacy_sqlserver.rs` stays inside the
+  ~400-line file-size rule; the Files-block file is the module root.
+- `app/src-tauri/src/commands.rs`, `app/src-tauri/src/main.rs` —
+  the Files block's "register command" lands here: `main.rs` owns the
+  `invoke_handler!` list, `commands.rs` holds the two `#[tauri::command]`
+  wrappers that translate `SqlServerError` to the bare code string.
+- `app/src/tauri/sqlserver.ts` — new file under the "Modify:
+  `app/src/tauri/*`" glob (the per-command bridge wrapper).
+- `.github/workflows/legacy.yml` — the `pull_request` `paths:` list
+  also gained `app/src-tauri/**` and `app/src/tauri/**` so the job
+  gates the files it covers.
+- `app/src-tauri/deny.toml` — the owner-approved RUSTSEC-2026-0097
+  ignore above (fix round 2); the Files block's `deny.toml` is the
+  root file, which stays unchanged.
+Supersedes: —

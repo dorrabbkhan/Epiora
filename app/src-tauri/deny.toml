@@ -20,12 +20,19 @@ yanked = "deny"
 # - RUSTSEC-2026-0370/0371/0372: zvariant, zbus_names, zvariant_derive
 #   merged into zbus 6 — keyring's secret-service backend still needs
 #   zbus 5.x.
+# 2026-11-24 (owner-approved, v1.1 Task 9, PR #119):
+# - RUSTSEC-2026-0097: rand 0.7.3 unsound with a custom logger, via
+#   winauth 0.0.5 ← tiberius `winauth` feature — compiled only for
+#   cfg(windows) and used for the NTLM client nonce; winauth 0.0.5 is
+#   the latest release and pins rand 0.7, and Epiora installs no
+#   custom logger that calls rand. Recorded in docs/decisions.md.
 ignore = [
     "RUSTSEC-2024-0429",
     "RUSTSEC-2024-0370",
     "RUSTSEC-2026-0370",
     "RUSTSEC-2026-0371",
     "RUSTSEC-2026-0372",
+    "RUSTSEC-2026-0097",
 ]
 
 [licenses]

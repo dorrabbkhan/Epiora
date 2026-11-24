@@ -14,6 +14,8 @@ on:
       - 'crates/epiora-legacy/**'
       - 'app/public/mdb/**'
       - 'app/src/legacy/**'
+      - 'app/src/tauri/**'
+      - 'app/src-tauri/**'
       - 'fixtures/legacy/**'
       - 'Cargo.*'
       - 'deny.toml'
@@ -80,3 +82,121 @@ jobs:
 
       - name: cargo test epiora-mdb + epiora-legacy
         run: cargo test -p epiora-mdb -p epiora-legacy
+
+  # v1.1 Task 9 (spec §4.1, §8.2): the desktop one-time SQL Server
+  # import. The service container runs SQL Server 2022 Developer
+  # edition (spec §13: CI only, never distributed; Microsoft developer
+  # licence). `fixtures/legacy/copy-tables.mjs` emits the verbatim
+  # Access→T-SQL copy of Sample.mdb, a pinned go-sqlcmd loads it into
+  # the `sample` database, and `app/src-tauri/tests/sqlserver.rs` maps
+  # it through Task 7's mapper to compare dataset hashes against the
+  # Access golden. Connection values live only in this job's env —
+  # the SA password is a throwaway for the ephemeral container.
+  sqlserver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-CU28-ubuntu-22.04
+        env:
+          ACCEPT_EULA: 'Y'
+          MSSQL_SA_PASSWORD: 'Ep1ora-CI-Str0ng!pass'
+          MSSQL_PID: Developer
+        ports:
+          - 1433:1433
+    env:
+      NODE_VERSION: '22.23.4'
+      MDB_VERSION: '1.0.1'
+      MDB_SHA256: 'ff9c425a88bc20bf9318a332eec50b17e77896eef65a0e69415ccb4e396d1812'
+      # Same 4 MiB bind size as legacy-golden.yml — upstream's 200 KB
+      # default would truncate MEMO check code and break hash parity.
+      EXPORT_BIND_SIZE: '4194304'
+      SQLCMD_VERSION: '1.10.0'
+      SQLCMD_SHA256: '92516d98c63d99b0994de5b61350c91f6915f9b76f139a59039fbcb225c2e987'
+      MSSQL_SA_PASSWORD: 'Ep1ora-CI-Str0ng!pass'
+      EPIORA_SQLSERVER_HOST: '127.0.0.1'
+      EPIORA_SQLSERVER_PORT: '1433'
+      EPIORA_SQLSERVER_DATABASE: 'sample'
+      EPIORA_SQLSERVER_USER: 'sa'
+      EPIORA_SQLSERVER_PASSWORD: 'Ep1ora-CI-Str0ng!pass'
+      EPIORA_SQLSERVER_TRUST_CERT: '1'
+      # A missing EPIORA_SQLSERVER_HOST must fail the tests, not pass
+      # silently: the suite's early return only applies outside this job.
+      EPIORA_SQLSERVER_REQUIRED: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install mdbtools and the Tauri Linux build deps from apt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            mdbtools \
+            libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev \
+            librsvg2-dev patchelf libdbus-1-dev pkg-config
+          apt-cache policy mdbtools | grep -E 'Installed|mdbtools'
+
+      # `cargo test` compiles the package's dependency graph for
+      # --extern; generate_context!() is not built (only --test
+      # sqlserver), but tauri-build still reads the config — same stub
+      # as app.yml's native-store job.
+      - name: Stub app/dist for codegen
+        run: |
+          mkdir -p app/dist
+          echo '<!doctype html><title>codegen stub</title>' > app/dist/index.html
+
+      - name: Build mdb-export at EXPORT_BIND_SIZE=4194304 (pinned tarball)
+        run: |
+          curl -sSL -o "$RUNNER_TEMP/mdbtools-$MDB_VERSION.tar.gz" \
+            "https://github.com/mdbtools/mdbtools/releases/download/v$MDB_VERSION/mdbtools-$MDB_VERSION.tar.gz"
+          echo "$MDB_SHA256  $RUNNER_TEMP/mdbtools-$MDB_VERSION.tar.gz" | sha256sum -c -
+          tar xzf "$RUNNER_TEMP/mdbtools-$MDB_VERSION.tar.gz" -C "$RUNNER_TEMP"
+          cd "$RUNNER_TEMP/mdbtools-$MDB_VERSION"
+          sed -i "s/^#define EXPORT_BIND_SIZE 200000/#define EXPORT_BIND_SIZE $EXPORT_BIND_SIZE/" src/util/mdb-export.c
+          ./configure --disable-glib --disable-man
+          make -C src -j"$(nproc)"
+          echo "MDB_EXPORT=$RUNNER_TEMP/mdbtools-$MDB_VERSION/src/util/mdb-export" >> "$GITHUB_ENV"
+
+      - name: Install go-sqlcmd (pinned, SHA-256 verified)
+        run: |
+          curl -sSfLo "$RUNNER_TEMP/sqlcmd.tar.bz2" \
+            "https://github.com/microsoft/go-sqlcmd/releases/download/v$SQLCMD_VERSION/sqlcmd-linux-amd64.tar.bz2"
+          echo "$SQLCMD_SHA256  $RUNNER_TEMP/sqlcmd.tar.bz2" | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/sqlcmd-bin"
+          tar xjf "$RUNNER_TEMP/sqlcmd.tar.bz2" -C "$RUNNER_TEMP/sqlcmd-bin"
+          "$RUNNER_TEMP/sqlcmd-bin/sqlcmd" --version
+
+      - name: Emit the verbatim Access to T-SQL copy
+        run: node fixtures/legacy/copy-tables.mjs --mdb fixtures/legacy/samples/ei7/Sample/Sample.mdb --tsql "$RUNNER_TEMP/sample.sql"
+
+      - name: Wait for SQL Server and load the copy
+        run: |
+          SQLCMD="$RUNNER_TEMP/sqlcmd-bin/sqlcmd"
+          for i in $(seq 1 60); do
+            if "$SQLCMD" -S "127.0.0.1,$EPIORA_SQLSERVER_PORT" -U "$EPIORA_SQLSERVER_USER" -P "$MSSQL_SA_PASSWORD" -C -l 5 -Q "SELECT 1" >/dev/null 2>&1; then
+              break
+            fi
+            if [ "$i" = 60 ]; then echo "SQL Server did not become ready" >&2; exit 1; fi
+            sleep 2
+          done
+          "$SQLCMD" -S "127.0.0.1,$EPIORA_SQLSERVER_PORT" -U "$EPIORA_SQLSERVER_USER" -P "$MSSQL_SA_PASSWORD" -C -l 30 -Q "CREATE DATABASE [$EPIORA_SQLSERVER_DATABASE]"
+          "$SQLCMD" -S "127.0.0.1,$EPIORA_SQLSERVER_PORT" -U "$EPIORA_SQLSERVER_USER" -P "$MSSQL_SA_PASSWORD" -C -l 60 -d "$EPIORA_SQLSERVER_DATABASE" -i "$RUNNER_TEMP/sample.sql"
+
+      - name: Install Rust 1.99.0 (pinned)
+        run: |
+          rustup toolchain install 1.99.0 --profile minimal
+          rustup default 1.99.0
+          rustc --version
+
+      - name: Rust build cache
+        uses: Swatinem/rust-cache@2201cc584a476d1b508be977bbe4b7d1c7a52e9c # v2.9.3
+        with:
+          workspaces: app/src-tauri
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: cargo test --test sqlserver
+        working-directory: app/src-tauri
+        run: cargo test -p epiora-app --test sqlserver -- --nocapture

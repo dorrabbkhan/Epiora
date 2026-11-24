@@ -47,6 +47,8 @@ fn main() {
             commands::store_tx_begin,
             commands::store_tx_commit,
             commands::store_tx_rollback,
+            commands::legacy_sqlserver_tables,
+            commands::legacy_sqlserver_batches,
         ])
         .run(tauri::generate_context!());
     if let Err(e) = result {
