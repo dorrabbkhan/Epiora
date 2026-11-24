@@ -9,7 +9,10 @@
 //! that job. Anywhere else (`cargo test --workspace` in app.yml's
 //! native-store, local runs) there is no server to connect to, so the
 //! test returns at once — the suite exists to be run in the CI job,
-//! not to be skipped by `#[ignore]` (which the repo forbids).
+//! not to be skipped by `#[ignore]` (which the repo forbids). The
+//! `sqlserver` job also sets `EPIORA_SQLSERVER_REQUIRED=1`: there a
+//! missing `EPIORA_SQLSERVER_HOST` is a job misconfiguration, so the
+//! tests panic instead of passing silently.
 
 use std::path::{Path, PathBuf};
 
@@ -39,6 +42,12 @@ fn conn() -> Option<SqlServerConn> {
 }
 
 fn absent() -> bool {
+    if std::env::var("EPIORA_SQLSERVER_REQUIRED").as_deref() == Ok("1") {
+        panic!(
+            "EPIORA_SQLSERVER_REQUIRED=1 but EPIORA_SQLSERVER_HOST is unset — \
+             the sqlserver CI job requires a running SQL Server"
+        );
+    }
     eprintln!("no EPIORA_SQLSERVER_HOST — sqlserver CI job only, nothing runs here");
     true
 }

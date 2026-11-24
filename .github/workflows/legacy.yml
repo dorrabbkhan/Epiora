@@ -120,6 +120,9 @@ jobs:
       EPIORA_SQLSERVER_USER: 'sa'
       EPIORA_SQLSERVER_PASSWORD: 'Ep1ora-CI-Str0ng!pass'
       EPIORA_SQLSERVER_TRUST_CERT: '1'
+      # A missing EPIORA_SQLSERVER_HOST must fail the tests, not pass
+      # silently: the suite's early return only applies outside this job.
+      EPIORA_SQLSERVER_REQUIRED: '1'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 

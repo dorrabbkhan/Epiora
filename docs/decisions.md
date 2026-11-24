@@ -6731,16 +6731,34 @@ distributed), loads the verbatim `copy-tables.mjs --tsql` copy of
 `Sample.mdb` with a pinned go-sqlcmd (v1.10.0, SHA-256 verified in
 the job; MIT per the release's licence), and runs
 `app/src-tauri/tests/sqlserver.rs`, which is env-gated so the
-`native-store` job and local runs skip it without `#[ignore]`.
+`native-store` job and local runs skip it without `#[ignore]`; the
+job also sets `EPIORA_SQLSERVER_REQUIRED=1` so a missing
+`EPIORA_SQLSERVER_HOST` fails the tests instead of passing silently
+(fix round 1).
 
 Interface notes where implementation superseded the Interfaces
 block sketch:
 
-- `tiberius` is pinned at **0.12.3** (2024-07), not the latest
-  0.13.0 — 0.13.0 shipped on crates.io 2026-11-20, three days before
-  task time, inside the ≥7-day supply-chain window the project
-  applies to new dependencies. Features `tds73` + `rustls` +
-  `winauth` (no OpenSSL; `winauth` is `cfg(windows)` inside tiberius).
+- `tiberius` is **0.13** (0.13.0, crates.io 2026-11-20 — the latest
+  release; the owner prefers the latest version of a tool over an
+  older pin. Fix round 1 moved off the task-time 0.12.3 pin).
+  Features `tds73` + `rustls` + `winauth` (no OpenSSL; `winauth` is
+  `cfg(windows)` inside tiberius). The `rustls` feature resolves to
+  tokio-rustls 0.26 / rustls 0.23 / rustls-webpki 0.103, replacing
+  0.12's tokio-rustls 0.24 / rustls 0.21 / rustls-webpki 0.101 and
+  its RUSTSEC-2026-0104 / RUSTSEC-2026-0382 advisories. 0.13's
+  `trust_cert`, auth constructors, row streaming, `ColumnData` and
+  the time/numeric types are API-compatible for this reader —
+  `legacy_sqlserver.rs`/`eptb.rs` needed no changes; the new
+  `handshake_timeout` (15 s) / `command_timeout` (30 s) defaults
+  bound only a stalled server round-trip, not a lazy row stream.
+  Remaining: `rand 0.7.3` via `winauth 0.0.5` (`cfg(windows)`-only,
+  required for `AuthMethod::Integrated` on Windows builds) is flagged
+  by RUSTSEC-2026-0097 (unsound; the trigger needs a custom `log`
+  logger, which the app does not install). `winauth` pins
+  `rand = "0.7"` and 0.0.5 is the latest release — no safe upgrade
+  exists, so the remedy is the owner's (a `deny.toml` `ignore`
+  entry, matching the recorded v0.3 Task 14 pattern).
 - `SqlServerAuth::Windows` resolves to `AuthMethod::Integrated` on
   Windows builds only; elsewhere it is a typed `sqlserver_auth`
   failure (tiberius gates `Integrated` on `all(windows, "winauth")`).

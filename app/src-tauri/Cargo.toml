@@ -30,12 +30,14 @@ keyring = "4.2.0"
 getrandom = "0.4.3"
 serde = { version = "1", features = ["derive"] }
 # v1.1 Task 9 (spec §4.1): the desktop-only SQL Server reader. 0.13.0
-# shipped on crates.io 2026-11-20 (<7 days at task time — supply-chain
-# policy pins the newest release at least a week old, so 0.12.3, July
-# 2024). `rustls` keeps the binary free of OpenSSL; `tds73` is the
-# SQL Server 2008+ protocol; `winauth` is cfg(windows)-gated inside
-# tiberius and enables AuthMethod::Integrated on Windows builds only.
-tiberius = { version = "0.12.3", default-features = false, features = ["tds73", "rustls", "winauth"] }
+# (crates.io 2026-11-20, the latest release) is required: its rustls
+# 0.23 / tokio-rustls 0.26 stack resolves RUSTSEC-2026-0104 and
+# RUSTSEC-2026-0382 (rustls-webpki 0.101 via tiberius 0.12's
+# tokio-rustls 0.24). `rustls` keeps the binary free of OpenSSL;
+# `tds73` is the SQL Server 2008+ protocol; `winauth` is
+# cfg(windows)-gated inside tiberius and enables
+# AuthMethod::Integrated on Windows builds only.
+tiberius = { version = "0.13", default-features = false, features = ["tds73", "rustls", "winauth"] }
 tokio-util = { version = "0.7", features = ["compat"] }
 tokio = { version = "1", features = ["net"] }
 # tiberius's row streams iterate through futures_util::TryStreamExt.
