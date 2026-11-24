@@ -1,0 +1,17 @@
+[package]
+name = "epiora-lang"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Epi Info language: expression parser, evaluator and function library (v1.1 spec §5.2)"
+
+[dependencies]
+epiora-core = { path = "../epiora-core" }
+libm = "0.2"
+rand_chacha = "0.10"
+rand_core = "0.10"
+thiserror = "2"
+
+[dev-dependencies]
+proptest = "1"
+serde_json = "1"

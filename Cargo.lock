@@ -514,6 +514,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "epiora-lang"
+version = "1.0.0"
+dependencies = [
+ "epiora-core",
+ "libm",
+ "proptest",
+ "rand_chacha",
+ "rand_core",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
 name = "epiora-legacy"
 version = "1.0.0"
 dependencies = [

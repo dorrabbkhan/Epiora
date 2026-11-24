@@ -6856,3 +6856,125 @@ Files outside the Files block:
   ignore above (fix round 2); the Files block's `deny.toml` is the
   root file, which stays unchanged.
 Supersedes: —
+
+### v1.1 Task 10 — Epi Info 7 expression language (`epiora-lang`) (2026-11-23)
+
+Decision: `parse_expr`/`type_check`/`eval_column` port
+`Epi.Core.Interpreter/Rules/` at
+`4cd353c62c40b78d9d1f013b0f5a2bb685a5fca6` (Apache-2.0, D2) — the
+grammar's `Expression → … → Value` precedence chain as a hand-rolled
+lexer + recursive-descent parser, the interpreter's eval domain as
+`EV`, and all 46 `supported@1.1` register functions in
+`src/functions/`. Every number below matches a `Rule_*.cs` branch or a
+`fixtures/ei7/v11/*` pin.
+
+Semantic choices where the source was pinned (quirks ported, not
+"fixed"):
+
+- Two missing kinds: a missing *cell* reads as `""` (the
+  `CurrentDataRow` → `DBNull` → `""` path in `Rule_Value`), the `(.)`
+  literal is `null`; `Util.IsEmpty` covers both. `select_sort.json`
+  pins the result: `<> 1` selects the missing row (38 records),
+  `= (.)` selects it (1 record).
+- Comparisons port `Rule_CompareExp` branch-for-branch, including the
+  reversed `TryValue.CompareTo(LHSO)` on the `RHSO is string` arm
+  (`5 < "10"` is false in EI7), the `RHSO is Boolean && =` numeric
+  arm, `CurrentCultureIgnoreCase` approximated by case-folded
+  ordinal, and `Time` as `TimeSpan` (same-type only with `Time`;
+  `Date`/`DateTime` share the `DateTime` family).
+- Logic operators are string-truthiness (`ToString() == "true"`); our
+  results stay `Bool` — the `"true"`/`"True"` spelling differs only
+  inside EI7's own `ToString()`, never in a comparison.
+- `AddExp` has no `TimeSpan` arms: `time ± x` is missing; `MultExp`
+  measures `Time` in `TotalDays`; `PowExp`/`NegateExp` run
+  `double.Parse`/`TryParse` on `ToString()` (text parses, dates are
+  missing). `type_check` is strict where EI7's branch set leaves
+  `null` (dates beside `+`, `Time` beside `±`, non-numeric under
+  `* / MOD`): an `expr_type` error naming the column, per the plan's
+  "type errors name the column" test — an early error EI7 only finds
+  at eval.
+- `YEARS` is the birthday-age formula, not `MONTHS/12`. `HOURS` is
+  `Math.Round(TotalHours)` (half-even), `MINUTES`/`SECONDS` raw
+  doubles. `EPIWEEK` ports `GetMMWRStart` over three candidate years.
+- `TXTTONUM` ports the two-step quirk: a `"true"/"false"` `ToString()`
+  is overwritten to 1/0 *before* `TryParse` runs, then `TryParse`
+  writes the parsed value or **0.0** — `TXTTONUM("true")` is `1`,
+  `TXTTONUM("false")` is `0`, `TXTTONUM("abc")` is `0`
+  (`Rule_TxtToNum.Execute` @ 4cd353c, lines 32–44; corrected in fix
+  round 1). `SUBSTRING` is 1-based with
+  `int.Parse` (reals fail). `FINDTEXT` is
+  `IndexOf(OrdinalIgnoreCase)+1`. `STRLEN` requires a real string.
+- `RND` draws from a `ChaCha20Rng` stream seeded by the recipe as-of
+  plus the expression's canonical text, using the same u32 Lemire
+  `draw_bounded` as `epiora-core`'s `random_numbers` (hard rule 7 —
+  EI7's `random.Next` replayed deterministically).
+- `ENVIRON`/`EXISTS`/`FILEDATE` resolve through `EvalEnv.globals`
+  under the reserved keys `environ:<name>`, `exists:<path>`,
+  `filedate:<path>` — the register's "map captured into the recipe at
+  session start, never live I/O" method choice. Missing keys give
+  missing values.
+- `PFROMZ`/`ZSCORE` are in the table but evaluate to EI7's own
+  `ArgumentException` ("no longer supported by Epi Info"), surfaced
+  as `unsupported_function` — the register marks them
+  `supported@1.1` (they parse), which is what the register-iteration
+  test asserts.
+- `FORMAT` calls `Microsoft.VisualBasic.Strings.Format` in EI7; the
+  v1.1 corpus pins `FORMAT(x, "0.00")` → `x.ToString()` ("54",
+  "46.1"), so non-date patterns return the `ToString()`. The named
+  date/time formats (`GeneralDate`, `LongDate`, `ShortDate`,
+  `LongTime`, `ShortTime`) are applied as a method choice — the
+  corpus pins none of them.
+- `GROUPROWINDEX`'s carry is the previous row's *expression result*
+  (`PreceedingDataRow[qualifiedId]`): equal consecutive argument
+  `ToString()`s increment the previous output's `int.TryParse`,
+  else 1. `LAGVALUE` is the previous row's argument `ToString()`.
+- `AND`/`OR`/`XOR`/`NOT` produce `Bool`, not EI7's `"true"/"false"`
+  strings — the eval domain keeps the truth value; `ei_to_string`
+  renders `True`/`False` (en-US .NET spelling).
+
+Approximations (recorded, not silent): `CurrentCultureIgnoreCase` ≈
+case-folded ordinal; `CurrentCulture` ≈ ordinal on trimmed strings;
+the `*`→`.*` LIKE glob is hand-rolled (no regex dep); `TXTTODATE`'s
+`DateTime.TryParse` accepts the en-US shapes the corpus exercises
+(`M/D/YYYY`, `M-D-YYYY`, ISO `YYYY-MM-DD`, each with an optional
+`h:mm[:ss] [AM|PM]` tail; a bare `h:mm` lands on the as-of date where
+EI7 uses `DateTime.Today`); `G15` formatting is an en-US
+approximation of `double.ToString()`.
+
+Files outside the Files block:
+- `crates/epiora-lang/src/expr.rs` — module root beside
+  `src/expr/{lexer,parser,ast,types,eval,missing}.rs`; the Files
+  block's `src/expr/*.rs` list lands the same files under this
+  layout.
+- `crates/epiora-lang/src/expr/{lit,ops}.rs` — the ~400-line rule
+  splits: `lit.rs` takes the digit-run scanners producing the
+  `Date`/`Time`/`Dec`/`Real` literal tokens out of `lexer.rs`;
+  `ops.rs` takes the `Rule_CompareExp`/`AddExp`/`MultExp`/`ConcatExp`
+  value-operator ports out of `eval.rs`, which keeps the node
+  dispatch. No behaviour change.
+- `crates/epiora-lang/src/functions/spec.rs` — the static `FnSpec`
+  table/`ArgKind`/`function_spec` split out of `functions/mod.rs`
+  (same rule); `types.rs` reads it through `mod.rs`'s re-export.
+- `crates/epiora-lang/Cargo.toml` dev-deps add `proptest` and
+  `serde_json` (register.json iteration test); `rand_chacha` +
+  `rand_core` match epiora-core's versions (MIT OR Apache-2.0,
+  inside `deny.toml`'s allow list).
+- `Cargo.lock` — the mechanical lockfile update for the new
+  workspace member.
+- `crates/epiora-lang/tests/expr.proptest-regressions` — proptest's
+  own saved-seed file (it asks to be checked in); the recorded seed
+  predates the non-negative-literal generator fix and now replays
+  harmless cases.
+- `crates/epiora-lang/src/functions/calendar.rs` — fix round 1: the
+  civil-calendar (`days_from_civil`/`civil_from_*`/
+  `secs_from_civil_checked`) and MMWR (`mmwr_start`, `day_of_week`,
+  `days_in_month`) helpers out of `date.rs` for the ~400-line rule;
+  `epiweek` itself stays in `date.rs`. No behaviour change.
+- `crates/epiora-lang/tests/expr_props.rs` — fix round 1: the two
+  proptests and their strategies out of `expr.rs` (same rule);
+  `sample()`/`env()` are duplicated so each test file is
+  self-contained. No test removed or weakened.
+- `crates/epiora-lang/tests/expr_props.proptest-regressions` — fix
+  round 1: the saved-seed file renamed to follow its test target
+  (proptest names it after the test file).
+Supersedes: —
