@@ -78,11 +78,11 @@ pub(crate) fn ei_to_string(v: &EV) -> String {
         EV::Real(x) => crate::functions::math::dotnet_g15(*x),
         EV::Text(s) => s.clone(),
         EV::Date(d) => {
-            let (y, m, dd) = crate::functions::date::civil_from_days(*d);
+            let (y, m, dd) = crate::functions::calendar::civil_from_days(*d);
             format!("{m}/{dd}/{y} 12:00:00 AM")
         }
         EV::DateTime(secs) => {
-            let (y, m, dd, h, mi, s) = crate::functions::date::civil_from_secs(*secs);
+            let (y, m, dd, h, mi, s) = crate::functions::calendar::civil_from_secs(*secs);
             let (h12, ap) = hour12(h);
             format!("{m}/{dd}/{y} {h12}:{mi:02}:{s:02} {ap}")
         }

@@ -249,11 +249,21 @@ fn lexed(tok: Tok, line: u32, column: u32) -> Lexed {
     Lexed { tok, line, column }
 }
 
-#[derive(Default)]
 struct Position {
     i: usize,
     line: u32,
     col: u32,
+}
+
+/// Source positions are 1-based — the `LangError::Syntax` contract.
+impl Default for Position {
+    fn default() -> Self {
+        Self {
+            i: 0,
+            line: 1,
+            col: 1,
+        }
+    }
 }
 
 impl Position {

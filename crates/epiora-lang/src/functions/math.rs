@@ -92,15 +92,24 @@ fn coerce_int(v: &EV) -> Option<i64> {
     }
 }
 
-/// `TXTTONUM(v)` — the two-step quirk: "true"/"false" briefly become
-/// 1/0, then `TryParse` writes the parsed double or **0.0** — so
-/// `TXTTONUM("abc")` is 0 and `TXTTONUM("true")` is 0 too. Only an
-/// empty input is missing.
+/// `TXTTONUM(v)` — the two-step quirk: a `ToString()` of
+/// "true"/"false" (case-insensitive) is overwritten to 1/0 *before*
+/// `Double.TryParse` writes the parsed double or **0.0** — so
+/// `TXTTONUM("true")` is 1, `TXTTONUM("false")` is 0 and
+/// `TXTTONUM("abc")` is 0 too. Only an empty input is missing.
+/// (`Rule_TxtToNum.Execute` @ 4cd353c, lines 32–44.)
 pub(crate) fn txt_to_num(v: &EV) -> EV {
     if is_empty(v) {
         return EV::Missing;
     }
     let s = ei_to_string(v);
+    let s = if s.eq_ignore_ascii_case("true") {
+        "1".to_string()
+    } else if s.eq_ignore_ascii_case("false") {
+        "0".to_string()
+    } else {
+        s
+    };
     match s.trim().parse::<f64>() {
         Ok(x) => EV::Real(x),
         Err(_) => EV::Real(0.0),

@@ -3,14 +3,11 @@
 //! and evaluates, missing propagates the way Epi Info 7.2.7.0
 //! propagates it (as pinned by `fixtures/ei7/v11/*`), bracketed names
 //! resolve, `SYSTEMDATE`/`SYSTEMTIME` read only the as-of, type errors
-//! name the column, and the two proptests cover the printer and the
-//! evaluator's total function.
+//! name the column, and `pgm_syntax` positions are 1-based. The two
+//! proptests live in `expr_props.rs`.
 
 use epiora_core::dataset::{Column, ColumnData, Dataset, Value};
-use epiora_lang::{
-    eval_column, parse_expr, type_check, AsOf, EvalEnv, Expr, LangError, Lit, Schema,
-};
-use proptest::prelude::*;
+use epiora_lang::{eval_column, parse_expr, type_check, AsOf, EvalEnv, Expr, LangError, Schema};
 
 /// A small dataset: `x` has a missing middle cell, `flag` a boolean,
 /// `name` text, `d` a date column, `t` a time column, `My Col` a
@@ -226,6 +223,49 @@ fn bracketed_names_parse() {
     assert_eq!(parse_expr("[oops").unwrap_err().code(), "pgm_syntax");
 }
 
+/// `Rule_TxtToNum.Execute` (upstream `Epi.Core.Interpreter/Rules/
+/// Functions/Rule_TxtToNum.cs` @ 4cd353c, lines 32–44): a `"true"`/
+/// `"false"` `ToString()` is overwritten to `1`/`0` *before*
+/// `Double.TryParse` runs — `"true"`/`"True"`/`(+)` are 1,
+/// `"false"`/`(-)` are 0, unparseable text is 0, empty is missing.
+#[test]
+fn txttonum_overwrites_true_and_false() {
+    let ds = sample();
+    let first = |source: &str| -> Option<f64> {
+        let e = parse_expr(source).unwrap();
+        match eval_column(&e, &ds, &env()).unwrap() {
+            ColumnData::Real(v) => v[0],
+            other => panic!("{source} yielded {other:?}"),
+        }
+    };
+    assert_eq!(first("TXTTONUM(\"true\")"), Some(1.0));
+    assert_eq!(first("TXTTONUM(\"True\")"), Some(1.0));
+    assert_eq!(first("TXTTONUM((+))"), Some(1.0));
+    assert_eq!(first("TXTTONUM(\"false\")"), Some(0.0));
+    assert_eq!(first("TXTTONUM((-))"), Some(0.0));
+    assert_eq!(first("TXTTONUM(\"abc\")"), Some(0.0));
+    // A boolean cell reads as `ToString()` — "True"/"False".
+    let e = parse_expr("TXTTONUM(flag)").unwrap();
+    match eval_column(&e, &ds, &env()).unwrap() {
+        ColumnData::Real(v) => assert_eq!(v, vec![Some(1.0), Some(0.0), None]),
+        other => panic!("TXTTONUM(flag) yielded {other:?}"),
+    }
+}
+
+/// `LangError::Syntax`'s `line`/`column` are the 1-based positions of
+/// the offending token.
+#[test]
+fn syntax_positions_are_one_based() {
+    match parse_expr("[oops").unwrap_err() {
+        LangError::Syntax { line, column, .. } => assert_eq!((line, column), (1, 1)),
+        other => panic!("[oops: {other:?}"),
+    }
+    match parse_expr("1 +\n)").unwrap_err() {
+        LangError::Syntax { line, column, .. } => assert_eq!((line, column), (2, 1)),
+        other => panic!("1 +\\n): {other:?}"),
+    }
+}
+
 /// `SYSTEMDATE`/`SYSTEMTIME` read `EvalEnv::as_of` — never a clock:
 /// two different envs give two different columns, deterministically.
 #[test]
@@ -280,153 +320,4 @@ fn type_errors_name_the_column() {
         Err(LangError::ExprType { column, .. }) => assert_eq!(column, "DAYS"),
         other => panic!("days(d): {other:?}"),
     }
-}
-
-proptest! {
-    /// The canonical `Display` re-parses to the identical AST —
-    /// exercised over the whole grammar (operators, literals, calls,
-    /// bracketed names, LIKE, expr lists).
-    #[test]
-    fn parse_print_roundtrip(e in any_expr()) {
-        let printed = e.to_string();
-        let reparsed = parse_expr(&printed)
-            .unwrap_or_else(|err| panic!("{printed}: {err}"));
-        prop_assert_eq!(reparsed, e);
-    }
-
-    /// `eval_column` on a generated expression over the fixture
-    /// dataset never panics — errors are `LangError`s, missingness
-    /// is `None`, everything else is a cell.
-    #[test]
-    fn eval_never_panics(e in any_expr(), seed in any::<u64>()) {
-        let ds = sample();
-        let mut env = env();
-        env.as_of = AsOf {
-            date: 10_000 + (seed % 20_000) as i32,
-            seconds: (seed % 86_400) as i32,
-        };
-        let _ = eval_column(&e, &ds, &env);
-    }
-}
-
-/// An arbitrary `Expr` over the printable grammar — literals stay in
-/// the grammar's own ranges so `Display` round-trips.
-fn any_expr() -> impl Strategy<Value = Expr> {
-    let leaf = prop_oneof![
-        4 => ident_strategy(),
-        3 => lit_strategy().prop_map(Expr::Literal),
-        2 => prop::sample::select(vec!["SYSTEMDATE", "SYSTEMTIME", "RECORDCOUNT"])
-            .prop_map(|n| Expr::Call {
-                name: n.to_string(),
-                args: Vec::new(),
-            }),
-    ];
-    leaf.prop_recursive(4, 48, 8, |inner| {
-        prop_oneof![
-            4 => (unop(), inner.clone()).prop_map(|(op, e)| Expr::Unary {
-                op,
-                operand: Box::new(e),
-            }),
-            8 => (binop(), inner.clone(), inner.clone()).prop_map(|(op, a, b)| Expr::Binary {
-                op,
-                lhs: Box::new(a),
-                rhs: Box::new(b),
-            }),
-            2 => (inner.clone(), like_pattern()).prop_map(|(e, p)| Expr::Like {
-                operand: Box::new(e),
-                pattern: p,
-            }),
-            3 => (func_name(), prop::collection::vec(inner.clone(), 0..=3)).prop_map(
-                |(name, args)| Expr::Call { name, args }
-            ),
-            1 => prop::collection::vec(inner.clone(), 2..=3).prop_map(Expr::List),
-        ]
-    })
-}
-
-fn unop() -> impl Strategy<Value = epiora_lang::UnOp> {
-    prop::sample::select(vec![
-        epiora_lang::UnOp::Neg,
-        epiora_lang::UnOp::Pos,
-        epiora_lang::UnOp::Not,
-    ])
-}
-
-fn binop() -> impl Strategy<Value = epiora_lang::BinOp> {
-    use epiora_lang::BinOp::*;
-    prop::sample::select(vec![
-        Or, Xor, And, Eq, Ne, Lt, Le, Gt, Ge, Concat, Add, Sub, Mul, Div, Mod, Pow,
-    ])
-}
-
-fn ident_strategy() -> impl Strategy<Value = Expr> {
-    prop::sample::select(vec![
-        "x",
-        "flag",
-        "name",
-        "d",
-        "t",
-        "age",
-        "ILL",
-        "My Col",
-        "weird var",
-    ])
-    .prop_map(|s| Expr::Ident(s.to_string()))
-}
-
-fn lit_strategy() -> impl Strategy<Value = Lit> {
-    prop_oneof![
-        Just(Lit::Missing),
-        prop::bool::ANY.prop_map(Lit::Boolean),
-        // Non-negative only: a leading `-` parses as `NegateExp`, so a
-        // negative literal is not a printable literal.
-        (0i64..1_000_000).prop_map(Lit::Integer),
-        // |x| < 1e15 keeps `Display` inside `RealLiteral`'s shape.
-        (0.0f64..1e15).prop_map(Lit::Real),
-        safe_text().prop_map(Lit::Text),
-        (-700_000i32..=2_900_000).prop_map(Lit::Date),
-        (0i32..=86_399).prop_map(Lit::Time),
-        (-1_000_000_000i64..2_000_000_000).prop_map(Lit::DateTime),
-    ]
-}
-
-fn safe_text() -> impl Strategy<Value = String> {
-    prop::collection::vec(prop::char::range('a', 'z'), 0..=12)
-        .prop_map(|cs| cs.into_iter().collect())
-}
-
-fn like_pattern() -> impl Strategy<Value = String> {
-    prop::collection::vec(prop::char::range('a', 'z'), 1..=6).prop_map(|cs| {
-        let mut s: String = cs.into_iter().collect();
-        if !s.is_empty() {
-            s.push('*');
-        }
-        s
-    })
-}
-
-fn func_name() -> impl Strategy<Value = String> {
-    prop::sample::select(vec![
-        "ABS",
-        "SQRT",
-        "ROUND",
-        "DAY",
-        "DAYS",
-        "MONTHS",
-        "SUBSTRING",
-        "UPPERCASE",
-        "TXTTONUM",
-        "FINDTEXT",
-        "RND",
-        "STEP",
-        "LN",
-        "NUMTODATE",
-        "STRLEN",
-        "LAGVALUE",
-        "GROUPROWINDEX",
-        "EPIWEEK",
-        "HOUR",
-        "NUMTOTIME",
-    ])
-    .prop_map(str::to_string)
 }

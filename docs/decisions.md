@@ -6896,9 +6896,12 @@ Semantic choices where the source was pinned (quirks ported, not
 - `YEARS` is the birthday-age formula, not `MONTHS/12`. `HOURS` is
   `Math.Round(TotalHours)` (half-even), `MINUTES`/`SECONDS` raw
   doubles. `EPIWEEK` ports `GetMMWRStart` over three candidate years.
-- `TXTTONUM` ports the two-step quirk: `"true"/"false"` briefly
-  become 1/0, then `TryParse` overwrites to the parsed value or
-  **0.0** — `TXTTONUM("true")` is `0`. `SUBSTRING` is 1-based with
+- `TXTTONUM` ports the two-step quirk: a `"true"/"false"` `ToString()`
+  is overwritten to 1/0 *before* `TryParse` runs, then `TryParse`
+  writes the parsed value or **0.0** — `TXTTONUM("true")` is `1`,
+  `TXTTONUM("false")` is `0`, `TXTTONUM("abc")` is `0`
+  (`Rule_TxtToNum.Execute` @ 4cd353c, lines 32–44; corrected in fix
+  round 1). `SUBSTRING` is 1-based with
   `int.Parse` (reals fail). `FINDTEXT` is
   `IndexOf(OrdinalIgnoreCase)+1`. `STRLEN` requires a real string.
 - `RND` draws from a `ChaCha20Rng` stream seeded by the recipe as-of
@@ -6962,4 +6965,16 @@ Files outside the Files block:
   own saved-seed file (it asks to be checked in); the recorded seed
   predates the non-negative-literal generator fix and now replays
   harmless cases.
+- `crates/epiora-lang/src/functions/calendar.rs` — fix round 1: the
+  civil-calendar (`days_from_civil`/`civil_from_*`/
+  `secs_from_civil_checked`) and MMWR (`mmwr_start`, `day_of_week`,
+  `days_in_month`) helpers out of `date.rs` for the ~400-line rule;
+  `epiweek` itself stays in `date.rs`. No behaviour change.
+- `crates/epiora-lang/tests/expr_props.rs` — fix round 1: the two
+  proptests and their strategies out of `expr.rs` (same rule);
+  `sample()`/`env()` are duplicated so each test file is
+  self-contained. No test removed or weakened.
+- `crates/epiora-lang/tests/expr_props.proptest-regressions` — fix
+  round 1: the saved-seed file renamed to follow its test target
+  (proptest names it after the test file).
 Supersedes: —

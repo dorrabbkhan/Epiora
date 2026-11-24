@@ -4,6 +4,7 @@
 //! implementation — argument coercion, null/missing behavior and the
 //! arithmetic — through `libm` where floats are involved.
 
+pub(crate) mod calendar;
 pub(crate) mod date;
 pub(crate) mod math;
 mod spec;

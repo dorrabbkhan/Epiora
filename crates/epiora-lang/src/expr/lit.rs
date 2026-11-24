@@ -167,7 +167,7 @@ fn parse_date_text(text: &str) -> Option<Option<i32>> {
         30..=99 => y + 1900,
         _ => y,
     };
-    Some(crate::functions::date::days_from_civil_checked(y, m, d))
+    Some(crate::functions::calendar::days_from_civil_checked(y, m, d))
 }
 
 /// `H:MM[:SS]` → seconds since midnight within the `Time` terminal's

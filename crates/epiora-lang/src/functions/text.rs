@@ -3,7 +3,7 @@
 //! EI7's null/empty results.
 
 use crate::expr::missing::{ei_to_string, is_empty, EV};
-use crate::functions::date;
+use crate::functions::calendar;
 
 /// `UPPERCASE(v)` — `ToString().ToUpperInvariant()`; missing when the
 /// operand is empty.
@@ -106,7 +106,7 @@ fn fmt_date(v: &EV, fmt: DateFmt) -> EV {
         _ => None,
     };
     let Some(secs) = secs else { return EV::Missing };
-    let (y, m, d, h, mi, s) = date::civil_from_secs(secs);
+    let (y, m, d, h, mi, s) = calendar::civil_from_secs(secs);
     let month_name = MONTH_NAMES[(m - 1) as usize];
     EV::Text(match fmt {
         DateFmt::Short => format!("{m}/{d}/{y}"),
