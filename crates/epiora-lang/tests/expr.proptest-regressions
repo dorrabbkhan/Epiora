@@ -1,0 +1,7 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 8596d7ab0c9f744cb340fa7d7b87daf15b8f1f971ca4b45f228c622ef2d52b29 # shrinks to e = Binary { op: Or, lhs: Literal(Integer(-1)), rhs: Ident("x") }

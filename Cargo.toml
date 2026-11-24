@@ -4,6 +4,7 @@ members = [
     "crates/epiora-core",
     "crates/epiora-import",
     "crates/epiora-import-wasm",
+    "crates/epiora-lang",
     "crates/epiora-legacy",
     "crates/epiora-mdb",
     "crates/epiora-wasm",
