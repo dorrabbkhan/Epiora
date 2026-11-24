@@ -198,7 +198,7 @@ fn aggregate(
                         let var = n.iter().map(|x| (x - mean) * (x - mean)).sum::<f64>()
                             / (n.len() - 1) as f64;
                         Some(if a.func == AggFunc::Stdev {
-                            var.sqrt()
+                            libm::sqrt(var)
                         } else {
                             var
                         })

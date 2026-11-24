@@ -7057,4 +7057,45 @@ Files outside the Files block:
 - `crates/epiora-core/src/receipt/canonical.rs` is listed in Files
   but unmodified: version 4 flows through `receipt/mod.rs` and the
   `skip_serializing_if` field keeps v1–v3 byte-identical.
+
+Interface and manifest notes (fix round 1, 2026-11-24):
+
+- `crates/epiora-lang/Cargo.toml` `[dependencies]` additions:
+  `serde` 1.0.229 and `serde_json` 1.0.154 with `float_roundtrip`
+  (both MIT OR Apache-2.0) — the crate's public types serialize for
+  the session store and the worker boundary (Task 12's
+  `Statement::Procedure { options: serde_json::Value }` /
+  `Action` variants and Task 13's lang-wasm `*Json` surface are
+  already pinned to `serde_json::Value`); `sha2` 0.10.9 (MIT OR
+  Apache-2.0) — `Recipe::sha256_hex` hashes the canonical text into
+  the receipt stamp's `recipe_sha256`. The same `serde`/`serde_json`
+  pairs also sit in `[dev-dependencies]` for the corpus runner's
+  fixture deserialization.
+- `[dev-dependencies]` additions `epiora-legacy` and `epiora-mdb`
+  (path crates, workspace AGPL-3.0-only): `tests/common/corpus`
+  opens the real `Sample.mdb`/`Nutrition.mdb` and decodes their raw
+  batches for `every_reference_program_step_matches`.
+- `WorkingView.key_vars: Vec<String>` is a `pub` field beyond the
+  Interfaces' pinned 4-field struct `{dataset, selected, order,
+  settings}`: `Command::KeyVars` declares the view's key columns and
+  EI7 keeps that declaration on the view for later keyless
+  MERGE/RELATE to consult, so the view has to carry it (the pinned
+  `settings` field is `ViewSettings`, not a place for key names).
+- `crates/epiora-lang/clippy.toml` (new): a copy of
+  `crates/epiora-core/clippy.toml`'s `disallowed-methods` list — the
+  libm-only float-maths rule (spec §3.4, E1) applies to the lang
+  crate as it does to core. It drove the `var.sqrt()` →
+  `libm::sqrt(var)` fix in `manage/summarize.rs`; the corpus
+  runner's `check_results` keeps `10f64.powi` under a scoped
+  `#[allow(clippy::disallowed_methods)]` because it computes the
+  comparison's expected tolerance.
+- Test-file splits (every named test kept verbatim; the ~400-line
+  file constraint): `tests/ei7_v11.rs` keeps only
+  `every_reference_program_step_matches`; its runner moved to
+  `tests/common/corpus/{mod,fixture,session,parse,run,compare}.rs`.
+  `tests/manage.rs` (804 lines) became
+  `tests/manage_{define_recode,merge_relate,view}.rs` by command
+  group; `tests/recipe.rs` (504) shed the receipt tests into
+  `tests/receipt.rs`. Shared builders (`ds`, `cells`, `Links`,
+  `recipe`, `ctx` …) live in `tests/common/{mod.rs,ds.rs}`.
 Supersedes: —
