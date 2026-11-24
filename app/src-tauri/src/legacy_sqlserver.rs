@@ -208,11 +208,15 @@ pub async fn sqlserver_batches(
         .map_err(|_| SqlServerError::QUERY)?;
     let mut exprs = Vec::with_capacity(meta.len());
     let mut accs: Vec<ColAcc> = Vec::with_capacity(meta.len());
+    let mut first_col = String::new();
     for row in &meta {
         let name = row
             .get::<&str, _>(0)
             .ok_or(SqlServerError::QUERY)?
             .to_string();
+        if first_col.is_empty() {
+            first_col = name.clone();
+        }
         let type_id = row.get::<u8, _>(1).ok_or(SqlServerError::QUERY)?;
         let q = bracket(&name);
         exprs.push(if is_utf16_type(type_id) {
@@ -225,18 +229,36 @@ pub async fn sqlserver_batches(
     // Row order must match the file order the Access golden was built
     // from — the mapper emits rows in source order, and JET's physical
     // order is not key order (ADDFull's `UniqueKey` starts 247, 277,
-    // 61…). Order by physical slot via `fn_PhysLocCracker`: insert
-    // order for the verbatim heap copy (matching the `mdb-export`
-    // dump order the golden's rows follow), leaf order on a clustered
-    // real project. A raw `ORDER BY %%physloc%%` is wrong — the rid's
-    // little-endian byte packing scrambles multi-page tables.
-    let sql = format!(
-        "SELECT {0} FROM {1} CROSS APPLY \
-         sys.fn_PhysLocCracker(%%physloc%%) plc \
-         ORDER BY plc.file_id, plc.page_id, plc.slot_id",
-        exprs.join(", "),
-        bracket(table)
-    );
+    // 61…). Two cases:
+    //
+    // - `meta*` tables: JET stores them in first-column id order
+    //   (`metaViews.ViewId` 1…18, `metaFields.FieldId` 1…534 — both
+    //   monotonic in the file), so `ORDER BY` that column reproduces
+    //   the dump order — and the heap can't be trusted for them: their
+    //   variable-size text rows (CheckCode up to ~13 KB) backfill
+    //   earlier pages and leave physical order ≠ insert order.
+    // - everything else: order by physical slot via
+    //   `fn_PhysLocCracker` — insert order for the verbatim heap copy
+    //   (the `mdb-export` dump order the golden's rows follow), leaf
+    //   order on a clustered real project, no key-column assumption.
+    //   A raw `ORDER BY %%physloc%%` is wrong — the rid's little-endian
+    //   byte packing scrambles multi-page tables.
+    let sql = if table.to_lowercase().starts_with("meta") {
+        format!(
+            "SELECT {0} FROM {1} ORDER BY {2}",
+            exprs.join(", "),
+            bracket(table),
+            bracket(&first_col)
+        )
+    } else {
+        format!(
+            "SELECT {0} FROM {1} CROSS APPLY \
+             sys.fn_PhysLocCracker(%%physloc%%) plc \
+             ORDER BY plc.file_id, plc.page_id, plc.slot_id",
+            exprs.join(", "),
+            bracket(table)
+        )
+    };
     let mut stream = client
         .query(sql, &[])
         .await

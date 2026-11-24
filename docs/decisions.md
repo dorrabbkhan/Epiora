@@ -6757,24 +6757,44 @@ block sketch:
 - `sqlserver_tables` lists `sys.tables WHERE is_ms_shipped = 0 ORDER
   BY object_id` — user tables in creation order, mirroring
   `mdb-tables`/`sqlite3 .tables`.
-- Row order is physical slot order on every table: `CROSS APPLY
-  sys.fn_PhysLocCracker(%%physloc%%)` orders by numeric
-  (file_id, page_id, slot_id). The mapper emits rows in source
+- Row order is split by table kind, both halves verified against a
+  local `mcr.microsoft.com/mssql/server:2022-CU28-ubuntu-22.04`
+  container loaded with the verbatim `copy-tables.mjs --tsql` copy
+  of `Sample.mdb` (93 tables). The mapper emits rows in source
   order and JET's physical order is not key order (`epiora-mdb`
   shows `ADDFull.UniqueKey` starting 247, 277, 61…), so ordering by
   any key column permutes joined cells and breaks
-  `sqlserver_copy_matches_access_hashes`. A bare
-  `ORDER BY %%physloc%%` is wrong: the rid's little-endian byte
-  packing scrambles tables spanning multiple pages (the first run
-  passed the data tables but still swapped `metaViews` rows, whose
-  CheckCode spans ~18 pages). Physical slot order is insert order
-  for the verbatim heap copy — reproducing the `mdb-export` dump
-  order the golden's rows follow — and leaf order on a clustered
-  real project, with no key-column assumption. Verified offline:
-  the pinned mdbtools `db.columns`/`db.rows` copy of `Sample.mdb`,
-  run through the same declared-type kind mapping and
-  physloc-equivalent order, maps to all 18 golden view hashes and
-  all grid hashes identical.
+  `sqlserver_copy_matches_access_hashes`.
+  - `meta*` tables: `ORDER BY` their first column. In the mdb every
+    `meta*` table's first column is a monotonic id in file order
+    (`metaViews.ViewId` 1…18, `metaFields.FieldId` 1…534,
+    `metaPages.PageId` 1…27; verified via `epiora-mdb` on all 17
+    `meta*` tables), and for a real EI7 SQL Server project the
+    first column is the id EI7 enumerates by. Physical order cannot
+    be trusted here: `meta*` rows are variable-size (CheckCode up
+    to ~13 KB) and SQL Server's heap backfills earlier pages — the
+    container shows `metaViews` rows 15, 17, 18 backfilling
+    page 896 while rows 14 and 16 each occupy later pages — so
+    physical order ≠ insert order for these tables, and insert
+    order is unrecoverable from a heap (`%%xact_seqno%%` is not
+    valid syntax; `%%seqno%%` is per-page).
+  - every other table: `CROSS APPLY
+    sys.fn_PhysLocCracker(%%physloc%%) ORDER BY plc.file_id,
+    plc.page_id, plc.slot_id` — physical slot order, which is
+    insert order for the verbatim heap copy (verified on all 76
+    non-`meta*` tables: 58 with a unique first column — including
+    `EvansCounty7`, `hmohiv`, `hmohiv8`, `LEUKEM210` re-checked
+    after a parse artifact — 15 by a unique secondary column,
+    `Addicts`/`Anderson` all-REAL fixed-size, `SohoDead` by a
+    full-row `ADDRESS` diff), the `mdb-export` dump order the
+    golden's rows follow, and leaf order on a clustered real
+    project — no key-column assumption.
+    A bare `ORDER BY %%physloc%%` is wrong: the rid's little-endian
+    byte packing scrambles tables spanning multiple pages.
+  Verified offline: the pinned mdbtools `db.columns`/`db.rows`
+  copy of `Sample.mdb`, run through the same declared-type kind
+  mapping and this split ordering, maps to all 18 golden view
+  hashes and all grid hashes identical.
 - SQL Server projects are one-time imports (not refreshable): the
   reader emits no snapshots and no refresh machinery is wired —
   refreshability arrives with Task 15's import flow, which calls the
