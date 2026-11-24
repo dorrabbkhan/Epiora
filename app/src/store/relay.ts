@@ -9,6 +9,7 @@ import initSql from '../../../store/migrations/0001_init.sql?raw';
 import runCommandSql from '../../../store/migrations/0002_run_command.sql?raw';
 import runNotesSql from '../../../store/migrations/0003_run_notes.sql?raw';
 import legacySql from '../../../store/migrations/0004_legacy.sql?raw';
+import sessionsSql from '../../../store/migrations/0005_sessions.sql?raw';
 import { migrate } from './migrate';
 import { StoreError, type Row, type SqlValue, type Store, type Tx } from './types';
 
@@ -17,6 +18,7 @@ const MIGRATIONS: { version: number; sql: string }[] = [
   { version: 2, sql: runCommandSql },
   { version: 3, sql: runNotesSql },
   { version: 4, sql: legacySql },
+  { version: 5, sql: sessionsSql },
 ];
 
 export const RELAY_TAG = 'epiora-store-relay';

@@ -16,11 +16,25 @@
 
 mod expr;
 pub mod functions;
+mod manage;
+mod recipe;
+mod view;
+
+#[cfg(feature = "fuzzing")]
+pub mod fuzz_harness;
 
 pub use expr::ast::{BinOp, Expr, Lit, UnOp};
 pub use expr::eval::{eval_column, AsOf, EvalEnv};
 pub use expr::parser::parse_expr;
 pub use expr::types::{type_check, Schema};
+pub use manage::{
+    AggFunc, Aggregate, Command, MergeMode, RecodeBound, RecodeRule, Scope, SetOption,
+};
+pub use recipe::{replay, working_view_stamp, Recipe};
+pub use view::{
+    DatasetRef, JoinMode, LinkedDatasets, Order, Process, StatisticsLevel, ViewSettings,
+    WorkingView,
+};
 
 /// A language failure with a stable machine-readable `code()`
 /// (spec §10: `pgm_syntax`, `expr_type`, `unknown_variable`; the two
@@ -71,6 +85,32 @@ pub enum LangError {
         /// The rejected function.
         name: String,
     },
+    /// A MERGE key pair whose destination and source types cannot
+    /// join (`merge_key_type`, spec §10).
+    #[error("merge key type mismatch on {column}: {message}")]
+    MergeKeyType {
+        /// The destination key column.
+        column: String,
+        /// Detail.
+        message: String,
+    },
+    /// A keyless RELATE the session has no stored link for
+    /// (`relate_no_link`).
+    #[error("no stored link from {parent} to {child}")]
+    RelateNoLink {
+        /// The parent (current) dataset.
+        parent: String,
+        /// The child dataset.
+        child: String,
+    },
+    /// A recipe step that cannot replay against the source dataset
+    /// (`recipe_replay_mismatch`) — reserved for the store-side
+    /// replay checks.
+    #[error("recipe step cannot replay: {message}")]
+    RecipeReplayMismatch {
+        /// Which step and why.
+        message: String,
+    },
 }
 
 impl LangError {
@@ -82,6 +122,9 @@ impl LangError {
             Self::UnknownVariable { .. } => "unknown_variable",
             Self::UnknownFunction { .. } => "unknown_function",
             Self::UnsupportedFunction { .. } => "unsupported_function",
+            Self::MergeKeyType { .. } => "merge_key_type",
+            Self::RelateNoLink { .. } => "relate_no_link",
+            Self::RecipeReplayMismatch { .. } => "recipe_replay_mismatch",
         }
     }
 }

@@ -358,6 +358,7 @@ fn zero_observation_group_explains_without_panic() {
     let ctx = RunContext {
         timestamp: "2026-11-17T00:00:00Z".to_string(),
         project: None,
+        working_view: None,
     };
     let too_few = Estimate::Undefined {
         reason: UndefinedReason::TooFew,

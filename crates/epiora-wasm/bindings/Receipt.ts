@@ -4,6 +4,7 @@ import type { DatasetStamp } from "./DatasetStamp";
 import type { EngineStamp } from "./EngineStamp";
 import type { ProjectStamp } from "./ProjectStamp";
 import type { ValidationEntry } from "./ValidationEntry";
+import type { WorkingViewStamp } from "./WorkingViewStamp";
 import type { JsonValue } from "./serde_json/JsonValue";
 
 /**
@@ -27,6 +28,11 @@ dataset: DatasetStamp | null,
  * The calculator stamp; present only on v3 receipts.
  */
 calculator: CalculatorStamp | null, 
+/**
+ * The working-view stamp; present only on v4 receipts (v1.1 spec
+ * §5.2).
+ */
+working_view: WorkingViewStamp | null, 
 /**
  * `"freq"` or `"tables"`.
  */

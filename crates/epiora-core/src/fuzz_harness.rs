@@ -35,6 +35,7 @@ fn ctx() -> RunContext {
     RunContext {
         timestamp: "fuzz".into(),
         project: None,
+        working_view: None,
     }
 }
 

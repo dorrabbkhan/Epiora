@@ -81,6 +81,7 @@ fn ctx(project: Option<ProjectStamp>) -> RunContext {
     RunContext {
         timestamp: "2026-10-30T12:00:00Z".into(),
         project,
+        working_view: None,
     }
 }
 

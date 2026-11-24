@@ -22,6 +22,10 @@ pub const RECEIPT_VERSION_WITH_PROJECT: u64 = 2;
 /// Receipt schema version for calculator runs (v1.0 spec §5.4): no
 /// dataset, a `calculator` stamp instead.
 pub const RECEIPT_VERSION_CALCULATOR: u64 = 3;
+/// Receipt schema version when a working-view stamp is present (v1.1
+/// spec §5.2): the dataset the procedure ran on came out of a recipe
+/// replay, and the stamp records exactly which recipe made it.
+pub const RECEIPT_VERSION_WORKING_VIEW: u64 = 4;
 
 /// `project` — which project the run belongs to (v0.3 spec §8.2).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -34,7 +38,7 @@ pub struct ProjectStamp {
 }
 
 /// `dataset` — which input produced the result.
-#[derive(Debug, Clone, PartialEq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct DatasetStamp {
     /// Dataset id.
@@ -43,6 +47,24 @@ pub struct DatasetStamp {
     pub version: u64,
     /// `Dataset::content_hash_hex`.
     pub sha256: String,
+}
+
+/// `working_view` — the recipe replay that produced the procedure's
+/// input (v1.1 spec §5.2). `source` stamps the raw table the recipe
+/// started from; `recipe_text` is the recipe's canonical text,
+/// `recipe_sha256` its hash and `view_sha256` the materialized view's
+/// content hash.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
+pub struct WorkingViewStamp {
+    /// Stamp of the recipe's source dataset.
+    pub source: DatasetStamp,
+    /// `Recipe::canonical_text`.
+    pub recipe_text: String,
+    /// `Recipe::sha256_hex`.
+    pub recipe_sha256: String,
+    /// `WorkingView::materialize().content_hash_hex()`.
+    pub view_sha256: String,
 }
 
 /// `calculator` — which calculator produced the result (v1.0 spec
@@ -112,6 +134,10 @@ pub struct Receipt {
     /// The calculator stamp; present only on v3 receipts.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub calculator: Option<CalculatorStamp>,
+    /// The working-view stamp; present only on v4 receipts (v1.1 spec
+    /// §5.2).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub working_view: Option<WorkingViewStamp>,
     /// `"freq"` or `"tables"`.
     pub procedure: String,
     /// Canonical options, every default filled in.
@@ -142,9 +168,12 @@ impl Receipt {
         timestamp: String,
         engine: EngineStamp,
         project: Option<ProjectStamp>,
+        working_view: Option<WorkingViewStamp>,
     ) -> Receipt {
         let mut receipt = Receipt {
-            receipt_version: if project.is_some() {
+            receipt_version: if working_view.is_some() {
+                RECEIPT_VERSION_WORKING_VIEW
+            } else if project.is_some() {
                 RECEIPT_VERSION_WITH_PROJECT
             } else {
                 RECEIPT_VERSION
@@ -152,6 +181,7 @@ impl Receipt {
             project,
             dataset: Some(dataset),
             calculator: None,
+            working_view,
             procedure,
             options,
             engine,
@@ -180,6 +210,7 @@ impl Receipt {
             project: None,
             dataset: None,
             calculator: Some(stamp),
+            working_view: None,
             procedure,
             options,
             engine,

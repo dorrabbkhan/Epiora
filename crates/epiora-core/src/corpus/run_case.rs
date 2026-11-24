@@ -60,6 +60,7 @@ fn ctx() -> RunContext {
     RunContext {
         timestamp: CASE_TIMESTAMP.to_string(),
         project: None,
+        working_view: None,
     }
 }
 
