@@ -6752,13 +6752,16 @@ block sketch:
   `legacy_sqlserver.rs`/`eptb.rs` needed no changes; the new
   `handshake_timeout` (15 s) / `command_timeout` (30 s) defaults
   bound only a stalled server round-trip, not a lazy row stream.
-  Remaining: `rand 0.7.3` via `winauth 0.0.5` (`cfg(windows)`-only,
-  required for `AuthMethod::Integrated` on Windows builds) is flagged
-  by RUSTSEC-2026-0097 (unsound; the trigger needs a custom `log`
-  logger, which the app does not install). `winauth` pins
-  `rand = "0.7"` and 0.0.5 is the latest release — no safe upgrade
-  exists, so the remedy is the owner's (a `deny.toml` `ignore`
-  entry, matching the recorded v0.3 Task 14 pattern).
+  Resolved (fix round 2, owner decision A — PR #119 comment
+  7118845674): `rand 0.7.3` via `winauth 0.0.5` (`cfg(windows)`-only,
+  required for `AuthMethod::Integrated` on Windows builds, used for
+  the NTLM client nonce) is flagged by RUSTSEC-2026-0097 (unsound;
+  the trigger needs a custom `log` logger, which the app does not
+  install). `winauth` pins `rand = "0.7"` and 0.0.5 is the latest
+  release — no safe upgrade exists, so the owner approved adding
+  RUSTSEC-2026-0097 to `app/src-tauri/deny.toml`'s `ignore` list
+  (the recorded v0.3 Task 14 pattern) and keeping Windows
+  integrated auth.
 - `SqlServerAuth::Windows` resolves to `AuthMethod::Integrated` on
   Windows builds only; elsewhere it is a typed `sqlserver_auth`
   failure (tiberius gates `Integrated` on `all(windows, "winauth")`).
@@ -6822,8 +6825,9 @@ Dependencies added beyond the plan's named `tiberius, tokio-util`:
 `tokio` (`net` — `TcpStream` for `Client::connect`),
 `futures-util` (`std` only — `TryStreamExt` to iterate tiberius's
 row stream), `serde` (`derive` — the `SqlServerConn`/`SqlServerAuth`
-IPC shape), all licences inside the existing `deny.toml` allow list
-(`cargo deny check` passes, so `deny.toml` itself is unchanged).
+IPC shape), all licences inside the existing `deny.toml` allow list.
+`app/src-tauri/deny.toml` gains the owner-approved RUSTSEC-2026-0097
+ignore recorded above (fix round 2); `cargo deny check` passes.
 Licences recorded: tiberius MIT/Apache-2.0; tokio/tokio-util MIT;
 futures-util MIT OR Apache-2.0; serde MIT OR Apache-2.0; go-sqlcmd
 MIT.
@@ -6848,4 +6852,7 @@ Files outside the Files block:
 - `.github/workflows/legacy.yml` — the `pull_request` `paths:` list
   also gained `app/src-tauri/**` and `app/src/tauri/**` so the job
   gates the files it covers.
+- `app/src-tauri/deny.toml` — the owner-approved RUSTSEC-2026-0097
+  ignore above (fix round 2); the Files block's `deny.toml` is the
+  root file, which stays unchanged.
 Supersedes: —
