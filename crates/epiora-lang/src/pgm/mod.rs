@@ -27,7 +27,7 @@ pub use ast::{
 pub use parser::parse_program;
 pub use plan::{plan, plan_with, Action, ProgramSource};
 pub use print::print_command;
-pub use register::{register, Entry, FieldType, Module, Register, Status};
+pub use register::{register, register_json, Entry, FieldType, Module, Register, Status};
 
 /// Decode program bytes to text: UTF-8 verbatim; Windows-1252
 /// when the bytes are not valid UTF-8 (EI3-era `.pgm` files are

@@ -21,6 +21,7 @@ use super::register::Register;
 use crate::manage::Command;
 use crate::view::DatasetRef;
 use crate::LangError;
+use serde::{Deserialize, Serialize};
 
 /// Where a `RUNPGM` looks up program text. `name` is the spelled
 /// reference: a saved program's name, a file's path, or
@@ -31,7 +32,8 @@ pub trait ProgramSource {
 }
 
 /// One planned action — a statement's execution-time effect.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Action {
     /// A cleaning command.
     Manage {

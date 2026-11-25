@@ -209,3 +209,16 @@ pub fn legacy_meta_any(data: &[u8]) {
     };
     let _ = crate::map_ei7(&mut src, fmt);
 }
+
+/// `eptb_any` (v1.1 plan Task 13): arbitrary bytes hit `decode_batch`
+/// — the boundary `legacyPush` exposes over wasm. A decoded batch must
+/// re-push into `BatchSource` identically; a failure must be a typed
+/// `LegacyError`, never a panic. `detect` runs over whatever survived.
+#[allow(clippy::panic)]
+pub fn eptb_any(data: &[u8]) {
+    if let Ok(table) = crate::batch::decode_batch(data) {
+        let mut src = BatchSource::new();
+        assert!(src.push(&table.name, data).is_ok());
+        let _ = crate::detect(&src);
+    }
+}

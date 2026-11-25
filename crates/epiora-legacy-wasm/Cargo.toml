@@ -1,0 +1,38 @@
+[package]
+name = "epiora-legacy-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Epiora legacy browser binding: EPTB batch -> mapped project (v1.1 spec §7)"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+# `parity` adds `legacyCase`, which drives the parity test
+# (`native_and_wasm_bit_identical`): the same case runner the wasm
+# module exports, callable natively so the binding is compared
+# byte-for-byte against the direct `epiora-legacy` pipeline.
+parity = []
+
+[dependencies]
+epiora-core = { path = "../epiora-core" }
+epiora-legacy = { path = "../epiora-legacy" }
+# wasm-bindgen is pinned exactly: wasm-pack requires the wasm-bindgen
+# CLI to equal the crate version, and CI installs that CLI from a
+# SHA-256-verified release tarball. js-sys stays in lockstep with it.
+wasm-bindgen = "=0.2.129"
+js-sys = "=0.3.106"
+serde = "1"
+serde-wasm-bindgen = "0.6.5"
+# float_roundtrip keeps JSON parsing bit-identical to the native
+# pipeline in the parity build (see epiora-core's Cargo.toml).
+serde_json = { version = "1", features = ["float_roundtrip"] }
+sha2 = "0.11"
+
+[dev-dependencies]
+epiora-mdb = { path = "../epiora-mdb" }
+# rusqlite is dev/test-only (mirroring epiora-legacy): the SQLite test
+# sources build the same RawTables the worker's EPTB encoder does.
+rusqlite = { version = "0.41", features = ["bundled"] }
+serde_json = { version = "1", features = ["float_roundtrip"] }

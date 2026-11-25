@@ -60,6 +60,20 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
     },
     cancelImport: (sessionId) => call(r.cancelImport(sessionId)),
     discardSession: (sessionId) => call(r.discardSession(sessionId)),
+    inspectLegacy: (files, codePage) => call(r.inspectLegacy(files, codePage)),
+    commitLegacy: (previewId, onProgress) =>
+      call(r.commitLegacy(previewId, Comlink.proxy(onProgress))),
+    planRefresh: (projectId, files, codePage) =>
+      call(r.planRefresh(projectId, files, codePage)),
+    commitRefresh: (previewId) => call(r.commitRefresh(previewId)),
+    openSession: (projectId, datasetId, version) =>
+      call(r.openSession(projectId, datasetId, version)),
+    applyCommand: (sessionId, commandText) =>
+      call(r.applyCommand(sessionId, commandText)),
+    undoLast: (sessionId) => call(r.undoLast(sessionId)),
+    runProgram: (sessionId, text, onEvent) =>
+      call(r.runProgram(sessionId, text, Comlink.proxy(onEvent))),
+    writeSession: (sessionId) => call(r.writeSession(sessionId)),
     runFreq: (projectId, datasetId, version, options) =>
       call(r.runFreq(projectId, datasetId, version, options)),
     runTables: (projectId, datasetId, version, options) =>

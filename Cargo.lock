@@ -532,6 +532,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "epiora-lang-wasm"
+version = "1.0.0"
+dependencies = [
+ "epiora-core",
+ "epiora-lang",
+ "epiora-legacy",
+ "epiora-mdb",
+ "js-sys",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "sha2 0.10.9",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "epiora-legacy"
 version = "1.0.0"
 dependencies = [
@@ -541,9 +557,26 @@ dependencies = [
  "epiora-mdb",
  "libm",
  "rusqlite",
+ "serde",
  "serde_json",
  "sha2 0.11.1",
  "thiserror",
+]
+
+[[package]]
+name = "epiora-legacy-wasm"
+version = "1.0.0"
+dependencies = [
+ "epiora-core",
+ "epiora-legacy",
+ "epiora-mdb",
+ "js-sys",
+ "rusqlite",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "sha2 0.11.1",
+ "wasm-bindgen",
 ]
 
 [[package]]

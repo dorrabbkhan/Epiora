@@ -32,9 +32,9 @@ pub use manage::{
     AggFunc, Aggregate, Command, MergeMode, RecodeBound, RecodeRule, Scope, SetOption,
 };
 pub use pgm::{
-    decode_pgm_text, parse_program, plan, plan_with, print_command, register, Action, DisplayWhat,
-    Entry, FieldType, Module, Program, ProgramRef, ProgramSource, Register, Spanned, Statement,
-    Status, WriteMode, WriteTarget, WriteVars,
+    decode_pgm_text, parse_program, plan, plan_with, print_command, register, register_json,
+    Action, DisplayWhat, Entry, FieldType, Module, Program, ProgramRef, ProgramSource, Register,
+    Spanned, Statement, Status, WriteMode, WriteTarget, WriteVars,
 };
 pub use recipe::{replay, working_view_stamp, Recipe};
 pub use view::{

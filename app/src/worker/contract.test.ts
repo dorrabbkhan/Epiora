@@ -5,21 +5,62 @@
 // generated binding types (checked structurally in contract.types.ts).
 
 import { readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { t } from '../ui/strings';
 import {
   ENGINE_ERROR_CODES,
   IMPORT_ERROR_CODES,
+  LANG_ERROR_CODES,
+  LEGACY_ERROR_CODES,
   STORE_ERROR_CODES,
   WORKER_ERROR_CODES,
 } from './errors';
+import { api } from './api';
 import { TYPES_CHECKED } from './contract.types';
+
+// Task 13 fix round: `inspectLegacy`/`planRefresh` take `File[]` per
+// the plan's Interfaces block — the test below drives a call with
+// real `File` objects. The wasm boundary is mocked (node vitest
+// cannot fetch the `?url` wasm; the browser suite drives the same
+// call unmocked) — what is asserted is the File→bytes conversion and
+// `dataFile` picking the data file over the `.prj` companion.
+vi.mock('@legacy/epiora_legacy_wasm', () => ({
+  default: vi.fn().mockResolvedValue(undefined),
+  legacyNew: vi.fn(() => ({ free: vi.fn() })),
+  legacyPush: vi.fn(),
+  legacyMap: vi.fn(() => ({
+    project: {
+      name: 'file-preview',
+      legacy_id: 'x',
+      source_format: 'ei7_access',
+      views: [],
+      datasets: [],
+      links: [],
+      programs: [],
+      check_code: [],
+      report: [],
+    },
+    snapshots: [],
+  })),
+}));
+vi.mock('../legacy/mdb', () => ({
+  openMdb: vi.fn(async () => ({
+    format: () => 'JET4',
+    tables: () => ['T'],
+    batches: async function* () {
+      yield new Uint8Array([0]);
+    },
+    close: vi.fn(),
+  })),
+}));
 
 const ALL_CODES = [
   ...IMPORT_ERROR_CODES,
   ...ENGINE_ERROR_CODES,
   ...STORE_ERROR_CODES,
   ...WORKER_ERROR_CODES,
+  ...LEGACY_ERROR_CODES,
+  ...LANG_ERROR_CODES,
 ];
 
 /** The string literals returned by `fn code()` in a Rust error enum,
@@ -53,6 +94,49 @@ describe('worker RPC contract', () => {
     const engineCodes = rustCodes('../../../crates/epiora-core/src/error.rs');
     expect(importCodes.slice().sort()).toEqual([...IMPORT_ERROR_CODES].sort());
     expect(engineCodes.slice().sort()).toEqual([...ENGINE_ERROR_CODES].sort());
+    // v1.1 Task 13: the two new wasm crates' codes have their own
+    // lists — `legacy_no_table` lives in source.rs as a
+    // `Source { code }` literal, not a `=>` arm, so it is listed in
+    // errors.ts but excluded here.
+    const legacyCodes = rustCodes('../../../crates/epiora-legacy/src/error.rs');
+    const langCodes = rustCodes('../../../crates/epiora-lang/src/lib.rs');
+    expect(legacyCodes.slice().sort()).toEqual(
+      [...LEGACY_ERROR_CODES].filter((c) => c !== 'legacy_no_table').sort(),
+    );
+    expect(langCodes.slice().sort()).toEqual([...LANG_ERROR_CODES].sort());
+  });
+
+  it('exposes_every_new_rpc', () => {
+    // v1.1 Task 13's worker RPC surface — `wire` keeps them as
+    // functions on the `api` object.
+    const a = api as unknown as Record<string, unknown>;
+    for (const name of [
+      'inspectLegacy',
+      'commitLegacy',
+      'planRefresh',
+      'commitRefresh',
+      'openSession',
+      'applyCommand',
+      'undoLast',
+      'runProgram',
+      'writeSession',
+    ]) {
+      expect(typeof a[name], `api.${name} missing`).toBe('function');
+    }
+  });
+
+  it('inspect_legacy_accepts_real_file_objects', async () => {
+    // The interface's `File[]` spelling driven for real: `toNameBytes`
+    // must read each `File` via `arrayBuffer()` and `dataFile` must
+    // pick the `.mdb` over the `.prj` companion.
+    const preview = await api.inspectLegacy([
+      new File([new Uint8Array([0xde, 0xad])], 'project.prj'),
+      new File([new Uint8Array([0xbe, 0xef])], 'project.mdb'),
+    ]);
+    expect(preview.project.name).toBe('file-preview');
+    const openMdb = vi.mocked((await import('../legacy/mdb')).openMdb);
+    expect(openMdb).toHaveBeenCalledTimes(1);
+    expect(Array.from(openMdb.mock.calls[0]![0] as Uint8Array)).toEqual([0xbe, 0xef]);
   });
 
   it('api_types_match_bindings', () => {

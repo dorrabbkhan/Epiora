@@ -1232,6 +1232,7 @@ dependencies = [
  "epiora-core",
  "epiora-import",
  "libm",
+ "serde",
  "thiserror 2.0.21",
 ]
 

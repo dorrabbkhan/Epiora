@@ -26,12 +26,14 @@ else
   echo "node_modules up to date"
 fi
 
-step "wasm packages (epiora-wasm, epiora-import-wasm)"
-# The worker's @engine/@import aliases point at crates/*/pkg, which is a
-# git-ignored build artifact — build both before tsc, Vitest or vite
-# build needs them.
+step "wasm packages (epiora-wasm, epiora-import-wasm, epiora-legacy-wasm, epiora-lang-wasm)"
+# The worker's @engine/@import/@legacy/@lang aliases point at
+# crates/*/pkg, which is a git-ignored build artifact — build all
+# four before tsc, Vitest or vite build needs them.
 "$root/scripts/wasm-build.sh" release epiora-wasm
 "$root/scripts/wasm-build.sh" release epiora-import-wasm
+"$root/scripts/wasm-build.sh" release epiora-legacy-wasm
+"$root/scripts/wasm-build.sh" release epiora-lang-wasm
 
 # v1.0 Task 16 (Files-block deviation, docs/decisions.md): the explain
 # formula guard (app/src/explain/guard.test.ts) drives the corpus

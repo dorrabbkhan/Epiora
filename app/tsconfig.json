@@ -22,7 +22,9 @@
       "@engine/*": ["../crates/epiora-wasm/pkg/*"],
       "@engine-types/*": ["../crates/epiora-wasm/bindings/*"],
       "@import/*": ["../crates/epiora-import-wasm/pkg/*"],
-      "@import-types/*": ["../crates/epiora-import-wasm/bindings/*"]
+      "@import-types/*": ["../crates/epiora-import-wasm/bindings/*"],
+      "@legacy/*": ["../crates/epiora-legacy-wasm/pkg/*"],
+      "@lang/*": ["../crates/epiora-lang-wasm/pkg/*"]
     }
   },
   "include": [

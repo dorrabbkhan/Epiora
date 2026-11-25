@@ -70,6 +70,31 @@ export const STORE_ERROR_CODES = [
   'sql',
 ] as const;
 
+/** `LegacyError::code()` (epiora-legacy, v1.1 Task 13) — the `mdb_*`
+ *  codes pass through from the mdbtools binding. */
+export const LEGACY_ERROR_CODES = [
+  'legacy_batch_invalid',
+  'legacy_layout_unknown',
+  'legacy_view_broken',
+  // `Source { code }` literal in source.rs, not a `code()` arm.
+  'legacy_no_table',
+] as const;
+
+/** `LangError::code()` (epiora-lang, v1.1 Task 13) — `unknown_variable`
+ *  is spelled like the engine's code and `categoryFor` checks ENGINE
+ *  first, so both lists carry it. */
+export const LANG_ERROR_CODES = [
+  'pgm_syntax',
+  'expr_type',
+  'unknown_variable',
+  'unknown_function',
+  'unsupported_function',
+  'merge_key_type',
+  'relate_no_link',
+  'recipe_replay_mismatch',
+  'pgm_runpgm_cycle',
+] as const;
+
 /** Detail codes the worker itself raises. */
 export const WORKER_ERROR_CODES = [
   'schema_change_unaccepted',
@@ -84,6 +109,8 @@ export const WORKER_ERROR_CODES = [
 const IMPORT = new Set<string>(IMPORT_ERROR_CODES);
 const ENGINE = new Set<string>(ENGINE_ERROR_CODES);
 const STORE = new Set<string>(STORE_ERROR_CODES);
+const LEGACY = new Set<string>(LEGACY_ERROR_CODES);
+const LANG = new Set<string>(LANG_ERROR_CODES);
 
 const WORKER_CATEGORY: Record<(typeof WORKER_ERROR_CODES)[number], RpcErrorCode> = {
   schema_change_unaccepted: 'ImportError',
@@ -103,6 +130,8 @@ export function categoryFor(detail: string): RpcErrorCode {
   }
   if (ENGINE.has(detail)) return 'EngineError';
   if (IMPORT.has(detail)) return 'ImportError';
+  if (LEGACY.has(detail)) return 'ImportError';
+  if (LANG.has(detail)) return 'EngineError';
   if (STORE.has(detail)) return 'StoreError';
   return 'StoreError';
 }

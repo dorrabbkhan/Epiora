@@ -8,12 +8,14 @@ use std::collections::{HashMap, HashSet};
 
 use epiora_core::dataset::Dataset;
 use epiora_import::Diff;
+use serde::{Deserialize, Serialize};
 
 use crate::error::LegacyError;
 use crate::project::LegacyProject;
 
 /// What a remapped view means for the committed data.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum RefreshOutcome {
     /// The re-import produced no record or schema change.
     Unchanged,
@@ -30,7 +32,7 @@ pub enum RefreshOutcome {
 }
 
 /// One view's refresh decision.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ViewRefresh {
     /// The view name.
     pub name: String,
@@ -39,7 +41,7 @@ pub struct ViewRefresh {
 }
 
 /// The refresh plan for a whole re-imported project.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct RefreshPlan {
     /// Every view's decision: `next` views in project order, then
     /// `previous`-only views (`Missing`) in committed order.

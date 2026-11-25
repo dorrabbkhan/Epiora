@@ -9,8 +9,8 @@
 #                                             (wasm-pack --target nodejs
 #                                             with the `parity` feature)
 #
-# <crate> is epiora-wasm (default, existing behaviour unchanged) or
-# epiora-import-wasm.
+# <crate> is epiora-wasm (default, existing behaviour unchanged),
+# epiora-import-wasm, epiora-legacy-wasm or epiora-lang-wasm.
 #
 # wasm-pack runs with --mode no-install and --no-opt: it may not
 # download tool binaries — CI installs wasm-bindgen and wasm-opt from
@@ -23,8 +23,8 @@ cd "$(git rev-parse --show-toplevel)"
 mode="${1:-release}"
 crate="${2:-epiora-wasm}"
 case "$crate" in
-  epiora-wasm|epiora-import-wasm) ;;
-  *) echo "usage: $0 [release|parity] [epiora-wasm|epiora-import-wasm]" >&2; exit 2 ;;
+  epiora-wasm|epiora-import-wasm|epiora-legacy-wasm|epiora-lang-wasm) ;;
+  *) echo "usage: $0 [release|parity] [epiora-wasm|epiora-import-wasm|epiora-legacy-wasm|epiora-lang-wasm]" >&2; exit 2 ;;
 esac
 wasm_name="${crate//-/_}"
 # The repo-local verified tool copies (installed like CI does) sit in
@@ -51,7 +51,7 @@ case "$mode" in
       --out-dir pkg-parity --no-opt --mode no-install -- --features parity
     ;;
   *)
-    echo "usage: $0 [release|parity] [epiora-wasm|epiora-import-wasm]" >&2
+    echo "usage: $0 [release|parity] [epiora-wasm|epiora-import-wasm|epiora-legacy-wasm|epiora-lang-wasm]" >&2
     exit 2
     ;;
 esac

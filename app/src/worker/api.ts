@@ -27,6 +27,17 @@ import { engine } from './engines';
 import * as rexport from './export';
 import { rpc, throwWired } from './errors';
 import * as importer from './importer';
+import * as langWorker from './lang';
+import * as langSessionWorker from './lang-session';
+import type {
+  DatasetVersion,
+  ProgramEvent,
+  ProgramRun,
+  Session,
+  SessionState,
+} from './lang';
+import * as legacyWorker from './legacy';
+import type { LegacyPreview, RefreshPreview } from './legacy';
 import { clearSnapshotCache, gridPage, loadEntry, storedSettings } from './snapshots';
 import { withStore } from './store-backend';
 import * as datasets from '../store/repo/datasets';
@@ -106,6 +117,16 @@ export interface StorageEstimate {
   persisted: boolean;
 }
 
+export type {
+  DatasetVersion,
+  LegacyPreview,
+  ProgramEvent,
+  ProgramRun,
+  RefreshPreview,
+  Session,
+  SessionState,
+};
+
 export interface DataApi {
   listProjects(): Promise<Project[]>;
   createProject(name: string): Promise<Project>;
@@ -142,6 +163,42 @@ export interface DataApi {
   ): Promise<CommitResult>;
   cancelImport(sessionId: string): Promise<void>;
   discardSession(sessionId: string): Promise<void>;
+  /**
+   * v1.1 Task 13 (spec §4.2): map picked legacy files to a project
+   * preview — `.mdb`/`.accdb` through mdbtools wasm, `.db` through
+   * sqlite-wasm — without writing the store.
+   */
+  inspectLegacy(
+    files: File[],
+    codePage?: string,
+  ): Promise<LegacyPreview>;
+  /** Commits a `inspectLegacy` preview — one transaction. */
+  commitLegacy(
+    previewId: string,
+    onProgress: (p: ImportProgress) => void,
+  ): Promise<string>;
+  /** Re-import: diffs a newer copy of the file against the project's
+   *  committed views. */
+  planRefresh(
+    projectId: string,
+    files: File[],
+    codePage?: string,
+  ): Promise<RefreshPreview>;
+  commitRefresh(previewId: string): Promise<void>;
+  /** Cleaning sessions and program runs (v1.1 spec §5–6). */
+  openSession(
+    projectId: string,
+    datasetId: string,
+    version: number,
+  ): Promise<Session>;
+  applyCommand(sessionId: string, commandText: string): Promise<SessionState>;
+  undoLast(sessionId: string): Promise<SessionState>;
+  runProgram(
+    sessionId: string,
+    text: string,
+    onEvent: (e: ProgramEvent) => void,
+  ): Promise<ProgramRun>;
+  writeSession(sessionId: string): Promise<DatasetVersion>;
   runFreq(
     projectId: string,
     datasetId: string,
@@ -265,6 +322,29 @@ export const api: DataApi = {
   ),
   cancelImport: wire((sessionId) => importer.cancelImport(sessionId)),
   discardSession: wire((sessionId) => importer.discardSession(sessionId)),
+  inspectLegacy: wire((files, codePage) => legacyWorker.inspectLegacy(files, codePage)),
+  commitLegacy: wire((previewId, onProgress) =>
+    withStore((s) => legacyWorker.commitLegacy(s, previewId, onProgress)),
+  ),
+  planRefresh: wire((projectId, files, codePage) =>
+    withStore((s) => legacyWorker.planRefresh(s, projectId, files, codePage)),
+  ),
+  commitRefresh: wire((previewId) =>
+    withStore((s) => legacyWorker.commitRefresh(s, previewId)),
+  ),
+  openSession: wire((projectId, datasetId, version) =>
+    withStore((s) => langWorker.openSession(s, projectId, datasetId, version)),
+  ),
+  applyCommand: wire((sessionId, commandText) =>
+    withStore((s) => langWorker.applyCommand(s, sessionId, commandText)),
+  ),
+  undoLast: wire((sessionId) => withStore((s) => langWorker.undoLast(s, sessionId))),
+  runProgram: wire((sessionId, text, onEvent) =>
+    withStore((s) => langSessionWorker.runProgram(s, sessionId, text, onEvent)),
+  ),
+  writeSession: wire(
+    (sessionId) => withStore((s) => langSessionWorker.writeSession(s, sessionId)),
+  ),
   runFreq: wire((projectId, datasetId, version, options) =>
     withStore((s) => analysis.runFreq(s, projectId, datasetId, version, options)),
   ),

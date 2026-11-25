@@ -12,10 +12,11 @@ use crate::pgm::print::write_command;
 use crate::view::WorkingView;
 use epiora_core::dataset::Dataset;
 use epiora_core::receipt::{DatasetStamp, WorkingViewStamp};
+use serde::{Deserialize, Serialize};
 use sha2::Digest;
 
 /// A session's recorded commands with its as-of instant.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Recipe {
     /// The session's as-of instant (`SYSTEMDATE`/`SYSTEMTIME`).
     pub as_of: AsOf,
@@ -43,6 +44,66 @@ impl Recipe {
             write_command(&mut out, step);
         }
         out.trim_end_matches('\n').to_string()
+    }
+
+    /// Inverse of [`Recipe::canonical_text`]: the `AS-OF` header plus
+    /// command blocks re-parsed into steps. Anything else — a missing
+    /// header, a statement that is not a cleaning command — is a
+    /// `recipe_replay_mismatch`; malformed text is `pgm_syntax`.
+    pub fn parse(text: &str) -> Result<Recipe, crate::LangError> {
+        let bad = |message: &str| crate::LangError::RecipeReplayMismatch {
+            message: message.to_string(),
+        };
+        let mut lines = text.split('\n');
+        let header = lines.next().unwrap_or_default().trim_end();
+        let rest = lines.collect::<Vec<_>>().join("\n");
+        let h = header
+            .strip_prefix("AS-OF ")
+            .ok_or_else(|| bad("recipe text must open with an AS-OF line"))?;
+        let (date_s, time_s) = h
+            .split_once(' ')
+            .ok_or_else(|| bad("AS-OF line must carry a date and a time"))?;
+        let mut dp = date_s.split('-');
+        let (y, m, d) = (
+            dp.next().and_then(|v| v.parse::<i32>().ok()),
+            dp.next().and_then(|v| v.parse::<u32>().ok()),
+            dp.next().and_then(|v| v.parse::<u32>().ok()),
+        );
+        let mut tp = time_s.split(':');
+        let (hh, mm, ss) = (
+            tp.next().and_then(|v| v.parse::<i32>().ok()),
+            tp.next().and_then(|v| v.parse::<i32>().ok()),
+            tp.next().and_then(|v| v.parse::<i32>().ok()),
+        );
+        let (y, m, d, hh, mm, ss) = match (y, m, d, hh, mm, ss) {
+            (Some(y), Some(m), Some(d), Some(hh), Some(mm), Some(ss)) => (y, m, d, hh, mm, ss),
+            _ => return Err(bad("AS-OF header is not a date-time")),
+        };
+        let date = crate::functions::calendar::days_from_civil_checked(y, m, d)
+            .ok_or_else(|| bad("AS-OF header carries an invalid date"))?;
+        if !(0..24).contains(&hh) || !(0..60).contains(&mm) || !(0..60).contains(&ss) {
+            return Err(bad("AS-OF header carries an invalid time"));
+        }
+        let as_of = AsOf {
+            date,
+            seconds: hh * 3600 + mm * 60 + ss,
+        };
+        let trimmed = rest.trim();
+        let mut steps = Vec::new();
+        if !trimmed.is_empty() {
+            let program = crate::parse_program(trimmed)?;
+            for stmt in &program.statements {
+                match &stmt.node {
+                    crate::pgm::Statement::Manage(c) => steps.push(c.clone()),
+                    _ => {
+                        return Err(bad(
+                            "recipe text holds a statement that is not a cleaning command",
+                        ))
+                    }
+                }
+            }
+        }
+        Ok(Recipe { as_of, steps })
     }
 
     /// SHA-256 hex of the canonical text — `recipe_sha256` in the

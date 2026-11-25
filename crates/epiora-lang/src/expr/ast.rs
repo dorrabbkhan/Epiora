@@ -2,10 +2,12 @@
 //! `Expression → Value` chain — plus its canonical printing (the form
 //! `parse_print_roundtrip` exercises).
 
+use serde::{Deserialize, Serialize};
 use std::fmt;
 
 /// A parsed expression (grammar `<Expression>`).
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Expr {
     /// A literal.
     Literal(Lit),
@@ -50,7 +52,8 @@ pub enum Expr {
 }
 
 /// A literal value (grammar `<Literal>` plus the `Boolean` terminal).
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Lit {
     /// `(.)` — missing.
     Missing,
@@ -71,7 +74,8 @@ pub enum Lit {
 }
 
 /// Unary operators.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum UnOp {
     /// `-x`.
     Neg,
@@ -82,7 +86,8 @@ pub enum UnOp {
 }
 
 /// Binary operators, in grammar precedence order (loosest first).
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum BinOp {
     /// `OR`.
     Or,

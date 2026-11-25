@@ -29,7 +29,7 @@ pub use report::{ReportEntry, ReportKind};
 pub use source::{BatchSource, LegacySource};
 
 #[cfg(feature = "fuzzing")]
-pub use ei7::fuzz::legacy_meta_any;
+pub use ei7::fuzz::{eptb_any, legacy_meta_any};
 
 /// `detect` — layout detection only: the `LegacySource` carries table
 /// names, not the backend, so an EI7 layout reports `Ei7Access`; the
