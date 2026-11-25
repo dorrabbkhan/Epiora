@@ -185,14 +185,18 @@ jobs:
           path: |
             crates/epiora-wasm/pkg
             crates/epiora-import-wasm/pkg
+            crates/epiora-legacy-wasm/pkg
+            crates/epiora-lang-wasm/pkg
           key: >-
             ${{ runner.os }}-wasm-pkg-wbindgen${{ env.WASM_BINDGEN_VERSION }}-wpack${{ env.WASM_PACK_VERSION }}-${{ env.BINARYEN_VERSION }}-${{ hashFiles('crates/**', 'Cargo.lock', 'rust-toolchain.toml', 'scripts/wasm-build.sh') }}
 
-      - name: Build the two wasm packages
+      - name: Build the four wasm packages
         if: env.RUN_BUNDLE == 'true' && steps.wasm_packages.outputs.cache-hit != 'true'
         run: |
           scripts/wasm-build.sh release epiora-wasm
           scripts/wasm-build.sh release epiora-import-wasm
+          scripts/wasm-build.sh release epiora-legacy-wasm
+          scripts/wasm-build.sh release epiora-lang-wasm
 
       - if: env.RUN_BUNDLE == 'true'
         name: Build app dist

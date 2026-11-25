@@ -28,6 +28,7 @@ import * as rexport from './export';
 import { rpc, throwWired } from './errors';
 import * as importer from './importer';
 import * as langWorker from './lang';
+import * as langSessionWorker from './lang-session';
 import type {
   DatasetVersion,
   ProgramEvent,
@@ -168,7 +169,7 @@ export interface DataApi {
    * sqlite-wasm — without writing the store.
    */
   inspectLegacy(
-    files: { name: string; bytes: Uint8Array }[],
+    files: File[],
     codePage?: string,
   ): Promise<LegacyPreview>;
   /** Commits a `inspectLegacy` preview — one transaction. */
@@ -180,7 +181,7 @@ export interface DataApi {
    *  committed views. */
   planRefresh(
     projectId: string,
-    files: { name: string; bytes: Uint8Array }[],
+    files: File[],
     codePage?: string,
   ): Promise<RefreshPreview>;
   commitRefresh(previewId: string): Promise<void>;
@@ -339,9 +340,11 @@ export const api: DataApi = {
   ),
   undoLast: wire((sessionId) => withStore((s) => langWorker.undoLast(s, sessionId))),
   runProgram: wire((sessionId, text, onEvent) =>
-    withStore((s) => langWorker.runProgram(s, sessionId, text, onEvent)),
+    withStore((s) => langSessionWorker.runProgram(s, sessionId, text, onEvent)),
   ),
-  writeSession: wire((sessionId) => withStore((s) => langWorker.writeSession(s, sessionId))),
+  writeSession: wire(
+    (sessionId) => withStore((s) => langSessionWorker.writeSession(s, sessionId)),
+  ),
   runFreq: wire((projectId, datasetId, version, options) =>
     withStore((s) => analysis.runFreq(s, projectId, datasetId, version, options)),
   ),

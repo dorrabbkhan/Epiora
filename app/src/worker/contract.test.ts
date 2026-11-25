@@ -5,7 +5,7 @@
 // generated binding types (checked structurally in contract.types.ts).
 
 import { readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { t } from '../ui/strings';
 import {
   ENGINE_ERROR_CODES,
@@ -17,6 +17,42 @@ import {
 } from './errors';
 import { api } from './api';
 import { TYPES_CHECKED } from './contract.types';
+
+// Task 13 fix round: `inspectLegacy`/`planRefresh` take `File[]` per
+// the plan's Interfaces block — the test below drives a call with
+// real `File` objects. The wasm boundary is mocked (node vitest
+// cannot fetch the `?url` wasm; the browser suite drives the same
+// call unmocked) — what is asserted is the File→bytes conversion and
+// `dataFile` picking the data file over the `.prj` companion.
+vi.mock('@legacy/epiora_legacy_wasm', () => ({
+  default: vi.fn().mockResolvedValue(undefined),
+  legacyNew: vi.fn(() => ({ free: vi.fn() })),
+  legacyPush: vi.fn(),
+  legacyMap: vi.fn(() => ({
+    project: {
+      name: 'file-preview',
+      legacy_id: 'x',
+      source_format: 'ei7_access',
+      views: [],
+      datasets: [],
+      links: [],
+      programs: [],
+      check_code: [],
+      report: [],
+    },
+    snapshots: [],
+  })),
+}));
+vi.mock('../legacy/mdb', () => ({
+  openMdb: vi.fn(async () => ({
+    format: () => 'JET4',
+    tables: () => ['T'],
+    batches: async function* () {
+      yield new Uint8Array([0]);
+    },
+    close: vi.fn(),
+  })),
+}));
 
 const ALL_CODES = [
   ...IMPORT_ERROR_CODES,
@@ -87,6 +123,20 @@ describe('worker RPC contract', () => {
     ]) {
       expect(typeof a[name], `api.${name} missing`).toBe('function');
     }
+  });
+
+  it('inspect_legacy_accepts_real_file_objects', async () => {
+    // The interface's `File[]` spelling driven for real: `toNameBytes`
+    // must read each `File` via `arrayBuffer()` and `dataFile` must
+    // pick the `.mdb` over the `.prj` companion.
+    const preview = await api.inspectLegacy([
+      new File([new Uint8Array([0xde, 0xad])], 'project.prj'),
+      new File([new Uint8Array([0xbe, 0xef])], 'project.mdb'),
+    ]);
+    expect(preview.project.name).toBe('file-preview');
+    const openMdb = vi.mocked((await import('../legacy/mdb')).openMdb);
+    expect(openMdb).toHaveBeenCalledTimes(1);
+    expect(Array.from(openMdb.mock.calls[0]![0] as Uint8Array)).toEqual([0xbe, 0xef]);
   });
 
   it('api_types_match_bindings', () => {

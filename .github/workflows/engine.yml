@@ -154,6 +154,30 @@ jobs:
         if: always()
         run: ./scripts/wasm-size.sh report >> "$GITHUB_STEP_SUMMARY"
 
+      # v1.1 Task 13: the gate's `cargo test --workspace --all-features`
+      # ran `native_and_wasm_bit_identical` in both crates, which wrote
+      # every case's input + native output to target/parity/*-cases.jsonl.
+      # Replaying the same inputs through the real wasm32
+      # `legacyCase`/`langCase` (nodejs parity builds) must reproduce
+      # every line byte-for-byte — the run that catches a wasm/native
+      # divergence the native-only test cannot see.
+      - name: Real-wasm parity diff (legacy + lang)
+        run: |
+          ./scripts/wasm-build.sh parity epiora-legacy-wasm
+          ./scripts/wasm-build.sh parity epiora-lang-wasm
+          node crates/epiora-legacy-wasm/parity/run.mjs \
+            target/parity/epiora-legacy-wasm-cases.jsonl \
+            > target/parity/epiora-legacy-wasm-wasm.jsonl
+          node crates/epiora-lang-wasm/parity/run.mjs \
+            target/parity/epiora-lang-wasm-cases.jsonl \
+            > target/parity/epiora-lang-wasm-wasm.jsonl
+          crates/epiora-wasm/parity/diff.sh \
+            target/parity/epiora-legacy-wasm-cases.jsonl \
+            target/parity/epiora-legacy-wasm-wasm.jsonl
+          crates/epiora-wasm/parity/diff.sh \
+            target/parity/epiora-lang-wasm-cases.jsonl \
+            target/parity/epiora-lang-wasm-wasm.jsonl
+
       - name: Upload parity lines
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -162,6 +186,10 @@ jobs:
           path: |
             target/corpus-native.jsonl
             target/corpus-wasm.jsonl
+            target/parity/epiora-legacy-wasm-cases.jsonl
+            target/parity/epiora-legacy-wasm-wasm.jsonl
+            target/parity/epiora-lang-wasm-cases.jsonl
+            target/parity/epiora-lang-wasm-wasm.jsonl
           if-no-files-found: ignore
 
   # Chromium performance gate (spec §5.3): 1,000,000 rows, seed

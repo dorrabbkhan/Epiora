@@ -7207,37 +7207,119 @@ Supersedes: —
 
 Files outside the Files block:
 
-- `app/vite.config.ts`, `app/vitest.config.ts`, `app/tsconfig.json`
-  — `@legacy`/`@lang` aliases to `crates/*-wasm/pkg` (mirroring
-  `@engine`/`@import`); vitest's unit project also gained the shared
-  `fs.allow`/`optimizeDeps`/`worker` settings so `?url` wasm imports
-  under `crates/` resolve in unit tests (contract.test.ts now loads
-  `api`).
+- `app/vite.config.ts` — `@legacy`/`@lang` aliases to
+  `crates/*-wasm/pkg` (mirroring `@engine`/`@import`).
+- `app/vitest.config.ts` — the same two aliases plus the unit
+  project's shared `fs.allow`/`optimizeDeps`/`worker` settings so
+  `?url` wasm imports under `crates/` resolve in unit tests
+  (contract.test.ts now loads `api`).
+- `app/tsconfig.json` — path entries for the two new aliases.
 - `app/src/worker/client.ts` — every new RPC needs a main-thread
   proxy method (the `DataApi` wrapper object is total; tsc enforces
   this — omitting it fails typecheck).
 - `app/src/worker/errors.ts` — `LEGACY_ERROR_CODES`/`LANG_ERROR_CODES`
   lists and `categoryFor` mapping (legacy → ImportError, lang →
   EngineError) so the new crates' stable `code()`s categorize right.
+- `app/src/worker/engines.test.ts` — the plan Step 1 test
+  `lang_and_legacy_not_loaded_at_start` lives here; the file itself
+  was not in the Files block.
 - `app/src/ui/strings.ts` — user-facing messages for every new detail
   code; contract.test.ts's `every_detail_code_has_a_user_message`
   requires it.
-- `scripts/check-app.sh`, `.github/workflows/app.yml` — the
-  `@legacy`/`@lang` aliases point at `pkg/` build artifacts, so the
-  app gate and CI now build all four wasm crates before tsc/vitest.
+- `Cargo.lock` — cargo-generated; the two new workspace crates'
+  dependency pins.
+- `app/src-tauri/Cargo.lock` — Tauri workspace lockfile; the new
+  `epiora-lang`/`epiora-legacy` members resolve in it.
+- `scripts/check-app.sh` — the `@legacy`/`@lang` aliases point at
+  `pkg/` build artifacts, so the app gate builds all four wasm crates
+  before tsc/vitest.
+- `.github/workflows/app.yml` — same reason: CI builds all four
+  packages before the app gate runs.
+- `.github/workflows/desktop.yml` (fix round 1) — the `bundle` job's
+  "Build the two wasm packages" step and its cache `path:` list grew
+  `epiora-legacy-wasm`/`epiora-lang-wasm` so `vite build` can resolve
+  the `@legacy`/`@lang` aliases (CI red in run 45589098188).
+- `crates/epiora-lang/src/expr/ast.rs` — `Serialize`/`Deserialize`
+  derives (`snake_case`) so `Expr`/`Lit`/`UnOp` cross the wasm JSON
+  surface.
+- `crates/epiora-lang/src/expr/eval.rs` — serde derives for the
+  eval-side enum the JSON surface returns.
+- `crates/epiora-lang/src/manage/mod.rs` — serde derives on the
+  cleaning-command types `printCommand`/`planProgram` serialize.
+- `crates/epiora-lang/src/pgm/ast.rs` — serde derives on the pgm AST
+  `parseProgram` returns.
+- `crates/epiora-lang/src/pgm/mod.rs` — `register_json` re-export.
+- `crates/epiora-lang/src/pgm/plan.rs` — serde derives on the action
+  JSON `planProgram` emits.
+- `crates/epiora-lang/src/pgm/register.rs` — `register_json` export
+  behind the wasm binding (fix round 1: its doc comment moved back
+  above its own function).
+- `crates/epiora-lang/src/recipe.rs` — `Recipe::parse` (the inverse
+  of `canonical_text`) so the worker can re-open a stored recipe;
+  serde derives on `Recipe`.
+- `crates/epiora-lang/src/view.rs` — serde derives on the view/
+  snapshot type `replay` returns.
+- `crates/epiora-lang/src/lib.rs` — re-export of `register_json`
+  plus the new serde'd types.
+- `crates/epiora-lang/src/fuzz_harness.rs` — `recipe_text_any`
+  harness: arbitrary bytes → `Recipe::parse`, asserting a parsed
+  recipe round-trips its canonical text.
+- `crates/epiora-lang/fuzz/Cargo.toml` — `recipe_text_any` target
+  registration (cargo-fuzz manifest).
+- `crates/epiora-lang/fuzz/fuzz_targets/recipe_text_any.rs` — the
+  fuzz target itself.
+- `crates/epiora-legacy/Cargo.toml` — `serde` dependency for the
+  refresh-plan derives `legacyRefreshPlan` needs over wasm.
+- `crates/epiora-legacy/src/lib.rs` — `eptb_any` re-export behind
+  the `fuzzing` feature.
+- `crates/epiora-legacy/src/refresh.rs` — serde derives on the
+  refresh-plan types `legacyRefreshPlan` serializes.
+- `crates/epiora-legacy/src/ei7/fuzz.rs` — `eptb_any` harness:
+  arbitrary bytes → `decode_batch`, never a panic.
+- `crates/epiora-legacy/fuzz/Cargo.toml` — `eptb_any` target
+  registration.
+- `crates/epiora-legacy/fuzz/fuzz_targets/eptb_any.rs` — the fuzz
+  target itself.
 - `app/src/legacy/mdb.ts` is *used* (not modified) — `openMdb` emits
   EPTB batches for `.mdb`/`.accdb`; `.db` goes through sqlite-wasm +
-  the EPTB encoder in `worker/legacy.ts`, mirroring the native
+  the EPTB encoder in `worker/legacy-eptb.ts`, mirroring the native
   `SqliteSource` test source's storage-class union.
+- `app/src/worker/legacy-eptb.ts` (new, fix round 1) — the `.db`
+  sqlite reader + EPTB v1 encoder + `pushFile`/`dataFile`, split out
+  of `worker/legacy.ts` for the ~400-line rule; `columnKind` now
+  classifies each column once over all its cells (the chunk-kind
+  review finding).
+- `app/src/worker/lang-session.ts` (new, fix round 1) — `runProgram`
+  + `runProcedure` + `writeSession` split out of `worker/lang.ts`
+  (same rule).
+- `app/src/worker/legacy.browser.test.ts` (new, fix round 1) — the
+  50,001-row `.db` chunked-kind import test (real worker + wasm).
+- `crates/epiora-legacy-wasm/src/parity/mod.rs` — the Files-block
+  `src/parity.rs` split for the ~400-line rule; runner + `legacyCase`
+  export.
+- `crates/epiora-legacy-wasm/src/parity/cases.rs` — golden-project
+  case iterator + `run_case` helpers (same split).
+- `crates/epiora-legacy-wasm/src/parity/tests.rs` — `assert_case`,
+  the `native_and_wasm_bit_identical` test and its JSONL emitter.
+- `crates/epiora-legacy-wasm/parity/run.mjs` — feeds the JSONL
+  inputs through the real wasm `legacyCase` (nodejs parity build).
+- `crates/epiora-lang-wasm/src/parity/mod.rs` — same split for the
+  lang crate; runner + `langCase` export.
+- `crates/epiora-lang-wasm/src/parity/cases.rs` — `.pgm` fixture
+  cases + `run_case` helpers.
+- `crates/epiora-lang-wasm/src/parity/tests.rs` — `assert_case`,
+  `native_and_wasm_bit_identical` and its JSONL emitter.
+- `crates/epiora-lang-wasm/parity/run.mjs` — feeds the JSONL inputs
+  through the real wasm `langCase`.
 - Keyless `RELATE` limitation: `replay`'s `linked` argument is
   `Record<string, Uint8Array>` (the plan's interface) — it cannot
   carry the stored `dataset_links` key pairs, so `LinkedDatasets::link`
   returns none and a keyless RELATE surfaces `relate_no_link`.
   Explicit-key RELATE works. Wiring links through needs either a
   signature change or a `links` sibling argument — noted for Task 16.
-- `worker/legacy.ts`'s `inspectLegacy` takes
-  `{ name, bytes: Uint8Array }[]` rather than `File[]` (the plan's
-  spelling): `File` is structured-cloneable, but the plain shape is
-  what the contract tests drive and what Task 15's UI will pass after
-  `arrayBuffer()`. Same for `planRefresh`.
+- `inspectLegacy`/`planRefresh` take `File[]` per the plan's
+  Interfaces block (fix round 1); the worker also accepts the
+  `{ name, bytes: Uint8Array }` plain shape (`FileInput`) — `File`s
+  are read via `arrayBuffer()`. contract.test.ts drives a call with
+  real `File` objects; the browser suite drives it unmocked.
 Supersedes: —
