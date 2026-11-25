@@ -157,7 +157,15 @@ pub fn replay(
         globals: std::collections::BTreeMap::new(),
     };
     for step in &recipe.steps {
-        crate::manage::apply(&mut view, linked, &mut env, step)?;
+        match step {
+            // `CANCEL READ` closes the working view and discards the
+            // recipe: replay starts over from the source (register's
+            // "closes the working view"). A session stores no such
+            // step — the worker clears its recipe instead — but the
+            // step is legal in hand-written recipe text.
+            Command::CancelRead => view = WorkingView::new(source.clone()),
+            _ => crate::manage::apply(&mut view, linked, &mut env, step)?,
+        }
     }
     Ok(view)
 }

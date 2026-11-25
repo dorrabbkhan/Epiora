@@ -7323,3 +7323,40 @@ Files outside the Files block:
   are read via `arrayBuffer()`. contract.test.ts drives a call with
   real `File` objects; the browser suite drives it unmocked.
 Supersedes: —
+
+## v1.1 Task 13b — stored links in `replay`; `CANCEL READ`
+
+- `crates/epiora-lang/src/pgm/plan.rs` (listed as Modify) needed **no
+  change**: `Statement::Manage(c)` already plans to `Action::Manage`
+  for every `Command`, so `CancelRead` rides the existing arm; the
+  interface's "plan maps the statement to `Action::Manage`" holds
+  without an edit.
+- `StoredLinks::link` (`src/links.rs`) matches `l.child` by name and
+  `l.parent` by name *or* by absence from the linked table set: the
+  wasm `replay` decodes the source under the placeholder id `source`
+  while a stored link names the parent by its store name, and the
+  session source is the one project dataset never in `linked` — so
+  `l.parent ∉ tables` means the link's parent is the source.
+- `CANCEL READ` semantics live in `replay` (it holds the source and
+  resets the view in place); `apply` returns `recipe_replay_mismatch`
+  if reached directly — `runProgram`/`applyCommand` never append the
+  step, they clear `steps` and replay the bare AS-OF header.
+- `lang-session.ts` `runProgram` fix (same file, behaviour
+  correction): `Action::Manage` serializes `{line, command}`, so the
+  manage branch now feeds `a.manage.command` to `printCommand` (was
+  `a.manage` — a `recipe_replay_mismatch` on any manage action in a
+  run) and the emitted `line` reads `a.manage.line` (was `0`).
+
+Files outside the Files block:
+
+- `crates/epiora-lang/src/pgm/parser/manage_stmt.rs` — `CANCEL READ`
+  parse (`cancel()` gains the `READ` arm); the block lists
+  `pgm/print.rs`/`pgm/plan.rs` only.
+- `crates/epiora-lang/tests/pgm/print.rs` — `Just(Command::CancelRead)`
+  added to the `leaf_command`/`any_command` proptest strategies so
+  `print_parse_roundtrip` covers the new variant.
+- `crates/epiora-lang-wasm/src/parity/tests.rs` — `assert_case`
+  refactored to `assert_input` so the two Task-13b extra cases drive
+  the same wasm/native byte-identity check and land in the JSONL; the
+  block names `parity/{mod.rs,cases.rs}` only.
+Supersedes: —

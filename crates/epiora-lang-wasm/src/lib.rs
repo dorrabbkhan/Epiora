@@ -11,10 +11,11 @@
 #[cfg(feature = "parity")]
 mod parity;
 
+use epiora_core::dataset::DatasetLink;
 use epiora_core::snapshot::{decode_snapshot, encode_snapshot};
 use epiora_lang::{
     parse_program, plan, print_command, register_json, replay, Command, LangError, Recipe,
-    WorkingView,
+    StoredLinks, WorkingView,
 };
 use js_sys::{Error, Reflect};
 use std::collections::BTreeMap;
@@ -86,28 +87,16 @@ pub fn register_js() -> Result<JsValue, JsValue> {
     })
 }
 
-/// The `Record<string, Uint8Array>` of linked datasets as a
-/// `LinkedDatasets` impl: names index decoded snapshots; stored
-/// `Relate`/`Grid` links do not cross this signature, so `link`
-/// reports none (a keyless `RELATE` → `relate_no_link`).
-pub(crate) struct MapLinks(pub BTreeMap<String, epiora_core::dataset::Dataset>);
-
-impl epiora_lang::LinkedDatasets for MapLinks {
-    fn get(&self, name: &str) -> Option<&epiora_core::dataset::Dataset> {
-        self.0.get(&name.to_ascii_lowercase())
-    }
-    fn link(&self, _parent: &str, _child: &str) -> Option<&epiora_core::dataset::DatasetLink> {
-        None
-    }
-}
-
 /// `source`/`linked` snapshots decode by caller-chosen name — the
 /// dataset's identity lives in the worker's store, not the snapshot
-/// bytes.
+/// bytes. `links` are the project's stored `dataset_links` rows
+/// (`{parent, child, child_key, parent_key, kind}` — the serde shape
+/// of `DatasetLink`) so a keyless `RELATE` resolves its key pair.
 pub(crate) fn replay_result(
     source: &[u8],
     linked: &BTreeMap<String, Vec<u8>>,
     recipe_text: &str,
+    links: &[DatasetLink],
 ) -> Result<(WorkingView, Recipe), LangError> {
     let src =
         decode_snapshot("source", 0, source).map_err(|e| LangError::RecipeReplayMismatch {
@@ -121,23 +110,39 @@ pub(crate) fn replay_result(
         tables.insert(name.to_ascii_lowercase(), ds);
     }
     let recipe = Recipe::parse(recipe_text)?;
-    let view = replay(&src, &MapLinks(tables), &recipe)?;
+    let view = replay(&src, &StoredLinks::new(tables, links.to_vec()), &recipe)?;
     Ok((view, recipe))
 }
 
-/// `replay(source, linked, recipeText) -> { view: Uint8Array,
+/// `replay(source, linked, recipeText, links?) -> { view: Uint8Array,
 /// viewSha256: string, recipeSha256: string }` — the materialized
 /// view snapshot plus the two hashes the worker writes into a
-/// receipt's `working_view` stamp.
+/// receipt's `working_view` stamp. `links` is the project's stored
+/// `dataset_links` as `DatasetLinkJson[]`; omitted behaves as before.
 #[wasm_bindgen(js_name = replay)]
-pub fn replay_js(source: &[u8], linked: JsValue, recipe_text: &str) -> Result<JsValue, JsValue> {
+pub fn replay_js(
+    source: &[u8],
+    linked: JsValue,
+    recipe_text: &str,
+    links: JsValue,
+) -> Result<JsValue, JsValue> {
     let tables: BTreeMap<String, Vec<u8>> =
         serde_wasm_bindgen::from_value(linked).map_err(|e| {
             js_error(&LangError::RecipeReplayMismatch {
                 message: format!("linked map failed: {e}"),
             })
         })?;
-    let (view, recipe) = replay_result(source, &tables, recipe_text).map_err(|e| js_error(&e))?;
+    let links: Vec<DatasetLink> = if links.is_undefined() || links.is_null() {
+        Vec::new()
+    } else {
+        serde_wasm_bindgen::from_value(links).map_err(|e| {
+            js_error(&LangError::RecipeReplayMismatch {
+                message: format!("links JSON failed: {e}"),
+            })
+        })?
+    };
+    let (view, recipe) =
+        replay_result(source, &tables, recipe_text, &links).map_err(|e| js_error(&e))?;
     let materialized = view.materialize();
     let snapshot = encode_snapshot(&materialized);
     let out = js_sys::Object::new();

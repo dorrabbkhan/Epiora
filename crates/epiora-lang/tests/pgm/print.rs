@@ -187,6 +187,7 @@ fn leaf_command() -> impl Strategy<Value = Command> {
         set_option().prop_map(Command::Set),
         Just(Command::CancelSelect),
         Just(Command::CancelSort),
+        Just(Command::CancelRead),
     ]
 }
 
@@ -196,6 +197,7 @@ fn any_command() -> impl Strategy<Value = Command> {
         Just(Command::CancelSelect),
         prop::collection::vec((name(), order()), 1..=3).prop_map(Command::Sort),
         Just(Command::CancelSort),
+        Just(Command::CancelRead),
         (name(), ty(), scope()).prop_map(|(name, ty, scope)| Command::Define { name, ty, scope }),
         (name(), expr(), scope()).prop_map(|(name, expr, scope)| Command::DefineExpr {
             name,

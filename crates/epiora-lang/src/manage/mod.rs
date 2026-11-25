@@ -164,6 +164,10 @@ pub enum Command {
     Sort(Vec<(String, Order)>),
     /// `CANCEL SORT`.
     CancelSort,
+    /// `CANCEL READ` — closes the working view and discards the
+    /// recipe (the register's wording): `replay` resets the view to
+    /// its source, so a session never stores it as a step.
+    CancelRead,
     /// `DEFINE <name> <type> [<scope>]` — an empty typed column.
     Define {
         /// Variable name.
@@ -262,6 +266,12 @@ pub(crate) fn apply(
         Command::CancelSelect => cancel_select(view),
         Command::Sort(keys) => sort(view, keys),
         Command::CancelSort => cancel_sort(view),
+        // `CANCEL READ` resets the view to the *source* — `apply`
+        // has no source; `replay` intercepts the step itself, so a
+        // direct `apply` reaching this arm is a caller bug.
+        Command::CancelRead => Err(LangError::RecipeReplayMismatch {
+            message: "CANCEL READ cannot apply to a view without its source".into(),
+        }),
         Command::Define { name, ty, scope } => define(view, name, *ty, *scope),
         Command::DefineExpr { name, expr, scope } => {
             let ty = crate::expr::types::type_check(

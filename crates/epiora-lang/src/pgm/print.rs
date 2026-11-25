@@ -32,6 +32,7 @@ pub(crate) fn write_command(out: &mut String, c: &Command) {
             }
         }
         Command::CancelSort => out.push_str("CANCEL SORT"),
+        Command::CancelRead => out.push_str("CANCEL READ"),
         Command::Define { name, ty, scope } => {
             out.push_str(&format!("DEFINE {name} {}", type_word(ty)));
             if *scope != Scope::Standard {

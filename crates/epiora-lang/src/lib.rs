@@ -16,6 +16,7 @@
 
 mod expr;
 pub mod functions;
+mod links;
 mod manage;
 mod pgm;
 mod recipe;
@@ -28,6 +29,7 @@ pub use expr::ast::{BinOp, Expr, Lit, UnOp};
 pub use expr::eval::{eval_column, AsOf, EvalEnv};
 pub use expr::parser::parse_expr;
 pub use expr::types::{type_check, Schema};
+pub use links::StoredLinks;
 pub use manage::{
     AggFunc, Aggregate, Command, MergeMode, RecodeBound, RecodeRule, Scope, SetOption,
 };

@@ -61,10 +61,15 @@ pub fn run_case(input: &str) -> Result<String, LangError> {
             );
         }
     }
+    let links: Vec<epiora_core::dataset::DatasetLink> = match &v["links"] {
+        serde_json::Value::Array(_) => serde_json::from_value(v["links"].clone())
+            .map_err(|e| err(format!("links JSON failed: {e}")))?,
+        _ => Vec::new(),
+    };
 
     let program = parse_program(&program_text)?;
     let actions = plan(&program, epiora_lang::register());
-    let (view, recipe) = replay_result(&source, &linked, &recipe_text)?;
+    let (view, recipe) = replay_result(&source, &linked, &recipe_text, &links)?;
     let materialized = view.materialize();
     let view_bytes = epiora_core::snapshot::encode_snapshot(&materialized);
     let src_ds = epiora_core::snapshot::decode_snapshot("source", 0, &source)
