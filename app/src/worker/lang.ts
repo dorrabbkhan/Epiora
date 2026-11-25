@@ -11,10 +11,11 @@
 // replayed view.
 //
 // `linked` is every dataset snapshot in the project keyed by name —
-// a RELATE command finds its child there; `links` carries the
-// project's stored `dataset_links` rows as `DatasetLink` JSON so a
-// *keyless* RELATE resolves its key pair (v1.1 Task 13b — `relate_no_link`
-// only when no stored link names the source and child).
+// a RELATE command finds its child there; `links` carries the stored
+// `dataset_links` rows naming the session's source dataset as
+// `DatasetLink` JSON so a *keyless* RELATE resolves its key pair
+// (v1.1 Task 13b — `relate_no_link` only when no stored link names
+// the source and child).
 
 import type { DatasetLink } from '@engine-types/DatasetLink';
 import { lang } from './engines';
@@ -147,11 +148,16 @@ function linkJson(l: legacyRepo.DatasetLink): DatasetLink {
 }
 
 /** Replay the recipe over the stored source — the one code path all
- *  mutating session calls funnel through. */
+ *  mutating session calls funnel through. `replay` gets only the
+ *  stored links whose `parent` names the session's source dataset
+ *  (`SessionMem.datasetName`, case-insensitive): a RELATE's parent
+ *  is always that source. */
 export async function replaySession(store: Store, s: SessionMem): Promise<void> {
   const langWasm = await lang();
   const linked = await linkedSnapshots(store, s);
-  const links = (await sessionLinks(store, s.projectId)).map(linkJson);
+  const links = (await sessionLinks(store, s.projectId))
+    .filter((l) => l.parentDataset.toLowerCase() === s.datasetName.toLowerCase())
+    .map(linkJson);
   const out = langWasm.replay(s.source, linked, recipeTextOf(s), links) as {
     view: Uint8Array;
     viewSha256: string;
@@ -292,7 +298,8 @@ export async function undoLast(store: Store, sessionId: string): Promise<Session
   };
 }
 
-/** The project's stored `dataset_links` — `replaySession` maps them
+/** The project's stored `dataset_links` — `replaySession` keeps only
+ *  the rows that name the session's source dataset, then maps them
  *  onto `replay`'s `DatasetLink` JSON so a keyless RELATE resolves
  *  its key pair. */
 export async function sessionLinks(

@@ -36,12 +36,13 @@ impl LinkedDatasets for StoredLinks {
         self.tables.get(&name.to_ascii_lowercase())
     }
 
-    /// The stored link parent→child, matched case-insensitively. A
-    /// replay source carries a placeholder id rather than its store
-    /// name (the wasm boundary decodes it as `source`), so `parent`
-    /// also matches a link whose `parent` names no linked table —
-    /// the session's source is the one project dataset absent from
-    /// `tables`.
+    /// The stored link parent→child, matched case-insensitively. The
+    /// worker already passes only the session source's stored links;
+    /// a replay source still carries a placeholder id rather than
+    /// its store name (the wasm boundary decodes it as `source`), so
+    /// `parent` also matches a link whose `parent` names no linked
+    /// table — the session's source is the one project dataset
+    /// absent from `tables`.
     fn link(&self, parent: &str, child: &str) -> Option<&DatasetLink> {
         self.links.iter().find(|l| {
             l.child.eq_ignore_ascii_case(child)

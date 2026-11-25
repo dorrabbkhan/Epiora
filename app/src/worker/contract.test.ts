@@ -17,7 +17,7 @@ import {
 } from './errors';
 import { api } from './api';
 import * as langWorker from './lang';
-import type { Row, Store, Tx } from '../store/types';
+import type { Row, SqlValue, Store, Tx } from '../store/types';
 import { TYPES_CHECKED } from './contract.types';
 
 // Task 13 fix round: `inspectLegacy`/`planRefresh` take `File[]` per
@@ -133,6 +133,71 @@ function fakeStore(): Store {
   return store;
 }
 
+/** A `Store` with four datasets — `parent` (the session's source),
+ *  `other`, `child`, `child2` — and two stored links: `parent →
+ *  child` and `other → child2`. Queries filter on the bound
+ *  parameters like the real SQL does. */
+function fakeStoreLinked(): Store {
+  const ds = (id: string, name: string): Row => ({
+    id,
+    project_id: 'p1',
+    name,
+    record_key: '"row_position"',
+    settings: '{}',
+    current_version: 1,
+    created_at: '2026-11-25T00:00:00Z',
+  });
+  const datasets = [ds('ds1', 'parent'), ds('ds2', 'other'), ds('ds3', 'child'), ds('ds4', 'child2')];
+  const links: Row[] = [
+    {
+      project_id: 'p1',
+      parent_dataset: 'parent',
+      child_dataset: 'child',
+      child_key: 'pid',
+      parent_key: 'id',
+      kind: 'relate',
+    },
+    {
+      project_id: 'p1',
+      parent_dataset: 'other',
+      child_dataset: 'child2',
+      child_key: 'ck2',
+      parent_key: 'k2',
+      kind: 'relate',
+    },
+  ];
+  const store: Store = {
+    query: async (sql: string, params?: SqlValue[]) => {
+      if (sql.includes('FROM dataset_links')) return links;
+      if (sql.includes('SELECT snapshot FROM dataset_versions')) {
+        return [{ snapshot: new Uint8Array([7]) }];
+      }
+      if (sql.includes('FROM dataset_versions')) {
+        return [
+          {
+            dataset_id: params?.[0] ?? '',
+            version: 1,
+            source_name: datasets.find((d) => d.id === params?.[0])?.name ?? '',
+            source_sha256: 'hash-of-source',
+            row_count: 0,
+            content_hash: 'hash-of-source',
+            snapshot_available: 1,
+          },
+        ];
+      }
+      if (sql.includes('FROM datasets WHERE project_id')) return datasets;
+      if (sql.includes('FROM datasets WHERE id')) {
+        return datasets.filter((d) => d.id === params?.[0]);
+      }
+      return [];
+    },
+    exec: async () => {},
+    transaction: async <T>(fn: (tx: Tx) => Promise<T>) => fn(store),
+    close: async () => {},
+  };
+  return store;
+}
+
 const ALL_CODES = [
   ...IMPORT_ERROR_CODES,
   ...ENGINE_ERROR_CODES,
@@ -216,6 +281,19 @@ describe('worker RPC contract', () => {
     expect(args[1]).toEqual({}); // the source is skipped in `linked`
     expect(args[3]).toEqual([
       { parent: 'parent', child: 'child', child_key: 'ck', parent_key: 'k', kind: 'relate' },
+    ]);
+  });
+
+  it('replay_passes_only_source_links', async () => {
+    // Task 13b fix round: `replay` gets only the stored links whose
+    // `parent` names the session's source dataset — the `other →
+    // child2` link never crosses the wasm boundary.
+    const store = fakeStoreLinked();
+    const session = await langWorker.openSession(store, 'p1', 'ds1', 1);
+    await langWorker.applyCommand(store, session.sessionId, 'SELECT v > 15');
+    const replay = vi.mocked((await import('@lang/epiora_lang_wasm')).replay);
+    expect(replay.mock.calls.at(-1)![3]).toEqual([
+      { parent: 'parent', child: 'child', child_key: 'pid', parent_key: 'id', kind: 'relate' },
     ]);
   });
 
