@@ -247,3 +247,26 @@ pub fn recipe_any(data: &[u8]) {
         _ => panic!("replay must be deterministic"),
     }
 }
+
+/// Arbitrary bytes → decode → parse → plan (v1.1 plan Task 12): the
+/// parser never panics, a failure is always a `pgm_syntax`-coded
+/// `LangError`, and every `Unsupported` action carries a non-empty
+/// command name.
+#[allow(clippy::panic)]
+pub fn pgm_any(data: &[u8]) {
+    let text = crate::decode_pgm_text(data);
+    match crate::parse_program(&text) {
+        Ok(p) => {
+            let actions = crate::plan(&p, crate::register());
+            for a in &actions {
+                if let crate::Action::Unsupported { command, .. } = a {
+                    assert!(
+                        !command.is_empty(),
+                        "unsupported action must name its command"
+                    );
+                }
+            }
+        }
+        Err(e) => assert_eq!(e.code(), "pgm_syntax"),
+    }
+}

@@ -310,7 +310,7 @@ jobs:
             cargo fuzz run "$target" -- -max_total_time=60
           done
           cd ../../epiora-lang/fuzz
-          for target in recipe_any; do
+          for target in recipe_any pgm_any; do
             echo "== fuzz $target"
             cargo fuzz run "$target" -- -max_total_time=60
           done
