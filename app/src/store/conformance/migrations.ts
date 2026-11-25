@@ -11,6 +11,7 @@ import * as datasets from '../repo/datasets';
 import * as legacy from '../repo/legacy';
 import * as projects from '../repo/projects';
 import * as runs from '../repo/runs';
+import * as sessions from '../repo/sessions';
 
 const now = () => new Date().toISOString();
 
@@ -69,7 +70,7 @@ export function migrationTests(ref: StoreRef, open: () => Promise<Store>): void 
     const version = await store.query(
       "SELECT value FROM meta WHERE key = 'schema_version'",
     );
-    expect(String(version[0]!.value)).toBe('4');
+    expect(String(version[0]!.value)).toBe('5');
 
     const old = await runs.get(store, 'r-old');
     expect(old).not.toBeNull();
@@ -121,7 +122,7 @@ export function migrationTests(ref: StoreRef, open: () => Promise<Store>): void 
     const version = await store.query(
       "SELECT value FROM meta WHERE key = 'schema_version'",
     );
-    expect(String(version[0]!.value)).toBe('4');
+    expect(String(version[0]!.value)).toBe('5');
 
     const old = await runs.get(store, 'r-old');
     expect(old).not.toBeNull();
@@ -170,7 +171,7 @@ export function migrationTests(ref: StoreRef, open: () => Promise<Store>): void 
     const version = await store.query(
       "SELECT value FROM meta WHERE key = 'schema_version'",
     );
-    expect(String(version[0]!.value)).toBe('4');
+    expect(String(version[0]!.value)).toBe('5');
 
     const { project, dataset } = await makeDataset(store);
     await legacy.upsertProject(store, {
@@ -217,6 +218,64 @@ export function migrationTests(ref: StoreRef, open: () => Promise<Store>): void 
 
     await projects.remove(store, project.id);
     for (const t of LEGACY_TABLES) {
+      const rows = await store.query(`SELECT COUNT(*) AS n FROM ${t}`);
+      expect(Number(rows[0]!.n), `${t} must be empty after cascade`).toBe(0);
+    }
+  });
+
+  it('migration_0005_on_both_backends', async () => {
+    // Rewind to the v4 shape: no `sessions`/`permanent_vars` tables.
+    // Reopening replays 0005 — the session tables appear (v1.1 plan
+    // Task 11, spec §5.2) and repo rows round-trip; deleting the
+    // project cascades every row.
+    let store = ref.get();
+    const SESSION_TABLES = ['sessions', 'permanent_vars'];
+    for (const t of SESSION_TABLES) {
+      await store.exec(`DROP TABLE IF EXISTS ${t}`);
+    }
+    await store.exec("UPDATE meta SET value = '4' WHERE key = 'schema_version'");
+    await store.close();
+    store = await open();
+    ref.set(store);
+
+    const names = (
+      await store.query("SELECT name FROM sqlite_master WHERE type = 'table'")
+    ).map((r) => r.name);
+    for (const t of SESSION_TABLES) {
+      expect(names, `${t} must exist`).toContain(t);
+    }
+    const version = await store.query(
+      "SELECT value FROM meta WHERE key = 'schema_version'",
+    );
+    expect(String(version[0]!.value)).toBe('5');
+
+    const { project } = await makeDataset(store);
+    await sessions.upsertSession(store, {
+      id: 's1',
+      projectId: project.id,
+      sourceDataset: 'Oswego',
+      sourceVersion: 1,
+      recipeText: 'AS-OF 2024-10-04 00:00:00\nSELECT (ILL = 1)',
+      asOf: '2024-10-04T00:00:00Z',
+      updatedAt: now(),
+    });
+    expect(await sessions.session(store, 's1')).toMatchObject({
+      sourceDataset: 'Oswego',
+      sourceVersion: 1,
+    });
+    expect(await sessions.sessions(store, project.id)).toHaveLength(1);
+    await sessions.putPermanentVar(store, {
+      projectId: project.id,
+      name: 'P',
+      type: 'NUMERIC',
+      exprText: null,
+    });
+    expect(await sessions.permanentVars(store, project.id)).toHaveLength(1);
+    await sessions.removeSession(store, 's1');
+    expect(await sessions.session(store, 's1')).toBeNull();
+
+    await projects.remove(store, project.id);
+    for (const t of SESSION_TABLES) {
       const rows = await store.query(`SELECT COUNT(*) AS n FROM ${t}`);
       expect(Number(rows[0]!.n), `${t} must be empty after cascade`).toBe(0);
     }

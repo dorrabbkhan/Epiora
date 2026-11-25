@@ -114,6 +114,7 @@ fn actual_by_family(ds: &crate::dataset::Dataset) -> Result<BTreeMap<String, Val
     let ctx = || RunContext {
         timestamp: "2026-10-30T12:00:00Z".to_string(),
         project: None,
+        working_view: None,
     };
     let var = |name: &str| VarSpec {
         name: name.to_string(),

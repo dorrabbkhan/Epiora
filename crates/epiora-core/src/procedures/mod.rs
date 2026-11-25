@@ -13,7 +13,7 @@ pub use tables::tables;
 
 use crate::dataset::{Dataset, Value};
 use crate::notes::Note;
-use crate::receipt::{ProjectStamp, Receipt, ValidationEntry};
+use crate::receipt::{ProjectStamp, Receipt, ValidationEntry, WorkingViewStamp};
 use crate::stats::{
     Anova, Bartlett, CategoryStats, GroupStats, KruskalWallis, RxcStats, StratifiedStats,
     TwoByTwoStats, TwoGroupTests,
@@ -35,6 +35,11 @@ pub struct RunContext {
     /// spec §8.2).
     #[serde(default)]
     pub project: Option<ProjectStamp>,
+    /// The recipe replay the procedure's input came out of; `Some`
+    /// makes the receipt v4 (v1.1 spec §5.2). `None` leaves v1–v3
+    /// untouched.
+    #[serde(default)]
+    pub working_view: Option<WorkingViewStamp>,
 }
 
 /// A procedure's result plus its receipt.
@@ -316,6 +321,7 @@ fn build_receipt(
         ctx.timestamp.clone(),
         crate::receipt::EngineStamp::current(),
         ctx.project.clone(),
+        ctx.working_view.clone(),
     )
 }
 

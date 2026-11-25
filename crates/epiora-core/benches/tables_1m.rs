@@ -99,6 +99,7 @@ fn tables_1m(c: &mut Criterion) {
     let ctx = RunContext {
         timestamp: "2026-10-31T00:00:00Z".to_string(),
         project: None,
+        working_view: None,
     };
 
     // Same pin as bench.spec.mjs: the first 3 EXPOSED values of

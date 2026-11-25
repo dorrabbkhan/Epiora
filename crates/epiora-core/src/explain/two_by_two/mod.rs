@@ -23,6 +23,7 @@ fn ctx() -> RunContext {
     RunContext {
         timestamp: super::EXPLAIN_TS.to_string(),
         project: None,
+        working_view: None,
     }
 }
 
