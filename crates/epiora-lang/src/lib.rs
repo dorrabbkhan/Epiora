@@ -17,6 +17,7 @@
 mod expr;
 pub mod functions;
 mod manage;
+mod pgm;
 mod recipe;
 mod view;
 
@@ -29,6 +30,11 @@ pub use expr::parser::parse_expr;
 pub use expr::types::{type_check, Schema};
 pub use manage::{
     AggFunc, Aggregate, Command, MergeMode, RecodeBound, RecodeRule, Scope, SetOption,
+};
+pub use pgm::{
+    decode_pgm_text, parse_program, plan, plan_with, print_command, register, Action, DisplayWhat,
+    Entry, FieldType, Module, Program, ProgramRef, ProgramSource, Register, Spanned, Statement,
+    Status, WriteMode, WriteTarget, WriteVars,
 };
 pub use recipe::{replay, working_view_stamp, Recipe};
 pub use view::{
@@ -111,6 +117,13 @@ pub enum LangError {
         /// Which step and why.
         message: String,
     },
+    /// A `RUNPGM` chain that names a program already running
+    /// (`pgm_runpgm_cycle`, spec §10).
+    #[error("RUNPGM cycle: {name} is already running")]
+    RunPgmCycle {
+        /// The program that closed the cycle.
+        name: String,
+    },
 }
 
 impl LangError {
@@ -125,6 +138,7 @@ impl LangError {
             Self::MergeKeyType { .. } => "merge_key_type",
             Self::RelateNoLink { .. } => "relate_no_link",
             Self::RecipeReplayMismatch { .. } => "recipe_replay_mismatch",
+            Self::RunPgmCycle { .. } => "pgm_runpgm_cycle",
         }
     }
 }

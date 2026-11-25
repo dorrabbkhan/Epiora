@@ -25,3 +25,10 @@ path = "fuzz_targets/recipe_any.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "pgm_any"
+path = "fuzz_targets/pgm_any.rs"
+test = false
+doc = false
+bench = false

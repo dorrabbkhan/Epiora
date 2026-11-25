@@ -7099,3 +7099,89 @@ Interface and manifest notes (fix round 1, 2026-11-24):
   `tests/receipt.rs`. Shared builders (`ds`, `cells`, `Links`,
   `recipe`, `ctx` …) live in `tests/common/{mod.rs,ds.rs}`.
 Supersedes: —
+
+### v1.1 Task 12 — `.pgm` parser, planner and register (2026-11-24)
+
+Decision: `src/pgm/*` parses Analysis `.pgm` text into `Program` (one
+`Spanned<Statement>` per content line), embeds the Task 1
+`register.json` as `pgm::register()`, and `plan`/`plan_with` map
+statements to pinned `Action`s — RUNPGM resolves through a
+`ProgramSource`, inlining the callee's actions with their origin
+lines; `print_command` is the canonical Command printer used by
+recipes and dialogs.
+
+Semantic choices where the grammar or the pinned interfaces left a
+gap:
+
+- `WriteTarget`/`DisplayWhat`/`ProgramRef` (the Interfaces'
+  "implementer's own"): `WriteTarget { mode: WriteMode, format:
+  String, target: String, vars: WriteVars }` — `WriteMode` is
+  `Replace`/`Append` (REPLACE is the register's `*` default output
+  method), `format` keeps the spelled output form (`"Epi 2000"`,
+  …), `target` is `table` or `file:table`, and `WriteVars` is
+  `All` / `Except(vars)` / `Only(vars)`. `DisplayWhat` is the
+  register's displayable views: `DbVariables { fields }`,
+  `DbViews`, `Tables`, `Recipe`. `ProgramRef` keeps RUNPGM's three
+  spellings: `Named(name)`, `File(path)`, `FileProgram { file,
+  name }`.
+- A found RUNPGM emits `Action::Note "RUNPGM <key>"` at the caller's
+  line then the inlined actions; a missing program emits only
+  `Action::Unsupported{command:"RUNPGM <key>", target_version:None}`
+  (the Interfaces' "a missing program is an Unsupported action naming
+  it"). A cycle is `LangError::RunPgmCycle` (`pgm_runpgm_cycle`).
+- `may_differ` becomes true at the first `Unsupported` action whose
+  register entry has `affects_data: true` and never resets
+  (plan-literal: the interface names no reset, so a later
+  `READ`/`WRITE` leaves it set).
+- QUIT/EXIT end the plan with a `Note` at their line; statements
+  after them are parsed but never planned. Output verbs the register
+  marks implemented-but-display-only (TYPEOUT/HEADER/ROUTEOUT/
+  CLOSEOUT/NEWPAGE/PRINTOUT/SYSINFO/ABOUT/BEEP, `DISPLAY TABLES`) —
+  actually every display-only verb — become `Note` actions carrying
+  the line text; `display_options`/`output`-family verbs that would
+  route results stay `Unsupported`.
+- `DEFINE x = e` produces `Command::DefineExpr` (Task 11's added
+  variant); `DEFINE x <TYPE>` stays `Command::Define`. `SET` clauses
+  named `(+)`, `(-)`, `(.)` and the display-only options are `Note`
+  actions, not `SetOption`s.
+- Input decoding is UTF-8 else Windows-1252 (`decode_pgm_text`);
+  CRLF and bare CR both split lines. `*` as the first non-blank char
+  is a comment; `***` mid-line ends the statement's text. Literals
+  reuse `expr::lit::{lex_number,number,real}` so the date/number
+  grammar is identical to expressions.
+- SUMMARIZE aggregates accept both `VAR` and `VARIANCE` spellings
+  (the register prints `Variance`; the corpus's reference `.pgm`s
+  use both) — both map to `AggFunc::Var`.
+
+Files outside the Files block:
+
+- `crates/epiora-lang/src/recipe.rs` — the canonical printer moved
+  to `src/pgm/print.rs` (the Interfaces pin `print_command` in the
+  pgm module "used by recipes and dialogs"); `recipe.rs` delegates.
+  `canonical_text_is_stable`/`replay_reproduces_view_hash` still pin
+  the byte-exact text.
+- `crates/epiora-lang/src/fuzz_harness.rs` — `pgm_any` harness
+  (decode → parse → plan; panic-freedom, `pgm_syntax` codes only,
+  non-empty unsupported names).
+- `crates/epiora-lang/fuzz/Cargo.toml` — the `[[bin]]` for
+  `pgm_any` (conductor note: record explicitly).
+- `.github/workflows/{engine.yml,fuzz-nightly.yml}` — Step 3's "add
+  `pgm_any` to PR and nightly fuzz lists": `pgm_any` joined the
+  existing `recipe_any` matrix entries on the pinned nightly.
+- `src/pgm/parser.rs` is the Files-block entry point (line infra,
+  dispatch, shared helpers); the per-command parsers needed their
+  own modules under the ~400-line rule:
+  `src/pgm/parser/{commands,manage_stmt,helpers,blocks}.rs` plus
+  `src/pgm/parser/blocks/{recode,summarize}.rs` and
+  `src/pgm/parser/manage_stmt/set.rs`. Largest file: commands.rs at
+  392 lines.
+- `tests/pgm/{plan,print}.rs` — the ~400-line split of
+  `tests/pgm.rs` (all 11 named tests kept verbatim: the fixture /
+  decoding / syntax-error tests in the root, planner tests in
+  `plan.rs`, `print_parse_roundtrip` proptest in `print.rs`).
+- `tests/pgm/print.rs` proptest domain note (test-side only):
+  `Value::Date` is generated with days ≥ -683003 — civil years < 100
+  are unspellable through the 2-digit-year pivot in
+  `parse_date_text` (`99` → 1999), so round-trip generation is
+  restricted to representable dates.
+Supersedes: —

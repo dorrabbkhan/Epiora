@@ -1,0 +1,9 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc f38e05c38596346141b39f2b0b1bf355e458e26469788607d24963fd85c73f9b # shrinks to c = Summarize { aggregates: [Aggregate { name: "ZA", func: Count, arg: None }, Aggregate { name: "ZA", func: Count, arg: None }], by: [], into: DatasetRef { name: "T2", join: Matching } }
+cc 86225b8d19eda62b64832b264efba8554f910b4dcb40b59551637ce5b82abb55 # shrinks to c = Recode { from: "ZA", to: "ZA", rules: [Single { from: Integer(0), to: Date(-683004) }], otherwise: None }
+cc 1c6ba92c56f2173cc58053deb25277aeaef9ece20fd82a79109344e1e756487f # shrinks to c = Summarize { aggregates: [Aggregate { name: "ZA", func: Variance, arg: Some("ZA") }], by: [], into: DatasetRef { name: "T2", join: Matching } }
