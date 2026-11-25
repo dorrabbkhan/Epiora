@@ -5,10 +5,13 @@
 //! `langCase` runner must match byte-for-byte.
 
 use super::{err, hex_decode, hex_encode};
-use epiora_core::dataset::{Column, ColumnData, Dataset};
+use epiora_core::dataset::{Column, ColumnData, Dataset, DatasetLink, LinkKind};
 use epiora_core::snapshot::encode_snapshot;
 use epiora_lang::Statement;
-use epiora_lang::{parse_program, plan, print_command, register_json, AsOf, LangError, Recipe};
+use epiora_lang::{
+    parse_expr, parse_program, plan, print_command, register_json, AsOf, Command, DatasetRef,
+    LangError, Recipe, StoredLinks,
+};
 use epiora_legacy::batch::{decode_batch, RawData, RawTable};
 use sha2::Digest;
 use std::collections::BTreeMap;
@@ -178,6 +181,11 @@ pub fn native_case(input: &serde_json::Value) -> Result<String, LangError> {
     for (k, b) in input["linked"].as_object().unwrap() {
         linked.insert(k.clone(), hex_decode(b.as_str().unwrap())?);
     }
+    let links: Vec<DatasetLink> = match &input["links"] {
+        serde_json::Value::Array(_) => serde_json::from_value(input["links"].clone())
+            .map_err(|e| err(format!("links JSON failed: {e}")))?,
+        _ => Vec::new(),
+    };
     let program = parse_program(&program_text)?;
     let actions = plan(&program, epiora_lang::register());
     let recipe = Recipe::parse(&recipe_text)?;
@@ -189,7 +197,7 @@ pub fn native_case(input: &serde_json::Value) -> Result<String, LangError> {
             .map_err(|e| err(format!("linked snapshot {name:?}: {e}")))?;
         tables.insert(name.to_ascii_lowercase(), ds);
     }
-    let view = epiora_lang::replay(&src, &crate::MapLinks(tables), &recipe)?;
+    let view = epiora_lang::replay(&src, &StoredLinks::new(tables, links), &recipe)?;
     let materialized = view.materialize();
     let view_bytes = encode_snapshot(&materialized);
     let stamp = epiora_lang::working_view_stamp(&src, &materialized, &recipe);
@@ -217,4 +225,104 @@ pub fn native_case(input: &serde_json::Value) -> Result<String, LangError> {
     out.push_str(&register_sha256);
     out.push_str("\"}");
     Ok(out)
+}
+
+/// A plain `(name, [col,…])` dataset for the hand-built cases.
+fn ds(name: &str, cols: Vec<(&str, ColumnData)>) -> Dataset {
+    Dataset::new(
+        name,
+        1,
+        cols.into_iter()
+            .map(|(n, d)| Column {
+                name: n.to_string(),
+                data: d,
+            })
+            .collect(),
+    )
+    .expect("dataset")
+}
+
+/// Task 13b's two extra cases — `(name, input)` pairs in `case_input`'s
+/// shape, plus `links` where a case carries stored `dataset_links`:
+/// a keyless `RELATE` resolved through the stored link, and a
+/// `CANCEL READ` program (a `Manage` step that resets the view to the
+/// source — never a stored recipe step, but legal in recipe text).
+pub fn extra_cases() -> Vec<(&'static str, serde_json::Value)> {
+    let as_of = AsOf {
+        date: 20_000,
+        seconds: 43_200,
+    };
+    let parent = ds(
+        "parent",
+        vec![
+            (
+                "k",
+                ColumnData::Text(
+                    vec!["3", "1", "2"]
+                        .into_iter()
+                        .map(|s| Some(s.to_string()))
+                        .collect(),
+                ),
+            ),
+            ("v", ColumnData::Integer(vec![Some(10), Some(20), Some(30)])),
+        ],
+    );
+    let child = ds(
+        "child",
+        vec![
+            (
+                "ck",
+                ColumnData::Text(
+                    vec!["1", "1", "1"]
+                        .into_iter()
+                        .map(|s| Some(s.to_string()))
+                        .collect(),
+                ),
+            ),
+            ("h", ColumnData::Integer(vec![Some(7), Some(8), Some(9)])),
+        ],
+    );
+    let link = DatasetLink {
+        parent: "parent".into(),
+        child: "child".into(),
+        parent_key: "k".into(),
+        child_key: "ck".into(),
+        kind: LinkKind::Relate,
+    };
+
+    let relate_recipe = Recipe {
+        as_of,
+        steps: vec![Command::Relate {
+            dataset: DatasetRef::named("child"),
+            keys: vec![],
+        }],
+    };
+    let relate = serde_json::json!({
+        "program_text": "READ 'p.mdb':parent\nRELATE child\nFREQ k",
+        "recipe_text": relate_recipe.canonical_text(),
+        "source": hex_encode(&encode_snapshot(&parent)),
+        "linked": {"child": hex_encode(&encode_snapshot(&child))},
+        "links": [serde_json::to_value(&link).unwrap()],
+        "steps": 1,
+    });
+
+    let cancel_recipe = Recipe {
+        as_of,
+        steps: vec![
+            Command::Select(parse_expr("v > 15").unwrap()),
+            Command::CancelRead,
+        ],
+    };
+    let cancel = serde_json::json!({
+        "program_text": "READ 'p.mdb':parent\nSELECT v > 15\nCANCEL READ",
+        "recipe_text": cancel_recipe.canonical_text(),
+        "source": hex_encode(&encode_snapshot(&parent)),
+        "linked": {},
+        "steps": 2,
+    });
+
+    vec![
+        ("keyless_relate_with_stored_link", relate),
+        ("cancel_read_program", cancel),
+    ]
 }

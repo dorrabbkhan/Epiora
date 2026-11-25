@@ -185,7 +185,9 @@ export interface DataApi {
     codePage?: string,
   ): Promise<RefreshPreview>;
   commitRefresh(previewId: string): Promise<void>;
-  /** Cleaning sessions and program runs (v1.1 spec §5–6). */
+  /** Cleaning sessions and program runs (v1.1 spec §5–6): session
+   *  replays carry the project's stored `dataset_links` (Task 13b),
+   *  and `CANCEL READ` closes the session's view, clearing the recipe. */
   openSession(
     projectId: string,
     datasetId: string,

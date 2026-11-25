@@ -16,6 +16,8 @@ import {
   WORKER_ERROR_CODES,
 } from './errors';
 import { api } from './api';
+import * as langWorker from './lang';
+import type { Row, SqlValue, Store, Tx } from '../store/types';
 import { TYPES_CHECKED } from './contract.types';
 
 // Task 13 fix round: `inspectLegacy`/`planRefresh` take `File[]` per
@@ -53,6 +55,148 @@ vi.mock('../legacy/mdb', () => ({
     close: vi.fn(),
   })),
 }));
+
+// Task 13b: the session tests below drive `openSession`/`applyCommand`
+// against a fake `Store`; both wasm boundaries are mocked — `engine()`
+// only verifies the snapshot's stored hash (returned verbatim),
+// `lang()`'s `replay` is the call under test.
+vi.mock('@engine/epiora_wasm', () => ({
+  default: vi.fn().mockResolvedValue(undefined),
+  datasetFromSnapshot: vi.fn(() => ({ free: vi.fn() })),
+  datasetHash: vi.fn(() => 'hash-of-source'),
+}));
+vi.mock('@lang/epiora_lang_wasm', () => ({
+  default: vi.fn().mockResolvedValue(undefined),
+  parseProgram: vi.fn((text: string) => ({
+    statements: [
+      {
+        node: {
+          manage: text.trim() === 'CANCEL READ' ? 'cancel_read' : { select: { lit: { integer: 1 } } },
+        },
+      },
+    ],
+  })),
+  printCommand: vi.fn((cmd: unknown) => (cmd === 'cancel_read' ? 'CANCEL READ' : 'SELECT v > 15')),
+  planProgram: vi.fn(() => []),
+  register: vi.fn(() => ({})),
+  replay: vi.fn(() => ({
+    view: new Uint8Array([9]),
+    viewSha256: 'view-hash',
+    recipeSha256: 'recipe-hash',
+  })),
+}));
+
+/** A `Store` answering the session repos' SQL by table — one parent
+ *  dataset with one snapshot and one stored `dataset_links` row. */
+function fakeStore(): Store {
+  const dataset: Row = {
+    id: 'ds1',
+    project_id: 'p1',
+    name: 'parent',
+    record_key: '"row_position"',
+    settings: '{}',
+    current_version: 1,
+    created_at: '2026-11-25T00:00:00Z',
+  };
+  const version: Row = {
+    dataset_id: 'ds1',
+    version: 1,
+    source_name: 'parent',
+    source_sha256: 'hash-of-source',
+    row_count: 0,
+    content_hash: 'hash-of-source',
+    snapshot_available: 1,
+  };
+  const link: Row = {
+    project_id: 'p1',
+    parent_dataset: 'parent',
+    child_dataset: 'child',
+    child_key: 'ck',
+    parent_key: 'k',
+    kind: 'relate',
+  };
+  const store: Store = {
+    query: async (sql: string) => {
+      if (sql.includes('FROM dataset_links')) return [link];
+      if (sql.includes('SELECT snapshot FROM dataset_versions')) {
+        return [{ snapshot: new Uint8Array([7]) }];
+      }
+      if (sql.includes('FROM dataset_versions')) return [version];
+      if (sql.includes('FROM datasets WHERE project_id')) return [dataset];
+      if (sql.includes('FROM datasets WHERE id')) return [dataset];
+      return [];
+    },
+    exec: async () => {},
+    transaction: async <T>(fn: (tx: Tx) => Promise<T>) => fn(store),
+    close: async () => {},
+  };
+  return store;
+}
+
+/** A `Store` with four datasets — `parent` (the session's source),
+ *  `other`, `child`, `child2` — and two stored links: `parent →
+ *  child` and `other → child2`. Queries filter on the bound
+ *  parameters like the real SQL does. */
+function fakeStoreLinked(): Store {
+  const ds = (id: string, name: string): Row => ({
+    id,
+    project_id: 'p1',
+    name,
+    record_key: '"row_position"',
+    settings: '{}',
+    current_version: 1,
+    created_at: '2026-11-25T00:00:00Z',
+  });
+  const datasets = [ds('ds1', 'parent'), ds('ds2', 'other'), ds('ds3', 'child'), ds('ds4', 'child2')];
+  const links: Row[] = [
+    {
+      project_id: 'p1',
+      parent_dataset: 'parent',
+      child_dataset: 'child',
+      child_key: 'pid',
+      parent_key: 'id',
+      kind: 'relate',
+    },
+    {
+      project_id: 'p1',
+      parent_dataset: 'other',
+      child_dataset: 'child2',
+      child_key: 'ck2',
+      parent_key: 'k2',
+      kind: 'relate',
+    },
+  ];
+  const store: Store = {
+    query: async (sql: string, params?: SqlValue[]) => {
+      if (sql.includes('FROM dataset_links')) return links;
+      if (sql.includes('SELECT snapshot FROM dataset_versions')) {
+        return [{ snapshot: new Uint8Array([7]) }];
+      }
+      if (sql.includes('FROM dataset_versions')) {
+        return [
+          {
+            dataset_id: params?.[0] ?? '',
+            version: 1,
+            source_name: datasets.find((d) => d.id === params?.[0])?.name ?? '',
+            source_sha256: 'hash-of-source',
+            row_count: 0,
+            content_hash: 'hash-of-source',
+            snapshot_available: 1,
+          },
+        ];
+      }
+      if (sql.includes('FROM datasets WHERE project_id')) return datasets;
+      if (sql.includes('FROM datasets WHERE id')) {
+        return datasets.filter((d) => d.id === params?.[0]);
+      }
+      return [];
+    },
+    exec: async () => {},
+    transaction: async <T>(fn: (tx: Tx) => Promise<T>) => fn(store),
+    close: async () => {},
+  };
+  return store;
+}
 
 const ALL_CODES = [
   ...IMPORT_ERROR_CODES,
@@ -123,6 +267,50 @@ describe('worker RPC contract', () => {
     ]) {
       expect(typeof a[name], `api.${name} missing`).toBe('function');
     }
+  });
+
+  it('replay_passes_stored_links', async () => {
+    // Task 13b: `openSession`'s replay carries the project's stored
+    // `dataset_links` as the serde `DatasetLink` shape — parent/child
+    // dataset names, snake_case key fields, the kind as-is.
+    const store = fakeStore();
+    await langWorker.openSession(store, 'p1', 'ds1', 1);
+    const replay = vi.mocked((await import('@lang/epiora_lang_wasm')).replay);
+    expect(replay).toHaveBeenCalled();
+    const args = replay.mock.calls[0]!;
+    expect(args[1]).toEqual({}); // the source is skipped in `linked`
+    expect(args[3]).toEqual([
+      { parent: 'parent', child: 'child', child_key: 'ck', parent_key: 'k', kind: 'relate' },
+    ]);
+  });
+
+  it('replay_passes_only_source_links', async () => {
+    // Task 13b fix round: `replay` gets only the stored links whose
+    // `parent` names the session's source dataset — the `other →
+    // child2` link never crosses the wasm boundary.
+    const store = fakeStoreLinked();
+    const session = await langWorker.openSession(store, 'p1', 'ds1', 1);
+    await langWorker.applyCommand(store, session.sessionId, 'SELECT v > 15');
+    const replay = vi.mocked((await import('@lang/epiora_lang_wasm')).replay);
+    expect(replay.mock.calls.at(-1)![3]).toEqual([
+      { parent: 'parent', child: 'child', child_key: 'pid', parent_key: 'id', kind: 'relate' },
+    ]);
+  });
+
+  it('apply_cancel_read_returns_source_state', async () => {
+    // Task 13b: `applyCommand('CANCEL READ')` clears the recipe —
+    // the command is never stored as a step and the session replays
+    // the bare AS-OF header over the source.
+    const store = fakeStore();
+    const session = await langWorker.openSession(store, 'p1', 'ds1', 1);
+    const after = await langWorker.applyCommand(store, session.sessionId, 'SELECT v > 15');
+    expect(after.steps).toEqual(['SELECT v > 15']);
+    const state = await langWorker.applyCommand(store, session.sessionId, 'CANCEL READ');
+    expect(state.steps).toEqual([]);
+    expect(state.recipeText.startsWith('AS-OF ')).toBe(true);
+    expect(state.recipeText.split('\n')).toHaveLength(1);
+    const replay = vi.mocked((await import('@lang/epiora_lang_wasm')).replay);
+    expect(replay.mock.calls.at(-1)![2]).toBe(state.recipeText);
   });
 
   it('inspect_legacy_accepts_real_file_objects', async () => {

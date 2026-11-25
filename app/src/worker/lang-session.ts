@@ -31,8 +31,7 @@ import type { TablesResult } from '@engine-types/TablesResult';
 import type { MeansResult } from '@engine-types/MeansResult';
 
 interface ActionJson {
-  line?: number;
-  manage?: unknown;
+  manage?: { line?: number; command?: unknown };
   procedure?: {
     line: number;
     name: string;
@@ -41,6 +40,7 @@ interface ActionJson {
   };
   read?: { name?: string; line?: number };
   write?: { line?: number };
+  list?: { line?: number; vars?: string[] };
   unsupported?: { line: number; text: string };
   note?: { line: number; text: string };
 }
@@ -65,14 +65,26 @@ export async function runProgram(
     onEvent(e);
   };
   for (const a of actions as ActionJson[]) {
-    const line = a.line ?? a.procedure?.line ?? a.unsupported?.line ?? a.note?.line ?? 0;
+    const line =
+      a.manage?.line ??
+      a.procedure?.line ??
+      a.read?.line ??
+      a.write?.line ??
+      a.list?.line ??
+      a.unsupported?.line ??
+      a.note?.line ??
+      0;
     if (a.manage !== undefined) {
-      const canonical = langWasm.printCommand(a.manage);
-      s.steps.push(canonical);
+      const canonical = langWasm.printCommand(a.manage.command);
+      const prior = s.steps;
+      // `CANCEL READ` closes the working view and discards the
+      // recipe — the steps clear, the command is never stored
+      // (plan Task 13b).
+      s.steps = canonical === 'CANCEL READ' ? [] : [...s.steps, canonical];
       try {
         await replaySession(store, s);
       } catch (e) {
-        s.steps.pop();
+        s.steps = prior;
         throw e;
       }
       emit({ kind: 'action', line, detail: canonical });

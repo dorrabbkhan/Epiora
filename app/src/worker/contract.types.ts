@@ -10,6 +10,7 @@ import type { MeansOptions } from '@engine-types/MeansOptions';
 import type { MeansResult } from '@engine-types/MeansResult';
 import type { TablesOptions } from '@engine-types/TablesOptions';
 import type { TablesResult } from '@engine-types/TablesResult';
+import type { DatasetLink } from '@engine-types/DatasetLink';
 import type { Receipt } from '@engine-types/Receipt';
 import type { Inspection } from '@import-types/Inspection';
 import type { ImportSettings } from '@import-types/ImportSettings';
@@ -73,5 +74,21 @@ export type Check_r = Assert<Equal<RefreshReturn['plan']['views'][number]['name'
 export type Check_s = Assert<Equal<SessionReturn['sourceVersion'], number>>;
 export type Check_t = Assert<Equal<StateReturn['steps'], string[]>>;
 export type Check_u = Assert<Equal<WriteReturn['datasetId'], string>>;
+
+// v1.1 Task 13b: `replay`'s `links` argument is the serde
+// `DatasetLink` shape — the store's camelCase `dataset_links` rows
+// map onto it in `lang.ts` (`parentDataset`→`parent`, …).
+export type Check_v = Assert<
+  Equal<
+    DatasetLink,
+    {
+      parent: string;
+      child: string;
+      child_key: string;
+      parent_key: string;
+      kind: 'relate' | 'grid';
+    }
+  >
+>;
 
 export const TYPES_CHECKED = true;

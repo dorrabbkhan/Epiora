@@ -74,6 +74,7 @@ fn cancel(p: &Parser, i: usize, toks: &[Lexed]) -> Result<StmtOut, LangError> {
     let cmd = match p.word(toks, 1).as_deref() {
         Some("SELECT") => Command::CancelSelect,
         Some("SORT") => Command::CancelSort,
+        Some("READ") => Command::CancelRead,
         _ => return Ok(p.unsup(i, i + 1)),
     };
     if toks.len() != 2 {

@@ -8,10 +8,10 @@
 //! `parity/run.mjs` replays through the real wasm32 `langCase`; the
 //! workflow diffs the two files byte-for-byte.
 
-use super::cases::{case_input, native_case, pgm_files, root};
+use super::cases::{case_input, extra_cases, native_case, pgm_files, root};
 use super::run_case;
 use epiora_lang::LangError;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 /// The JSONL the nodejs parity run replays.
 fn cases_path() -> PathBuf {
@@ -52,22 +52,21 @@ fn write_cases(lines: &[String]) {
     );
 }
 
-/// `langCase` output == the direct pipeline's, for one program —
+/// `langCase` output == the direct pipeline's, for one input —
 /// or both fail with the same `LangError` (`code` + message), so
 /// error behaviour is pinned too. Returns the case's parity line.
-fn assert_case(path: &Path) -> String {
-    let input = case_input(path);
-    let input_text = serde_json::to_string(&input).unwrap();
+fn assert_input(name: &str, input: &serde_json::Value) -> String {
+    let input_text = serde_json::to_string(input).unwrap();
     let got = run_case(&input_text);
-    let native = native_case(&input);
+    let native = native_case(input);
     match (&got, &native) {
-        (Ok(g), Ok(n)) => assert_eq!(g, n, "{path:?}: wasm != native"),
+        (Ok(g), Ok(n)) => assert_eq!(g, n, "{name}: wasm != native"),
         (Err(g), Err(n)) => assert_eq!(
             (g.code(), g.to_string()),
             (n.code(), n.to_string()),
-            "{path:?}: error mismatch"
+            "{name}: error mismatch"
         ),
-        (g, n) => panic!("{path:?}: one side failed — wasm {g:?} native {n:?}"),
+        (g, n) => panic!("{name}: one side failed — wasm {g:?} native {n:?}"),
     }
     parity_line(&input_text, &native)
 }
@@ -77,10 +76,26 @@ fn assert_case(path: &Path) -> String {
 fn native_and_wasm_bit_identical() {
     let files = pgm_files();
     assert!(!files.is_empty(), "no .pgm fixtures found");
-    let mut lines = Vec::with_capacity(files.len());
+    let extras = extra_cases();
+    let mut lines = Vec::with_capacity(files.len() + extras.len());
     let mut replays = 0usize;
     for f in &files {
-        lines.push(assert_case(f));
+        lines.push(assert_input(&format!("{f:?}"), &case_input(f)));
+    }
+    // Task 13b's hand-built cases — a keyless RELATE resolved through
+    // the `links` input and a CANCEL READ program — go through the
+    // same assertion and land in the JSONL for run.mjs.
+    for (name, input) in &extras {
+        let line = assert_input(name, input);
+        let out = run_case(&serde_json::to_string(input).unwrap())
+            .unwrap_or_else(|e| panic!("{name}: expected a replay, got {e:?}"));
+        let v: serde_json::Value = serde_json::from_str(&out).unwrap();
+        assert!(
+            !v["view"].as_str().unwrap().is_empty() && v["stamp"].is_object(),
+            "{name}: expected a stamped replay"
+        );
+        replays += 1;
+        lines.push(line);
     }
     // Programs with a resolvable READ source must replay to real
     // bytes — a parse-only pass would be vacuous parity.
@@ -99,8 +114,8 @@ fn native_and_wasm_bit_identical() {
     assert!(replays > 0, "no fixture produced a real replay");
     write_cases(&lines);
     eprintln!(
-        "parity: {} programs bit-identical ({} stamped replays)",
-        files.len(),
+        "parity: {} cases bit-identical ({} stamped replays)",
+        files.len() + extras.len(),
         replays
     );
 }
