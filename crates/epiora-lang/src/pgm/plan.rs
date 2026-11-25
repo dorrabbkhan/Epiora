@@ -12,9 +12,9 @@
 //!
 //! `may_differ` marks every `Procedure` action that follows an
 //! `affects_data` `Unsupported` action — the unrun command may have
-//! changed the data the procedure reports on. A `READ` (or `WRITE`,
-//! which re-reads its target) starts a new working view and clears
-//! the flag.
+//! changed the data the procedure reports on. Once set it never
+//! resets: the plan names no reset, so a later `READ`/`WRITE`
+//! leaves it on.
 
 use super::ast::{DisplayWhat, Program, ProgramRef, Statement, WriteTarget};
 use super::register::Register;
@@ -153,21 +153,14 @@ fn plan_into(
                 options: options.clone(),
                 may_differ: *differ,
             }),
-            Statement::Read(d) => {
-                *differ = false;
-                out.push(Action::Read {
-                    line,
-                    target: d.clone(),
-                });
-            }
-            Statement::Write(t) => {
-                // WRITE re-reads its target: a new working view.
-                *differ = false;
-                out.push(Action::Write {
-                    line,
-                    target: t.clone(),
-                });
-            }
+            Statement::Read(d) => out.push(Action::Read {
+                line,
+                target: d.clone(),
+            }),
+            Statement::Write(t) => out.push(Action::Write {
+                line,
+                target: t.clone(),
+            }),
             Statement::List(vars) => out.push(Action::List {
                 line,
                 vars: vars.clone(),

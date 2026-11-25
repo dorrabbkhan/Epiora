@@ -2,8 +2,9 @@
 //! at its line's end (EI7 commands are line-bounded). On top of the
 //! expression terminals it adds the `File` (`'…'`), `{brace}` string,
 //! `::`/`:` and `!` (DLL call) terminals; `***` and a leading `*` are
-//! comments, and `*`-comments are how EI3 saved programs mark
-//! disabled lines (`*assign x=1`).
+//! comments, `//` comments out the rest of its line, and
+//! `*`-comments are how EI3 saved programs mark disabled lines
+//! (`*assign x=1`).
 
 use crate::expr::ast::{is_id_head, is_id_tail};
 use crate::expr::lit::{lex_number, number, real};
@@ -66,7 +67,7 @@ pub(crate) enum Tok {
 
 /// Lex one source line (no newline characters) into tokens; `base`
 /// is the line's byte offset in the program text. A `*` or `***`
-/// comment run ends the line.
+/// comment run or a `//` comment ends the line.
 pub(crate) fn lex_line(text: &str, line: u32, base: usize) -> Result<Vec<Lexed>, LangError> {
     let chars: Vec<char> = text.chars().collect();
     let bytes: Vec<usize> = text.char_indices().map(|(i, _)| base + i).collect();
@@ -113,6 +114,12 @@ pub(crate) fn lex_line(text: &str, line: u32, base: usize) -> Result<Vec<Lexed>,
                 push(&mut out, Tok::Star, i0, i0 + 1);
                 i += n;
             }
+            // `//` comments out the rest of the line — a whole-line
+            // comment lexes to nothing, a trailing one ends the
+            // statement's tokens. String, file, brace and `[…]`
+            // arms consume their contents whole, so a `//` inside
+            // them never reaches here.
+            '/' if at(1) == Some('/') => break,
             '(' | ')' | ',' | '=' | '&' | '+' | '-' | '/' | '%' | '^' | '!' => {
                 let tok = match c {
                     '(' => Tok::LParen,

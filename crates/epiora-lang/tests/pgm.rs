@@ -52,14 +52,17 @@ fn every_fixture_program_parses() {
 }
 
 /// Bytes that are not UTF-8 decode as Windows-1252; CRLF and bare CR
-/// line endings and mixed-case keywords all parse (Review Focus 4).
+/// line endings and mixed-case keywords all parse. `*` and `//`
+/// comment lines (and a trailing `//`) produce no statements, `//`
+/// inside a string stays text, and `[Ill Status]` is one bracketed
+/// variable name (Review Focus 4).
 #[test]
 fn crlf_cp1252_mixed_case_program_parses() {
     // \xE9 is 'é' in cp1252 (invalid UTF-8, so decoding is exercised).
-    let bytes: &[u8] = b"read 'x.mdb':t\r\nFrEq iLl WEIGHTVAR=w\rselect ill = 1\r\nTYPEOUT \"caf\xE9\"\r\nquit\r\n";
+    let bytes: &[u8] = b"read 'x.mdb':t\r\n* a star comment\r\n// a slash comment\r\nFrEq iLl WEIGHTVAR=w // trailing\rselect ill = 1\r\nTYPEOUT \"caf\xE9\"\r\nTYPEOUT \"http://x\"\r\nFREQ [Ill Status]\r\nquit\r\n";
     let text = decode_pgm_text(bytes);
     let p = parse_program(&text).expect("cp1252 program parses");
-    assert_eq!(p.statements.len(), 5);
+    assert_eq!(p.statements.len(), 7);
     match &p.statements[0].node {
         Statement::Read(target) => assert_eq!(target.name, "x.mdb:t"),
         other => panic!("{other:?}"),
@@ -72,12 +75,27 @@ fn crlf_cp1252_mixed_case_program_parses() {
         }
         other => panic!("{other:?}"),
     }
-    assert_eq!(p.statements[1].line, 2);
+    // The FREQ is the statement after the `*` and `//` comment
+    // lines: source line 4.
+    assert_eq!(p.statements[1].line, 4);
     match &p.statements[3].node {
         Statement::Output(t) => assert!(t.contains("café"), "{t}"),
         other => panic!("{other:?}"),
     }
-    assert!(matches!(p.statements[4].node, Statement::Quit));
+    // `//` inside a string literal is kept as text.
+    match &p.statements[4].node {
+        Statement::Output(t) => assert!(t.contains("http://x"), "{t}"),
+        other => panic!("{other:?}"),
+    }
+    // A bracketed name with a space is one variable.
+    match &p.statements[5].node {
+        Statement::Procedure { name, options, .. } => {
+            assert_eq!(name, "FREQ");
+            assert_eq!(options["vars"][0], "Ill Status");
+        }
+        other => panic!("{other:?}"),
+    }
+    assert!(matches!(p.statements[6].node, Statement::Quit));
 }
 
 /// A real program in Epi Info 3.5-era syntax from the Task 2 sample

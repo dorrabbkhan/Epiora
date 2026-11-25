@@ -7130,9 +7130,9 @@ gap:
   (the Interfaces' "a missing program is an Unsupported action naming
   it"). A cycle is `LangError::RunPgmCycle` (`pgm_runpgm_cycle`).
 - `may_differ` becomes true at the first `Unsupported` action whose
-  register entry has `affects_data: true` and resets on `Action::Read`
-  or `Action::Write` (WRITE re-reads its target — a new working view
-  re-establishes what procedures report on); `List` does not reset it.
+  register entry has `affects_data: true` and never resets
+  (plan-literal: the interface names no reset, so a later
+  `READ`/`WRITE` leaves it set).
 - QUIT/EXIT end the plan with a `Note` at their line; statements
   after them are parsed but never planned. Output verbs the register
   marks implemented-but-display-only (TYPEOUT/HEADER/ROUTEOUT/

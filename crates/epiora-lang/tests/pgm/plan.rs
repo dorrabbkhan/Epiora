@@ -68,8 +68,8 @@ fn unsupported_listed_with_line_and_version() {
 }
 
 /// `may_differ` is true for every procedure after an Unsupported
-/// action the register marks `affects_data: true` — until a READ
-/// starts a new working view.
+/// action the register marks `affects_data: true`; once set it
+/// never resets — the plan names no reset rule.
 #[test]
 fn procedures_after_unsupported_data_command_may_differ() {
     let a = actions(
@@ -82,9 +82,24 @@ fn procedures_after_unsupported_data_command_may_differ() {
     // `DEFINE x` (unsupported, affects_data) precedes the first FREQs.
     assert!(differ(2), "FREQ after unsupported DEFINE differs");
     assert!(differ(4), "still differs — the unsupported DEFINE ran");
-    // The second READ resets the working view; only a non-data
-    // unsupported command (GRAPH) precedes this FREQ.
-    assert!(!differ(7), "after READ only GRAPH is unsupported");
+    // The second READ does not reset the flag (the plan names no
+    // reset): the earlier DEFINE still shadows this FREQ.
+    assert!(differ(7), "READ does not reset may_differ");
+}
+
+/// The flag never resets (plan-literal): an `affects_data`
+/// `Unsupported` command, then READ, then a procedure — the
+/// procedure still `may_differ`. A procedure *before* the
+/// unsupported command does not.
+#[test]
+fn may_differ_never_resets() {
+    let a = actions("FREQ y\nDEFINE x\nREAD 'f':u\nFREQ y\n");
+    let differ = |i: usize| match &a[i] {
+        Action::Procedure { may_differ, .. } => *may_differ,
+        other => panic!("{other:?}"),
+    };
+    assert!(!differ(0), "FREQ before the unsupported DEFINE");
+    assert!(differ(3), "FREQ after DEFINE + READ still differs");
 }
 
 /// Output commands with no effect on numbers are recorded as notes
