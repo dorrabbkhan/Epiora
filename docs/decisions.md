@@ -7360,3 +7360,207 @@ Files outside the Files block:
   the same wasm/native byte-identity check and land in the JSONL; the
   block names `parity/{mod.rs,cases.rs}` only.
 Supersedes: —
+
+### v1.1 Task 14 — method choices where Epi Info 7 is unexpected (2026-11-26)
+
+Decision: the method choices below are recorded for the task's OWNER
+REVIEW. Except for MERGE — already decided by the owner on 2026-11-23
+(PR #111, option A) — each recommendation is a recommendation, not an
+owner approval. Tasks 10 and 11 already implement the recommended
+behaviour unless the entry says otherwise; this task changes no
+`crates/epiora-lang/src/manage/*` code.
+
+Every entry names the same three options required by the plan: **match
+Epi Info 7**, **match R/common practice**, or **match Epi Info 7 and
+add an assumption note**. Fixture references are the program lines in
+`fixtures/ei7/v11/*.json`; the Task 11 evidence named below is in
+`crates/epiora-lang/tests/`.
+
+1. **Missing values in comparisons.**
+
+   - Epi Info 7: `select_sort.json` L10/L13/L16 pins
+     `SELECT MASHEDPOTA = 1` → 37 rows, `SELECT MASHEDPOTA <> 1` → 38
+     rows (the 37 zero rows plus the one missing row), and
+     `SELECT MASHEDPOTA = (.)` → 1 row. Missing therefore tests equal
+     to the `(.)` missing literal and not equal to any non-missing
+     value; inequality against a non-missing value includes missing.
+   - R/common practice: R's `NA != 1` and SQL's `NULL <> 1` are
+     unknown, not true; filters normally drop them. Missing equality
+     uses an explicit test (`is.na`, `IS NULL`).
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7 and add an assumption note**,
+     because migration parity depends on the pinned row counts and the
+     behaviour is surprising enough to need a visible note.
+     `expr::ops::compare` already implements it;
+     `expr.rs::missing_propagates_as_epi_info` pins the 37/38/1 counts
+     plus `(.) = (.)` and `(.) <> (.)`.
+
+2. **FREQ's displayed total and missing-category order.**
+
+   - Epi Info 7: after `select_sort.json` L16 selects the one missing
+     MASHEDPOTA row, L17 prints no categories and `freq.total` 0 — the
+     displayed Total is the non-missing category sum, not the selected
+     record count. With `SET MISSING=ON`, `delete_set.json` L21 puts
+     the missing category first (24 rows) and includes it in Total 46;
+     L23 (`SET MISSING=OFF`) leaves only 22 non-missing rows.
+   - R/common practice: base R excludes `NA` unless `useNA` is asked
+     for; when shown, the missing category is normally last. Epiora's
+     statistical result separately reports `total` (records in scope)
+     and `missing`, with `"(missing)"` last by the v0.2 dataset-model
+     rule.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match R/common practice** in the engine result:
+     keep `total` and `missing` distinct and keep `"(missing)"` last.
+     The EI7 corpus comparator's display mapping (missing first and
+     Total recomputed as the category sum) remains test-side compatibility
+     evidence, not a statistical-result change. Task 11 records this in
+     `tests/common/corpus/compare.rs`; no numeric result is hidden.
+
+3. **RECODE range-boundary inclusivity.**
+
+   - Epi Info 7: `recode.json` L10–L15 recodes AGE as
+     `LOVALUE - 17`, `18 - 64`, `65 - HIVALUE` and prints AGEGRP counts
+     23/43/9, Total 75. The corpus README names the boundary rows at
+     ages 17, 64 and 65; Task 11's hand-computed
+     `manage_define_recode.rs::recode_boundaries_as_ei7` shows 17 →
+     group 1, 64 → group 2 and 65 → group 3. Both endpoints are
+     inclusive, including the unbounded `LOVALUE`/`HIVALUE` ends.
+   - R/common practice: SQL `BETWEEN` is inclusive; R interval
+     constructors make inclusivity explicit (`cut`'s `right`, often
+     right-inclusive only). There is no safe assumption that one end is
+     excluded.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7**. Inclusive ends are explicit,
+     reproducible and close to common practice; `manage/recode.rs`
+     already implements them.
+
+4. **RECODE ELSE and a missing source.**
+
+   - Epi Info 7: `recode.json` L23–L27 recodes MASHEDPOTA with
+     `0 = 0` and `ELSE = 2`; the missing source row does not become 2,
+     so MPGRP has counts 37/37 and Total 74 rather than 75.
+   - R/common practice: missing normally stays `NA` unless the user
+     recodes it explicitly; catch-all branches in careful recodes do
+     not silently manufacture a present value.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7**. It is also the safer common
+     behaviour. `manage/recode.rs` implements it and
+     `manage_define_recode.rs::recode_else_does_not_catch_missing`
+     pins the missing cell.
+
+5. **MERGE duplicate keys, UPDATE vs APPEND.**
+
+   - Epi Info 7: the only runnable reference is the bare default
+     match-or-insert form. In `merge_relate.json` L27, MERGE on
+     `PatientID::VisitPatientID` reports `NUMBERUPDATED = 11` and
+     `NUMBERINSERTED = 0` — eleven duplicate source keys all apply to
+     the one destination row. In L30, MERGE on
+     `GlobalRecordId::GlobalRecordId` reports `NUMBERUPDATED = 1` and
+     `NUMBERINSERTED = 10`. The explicit `UPDATE`, `APPEND` and
+     `RELATE` option words crash EI7 7.2.7.0 in
+     `Rule_Merge.SetMergeOpt` (`fixtures/ei7/v11/README.md`); the owner
+     decided on 2026-11-23 (PR #111, option A) that the corpus pins the
+     default path and that Task 14 records Epiora's own UPDATE and
+     APPEND semantics, with Task 11's hand-computed tests as evidence.
+   - R/common practice: R/database joins usually expand duplicate key
+     matches rather than overwriting; SQL `MERGE`/upsert updates
+     matches and inserts misses, often rejecting duplicate matches;
+     append is concatenation. There is no single common duplicate-key
+     rule.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7 and add an assumption note**
+     for the default form: matched rows take shared source columns,
+     repeated source keys overwrite in source order so the last source
+     row wins, and unmatched source rows insert. Epiora's explicit
+     `UPDATE` suppresses those inserts; explicit `APPEND` appends every
+     source row unconditionally, duplicates included. The duplicate-key
+     note must say that last-wins can hide earlier source rows. This is
+     exactly the implemented `manage/merge.rs` behaviour and
+     `manage_merge_relate.rs::merge_duplicate_keys_update_and_append`;
+     the owner's decision therefore requires no code change.
+
+6. **SORT position of missing values.**
+
+   - Epi Info 7: `select_sort.json` L30 sorts TIMESUPPER ascending and
+     L31 lists all 47 missing cells before the first present datetime.
+     Missing is therefore first in ascending order. The corpus does not
+     pin a descending missing-key case; Task 11 implements the mirror
+     image, missing last descending.
+   - R/common practice: R's `order` puts missing values last by default
+     (`na.last = TRUE`); SQL NULL placement varies by engine and often
+     by explicit `NULLS FIRST/LAST`.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7 and add an assumption note**:
+     ascending missing-first is pinned; the descending mirror is the
+     natural reading of one total order reversed and is what
+     `manage/select_sort.rs` implements.
+     `manage_view.rs::sort_places_missing_first` pins the ascending
+     case.
+
+7. **Date and time differences.**
+
+   - Epi Info 7: `functions_date.json` L21–L25 pins `MINUTES` values
+     of 180–420 while `DAYS` over the same pair has min/mean/max 0 —
+     `DAYS` is the whole-day component, not fractional elapsed days.
+     L27–L31 pin the two-argument `YEARS`/`MONTHS` surface but only at
+     zero values in this corpus. The EI7 source at the D2 commit
+     (`Rule_Years.cs` and `Rule_Months.cs`) uses completed calendar
+     units: `YEARS` subtracts one when the end month/day is before the
+     start month/day; `MONTHS` computes the calendar-month difference
+     and subtracts one when the end day-of-month is smaller. Thus
+     31 January → 28 February is 0 completed months, not a
+     month-end-adjusted 1.
+   - R/common practice: base R's `difftime` is exact elapsed time
+     (fractional units are normal); SQL Server `DATEDIFF` counts
+     month/year boundaries rather than completed anniversaries;
+     month-end-aware libraries differ in how they clamp 31-day months.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7 and add an assumption note**.
+     `functions/date.rs` already implements whole-component `DAYS` and
+     completed-calendar-unit `MONTHS`/`YEARS`. The assumption note must
+     name the month-end rule. The lack of a nonzero month-end fixture
+     is a corpus coverage gap, not a licence to invent one here:
+     fixtures may change only in fixture tasks.
+
+8. **ABS/TRUNC on missing input.**
+
+   - Epi Info 7: the Task 3 runtime measurements in
+     `fixtures/ei7/v11/README.md` show `ABS` and `TRUNC` throwing
+     `NullReferenceException` on a missing input cell, while `ROUND`,
+     the date parts/differences and the pinned text functions propagate
+     missing. A crashing function cannot have a step-level output pin —
+     the program aborts before ROUTEOUT output — so the corpus exercises
+     `ABS`/`TRUNC` only on the fully populated HeightInches column
+     (`functions_text_math.json` L19/L21/L30).
+   - R/common practice: `abs(NA)` and `trunc(NA)` are `NA`; missing
+     propagates rather than crashing.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match R/common practice**. Reproducing a
+     `NullReferenceException` would violate Epiora's typed-error rule
+     and could never produce a useful result. Epiora propagates missing
+     for `ABS`/`TRUNC` as it does for the rest of the scalar family;
+     `expr.rs::missing_propagates_as_epi_info` pins `abs(0 - x)` staying
+     missing on a missing operand.
+
+Measured Task 3 findings that are **not** Task 14 method choices:
+`END-SET` and `RUNSILENT` are syntax/headless-harness requirements;
+EI7 writing MERGE output into the destination file is already superseded
+by owner decision G3 (cleaning changes a working view, never saved data);
+raw-table UNDELETE restoring zero rows is pinned and implemented as the
+raw/project distinction, not an open choice; RELATE's one-to-many row
+expansion is ordinary relational-join behaviour; output-file casing and
+run timestamps are artifact provenance. `DEFINE x = f()` and `LOG` are
+EI7 parser/implementation defects with no runnable numeric reference;
+they are documented in `fixtures/ei7/v11/README.md`, not treated as
+statistical method choices.
+
+Files outside the Files block: none.
+Supersedes: —
