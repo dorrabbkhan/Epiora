@@ -60,14 +60,12 @@ fn if_stmt(p: &Parser, i: usize, toks: &[Lexed]) -> Result<StmtOut, LangError> {
     let mut otherwise: Vec<Command> = Vec::new();
     let mut into_else = false;
     let mut ended = false;
-    let mut last: &[Lexed] = toks;
     while j < p.line_count() {
         let t = p.toks(j)?;
         if t.is_empty() {
             j += 1;
             continue;
         }
-        last = t;
         let head = p.head(j).unwrap_or_default();
         if head == "END" {
             ended = true;
@@ -101,8 +99,8 @@ fn if_stmt(p: &Parser, i: usize, toks: &[Lexed]) -> Result<StmtOut, LangError> {
         j = out.next;
     }
     if !ended {
-        // Report the block's last line — where END was expected.
-        return Err(p.err_at(last, last.len() - 1, "missing END for IF block"));
+        // An unterminated block reports its opening statement.
+        return Err(p.err_at(toks, 0, "missing END for IF block"));
     }
     Ok(StmtOut {
         statements: vec![p.spanned(

@@ -148,10 +148,41 @@ fn syntax_error_reports_line_and_column() {
         LangError::Syntax { line: 1, .. } => {}
         other => panic!("{other:?}"),
     }
-    // A dangling IF reports the missing END.
+    // A dangling IF reports the missing END at its opening line.
     match parse_program("IF x = 1 THEN\nASSIGN y = 2\n").expect_err("no END") {
-        LangError::Syntax { line: 2, .. } => {}
+        LangError::Syntax { line: 1, .. } => {}
         other => panic!("{other:?}"),
+    }
+}
+
+/// The CI `pgm_any` crash on 6ebf9ef: an unterminated IF at end of
+/// input indexed one past the last line. Every unterminated block
+/// is `pgm_syntax` at its opening statement — never a panic.
+#[test]
+fn fuzz_crash_unterminated_if_is_syntax_error() {
+    let crash: &[u8] = &[73, 70, 34, 136, 128, 65, 34];
+    for (label, text) in [
+        ("crash bytes", decode_pgm_text(crash)),
+        ("dangling IF", "IF x = 1 THEN\n".to_string()),
+        ("dangling RECODE", "RECODE a TO b\n".to_string()),
+    ] {
+        let err = parse_program(&text).expect_err(label);
+        assert_eq!(err.code(), "pgm_syntax", "{label}: {err}");
+        match err {
+            LangError::Syntax { line: 1, .. } => {}
+            other => panic!("{label}: {other:?}"),
+        }
+    }
+    // The fuzz harness entry point must not panic on them either
+    // (public under the `fuzzing` feature — exercised by the
+    // `--all-features` engine gate and the fuzz build).
+    #[cfg(feature = "fuzzing")]
+    for data in [
+        crash,
+        b"IF x = 1 THEN\n".as_slice(),
+        b"RECODE a TO b\n".as_slice(),
+    ] {
+        epiora_lang::fuzz_harness::pgm_any(data);
     }
 }
 

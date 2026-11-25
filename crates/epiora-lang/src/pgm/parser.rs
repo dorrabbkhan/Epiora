@@ -96,17 +96,19 @@ impl<'a> Parser<'a> {
         Ok(Program { statements })
     }
 
-    /// Line `i`'s tokens, or its stored lex error.
+    /// Line `i`'s tokens, or its stored lex error. An out-of-range
+    /// index is end of input — the empty token slice, never a panic.
     pub(crate) fn toks(&self, i: usize) -> Result<&[Lexed], LangError> {
-        match &self.lines[i].toks {
-            Ok(t) => Ok(t),
-            Err(e) => Err(e.clone()),
+        match self.lines.get(i).map(|line| &line.toks) {
+            Some(Ok(t)) => Ok(t),
+            Some(Err(e)) => Err(e.clone()),
+            None => Ok(&[]),
         }
     }
 
-    /// The line's raw text.
+    /// The line's raw text; out-of-range is the empty string.
     pub(crate) fn raw(&self, i: usize) -> &'a str {
-        self.lines[i].raw
+        self.lines.get(i).map(|line| line.raw).unwrap_or("")
     }
 
     /// Number of source lines.

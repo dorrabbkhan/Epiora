@@ -28,14 +28,12 @@ pub(super) fn recode(p: &Parser, i: usize, toks: &[Lexed]) -> Result<StmtOut, La
     let mut otherwise = None;
     let mut j = i + 1;
     let mut ended = false;
-    let mut last: &[Lexed] = toks;
     while j < p.line_count() {
         let t = p.toks(j)?;
         if t.is_empty() {
             j += 1;
             continue;
         }
-        last = t;
         if p.kw(t, 0, "END") && t.len() == 1 {
             ended = true;
             j += 1;
@@ -56,7 +54,8 @@ pub(super) fn recode(p: &Parser, i: usize, toks: &[Lexed]) -> Result<StmtOut, La
         j += 1;
     }
     if !ended {
-        return Err(p.err_at(last, last.len() - 1, "missing END for RECODE block"));
+        // An unterminated block reports its opening statement.
+        return Err(p.err_at(toks, 0, "missing END for RECODE block"));
     }
     Ok(StmtOut {
         statements: vec![p.spanned(
