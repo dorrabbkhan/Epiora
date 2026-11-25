@@ -23,6 +23,8 @@ const enginePkg = fileURLToPath(new URL('../crates/epiora-wasm/pkg', import.meta
 const engineTypes = fileURLToPath(new URL('../crates/epiora-wasm/bindings', import.meta.url));
 const importPkg = fileURLToPath(new URL('../crates/epiora-import-wasm/pkg', import.meta.url));
 const importTypes = fileURLToPath(new URL('../crates/epiora-import-wasm/bindings', import.meta.url));
+const legacyPkg = fileURLToPath(new URL('../crates/epiora-legacy-wasm/pkg', import.meta.url));
+const langPkg = fileURLToPath(new URL('../crates/epiora-lang-wasm/pkg', import.meta.url));
 
 const MIB = 1024 * 1024;
 
@@ -94,6 +96,8 @@ export default defineConfig({
       '@engine-types': engineTypes,
       '@import': importPkg,
       '@import-types': importTypes,
+      '@legacy': legacyPkg,
+      '@lang': langPkg,
     },
   },
   server: {

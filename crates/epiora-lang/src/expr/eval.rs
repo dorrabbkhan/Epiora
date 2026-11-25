@@ -18,7 +18,7 @@ use std::collections::BTreeMap;
 /// The recipe's as-of instant — the only clock the engine reads
 /// (spec §5.3). `date` is days since 1970-01-01; `seconds` is seconds
 /// since midnight.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct AsOf {
     /// Days since 1970-01-01.
     pub date: i32,

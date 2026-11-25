@@ -498,6 +498,8 @@ jobs:
         run: |
           scripts/wasm-build.sh release epiora-wasm
           scripts/wasm-build.sh release epiora-import-wasm
+          scripts/wasm-build.sh release epiora-legacy-wasm
+          scripts/wasm-build.sh release epiora-lang-wasm
 
       # Generated in CI, never committed — the 1,000,000-row file is
       # ~80 MB. The 10,000-row file feeds the grid-scroll scenario.

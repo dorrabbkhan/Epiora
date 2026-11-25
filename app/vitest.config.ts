@@ -21,6 +21,8 @@ const enginePkg = fileURLToPath(new URL('../crates/epiora-wasm/pkg', import.meta
 const engineTypes = fileURLToPath(new URL('../crates/epiora-wasm/bindings', import.meta.url));
 const importPkg = fileURLToPath(new URL('../crates/epiora-import-wasm/pkg', import.meta.url));
 const importTypes = fileURLToPath(new URL('../crates/epiora-import-wasm/bindings', import.meta.url));
+const legacyPkg = fileURLToPath(new URL('../crates/epiora-legacy-wasm/pkg', import.meta.url));
+const langPkg = fileURLToPath(new URL('../crates/epiora-lang-wasm/pkg', import.meta.url));
 
 // WebKit needs a persistent (on-disk) profile for OPFS, and a fresh one
 // per run — a reused profile can leave a stale WebKit lock and time out
@@ -43,11 +45,19 @@ export default defineConfig({
       '@engine-types': engineTypes,
       '@import': importPkg,
       '@import-types': importTypes,
+      '@legacy': legacyPkg,
+      '@lang': langPkg,
     },
   },
   test: {
     projects: [
       {
+        // fs.allow mirrors store-opfs: the worker's `?url` wasm
+        // imports live under crates/*/pkg, outside the app root
+        // (v1.1 Task 13 — the unit project now loads engines.ts).
+        server: { fs: { allow: fsAllow } },
+        optimizeDeps: { exclude: ['@sqlite.org/sqlite-wasm'] },
+        worker: { format: 'es' },
         test: {
           name: 'unit',
           environment: 'jsdom',

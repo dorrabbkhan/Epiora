@@ -59,4 +59,19 @@ export type Check_m = Assert<
 >;
 export type Check_n = Assert<Equal<GridPage['rows'][number][number], string | null>>;
 
+// v1.1 Task 13: the new RPCs carry JSON shapes the two wasm modules
+// emit — no ts-rs bindings exist for them, so the checks pin the
+// worker's declared shapes.
+type InspectReturn = Awaited<ReturnType<DataApi['inspectLegacy']>>;
+type RefreshReturn = Awaited<ReturnType<DataApi['planRefresh']>>;
+type SessionReturn = Awaited<ReturnType<DataApi['openSession']>>;
+type StateReturn = Awaited<ReturnType<DataApi['applyCommand']>>;
+type WriteReturn = Awaited<ReturnType<DataApi['writeSession']>>;
+
+export type Check_q = Assert<Equal<InspectReturn['previewId'], string>>;
+export type Check_r = Assert<Equal<RefreshReturn['plan']['views'][number]['name'], string>>;
+export type Check_s = Assert<Equal<SessionReturn['sourceVersion'], number>>;
+export type Check_t = Assert<Equal<StateReturn['steps'], string[]>>;
+export type Check_u = Assert<Equal<WriteReturn['datasetId'], string>>;
+
 export const TYPES_CHECKED = true;

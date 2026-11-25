@@ -270,3 +270,17 @@ pub fn pgm_any(data: &[u8]) {
         Err(e) => assert_eq!(e.code(), "pgm_syntax"),
     }
 }
+
+/// `recipe_text_any` (v1.1 plan Task 13): arbitrary bytes decode to
+/// text and hit [`Recipe::parse`] — the canonical-text boundary the
+/// wasm `replay` exposes. A parsed recipe must round-trip
+/// (`parse(canonical_text) == recipe`); a failure must be a typed
+/// `LangError`, never a panic.
+#[allow(clippy::panic)]
+pub fn recipe_text_any(data: &[u8]) {
+    let text = crate::decode_pgm_text(data);
+    if let Ok(recipe) = Recipe::parse(&text) {
+        let again = Recipe::parse(&recipe.canonical_text());
+        assert_eq!(again.as_ref().ok(), Some(&recipe));
+    }
+}

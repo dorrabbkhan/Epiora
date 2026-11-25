@@ -25,3 +25,10 @@ path = "fuzz_targets/legacy_meta_any.rs"
 test = false
 doc = false
 bench = false
+
+[[bin]]
+name = "eptb_any"
+path = "fuzz_targets/eptb_any.rs"
+test = false
+doc = false
+bench = false

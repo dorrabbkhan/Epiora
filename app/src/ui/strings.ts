@@ -406,6 +406,20 @@ export const t = {
     keychain_unavailable: 'The system keychain is not available.',
     key_invalid: 'The stored database key is not valid.',
     sql: 'The local database reported an error.',
+    // LegacyError::code() (v1.1 Task 13)
+    legacy_batch_invalid: 'The legacy file could not be read.',
+    legacy_layout_unknown: 'The file is not a recognised Epi Info project.',
+    legacy_view_broken: 'A project view could not be read.',
+    legacy_no_table: 'A table the project needs is not in the file.',
+    // LangError::code() (v1.1 Task 13)
+    pgm_syntax: 'The program has a syntax error.',
+    expr_type: 'An expression has the wrong type.',
+    unknown_function: 'The program uses a function Epiora does not know.',
+    unsupported_function: 'The program uses a command Epiora does not support yet.',
+    merge_key_type: 'The MERGE key columns have different types.',
+    relate_no_link: 'The project has no stored link for that RELATE.',
+    recipe_replay_mismatch: 'The recorded commands could not be replayed.',
+    pgm_runpgm_cycle: 'A RUNPGM program refers to itself.',
     // Worker-only codes
     schema_change_unaccepted: 'The file changes the dataset schema; accept it to continue.',
     session_not_found: 'The import session no longer exists.',

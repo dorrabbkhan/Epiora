@@ -12,9 +12,11 @@
 //! a raw table).
 
 use epiora_core::dataset::{ColumnData, Dataset};
+use serde::{Deserialize, Serialize};
 
 /// `SET PROCESS=` — which records the view includes.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Process {
     /// Undeleted records only (EI7's default).
     #[default]
@@ -26,7 +28,8 @@ pub enum Process {
 }
 
 /// `SET STATISTICS=` — the analysis verbosity EI7 carries per view.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum StatisticsLevel {
     /// Suppress all statistics.
     None,
@@ -43,7 +46,7 @@ pub enum StatisticsLevel {
 /// `SetClause`). Display-only options are stored, not applied, by the
 /// view itself — `materialize` reacts to `process` and the corpus
 /// runner reads `include_missing` for FREQ.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct ViewSettings {
     /// `SET PROCESS=`.
     pub process: Process,
@@ -89,7 +92,8 @@ pub(crate) struct DefinedVar {
 }
 
 /// `MERGE`/`RELATE` join modes; `MATCHING` is the unmarked form.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum JoinMode {
     /// Keep only destination rows with at least one match.
     #[default]
@@ -100,7 +104,7 @@ pub enum JoinMode {
 
 /// A dataset reference in commands: the name and, for RELATE, the
 /// `ALL` modifier.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct DatasetRef {
     /// Table name as the command spelled it.
     pub name: String,
@@ -119,7 +123,8 @@ impl DatasetRef {
 }
 
 /// SORT direction.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Order {
     /// Ascending — missing cells first (ei7_v11 `SORT TIMESUPPER`).
     Asc,

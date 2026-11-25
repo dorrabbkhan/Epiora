@@ -1,0 +1,36 @@
+[package]
+name = "epiora-lang-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Epiora language browser binding: .pgm parse/plan + recipe replay (v1.1 spec §5-6)"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+# `parity` adds `langCase`, which drives the parity test
+# (`native_and_wasm_bit_identical`): the same case runner the wasm
+# module exports, callable natively so the binding is compared
+# byte-for-byte against the direct `epiora-lang` pipeline.
+parity = []
+
+[dependencies]
+epiora-core = { path = "../epiora-core" }
+epiora-lang = { path = "../epiora-lang" }
+# wasm-bindgen is pinned exactly: wasm-pack requires the wasm-bindgen
+# CLI to equal the crate version, and CI installs that CLI from a
+# SHA-256-verified release tarball. js-sys stays in lockstep with it.
+wasm-bindgen = "=0.2.129"
+js-sys = "=0.3.106"
+serde = "1"
+serde-wasm-bindgen = "0.6.5"
+# float_roundtrip keeps JSON parsing bit-identical to the native
+# pipeline in the parity build (see epiora-core's Cargo.toml).
+serde_json = { version = "1", features = ["float_roundtrip"] }
+sha2 = "0.10"
+
+[dev-dependencies]
+epiora-legacy = { path = "../epiora-legacy" }
+epiora-mdb = { path = "../epiora-mdb" }
+serde_json = { version = "1", features = ["float_roundtrip"] }

@@ -12,6 +12,12 @@ static REGISTER_JSON: &str = include_str!("../../register.json");
 static REGISTER: OnceLock<Register> = OnceLock::new();
 
 /// The embedded register — parsed once, shared for the process.
+/// The raw register JSON — `register()`'s parsed form, emitted
+/// verbatim so callers can return it without reserializing.
+pub fn register_json() -> &'static str {
+    REGISTER_JSON
+}
+
 pub fn register() -> &'static Register {
     REGISTER.get_or_init(|| {
         // The file is embedded at build time; a parse failure is a

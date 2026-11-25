@@ -10,9 +10,12 @@ import { t } from '../ui/strings';
 import {
   ENGINE_ERROR_CODES,
   IMPORT_ERROR_CODES,
+  LANG_ERROR_CODES,
+  LEGACY_ERROR_CODES,
   STORE_ERROR_CODES,
   WORKER_ERROR_CODES,
 } from './errors';
+import { api } from './api';
 import { TYPES_CHECKED } from './contract.types';
 
 const ALL_CODES = [
@@ -20,6 +23,8 @@ const ALL_CODES = [
   ...ENGINE_ERROR_CODES,
   ...STORE_ERROR_CODES,
   ...WORKER_ERROR_CODES,
+  ...LEGACY_ERROR_CODES,
+  ...LANG_ERROR_CODES,
 ];
 
 /** The string literals returned by `fn code()` in a Rust error enum,
@@ -53,6 +58,35 @@ describe('worker RPC contract', () => {
     const engineCodes = rustCodes('../../../crates/epiora-core/src/error.rs');
     expect(importCodes.slice().sort()).toEqual([...IMPORT_ERROR_CODES].sort());
     expect(engineCodes.slice().sort()).toEqual([...ENGINE_ERROR_CODES].sort());
+    // v1.1 Task 13: the two new wasm crates' codes have their own
+    // lists — `legacy_no_table` lives in source.rs as a
+    // `Source { code }` literal, not a `=>` arm, so it is listed in
+    // errors.ts but excluded here.
+    const legacyCodes = rustCodes('../../../crates/epiora-legacy/src/error.rs');
+    const langCodes = rustCodes('../../../crates/epiora-lang/src/lib.rs');
+    expect(legacyCodes.slice().sort()).toEqual(
+      [...LEGACY_ERROR_CODES].filter((c) => c !== 'legacy_no_table').sort(),
+    );
+    expect(langCodes.slice().sort()).toEqual([...LANG_ERROR_CODES].sort());
+  });
+
+  it('exposes_every_new_rpc', () => {
+    // v1.1 Task 13's worker RPC surface — `wire` keeps them as
+    // functions on the `api` object.
+    const a = api as unknown as Record<string, unknown>;
+    for (const name of [
+      'inspectLegacy',
+      'commitLegacy',
+      'planRefresh',
+      'commitRefresh',
+      'openSession',
+      'applyCommand',
+      'undoLast',
+      'runProgram',
+      'writeSession',
+    ]) {
+      expect(typeof a[name], `api.${name} missing`).toBe('function');
+    }
   });
 
   it('api_types_match_bindings', () => {

@@ -30,6 +30,9 @@ void storeLockReleased().then(() =>
 // still reported — as an RpcError — by the first RPC that needs the
 // engine; this catch only keeps the startup call off the unhandled-
 // rejection log.
+// v1.1 Task 13: epiora-legacy-wasm and epiora-lang-wasm are NOT
+// started here — `legacy()`/`lang()` lazy-load them on the first
+// legacy/session RPC (engines.test.ts pins this).
 void engine().catch(() => {});
 
 Comlink.expose(api);

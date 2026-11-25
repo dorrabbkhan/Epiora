@@ -28,9 +28,11 @@ use crate::expr::eval::EvalEnv;
 use crate::view::{DatasetRef, JoinMode, Order, Process, StatisticsLevel, WorkingView};
 use crate::LangError;
 use epiora_core::dataset::{Value, ValueType};
+use serde::{Deserialize, Serialize};
 
 /// A variable's declared scope (`DEFINE` scope word).
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Scope {
     /// View-scoped; dies with the session's view.
     #[default]
@@ -46,7 +48,8 @@ pub enum Scope {
 /// match-or-insert; `UPDATE`/`APPEND` crash EI7 7.2.7.0's
 /// `SetMergeOpt`, so only the bare form is corpus-pinned — owner
 /// decision 2026-11-23).
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum MergeMode {
     /// Update matched destination rows, insert the rest.
     #[default]
@@ -58,7 +61,8 @@ pub enum MergeMode {
 }
 
 /// A RECODE bound: `LOVALUE`/`HIVALUE` or a literal.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum RecodeBound {
     /// The lowest literal — matches any value below the range start.
     LoValue,
@@ -69,7 +73,8 @@ pub enum RecodeBound {
 }
 
 /// One RECODE rule line.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum RecodeRule {
     /// `<lit> = <lit>` — a single source value.
     Single {
@@ -90,7 +95,7 @@ pub enum RecodeRule {
 }
 
 /// A SUMMARIZE aggregate — `Ident::Agg(arg)`.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Aggregate {
     /// Output column name.
     pub name: String,
@@ -101,7 +106,8 @@ pub struct Aggregate {
 }
 
 /// The SUMMARIZE aggregation verbs.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum AggFunc {
     /// Row count.
     Count,
@@ -124,7 +130,8 @@ pub enum AggFunc {
 }
 
 /// One `SET` clause.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum SetOption {
     /// `PROCESS=UNDELETED|BOTH|DELETED`.
     Process(Process),
@@ -146,7 +153,8 @@ pub enum SetOption {
 /// [`Command::DefineExpr`] for `DEFINE x = <expr>` (EI7 defines a
 /// zero-filled variable of the expression's type, pinned by
 /// define_assign_if's `MEANS DOUBLED` — decisions.md).
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Command {
     /// `SELECT <expr>` — AND-combines with earlier selects.
     Select(Expr),

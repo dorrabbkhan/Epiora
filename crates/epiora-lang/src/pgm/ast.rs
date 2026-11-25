@@ -4,17 +4,18 @@
 
 use crate::manage::Command;
 use crate::view::DatasetRef;
+use serde::{Deserialize, Serialize};
 
 /// A parsed program: one spanned statement per command line (block
 /// commands — IF, RECODE — are a single statement).
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Program {
     /// Statements in source order.
     pub statements: Vec<Spanned<Statement>>,
 }
 
 /// A node with its 1-based source position.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Spanned<T> {
     /// 1-based line.
     pub line: u32,
@@ -27,7 +28,8 @@ pub struct Spanned<T> {
 /// One `.pgm` statement. Commands Epiora runs keep their structured
 /// form; the rest keep their name and source text so the migration
 /// report can list them.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Statement {
     /// A cleaning command (spec §5.3's `Command`).
     Manage(Command),
@@ -71,7 +73,7 @@ pub enum Statement {
 }
 
 /// `WRITE`'s destination and record selection.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct WriteTarget {
     /// `REPLACE` or `APPEND`.
     pub mode: WriteMode,
@@ -84,7 +86,8 @@ pub struct WriteTarget {
 }
 
 /// `WRITE`'s mode word.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum WriteMode {
     /// Overwrite the target.
     Replace,
@@ -93,7 +96,8 @@ pub enum WriteMode {
 }
 
 /// `WRITE`'s variable selection.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum WriteVars {
     /// `*` — every variable.
     All,
@@ -104,7 +108,8 @@ pub enum WriteVars {
 }
 
 /// `DISPLAY`'s subject.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum DisplayWhat {
     /// `DISPLAY DBVARIABLES [vars]`.
     DbVariables {
@@ -122,7 +127,8 @@ pub enum DisplayWhat {
 
 /// `RUNPGM`'s target (the register's `program in project` / `File` /
 /// `File:program` forms).
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum ProgramRef {
     /// A program saved in the project: `RUNPGM name` or
     /// `RUNPGM "name"`.

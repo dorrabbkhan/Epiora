@@ -7185,3 +7185,59 @@ Files outside the Files block:
   `parse_date_text` (`99` → 1999), so round-trip generation is
   restricted to representable dates.
 Supersedes: —
+
+## v1.1 Task 13 — epiora-legacy-wasm + epiora-lang-wasm
+
+- `crates/epiora-wasm/src/lib.rs` (listed as Modify) needed **no
+  change**: `RunContext.working_view` already exists upstream of this
+  task (Task 11/12 added it to `epiora-core::procedures::RunContext`
+  with `#[serde(default)]`), so every procedure already deserializes
+  it from the JS ctx object. The worker's session path now passes it
+  (`lang.ts` `workingViewStamp`); nothing in the binding itself
+  required editing.
+- `legacyRefreshPlan`'s `RefreshPlanJson` carries the plan plus the
+  remapped `project` and `snapshots` — `commitRefresh` writes new
+  versions without re-mapping the file (the interface names the
+  return `RefreshPlanJson`; the shape is ours).
+- `legacyMap(h, name?, format?)` takes an optional `format`: `detect`
+  is layout-only (`ei7_access`/`ei3_access`), so a `.db` file's true
+  backend (`ei7_sqlite`) must come from the caller — the file's
+  extension knows it, the batches don't. Same param on
+  `legacyRefreshPlan`.
+
+Files outside the Files block:
+
+- `app/vite.config.ts`, `app/vitest.config.ts`, `app/tsconfig.json`
+  — `@legacy`/`@lang` aliases to `crates/*-wasm/pkg` (mirroring
+  `@engine`/`@import`); vitest's unit project also gained the shared
+  `fs.allow`/`optimizeDeps`/`worker` settings so `?url` wasm imports
+  under `crates/` resolve in unit tests (contract.test.ts now loads
+  `api`).
+- `app/src/worker/client.ts` — every new RPC needs a main-thread
+  proxy method (the `DataApi` wrapper object is total; tsc enforces
+  this — omitting it fails typecheck).
+- `app/src/worker/errors.ts` — `LEGACY_ERROR_CODES`/`LANG_ERROR_CODES`
+  lists and `categoryFor` mapping (legacy → ImportError, lang →
+  EngineError) so the new crates' stable `code()`s categorize right.
+- `app/src/ui/strings.ts` — user-facing messages for every new detail
+  code; contract.test.ts's `every_detail_code_has_a_user_message`
+  requires it.
+- `scripts/check-app.sh`, `.github/workflows/app.yml` — the
+  `@legacy`/`@lang` aliases point at `pkg/` build artifacts, so the
+  app gate and CI now build all four wasm crates before tsc/vitest.
+- `app/src/legacy/mdb.ts` is *used* (not modified) — `openMdb` emits
+  EPTB batches for `.mdb`/`.accdb`; `.db` goes through sqlite-wasm +
+  the EPTB encoder in `worker/legacy.ts`, mirroring the native
+  `SqliteSource` test source's storage-class union.
+- Keyless `RELATE` limitation: `replay`'s `linked` argument is
+  `Record<string, Uint8Array>` (the plan's interface) — it cannot
+  carry the stored `dataset_links` key pairs, so `LinkedDatasets::link`
+  returns none and a keyless RELATE surfaces `relate_no_link`.
+  Explicit-key RELATE works. Wiring links through needs either a
+  signature change or a `links` sibling argument — noted for Task 16.
+- `worker/legacy.ts`'s `inspectLegacy` takes
+  `{ name, bytes: Uint8Array }[]` rather than `File[]` (the plan's
+  spelling): `File` is structured-cloneable, but the plain shape is
+  what the contract tests drive and what Task 15's UI will pass after
+  `arrayBuffer()`. Same for `planRefresh`.
+Supersedes: —
