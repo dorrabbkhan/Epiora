@@ -6918,12 +6918,14 @@ Semantic choices where the source was pinned (quirks ported, not
   as `unsupported_function` — the register marks them
   `supported@1.1` (they parse), which is what the register-iteration
   test asserts.
-- `FORMAT` calls `Microsoft.VisualBasic.Strings.Format` in EI7; the
-  v1.1 corpus pins `FORMAT(x, "0.00")` → `x.ToString()` ("54",
-  "46.1"), so non-date patterns return the `ToString()`. The named
-  date/time formats (`GeneralDate`, `LongDate`, `ShortDate`,
-  `LongTime`, `ShortTime`) are applied as a method choice — the
-  corpus pins none of them.
+- `FORMAT` calls `Microsoft.VisualBasic.Strings.Format` in EI7. The
+  scalar-family implementation now matches EI7 for the simple numeric
+  digit pictures (`0`, `#` and `.`), so `FORMAT(54, "0.00")` is
+  `"54.00"` with half-away-from-zero rounding (corrected by v1.1
+  Task 14 Step 2). The named date/time formats (`GeneralDate`,
+  `LongDate`, `ShortDate`, `LongTime`, `ShortTime`) are applied as a
+  method choice; other non-date patterns keep the raw `ToString()`
+  fallback — the corpus pins none of them.
 - `GROUPROWINDEX`'s carry is the previous row's *expression result*
   (`PreceedingDataRow[qualifiedId]`): equal consecutive argument
   `ToString()`s increment the previous output's `int.TryParse`,
@@ -7370,6 +7372,9 @@ owner approval. Tasks 10 and 11 already implement the recommended
 behaviour unless the entry says otherwise; this task changes no
 `crates/epiora-lang/src/manage/*` code.
 
+Owner answer (2026-11-26): all 13 recommendations accepted; item 11
+applied in Step 2 (`functions/text.rs`, tests named).
+
 Every entry names the same three options required by the plan: **match
 Epi Info 7**, **match R/common practice**, or **match Epi Info 7 and
 add an assumption note**. Fixture references are the program lines in
@@ -7635,15 +7640,17 @@ evidence named below is in `crates/epiora-lang/tests/`.
       pictures. Raw `ToString()` is not a formatting implementation.
     - Options: match Epi Info 7 / match R/common practice / match Epi
       Info 7 and add an assumption note.
-    - Recommendation: **match Epi Info 7**. Epiora currently does not:
-      `functions/text.rs::format` applies the named date/time patterns
-      and otherwise returns `ei_to_string`, so `FORMAT(54, "0.00")`
-      returns the text `"54"`. The exact-value test does not exist;
+    - Recommendation: **match Epi Info 7**. Epiora now does:
+      `functions/text.rs::format` implements the simple numeric digit
+      pictures (`0`, `#` and `.`) with half-away-from-zero rounding, so
+      `FORMAT(54, "0.00")` returns the text `"54.00"`. The named
+      date/time patterns and missing propagation are unchanged;
+      unrecognised pictures keep the raw `ei_to_string` fallback.
+      `functions_format.rs` pins `54`/`46.1`/`53.3` →
+      `"54.00"`/`"46.10"`/`"53.30"`, positive and negative half-way
+      cases, `0.125` → `"0.13"`, and missing input → missing.
       `expr.rs::every_register_function_parses_and_evaluates` exercises
-      that call but asserts successful evaluation and column length,
-      and the corpus comparator's numericising text cell has the same
-      blind spot as the parsed json. If the owner picks EI7's form,
-      Step 2 changes code + tests.
+      the same call as part of the register sweep.
 
 12. **Raw-table DELETE / SET PROCESS / UNDELETE.**
 
@@ -7717,5 +7724,12 @@ by owner decision G3 (cleaning changes a working view, never saved data);
 RELATE's one-to-many row expansion is ordinary relational-join behaviour;
 output-file casing and run timestamps are artifact provenance.
 
-Files outside the Files block: none.
+Files outside the Files block:
+- `crates/epiora-lang/src/functions/text.rs` — the plan's Step 2 names
+  `manage/*`, but `FORMAT` lives in `functions/`; item 11's implementation.
+- `crates/epiora-lang/tests/functions_format.rs` — item 11's exact-value
+  numeric-picture tests.
+- `crates/epiora-lang/tests/common/corpus/compare.rs` — owner-approved
+  2026-11-26 to mirror `cellValue` (integral → integer), which FORMAT's
+  correct `"54.00"` exposed; no tolerance/fixture/expected value changed.
 Supersedes: —
