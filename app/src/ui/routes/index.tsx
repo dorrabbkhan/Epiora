@@ -138,6 +138,9 @@ export function ProjectsScreen() {
     <div className={styles.page}>
       <h1>{t.projects.title}</h1>
       <div className={styles.actions}>
+        <Link to="/legacy">{t.projects.openLegacy}</Link>
+      </div>
+      <div className={styles.actions}>
         <ProjectNameDialog
           title={t.projects.createTitle}
           submitLabel={t.common.create}

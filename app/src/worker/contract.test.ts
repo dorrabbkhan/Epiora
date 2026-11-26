@@ -256,6 +256,8 @@ describe('worker RPC contract', () => {
     const a = api as unknown as Record<string, unknown>;
     for (const name of [
       'inspectLegacy',
+      'inspectLegacySqlServer',
+      'getLegacyProject',
       'commitLegacy',
       'planRefresh',
       'commitRefresh',

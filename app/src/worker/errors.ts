@@ -178,8 +178,10 @@ export function isWiredRpcError(e: unknown): e is WiredRpcError {
 /** The stable `code` a wasm-bound Rust error carries (`js_error` sets
  *  it on the thrown Error). */
 function rustCode(e: unknown): string | undefined {
-  if (e instanceof Error) {
-    const code = (e as unknown as { code?: unknown }).code;
+  // wasm-bindgen errors do not always survive the boundary as an
+  // `instanceof Error`; the stable `code` property is the contract.
+  if (typeof e === 'object' && e !== null) {
+    const code = (e as { code?: unknown }).code;
     if (typeof code === 'string') return code;
   }
   return undefined;

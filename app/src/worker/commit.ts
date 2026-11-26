@@ -20,7 +20,7 @@ import type { RecordBatch } from '@import-types/RecordBatch';
 import type { CommitResult, ImportProgress } from './api';
 import { importer } from './engines';
 import { rpc } from './errors';
-import { destroySession, getSession, importedFor } from './importer';
+import { destroySession, getSession, importedFor, throwWhenCancelled } from './importer';
 import { loadEntry, serializeSettings } from './snapshots';
 import * as changes from '../store/repo/changes';
 import * as datasets from '../store/repo/datasets';
@@ -108,10 +108,7 @@ export async function commitImport(
     // sqlite-wasm exec resolves on a microtask, so without an explicit
     // yield the worker's event loop never runs `cancelImport` during a
     // commit — the flag check must yield to be reachable at all.
-    const checkCancel = async () => {
-      await new Promise((r) => setTimeout(r, 0));
-      if (s.cancelled) throw rpc('cancelled', 'the import was cancelled');
-    };
+    const checkCancel = () => throwWhenCancelled(s.cancelled);
 
     emit('parse', 0, 1);
     await checkCancel();

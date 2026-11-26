@@ -105,6 +105,13 @@ async function chooseFile(path) {
 }
 
 describe('Epiora desktop', () => {
+  it('sqlserver_form_only_on_desktop', async () => {
+    await waitForApp();
+    await clickText('a', 'Open an Epi Info project');
+    await waitFor(byText('h2', 'Connect to SQL Server'), 'SQL Server form');
+    await clickText('a', 'Epiora');
+  });
+
   it('imports the fixture CSV, runs TABLES and encrypts the store', async () => {
     await waitForApp();
     say('app rendered');

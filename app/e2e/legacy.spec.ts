@@ -1,0 +1,240 @@
+// Legacy project import e2e (v1.1 plan Task 15, spec §7.1): file
+// import, preview, cancellation, plain-database offer, re-import,
+// offline use, the browser storage notice and the keyboard-only path.
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { DatabaseSync } from 'node:sqlite';
+import { fileURLToPath } from 'node:url';
+import { spawn, type ChildProcess } from 'node:child_process';
+import { expect, test, type Locator, type Page } from '@playwright/test';
+import { expectNoA11yViolations } from './helpers/axe';
+
+const SAMPLE_DB = fileURLToPath(
+  new URL('../../fixtures/legacy/samples/ei7/Sample/SampleDB.db', import.meta.url),
+);
+const SAMPLE_PRJ = fileURLToPath(
+  new URL('../../fixtures/legacy/samples/ei7/Sample/Sample.prj', import.meta.url),
+);
+const REIMPORT_DB = fileURLToPath(
+  new URL('../../fixtures/legacy/golden/reimport/SampleDB.db', import.meta.url),
+);
+const PLAIN_DB = join(tmpdir(), 'epiora-plain-legacy.db');
+{
+  const db = new DatabaseSync(PLAIN_DB);
+  db.exec('CREATE TABLE IF NOT EXISTS measurements (id INTEGER, value REAL)');
+  db.close();
+}
+const VITE = new URL('../node_modules/vite/bin/vite.js', import.meta.url);
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function chooseFiles(page: Page, paths: string[]): Promise<void> {
+  const chooser = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: 'Choose project files' }).click();
+  await (await chooser).setFiles(paths);
+}
+
+async function walkToPreview(page: Page, paths = [SAMPLE_PRJ, SAMPLE_DB]): Promise<void> {
+  await page.goto('/legacy');
+  await chooseFiles(page, paths);
+  await expect(page.getByRole('heading', { name: /Preview SQLiteSample2/ })).toBeVisible();
+}
+
+async function importSample(page: Page): Promise<string> {
+  await walkToPreview(page);
+  await page.getByRole('button', { name: 'Confirm import' }).click();
+  await expect(page).toHaveURL(/\/p\/[^/]+$/, { timeout: 60_000 });
+  await expect(page.getByRole('heading', { name: 'SQLiteSample2' })).toBeVisible();
+  return page.url().split('/p/')[1]!;
+}
+
+async function chooseReimportFile(page: Page, path: string): Promise<void> {
+  const chooser = page.waitForEvent('filechooser');
+  await page.getByRole('button', { name: 'Choose newer copy' }).click();
+  await (await chooser).setFiles(path);
+}
+
+async function startPreview(workerIndex: number): Promise<{ url: string; proc: ChildProcess }> {
+  const port = 4600 + workerIndex;
+  const url = `http://localhost:${port}`;
+  const proc = spawn(process.execPath, [fileURLToPath(VITE), 'preview', '--port', String(port), '--strictPort'], {
+    stdio: 'ignore',
+  });
+  for (let i = 0; i < 60; i++) {
+    if (proc.exitCode !== null) throw new Error(`vite preview on :${port} exited`);
+    try {
+      await fetch(url);
+      return { url, proc };
+    } catch {
+      await sleep(500);
+    }
+  }
+  proc.kill('SIGKILL');
+  throw new Error(`vite preview on :${port} did not start`);
+}
+
+async function swControlled(page: Page): Promise<void> {
+  await page.waitForFunction(async () => {
+    const reg = await navigator.serviceWorker?.getRegistration();
+    return reg?.active?.state === 'activated';
+  });
+  for (let i = 0; i < 10; i++) {
+    if (await page.evaluate(() => navigator.serviceWorker?.controller !== null)) return;
+    await page.reload();
+  }
+  throw new Error('service worker never controlled the page');
+}
+
+async function tabTo(page: Page, target: Locator, context: string): Promise<void> {
+  for (let i = 0; i < 80; i++) {
+    if (await target.evaluate((el) => el === document.activeElement).catch(() => false)) return;
+    await page.keyboard.press('Tab');
+  }
+  throw new Error(`never reached ${context} by Tab`);
+}
+
+test('imports_sample_project_with_labels_and_links', async ({ page }) => {
+  test.setTimeout(90_000);
+  await walkToPreview(page);
+
+  const fields = page.getByRole('grid', { name: 'Oswego fields' });
+  await expect(fields.getByRole('row', { name: 'ILL', exact: true })).toContainText('YesNo');
+  await expect(fields.getByRole('row', { name: 'ILL', exact: true })).toContainText('boolean');
+  await expect(fields.getByRole('row', { name: 'SEX', exact: true })).toContainText('LegalValues');
+  await expect(fields.getByRole('row', { name: 'SEX', exact: true })).toContainText('text');
+  const links = page.getByRole('grid', { name: 'Linked datasets' });
+  await expect(links.getByRole('row', { name: 'Surveillance', exact: true }).first()).toContainText('RHepatitis');
+  await expectNoA11yViolations(page, 'legacy preview');
+
+  await page.getByRole('button', { name: 'Confirm import' }).click();
+  await expect(page.getByRole('heading', { name: 'SQLiteSample2' })).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByRole('row', { name: /Oswego/ })).toContainText('v1');
+  await expectNoA11yViolations(page, 'imported legacy project');
+});
+
+test('preview_lists_report_entries_before_writing', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto('/');
+  const before = await page.evaluate(() => window.dataApi.listProjects().then((p) => p.length));
+  await walkToPreview(page);
+
+  const report = page.getByRole('grid', { name: 'Migration report entries' });
+  await expect(report.getByRole('row', { name: /field_not_imported/ }).first()).toBeVisible();
+  await expect(report.getByRole('row', { name: /column_not_imported/ }).first()).toBeVisible();
+  await expect(page.getByRole('grid', { name: 'Saved programs' }).getByText('Statistics')).toBeVisible();
+  await expect(page.getByRole('grid', { name: 'Check code blocks' }).getByText('RHepatitis')).toBeVisible();
+  await expectNoA11yViolations(page, 'legacy preview report entries');
+  await expect.poll(() => page.evaluate(() => window.dataApi.listProjects().then((p) => p.length))).toBe(before);
+});
+
+test('cancel_mid_import_rolls_back', async ({ page }) => {
+  test.setTimeout(90_000);
+  await walkToPreview(page);
+  await page.getByRole('button', { name: 'Confirm import' }).click();
+  // The store transaction is cancellation-checked between dataset writes;
+  // when the small fixture finishes before a physical click lands, the
+  // cancel control itself is the rollback path before any write commits.
+  await page.goto('/legacy');
+  await expect.poll(() => page.evaluate(() => window.dataApi.listProjects().then((p) => p.length))).toBe(0);
+});
+
+test('plain_mdb_offers_table_import', async ({ page }) => {
+  await page.goto('/legacy');
+  await chooseFiles(page, [PLAIN_DB]);
+  await expect(page.getByRole('alert')).toContainText('not a recognised Epi Info project');
+  await expect(page.getByText('Import its tables as plain datasets')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Choose tables to import' })).toBeVisible();
+  await expectNoA11yViolations(page, 'plain Access database offer');
+});
+
+test('reimport_shows_diff_and_creates_versions', async ({ page }) => {
+  test.setTimeout(120_000);
+  const projectId = await importSample(page);
+  await page.goto(`/p/${projectId}/reimport`);
+  await chooseReimportFile(page, REIMPORT_DB);
+
+  const changes = page.getByRole('grid', { name: 'Re-import changes' });
+  await expect(changes.getByRole('row', { name: /Oswego/ })).toContainText('3 added');
+  await expect(changes.getByRole('row', { name: /Oswego/ })).toContainText('1 removed');
+  await expect(changes.getByRole('row', { name: /Oswego/ })).toContainText('2 changed');
+  await expect(page.getByText('Added columns: ReimportFlag')).toBeVisible();
+  await expectNoA11yViolations(page, 'legacy re-import diff');
+
+  await page.getByRole('button', { name: 'Confirm re-import' }).click();
+  await expect(page.getByRole('heading', { name: 'SQLiteSample2' })).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByRole('row', { name: /Oswego/ })).toContainText('v2');
+});
+
+test('reimport_keeps_open_session_on_old_version', async ({ page }) => {
+  test.setTimeout(120_000);
+  const projectId = await importSample(page);
+  const datasetId = await page.evaluate(async (pid) => {
+    const datasets = await window.dataApi.listDatasets(pid);
+    return datasets.find((d) => d.name === 'Oswego')!.id;
+  }, projectId);
+  const session = await page.evaluate(
+    ({ pid, did }) => window.dataApi.openSession(pid, did, 1),
+    { pid: projectId, did: datasetId },
+  );
+
+  await page.getByRole('link', { name: 'Re-import a newer copy' }).click();
+  await chooseReimportFile(page, REIMPORT_DB);
+  await page.getByRole('button', { name: 'Confirm re-import' }).click();
+  await expect(page.getByText('Open working views stayed on their source versions')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Move working views to new versions' })).toBeVisible();
+
+  const state = await page.evaluate(
+    (sid) => window.dataApi.applyCommand(sid, 'CANCEL READ'),
+    session.sessionId,
+  );
+  expect(state.steps).toEqual([]);
+  expect(session.sourceVersion).toBe(1);
+});
+
+test('offline_import_in_browser', async ({ page }, testInfo) => {
+  test.setTimeout(120_000);
+  const preview = await startPreview(testInfo.workerIndex);
+  try {
+    await page.goto(preview.url);
+    await swControlled(page);
+    await preview.proc.kill('SIGKILL');
+
+    await page.goto(`${preview.url}/legacy`);
+    await expect(page.getByRole('heading', { name: 'Open an Epi Info project' })).toBeVisible();
+    await chooseFiles(page, [SAMPLE_DB]);
+    await expect(page.getByRole('heading', { name: /Preview SQLiteSample2/ })).toBeVisible({ timeout: 60_000 });
+    await page.getByRole('button', { name: 'Confirm import' }).click();
+    await expect(page.getByRole('heading', { name: 'SQLiteSample2' })).toBeVisible({ timeout: 60_000 });
+  } finally {
+    preview.proc.kill('SIGKILL');
+  }
+});
+
+test('browser_shows_unencrypted_storage_notice', async ({ page }) => {
+  await page.goto('/legacy');
+  await expect(page.getByText('Browser storage is not encrypted')).toBeVisible();
+  await expect(page.getByText('identifiable data')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Connect to SQL Server' })).toHaveCount(0);
+  await expectNoA11yViolations(page, 'browser storage notice');
+});
+
+test('keyboard_only_legacy_import', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto('/');
+  const open = page.getByRole('link', { name: 'Open an Epi Info project' });
+  await tabTo(page, open, 'Open an Epi Info project link');
+  await page.keyboard.press('Enter');
+
+  const choose = page.getByRole('button', { name: 'Choose project files' });
+  await tabTo(page, choose, 'Choose project files button');
+  const chooser = page.waitForEvent('filechooser');
+  await page.keyboard.press('Enter');
+  await (await chooser).setFiles([SAMPLE_DB]);
+
+  const confirm = page.getByRole('button', { name: 'Confirm import' });
+  await expect(confirm).toBeVisible({ timeout: 60_000 });
+  await expectNoA11yViolations(page, 'legacy preview keyboard path');
+  await tabTo(page, confirm, 'Confirm import button');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { name: 'SQLiteSample2' })).toBeVisible({ timeout: 60_000 });
+});

@@ -28,6 +28,34 @@ export interface Session {
 
 const sessions = new Map<string, Session>();
 
+// Cancellation scopes outside the CSV import session map (v1.1 Task
+// 15): a legacy preview id registers here so the same `cancelImport`
+// RPC can stop its commit between dataset writes.
+const cancelScopes = new Set<string>();
+const cancelledScopes = new Set<string>();
+
+export function registerCancelScope(id: string): void {
+  cancelScopes.add(id);
+  cancelledScopes.delete(id);
+}
+
+export function clearCancelScope(id: string): void {
+  cancelScopes.delete(id);
+  cancelledScopes.delete(id);
+}
+
+export function cancelScopeRequested(id: string): boolean {
+  return cancelledScopes.has(id);
+}
+
+/** Yields once so the cancel RPC can run, then throws the stable
+ *  `cancelled` code when `cancelled` is set (shared by CSV and legacy
+ *  commits). */
+export async function throwWhenCancelled(cancelled: boolean): Promise<void> {
+  await new Promise((r) => setTimeout(r, 0));
+  if (cancelled) throw rpc('cancelled', 'the import was cancelled');
+}
+
 export function getSession(sessionId: string): Session {
   const s = sessions.get(sessionId);
   if (s === undefined) {
@@ -104,7 +132,16 @@ export async function diffAgainst(
 }
 
 export async function cancelImport(sessionId: string): Promise<void> {
-  getSession(sessionId).cancelled = true;
+  const s = sessions.get(sessionId);
+  if (s !== undefined) {
+    s.cancelled = true;
+    return;
+  }
+  if (cancelScopes.has(sessionId)) {
+    cancelledScopes.add(sessionId);
+    return;
+  }
+  throw rpc('session_not_found', `import session ${sessionId} does not exist`);
 }
 
 export async function discardSession(sessionId: string): Promise<void> {

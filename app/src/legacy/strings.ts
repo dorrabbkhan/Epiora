@@ -1,0 +1,50 @@
+// English copy for the legacy import flow (v1.1 plan Task 15). Kept
+// out of `ui/strings.ts` because the routes pass whole fragments to
+// one another; global chrome/errors stay in the shared table.
+export const legacyT = {
+  title: 'Open an Epi Info project',
+  chooseFiles: 'Choose project files',
+  reading: 'Reading project…',
+  browserNotice:
+    'Browser storage is not encrypted. Do not import identifiable data unless you accept this risk.',
+  sqlServerTitle: 'Connect to SQL Server',
+  sqlServerIntro: 'Credentials are used for this import only and are never stored.',
+  server: 'Server',
+  port: 'Port',
+  database: 'Database',
+  user: 'User',
+  password: 'Password',
+  windowsAuth: 'Use Windows authentication',
+  trustCertificate: 'Trust the server certificate',
+  connect: 'Read project',
+  readingTables: 'Reading SQL Server tables…',
+  previewTitle: (name: string) => `Preview ${name}`,
+  previewIntro:
+    'Review every view, field, link, program, check-code block and migration report entry before writing.',
+  views: 'Views',
+  fields: (view: string) => `${view} fields`,
+  links: 'Linked datasets',
+  programs: 'Saved programs',
+  checkCode: 'Check code blocks',
+  report: 'Migration report entries',
+  confirm: 'Confirm import',
+  cancel: 'Cancel import',
+  back: 'Back to project picker',
+  missingPreview: 'This import preview is no longer available. Choose the project files again.',
+  writeProgress: 'Write project',
+  cancelled: 'The import was cancelled; nothing was written.',
+  plainOfferTitle: 'This file is not a recognised Epi Info project.',
+  plainOffer:
+    'Import its tables as plain datasets instead of an Epi Info project.',
+  chooseTables: 'Choose tables to import',
+  reimportTitle: 'Re-import a newer copy',
+  chooseNewer: 'Choose newer copy',
+  reimportIntro:
+    'Diff each keyed view against its latest imported version before creating new versions.',
+  diffTitle: 'Re-import changes',
+  confirmReimport: 'Confirm re-import',
+  noChanges: 'The newer copy has no record or schema changes; no new versions will be created.',
+  sessionBanner: 'Open working views stayed on their source versions.',
+  moveSessions: 'Move working views to new versions',
+  movingSessions: 'Open the analysis workspace to move a working view by replaying its recipe.',
+} as const;

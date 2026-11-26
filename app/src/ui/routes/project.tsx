@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import {
+  Button,
   Cell,
   Column,
   Row,
@@ -7,6 +8,9 @@ import {
   TableBody,
   TableHeader,
 } from '../components';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { dataApi } from '../../worker/client';
 import { useDatasets, useProjects, useRuns } from '../queries';
 import { EmptyState } from '../screens/EmptyState';
 import { OutputLog } from '../screens/analysis/OutputLog';
@@ -38,6 +42,14 @@ export function ProjectScreen({ project }: { project: string }) {
 
 function ProjectView({ projectId, name }: { projectId: string; name: string }) {
   const datasets = useDatasets(projectId);
+  const legacy = useQuery({
+    queryKey: ['legacyProject', projectId],
+    queryFn: () => dataApi.getLegacyProject(projectId),
+  });
+  const [sessionBanner] = useState(
+    () => sessionStorage.getItem(`epiora-reimported:${projectId}`) === '1',
+  );
+  const [moveHelp, setMoveHelp] = useState(false);
   const runs = useRuns(projectId);
   const list = datasets.data;
   const runList = runs.data;
@@ -52,7 +64,29 @@ function ProjectView({ projectId, name }: { projectId: string; name: string }) {
         <Link to="/p/$project/analysis" params={{ project: projectId }}>
           {t.project.analysis}
         </Link>
+        {legacy.data !== null && legacy.data !== undefined && legacy.data.sourceFormat !== 'ei7_sql_server' && (
+          <Link to="/p/$project/reimport" params={{ project: projectId }}>
+            {t.project.reimport}
+          </Link>
+        )}
       </div>
+      {sessionBanner && (
+        <section aria-label="Working views">
+          <p>Open working views stayed on their source versions.</p>
+          {moveHelp ? (
+            <p>Open the analysis workspace to move a working view by replaying its recipe.</p>
+          ) : (
+            <Button
+              onPress={() => {
+                sessionStorage.removeItem(`epiora-reimported:${projectId}`);
+                setMoveHelp(true);
+              }}
+            >
+              Move working views to new versions
+            </Button>
+          )}
+        </section>
+      )}
       <section>
         <h2>{t.project.datasets}</h2>
         {list === undefined ? (

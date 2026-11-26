@@ -7737,3 +7737,9 @@ Files outside the Files block:
   2026-11-26 to mirror `cellValue` (integral → integer), which FORMAT's
   correct `"54.00"` exposed; no tolerance/fixture/expected value changed.
 Supersedes: —
+
+## v1.1 Task 15 — legacy import UI implementation surface
+
+Files outside the Files block: `app/src/worker/legacy.ts`, `app/src/worker/api.ts`, `app/src/worker/client.ts`, `app/src/worker/snapshots.ts`, `app/src/worker/errors.ts`, `app/src/worker/contract.test.ts`, `app/desktop-e2e/smoke.spec.mjs`, and this entry in `docs/decisions.md`.
+
+Reason: Task 13's preview JSON carries counts but no per-field schema, so the UI derives legacy/Epiora field types from snapshot-v2 metadata in `snapshots.ts` and enriches the preview in `worker/legacy.ts`. `worker/api.ts`/`client.ts` expose the already-internal legacy-project identity needed to gate re-import and the SQL Server batch inspect RPC needed by the desktop form. `contract.test.ts` pins those added RPCs. `errors.ts` now honours wasm error objects whose `code` survives the boundary without an `instanceof Error` check; otherwise the plain-database offer cannot recognize `legacy_layout_unknown`. The desktop smoke spec is the only existing home for the task-required desktop smoke assertion.

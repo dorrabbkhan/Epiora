@@ -11,6 +11,7 @@ import { CalcIndexScreen } from './routes/calc-index';
 import { CalcScreen } from './routes/calc';
 import { DatasetScreen } from './routes/dataset';
 import { ImportScreen } from './routes/import';
+import { LegacyImportScreen, LegacyPreviewScreen, LegacyReimportScreen } from './routes/legacy';
 import { ProjectsScreen } from './routes/index';
 import { ProjectScreen } from './routes/project';
 import { SettingsScreen } from './routes/settings';
@@ -81,6 +82,30 @@ const importRoute = createRoute({
   component: ImportScreen,
 });
 
+const legacyRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/legacy',
+  component: LegacyImportScreen,
+});
+
+const legacyPreviewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/legacy/preview/$previewId',
+  component: function LegacyPreviewRoute() {
+    const { previewId } = legacyPreviewRoute.useParams();
+    return <LegacyPreviewScreen previewId={previewId} />;
+  },
+});
+
+const legacyReimportRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/p/$project/reimport',
+  component: function LegacyReimportRoute() {
+    const { project } = legacyReimportRoute.useParams();
+    return <LegacyReimportScreen project={project} />;
+  },
+});
+
 const datasetRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/p/$project/d/$dataset',
@@ -145,6 +170,9 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   projectRoute,
   importRoute,
+  legacyRoute,
+  legacyPreviewRoute,
+  legacyReimportRoute,
   datasetRoute,
   analysisRoute,
   settingsRoute,

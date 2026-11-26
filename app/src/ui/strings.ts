@@ -20,6 +20,7 @@ export const t = {
   },
   projects: {
     title: 'Projects',
+    openLegacy: 'Open an Epi Info project',
     empty: 'No projects yet. Create one to start importing data.',
     create: 'New project',
     createTitle: 'New project',
@@ -38,6 +39,7 @@ export const t = {
     emptyLog: 'No results yet.',
     emptyLogAction: 'Run an analysis',
     importData: 'Import data',
+    reimport: 'Re-import a newer copy',
     analysis: 'Analysis workspace',
     notFound: 'Project not found.',
     versionColumn: 'Current version',

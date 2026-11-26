@@ -37,15 +37,17 @@ import type {
   SessionState,
 } from './lang';
 import * as legacyWorker from './legacy';
-import type { LegacyPreview, RefreshPreview } from './legacy';
+import type { LegacyPreview, RefreshPreview, SqlServerTableInput } from './legacy';
 import { clearSnapshotCache, gridPage, loadEntry, storedSettings } from './snapshots';
 import { withStore } from './store-backend';
 import * as datasets from '../store/repo/datasets';
 import * as projects from '../store/repo/projects';
+import * as legacyRepo from '../store/repo/legacy';
 import * as versions from '../store/repo/versions';
 import type { Project } from '../store/repo/projects';
+import type { LegacyProject as LegacyProjectInfo } from '../store/repo/legacy';
 
-export type { Project };
+export type { LegacyProjectInfo, Project };
 
 export interface DatasetInfo {
   id: string;
@@ -172,6 +174,15 @@ export interface DataApi {
     files: File[],
     codePage?: string,
   ): Promise<LegacyPreview>;
+  /** Desktop SQL Server tables already read as EPTB by the Tauri
+   *  bridge; credentials never cross this RPC. */
+  inspectLegacySqlServer(
+    database: string,
+    tables: SqlServerTableInput[],
+  ): Promise<LegacyPreview>;
+  /** Whether a project came from a legacy import (drives the
+   *  re-import entry point). */
+  getLegacyProject(projectId: string): Promise<LegacyProjectInfo | null>;
   /** Commits a `inspectLegacy` preview — one transaction. */
   commitLegacy(
     previewId: string,
@@ -325,6 +336,12 @@ export const api: DataApi = {
   cancelImport: wire((sessionId) => importer.cancelImport(sessionId)),
   discardSession: wire((sessionId) => importer.discardSession(sessionId)),
   inspectLegacy: wire((files, codePage) => legacyWorker.inspectLegacy(files, codePage)),
+  inspectLegacySqlServer: wire((database, tables) =>
+    legacyWorker.inspectLegacySqlServer(database, tables),
+  ),
+  getLegacyProject: wire((projectId) =>
+    withStore((s) => legacyRepo.project(s, projectId)),
+  ),
   commitLegacy: wire((previewId, onProgress) =>
     withStore((s) => legacyWorker.commitLegacy(s, previewId, onProgress)),
   ),

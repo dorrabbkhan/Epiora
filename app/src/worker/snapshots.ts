@@ -218,6 +218,21 @@ interface ColumnSlice {
   missing: number;
   bitmap: number;
   values: number;
+  prompt?: string;
+  legacyType?: string;
+  legacyName?: string;
+  labelSet?: string;
+}
+
+/** The schema and v2 column metadata of a verified snapshot (v1.1
+ *  legacy preview: legacy type → Epiora type without decoding rows). */
+export interface SnapshotColumnInfo {
+  name: string;
+  type: ValueType;
+  prompt?: string;
+  legacyType?: string;
+  legacyName?: string;
+  labelSet?: string;
 }
 
 const utf8 = new TextDecoder();
@@ -288,19 +303,23 @@ function scan(bytes: Uint8Array): { rowCount: number; columns: ColumnSlice[] } {
       const width = { integer: 8, real: 8, boolean: 1, date: 4, time: 4, date_time: 8 }[type];
       pos += width * rowCount;
     }
+    const info: ColumnSlice = { name, type, missing, bitmap, values };
     if (format === 2) {
       // Meta block: a flag byte (bits 0–3 = prompt, legacy type,
       // legacy name, label-set id) then each flagged `u32`+UTF-8 field.
       const flags = view.getUint8(pos);
       pos += 1;
+      const metaKeys = ['prompt', 'legacyType', 'legacyName', 'labelSet'] as const;
       for (let bit = 0; bit < 4; bit++) {
         if ((flags & (1 << bit)) !== 0) {
           const len = view.getUint32(pos, true);
-          pos += 4 + len;
+          pos += 4;
+          info[metaKeys[bit]!] = utf8.decode(bytes.subarray(pos, pos + len));
+          pos += len;
         }
       }
     }
-    columns.push({ name, type, missing, bitmap, values });
+    columns.push(info);
   }
   return { rowCount, columns };
 }
@@ -358,6 +377,19 @@ export function gridPage(bytes: Uint8Array, offset: number, limit: number): Grid
     rows,
     total: rowCount,
   };
+}
+
+/** Column names, Epiora types and snapshot-v2 metadata without
+ *  materializing any row values. */
+export function snapshotColumns(bytes: Uint8Array): SnapshotColumnInfo[] {
+  return scan(bytes).columns.map(({ name, type, prompt, legacyType, legacyName, labelSet }) => ({
+    name,
+    type,
+    ...(prompt !== undefined ? { prompt } : {}),
+    ...(legacyType !== undefined ? { legacyType } : {}),
+    ...(legacyName !== undefined ? { legacyName } : {}),
+    ...(labelSet !== undefined ? { labelSet } : {}),
+  }));
 }
 
 function popcount(b: number): number {
