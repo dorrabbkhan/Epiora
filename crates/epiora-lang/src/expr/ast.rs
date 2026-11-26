@@ -212,14 +212,14 @@ impl fmt::Display for Lit {
             Self::Text(s) => write!(f, "\"{s}\""),
             Self::Date(days) => {
                 let (y, m, d) = crate::functions::calendar::civil_from_days(*days);
-                write!(f, "{m}/{d}/{y}")
+                write!(f, "{m}/{d}/{y:04}")
             }
             Self::Time(secs) => {
                 write!(f, "{}:{:02}:{:02}", secs / 3600, secs / 60 % 60, secs % 60)
             }
             Self::DateTime(secs) => {
                 let (y, m, d, h, mi, s) = crate::functions::calendar::civil_from_secs(*secs);
-                write!(f, "{m}/{d}/{y} {h}:{mi:02}:{s:02}")
+                write!(f, "{m}/{d}/{y:04} {h}:{mi:02}:{s:02}")
             }
         }
     }

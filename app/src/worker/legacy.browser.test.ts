@@ -21,6 +21,7 @@ import {
   untilStore,
 } from './integration-helpers';
 import type { Store } from '../store/types';
+import { RpcError } from './errors';
 import sampleDbUrl from '../../../fixtures/legacy/golden/reimport/SampleDB.db?url';
 import originalDbUrl from '../../../fixtures/legacy/samples/ei7/Sample/SampleDB.db?url';
 import reimportDbUrl from '../../../fixtures/legacy/golden/reimport/SampleDB.db?url';
@@ -99,6 +100,15 @@ async function makeSchemaAndMissingViewDb(base: ArrayBuffer): Promise<Uint8Array
     return (sqlite3.capi as unknown as DbExport).sqlite3_js_db_export(db, 'main');
   } finally {
     db.close();
+  }
+}
+
+async function rpcDetail(promise: Promise<unknown>): Promise<string | null> {
+  try {
+    await promise;
+    return null;
+  } catch (e) {
+    return e instanceof RpcError ? e.detail : String(e);
   }
 }
 
@@ -320,6 +330,27 @@ describe('legacy .db import', () => {
     );
     await store.close();
   });
+
+
+  it('legacy_preview_is_consumed_on_commit_and_discard_is_typed', async () => {
+    const db = `t-${crypto.randomUUID()}`;
+    const api = spawn(db);
+    const bytes = await fixture(originalDbUrl);
+    const committed = await api.inspectLegacy([
+      new File([new Uint8Array(bytes)], 'SampleDB.db'),
+    ]);
+    await api.commitLegacy(committed.previewId, () => {});
+    expect(await rpcDetail(api.commitLegacy(committed.previewId, () => {}))).toBe('session_not_found');
+    expect(await rpcDetail(api.discardLegacyPreview(committed.previewId))).toBe('session_not_found');
+
+    const discarded = await api.inspectLegacy([
+      new File([new Uint8Array(bytes)], 'SampleDB.db'),
+    ]);
+    await api.discardLegacyPreview(discarded.previewId);
+    expect(await rpcDetail(api.discardLegacyPreview(discarded.previewId))).toBe('session_not_found');
+    expect(await rpcDetail(api.commitLegacy(discarded.previewId, () => {}))).toBe('session_not_found');
+  });
+
 
   it('unchanged_legacy_reimport_writes_nothing', async () => {
     const db = `t-${crypto.randomUUID()}`;

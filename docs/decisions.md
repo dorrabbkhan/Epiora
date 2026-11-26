@@ -7821,3 +7821,30 @@ Files outside the Files block modified by full path:
 - `app/src/worker/legacy-refresh.ts` — re-import schema and missing-view report entries.
 - `app/src/worker/legacy.browser.test.ts` — regression coverage for both worker fixes.
 - `docs/decisions.md` — this entry.
+
+Fix-round-4 exact file accounting. Files block members modified by full path:
+- `app/src/legacy/LegacyPreview.tsx`
+- `app/src/legacy/ReimportDialog.tsx`
+- `app/src/legacy/SqlServerForm.tsx`
+
+Files outside the Files block modified or created by full path:
+- `app/src/legacy/sqlserver.browser.test.ts` — full UI/worker SQL Server sentinel test; the bridge is mocked but the form, preview, worker and OPFS store are real.
+- `app/src/worker/api-legacy.ts` — removes the database argument from the SQL Server inspect RPC and exposes typed preview-discard RPCs.
+- `app/src/worker/client.ts` — typed client wrappers for the changed inspect and discard RPCs.
+- `app/src/worker/contract.test.ts` — pins the added discard RPCs on the worker API surface.
+- `app/src/worker/legacy-plain.ts` — carries the picked data file's SHA-256 through plain-table preview state.
+- `app/src/worker/legacy-records.ts` — writes explicit source provenance instead of reusing a dataset content hash as `source_sha256`.
+- `app/src/worker/legacy-refresh.ts` — carries the re-import file SHA-256 and writes report-only `missing`/`no_key` outcomes without versions.
+- `app/src/worker/legacy.browser.test.ts` — regression coverage for preview consumption/discard.
+- `app/src/worker/legacy-provenance.browser.test.ts` — regression coverage for file provenance and report-only re-import.
+- `app/src/worker/legacy.ts` — computes source-file provenance, uses fixed SQL Server provenance, consumes successful previews and implements typed discard.
+- `crates/epiora-import-wasm/src/lib.rs` — exposes the importer's existing SHA-256 helper to the worker.
+- `crates/epiora-import/src/lib.rs` — makes that existing helper public for the browser binding; no new hash implementation.
+- `crates/epiora-lang/src/expr/ast.rs` — canonical date/date-time literals print zero-padded four-digit years.
+- `crates/epiora-lang/src/expr/lit.rs` — the two-digit-year pivot applies only to one/two-digit year spellings, not padded four-digit spellings.
+- `crates/epiora-lang/src/pgm/print.rs` — the independent program canonical value printer uses the same four-digit years.
+- `crates/epiora-lang/tests/expr_props.proptest-regressions` — preserves the proptest seed that shrinks to `Date(-683004)`.
+- `crates/epiora-lang/tests/expr_props.rs` — fixed regression tests for CI's two minimal failing expressions.
+- `docs/decisions.md` — this entry.
+
+For SQL Server there is no source file to hash. `dataset_versions.source_sha256` is non-null text in the v0.3 schema, so the import stores the empty string as the no-file-bytes value rather than mislabelling a dataset content hash; provenance text is the fixed label `SQL Server import`, never a connection field.

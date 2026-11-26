@@ -45,7 +45,7 @@ export function SqlServerForm() {
         const batches = await bridge.legacySqlServerBatches(conn, name, 50_000);
         payloads.push({ name, batches: batches.map((b) => new Uint8Array(b)) });
       }
-      const preview = await dataApi.inspectLegacySqlServer(database, payloads);
+      const preview = await dataApi.inspectLegacySqlServer(payloads);
       rememberLegacyPreview(preview);
       await navigate({ to: '/legacy/preview/$previewId', params: { previewId: preview.previewId } });
     } catch (e) {

@@ -3,7 +3,7 @@
 // tables become ordinary datasets in a new Epiora project, in one
 // cancellable transaction.
 
-import { legacy } from './engines';
+import { importer, legacy } from './engines';
 import { dataFile, pushFile } from './legacy-eptb';
 import { rpc } from './errors';
 import {
@@ -30,6 +30,7 @@ import type { LegacyHandle } from '@legacy/epiora_legacy_wasm';
 
 interface PlainState {
   sourceName: string;
+  sourceSha256: string;
   tables: string[];
   handle: LegacyHandle;
 }
@@ -53,7 +54,8 @@ export async function inspectPlainLegacy(
       throw rpc('not_found', `${f.name} has no plain tables to import`);
     }
     const previewId = crypto.randomUUID();
-    plainPreviews.set(previewId, { sourceName: f.name, tables, handle: h });
+    const sourceSha256 = (await importer()).sha256(f.bytes);
+    plainPreviews.set(previewId, { sourceName: f.name, sourceSha256, tables, handle: h });
     registerCancelScope(previewId);
     return { previewId, sourceName: f.name, tables };
   } catch (e) {
@@ -112,6 +114,7 @@ export async function commitPlainLegacy(
           version: 1,
           now,
           sourceName: state.sourceName,
+          sourceSha256: state.sourceSha256,
           snapshot: new Uint8Array(mapped.snapshots[i]!),
           rowCount: table.records,
           contentHash: table.hash,

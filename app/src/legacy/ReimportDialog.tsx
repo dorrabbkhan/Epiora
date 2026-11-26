@@ -2,7 +2,7 @@
 // can refresh, and only from a newer copy of the same legacy project.
 // The preview shows per-view counts plus bounded record-level samples
 // before one transaction creates the new versions.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -113,6 +113,17 @@ export function ReimportDialog({ project }: { project: string }) {
   const [busy, setBusy] = useState(false);
   const notRefreshable = legacy.data?.sourceFormat === 'ei7_sql_server';
   const notLegacy = legacy.data === null;
+  const previewId = preview?.previewId ?? null;
+
+  // Close/Cancel and route unmount both abandon the worker-side refresh
+  // preview. After a successful commit the worker has already consumed
+  // it; the typed not-found is intentionally ignored here.
+  useEffect(() => {
+    if (previewId === null) return;
+    return () => {
+      void dataApi.discardRefreshPreview(previewId).catch(() => {});
+    };
+  }, [previewId]);
 
   const inspect = async (files: FileList | null) => {
     if (files === null || files.length === 0 || notLegacy || notRefreshable) return;
@@ -156,6 +167,9 @@ export function ReimportDialog({ project }: { project: string }) {
     };
   });
   const anyChanged = rows.some((row) => row.outcome === 'changed' || row.outcome === 'new');
+  // Missing/no-key outcomes create no versions, but they are not a true
+  // no-op: the user must be able to confirm writing their report markers.
+  const canConfirm = anyChanged || rows.some((row) => row.outcome === 'missing' || row.outcome === 'no key');
 
   return (
     <div>
@@ -201,13 +215,13 @@ export function ReimportDialog({ project }: { project: string }) {
             <RecordSamples key={`${row.id}-samples`} viewName={row.name} diff={row.diff} />
           ))}
           <div className={styles.panel}>
-            {anyChanged && (
+            {canConfirm && (
               <Button onPress={() => void confirm()} isDisabled={busy}>
                 {legacyT.confirmReimport}
               </Button>
             )}
             <Link to="/p/$project" params={{ project }}>
-              {anyChanged ? legacyT.cancel : legacyT.close}
+              {canConfirm ? legacyT.cancel : legacyT.close}
             </Link>
           </div>
         </section>

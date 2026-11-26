@@ -61,14 +61,15 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
     cancelImport: (sessionId) => call(r.cancelImport(sessionId)),
     discardSession: (sessionId) => call(r.discardSession(sessionId)),
     inspectLegacy: (files, codePage) => call(r.inspectLegacy(files, codePage)),
-    inspectLegacySqlServer: (database, tables) =>
-      call(r.inspectLegacySqlServer(database, tables)),
+    inspectLegacySqlServer: (tables) => call(r.inspectLegacySqlServer(tables)),
     getLegacyProject: (projectId) => call(r.getLegacyProject(projectId)),
     commitLegacy: (previewId, onProgress) =>
       call(r.commitLegacy(previewId, Comlink.proxy(onProgress))),
+    discardLegacyPreview: (previewId) => call(r.discardLegacyPreview(previewId)),
     planRefresh: (projectId, files, codePage) =>
       call(r.planRefresh(projectId, files, codePage)),
     commitRefresh: (previewId) => call(r.commitRefresh(previewId)),
+    discardRefreshPreview: (previewId) => call(r.discardRefreshPreview(previewId)),
     inspectPlainLegacy: (files, codePage) => call(r.inspectPlainLegacy(files, codePage)),
     commitPlainLegacy: (previewId, tables, onProgress) =>
       call(r.commitPlainLegacy(previewId, tables, Comlink.proxy(onProgress))),

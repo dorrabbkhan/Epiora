@@ -105,6 +105,15 @@ fn dataset(
     Ok(Dataset::new(id, version, imported.columns.clone())?)
 }
 
+/// `sha256(bytes)` — lowercase hex SHA-256 of raw source bytes, the
+/// same helper the importer uses for `source_sha256`. Legacy containers
+/// are not tabular imports themselves, but their provenance is the same
+/// measurement.
+#[wasm_bindgen(js_name = sha256)]
+pub fn sha256(bytes: &[u8]) -> String {
+    epiora_import::sha256_hex(bytes)
+}
+
 /// `inspect(bytes, fileName)` — detection, effective settings and a
 /// typed preview under default settings (spec §6.1–6.2).
 #[wasm_bindgen(js_name = inspect)]

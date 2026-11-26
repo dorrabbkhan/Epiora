@@ -7,7 +7,7 @@
 // imports live in their own modules and are re-exported for the RPC
 // surface.
 
-import { legacy } from './engines';
+import { importer, legacy } from './engines';
 import { writeLegacyVersion } from './legacy-records';
 import { dataFile, pushFile } from './legacy-eptb';
 import { rpc } from './errors';
@@ -35,6 +35,7 @@ import {
 
 interface PreviewState {
   sourceName: string;
+  sourceSha256: string;
   project: LegacyProjectJson;
   snapshots: Uint8Array[];
 }
@@ -51,12 +52,13 @@ function getPreview(previewId: string): PreviewState {
 
 function makePreview(
   sourceName: string,
+  sourceSha256: string,
   project: Parameters<typeof enrichProject>[0],
   snapshots: Uint8Array[],
 ): LegacyPreview {
   const previewId = crypto.randomUUID();
   const enriched = enrichProject(project, snapshots);
-  previews.set(previewId, { sourceName, project: enriched, snapshots });
+  previews.set(previewId, { sourceName, sourceSha256, project: enriched, snapshots });
   registerCancelScope(previewId);
   return { previewId, project: enriched };
 }
@@ -75,7 +77,8 @@ export async function inspectLegacy(
       snapshots: Uint8Array[];
     };
     const snapshots = mapped.snapshots.map((s) => new Uint8Array(s));
-    return makePreview(f.name, mapped.project, snapshots);
+    const sourceSha256 = (await importer()).sha256(f.bytes);
+    return makePreview(f.name, sourceSha256, mapped.project, snapshots);
   } finally {
     h.free();
   }
@@ -102,10 +105,13 @@ export async function commitLegacy(
       // A released progress proxy must not fail the import.
     }
   };
+  // Re-arm the scope on every attempt: a failed commit keeps the preview
+  // for retry even though its first attempt's scope has been cleared.
+  registerCancelScope(previewId);
   const checkCancel = () => throwWhenCancelled(() => cancelScopeRequested(previewId));
   try {
     await checkCancel();
-    return await store.transaction(async (tx: Tx) => {
+    const projectId = await store.transaction(async (tx: Tx) => {
       await checkCancel();
       emit('write', 0, total);
       const project = await projects.create(tx, p.name, now);
@@ -140,6 +146,7 @@ export async function commitLegacy(
           version: 1,
           now,
           sourceName: state.sourceName,
+          sourceSha256: state.sourceSha256,
           snapshot: state.snapshots[entry.snapshotIndex]!,
           rowCount: entry.records,
           contentHash: entry.hash,
@@ -195,16 +202,25 @@ export async function commitLegacy(
       await checkCancel();
       return project.id;
     });
+    // A successful commit consumes the preview and its snapshots. A
+    // failure keeps it so the user can retry the same inspected import.
+    previews.delete(previewId);
+    return projectId;
   } finally {
     clearCancelScope(previewId);
   }
 }
 
+/** Non-connection provenance for SQL Server imports. No host, database,
+ *  user or password is needed to identify the resulting project. The
+ *  schema requires non-null text, so the empty string is the no-file-bytes
+ *  hash value rather than a reused dataset content hash. */
+const SQL_SERVER_SOURCE_NAME = 'SQL Server import';
+
 /** Desktop SQL Server import (v1.1 Task 15): the main thread has
  *  already read every table as EPTB through the Tauri bridge; this
  *  RPC only maps those batches. Credentials never cross the worker. */
 export async function inspectLegacySqlServer(
-  database: string,
   tables: SqlServerTableInput[],
 ): Promise<LegacyPreview> {
   const leg = await legacy();
@@ -213,7 +229,7 @@ export async function inspectLegacySqlServer(
     for (const table of tables) {
       for (const batch of table.batches) leg.legacyPush(h, table.name, batch);
     }
-    const mapped = leg.legacyMap(h, database, 'ei7_sql_server') as {
+    const mapped = leg.legacyMap(h, SQL_SERVER_SOURCE_NAME, 'ei7_sql_server') as {
       project: Omit<LegacyProjectJson, 'views' | 'datasets'> & {
         views: Omit<LegacyProjectJson['views'][number], 'fields'>[];
         datasets: Omit<LegacyProjectJson['datasets'][number], 'fields'>[];
@@ -221,7 +237,7 @@ export async function inspectLegacySqlServer(
       snapshots: Uint8Array[];
     };
     const snapshots = mapped.snapshots.map((s) => new Uint8Array(s));
-    return makePreview(database, mapped.project, snapshots);
+    return makePreview(SQL_SERVER_SOURCE_NAME, '', mapped.project, snapshots);
   } finally {
     h.free();
   }
@@ -230,7 +246,9 @@ export async function inspectLegacySqlServer(
 /** Frees a preview once the UI is done with it. `commitLegacy` keeps
  *  the preview so a retry after a store failure can still commit. */
 export function discardPreview(previewId: string): void {
+  getPreview(previewId);
   previews.delete(previewId);
+  clearCancelScope(previewId);
 }
 
 export { planRefresh, commitRefresh, discardRefreshPreview } from './legacy-refresh';

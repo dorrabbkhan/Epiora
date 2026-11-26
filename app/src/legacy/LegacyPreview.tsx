@@ -3,7 +3,7 @@
 // fields, links, programs, check-code block counts and the migration
 // report. Confirm commits in one transaction; cancel uses the same
 // `cancelImport` RPC as a CSV import and rolls the transaction back.
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -29,6 +29,7 @@ import styles from './legacy.module.css';
 // explains that and sends the user back instead of inventing a stale
 // preview.
 const cache = new Map<string, LegacyPreviewData>();
+const pendingDiscards = new Map<string, number>();
 
 export function rememberLegacyPreview(preview: LegacyPreviewData): void {
   cache.set(preview.previewId, preview);
@@ -78,6 +79,31 @@ export function LegacyPreview({ previewId }: { previewId: string }) {
   const [progress, setProgress] = useState<ImportProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  // Leaving the preview without confirming abandons the worker-side
+  // inspection (browser Back, the Cancel link, or any other route
+  // change). A successful confirm removes the cache entry first, so this
+  // cleanup does not discard an already-consumed preview.
+  useEffect(() => {
+    const pending = pendingDiscards.get(previewId);
+    if (pending !== undefined) {
+      clearTimeout(pending);
+      pendingDiscards.delete(previewId);
+    }
+    return () => {
+      if (!cache.has(previewId)) return;
+      // StrictMode's development-only effect remount runs this cleanup
+      // immediately before the replacement setup. Deferring one task lets
+      // that setup cancel the discard; a real route unmount cannot.
+      const timeout = window.setTimeout(() => {
+        pendingDiscards.delete(previewId);
+        if (cache.delete(previewId)) {
+          void dataApi.discardLegacyPreview(previewId).catch(() => {});
+        }
+      }, 0);
+      pendingDiscards.set(previewId, timeout);
+    };
+  }, [previewId]);
 
   if (cached === undefined) {
     return (

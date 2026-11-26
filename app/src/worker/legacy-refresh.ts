@@ -3,7 +3,7 @@
 // plan diffs every keyed view. The preview is write-free; commit writes
 // only changed/new versions in one transaction.
 
-import { legacy } from './engines';
+import { importer, legacy } from './engines';
 import { dataFile, pushFile } from './legacy-eptb';
 import { rpc } from './errors';
 import { gridPage, loadEntry } from './snapshots';
@@ -33,6 +33,7 @@ interface RefreshState {
   projectId: string;
   plan: RefreshPlanJson;
   sourceName: string;
+  sourceSha256: string;
   project: LegacyProjectJson;
   snapshots: Uint8Array[];
 }
@@ -145,11 +146,13 @@ export async function planRefresh(
     }
     addAddedRecordIds(out.plan, project, snapshots);
     const previewId = crypto.randomUUID();
+    const sourceSha256 = (await importer()).sha256(f.bytes);
     registerCancelScope(previewId);
     refreshPreviews.set(previewId, {
       projectId,
       plan: out.plan,
       sourceName: f.name,
+      sourceSha256,
       project,
       snapshots,
     });
@@ -173,10 +176,13 @@ export async function commitRefresh(store: Store, previewId: string): Promise<vo
   const checkCancel = () => throwWhenCancelled(() => cancelScopeRequested(previewId));
   try {
     await checkCancel();
-    const writes = rp.plan.views.some(
+    const versionWrites = rp.plan.views.some(
       (v) => typeof v.outcome !== 'string' || v.outcome === 'new',
     );
-    if (!writes) return;
+    const reportOnlyWrites = rp.plan.views.some(
+      (v) => v.outcome === 'missing' || v.outcome === 'no_key',
+    );
+    if (!versionWrites && !reportOnlyWrites) return;
 
     const p = rp.project;
     const now = new Date().toISOString();
@@ -218,6 +224,7 @@ export async function commitRefresh(store: Store, previewId: string): Promise<vo
           version,
           now,
           sourceName: rp.sourceName,
+          sourceSha256: rp.sourceSha256,
           snapshot: rp.snapshots[entry.snapshotIndex]!,
           rowCount: entry.records,
           contentHash: entry.hash,

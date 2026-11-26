@@ -327,7 +327,7 @@ fn non_missing<'a>(table: &'a table::Table, col: usize, missing_codes: &[String]
 }
 
 /// Lowercase hex SHA-256 of the raw input bytes.
-pub(crate) fn sha256_hex(bytes: &[u8]) -> String {
+pub fn sha256_hex(bytes: &[u8]) -> String {
     let digest = sha2::Sha256::digest(bytes);
     let mut hex = String::with_capacity(digest.len() * 2);
     for byte in digest {

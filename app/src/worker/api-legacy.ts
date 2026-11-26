@@ -18,17 +18,18 @@ export interface LegacyDataApi {
   /** Map picked legacy files to a project preview without writing. */
   inspectLegacy(files: File[], codePage?: string): Promise<LegacyPreview>;
   /** Desktop SQL Server tables already read as EPTB by the Tauri bridge. */
-  inspectLegacySqlServer(
-    database: string,
-    tables: SqlServerTableInput[],
-  ): Promise<LegacyPreview>;
+  inspectLegacySqlServer(tables: SqlServerTableInput[]): Promise<LegacyPreview>;
   /** Whether a project came from a legacy import. */
   getLegacyProject(projectId: string): Promise<LegacyProjectInfo | null>;
   /** Commits a `inspectLegacy` preview — one transaction. */
   commitLegacy(previewId: string, onProgress: (p: ImportProgress) => void): Promise<string>;
+  /** Abandons an uncommitted legacy import preview. */
+  discardLegacyPreview(previewId: string): Promise<void>;
   /** Diffs a newer copy of the file against the committed project. */
   planRefresh(projectId: string, files: File[], codePage?: string): Promise<RefreshPreview>;
   commitRefresh(previewId: string): Promise<void>;
+  /** Abandons an uncommitted re-import preview. */
+  discardRefreshPreview(previewId: string): Promise<void>;
   /** Unknown-layout file: list ordinary tables, then import chosen ones. */
   inspectPlainLegacy(files: File[], codePage?: string): Promise<PlainPreview>;
   commitPlainLegacy(
@@ -42,21 +43,25 @@ export interface LegacyDataApi {
 
 export const legacyApi: LegacyDataApi = {
   inspectLegacy: wire((files, codePage) => legacyWorker.inspectLegacy(files, codePage)),
-  inspectLegacySqlServer: wire((database, tables) =>
-    legacyWorker.inspectLegacySqlServer(database, tables),
-  ),
+  inspectLegacySqlServer: wire((tables) => legacyWorker.inspectLegacySqlServer(tables)),
   getLegacyProject: wire((projectId) =>
     withStore((s) => legacyRepo.project(s, projectId)),
   ),
   commitLegacy: wire((previewId, onProgress) =>
     withStore((s) => legacyWorker.commitLegacy(s, previewId, onProgress)),
   ),
+  discardLegacyPreview: wire(async (previewId) => {
+    legacyWorker.discardPreview(previewId);
+  }),
   planRefresh: wire((projectId, files, codePage) =>
     withStore((s) => legacyWorker.planRefresh(s, projectId, files, codePage)),
   ),
   commitRefresh: wire((previewId) =>
     withStore((s) => legacyWorker.commitRefresh(s, previewId)),
   ),
+  discardRefreshPreview: wire(async (previewId) => {
+    legacyWorker.discardRefreshPreview(previewId);
+  }),
   inspectPlainLegacy: wire((files, codePage) => legacyWorker.inspectPlainLegacy(files, codePage)),
   commitPlainLegacy: wire((previewId, tables, onProgress) =>
     withStore((s) => legacyWorker.commitPlainLegacy(s, previewId, tables, onProgress)),

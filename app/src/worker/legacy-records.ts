@@ -27,6 +27,7 @@ export interface LegacyVersionWrite {
   version: number;
   now: string;
   sourceName: string;
+  sourceSha256: string;
   snapshot: Uint8Array;
   rowCount: number;
   contentHash: string;
@@ -74,10 +75,7 @@ export async function writeLegacyVersion(input: LegacyVersionWrite): Promise<voi
       version: input.version,
       now: input.now,
       sourceName: input.sourceName,
-      // The legacy mapper does not hash the container file per dataset;
-      // this keeps the provenance field populated with the same digest
-      // the preview/store path already surfaced for the version.
-      sourceSha256: input.contentHash,
+      sourceSha256: input.sourceSha256,
       importSettings: JSON.stringify(settings),
       coercions: '{}',
       serializedSettings: serializeSettings(settings, stored.schema, snapshotMeta),

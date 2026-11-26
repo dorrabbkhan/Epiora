@@ -27,6 +27,10 @@ import { TYPES_CHECKED } from './contract.types';
 // cannot fetch the `?url` wasm; the browser suite drives the same
 // call unmocked) — what is asserted is the File→bytes conversion and
 // `dataFile` picking the data file over the `.prj` companion.
+vi.mock('@import/epiora_import_wasm', () => ({
+  default: vi.fn().mockResolvedValue(undefined),
+  sha256: vi.fn(() => 'file-sha256'),
+}));
 vi.mock('@legacy/epiora_legacy_wasm', () => ({
   default: vi.fn().mockResolvedValue(undefined),
   legacyNew: vi.fn(() => ({ free: vi.fn() })),
@@ -263,8 +267,10 @@ describe('worker RPC contract', () => {
       'inspectLegacySqlServer',
       'getLegacyProject',
       'commitLegacy',
+      'discardLegacyPreview',
       'planRefresh',
       'commitRefresh',
+      'discardRefreshPreview',
       'inspectPlainLegacy',
       'commitPlainLegacy',
       'moveSessionsToCurrent',
