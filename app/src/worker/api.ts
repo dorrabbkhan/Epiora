@@ -28,6 +28,7 @@ import * as rexport from './export';
 import { rpc, throwWired } from './errors';
 import * as importer from './importer';
 import * as langWorker from './lang';
+import { moveSessionsToCurrent, type MovedSession } from './lang-move';
 import * as langSessionWorker from './lang-session';
 import type {
   DatasetVersion,
@@ -37,7 +38,7 @@ import type {
   SessionState,
 } from './lang';
 import * as legacyWorker from './legacy';
-import type { LegacyPreview, RefreshPreview, SqlServerTableInput } from './legacy';
+import type { LegacyPreview, PlainPreview, RefreshPreview, SqlServerTableInput } from './legacy';
 import { clearSnapshotCache, gridPage, loadEntry, storedSettings } from './snapshots';
 import { withStore } from './store-backend';
 import * as datasets from '../store/repo/datasets';
@@ -125,6 +126,7 @@ export type {
   ProgramEvent,
   ProgramRun,
   RefreshPreview,
+  PlainPreview,
   Session,
   SessionState,
 };
@@ -196,6 +198,17 @@ export interface DataApi {
     codePage?: string,
   ): Promise<RefreshPreview>;
   commitRefresh(previewId: string): Promise<void>;
+  /** Unknown-layout file: list ordinary tables, then import the chosen
+   *  ones as plain datasets (Review Focus 2). */
+  inspectPlainLegacy(files: File[], codePage?: string): Promise<PlainPreview>;
+  commitPlainLegacy(
+    previewId: string,
+    tables: string[],
+    onProgress: (p: ImportProgress) => void,
+  ): Promise<string>;
+  /** Move a project's persisted working views onto current dataset
+   *  versions by replaying their recipes. */
+  moveSessionsToCurrent(projectId: string): Promise<MovedSession[]>;
   /** Cleaning sessions and program runs (v1.1 spec §5–6): session
    *  replays carry the project's stored `dataset_links` (Task 13b),
    *  and `CANCEL READ` closes the session's view, clearing the recipe. */
@@ -350,6 +363,13 @@ export const api: DataApi = {
   ),
   commitRefresh: wire((previewId) =>
     withStore((s) => legacyWorker.commitRefresh(s, previewId)),
+  ),
+  inspectPlainLegacy: wire((files, codePage) => legacyWorker.inspectPlainLegacy(files, codePage)),
+  commitPlainLegacy: wire((previewId, tables, onProgress) =>
+    withStore((s) => legacyWorker.commitPlainLegacy(s, previewId, tables, onProgress)),
+  ),
+  moveSessionsToCurrent: wire((projectId) =>
+    withStore((s) => moveSessionsToCurrent(s, projectId)),
   ),
   openSession: wire((projectId, datasetId, version) =>
     withStore((s) => langWorker.openSession(s, projectId, datasetId, version)),

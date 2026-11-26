@@ -108,7 +108,7 @@ export async function commitImport(
     // sqlite-wasm exec resolves on a microtask, so without an explicit
     // yield the worker's event loop never runs `cancelImport` during a
     // commit — the flag check must yield to be reachable at all.
-    const checkCancel = () => throwWhenCancelled(s.cancelled);
+    const checkCancel = () => throwWhenCancelled(() => s.cancelled);
 
     emit('parse', 0, 1);
     await checkCancel();
@@ -158,6 +158,7 @@ export async function commitImport(
     }
 
     const result = await store.transaction(async (tx) => {
+      await checkCancel();
       const deviceId = await meta.deviceId(tx);
       const importId = crypto.randomUUID();
       let datasetId: string;
@@ -166,6 +167,7 @@ export async function commitImport(
         datasetId = target.datasetId;
         version = dataset!.currentVersion + 1;
       } else {
+        await checkCancel();
         const created = await datasets.create(
           tx,
           {
@@ -180,6 +182,7 @@ export async function commitImport(
         version = 1;
       }
       // Inserted first so every change entry can carry its import_id.
+      await checkCancel();
       await imports.insert(tx, {
         id: importId,
         datasetId,
@@ -297,6 +300,7 @@ export async function commitImport(
       }
 
       emit('snapshot', 0, 1);
+      await checkCancel();
       await versions.insert(tx, {
         datasetId,
         version,
@@ -313,6 +317,9 @@ export async function commitImport(
       );
       await datasets.setCurrentVersion(tx, datasetId, version);
       emit('snapshot', 1, 1);
+      // Last checkpoint before the transaction commits: a cancel that
+      // landed during the snapshot writes still rolls every write back.
+      await checkCancel();
       return { datasetId, version };
     });
     return result;

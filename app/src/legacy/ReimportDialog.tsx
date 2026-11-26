@@ -1,7 +1,7 @@
-// `/p/:project/reimport` (v1.1 spec §4.5/§7.1): a newer copy of the
-// same legacy project is diffed keyed on the stable record key. The
-// screen shows per-view record and schema changes before the one
-// transaction that creates the new versions.
+// `/p/:project/reimport` (v1.1 spec §4.5/§7.1): only a legacy project
+// can refresh, and only from a newer copy of the same legacy project.
+// The preview shows per-view counts plus bounded record-level samples
+// before one transaction creates the new versions.
 import { useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -17,29 +17,17 @@ import {
 } from '../ui/components';
 import { dataApi } from '../worker/client';
 import { RpcError } from '../worker/errors';
+import type { RefreshDiff } from '../worker/legacy';
 import { legacyT } from './strings';
+import { t } from '../ui/strings';
 import styles from './legacy.module.css';
 
-interface DiffFieldChange {
-  record_id?: unknown;
-}
+const SAMPLE_LIMIT = 20;
 
-interface DiffPayload {
-  added: unknown[];
-  removed: unknown[];
-  changed: DiffFieldChange[];
-  unchanged: number;
-  schema: {
-    added_columns: string[];
-    removed_columns: string[];
-    type_changes: { name: string; from: string; to: string }[];
-  };
-}
-
-function diffOf(outcome: unknown): DiffPayload | null {
+function diffOf(outcome: unknown): RefreshDiff | null {
   if (typeof outcome !== 'object' || outcome === null) return null;
   const changed = (outcome as { changed?: unknown }).changed;
-  return typeof changed === 'object' && changed !== null ? (changed as DiffPayload) : null;
+  return typeof changed === 'object' && changed !== null ? (changed as RefreshDiff) : null;
 }
 
 function outcomeText(outcome: unknown): string {
@@ -47,22 +35,70 @@ function outcomeText(outcome: unknown): string {
   return 'changed';
 }
 
-function changedRecords(diff: DiffPayload): number {
-  return new Set(diff.changed.map((c) => String(c.record_id))).size;
+function changedRecords(diff: RefreshDiff): number {
+  return new Set(diff.changed.map((c) => c.record_id)).size;
 }
 
-function schemaText(diff: DiffPayload): string | null {
+function renderValue(v: unknown): string {
+  if (v === null || v === undefined) return '—';
+  if (typeof v === 'object' && 'value' in v) return String((v as { value: unknown }).value);
+  return String(v);
+}
+
+function schemaText(diff: RefreshDiff): string | null {
   const parts = [];
   if (diff.schema.added_columns.length > 0) {
-    parts.push(`Added columns: ${diff.schema.added_columns.join(', ')}`);
+    parts.push(t.import.addedColumns(diff.schema.added_columns));
   }
   if (diff.schema.removed_columns.length > 0) {
-    parts.push(`Removed columns: ${diff.schema.removed_columns.join(', ')}`);
+    parts.push(t.import.removedColumns(diff.schema.removed_columns));
   }
-  for (const change of diff.schema.type_changes) {
-    parts.push(`Type change: ${change.name} ${change.from} → ${change.to}`);
+  if (diff.schema.type_changes.length > 0) {
+    parts.push(t.import.typeChanges(diff.schema.type_changes));
   }
   return parts.length === 0 ? null : parts.join('; ');
+}
+
+function RecordSamples({ viewName, diff }: { viewName: string; diff: RefreshDiff }) {
+  const added = diff.added.slice(0, SAMPLE_LIMIT);
+  const removed = diff.removed.slice(0, SAMPLE_LIMIT);
+  const changed = diff.changed.slice(0, SAMPLE_LIMIT);
+  if (added.length === 0 && removed.length === 0 && changed.length === 0) return null;
+  return (
+    <section className={styles.section} aria-label={`${legacyT.recordSamplesTitle} ${viewName}`}>
+      <h3>{legacyT.recordSamplesTitle}: {viewName}</h3>
+      {added.length > 0 && (
+        <>
+          <h4>{legacyT.addedRecordsTitle}</h4>
+          <ul>
+            {added.map((row, i) => (
+              <li key={`a-${row}`}>{diff.added_records?.[i] ?? legacyT.addedRow(row)}</li>
+            ))}
+          </ul>
+        </>
+      )}
+      {removed.length > 0 && (
+        <>
+          <h4>{legacyT.removedRecordsTitle}</h4>
+          <ul>
+            {removed.map((id) => <li key={`r-${id}`}>{id}</li>)}
+          </ul>
+        </>
+      )}
+      {changed.length > 0 && (
+        <>
+          <h4>{legacyT.changedRecordsTitle}</h4>
+          <ul>
+            {changed.map((c, i) => (
+              <li key={`c-${c.record_id}-${c.field}-${i}`}>
+                {c.record_id} {c.field}: {renderValue(c.old)} → {renderValue(c.new)}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </section>
+  );
 }
 
 export function ReimportDialog({ project }: { project: string }) {
@@ -76,9 +112,10 @@ export function ReimportDialog({ project }: { project: string }) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const notRefreshable = legacy.data?.sourceFormat === 'ei7_sql_server';
+  const notLegacy = legacy.data === null;
 
   const inspect = async (files: FileList | null) => {
-    if (files === null || files.length === 0) return;
+    if (files === null || files.length === 0 || notLegacy || notRefreshable) return;
     setBusy(true);
     setError(null);
     try {
@@ -115,6 +152,7 @@ export function ReimportDialog({ project }: { project: string }) {
       removed: diff?.removed.length ?? 0,
       changed: diff === null ? 0 : changedRecords(diff),
       schema: diff === null ? null : schemaText(diff),
+      diff,
     };
   });
   const anyChanged = rows.some((row) => row.outcome === 'changed' || row.outcome === 'new');
@@ -123,9 +161,10 @@ export function ReimportDialog({ project }: { project: string }) {
     <div>
       <h1>{legacyT.reimportTitle}</h1>
       <p>{legacyT.reimportIntro}</p>
-      {notRefreshable ? (
-        <p role="alert">SQL Server projects are not refreshable; choose a newer `.mdb` or `.db` copy of a file-backed project.</p>
-      ) : (
+      {legacy.isPending && <p>{t.common.loading}</p>}
+      {notLegacy && <p role="alert">{legacyT.notLegacyProject}</p>}
+      {!notLegacy && notRefreshable && <p role="alert">{legacyT.sqlServerNotRefreshable}</p>}
+      {!notLegacy && !notRefreshable && !legacy.isPending && (
         <FileTrigger onSelect={(files) => void inspect(files)}>
           <Button isDisabled={busy}>{legacyT.chooseNewer}</Button>
         </FileTrigger>
@@ -137,11 +176,11 @@ export function ReimportDialog({ project }: { project: string }) {
           {!anyChanged && <p>{legacyT.noChanges}</p>}
           <Table caption={legacyT.diffTitle} aria-label={legacyT.diffTitle}>
             <TableHeader>
-              <Column isRowHeader>View</Column>
-              <Column>Outcome</Column>
-              <Column>Added</Column>
-              <Column>Removed</Column>
-              <Column>Changed</Column>
+              <Column isRowHeader>{legacyT.tableColumnView}</Column>
+              <Column>{legacyT.tableColumnOutcome}</Column>
+              <Column>{legacyT.tableColumnAdded}</Column>
+              <Column>{legacyT.tableColumnRemoved}</Column>
+              <Column>{legacyT.tableColumnChanged}</Column>
             </TableHeader>
             <TableBody items={rows}>
               {(row) => (
@@ -157,6 +196,9 @@ export function ReimportDialog({ project }: { project: string }) {
           </Table>
           {rows.map((row) => row.schema !== null && (
             <p key={row.id} className={styles.schemaNote}>{row.schema}</p>
+          ))}
+          {rows.map((row) => row.diff !== null && (
+            <RecordSamples key={`${row.id}-samples`} viewName={row.name} diff={row.diff} />
           ))}
           <div className={styles.panel}>
             <Button onPress={() => void confirm()} isDisabled={busy}>

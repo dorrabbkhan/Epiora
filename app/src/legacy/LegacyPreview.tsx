@@ -52,9 +52,9 @@ function FieldsTable({ view }: { view: Project['views'][number] }) {
       <div className={styles.tableWrap}>
         <Table caption={label} aria-label={label}>
           <TableHeader>
-            <Column isRowHeader>Field</Column>
-            <Column>Legacy type</Column>
-            <Column>Epiora type</Column>
+            <Column isRowHeader>{legacyT.headers.field}</Column>
+            <Column>{legacyT.headers.legacyType}</Column>
+            <Column>{legacyT.headers.epioraType}</Column>
           </TableHeader>
           <TableBody items={rows}>
             {(field) => (
@@ -102,6 +102,10 @@ export function LegacyPreview({ previewId }: { previewId: string }) {
     // be offered.
     setProgress({ stage: 'write', done: 0, total: Math.max(project.views.length + project.datasets.length, 1) });
     try {
+      // Let the progress/cancel control paint before the commit RPC starts;
+      // otherwise even a physically fast click can only arrive after a small
+      // project has already committed.
+      await new Promise((resolve) => requestAnimationFrame(resolve));
       const projectId = await dataApi.commitLegacy(previewId, setProgress);
       await qc.invalidateQueries();
       cache.delete(previewId);
@@ -142,10 +146,10 @@ export function LegacyPreview({ previewId }: { previewId: string }) {
         <h2>{legacyT.views}</h2>
         <Table caption={legacyT.views} aria-label={legacyT.views}>
           <TableHeader>
-            <Column isRowHeader>View</Column>
-            <Column>Records</Column>
-            <Column>Deleted records</Column>
-            <Column>Key column</Column>
+            <Column isRowHeader>{legacyT.headers.view}</Column>
+            <Column>{legacyT.headers.records}</Column>
+            <Column>{legacyT.headers.deletedRecords}</Column>
+            <Column>{legacyT.headers.keyColumn}</Column>
           </TableHeader>
           <TableBody items={views}>
             {(view) => (
@@ -166,11 +170,11 @@ export function LegacyPreview({ previewId }: { previewId: string }) {
           <h2>{legacyT.links}</h2>
           <Table caption={legacyT.links} aria-label={legacyT.links}>
             <TableHeader>
-              <Column isRowHeader>Parent</Column>
-              <Column>Child</Column>
-              <Column>Child key</Column>
-              <Column>Parent key</Column>
-              <Column>Kind</Column>
+              <Column isRowHeader>{legacyT.headers.parent}</Column>
+              <Column>{legacyT.headers.child}</Column>
+              <Column>{legacyT.headers.childKey}</Column>
+              <Column>{legacyT.headers.parentKey}</Column>
+              <Column>{legacyT.headers.kind}</Column>
             </TableHeader>
             <TableBody items={links}>
               {(link) => (
@@ -192,7 +196,7 @@ export function LegacyPreview({ previewId }: { previewId: string }) {
           <h2>{legacyT.programs}</h2>
           <Table caption={legacyT.programs} aria-label={legacyT.programs}>
             <TableHeader>
-              <Column isRowHeader>Name</Column>
+              <Column isRowHeader>{legacyT.headers.name}</Column>
               <Column>SHA-256</Column>
             </TableHeader>
             <TableBody items={programs}>
@@ -212,8 +216,8 @@ export function LegacyPreview({ previewId }: { previewId: string }) {
           <h2>{legacyT.checkCode}</h2>
           <Table caption={legacyT.checkCode} aria-label={legacyT.checkCode}>
             <TableHeader>
-              <Column isRowHeader>View</Column>
-              <Column>Blocks</Column>
+              <Column isRowHeader>{legacyT.headers.view}</Column>
+              <Column>{legacyT.headers.blocks}</Column>
             </TableHeader>
             <TableBody items={checkCode}>
               {(entry) => (
@@ -231,9 +235,9 @@ export function LegacyPreview({ previewId }: { previewId: string }) {
         <h2>{legacyT.report}</h2>
         <Table caption={legacyT.report} aria-label={legacyT.report}>
           <TableHeader>
-            <Column isRowHeader>Kind</Column>
-            <Column>Item</Column>
-            <Column>Reason</Column>
+            <Column isRowHeader>{legacyT.headers.kind}</Column>
+            <Column>{legacyT.headers.item}</Column>
+            <Column>{legacyT.headers.reason}</Column>
           </TableHeader>
           <TableBody items={report}>
             {(entry) => (

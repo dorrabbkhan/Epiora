@@ -48,12 +48,14 @@ export function cancelScopeRequested(id: string): boolean {
   return cancelledScopes.has(id);
 }
 
-/** Yields once so the cancel RPC can run, then throws the stable
- *  `cancelled` code when `cancelled` is set (shared by CSV and legacy
- *  commits). */
-export async function throwWhenCancelled(cancelled: boolean): Promise<void> {
+/** Yields once so the cancel RPC can run, then reads the live flag and
+ *  throws the stable `cancelled` code when it is set (shared by CSV and
+ *  legacy commits). The callback shape is deliberate: passing a boolean
+ *  captures it before the yield and makes a cancel landing inside that
+ *  yield invisible. */
+export async function throwWhenCancelled(cancelled: () => boolean): Promise<void> {
   await new Promise((r) => setTimeout(r, 0));
-  if (cancelled) throw rpc('cancelled', 'the import was cancelled');
+  if (cancelled()) throw rpc('cancelled', 'the import was cancelled');
 }
 
 export function getSession(sessionId: string): Session {

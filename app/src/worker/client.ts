@@ -69,6 +69,10 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
     planRefresh: (projectId, files, codePage) =>
       call(r.planRefresh(projectId, files, codePage)),
     commitRefresh: (previewId) => call(r.commitRefresh(previewId)),
+    inspectPlainLegacy: (files, codePage) => call(r.inspectPlainLegacy(files, codePage)),
+    commitPlainLegacy: (previewId, tables, onProgress) =>
+      call(r.commitPlainLegacy(previewId, tables, Comlink.proxy(onProgress))),
+    moveSessionsToCurrent: (projectId) => call(r.moveSessionsToCurrent(projectId)),
     openSession: (projectId, datasetId, version) =>
       call(r.openSession(projectId, datasetId, version)),
     applyCommand: (sessionId, commandText) =>

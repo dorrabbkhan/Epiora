@@ -45,6 +45,12 @@ export const t = {
     versionColumn: 'Current version',
     createdColumn: 'Created',
     noVersion: '—',
+    workingViewsLabel: 'Working views',
+    workingViewsBanner: 'Open working views stayed on their source versions.',
+    moveWorkingViews: 'Move working views to new versions',
+    movingWorkingViews: 'Moving working views…',
+    movedWorkingViews: 'Working views moved to the new versions.',
+    moveWorkingViewsFailed: 'A working view could not be replayed on the new version.',
   },
   import: {
     title: 'Import data',
@@ -429,6 +435,8 @@ export const t = {
     not_found: 'The requested item does not exist.',
     hash_mismatch: 'The stored data failed its integrity check.',
     cancelled: 'The import was cancelled.',
+    reimport_not_legacy: 'Only a project imported from Epi Info can be re-imported.',
+    reimport_source_mismatch: 'That file is not a newer copy of this Epi Info project.',
     internal_error: 'Something went wrong.',
   },
 } as const;

@@ -1,11 +1,11 @@
-// Legacy project import and re-import (v1.1 plan Task 13, spec §4.2):
-// the worker turns picked files into EPTB batches — `.mdb`/`.accdb`
-// through the mdbtools wasm module, `.db` through sqlite-wasm + the
-// encoder in `./legacy-eptb` — pushes them into `epiora-legacy-wasm`
-// and keeps the mapped project + snapshots in a preview until
-// `commitLegacy` writes the five store tables plus the view datasets
-// in one transaction. `planRefresh`/`commitRefresh` do the same for a
-// newer copy of an already-imported file.
+// Legacy project import (v1.1 plan Task 13/15, spec §4.2): picked
+// files become EPTB batches — `.mdb`/`.accdb` through the mdbtools
+// wasm module, `.db` through sqlite-wasm + the encoder in
+// `./legacy-eptb` — then `epiora-legacy-wasm` maps them and
+// `commitLegacy` writes project, identity, snapshots, links, programs,
+// check code and report in one transaction. Refresh and plain-table
+// imports live in their own modules and are re-exported for the RPC
+// surface.
 
 import { legacy } from './engines';
 import { dataFile, pushFile } from './legacy-eptb';
@@ -20,65 +20,16 @@ import * as datasets from '../store/repo/datasets';
 import * as legacyRepo from '../store/repo/legacy';
 import * as projects from '../store/repo/projects';
 import * as versions from '../store/repo/versions';
-import { loadEntry, snapshotColumns, type SnapshotColumnInfo } from './snapshots';
 import type { Store, Tx } from '../store/types';
 import type { ImportProgress } from './api';
-
-/** One `project` member of `legacyMap`'s return — the golden
- *  `project.json` vocabulary (plus `key_column`, `text` and
- *  `datasets`, which the store needs). */
-export interface LegacyProjectJson {
-  name: string;
-  legacy_id: string;
-  source_format: string;
-  views: {
-    name: string;
-    records: number;
-    deleted_records: number;
-    hash: string;
-    key_column: string;
-    fields: SnapshotColumnInfo[];
-  }[];
-  datasets: { name: string; records: number; hash: string; fields: SnapshotColumnInfo[] }[];
-  links: {
-    parent: string;
-    child: string;
-    child_key: string;
-    parent_key: string;
-    kind: 'relate' | 'grid';
-  }[];
-  programs: { name: string; text: string; text_sha256: string }[];
-  check_code: { view: string; blocks: number; text: string }[];
-  report: { kind: string; item: string; reason: string }[];
-}
-
-/** `RefreshPlanJson['plan']` — every view's refresh decision. */
-export interface RefreshPlanJson {
-  views: {
-    name: string;
-    outcome:
-      | 'unchanged'
-      | 'missing'
-      | 'new'
-      | 'no_key'
-      | { changed: unknown };
-  }[];
-}
-
-export interface LegacyPreview {
-  previewId: string;
-  project: LegacyProjectJson;
-}
-
-export interface RefreshPreview {
-  previewId: string;
-  plan: RefreshPlanJson;
-  project: LegacyProjectJson;
-}
-
-/** A picked file — the plan's `File[]` spelling — or the equivalent
- *  `{name, bytes}` plain object tests and pre-read callers use. */
-export type FileInput = File | { name: string; bytes: Uint8Array };
+import {
+  enrichProject,
+  toNameBytes,
+  type FileInput,
+  type LegacyPreview,
+  type LegacyProjectJson,
+  type SqlServerTableInput,
+} from './legacy-shared';
 
 interface PreviewState {
   sourceName: string;
@@ -86,21 +37,7 @@ interface PreviewState {
   snapshots: Uint8Array[];
 }
 
-export interface SqlServerTableInput {
-  name: string;
-  batches: Uint8Array[];
-}
-
-interface RefreshState {
-  projectId: string;
-  plan: RefreshPlanJson;
-  sourceName: string;
-  project: LegacyProjectJson;
-  snapshots: Uint8Array[];
-}
-
 const previews = new Map<string, PreviewState>();
-const refreshPreviews = new Map<string, RefreshState>();
 
 function getPreview(previewId: string): PreviewState {
   const p = previews.get(previewId);
@@ -108,38 +45,6 @@ function getPreview(previewId: string): PreviewState {
     throw rpc('session_not_found', `legacy preview ${previewId} does not exist`);
   }
   return p;
-}
-
-/** `File`s read via `arrayBuffer()`; `{name, bytes}` inputs pass
- *  through. Discriminates on `arrayBuffer` — modern `File`s also
- *  carry a `bytes()` method, so `'bytes' in f` cannot tell them
- *  apart. */
-async function toNameBytes(files: FileInput[]): Promise<{ name: string; bytes: Uint8Array }[]> {
-  return Promise.all(
-    files.map(async (f) =>
-      'arrayBuffer' in f ? { name: f.name, bytes: new Uint8Array(await f.arrayBuffer()) } : f,
-    ),
-  );
-}
-
-/** Adds the per-column legacy/Epiora type preview the route shows
- *  before writing. The metadata is read from the snapshots the mapper
- *  just produced — no store write and no row decode. */
-function enrichProject(
-  project: Omit<LegacyProjectJson, 'views' | 'datasets'> & {
-    views: Omit<LegacyProjectJson['views'][number], 'fields'>[];
-    datasets: Omit<LegacyProjectJson['datasets'][number], 'fields'>[];
-  },
-  snapshots: Uint8Array[],
-): LegacyProjectJson {
-  return {
-    ...project,
-    views: project.views.map((v, i) => ({ ...v, fields: snapshotColumns(snapshots[i]!) })),
-    datasets: project.datasets.map((d, j) => ({
-      ...d,
-      fields: snapshotColumns(snapshots[project.views.length + j]!),
-    })),
-  };
 }
 
 function makePreview(
@@ -153,8 +58,6 @@ function makePreview(
   registerCancelScope(previewId);
   return { previewId, project: enriched };
 }
-
-// ---- inspect / commit / refresh ---------------------------------
 
 export async function inspectLegacy(
   files: FileInput[],
@@ -178,7 +81,9 @@ export async function inspectLegacy(
 
 /** One transaction: the project row, its legacy identity, every view
  *  dataset + version 1 snapshot, links, programs, check code and the
- *  migration report. */
+ *  migration report. Every checkpoint reads the live cancel flag after
+ *  yielding; a throw anywhere before the end rolls the transaction
+ *  back. */
 export async function commitLegacy(
   store: Store,
   previewId: string,
@@ -195,18 +100,14 @@ export async function commitLegacy(
       // A released progress proxy must not fail the import.
     }
   };
-  const checkCancel = async () => {
-    await throwWhenCancelled(cancelScopeRequested(previewId));
-    // Keep the cancel RPC reachable on small projects too; sqlite-wasm
-    // writes are fast enough that a bare microtask loop can finish
-    // before the user ever sees the progress control.
-    await new Promise((r) => setTimeout(r, 50));
-  };
+  const checkCancel = () => throwWhenCancelled(() => cancelScopeRequested(previewId));
   try {
     await checkCancel();
     return await store.transaction(async (tx: Tx) => {
+      await checkCancel();
       emit('write', 0, total);
       const project = await projects.create(tx, p.name, now);
+      await checkCancel();
       await legacyRepo.upsertProject(tx, {
         projectId: project.id,
         legacyId: p.legacy_id,
@@ -231,6 +132,7 @@ export async function commitLegacy(
           { projectId: project.id, name, key, settings: '{}' },
           now,
         );
+        await checkCancel();
         await versions.insert(tx, {
           datasetId: d.id,
           version: 1,
@@ -240,6 +142,7 @@ export async function commitLegacy(
           contentHash: hash,
           snapshot,
         });
+        await checkCancel();
         await datasets.setCurrentVersion(tx, d.id, 1);
         idByName.set(name, d.id);
         emit('write', i + 1, total);
@@ -273,6 +176,7 @@ export async function commitLegacy(
         });
       }
       for (const prog of p.programs) {
+        await checkCancel();
         await legacyRepo.insertProgram(tx, {
           id: crypto.randomUUID(),
           projectId: project.id,
@@ -284,6 +188,7 @@ export async function commitLegacy(
       for (const c of p.check_code) {
         const datasetId = idByName.get(c.view);
         if (datasetId !== undefined) {
+          await checkCancel();
           await legacyRepo.upsertCheckCode(tx, {
             projectId: project.id,
             datasetId,
@@ -292,12 +197,16 @@ export async function commitLegacy(
           });
         }
       }
+      await checkCancel();
       await legacyRepo.insertMigrationReport(tx, {
         projectId: project.id,
         version: 1,
         json: JSON.stringify(p.report),
       });
       emit('snapshot', 1, 1);
+      // Last checkpoint before commit: cancellation remains a complete
+      // rollback even when it lands during the final report write.
+      await checkCancel();
       return project.id;
     });
   } finally {
@@ -332,128 +241,25 @@ export async function inspectLegacySqlServer(
   }
 }
 
-/** `previous` packets for `legacyRefreshPlan`: one
- *  `u32 name_len | name | u32 version | snapshot` per committed view
- *  dataset. */
-function previousPacket(name: string, version: number, snapshot: Uint8Array): Uint8Array {
-  const nb = new TextEncoder().encode(name);
-  const out = new Uint8Array(4 + nb.length + 4 + snapshot.length);
-  const dv = new DataView(out.buffer);
-  dv.setUint32(0, nb.length, true);
-  out.set(nb, 4);
-  dv.setUint32(4 + nb.length, version, true);
-  out.set(snapshot, 4 + nb.length + 4);
-  return out;
-}
-
-export async function planRefresh(
-  store: Store,
-  projectId: string,
-  files: FileInput[],
-  codePage?: string,
-): Promise<RefreshPreview> {
-  const leg = await legacy();
-  const h = leg.legacyNew();
-  try {
-    const f = dataFile(await toNameBytes(files));
-    const format = await pushFile(leg, h, f.name, f.bytes, codePage);
-    const prev: Uint8Array[] = [];
-    for (const d of await datasets.listByProject(store, projectId)) {
-      const entry = await loadEntry(store, d.id, d.currentVersion);
-      prev.push(previousPacket(d.name, d.currentVersion, entry.bytes));
-    }
-    const out = leg.legacyRefreshPlan(h, prev, format) as {
-      plan: RefreshPlanJson;
-      project: LegacyProjectJson;
-      snapshots: Uint8Array[];
-    };
-    const previewId = crypto.randomUUID();
-    const snapshots = out.snapshots.map((s) => new Uint8Array(s));
-    const project = enrichProject(out.project, snapshots);
-    refreshPreviews.set(previewId, {
-      projectId,
-      plan: out.plan,
-      sourceName: f.name,
-      project,
-      snapshots,
-    });
-    return { previewId, plan: out.plan, project };
-  } finally {
-    h.free();
-  }
-}
-
-/** Writes a new version for every `changed`/`new` view of a
- *  `planRefresh` preview. `missing` views keep their committed data
- *  untouched (spec §4.2 re-import semantics). */
-export async function commitRefresh(store: Store, previewId: string): Promise<void> {
-  const rp = refreshPreviews.get(previewId);
-  if (rp === undefined) {
-    throw rpc('session_not_found', `refresh preview ${previewId} does not exist`);
-  }
-  const p = rp.project;
-  const now = new Date().toISOString();
-  await store.transaction(async (tx: Tx) => {
-    const existing = new Map(
-      (await datasets.listByProject(tx, rp.projectId)).map((d) => [d.name, d]),
-    );
-    const index = new Map(p.views.map((v, i) => [v.name, i]));
-    for (const v of rp.plan.views) {
-      const outcome = typeof v.outcome === 'string' ? v.outcome : 'changed';
-      if (outcome !== 'changed' && outcome !== 'new') continue;
-      const i = index.get(v.name);
-      if (i === undefined) continue;
-      const view = p.views[i]!;
-      const snap = rp.snapshots[i]!;
-      const prev = existing.get(v.name);
-      if (outcome === 'new' || prev === undefined) {
-        const key =
-          view.key_column === ''
-            ? '"row_position"'
-            : JSON.stringify({ column: { name: view.key_column } });
-        const d = await datasets.create(
-          tx,
-          { projectId: rp.projectId, name: v.name, key, settings: '{}' },
-          now,
-        );
-        await versions.insert(tx, {
-          datasetId: d.id,
-          version: 1,
-          sourceName: rp.sourceName,
-          sourceSha256: view.hash,
-          rowCount: view.records,
-          contentHash: view.hash,
-          snapshot: snap,
-        });
-        await datasets.setCurrentVersion(tx, d.id, 1);
-      } else {
-        const version = prev.currentVersion + 1;
-        await versions.insert(tx, {
-          datasetId: prev.id,
-          version,
-          sourceName: rp.sourceName,
-          sourceSha256: view.hash,
-          rowCount: view.records,
-          contentHash: view.hash,
-          snapshot: snap,
-        });
-        await datasets.setCurrentVersion(tx, prev.id, version);
-      }
-    }
-    const report = await legacyRepo.latestMigrationReport(tx, rp.projectId);
-    await legacyRepo.insertMigrationReport(tx, {
-      projectId: rp.projectId,
-      version: (report?.version ?? 0) + 1,
-      json: JSON.stringify(p.report),
-    });
-  });
-  refreshPreviews.delete(previewId);
-}
-
-/** Frees a preview once the UI is done with it (cancel or refresh
- *  discard). `commitLegacy` keeps the preview so a retry after a
- *  store failure can still commit. */
+/** Frees a preview once the UI is done with it. `commitLegacy` keeps
+ *  the preview so a retry after a store failure can still commit. */
 export function discardPreview(previewId: string): void {
   previews.delete(previewId);
-  refreshPreviews.delete(previewId);
 }
+
+export { planRefresh, commitRefresh, discardRefreshPreview } from './legacy-refresh';
+export {
+  inspectPlainLegacy,
+  commitPlainLegacy,
+  discardPlainPreview,
+} from './legacy-plain';
+export type {
+  FileInput,
+  LegacyPreview,
+  LegacyProjectJson,
+  PlainPreview,
+  RefreshDiff,
+  RefreshPlanJson,
+  RefreshPreview,
+  SqlServerTableInput,
+} from './legacy-shared';

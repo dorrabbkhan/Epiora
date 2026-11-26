@@ -7740,6 +7740,21 @@ Supersedes: —
 
 ## v1.1 Task 15 — legacy import UI implementation surface
 
-Files outside the Files block: `app/src/worker/legacy.ts`, `app/src/worker/api.ts`, `app/src/worker/client.ts`, `app/src/worker/snapshots.ts`, `app/src/worker/errors.ts`, `app/src/worker/contract.test.ts`, `app/desktop-e2e/smoke.spec.mjs`, and this entry in `docs/decisions.md`.
+Files outside the Files block:
+- `app/src/worker/legacy.ts` — legacy worker orchestration; the plan named only `importer.ts` and `commit.ts` among worker files.
+- `app/src/worker/legacy-shared.ts` — shared legacy types/enrichment used while splitting `legacy.ts` below the file-size rule.
+- `app/src/worker/legacy-refresh.ts` — re-import planning, identity enforcement and version writes.
+- `app/src/worker/legacy-plain.ts` — plain-table preview and cancellable import for unknown-layout files.
+- `app/src/worker/api.ts` — exposes legacy identity, SQL Server inspect, plain-table import and working-view move RPCs.
+- `app/src/worker/client.ts` — typed client wrappers for those RPCs.
+- `app/src/worker/snapshots.ts` — snapshot-v2 metadata/page helpers used by preview enrichment and added-record ids.
+- `app/src/worker/errors.ts` — typed wasm error propagation plus the re-import identity error codes.
+- `app/src/worker/contract.test.ts` — pins the added RPCs and error-code message coverage.
+- `app/src/worker/lang.ts` — exports the existing replay machinery needed by the move.
+- `app/src/worker/lang-move.ts` — implements the working-view move through the existing Task 13 replay machinery.
+- `app/src/legacy/mdb.ts` — resolves the mdb wasm asset relative to the worker origin; required for any real `.mdb` import in the app.
+- `app/desktop-e2e/smoke.spec.mjs` — existing home for the task-required desktop smoke assertion.
+- `crates/epiora-legacy-wasm/src/lib.rs` — exposes source table names and converts selected plain EPTB tables into dataset snapshots.
+- `docs/decisions.md` — this entry.
 
-Reason: Task 13's preview JSON carries counts but no per-field schema, so the UI derives legacy/Epiora field types from snapshot-v2 metadata in `snapshots.ts` and enriches the preview in `worker/legacy.ts`. `worker/api.ts`/`client.ts` expose the already-internal legacy-project identity needed to gate re-import and the SQL Server batch inspect RPC needed by the desktop form. `contract.test.ts` pins those added RPCs. `errors.ts` now honours wasm error objects whose `code` survives the boundary without an `instanceof Error` check; otherwise the plain-database offer cannot recognize `legacy_layout_unknown`. The desktop smoke spec is the only existing home for the task-required desktop smoke assertion.
+Reason: Task 13's preview JSON carries counts but no per-field schema, so the UI derives legacy/Epiora field types from snapshot-v2 metadata in `snapshots.ts` and enriches the preview in the legacy worker. `worker/api.ts`/`client.ts` expose the already-internal legacy-project identity needed to gate re-import, the SQL Server batch inspect RPC needed by the desktop form, and the Review Focus RPCs. `contract.test.ts` pins those added RPCs. `errors.ts` honours wasm error objects whose `code` survives the boundary and carries typed re-import identity errors. `lang.ts` is the owner of session memory/replay, so moving working views belongs there. The desktop smoke spec is the only existing home for the task-required desktop smoke assertion.

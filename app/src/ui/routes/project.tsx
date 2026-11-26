@@ -49,7 +49,7 @@ function ProjectView({ projectId, name }: { projectId: string; name: string }) {
   const [sessionBanner] = useState(
     () => sessionStorage.getItem(`epiora-reimported:${projectId}`) === '1',
   );
-  const [moveHelp, setMoveHelp] = useState(false);
+  const [moveState, setMoveState] = useState<'idle' | 'moving' | 'done' | 'error'>('idle');
   const runs = useRuns(projectId);
   const list = datasets.data;
   const runList = runs.data;
@@ -71,20 +71,27 @@ function ProjectView({ projectId, name }: { projectId: string; name: string }) {
         )}
       </div>
       {sessionBanner && (
-        <section aria-label="Working views">
-          <p>Open working views stayed on their source versions.</p>
-          {moveHelp ? (
-            <p>Open the analysis workspace to move a working view by replaying its recipe.</p>
-          ) : (
+        <section aria-label={t.project.workingViewsLabel}>
+          <p>{t.project.workingViewsBanner}</p>
+          {moveState === 'done' && <p>{t.project.movedWorkingViews}</p>}
+          {moveState === 'error' && <p role="alert">{t.project.moveWorkingViewsFailed}</p>}
+          {(moveState === 'idle' || moveState === 'error') && (
             <Button
               onPress={() => {
-                sessionStorage.removeItem(`epiora-reimported:${projectId}`);
-                setMoveHelp(true);
+                setMoveState('moving');
+                void dataApi.moveSessionsToCurrent(projectId).then(
+                  () => {
+                    sessionStorage.removeItem(`epiora-reimported:${projectId}`);
+                    setMoveState('done');
+                  },
+                  () => setMoveState('error'),
+                );
               }}
             >
-              Move working views to new versions
+              {t.project.moveWorkingViews}
             </Button>
           )}
+          {moveState === 'moving' && <p>{t.project.movingWorkingViews}</p>}
         </section>
       )}
       <section>

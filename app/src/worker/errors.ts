@@ -103,6 +103,8 @@ export const WORKER_ERROR_CODES = [
   'not_found',
   'hash_mismatch',
   'cancelled',
+  'reimport_not_legacy',
+  'reimport_source_mismatch',
   'internal_error',
 ] as const;
 
@@ -119,6 +121,8 @@ const WORKER_CATEGORY: Record<(typeof WORKER_ERROR_CODES)[number], RpcErrorCode>
   not_found: 'StoreError',
   hash_mismatch: 'HashMismatch',
   cancelled: 'Cancelled',
+  reimport_not_legacy: 'ImportError',
+  reimport_source_mismatch: 'ImportError',
   internal_error: 'StoreError',
 };
 
