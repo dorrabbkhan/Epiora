@@ -7,12 +7,20 @@ import { legacy } from './engines';
 import { dataFile, pushFile } from './legacy-eptb';
 import { rpc } from './errors';
 import { gridPage, loadEntry } from './snapshots';
+import { writeLegacyVersion } from './legacy-records';
 import * as datasets from '../store/repo/datasets';
 import * as legacyRepo from '../store/repo/legacy';
-import * as versions from '../store/repo/versions';
 import type { Store, Tx } from '../store/types';
 import {
+  cancelScopeRequested,
+  clearCancelScope,
+  registerCancelScope,
+  throwWhenCancelled,
+} from './importer';
+import {
   enrichProject,
+  projectEntries,
+  recordKeyJson,
   toNameBytes,
   type FileInput,
   type LegacyProjectJson,
@@ -64,17 +72,17 @@ function sameLegacyProject(
  *  the key column out of the new snapshot. The indices alone are not a
  *  record-level preview; removed and changed entries already carry ids. */
 function addAddedRecordIds(plan: RefreshPlanJson, project: LegacyProjectJson, snapshots: Uint8Array[]): void {
-  const index = new Map(project.views.map((v, i) => [v.name, i]));
+  const index = new Map(projectEntries(project).map((entry) => [entry.name, entry]));
   for (const view of plan.views) {
     if (typeof view.outcome === 'string') continue;
     const diff = view.outcome.changed;
-    const i = index.get(view.name);
-    if (i === undefined || diff.added.length === 0) continue;
-    const meta = project.views[i]!;
-    const keyIndex = gridPage(snapshots[i]!, 0, 0).columns.findIndex((c) => c.name === meta.key_column);
+    const entry = index.get(view.name);
+    if (entry === undefined || diff.added.length === 0) continue;
+    const snapshot = snapshots[entry.snapshotIndex]!;
+    const keyIndex = gridPage(snapshot, 0, 0).columns.findIndex((c) => c.name === entry.keyColumn);
     if (keyIndex < 0) continue;
     const maxRow = Math.max(...diff.added);
-    const page = gridPage(snapshots[i]!, 0, maxRow + 1);
+    const page = gridPage(snapshot, 0, maxRow + 1);
     diff.added_records = diff.added.map((row) => page.rows[row]?.[keyIndex] ?? null);
   }
 }
@@ -114,6 +122,7 @@ export async function planRefresh(
     }
     addAddedRecordIds(out.plan, project, snapshots);
     const previewId = crypto.randomUUID();
+    registerCancelScope(previewId);
     refreshPreviews.set(previewId, {
       projectId,
       plan: out.plan,
@@ -127,73 +136,98 @@ export async function planRefresh(
   }
 }
 
-/** Writes a new version for every `changed`/`new` view of a
- *  `planRefresh` preview. `missing` views keep their committed data
- *  untouched (spec §4.2 re-import semantics). */
+/** Writes a new version for every `changed`/`new` view or grid child
+ *  of a `planRefresh` preview through the canonical v0.3 write path.
+ *  `missing` views keep their committed data untouched; an unchanged
+ *  re-import writes nothing at all — no version, imports row or report
+ *  row (spec §4.5). Cancellation throws inside the one transaction and
+ *  rolls it back. */
 export async function commitRefresh(store: Store, previewId: string): Promise<void> {
   const rp = refreshPreviews.get(previewId);
   if (rp === undefined) {
     throw rpc('session_not_found', `refresh preview ${previewId} does not exist`);
   }
-  const p = rp.project;
-  const now = new Date().toISOString();
-  await store.transaction(async (tx: Tx) => {
-    const existing = new Map(
-      (await datasets.listByProject(tx, rp.projectId)).map((d) => [d.name, d]),
+  const checkCancel = () => throwWhenCancelled(() => cancelScopeRequested(previewId));
+  try {
+    await checkCancel();
+    const writes = rp.plan.views.some(
+      (v) => typeof v.outcome !== 'string' || v.outcome === 'new',
     );
-    const index = new Map(p.views.map((v, i) => [v.name, i]));
-    for (const v of rp.plan.views) {
-      const outcome = typeof v.outcome === 'string' ? v.outcome : 'changed';
-      if (outcome !== 'changed' && outcome !== 'new') continue;
-      const i = index.get(v.name);
-      if (i === undefined) continue;
-      const view = p.views[i]!;
-      const snap = rp.snapshots[i]!;
-      const prev = existing.get(v.name);
-      if (outcome === 'new' || prev === undefined) {
-        const key =
-          view.key_column === ''
-            ? '"row_position"'
-            : JSON.stringify({ column: { name: view.key_column } });
-        const d = await datasets.create(
+    if (!writes) return;
+
+    const p = rp.project;
+    const now = new Date().toISOString();
+    await store.transaction(async (tx: Tx) => {
+      const existing = new Map(
+        (await datasets.listByProject(tx, rp.projectId)).map((d) => [d.name, d]),
+      );
+      const entries = new Map(projectEntries(p).map((entry) => [entry.name, entry]));
+      for (const v of rp.plan.views) {
+        const changed = typeof v.outcome === 'string' ? null : v.outcome.changed;
+        const isNew = v.outcome === 'new';
+        if (changed === null && !isNew) continue;
+        const entry = entries.get(v.name);
+        if (entry === undefined) continue;
+        const prev = existing.get(v.name);
+        let datasetId: string;
+        let version: number;
+        if (isNew || prev === undefined) {
+          await checkCancel();
+          const d = await datasets.create(
+            tx,
+            {
+              projectId: rp.projectId,
+              name: v.name,
+              key: recordKeyJson(entry.keyColumn),
+              settings: '{}',
+            },
+            now,
+          );
+          datasetId = d.id;
+          version = 1;
+        } else {
+          datasetId = prev.id;
+          version = prev.currentVersion + 1;
+        }
+        await writeLegacyVersion({
           tx,
-          { projectId: rp.projectId, name: v.name, key, settings: '{}' },
-          now,
-        );
-        await versions.insert(tx, {
-          datasetId: d.id,
-          version: 1,
-          sourceName: rp.sourceName,
-          sourceSha256: view.hash,
-          rowCount: view.records,
-          contentHash: view.hash,
-          snapshot: snap,
-        });
-        await datasets.setCurrentVersion(tx, d.id, 1);
-      } else {
-        const version = prev.currentVersion + 1;
-        await versions.insert(tx, {
-          datasetId: prev.id,
+          datasetId,
           version,
+          now,
           sourceName: rp.sourceName,
-          sourceSha256: view.hash,
-          rowCount: view.records,
-          contentHash: view.hash,
-          snapshot: snap,
+          snapshot: rp.snapshots[entry.snapshotIndex]!,
+          rowCount: entry.records,
+          contentHash: entry.hash,
+          keyColumn: entry.keyColumn,
+          diff: changed,
+          checkCancel,
         });
-        await datasets.setCurrentVersion(tx, prev.id, version);
       }
-    }
-    const report = await legacyRepo.latestMigrationReport(tx, rp.projectId);
-    await legacyRepo.insertMigrationReport(tx, {
-      projectId: rp.projectId,
-      version: (report?.version ?? 0) + 1,
-      json: JSON.stringify(p.report),
+      const reportEntries = [...p.report];
+      for (const v of rp.plan.views) {
+        if (v.outcome === 'no_key') {
+          reportEntries.push({
+            kind: 'view_not_refreshed',
+            item: v.name,
+            reason: 'no GlobalRecordId or UniqueKey record key; left unchanged',
+          });
+        }
+      }
+      const report = await legacyRepo.latestMigrationReport(tx, rp.projectId);
+      await legacyRepo.insertMigrationReport(tx, {
+        projectId: rp.projectId,
+        version: (report?.version ?? 0) + 1,
+        json: JSON.stringify(reportEntries),
+      });
+      await checkCancel();
     });
-  });
-  refreshPreviews.delete(previewId);
+  } finally {
+    refreshPreviews.delete(previewId);
+    clearCancelScope(previewId);
+  }
 }
 
 export function discardRefreshPreview(previewId: string): void {
   refreshPreviews.delete(previewId);
+  clearCancelScope(previewId);
 }

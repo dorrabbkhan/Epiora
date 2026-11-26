@@ -30,6 +30,7 @@
 
 .section {
   margin-block-start: var(--ep-space-lg);
+  overflow-x: auto;
 }
 
 .schemaNote {

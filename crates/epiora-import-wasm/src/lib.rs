@@ -299,6 +299,8 @@ pub fn dataset_from_records_wasm(
         .map_err(|e| js_error(&e))
 }
 
+mod snapshot_records;
+
 #[cfg(all(test, feature = "ts"))]
 mod export {
     use ts_rs::{Config, TS};

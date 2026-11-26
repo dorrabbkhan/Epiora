@@ -23,6 +23,7 @@ import {
   useRenameProject,
 } from '../queries';
 import { EmptyState } from '../screens/EmptyState';
+import { legacyT } from '../../legacy/strings';
 import { t } from '../strings';
 import styles from './routes.module.css';
 import { RpcError } from '../../worker/errors';
@@ -138,7 +139,7 @@ export function ProjectsScreen() {
     <div className={styles.page}>
       <h1>{t.projects.title}</h1>
       <div className={styles.actions}>
-        <Link to="/legacy">{t.projects.openLegacy}</Link>
+        <Link to="/legacy">{legacyT.openProject}</Link>
       </div>
       <div className={styles.actions}>
         <ProjectNameDialog

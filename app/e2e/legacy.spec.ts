@@ -5,51 +5,19 @@ import { fileURLToPath } from 'node:url';
 import { spawn, type ChildProcess } from 'node:child_process';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { expectNoA11yViolations } from './helpers/axe';
-
-const SAMPLE_DB = fileURLToPath(
-  new URL('../../fixtures/legacy/samples/ei7/Sample/SampleDB.db', import.meta.url),
-);
-const SAMPLE_PRJ = fileURLToPath(
-  new URL('../../fixtures/legacy/samples/ei7/Sample/Sample.prj', import.meta.url),
-);
-const REIMPORT_DB = fileURLToPath(
-  new URL('../../fixtures/legacy/golden/reimport/SampleDB.db', import.meta.url),
-);
-const PLAIN_MDB = fileURLToPath(
-  new URL('../../fixtures/legacy/samples/ei3/HospitalPoints.mdb', import.meta.url),
-);
-const MISMATCH_DB = fileURLToPath(
-  new URL('../../fixtures/legacy/samples/ei7/BeefPrevention/BeefPrevention.db', import.meta.url),
-);
-const VITE = new URL('../node_modules/vite/bin/vite.js', import.meta.url);
+import {
+  MISMATCH_DB,
+  PLAIN_MDB,
+  REIMPORT_DB,
+  SAMPLE_DB,
+  chooseFiles,
+  chooseReimportFile,
+  importSample,
+  walkToPreview,
+} from './helpers/legacy';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-async function chooseFiles(page: Page, paths: string[]): Promise<void> {
-  const chooser = page.waitForEvent('filechooser');
-  await page.getByRole('button', { name: 'Choose project files' }).click();
-  await (await chooser).setFiles(paths);
-}
-
-async function walkToPreview(page: Page, paths = [SAMPLE_PRJ, SAMPLE_DB]): Promise<void> {
-  await page.goto('/legacy');
-  await chooseFiles(page, paths);
-  await expect(page.getByRole('heading', { name: /Preview SQLiteSample2/ })).toBeVisible();
-}
-
-async function importSample(page: Page): Promise<string> {
-  await walkToPreview(page);
-  await page.getByRole('button', { name: 'Confirm import' }).click();
-  await expect(page).toHaveURL(/\/p\/[^/]+$/, { timeout: 60_000 });
-  await expect(page.getByRole('heading', { name: 'SQLiteSample2' })).toBeVisible();
-  return page.url().split('/p/')[1]!;
-}
-
-async function chooseReimportFile(page: Page, path: string): Promise<void> {
-  const chooser = page.waitForEvent('filechooser');
-  await page.getByRole('button', { name: 'Choose newer copy' }).click();
-  await (await chooser).setFiles(path);
-}
+const VITE = new URL('../node_modules/vite/bin/vite.js', import.meta.url);
 
 async function startPreview(workerIndex: number): Promise<{ url: string; proc: ChildProcess }> {
   const port = 4600 + workerIndex;
@@ -108,6 +76,15 @@ test('imports_sample_project_with_labels_and_links', async ({ page }) => {
   await expect(page.getByRole('row', { name: /Oswego/ })).toContainText('v1');
   await expectNoA11yViolations(page, 'imported legacy project');
 });
+
+for (const colorScheme of ['light', 'dark'] as const) {
+  test(`legacy_preview_axe_${colorScheme}`, async ({ page }) => {
+    test.setTimeout(90_000);
+    await page.emulateMedia({ colorScheme });
+    await walkToPreview(page);
+    await expectNoA11yViolations(page, `legacy preview ${colorScheme}`);
+  });
+}
 
 test('preview_lists_report_entries_before_writing', async ({ page }) => {
   test.setTimeout(90_000);
@@ -186,6 +163,29 @@ test('reimport_shows_diff_and_creates_versions', async ({ page }) => {
   await page.getByRole('button', { name: 'Confirm re-import' }).click();
   await expect(page.getByRole('heading', { name: 'SQLiteSample2' })).toBeVisible({ timeout: 60_000 });
   await expect(page.getByRole('row', { name: /Oswego/ })).toContainText('v2');
+});
+
+test('reimporting_the_identical_file_is_a_noop_and_offers_only_close', async ({ page }) => {
+  test.setTimeout(120_000);
+  const projectId = await importSample(page);
+  const before = await page.evaluate(async (pid) => {
+    const datasets = await window.dataApi.listDatasets(pid);
+    return datasets.map((d) => `${d.name}:v${d.currentVersion}`).sort();
+  }, projectId);
+  await page.goto(`/p/${projectId}/reimport`);
+  await chooseReimportFile(page, SAMPLE_DB);
+
+  await expect(page.getByText('no record or schema changes')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Confirm re-import' })).toHaveCount(0);
+  const close = page.getByRole('link', { name: 'Close' });
+  await expect(close).toBeVisible();
+  await close.click();
+  await expect(page.getByRole('heading', { name: 'SQLiteSample2' })).toBeVisible();
+  const after = await page.evaluate(async (pid) => {
+    const datasets = await window.dataApi.listDatasets(pid);
+    return datasets.map((d) => `${d.name}:v${d.currentVersion}`).sort();
+  }, projectId);
+  expect(after).toEqual(before);
 });
 
 test('reimport_keeps_open_session_on_old_version', async ({ page }) => {

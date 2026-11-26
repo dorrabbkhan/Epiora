@@ -13,8 +13,17 @@
 import sqlite3InitModule, { type Sqlite3Static } from '@sqlite.org/sqlite-wasm';
 import sqlite3WasmUrl from '@sqlite.org/sqlite-wasm/sqlite3.wasm?url';
 import { afterEach, describe, expect, it } from 'vitest';
-import { fixture, spawn, terminateSpawned } from './integration-helpers';
+import {
+  fixture,
+  openHarness,
+  spawn,
+  terminateSpawned,
+  untilStore,
+} from './integration-helpers';
+import type { Store } from '../store/types';
 import sampleDbUrl from '../../../fixtures/legacy/golden/reimport/SampleDB.db?url';
+import originalDbUrl from '../../../fixtures/legacy/samples/ei7/Sample/SampleDB.db?url';
+import reimportDbUrl from '../../../fixtures/legacy/golden/reimport/SampleDB.db?url';
 
 afterEach(terminateSpawned);
 
@@ -62,6 +71,50 @@ async function makeChunkMixDb(base: ArrayBuffer): Promise<Uint8Array> {
   }
 }
 
+async function countWhere(store: Store, sql: string, params: (string | number)[] = []): Promise<number> {
+  const rows = await store.query(sql, params);
+  return Number(rows[0]!.n);
+}
+
+async function storeShape(store: Store) {
+  const tables = [
+    'projects',
+    'datasets',
+    'dataset_versions',
+    'records',
+    'changes',
+    'imports',
+    'legacy_projects',
+    'dataset_links',
+    'programs',
+    'check_code',
+    'migration_reports',
+  ];
+  const counts: Record<string, number> = {};
+  for (const table of tables) counts[table] = await countWhere(store, `SELECT COUNT(*) AS n FROM ${table}`);
+  return {
+    counts,
+    datasets: await store.query('SELECT id, name, current_version FROM datasets ORDER BY id'),
+    versions: await store.query(
+      'SELECT dataset_id, version, row_count, content_hash FROM dataset_versions ORDER BY dataset_id, version',
+    ),
+    changes: await store.query(
+      'SELECT dataset_id, kind, COUNT(*) AS n FROM changes GROUP BY dataset_id, kind ORDER BY dataset_id, kind',
+    ),
+    imports: await store.query('SELECT dataset_id, version FROM imports ORDER BY dataset_id, version'),
+    reports: await store.query('SELECT project_id, version, json FROM migration_reports ORDER BY version'),
+  };
+}
+
+async function importOriginal(db: string) {
+  const api = spawn(db);
+  const bytes = await fixture(originalDbUrl);
+  const preview = await api.inspectLegacy([new File([new Uint8Array(bytes)], 'SampleDB.db')]);
+  const projectId = await api.commitLegacy(preview.previewId, () => {});
+  const oswego = (await api.listDatasets(projectId)).find((d) => d.name === 'Oswego')!;
+  return { api, projectId, oswego };
+}
+
 describe('legacy .db import', () => {
   it('column_kind_is_classified_once_over_all_rows', async () => {
     const api = spawn(`t-${crypto.randomUUID()}`);
@@ -86,5 +139,87 @@ describe('legacy .db import', () => {
     expect(Number(page.rows[0]![page.columns.findIndex((c) => c.name === 'AGE')])).toBeCloseTo(
       20.5,
     );
+  });
+
+  it('legacy_import_writes_records_changes_imports_and_a_rebuildable_snapshot', async () => {
+    const db = `t-${crypto.randomUUID()}`;
+    const { oswego } = await importOriginal(db);
+
+    terminateSpawned();
+    let store = await openHarness(db);
+    const rows = await countWhere(store, 'SELECT COUNT(*) AS n FROM records WHERE dataset_id = ?', [oswego.id]);
+    const inserts = await countWhere(
+      store,
+      "SELECT COUNT(*) AS n FROM changes WHERE dataset_id = ? AND kind = 'insert'",
+      [oswego.id],
+    );
+    const imports = await countWhere(store, 'SELECT COUNT(*) AS n FROM imports WHERE dataset_id = ?', [oswego.id]);
+    expect(rows).toBe(75);
+    expect(inserts).toBe(75);
+    expect(imports).toBe(1);
+    await store.exec('UPDATE dataset_versions SET snapshot = ? WHERE dataset_id = ? AND version = 1', [
+      new TextEncoder().encode('corrupted'),
+      oswego.id,
+    ]);
+    await store.close();
+
+    const api2 = spawn(db);
+    const page = await untilStore(() => api2.getVersionPage(oswego.id, 1, 0, 1));
+    expect(page.total).toBe(75);
+
+    terminateSpawned();
+    store = await openHarness(db);
+    const snap = await store.query('SELECT snapshot FROM dataset_versions WHERE dataset_id = ? AND version = 1', [oswego.id]);
+    expect(String.fromCharCode(...Array.from(snap[0]!.snapshot as Uint8Array).slice(0, 4))).toBe('EPSN');
+    await store.close();
+  });
+
+  it('legacy_reimport_writes_insert_update_delete_entries_and_a_rebuildable_v2', async () => {
+    const db = `t-${crypto.randomUUID()}`;
+    const { api, projectId, oswego } = await importOriginal(db);
+    const bytes = await fixture(reimportDbUrl);
+    const preview = await api.planRefresh(projectId, [new File([new Uint8Array(bytes)], 'SampleDB.db')]);
+    await api.commitRefresh(preview.previewId);
+    expect((await api.listVersions(oswego.id)).map((v) => v.version)).toEqual([1, 2]);
+
+    terminateSpawned();
+    let store = await openHarness(db);
+    expect(await countWhere(store, 'SELECT COUNT(*) AS n FROM records WHERE dataset_id = ?', [oswego.id])).toBe(77);
+    expect(await countWhere(store, "SELECT COUNT(*) AS n FROM changes WHERE dataset_id = ? AND kind = 'insert'", [oswego.id])).toBe(78);
+    expect(await countWhere(store, "SELECT COUNT(*) AS n FROM changes WHERE dataset_id = ? AND kind = 'update'", [oswego.id])).toBe(4);
+    expect(await countWhere(store, "SELECT COUNT(*) AS n FROM changes WHERE dataset_id = ? AND kind = 'delete'", [oswego.id])).toBe(1);
+    expect(await countWhere(store, 'SELECT COUNT(*) AS n FROM imports WHERE dataset_id = ?', [oswego.id])).toBe(2);
+    await store.exec('UPDATE dataset_versions SET snapshot = ? WHERE dataset_id = ? AND version = 2', [
+      new TextEncoder().encode('corrupted'),
+      oswego.id,
+    ]);
+    await store.close();
+
+    const api2 = spawn(db);
+    const page = await untilStore(() => api2.getVersionPage(oswego.id, 2, 0, 1));
+    expect(page.total).toBe(77);
+    terminateSpawned();
+    store = await openHarness(db);
+    await store.close();
+  });
+
+  it('unchanged_legacy_reimport_writes_nothing', async () => {
+    const db = `t-${crypto.randomUUID()}`;
+    await importOriginal(db);
+    terminateSpawned();
+    let store = await openHarness(db);
+    const before = await storeShape(store);
+    await store.close();
+
+    const api = spawn(db);
+    const project = (await api.listProjects())[0]!;
+    const bytes = await fixture(originalDbUrl);
+    const preview = await api.planRefresh(project.id, [new File([new Uint8Array(bytes)], 'SampleDB.db')]);
+    await api.commitRefresh(preview.previewId);
+
+    terminateSpawned();
+    store = await openHarness(db);
+    expect(await storeShape(store)).toEqual(before);
+    await store.close();
   });
 });

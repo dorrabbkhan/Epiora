@@ -2,6 +2,8 @@
 // out of `ui/strings.ts` because the routes pass whole fragments to
 // one another; global chrome/errors stay in the shared table.
 export const legacyT = {
+  openProject: 'Open an Epi Info project',
+  reimport: 'Re-import a newer copy',
   title: 'Open an Epi Info project',
   chooseFiles: 'Choose project files',
   reading: 'Reading project…',
@@ -46,12 +48,19 @@ export const legacyT = {
     'Diff each keyed view against its latest imported version before creating new versions.',
   diffTitle: 'Re-import changes',
   confirmReimport: 'Confirm re-import',
+  close: 'Close',
   noChanges: 'The newer copy has no record or schema changes; no new versions will be created.',
   sessionBanner: 'Open working views stayed on their source versions.',
   moveSessions: 'Move working views to new versions',
   movingSessions: 'Moving working views…',
   movedSessions: 'Working views moved to the new versions.',
   moveSessionsFailed: 'A working view could not be replayed on the new version.',
+  workingViewsLabel: 'Working views',
+  workingViewsBanner: 'Open working views stayed on their source versions.',
+  moveWorkingViews: 'Move working views to new versions',
+  movingWorkingViews: 'Moving working views…',
+  movedWorkingViews: 'Working views moved to the new versions.',
+  moveWorkingViewsFailed: 'A working view could not be replayed on the new version.',
   sqlServerNotRefreshable: 'SQL Server projects are not refreshable; choose a newer `.mdb` or `.db` copy of a file-backed project.',
   notLegacyProject: 'Only a project imported from Epi Info can be re-imported.',
   recordSamplesTitle: 'Record samples',
@@ -82,4 +91,18 @@ export const legacyT = {
   tableColumnAdded: 'Added',
   tableColumnRemoved: 'Removed',
   tableColumnChanged: 'Changed',
+} as const;
+
+/** User-facing copy for the Tauri SQL Server bridge's stable error codes. */
+export function sqlErrorText(e: unknown): string {
+  const code = typeof e === 'string' ? e : e instanceof Error ? e.message : String(e);
+  if (code.includes('sqlserver_auth')) return 'SQL Server authentication failed.';
+  if (code.includes('sqlserver_connect')) return 'Could not connect to SQL Server.';
+  if (code.includes('sqlserver_query')) return 'SQL Server rejected the table read.';
+  return code;
+}
+
+export const legacyErrorT = {
+  reimport_not_legacy: 'Only a project imported from Epi Info can be re-imported.',
+  reimport_source_mismatch: 'That file is not a newer copy of this Epi Info project.',
 } as const;

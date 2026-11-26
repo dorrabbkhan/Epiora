@@ -201,10 +201,14 @@ export function ReimportDialog({ project }: { project: string }) {
             <RecordSamples key={`${row.id}-samples`} viewName={row.name} diff={row.diff} />
           ))}
           <div className={styles.panel}>
-            <Button onPress={() => void confirm()} isDisabled={busy}>
-              {legacyT.confirmReimport}
-            </Button>
-            <Link to="/p/$project" params={{ project }}>{legacyT.cancel}</Link>
+            {anyChanged && (
+              <Button onPress={() => void confirm()} isDisabled={busy}>
+                {legacyT.confirmReimport}
+              </Button>
+            )}
+            <Link to="/p/$project" params={{ project }}>
+              {anyChanged ? legacyT.cancel : legacyT.close}
+            </Link>
           </div>
         </section>
       )}

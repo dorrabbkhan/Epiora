@@ -35,7 +35,7 @@ pub use diff::{
 pub use error::ImportError;
 pub use excel_date::serial_to_days;
 pub use keys::{key_candidates, record_ids, KeyCandidate};
-pub use records::{dataset_from_records, record_json};
+pub use records::{dataset_from_records, dataset_from_records_with_meta, record_json};
 pub use settings::{
     Container, DateFormat, DecimalSep, Detection, Encoding, ImportSettings, RecordKey,
 };

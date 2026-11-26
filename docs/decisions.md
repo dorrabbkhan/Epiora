@@ -7758,3 +7758,54 @@ Files outside the Files block:
 - `docs/decisions.md` — this entry.
 
 Reason: Task 13's preview JSON carries counts but no per-field schema, so the UI derives legacy/Epiora field types from snapshot-v2 metadata in `snapshots.ts` and enriches the preview in the legacy worker. `worker/api.ts`/`client.ts` expose the already-internal legacy-project identity needed to gate re-import, the SQL Server batch inspect RPC needed by the desktop form, and the Review Focus RPCs. `contract.test.ts` pins those added RPCs. `errors.ts` honours wasm error objects whose `code` survives the boundary and carries typed re-import identity errors. `lang.ts` is the owner of session memory/replay, so moving working views belongs there. The desktop smoke spec is the only existing home for the task-required desktop smoke assertion.
+
+Fix-round-2 exact file accounting. Files block members created or modified by full path:
+- `app/src/legacy/ImportLegacy.tsx`
+- `app/src/legacy/LegacyPreview.tsx`
+- `app/src/legacy/SqlServerForm.tsx`
+- `app/src/legacy/ReimportDialog.tsx`
+- `app/src/legacy/strings.ts`
+- `app/src/legacy/legacy.module.css`
+- `app/src/ui/routes/legacy.tsx`
+- `app/e2e/legacy.spec.ts`
+- `app/src/ui/router.tsx`
+- `app/src/ui/routes/index.tsx`
+- `app/src/ui/routes/project.tsx`
+- `app/src/worker/importer.ts`
+- `app/src/worker/commit.ts`
+
+Every other file in the final diff, by full path:
+- `app/desktop-e2e/smoke.spec.mjs`
+- `app/e2e/a11y.spec.ts` — shared light/dark axe coverage for the seeded legacy preview and re-import states.
+- `app/e2e/helpers/legacy.ts` — shared legacy seeding helpers used by the legacy, accessibility and viewport specs.
+- `app/e2e/routes.ts` — adds `/legacy` to the shared route matrix.
+- `app/e2e/viewport.spec.ts` — shared 320px and 200% zoom coverage for the seeded legacy states.
+- `app/src/legacy/mdb.ts` — resolves the mdb wasm asset relative to the worker origin; required for real `.mdb` imports.
+- `app/src/worker/api-legacy.ts` — legacy RPC surface split out of `api.ts` for the file-size rule.
+- `app/src/worker/api.ts` — spreads the legacy RPC surface into the worker API.
+- `app/src/worker/client.ts` — typed client wrappers for the legacy RPCs.
+- `app/src/worker/commit-version.ts` — the shared v0.3 records/changes/imports/version write path extracted from `commit.ts` and reused by legacy import/re-import.
+- `app/src/worker/contract.test.ts` — pins the RPC and error-message contract.
+- `app/src/worker/errors.ts` — typed error propagation and legacy re-import error copy lookup.
+- `app/src/worker/lang-move.ts` — working-view move implementation.
+- `app/src/worker/lang.ts` — exports the replay machinery used by the move.
+- `app/src/worker/legacy.browser.test.ts` — worker regression tests for canonical store writes, rebuilds, diff entries and unchanged re-import no-op.
+- `app/src/worker/legacy-plain.ts` — plain-table preview and cancellable import for unknown-layout files.
+- `app/src/worker/legacy-records.ts` — adapter that pages canonical records/metadata out of legacy snapshots and calls the shared write path.
+- `app/src/worker/legacy-refresh.ts` — re-import planning, grid-child commit handling, no-op behaviour and identity enforcement.
+- `app/src/worker/legacy-shared.ts` — shared legacy types, keys and enrichment helpers.
+- `app/src/worker/legacy.ts` — legacy worker orchestration.
+- `app/src/worker/rpc-wire.ts` — shared RPC error wrapper used by the split API modules.
+- `app/src/worker/snapshot-codec.ts` — snapshot paging/metadata scanner split out of `snapshots.ts`.
+- `app/src/worker/snapshots.ts` — verified loading and records-driven rebuilds, including legacy metadata.
+- `crates/epiora-import/src/lib.rs` — exports the metadata-aware records rebuild.
+- `crates/epiora-import/src/records.rs` — implements the metadata-aware records rebuild.
+- `crates/epiora-import-wasm/src/lib.rs` — registers the snapshot-records module.
+- `crates/epiora-import-wasm/src/snapshot_records.rs` — canonical record paging and metadata-aware snapshot rebuild exports.
+- `crates/epiora-legacy/src/refresh.rs` — diffs grid children by `UniqueKey`/`GlobalRecordId` instead of marking them missing.
+- `crates/epiora-legacy/tests/golden.rs` — HansensDisease grid-children refresh regression test.
+- `crates/epiora-legacy-wasm/src/lib.rs` — legacy wasm root after the plain-table split.
+- `crates/epiora-legacy-wasm/src/plain.rs` — plain-table wasm conversion split out of `lib.rs`.
+- `docs/decisions.md` — this entry.
+
+`app/src/ui/strings.ts` is in the Files block but is not modified in the final diff: its Task-15 copy moved to `app/src/legacy/strings.ts` so the already-over-400-line shared file does not grow.

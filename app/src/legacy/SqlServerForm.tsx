@@ -8,16 +8,8 @@ import { Button, Checkbox, FieldError, Input, Label, TextField } from '../ui/com
 import { dataApi } from '../worker/client';
 import type { SqlServerAuth } from '../tauri/sqlserver';
 import { rememberLegacyPreview } from './LegacyPreview';
-import { legacyT } from './strings';
+import { legacyT, sqlErrorText } from './strings';
 import styles from './legacy.module.css';
-
-function sqlError(e: unknown): string {
-  const code = typeof e === 'string' ? e : e instanceof Error ? e.message : String(e);
-  if (code.includes('sqlserver_auth')) return 'SQL Server authentication failed.';
-  if (code.includes('sqlserver_connect')) return 'Could not connect to SQL Server.';
-  if (code.includes('sqlserver_query')) return 'SQL Server rejected the table read.';
-  return code;
-}
 
 export function SqlServerForm() {
   const navigate = useNavigate();
@@ -57,7 +49,7 @@ export function SqlServerForm() {
       rememberLegacyPreview(preview);
       await navigate({ to: '/legacy/preview/$previewId', params: { previewId: preview.previewId } });
     } catch (e) {
-      setError(sqlError(e));
+      setError(sqlErrorText(e));
     } finally {
       form.reset();
       setWindowsAuth(false);

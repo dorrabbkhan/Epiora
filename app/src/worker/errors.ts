@@ -11,6 +11,7 @@
 // store conformance harness uses for StoreError.
 
 import { StoreError } from '../store/types';
+import { legacyErrorT } from '../legacy/strings';
 import { t } from '../ui/strings';
 
 export type RpcErrorCode =
@@ -142,7 +143,8 @@ export function categoryFor(detail: string): RpcErrorCode {
 
 function userMessageFor(detail: string): string {
   const messages = t.errors as Record<string, string | undefined>;
-  return messages[detail] ?? messages.internal_error ?? 'Something went wrong.';
+  const legacyMessages = legacyErrorT as Record<string, string | undefined>;
+  return messages[detail] ?? legacyMessages[detail] ?? messages.internal_error ?? 'Something went wrong.';
 }
 
 export class RpcError extends Error {

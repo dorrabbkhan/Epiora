@@ -117,6 +117,56 @@ export async function toNameBytes(
   );
 }
 
+
+/** One importable dataset of a mapped project and its snapshot index —
+ *  views first, then grid/relate child datasets, matching `legacyMap`. */
+export interface LegacyDatasetEntry {
+  name: string;
+  records: number;
+  hash: string;
+  keyColumn: string;
+  snapshotIndex: number;
+  kind: 'view' | 'dataset';
+}
+
+function columnNamed(fields: SnapshotColumnInfo[], wanted: string): string | null {
+  return fields.find((f) => f.name.toLowerCase() === wanted.toLowerCase())?.name ?? null;
+}
+
+/** A grid child's row key: `UniqueKey` identifies the child row, while
+ *  `GlobalRecordId` is the parent foreign key shared by several rows. */
+export function gridKeyColumn(fields: SnapshotColumnInfo[]): string {
+  return columnNamed(fields, 'UniqueKey') ?? columnNamed(fields, 'GlobalRecordId') ?? '';
+}
+
+/** The datasets in snapshot order with the key the v0.3 records/diff
+ *  path uses. An empty key means row-position identity. */
+export function projectEntries(project: LegacyProjectJson): LegacyDatasetEntry[] {
+  return [
+    ...project.views.map((v, i) => ({
+      name: v.name,
+      records: v.records,
+      hash: v.hash,
+      keyColumn: v.key_column,
+      snapshotIndex: i,
+      kind: 'view' as const,
+    })),
+    ...project.datasets.map((d, j) => ({
+      name: d.name,
+      records: d.records,
+      hash: d.hash,
+      keyColumn: gridKeyColumn(d.fields),
+      snapshotIndex: project.views.length + j,
+      kind: 'dataset' as const,
+    })),
+  ];
+}
+
+/** The `datasets.record_key` JSON spelling for a key column or row position. */
+export function recordKeyJson(keyColumn: string): string {
+  return keyColumn === '' ? '"row_position"' : JSON.stringify({ column: { name: keyColumn } });
+}
+
 /** Adds the per-column legacy/Epiora type preview the route shows
  *  before writing. The metadata is read from the snapshots the mapper
  *  just produced — no store write and no row decode. */

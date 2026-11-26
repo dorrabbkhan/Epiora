@@ -57,9 +57,45 @@ impl RefreshPlan {
     }
 }
 
-/// Diffs each view of `next` against `previous` (the committed
-/// `(name, dataset)` pairs) by the view's `key_column`
-/// (`GlobalRecordId` or `UniqueKey`). Key-column problems surface as
+/// A grid child's row-key column. `UniqueKey` wins because several
+/// rows of one grid share the parent's `GlobalRecordId`; the parent's
+/// id is the foreign key, never the child row id.
+fn grid_key_column(dataset: &Dataset) -> String {
+    for wanted in ["UniqueKey", "GlobalRecordId"] {
+        if let Some(c) = dataset
+            .columns()
+            .iter()
+            .find(|c| c.name.eq_ignore_ascii_case(wanted))
+        {
+            return c.name.clone();
+        }
+    }
+    String::new()
+}
+
+fn outcome_for(
+    previous: Option<&Dataset>,
+    next: &Dataset,
+    key_column: &str,
+) -> Result<RefreshOutcome, LegacyError> {
+    match previous {
+        None => Ok(RefreshOutcome::New),
+        Some(_) if key_column.is_empty() => Ok(RefreshOutcome::NoKey),
+        Some(p) => {
+            let d = epiora_import::diff_datasets(p, next, key_column)?;
+            if d.unchanged {
+                Ok(RefreshOutcome::Unchanged)
+            } else {
+                Ok(RefreshOutcome::Changed(d))
+            }
+        }
+    }
+}
+
+/// Diffs each view and grid child of `next` against `previous` (the
+/// committed `(name, dataset)` pairs). Views use their mapper-chosen
+/// `key_column` (`GlobalRecordId` or `UniqueKey`); grid children use
+/// their own `UniqueKey` when present. Key-column problems surface as
 /// the import diff's typed errors (`DuplicateKey`, `MissingKey`, …).
 pub fn refresh_plan(
     previous: &[(String, Dataset)],
@@ -67,25 +103,26 @@ pub fn refresh_plan(
 ) -> Result<RefreshPlan, LegacyError> {
     let prev: HashMap<&str, &Dataset> = previous.iter().map(|(n, d)| (n.as_str(), d)).collect();
     let mut views = Vec::new();
+    let mut next_names: HashSet<&str> = HashSet::new();
     for nv in &next.views {
-        let outcome = match prev.get(nv.name.as_str()) {
-            None => RefreshOutcome::New,
-            Some(_) if nv.key_column.is_empty() => RefreshOutcome::NoKey,
-            Some(p) => {
-                let d = epiora_import::diff_datasets(p, &nv.dataset, &nv.key_column)?;
-                if d.unchanged {
-                    RefreshOutcome::Unchanged
-                } else {
-                    RefreshOutcome::Changed(d)
-                }
-            }
-        };
+        next_names.insert(nv.name.as_str());
         views.push(ViewRefresh {
             name: nv.name.clone(),
-            outcome,
+            outcome: outcome_for(
+                prev.get(nv.name.as_str()).copied(),
+                &nv.dataset,
+                &nv.key_column,
+            )?,
         });
     }
-    let next_names: HashSet<&str> = next.views.iter().map(|v| v.name.as_str()).collect();
+    for nd in &next.datasets {
+        next_names.insert(nd.id());
+        let key = grid_key_column(nd);
+        views.push(ViewRefresh {
+            name: nd.id().to_string(),
+            outcome: outcome_for(prev.get(nd.id()).copied(), nd, &key)?,
+        });
+    }
     for (name, _) in previous {
         if !next_names.contains(name.as_str()) {
             views.push(ViewRefresh {

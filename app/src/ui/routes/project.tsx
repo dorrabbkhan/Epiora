@@ -14,6 +14,7 @@ import { dataApi } from '../../worker/client';
 import { useDatasets, useProjects, useRuns } from '../queries';
 import { EmptyState } from '../screens/EmptyState';
 import { OutputLog } from '../screens/analysis/OutputLog';
+import { legacyT } from '../../legacy/strings';
 import { t } from '../strings';
 import styles from './routes.module.css';
 
@@ -66,15 +67,15 @@ function ProjectView({ projectId, name }: { projectId: string; name: string }) {
         </Link>
         {legacy.data !== null && legacy.data !== undefined && legacy.data.sourceFormat !== 'ei7_sql_server' && (
           <Link to="/p/$project/reimport" params={{ project: projectId }}>
-            {t.project.reimport}
+            {legacyT.reimport}
           </Link>
         )}
       </div>
       {sessionBanner && (
-        <section aria-label={t.project.workingViewsLabel}>
-          <p>{t.project.workingViewsBanner}</p>
-          {moveState === 'done' && <p>{t.project.movedWorkingViews}</p>}
-          {moveState === 'error' && <p role="alert">{t.project.moveWorkingViewsFailed}</p>}
+        <section aria-label={legacyT.workingViewsLabel}>
+          <p>{legacyT.workingViewsBanner}</p>
+          {moveState === 'done' && <p>{legacyT.movedWorkingViews}</p>}
+          {moveState === 'error' && <p role="alert">{legacyT.moveWorkingViewsFailed}</p>}
           {(moveState === 'idle' || moveState === 'error') && (
             <Button
               onPress={() => {
@@ -88,10 +89,10 @@ function ProjectView({ projectId, name }: { projectId: string; name: string }) {
                 );
               }}
             >
-              {t.project.moveWorkingViews}
+              {legacyT.moveWorkingViews}
             </Button>
           )}
-          {moveState === 'moving' && <p>{t.project.movingWorkingViews}</p>}
+          {moveState === 'moving' && <p>{legacyT.movingWorkingViews}</p>}
         </section>
       )}
       <section>

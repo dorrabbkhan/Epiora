@@ -25,10 +25,11 @@ import * as analysis from './analysis';
 import * as commit from './commit';
 import { engine } from './engines';
 import * as rexport from './export';
-import { rpc, throwWired } from './errors';
+import { rpc } from './errors';
+import { wire } from './rpc-wire';
+import { legacyApi, type LegacyDataApi } from './api-legacy';
 import * as importer from './importer';
 import * as langWorker from './lang';
-import { moveSessionsToCurrent, type MovedSession } from './lang-move';
 import * as langSessionWorker from './lang-session';
 import type {
   DatasetVersion,
@@ -37,18 +38,16 @@ import type {
   Session,
   SessionState,
 } from './lang';
-import * as legacyWorker from './legacy';
-import type { LegacyPreview, PlainPreview, RefreshPreview, SqlServerTableInput } from './legacy';
+import type { LegacyPreview, PlainPreview, RefreshPreview } from './legacy';
 import { clearSnapshotCache, gridPage, loadEntry, storedSettings } from './snapshots';
 import { withStore } from './store-backend';
 import * as datasets from '../store/repo/datasets';
 import * as projects from '../store/repo/projects';
-import * as legacyRepo from '../store/repo/legacy';
 import * as versions from '../store/repo/versions';
 import type { Project } from '../store/repo/projects';
-import type { LegacyProject as LegacyProjectInfo } from '../store/repo/legacy';
 
-export type { LegacyProjectInfo, Project };
+export type { Project };
+export type { LegacyProjectInfo, MovedSession } from './api-legacy';
 
 export interface DatasetInfo {
   id: string;
@@ -131,7 +130,7 @@ export type {
   SessionState,
 };
 
-export interface DataApi {
+export interface DataApi extends LegacyDataApi {
   listProjects(): Promise<Project[]>;
   createProject(name: string): Promise<Project>;
   renameProject(id: string, name: string): Promise<void>;
@@ -167,48 +166,6 @@ export interface DataApi {
   ): Promise<CommitResult>;
   cancelImport(sessionId: string): Promise<void>;
   discardSession(sessionId: string): Promise<void>;
-  /**
-   * v1.1 Task 13 (spec §4.2): map picked legacy files to a project
-   * preview — `.mdb`/`.accdb` through mdbtools wasm, `.db` through
-   * sqlite-wasm — without writing the store.
-   */
-  inspectLegacy(
-    files: File[],
-    codePage?: string,
-  ): Promise<LegacyPreview>;
-  /** Desktop SQL Server tables already read as EPTB by the Tauri
-   *  bridge; credentials never cross this RPC. */
-  inspectLegacySqlServer(
-    database: string,
-    tables: SqlServerTableInput[],
-  ): Promise<LegacyPreview>;
-  /** Whether a project came from a legacy import (drives the
-   *  re-import entry point). */
-  getLegacyProject(projectId: string): Promise<LegacyProjectInfo | null>;
-  /** Commits a `inspectLegacy` preview — one transaction. */
-  commitLegacy(
-    previewId: string,
-    onProgress: (p: ImportProgress) => void,
-  ): Promise<string>;
-  /** Re-import: diffs a newer copy of the file against the project's
-   *  committed views. */
-  planRefresh(
-    projectId: string,
-    files: File[],
-    codePage?: string,
-  ): Promise<RefreshPreview>;
-  commitRefresh(previewId: string): Promise<void>;
-  /** Unknown-layout file: list ordinary tables, then import the chosen
-   *  ones as plain datasets (Review Focus 2). */
-  inspectPlainLegacy(files: File[], codePage?: string): Promise<PlainPreview>;
-  commitPlainLegacy(
-    previewId: string,
-    tables: string[],
-    onProgress: (p: ImportProgress) => void,
-  ): Promise<string>;
-  /** Move a project's persisted working views onto current dataset
-   *  versions by replaying their recipes. */
-  moveSessionsToCurrent(projectId: string): Promise<MovedSession[]>;
   /** Cleaning sessions and program runs (v1.1 spec §5–6): session
    *  replays carry the project's stored `dataset_links` (Task 13b),
    *  and `CANCEL READ` closes the session's view, clearing the recipe. */
@@ -302,12 +259,6 @@ function toVersionInfo(v: versions.DatasetVersion): VersionInfo {
   return { ...v };
 }
 
-/** Wraps a handler so rejections reach the client as a wired RpcError. */
-const wire =
-  <A extends unknown[], R>(f: (...args: A) => Promise<R>) =>
-  (...args: A): Promise<R> =>
-    f(...args).catch(throwWired);
-
 const now = () => new Date().toISOString();
 
 export const api: DataApi = {
@@ -348,29 +299,7 @@ export const api: DataApi = {
   ),
   cancelImport: wire((sessionId) => importer.cancelImport(sessionId)),
   discardSession: wire((sessionId) => importer.discardSession(sessionId)),
-  inspectLegacy: wire((files, codePage) => legacyWorker.inspectLegacy(files, codePage)),
-  inspectLegacySqlServer: wire((database, tables) =>
-    legacyWorker.inspectLegacySqlServer(database, tables),
-  ),
-  getLegacyProject: wire((projectId) =>
-    withStore((s) => legacyRepo.project(s, projectId)),
-  ),
-  commitLegacy: wire((previewId, onProgress) =>
-    withStore((s) => legacyWorker.commitLegacy(s, previewId, onProgress)),
-  ),
-  planRefresh: wire((projectId, files, codePage) =>
-    withStore((s) => legacyWorker.planRefresh(s, projectId, files, codePage)),
-  ),
-  commitRefresh: wire((previewId) =>
-    withStore((s) => legacyWorker.commitRefresh(s, previewId)),
-  ),
-  inspectPlainLegacy: wire((files, codePage) => legacyWorker.inspectPlainLegacy(files, codePage)),
-  commitPlainLegacy: wire((previewId, tables, onProgress) =>
-    withStore((s) => legacyWorker.commitPlainLegacy(s, previewId, tables, onProgress)),
-  ),
-  moveSessionsToCurrent: wire((projectId) =>
-    withStore((s) => moveSessionsToCurrent(s, projectId)),
-  ),
+  ...legacyApi,
   openSession: wire((projectId, datasetId, version) =>
     withStore((s) => langWorker.openSession(s, projectId, datasetId, version)),
   ),

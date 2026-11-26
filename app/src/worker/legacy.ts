@@ -8,6 +8,7 @@
 // surface.
 
 import { legacy } from './engines';
+import { writeLegacyVersion } from './legacy-records';
 import { dataFile, pushFile } from './legacy-eptb';
 import { rpc } from './errors';
 import {
@@ -19,11 +20,12 @@ import {
 import * as datasets from '../store/repo/datasets';
 import * as legacyRepo from '../store/repo/legacy';
 import * as projects from '../store/repo/projects';
-import * as versions from '../store/repo/versions';
 import type { Store, Tx } from '../store/types';
 import type { ImportProgress } from './api';
 import {
   enrichProject,
+  projectEntries,
+  recordKeyJson,
   toNameBytes,
   type FileInput,
   type LegacyPreview,
@@ -116,53 +118,37 @@ export async function commitLegacy(
         importedAt: now,
       });
       // View datasets first, then `datasets` (grid children) — the
-      // snapshot layout `legacyMap` documented.
+      // snapshot layout `legacyMap` documented. Every dataset goes
+      // through the canonical v0.3 records/changes/imports write path.
       const idByName = new Map<string, string>();
-      const writeDataset = async (
-        name: string,
-        key: string,
-        snapshot: Uint8Array,
-        records: number,
-        hash: string,
-        i: number,
-      ) => {
+      const entries = projectEntries(p);
+      for (const [i, entry] of entries.entries()) {
         await checkCancel();
         const d = await datasets.create(
           tx,
-          { projectId: project.id, name, key, settings: '{}' },
+          {
+            projectId: project.id,
+            name: entry.name,
+            key: recordKeyJson(entry.keyColumn),
+            settings: '{}',
+          },
           now,
         );
-        await checkCancel();
-        await versions.insert(tx, {
+        await writeLegacyVersion({
+          tx,
           datasetId: d.id,
           version: 1,
+          now,
           sourceName: state.sourceName,
-          sourceSha256: hash,
-          rowCount: records,
-          contentHash: hash,
-          snapshot,
+          snapshot: state.snapshots[entry.snapshotIndex]!,
+          rowCount: entry.records,
+          contentHash: entry.hash,
+          keyColumn: entry.keyColumn,
+          diff: null,
+          checkCancel,
         });
-        await checkCancel();
-        await datasets.setCurrentVersion(tx, d.id, 1);
-        idByName.set(name, d.id);
+        idByName.set(entry.name, d.id);
         emit('write', i + 1, total);
-      };
-      for (const [i, v] of p.views.entries()) {
-        const key =
-          v.key_column === ''
-            ? '"row_position"'
-            : JSON.stringify({ column: { name: v.key_column } });
-        await writeDataset(v.name, key, state.snapshots[i]!, v.records, v.hash, i);
-      }
-      for (const [j, d] of p.datasets.entries()) {
-        await writeDataset(
-          d.name,
-          '"row_position"',
-          state.snapshots[p.views.length + j]!,
-          d.records,
-          d.hash,
-          p.views.length + j,
-        );
       }
       for (const l of p.links) {
         await checkCancel();
