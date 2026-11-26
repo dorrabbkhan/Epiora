@@ -12,14 +12,15 @@ import {
   registerCancelScope,
   throwWhenCancelled,
 } from './importer';
+import { writeLegacyVersion } from './legacy-records';
 import * as datasets from '../store/repo/datasets';
 import * as projects from '../store/repo/projects';
-import * as versions from '../store/repo/versions';
 import type { Store, Tx } from '../store/types';
 import type { ImportProgress } from './api';
 import {
   fileStem,
   plainTableNames,
+  recordKeyJson,
   toNameBytes,
   type FileInput,
   type PlainPreview,
@@ -102,21 +103,22 @@ export async function commitPlainLegacy(
         await checkCancel();
         const d = await datasets.create(
           tx,
-          { projectId: project.id, name: table.name, key: '"row_position"', settings: '{}' },
+          { projectId: project.id, name: table.name, key: recordKeyJson(''), settings: '{}' },
           now,
         );
-        await checkCancel();
-        await versions.insert(tx, {
+        await writeLegacyVersion({
+          tx,
           datasetId: d.id,
           version: 1,
+          now,
           sourceName: state.sourceName,
-          sourceSha256: table.hash,
+          snapshot: new Uint8Array(mapped.snapshots[i]!),
           rowCount: table.records,
           contentHash: table.hash,
-          snapshot: new Uint8Array(mapped.snapshots[i]!),
+          keyColumn: '',
+          diff: null,
+          checkCancel,
         });
-        await checkCancel();
-        await datasets.setCurrentVersion(tx, d.id, 1);
         emit('write', i + 1, chosen.length);
       }
       emit('snapshot', 1, 1);

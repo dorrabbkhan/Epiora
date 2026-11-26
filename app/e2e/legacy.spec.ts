@@ -144,6 +144,30 @@ test('plain_mdb_offers_table_import', async ({ page }) => {
   expect(counts).toEqual({ projects: 1, datasets: 1 });
 });
 
+test('cancel_mid_plain_table_import_rolls_back', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto('/legacy');
+  await chooseFiles(page, [PLAIN_MDB]);
+  await expect(page.getByRole('alert')).toContainText('not a recognised Epi Info project');
+  await page.getByRole('button', { name: 'Choose tables to import' }).click();
+  await expect(page.getByRole('checkbox', { name: 'hosppts' })).toBeChecked();
+
+  await page.getByRole('button', { name: 'Import selected tables' }).click();
+  const cancel = page.getByRole('button', { name: 'Cancel import' });
+  await expect(cancel).toBeVisible();
+  await cancel.click();
+  await expect(page.getByRole('alert')).toContainText(/cancelled/i);
+  await expect
+    .poll(() => page.evaluate(() => window.dataApi.listProjects().then((p) => p.length)))
+    .toBe(0);
+  const datasetCounts = await page.evaluate(() =>
+    window.dataApi.listProjects().then((projects) =>
+      Promise.all(projects.map((p) => window.dataApi.listDatasets(p.id).then((d) => d.length))),
+    ),
+  );
+  expect(datasetCounts).toEqual([]);
+});
+
 test('reimport_shows_diff_and_creates_versions', async ({ page }) => {
   test.setTimeout(120_000);
   const projectId = await importSample(page);

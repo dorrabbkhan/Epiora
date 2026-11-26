@@ -4,13 +4,14 @@
 // its ordinary tables for plain dataset import instead of failing.
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Button, Checkbox, FileTrigger } from '../ui/components';
+import { Button, Checkbox, FileTrigger, ProgressBar } from '../ui/components';
 import { dataApi } from '../worker/client';
 import { RpcError } from '../worker/errors';
 import { inTauri } from '../worker/client';
 import { rememberLegacyPreview } from './LegacyPreview';
 import { SqlServerForm } from './SqlServerForm';
 import { legacyT } from './strings';
+import type { ImportProgress } from '../worker/api';
 import type { PlainPreview } from '../worker/legacy';
 import styles from './legacy.module.css';
 
@@ -44,6 +45,7 @@ export function ImportLegacy() {
   const [plainFiles, setPlainFiles] = useState<File[] | null>(null);
   const [chosen, setChosen] = useState<string[]>([]);
   const [choosingTables, setChoosingTables] = useState(false);
+  const [progress, setProgress] = useState<ImportProgress | null>(null);
 
   const inspect = async (files: FileList | null) => {
     if (files === null || files.length === 0) return;
@@ -78,15 +80,26 @@ export function ImportLegacy() {
     if (plain === null || chosen.length === 0) return;
     setBusy(true);
     setError(null);
+    setProgress({ stage: 'write', done: 0, total: chosen.length });
     try {
-      const projectId = await dataApi.commitPlainLegacy(plain.previewId, chosen, () => {});
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const projectId = await dataApi.commitPlainLegacy(plain.previewId, chosen, setProgress);
       await navigate({ to: '/p/$project', params: { project: projectId } });
     } catch (e) {
       setError({
         plain: false,
-        message: e instanceof RpcError ? e.userMessage : e instanceof Error ? e.message : String(e),
+        message:
+          e instanceof RpcError && e.detail === 'cancelled'
+            ? legacyT.cancelled
+            : e instanceof RpcError
+              ? e.userMessage
+              : e instanceof Error
+                ? e.message
+                : String(e),
       });
+    } finally {
       setBusy(false);
+      setProgress(null);
     }
   };
 
@@ -121,6 +134,18 @@ export function ImportLegacy() {
               {table}
             </Checkbox>
           ))}
+          {progress !== null && (
+            <div className={styles.progress}>
+              <ProgressBar
+                aria-label={legacyT.writeProgress}
+                value={progress.done}
+                maxValue={Math.max(progress.total, 1)}
+              />
+              <Button onPress={() => void dataApi.cancelImport(plain.previewId)}>
+                {legacyT.cancel}
+              </Button>
+            </div>
+          )}
           <div className={styles.panel}>
             <Button onPress={() => void importPlain()} isDisabled={busy || chosen.length === 0}>
               {busy ? legacyT.importingTables : legacyT.importTables}

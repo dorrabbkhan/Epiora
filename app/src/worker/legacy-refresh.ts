@@ -24,6 +24,7 @@ import {
   toNameBytes,
   type FileInput,
   type LegacyProjectJson,
+  type RefreshDiff,
   type RefreshPlanJson,
   type RefreshPreview,
 } from './legacy-shared';
@@ -66,6 +67,28 @@ function sameLegacyProject(
     stored.sourceFormat === mapped.source_format &&
     stored.fileName.toLowerCase() === sourceName.toLowerCase()
   );
+}
+
+type ReportEntry = LegacyProjectJson['report'][number];
+
+function schemaReportEntries(view: string, diff: RefreshDiff): ReportEntry[] {
+  return [
+    ...diff.schema.added_columns.map((column) => ({
+      kind: 'schema_field_added',
+      item: `${view}/${column}`,
+      reason: 'field added in the newer copy; schema change applied',
+    })),
+    ...diff.schema.removed_columns.map((column) => ({
+      kind: 'schema_field_removed',
+      item: `${view}/${column}`,
+      reason: 'field removed in the newer copy; schema change applied',
+    })),
+    ...diff.schema.type_changes.map((change) => ({
+      kind: 'schema_field_retyped',
+      item: `${view}/${change.column}`,
+      reason: `field type changed from ${change.from} to ${change.to} in the newer copy; schema change applied`,
+    })),
+  ];
 }
 
 /** Adds `added_records` beside the diff's added row indices by reading
@@ -205,6 +228,16 @@ export async function commitRefresh(store: Store, previewId: string): Promise<vo
       }
       const reportEntries = [...p.report];
       for (const v of rp.plan.views) {
+        if (typeof v.outcome !== 'string') {
+          reportEntries.push(...schemaReportEntries(v.name, v.outcome.changed));
+        }
+        if (v.outcome === 'missing') {
+          reportEntries.push({
+            kind: 'view_not_refreshed',
+            item: v.name,
+            reason: 'missing from the newer copy; committed data kept unchanged',
+          });
+        }
         if (v.outcome === 'no_key') {
           reportEntries.push({
             kind: 'view_not_refreshed',

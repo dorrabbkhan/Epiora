@@ -64,6 +64,10 @@ export async function writeLegacyVersion(input: LegacyVersionWrite): Promise<voi
   try {
     const stored = rows.schema() as SnapshotSchema;
     const settings = legacySettings(input.keyColumn);
+    const snapshotMeta =
+      stored.meta.length === 0
+        ? undefined
+        : { meta: stored.meta, labelSets: stored.label_sets };
     await writeCommittedVersion({
       tx: input.tx,
       datasetId: input.datasetId,
@@ -76,10 +80,7 @@ export async function writeLegacyVersion(input: LegacyVersionWrite): Promise<voi
       sourceSha256: input.contentHash,
       importSettings: JSON.stringify(settings),
       coercions: '{}',
-      serializedSettings: serializeSettings(settings, stored.schema, {
-        meta: stored.meta,
-        labelSets: stored.label_sets,
-      }),
+      serializedSettings: serializeSettings(settings, stored.schema, snapshotMeta),
       rows: {
         rowCount: input.rowCount,
         recordBatch: (start, len) => rows.recordBatch(start, len) as RecordBatch,

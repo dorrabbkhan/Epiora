@@ -1,41 +1,41 @@
 .notice {
-  color: var(--ep-color-warning);
-  background: var(--ep-color-surface);
-  border: var(--ep-border-width-thin) solid var(--ep-color-warning);
-  border-radius: var(--ep-radius-medium);
-  padding: var(--ep-space-md);
-  margin-block: var(--ep-space-md);
+  color: var(--color-danger);
+  background: var(--color-surface);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-3);
+  padding: var(--space-4);
+  margin-block: var(--space-4);
 }
 
 .panel {
   display: flex;
   flex-direction: column;
-  gap: var(--ep-space-md);
-  margin-block: var(--ep-space-md);
+  gap: var(--space-4);
+  margin-block: var(--space-4);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: var(--ep-space-sm);
+  gap: var(--space-2);
   max-width: 36rem;
 }
 
 .progress {
   display: flex;
   flex-direction: column;
-  gap: var(--ep-space-sm);
-  margin-block: var(--ep-space-md);
+  gap: var(--space-2);
+  margin-block: var(--space-4);
 }
 
 .section {
-  margin-block-start: var(--ep-space-lg);
+  margin-block-start: var(--space-6);
   overflow-x: auto;
 }
 
 .schemaNote {
-  color: var(--ep-color-muted);
-  font-size: var(--ep-font-size-small);
+  color: var(--color-textMuted);
+  font-size: var(--font-size2);
 }
 
 .tableWrap {

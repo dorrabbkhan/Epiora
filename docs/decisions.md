@@ -7809,3 +7809,15 @@ Every other file in the final diff, by full path:
 - `docs/decisions.md` — this entry.
 
 `app/src/ui/strings.ts` is in the Files block but is not modified in the final diff: its Task-15 copy moved to `app/src/legacy/strings.ts` so the already-over-400-line shared file does not grow.
+
+Fix-round-3 exact file accounting. Files block members modified by full path:
+- `app/src/legacy/ImportLegacy.tsx`
+- `app/src/legacy/legacy.module.css`
+- `app/e2e/legacy.spec.ts`
+
+Files outside the Files block modified by full path:
+- `app/src/worker/legacy-plain.ts` — plain-table imports now use the canonical write path.
+- `app/src/worker/legacy-records.ts` — metadata-free plain snapshots persist no empty metadata rebuild payload.
+- `app/src/worker/legacy-refresh.ts` — re-import schema and missing-view report entries.
+- `app/src/worker/legacy.browser.test.ts` — regression coverage for both worker fixes.
+- `docs/decisions.md` — this entry.

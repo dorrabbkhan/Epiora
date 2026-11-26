@@ -24,6 +24,7 @@ import type { Store } from '../store/types';
 import sampleDbUrl from '../../../fixtures/legacy/golden/reimport/SampleDB.db?url';
 import originalDbUrl from '../../../fixtures/legacy/samples/ei7/Sample/SampleDB.db?url';
 import reimportDbUrl from '../../../fixtures/legacy/golden/reimport/SampleDB.db?url';
+import plainMdbUrl from '../../../fixtures/legacy/samples/ei3/HospitalPoints.mdb?url';
 
 afterEach(terminateSpawned);
 
@@ -65,6 +66,36 @@ async function makeChunkMixDb(base: ArrayBuffer): Promise<Uint8Array> {
        SELECT 'appended-' || x FROM c`,
     );
     db.exec(`INSERT INTO Oswego12 (GlobalRecordId, AGE) VALUES ('appended-50001', 20.5)`);
+    return (sqlite3.capi as unknown as DbExport).sqlite3_js_db_export(db, 'main');
+  } finally {
+    db.close();
+  }
+}
+
+async function makeSchemaAndMissingViewDb(base: ArrayBuffer): Promise<Uint8Array> {
+  const sqlite3 = (await (
+    sqlite3InitModule as unknown as (cfg?: {
+      locateFile?: () => string;
+    }) => Promise<Sqlite3Static>
+  )({ locateFile: () => sqlite3WasmUrl })) as Sqlite3Static;
+  const src = new Uint8Array(base);
+  const db = new sqlite3.oo1.DB(':memory:');
+  try {
+    sqlite3.capi.sqlite3_deserialize(
+      db.pointer!,
+      'main',
+      sqlite3.wasm.allocFromTypedArray(src),
+      src.length,
+      src.length,
+      sqlite3.capi.SQLITE_DESERIALIZE_FREEONCLOSE |
+        sqlite3.capi.SQLITE_DESERIALIZE_RESIZEABLE,
+    );
+    db.exec("DELETE FROM metaViews WHERE Name = 'ADDFull'");
+    db.exec('ALTER TABLE Oswego12 DROP COLUMN BROWNBREAD');
+    db.exec('DELETE FROM metaFields WHERE FieldId = 186');
+    db.exec(
+      "UPDATE Oswego12 SET AGE = 33.5 WHERE GlobalRecordId = '0672b138-2bb7-44c1-8144-14f26098354d'",
+    );
     return (sqlite3.capi as unknown as DbExport).sqlite3_js_db_export(db, 'main');
   } finally {
     db.close();
@@ -174,6 +205,51 @@ describe('legacy .db import', () => {
     await store.close();
   });
 
+  it('plain_table_import_writes_records_changes_imports_and_a_rebuildable_snapshot', async () => {
+    const db = `t-${crypto.randomUUID()}`;
+    const api = spawn(db);
+    const bytes = await fixture(plainMdbUrl);
+    const preview = await api.inspectPlainLegacy([
+      new File([new Uint8Array(bytes)], 'HospitalPoints.mdb'),
+    ]);
+    expect(preview.tables).toContain('hosppts');
+    const projectId = await api.commitPlainLegacy(preview.previewId, ['hosppts'], () => {});
+    const plain = (await api.listDatasets(projectId)).find((d) => d.name === 'hosppts')!;
+
+    terminateSpawned();
+    let store = await openHarness(db);
+    const version = await store.query(
+      'SELECT row_count FROM dataset_versions WHERE dataset_id = ? AND version = 1',
+      [plain.id],
+    );
+    const rowCount = Number(version[0]!.row_count);
+    expect(rowCount).toBeGreaterThan(0);
+    expect(await countWhere(store, 'SELECT COUNT(*) AS n FROM records WHERE dataset_id = ?', [plain.id])).toBe(rowCount);
+    expect(
+      await countWhere(
+        store,
+        "SELECT COUNT(*) AS n FROM changes WHERE dataset_id = ? AND kind = 'insert'",
+        [plain.id],
+      ),
+    ).toBe(rowCount);
+    expect(await countWhere(store, 'SELECT COUNT(*) AS n FROM imports WHERE dataset_id = ?', [plain.id])).toBe(1);
+    await store.exec('UPDATE dataset_versions SET snapshot = ? WHERE dataset_id = ? AND version = 1', [
+      new TextEncoder().encode('corrupted'),
+      plain.id,
+    ]);
+    await store.close();
+
+    const api2 = spawn(db);
+    const page = await untilStore(() => api2.getVersionPage(plain.id, 1, 0, 1));
+    expect(page.total).toBe(rowCount);
+
+    terminateSpawned();
+    store = await openHarness(db);
+    const snap = await store.query('SELECT snapshot FROM dataset_versions WHERE dataset_id = ? AND version = 1', [plain.id]);
+    expect(String.fromCharCode(...Array.from(snap[0]!.snapshot as Uint8Array).slice(0, 4))).toBe('EPSN');
+    await store.close();
+  });
+
   it('legacy_reimport_writes_insert_update_delete_entries_and_a_rebuildable_v2', async () => {
     const db = `t-${crypto.randomUUID()}`;
     const { api, projectId, oswego } = await importOriginal(db);
@@ -200,6 +276,48 @@ describe('legacy .db import', () => {
     expect(page.total).toBe(77);
     terminateSpawned();
     store = await openHarness(db);
+    await store.close();
+  });
+
+  it('legacy_reimport_persists_schema_and_missing_view_report_entries', async () => {
+    const db = `t-${crypto.randomUUID()}`;
+    const { api, projectId } = await importOriginal(db);
+    const bytes = await makeSchemaAndMissingViewDb(await fixture(reimportDbUrl));
+    const preview = await api.planRefresh(projectId, [new File([new Uint8Array(bytes)], 'SampleDB.db')]);
+
+    const oswego = preview.plan.views.find((v) => v.name === 'Oswego')!;
+    expect(typeof oswego.outcome).not.toBe('string');
+    if (typeof oswego.outcome === 'string') throw new Error('Oswego unexpectedly did not change');
+    expect(oswego.outcome.changed.schema.added_columns).toContain('ReimportFlag');
+    expect(oswego.outcome.changed.schema.removed_columns).toContain('BROWNBREAD');
+    expect(oswego.outcome.changed.schema.type_changes.map((c) => c.column)).toContain('AGE');
+    expect(preview.plan.views.find((v) => v.name === 'ADDFull')?.outcome).toBe('missing');
+
+    await api.commitRefresh(preview.previewId);
+    terminateSpawned();
+    const store = await openHarness(db);
+    const reports = await store.query(
+      'SELECT version, json FROM migration_reports WHERE project_id = ? ORDER BY version',
+      [projectId],
+    );
+    expect(reports).toHaveLength(2);
+    const entries = JSON.parse(String(reports[1]!.json)) as {
+      kind: string;
+      item: string;
+      reason: string;
+    }[];
+    expect(entries).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ kind: 'schema_field_added', item: 'Oswego/ReimportFlag' }),
+        expect.objectContaining({ kind: 'schema_field_removed', item: 'Oswego/BROWNBREAD' }),
+        expect.objectContaining({ kind: 'schema_field_retyped', item: 'Oswego/AGE' }),
+        expect.objectContaining({
+          kind: 'view_not_refreshed',
+          item: 'ADDFull',
+          reason: expect.stringContaining('missing from the newer copy'),
+        }),
+      ]),
+    );
     await store.close();
   });
 
