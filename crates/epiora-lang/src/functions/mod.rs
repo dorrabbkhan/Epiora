@@ -6,6 +6,7 @@
 
 pub(crate) mod calendar;
 pub(crate) mod date;
+mod digits;
 pub(crate) mod math;
 mod spec;
 pub(crate) mod text;

@@ -240,9 +240,10 @@ pub fn compare_list(sess: &Session, vars: &[String], step: &Step) {
     check_results(&selection_json(sess, 0, false), step, "list");
 }
 
-/// One LIST cell as the fixture's `cellValue` reads it: `''`/`Missing`
-/// → null, numeric spellings → numbers, text verbatim, EI7's date/
-/// time spellings.
+/// One LIST cell as `fixtures/ei7/steps.mjs::cellValue` reads it:
+/// `''`/`Missing` → null, numeric spellings → numbers in the JS
+/// `Number`/`JSON.stringify` shape (integral values integer JSON,
+/// otherwise float), text verbatim, EI7's date/time spellings.
 fn list_cell(ds: &Dataset, var: &str, row: usize) -> Json {
     let c = ds.column(var).unwrap_or_else(|_| panic!("list var {var}"));
     fn real(x: f64) -> Json {
@@ -293,10 +294,10 @@ fn list_cell(ds: &Dataset, var: &str, row: usize) -> Json {
                 .is_some()
         {
             return stripped.parse::<f64>().map_or(Json::Null, |x| {
-                if s.contains('.') {
-                    Json::from(x)
-                } else {
+                if x.fract() == 0.0 && x >= i64::MIN as f64 && x < i64::MAX as f64 {
                     Json::from(x as i64)
+                } else {
+                    Json::from(x)
                 }
             });
         }

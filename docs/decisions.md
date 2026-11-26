@@ -6918,12 +6918,14 @@ Semantic choices where the source was pinned (quirks ported, not
   as `unsupported_function` — the register marks them
   `supported@1.1` (they parse), which is what the register-iteration
   test asserts.
-- `FORMAT` calls `Microsoft.VisualBasic.Strings.Format` in EI7; the
-  v1.1 corpus pins `FORMAT(x, "0.00")` → `x.ToString()` ("54",
-  "46.1"), so non-date patterns return the `ToString()`. The named
-  date/time formats (`GeneralDate`, `LongDate`, `ShortDate`,
-  `LongTime`, `ShortTime`) are applied as a method choice — the
-  corpus pins none of them.
+- `FORMAT` calls `Microsoft.VisualBasic.Strings.Format` in EI7. The
+  scalar-family implementation now matches EI7 for the simple numeric
+  digit pictures (`0`, `#` and `.`), so `FORMAT(54, "0.00")` is
+  `"54.00"` with half-away-from-zero rounding (corrected by v1.1
+  Task 14 Step 2). The named date/time formats (`GeneralDate`,
+  `LongDate`, `ShortDate`, `LongTime`, `ShortTime`) are applied as a
+  method choice; other non-date patterns keep the raw `ToString()`
+  fallback — the corpus pins none of them.
 - `GROUPROWINDEX`'s carry is the previous row's *expression result*
   (`PreceedingDataRow[qualifiedId]`): equal consecutive argument
   `ToString()`s increment the previous output's `int.TryParse`,
@@ -7359,4 +7361,379 @@ Files outside the Files block:
   refactored to `assert_input` so the two Task-13b extra cases drive
   the same wasm/native byte-identity check and land in the JSONL; the
   block names `parity/{mod.rs,cases.rs}` only.
+Supersedes: —
+
+### v1.1 Task 14 — method choices where Epi Info 7 is unexpected (2026-11-26)
+
+Decision: the method choices below are recorded for the task's OWNER
+REVIEW. Except for MERGE — already decided by the owner on 2026-11-23
+(PR #111, option A) — each recommendation is a recommendation, not an
+owner approval. Tasks 10 and 11 already implement the recommended
+behaviour unless the entry says otherwise; this task changes no
+`crates/epiora-lang/src/manage/*` code.
+
+Owner answer (2026-11-26): all 13 recommendations accepted; item 11
+applied in Step 2 (`functions/text.rs`, tests named).
+
+Every entry names the same three options required by the plan: **match
+Epi Info 7**, **match R/common practice**, or **match Epi Info 7 and
+add an assumption note**. Fixture references are the program lines in
+`fixtures/ei7/v11/*.json`; where the exact evidence matters, the
+physical json/html line range read is named explicitly. The Task 11
+evidence named below is in `crates/epiora-lang/tests/`.
+
+1. **Missing values in comparisons.**
+
+   - Epi Info 7: `select_sort.json` L10/L13/L16 pins
+     `SELECT MASHEDPOTA = 1` → 37 rows, `SELECT MASHEDPOTA <> 1` → 38
+     rows (the 37 zero rows plus the one missing row), and
+     `SELECT MASHEDPOTA = (.)` → 1 row. Missing therefore tests equal
+     to the `(.)` missing literal and not equal to any non-missing
+     value; inequality against a non-missing value includes missing.
+   - R/common practice: R's `NA != 1` and SQL's `NULL <> 1` are
+     unknown, not true; filters normally drop them. Missing equality
+     uses an explicit test (`is.na`, `IS NULL`).
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7 and add an assumption note**,
+     because migration parity depends on the pinned row counts and the
+     behaviour is surprising enough to need a visible note.
+     `expr::ops::compare` already implements it;
+     `expr.rs::missing_propagates_as_epi_info` pins the 37/38/1 counts
+     plus `(.) = (.)` and `(.) <> (.)`.
+
+2. **FREQ's displayed total and missing-category order.**
+
+   - Epi Info 7: after `select_sort.json` L16 selects the one missing
+     MASHEDPOTA row, L17 prints no categories and `freq.total` 0 — the
+     displayed Total is the non-missing category sum, not the selected
+     record count. With `SET MISSING=ON`, `delete_set.json` L21 puts
+     the missing category first (24 rows) and includes it in Total 46;
+     L23 (`SET MISSING=OFF`) leaves only 22 non-missing rows.
+   - R/common practice: base R excludes `NA` unless `useNA` is asked
+     for; when shown, the missing category is normally last. Epiora's
+     statistical result separately reports `total` (records in scope)
+     and `missing`, with `"(missing)"` last by the v0.2 dataset-model
+     rule.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match R/common practice** in the engine result:
+     keep `total` and `missing` distinct and keep `"(missing)"` last.
+     The EI7 corpus comparator's display mapping (missing first and
+     Total recomputed as the category sum) remains test-side compatibility
+     evidence, not a statistical-result change. Task 11 records this in
+     `tests/common/corpus/compare.rs`; no numeric result is hidden.
+
+3. **RECODE range-boundary inclusivity.**
+
+   - Epi Info 7: `recode.json` L10–L15 recodes AGE as
+     `LOVALUE - 17`, `18 - 64`, `65 - HIVALUE` and prints AGEGRP counts
+     23/43/9, Total 75. The corpus README names the boundary rows at
+     ages 17, 64 and 65; Task 11's hand-computed
+     `manage_define_recode.rs::recode_boundaries_as_ei7` shows 17 →
+     group 1, 64 → group 2 and 65 → group 3. Both endpoints are
+     inclusive, including the unbounded `LOVALUE`/`HIVALUE` ends.
+   - R/common practice: SQL `BETWEEN` is inclusive; R interval
+     constructors make inclusivity explicit (`cut`'s `right`, often
+     right-inclusive only). There is no safe assumption that one end is
+     excluded.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7**. Inclusive ends are explicit,
+     reproducible and close to common practice; `manage/recode.rs`
+     already implements them.
+
+4. **RECODE ELSE and a missing source.**
+
+   - Epi Info 7: `recode.json` L23–L27 recodes MASHEDPOTA with
+     `0 = 0` and `ELSE = 2`; the missing source row does not become 2,
+     so MPGRP has counts 37/37 and Total 74 rather than 75.
+   - R/common practice: missing normally stays `NA` unless the user
+     recodes it explicitly; catch-all branches in careful recodes do
+     not silently manufacture a present value.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7**. It is also the safer common
+     behaviour. `manage/recode.rs` implements it and
+     `manage_define_recode.rs::recode_else_does_not_catch_missing`
+     pins the missing cell.
+
+5. **MERGE duplicate keys, UPDATE vs APPEND.**
+
+   - Epi Info 7: the only runnable reference is the bare default
+     match-or-insert form. In `merge_relate.json` step `"line": 27`
+     (physical json lines 582–618), MERGE on
+     `PatientID::VisitPatientID` reports `NUMBERUPDATED = 11` and
+     `NUMBERINSERTED = 0`: eleven source rows matched a destination row
+     and none inserted. In step `"line": 30` (physical json lines
+     659–695), MERGE on `GlobalRecordId::GlobalRecordId` reports
+     `NUMBERUPDATED = 1` and `NUMBERINSERTED = 10`. These counts pin
+     match-or-insert only; they do **not** pin which duplicate source
+     row survives. Even the later LIST's surviving GUID cannot prove
+     source-order last-wins because the fixture does not pin MERGE's
+     internal source scan order. The explicit `UPDATE`, `APPEND` and
+     `RELATE` option
+     words crash EI7 7.2.7.0 in `Rule_Merge.SetMergeOpt`
+     (`fixtures/ei7/v11/README.md`); the owner decided on 2026-11-23
+     (PR #111, option A) that the corpus pins the default path and that
+     Task 14 records Epiora's own UPDATE and APPEND semantics, with
+     Task 11's hand-computed tests as evidence.
+   - R/common practice: R/database joins usually expand duplicate key
+     matches rather than overwriting; SQL `MERGE`/upsert updates
+     matches and inserts misses, often rejecting duplicate matches;
+     append is concatenation. There is no single common duplicate-key
+     rule.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7 and add an assumption note**
+     for the default form — where "match Epi Info 7" means only the
+     measured match-or-insert shape. Matched rows take shared source
+     columns and unmatched source rows insert. The duplicate survivor
+     is Epiora's hand-computed implementation choice, not measured EI7
+     behaviour: repeated source keys overwrite in source order so the
+     last source row wins. Epiora's explicit `UPDATE` suppresses those
+     inserts; explicit `APPEND` appends every source row
+     unconditionally, duplicates included. The duplicate-key note must
+     say that last-wins can hide earlier source rows and is Epiora's
+     choice. This is exactly the implemented `manage/merge.rs`
+     behaviour and
+     `manage_merge_relate.rs::merge_duplicate_keys_update_and_append`;
+     the owner's decision therefore requires no code change.
+
+6. **SORT position of missing values.**
+
+   - Epi Info 7: `select_sort.json` L30 sorts TIMESUPPER ascending and
+     L31 lists all 47 missing cells before the first present datetime.
+     Missing is therefore first in ascending order. The corpus does not
+     pin a descending missing-key case; Task 11 implements the mirror
+     image, missing last descending.
+   - R/common practice: R's `order` puts missing values last by default
+     (`na.last = TRUE`); SQL NULL placement varies by engine and often
+     by explicit `NULLS FIRST/LAST`.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7 and add an assumption note**:
+     ascending missing-first is pinned; the descending mirror is the
+     natural reading of one total order reversed and is what
+     `manage/select_sort.rs` implements.
+     `manage_view.rs::sort_places_missing_first` pins the ascending
+     case.
+
+7. **Date and time differences.**
+
+   - Epi Info 7: `functions_date.json` L21–L25 pins `MINUTES` values
+     of 180–420 while `DAYS` over the same pair has min/mean/max 0 —
+     `DAYS` is the whole-day component, not fractional elapsed days.
+     L27–L31 pin the two-argument `YEARS`/`MONTHS` surface but only at
+     zero values in this corpus. The EI7 source at the D2 commit
+     (`Rule_Years.cs` and `Rule_Months.cs`) uses completed calendar
+     units: `YEARS` subtracts one when the end month/day is before the
+     start month/day; `MONTHS` computes the calendar-month difference
+     and subtracts one when the end day-of-month is smaller. Thus
+     31 January → 28 February is 0 completed months, not a
+     month-end-adjusted 1.
+   - R/common practice: base R's `difftime` is exact elapsed time
+     (fractional units are normal); SQL Server `DATEDIFF` counts
+     month/year boundaries rather than completed anniversaries;
+     month-end-aware libraries differ in how they clamp 31-day months.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7 and add an assumption note**.
+     `functions/date.rs` already implements whole-component `DAYS` and
+     completed-calendar-unit `MONTHS`/`YEARS`. The assumption note must
+     name the month-end rule. The lack of a nonzero month-end fixture
+     is a corpus coverage gap, not a licence to invent one here:
+     fixtures may change only in fixture tasks.
+
+8. **ABS/TRUNC on missing input.**
+
+   - Epi Info 7: the Task 3 runtime measurements in
+     `fixtures/ei7/v11/README.md` show `ABS` and `TRUNC` throwing
+     `NullReferenceException` on a missing input cell, while `ROUND`,
+     the date parts/differences and the pinned text functions propagate
+     missing. A crashing function cannot have a step-level output pin —
+     the program aborts before ROUTEOUT output — so the corpus exercises
+     `ABS`/`TRUNC` only on the fully populated HeightInches column
+     (`functions_text_math.json` L19/L21/L30).
+   - R/common practice: `abs(NA)` and `trunc(NA)` are `NA`; missing
+     propagates rather than crashing.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match R/common practice**. Reproducing a
+     `NullReferenceException` would violate Epiora's typed-error rule
+     and could never produce a useful result. Epiora propagates missing
+     for `ABS`/`TRUNC` as it does for the rest of the scalar family;
+     `expr.rs::missing_propagates_as_epi_info` pins `abs(0 - x)` staying
+     missing on a missing operand.
+
+9. **DEFINE with an expression.**
+
+   - Epi Info 7: `define_assign_if.json` step `"line": 11` (physical
+     json lines 106–109) is `DEFINE DOUBLED = AGE + AGE`; step
+     `"line": 12` (`MEANS DOUBLED`, physical json lines 112–153)
+     reports 75 observations with Total, Mean, Variance and Std Dev all
+     0. The runnable column-expression form therefore creates the
+     variable but does not evaluate its expression: the column is
+     zero-initialised. The function-call subform is narrower still:
+     `fixtures/ei7/v11/README.md` lines 32–35 record `DEFINE x = f()`
+     resolving the function as a column name and rejecting it, so there
+     is no runnable EI7 reference for that subform.
+   - R/common practice: a column defined from an expression is normally
+     computed (`mutate`, `transform`, a SQL select or generated
+     column). Silent zero-initialisation is not expected.
+   - Options: match Epi Info 7 / match R/common practice / match Epi
+     Info 7 and add an assumption note.
+   - Recommendation: **match Epi Info 7 and add an assumption note**
+     for the runnable column-expression form. Epiora's
+     `Command::DefineExpr` already type-checks the expression but does
+     not evaluate it; `manage/define_assign.rs::define_expr` fills the
+     column with the zero/empty value of the expression's type. Epiora
+     applies the same zero-initialisation to a well-typed function
+     expression as a compatibility extension EI7 cannot run. The note
+     must state both halves. The Task 11 corpus test
+     `ei7_v11.rs::every_reference_program_step_matches` pins the 75/0
+     MEANS output.
+
+10. **TEXTINPUT assignment casing.**
+
+    - Epi Info 7: `define_assign_if.json` steps `"line": 35` through
+      `41` (physical json lines 1031–1089) define `SICKTXT TEXTINPUT`,
+      assign `"yes"` or `"no"` inside IF branches, and print the FREQ
+      categories `NO` (29 rows) and `YES` (46 rows). In
+      `functions_text_math.json` steps `"line": 10` and `11` (physical
+      json lines 38–47), `ASSIGN SUBNM = SUBSTRING(Name, 1, 3)` is
+      field-dependent; the LIST rows at physical json lines 175–200
+      show `Doe`, not `DOE`. Immediate assignment uppercases, while the
+      field-dependent record path preserves case.
+    - R/common practice: assignment does not change string case based
+      on whether the expression mentions a field; `"yes"` stays
+      lower-case unless the user explicitly asks for upper case.
+    - Options: match Epi Info 7 / match R/common practice / match Epi
+      Info 7 and add an assumption note.
+    - Recommendation: **match Epi Info 7 and add an assumption note**.
+      Epiora implements that path split:
+      `manage/define_assign.rs::assign` and `if_then` uppercase a
+      TEXTINPUT target only when the expression has no dataset-column
+      reference; field-dependent assignments keep case. The Task 11
+      corpus test `ei7_v11.rs::every_reference_program_step_matches`
+      pins the field-dependent half through exact LIST-row comparison.
+      It also exercises the immediate branch and its pinned counts, but
+      the FREQ comparator does not assert category labels, so the
+      immediate `YES`/`NO` casing currently has no exact test pin
+      beyond the fixture rows.
+
+11. **FORMAT(x, "0.00").**
+
+    - Epi Info 7: `functions_text_math.json` step `"line": 27`
+      (physical json lines 139–144) assigns `FMTH =
+      FORMAT(HeightInches, "0.00")`. The parsed json LIST rows
+      numericise the first FMTH strings to `54`, `46.1` and `53.3`
+      (physical json lines 175–215), so they cannot by themselves pin
+      the string form. The committed html is the evidence:
+      `functions_text_math.html` line 109 shows `54.00`, `46.10` and
+      `53.30`. EI7's Visual Basic `Format` therefore honours the
+      numeric picture; the Task 10 inference that this corpus pinned
+      `x.ToString()` was wrong.
+    - R/common practice: formatting functions honour the requested
+      decimal picture — for example R's `sprintf("%.2f", 54)` is
+      `"54.00"`, as are the corresponding SQL and spreadsheet numeric
+      pictures. Raw `ToString()` is not a formatting implementation.
+    - Options: match Epi Info 7 / match R/common practice / match Epi
+      Info 7 and add an assumption note.
+    - Recommendation: **match Epi Info 7**. Epiora now does:
+      `functions/text.rs::format` implements the simple numeric digit
+      pictures (`0`, `#` and `.`) with half-away-from-zero rounding, so
+      `FORMAT(54, "0.00")` returns the text `"54.00"`. The named
+      date/time patterns and missing propagation are unchanged;
+      unrecognised pictures keep the raw `ei_to_string` fallback.
+      `functions_format.rs` pins `54`/`46.1`/`53.3` →
+      `"54.00"`/`"46.10"`/`"53.30"`, positive and negative half-way
+      cases, `0.125` → `"0.13"`, and missing input → missing.
+      `expr.rs::every_register_function_parses_and_evaluates` exercises
+      the same call as part of the register sweep.
+
+12. **Raw-table DELETE / SET PROCESS / UNDELETE.**
+
+    - Epi Info 7: `delete_set.json` step `"line": 10` (physical json
+      lines 106–118) runs `DELETE ILL = 0 RUNSILENT` and reports
+      `delete.records_deleted = 29`; the next FREQ (physical json lines
+      121–170) has Total 46. After `SET PROCESS=BOTH END-SET` at step
+      `"line": 14` (physical json lines 437–440), FREQ at physical json
+      lines 443–493 is still Total 46 — the setting does not bring the
+      raw-table rows back. `UNDELETE * RUNSILENT` at step `"line": 18`
+      (physical json lines 697–709) reports
+      `undelete.records_restored = 0`, and FREQ at physical json lines
+      712–762 remains Total 46. `fixtures/ei7/v11/README.md` lines
+      43–46 quote EI7's reason: the current read is not an Epi7
+      project.
+    - R/common practice: row deletion in a data frame or ordinary table
+      is physical in the working copy unless the system explicitly
+      models soft deletes; there is no process visibility mode or
+      undelete. A soft delete restorable in-session exists only when a
+      row-status carrier exists.
+    - Options: match Epi Info 7 / match R/common practice / match Epi
+      Info 7 and add an assumption note.
+    - Recommendation: **match Epi Info 7 and add an assumption note**.
+      Epiora already implements the raw/project distinction inside the
+      working view: a table without a RecStatus carrier drops the rows
+      from the in-memory view and UNDELETE restores nothing; a project
+      table carrying RecStatus has DELETE write a 0 mark, SET PROCESS
+      filter the mark's visibility, and UNDELETE clear session marks.
+      Owner decision G3 still holds — the saved source dataset never
+      changes. The assumption note must say that a raw-table delete is
+      irreversible for that session. The Task 11 tests are
+      `manage_view.rs::delete_records_then_write_creates_version`,
+      `manage_view.rs::undelete_restores_session_deleted_records` and
+      `manage_view.rs::set_process_both_includes_deleted_marks`, with
+      `ei7_v11.rs::every_reference_program_step_matches` pinning the
+      raw-table fixture counts.
+
+13. **LOG.**
+
+    - Epi Info 7: runnable EI7 7.2.7.0 rejects `LOG` —
+      `fixtures/ei7/v11/README.md` lines 56–57 record "Unexpected
+      Token: LOG" and name `LN` as the usable natural log — so no
+      fixture supplies a numeric reference. The D2 source at `4cd353c`,
+      `Epi.Core.Interpreter/Rules/Functions/Rule_LOG_Func.cs` line 35,
+      nevertheless implements `Math.Log(param1, 10.0)`: the intended
+      function behind the unparseable token is base-10.
+    - R/common practice: R's `log` is natural and `log10` is base-10;
+      scientific and spreadsheet conventions that expose both `LN` and
+      `LOG` commonly make `LN` natural and `LOG` base-10. There is no
+      universal cross-language meaning.
+    - Options: match Epi Info 7 / match R/common practice / match Epi
+      Info 7 and add an assumption note.
+    - Recommendation: **match Epi Info 7 and add an assumption note**:
+      keep `LOG` supported and base-10. The scope is already fixed —
+      spec §5.2 includes `LOG` in the v1.1 expression surface, the
+      command scope in spec §5.3 depends on that expression language,
+      and the register marks `LOG` supported at v1.1 — so reproducing
+      the parser rejection would contradict the planned surface. The
+      assumption note must say runnable EI7 rejects `LOG`; base-10 is
+      implementation-source evidence, not a measured fixture output.
+      Epiora already implements base-10 at
+      `crates/epiora-lang/src/functions/mod.rs:89`.
+      `expr.rs::every_register_function_parses_and_evaluates` exercises
+      `LOG(x)` as part of the register sweep but does not assert an
+      exact logarithm value.
+
+Measured Task 3 findings that are **not** Task 14 method choices:
+`END-SET` and `RUNSILENT` are syntax/headless-harness requirements;
+EI7 writing MERGE output into the destination file is already superseded
+by owner decision G3 (cleaning changes a working view, never saved data);
+RELATE's one-to-many row expansion is ordinary relational-join behaviour;
+output-file casing and run timestamps are artifact provenance.
+
+Files outside the Files block:
+- `crates/epiora-lang/src/functions/text.rs` — the plan's Step 2 names
+  `manage/*`, but `FORMAT` lives in `functions/`; item 11's implementation.
+- `crates/epiora-lang/src/functions/digits.rs` and
+  `crates/epiora-lang/src/functions/mod.rs` — fix round 2 extracts the
+  decimal digit arithmetic used by the 15-significant-digit pre-rounding so
+  `text.rs` stays within the file-size rule; no behaviour change.
+- `crates/epiora-lang/tests/functions_format.rs` — item 11's exact-value
+  numeric-picture tests.
+- `crates/epiora-lang/tests/common/corpus/compare.rs` — owner-approved
+  2026-11-26 to mirror `cellValue` (integral → integer), which FORMAT's
+  correct `"54.00"` exposed; no tolerance/fixture/expected value changed.
 Supersedes: —
