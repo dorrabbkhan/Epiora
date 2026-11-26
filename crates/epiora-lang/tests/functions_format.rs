@@ -46,6 +46,19 @@ fn format_rounds_half_away_from_zero() {
     assert_eq!(first("FORMAT(0.125, \"0.00\")").as_deref(), Some("0.13"));
 }
 
+/// .NET Framework first rounds a `double` to 15 significant digits, so
+/// binary-rounding tails never decide the picture rounding.
+#[test]
+fn format_reduces_reals_to_15_significant_digits_first() {
+    assert_eq!(
+        first("FORMAT(2.674999999999999, \"0.00\")").as_deref(),
+        Some("2.68")
+    );
+    assert_eq!(first("FORMAT(2.675, \"0.00\")").as_deref(), Some("2.68"));
+    assert_eq!(first("FORMAT(1.005, \"0.00\")").as_deref(), Some("1.01"));
+    assert_eq!(first("FORMAT(0.1 + 0.2, \"0.0\")").as_deref(), Some("0.3"));
+}
+
 /// `#` is optional: fractional trailing zeroes drop, and a zero integer
 /// part has no leading digit.
 #[test]

@@ -4,6 +4,9 @@
 
 use crate::expr::missing::{ei_to_string, is_empty, EV};
 use crate::functions::calendar;
+use crate::functions::digits::{
+    decimal_digits, increment_digits, round_significant_digits, DOTNET_CUSTOM_DOUBLE_DIGITS,
+};
 
 /// `UPPERCASE(v)` — `ToString().ToUpperInvariant()`; missing when the
 /// operand is empty.
@@ -135,10 +138,11 @@ fn format_digit_picture(v: &EV, pattern: &str) -> Option<String> {
         // Integer formatting is exact decimal formatting in .NET — do
         // not round-trip it through `f64` and lose digits above 2^53.
         EV::Int(i) => (*i < 0, i.unsigned_abs().to_string()),
-        EV::Real(x) if x.is_finite() => (
-            x.is_sign_negative() && *x != 0.0,
-            format!("{}", libm::fabs(*x)),
-        ),
+        EV::Real(x) if x.is_finite() => {
+            let shortest = format!("{}", libm::fabs(*x));
+            let magnitude = round_significant_digits(&shortest, DOTNET_CUSTOM_DOUBLE_DIGITS)?;
+            (x.is_sign_negative() && *x != 0.0, magnitude)
+        }
         _ => return None,
     };
     let picture = parse_digit_picture(pattern)?;
@@ -164,9 +168,9 @@ fn format_digit_picture(v: &EV, pattern: &str) -> Option<String> {
 
 /// Decimal digits after rounding the positive decimal text to `places`
 /// fraction digits, half away from zero. Real input text is Rust's
-/// locale-independent, round-trippable decimal rendering; the rounding
-/// itself is digit arithmetic, so no platform float formatting decides a
-/// tie.
+/// locale-independent, round-trippable decimal rendering after the .NET
+/// 15-significant-digit reduction; the rounding itself is digit
+/// arithmetic, so no platform float formatting decides a tie.
 struct FixedDigits {
     integer: Vec<u8>,
     fraction: Vec<u8>,
@@ -189,16 +193,6 @@ fn rounded_fixed_digits(text: &str, places: usize) -> Option<FixedDigits> {
     Some(FixedDigits { integer, fraction })
 }
 
-/// ASCII decimal digits as values 0–9; anything else rejects the input.
-fn decimal_digits(s: &str) -> Option<Vec<u8>> {
-    s.bytes()
-        .map(|b| match b {
-            b'0'..=b'9' => Some(b - b'0'),
-            _ => None,
-        })
-        .collect()
-}
-
 /// Increment the fixed digit pair, carrying from the fraction into the
 /// integer part when every fraction digit rolls over.
 fn round_up_digits(integer: &mut Vec<u8>, fraction: &mut [u8]) {
@@ -210,17 +204,6 @@ fn round_up_digits(integer: &mut Vec<u8>, fraction: &mut [u8]) {
         *d = 0;
     }
     increment_digits(integer);
-}
-
-fn increment_digits(digits: &mut Vec<u8>) {
-    for d in digits.iter_mut().rev() {
-        if *d < 9 {
-            *d += 1;
-            return;
-        }
-        *d = 0;
-    }
-    digits.insert(0, 1);
 }
 
 /// Align the rounded integer digits with the picture's integer placeholders

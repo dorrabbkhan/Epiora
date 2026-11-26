@@ -294,7 +294,7 @@ fn list_cell(ds: &Dataset, var: &str, row: usize) -> Json {
                 .is_some()
         {
             return stripped.parse::<f64>().map_or(Json::Null, |x| {
-                if x.fract() == 0.0 && x.abs() < 1e15 {
+                if x.fract() == 0.0 && x >= i64::MIN as f64 && x < i64::MAX as f64 {
                     Json::from(x as i64)
                 } else {
                     Json::from(x)

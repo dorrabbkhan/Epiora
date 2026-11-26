@@ -7727,6 +7727,10 @@ output-file casing and run timestamps are artifact provenance.
 Files outside the Files block:
 - `crates/epiora-lang/src/functions/text.rs` — the plan's Step 2 names
   `manage/*`, but `FORMAT` lives in `functions/`; item 11's implementation.
+- `crates/epiora-lang/src/functions/digits.rs` and
+  `crates/epiora-lang/src/functions/mod.rs` — fix round 2 extracts the
+  decimal digit arithmetic used by the 15-significant-digit pre-rounding so
+  `text.rs` stays within the file-size rule; no behaviour change.
 - `crates/epiora-lang/tests/functions_format.rs` — item 11's exact-value
   numeric-picture tests.
 - `crates/epiora-lang/tests/common/corpus/compare.rs` — owner-approved
