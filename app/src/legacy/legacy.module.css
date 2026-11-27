@@ -1,0 +1,43 @@
+.notice {
+  color: var(--color-danger);
+  background: var(--color-surface);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-3);
+  padding: var(--space-4);
+  margin-block: var(--space-4);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-block: var(--space-4);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 36rem;
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-block: var(--space-4);
+}
+
+.section {
+  margin-block-start: var(--space-6);
+  overflow-x: auto;
+}
+
+.schemaNote {
+  color: var(--color-textMuted);
+  font-size: var(--font-size2);
+}
+
+.tableWrap {
+  overflow-x: auto;
+}

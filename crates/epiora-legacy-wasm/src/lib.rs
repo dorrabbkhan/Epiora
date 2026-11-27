@@ -10,6 +10,7 @@
 
 #[cfg(feature = "parity")]
 mod parity;
+mod plain;
 
 use epiora_core::dataset::{Dataset, LinkKind};
 use epiora_core::snapshot::encode_snapshot;
@@ -231,7 +232,7 @@ fn js_error_reason(reason: String) -> LegacyError {
 /// The accumulated EPTB batches of one legacy file.
 #[wasm_bindgen]
 pub struct LegacyHandle {
-    source: BatchSource,
+    pub(crate) source: BatchSource,
 }
 
 /// `legacyNew()` — an empty batch source.

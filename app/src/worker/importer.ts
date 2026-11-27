@@ -28,6 +28,87 @@ export interface Session {
 
 const sessions = new Map<string, Session>();
 
+// Cancellation scopes outside the CSV import session map (v1.1 Task
+// 15): a legacy preview id registers here so the same `cancelImport`
+// RPC can stop its commit between dataset writes.
+const cancelScopes = new Set<string>();
+const cancelledScopes = new Set<string>();
+
+export function registerCancelScope(id: string): void {
+  cancelScopes.add(id);
+  cancelledScopes.delete(id);
+}
+
+export function clearCancelScope(id: string): void {
+  cancelScopes.delete(id);
+  cancelledScopes.delete(id);
+}
+
+export function cancelScopeRequested(id: string): boolean {
+  return cancelledScopes.has(id);
+}
+
+interface ImportCommitHold {
+  entered: Promise<void>;
+  enteredResolve: () => void;
+  release: Promise<void>;
+  releaseResolve: () => void;
+}
+
+let importCommitHold: ImportCommitHold | null = null;
+
+function testHooksDisabled(): Promise<never> {
+  return Promise.reject(rpc('not_found', 'test hooks are disabled in this build'));
+}
+
+/** Test hook (`VITE_TEST_HOOKS=1` only): arms a one-shot gate at the
+ *  import commit boundary. The returned promise resolves when a commit
+ *  reaches that gate; `releaseImportCommitHold` releases the worker. */
+export function holdNextImportCommit(): Promise<void> {
+  if (import.meta.env.VITE_TEST_HOOKS !== '1') return testHooksDisabled();
+  if (importCommitHold !== null) return importCommitHold.entered;
+  let enteredResolve!: () => void;
+  let releaseResolve!: () => void;
+  const entered = new Promise<void>((resolve) => {
+    enteredResolve = resolve;
+  });
+  const release = new Promise<void>((resolve) => {
+    releaseResolve = resolve;
+  });
+  importCommitHold = { entered, enteredResolve, release, releaseResolve };
+  return entered;
+}
+
+/** Releases the one-shot import commit gate. Without an armed gate this
+ *  is a no-op so a failing test's teardown cannot create a new error. */
+export function releaseImportCommitHold(): Promise<void> {
+  if (import.meta.env.VITE_TEST_HOOKS !== '1') return testHooksDisabled();
+  importCommitHold?.releaseResolve();
+  return Promise.resolve();
+}
+
+/** Awaits an armed test-only import commit gate. Production builds never
+ *  consult the gate state: without `VITE_TEST_HOOKS=1` this returns in
+ *  the same microtask and the commit path has no test-only wait. */
+export async function awaitImportCommitHold(): Promise<void> {
+  if (import.meta.env.VITE_TEST_HOOKS !== '1') return;
+  const hold = importCommitHold;
+  if (hold === null) return;
+  hold.enteredResolve();
+  await hold.release;
+  if (importCommitHold === hold) importCommitHold = null;
+}
+
+/** Yields once so the cancel RPC can run, then reads the live flag and
+ *  throws the stable `cancelled` code when it is set (shared by CSV and
+ *  legacy commits). The callback shape is deliberate: passing a boolean
+ *  captures it before the yield and makes a cancel landing inside that
+ *  yield invisible. */
+export async function throwWhenCancelled(cancelled: () => boolean): Promise<void> {
+  await new Promise((r) => setTimeout(r, 0));
+  if (cancelled()) throw rpc('cancelled', 'the import was cancelled');
+}
+
 export function getSession(sessionId: string): Session {
   const s = sessions.get(sessionId);
   if (s === undefined) {
@@ -104,7 +185,16 @@ export async function diffAgainst(
 }
 
 export async function cancelImport(sessionId: string): Promise<void> {
-  getSession(sessionId).cancelled = true;
+  const s = sessions.get(sessionId);
+  if (s !== undefined) {
+    s.cancelled = true;
+    return;
+  }
+  if (cancelScopes.has(sessionId)) {
+    cancelledScopes.add(sessionId);
+    return;
+  }
+  throw rpc('session_not_found', `import session ${sessionId} does not exist`);
 }
 
 export async function discardSession(sessionId: string): Promise<void> {

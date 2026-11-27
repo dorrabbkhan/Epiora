@@ -4,6 +4,7 @@
 import { expect, test } from '@playwright/test';
 import { expectNoA11yViolations } from './helpers/axe';
 import { ROUTES } from './routes';
+import { walkToPreview } from './helpers/legacy';
 
 for (const colorScheme of ['light', 'dark'] as const) {
   for (const route of ROUTES) {
@@ -15,6 +16,24 @@ for (const colorScheme of ['light', 'dark'] as const) {
       await expectNoA11yViolations(page, `${route} (${colorScheme})`);
     });
   }
+}
+
+
+// Legacy preview and re-import are states rather than directly seeded
+// URLs: cover them in the same light/dark matrix with one seeded project.
+for (const colorScheme of ['light', 'dark'] as const) {
+  test(`legacy preview and reimport in ${colorScheme} have no axe violations`, async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.emulateMedia({ colorScheme });
+    await walkToPreview(page);
+    await expectNoA11yViolations(page, `legacy preview (${colorScheme})`);
+    await page.getByRole('button', { name: 'Confirm import' }).click();
+    await expect(page).toHaveURL(/\/p\/[^/]+$/, { timeout: 60_000 });
+    const projectId = page.url().split('/p/')[1]!;
+    await page.goto(`/p/${projectId}/reimport`);
+    await expect(page.getByRole('heading', { name: 'Re-import a newer copy' })).toBeVisible();
+    await expectNoA11yViolations(page, `legacy reimport (${colorScheme})`);
+  });
 }
 
 // v1.0 Task 14: one calculator per family — counts, person_time,

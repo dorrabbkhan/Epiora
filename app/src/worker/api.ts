@@ -25,7 +25,9 @@ import * as analysis from './analysis';
 import * as commit from './commit';
 import { engine } from './engines';
 import * as rexport from './export';
-import { rpc, throwWired } from './errors';
+import { rpc } from './errors';
+import { wire } from './rpc-wire';
+import { legacyApi, type LegacyDataApi } from './api-legacy';
 import * as importer from './importer';
 import * as langWorker from './lang';
 import * as langSessionWorker from './lang-session';
@@ -36,8 +38,7 @@ import type {
   Session,
   SessionState,
 } from './lang';
-import * as legacyWorker from './legacy';
-import type { LegacyPreview, RefreshPreview } from './legacy';
+import type { LegacyPreview, PlainPreview, RefreshPreview } from './legacy';
 import { clearSnapshotCache, gridPage, loadEntry, storedSettings } from './snapshots';
 import { withStore } from './store-backend';
 import * as datasets from '../store/repo/datasets';
@@ -46,6 +47,7 @@ import * as versions from '../store/repo/versions';
 import type { Project } from '../store/repo/projects';
 
 export type { Project };
+export type { LegacyProjectInfo, MovedSession } from './api-legacy';
 
 export interface DatasetInfo {
   id: string;
@@ -123,11 +125,12 @@ export type {
   ProgramEvent,
   ProgramRun,
   RefreshPreview,
+  PlainPreview,
   Session,
   SessionState,
 };
 
-export interface DataApi {
+export interface DataApi extends LegacyDataApi {
   listProjects(): Promise<Project[]>;
   createProject(name: string): Promise<Project>;
   renameProject(id: string, name: string): Promise<void>;
@@ -163,28 +166,6 @@ export interface DataApi {
   ): Promise<CommitResult>;
   cancelImport(sessionId: string): Promise<void>;
   discardSession(sessionId: string): Promise<void>;
-  /**
-   * v1.1 Task 13 (spec §4.2): map picked legacy files to a project
-   * preview — `.mdb`/`.accdb` through mdbtools wasm, `.db` through
-   * sqlite-wasm — without writing the store.
-   */
-  inspectLegacy(
-    files: File[],
-    codePage?: string,
-  ): Promise<LegacyPreview>;
-  /** Commits a `inspectLegacy` preview — one transaction. */
-  commitLegacy(
-    previewId: string,
-    onProgress: (p: ImportProgress) => void,
-  ): Promise<string>;
-  /** Re-import: diffs a newer copy of the file against the project's
-   *  committed views. */
-  planRefresh(
-    projectId: string,
-    files: File[],
-    codePage?: string,
-  ): Promise<RefreshPreview>;
-  commitRefresh(previewId: string): Promise<void>;
   /** Cleaning sessions and program runs (v1.1 spec §5–6): session
    *  replays carry the project's stored `dataset_links` (Task 13b),
    *  and `CANCEL READ` closes the session's view, clearing the recipe. */
@@ -235,6 +216,18 @@ export interface DataApi {
   storageEstimate(): Promise<StorageEstimate>;
   requestPersistence(): Promise<boolean>;
   /**
+   * Test hook: arms a one-shot hold immediately before the next CSV or
+   * legacy import commit's transaction boundary; the promise resolves
+   * when the worker reaches it. Only functional in builds made with
+   * `VITE_TEST_HOOKS=1`.
+   */
+  __holdNextImportCommit(): Promise<void>;
+  /**
+   * Test hook: releases the armed import commit hold. Only functional in
+   * builds made with `VITE_TEST_HOOKS=1`.
+   */
+  __releaseImportCommitHold(): Promise<void>;
+  /**
    * Test hook (Task 8's `Store.__simulateQuotaOnNextWrite`, Task 11
    * e2e): the store's next mutating statement fails `quota_exceeded`.
    * Only functional in builds made with `VITE_TEST_HOOKS=1`.
@@ -278,12 +271,6 @@ function toVersionInfo(v: versions.DatasetVersion): VersionInfo {
   return { ...v };
 }
 
-/** Wraps a handler so rejections reach the client as a wired RpcError. */
-const wire =
-  <A extends unknown[], R>(f: (...args: A) => Promise<R>) =>
-  (...args: A): Promise<R> =>
-    f(...args).catch(throwWired);
-
 const now = () => new Date().toISOString();
 
 export const api: DataApi = {
@@ -324,16 +311,7 @@ export const api: DataApi = {
   ),
   cancelImport: wire((sessionId) => importer.cancelImport(sessionId)),
   discardSession: wire((sessionId) => importer.discardSession(sessionId)),
-  inspectLegacy: wire((files, codePage) => legacyWorker.inspectLegacy(files, codePage)),
-  commitLegacy: wire((previewId, onProgress) =>
-    withStore((s) => legacyWorker.commitLegacy(s, previewId, onProgress)),
-  ),
-  planRefresh: wire((projectId, files, codePage) =>
-    withStore((s) => legacyWorker.planRefresh(s, projectId, files, codePage)),
-  ),
-  commitRefresh: wire((previewId) =>
-    withStore((s) => legacyWorker.commitRefresh(s, previewId)),
-  ),
+  ...legacyApi,
   openSession: wire((projectId, datasetId, version) =>
     withStore((s) => langWorker.openSession(s, projectId, datasetId, version)),
   ),
@@ -370,6 +348,18 @@ export const api: DataApi = {
     return { usage: est.usage ?? 0, quota: est.quota ?? 0, persisted };
   }),
   requestPersistence: wire(async () => (await navigator.storage?.persist?.()) ?? false),
+  __holdNextImportCommit: wire(() => {
+    if (import.meta.env.VITE_TEST_HOOKS !== '1') {
+      return Promise.reject(rpc('not_found', 'test hooks are disabled in this build'));
+    }
+    return importer.holdNextImportCommit();
+  }),
+  __releaseImportCommitHold: wire(() => {
+    if (import.meta.env.VITE_TEST_HOOKS !== '1') {
+      return Promise.reject(rpc('not_found', 'test hooks are disabled in this build'));
+    }
+    return importer.releaseImportCommitHold();
+  }),
   __simulateQuotaOnNextWrite: wire(() => {
     if (import.meta.env.VITE_TEST_HOOKS !== '1') {
       return Promise.reject(rpc('not_found', 'test hooks are disabled in this build'));

@@ -56,6 +56,45 @@ fn hdcaseform_check_code_is_not_truncated() {
     assert_eq!(check.blocks, 164, "HDCaseForm check_code blocks");
 }
 
+/// `hansens_disease_grids_are_not_missing_on_refresh` — grid child
+/// datasets participate in the refresh diff by their `UniqueKey`; an
+/// unchanged copy must classify them `unchanged`, never `missing`.
+#[test]
+fn hansens_disease_grids_are_not_missing_on_refresh() {
+    let mdb = root().join("fixtures/legacy/samples/ei7/HansensDisease/HansensDisease.mdb");
+    let mut src = mdb_source(&mdb);
+    let project = map_ei7(&mut src, SourceFormat::Ei7Access).unwrap();
+    assert!(
+        !project.datasets.is_empty(),
+        "HansensDisease has grid children"
+    );
+    let previous: Vec<(String, epiora_core::dataset::Dataset)> = project
+        .views
+        .iter()
+        .map(|v| (v.name.clone(), v.dataset.clone()))
+        .chain(
+            project
+                .datasets
+                .iter()
+                .map(|d| (d.id().to_string(), d.clone())),
+        )
+        .collect();
+    let plan = epiora_legacy::refresh_plan(&previous, &project).unwrap();
+    for grid in &project.datasets {
+        let outcome = plan
+            .views
+            .iter()
+            .find(|v| v.name == grid.id())
+            .unwrap_or_else(|| panic!("grid {} missing from the refresh plan", grid.id()));
+        assert!(
+            matches!(outcome.outcome, epiora_legacy::RefreshOutcome::Unchanged),
+            "grid {}: expected unchanged, got {:?}",
+            grid.id(),
+            outcome.outcome
+        );
+    }
+}
+
 /// `sqlite_copy_matches_access` — a verbatim SQLite copy of the Access
 /// Sample maps to the same project (spec §8.2: the copy-tables check).
 #[test]

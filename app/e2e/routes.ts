@@ -3,6 +3,7 @@ export const ROUTES = [
   '/',
   '/p/demo',
   '/p/demo/import',
+  '/legacy',
   '/p/demo/d/demo',
   '/p/demo/analysis',
   '/settings',

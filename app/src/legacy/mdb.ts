@@ -91,13 +91,14 @@ export async function openMdb(
   codePage?: string,
   moduleUrl = '/mdb/mdb.js',
 ): Promise<MdbHandle> {
-  const init = (await import(/* @vite-ignore */ moduleUrl)).default as (
+  const base = new URL(moduleUrl, globalThis.location?.href ?? import.meta.url);
+  const init = (await import(/* @vite-ignore */ base.href)).default as (
     opts?: object,
   ) => Promise<MdbModule>;
   // locateFile: resolve the .wasm next to moduleUrl — the module's own
   // import.meta.url is a dead dev-server URL under vitest.
   const M = await init({
-    locateFile: (file: string) => new URL(file, moduleUrl).href,
+    locateFile: (file: string) => new URL(file, base).href,
   });
 
   const vpath = `/epiora-mdb-${++counter}.mdb`;

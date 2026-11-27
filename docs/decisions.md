@@ -7737,3 +7737,154 @@ Files outside the Files block:
   2026-11-26 to mirror `cellValue` (integral → integer), which FORMAT's
   correct `"54.00"` exposed; no tolerance/fixture/expected value changed.
 Supersedes: —
+
+## v1.1 Task 15 — legacy import UI implementation surface
+
+Files outside the Files block:
+- `app/src/worker/legacy.ts` — legacy worker orchestration; the plan named only `importer.ts` and `commit.ts` among worker files.
+- `app/src/worker/legacy-shared.ts` — shared legacy types/enrichment used while splitting `legacy.ts` below the file-size rule.
+- `app/src/worker/legacy-refresh.ts` — re-import planning, identity enforcement and version writes.
+- `app/src/worker/legacy-plain.ts` — plain-table preview and cancellable import for unknown-layout files.
+- `app/src/worker/api.ts` — exposes legacy identity, SQL Server inspect, plain-table import and working-view move RPCs.
+- `app/src/worker/client.ts` — typed client wrappers for those RPCs.
+- `app/src/worker/snapshots.ts` — snapshot-v2 metadata/page helpers used by preview enrichment and added-record ids.
+- `app/src/worker/errors.ts` — typed wasm error propagation plus the re-import identity error codes.
+- `app/src/worker/contract.test.ts` — pins the added RPCs and error-code message coverage.
+- `app/src/worker/lang.ts` — exports the existing replay machinery needed by the move.
+- `app/src/worker/lang-move.ts` — implements the working-view move through the existing Task 13 replay machinery.
+- `app/src/legacy/mdb.ts` — resolves the mdb wasm asset relative to the worker origin; required for any real `.mdb` import in the app.
+- `app/desktop-e2e/smoke.spec.mjs` — existing home for the task-required desktop smoke assertion.
+- `crates/epiora-legacy-wasm/src/lib.rs` — exposes source table names and converts selected plain EPTB tables into dataset snapshots.
+- `docs/decisions.md` — this entry.
+
+Reason: Task 13's preview JSON carries counts but no per-field schema, so the UI derives legacy/Epiora field types from snapshot-v2 metadata in `snapshots.ts` and enriches the preview in the legacy worker. `worker/api.ts`/`client.ts` expose the already-internal legacy-project identity needed to gate re-import, the SQL Server batch inspect RPC needed by the desktop form, and the Review Focus RPCs. `contract.test.ts` pins those added RPCs. `errors.ts` honours wasm error objects whose `code` survives the boundary and carries typed re-import identity errors. `lang.ts` is the owner of session memory/replay, so moving working views belongs there. The desktop smoke spec is the only existing home for the task-required desktop smoke assertion.
+
+Fix-round-2 exact file accounting. Files block members created or modified by full path:
+- `app/src/legacy/ImportLegacy.tsx`
+- `app/src/legacy/LegacyPreview.tsx`
+- `app/src/legacy/SqlServerForm.tsx`
+- `app/src/legacy/ReimportDialog.tsx`
+- `app/src/legacy/strings.ts`
+- `app/src/legacy/legacy.module.css`
+- `app/src/ui/routes/legacy.tsx`
+- `app/e2e/legacy.spec.ts`
+- `app/src/ui/router.tsx`
+- `app/src/ui/routes/index.tsx`
+- `app/src/ui/routes/project.tsx`
+- `app/src/worker/importer.ts`
+- `app/src/worker/commit.ts`
+
+Every other file in the final diff, by full path:
+- `app/desktop-e2e/smoke.spec.mjs`
+- `app/e2e/a11y.spec.ts` — shared light/dark axe coverage for the seeded legacy preview and re-import states.
+- `app/e2e/helpers/legacy.ts` — shared legacy seeding helpers used by the legacy, accessibility and viewport specs.
+- `app/e2e/routes.ts` — adds `/legacy` to the shared route matrix.
+- `app/e2e/viewport.spec.ts` — shared 320px and 200% zoom coverage for the seeded legacy states.
+- `app/src/legacy/mdb.ts` — resolves the mdb wasm asset relative to the worker origin; required for real `.mdb` imports.
+- `app/src/worker/api-legacy.ts` — legacy RPC surface split out of `api.ts` for the file-size rule.
+- `app/src/worker/api.ts` — spreads the legacy RPC surface into the worker API.
+- `app/src/worker/client.ts` — typed client wrappers for the legacy RPCs.
+- `app/src/worker/commit-version.ts` — the shared v0.3 records/changes/imports/version write path extracted from `commit.ts` and reused by legacy import/re-import.
+- `app/src/worker/contract.test.ts` — pins the RPC and error-message contract.
+- `app/src/worker/errors.ts` — typed error propagation and legacy re-import error copy lookup.
+- `app/src/worker/lang-move.ts` — working-view move implementation.
+- `app/src/worker/lang.ts` — exports the replay machinery used by the move.
+- `app/src/worker/legacy.browser.test.ts` — worker regression tests for canonical store writes, rebuilds, diff entries and unchanged re-import no-op.
+- `app/src/worker/legacy-plain.ts` — plain-table preview and cancellable import for unknown-layout files.
+- `app/src/worker/legacy-records.ts` — adapter that pages canonical records/metadata out of legacy snapshots and calls the shared write path.
+- `app/src/worker/legacy-refresh.ts` — re-import planning, grid-child commit handling, no-op behaviour and identity enforcement.
+- `app/src/worker/legacy-shared.ts` — shared legacy types, keys and enrichment helpers.
+- `app/src/worker/legacy.ts` — legacy worker orchestration.
+- `app/src/worker/rpc-wire.ts` — shared RPC error wrapper used by the split API modules.
+- `app/src/worker/snapshot-codec.ts` — snapshot paging/metadata scanner split out of `snapshots.ts`.
+- `app/src/worker/snapshots.ts` — verified loading and records-driven rebuilds, including legacy metadata.
+- `crates/epiora-import/src/lib.rs` — exports the metadata-aware records rebuild.
+- `crates/epiora-import/src/records.rs` — implements the metadata-aware records rebuild.
+- `crates/epiora-import-wasm/src/lib.rs` — registers the snapshot-records module.
+- `crates/epiora-import-wasm/src/snapshot_records.rs` — canonical record paging and metadata-aware snapshot rebuild exports.
+- `crates/epiora-legacy/src/refresh.rs` — diffs grid children by `UniqueKey`/`GlobalRecordId` instead of marking them missing.
+- `crates/epiora-legacy/tests/golden.rs` — HansensDisease grid-children refresh regression test.
+- `crates/epiora-legacy-wasm/src/lib.rs` — legacy wasm root after the plain-table split.
+- `crates/epiora-legacy-wasm/src/plain.rs` — plain-table wasm conversion split out of `lib.rs`.
+- `docs/decisions.md` — this entry.
+
+`app/src/ui/strings.ts` is in the Files block but is not modified in the final diff: its Task-15 copy moved to `app/src/legacy/strings.ts` so the already-over-400-line shared file does not grow.
+
+Fix-round-3 exact file accounting. Files block members modified by full path:
+- `app/src/legacy/ImportLegacy.tsx`
+- `app/src/legacy/legacy.module.css`
+- `app/e2e/legacy.spec.ts`
+
+Files outside the Files block modified by full path:
+- `app/src/worker/legacy-plain.ts` — plain-table imports now use the canonical write path.
+- `app/src/worker/legacy-records.ts` — metadata-free plain snapshots persist no empty metadata rebuild payload.
+- `app/src/worker/legacy-refresh.ts` — re-import schema and missing-view report entries.
+- `app/src/worker/legacy.browser.test.ts` — regression coverage for both worker fixes.
+- `docs/decisions.md` — this entry.
+
+Fix-round-4 exact file accounting. Files block members modified by full path:
+- `app/src/legacy/LegacyPreview.tsx`
+- `app/src/legacy/ReimportDialog.tsx`
+- `app/src/legacy/SqlServerForm.tsx`
+
+Files outside the Files block modified or created by full path:
+- `app/src/legacy/sqlserver.browser.test.ts` — full UI/worker SQL Server sentinel test; the bridge is mocked but the form, preview, worker and OPFS store are real.
+- `app/src/worker/api-legacy.ts` — removes the database argument from the SQL Server inspect RPC and exposes typed preview-discard RPCs.
+- `app/src/worker/client.ts` — typed client wrappers for the changed inspect and discard RPCs.
+- `app/src/worker/contract.test.ts` — pins the added discard RPCs on the worker API surface.
+- `app/src/worker/legacy-plain.ts` — carries the picked data file's SHA-256 through plain-table preview state.
+- `app/src/worker/legacy-records.ts` — writes explicit source provenance instead of reusing a dataset content hash as `source_sha256`.
+- `app/src/worker/legacy-refresh.ts` — carries the re-import file SHA-256 and writes report-only `missing`/`no_key` outcomes without versions.
+- `app/src/worker/legacy.browser.test.ts` — regression coverage for preview consumption/discard.
+- `app/src/worker/legacy-provenance.browser.test.ts` — regression coverage for file provenance and report-only re-import.
+- `app/src/worker/legacy.ts` — computes source-file provenance, uses fixed SQL Server provenance, consumes successful previews and implements typed discard.
+- `crates/epiora-import-wasm/src/lib.rs` — exposes the importer's existing SHA-256 helper to the worker.
+- `crates/epiora-import/src/lib.rs` — makes that existing helper public for the browser binding; no new hash implementation.
+- `crates/epiora-lang/src/expr/ast.rs` — canonical date/date-time literals print zero-padded four-digit years.
+- `crates/epiora-lang/src/expr/lit.rs` — the two-digit-year pivot applies only to one/two-digit year spellings, not padded four-digit spellings.
+- `crates/epiora-lang/src/pgm/print.rs` — the independent program canonical value printer uses the same four-digit years.
+- `crates/epiora-lang/tests/expr_props.proptest-regressions` — preserves the proptest seed that shrinks to `Date(-683004)`.
+- `crates/epiora-lang/tests/expr_props.rs` — fixed regression tests for CI's two minimal failing expressions.
+- `docs/decisions.md` — this entry.
+
+For SQL Server there is no source file to hash. `dataset_versions.source_sha256` is non-null text in the v0.3 schema, so the import stores the empty string as the no-file-bytes value rather than mislabelling a dataset content hash; provenance text is the fixed label `SQL Server import`, never a connection field.
+
+Fix-round-5 exact file accounting. Files block members modified by full path:
+- `app/src/legacy/ImportLegacy.tsx`
+- `app/src/legacy/LegacyPreview.tsx`
+- `app/src/legacy/strings.ts`
+- `app/e2e/legacy.spec.ts`
+
+Files outside the Files block modified or created by full path:
+- `crates/epiora-legacy-wasm/src/plain.rs` — exposes the per-table binary columns skipped by plain-table decoding.
+- `app/src/worker/legacy.ts` — adds the explicit import-attempt cancellation arming RPC implementation and removes the commit-time re-arm.
+- `app/src/worker/legacy-plain.ts` — releases plain previews through the typed discard path and writes binary-column migration-report entries.
+- `app/src/worker/legacy-shared.ts` — carries the plain-preview skipped-column warning type; the corrective round removed the round-5 settle helper entirely.
+- `app/e2e/helpers/legacy.ts` — shared helper that synthesizes the small binary-column sqlite database in memory without adding a fixture.
+- `app/src/worker/api-legacy.ts` — exposes `beginLegacyImport` and `discardPlainPreview` on the worker RPC surface.
+- `app/src/worker/client.ts` — typed client wrappers for those two RPCs.
+- `app/src/worker/contract.test.ts` — pins the two added RPCs.
+- `app/src/worker/legacy-cancel.browser.test.ts` — regression coverage for cancellation requested before project/plain commit's first yield and the typed unknown-preview begin failure.
+- `app/src/worker/legacy-plain.browser.test.ts` — regression coverage for plain-preview release and binary-column warning/report persistence.
+- `app/src/worker/legacy-plain.test.ts` — unit coverage for the wasm binary-column warning list and skipped-column snapshot shape.
+- `docs/decisions.md` — this entry.
+
+Cancellation determinism comes from a test-only hook rather than production latency. `app/src/worker/importer.ts` implements a one-shot pre-commit hold that is inert unless the build was made with `VITE_TEST_HOOKS=1`; `app/src/worker/api.ts` exposes `__holdNextImportCommit` and `__releaseImportCommitHold` in that lane. The e2e test arms the hold before starting the import, waits until the worker reaches the point immediately before transaction commit, clicks the real Cancel control, waits for that click's `cancelImport` RPC to finish in the worker, then releases the hold. The final checkpoint after the last yield reads the live cancellation flag immediately before commit and rolls the transaction back. Production imports have no settle window, polling loop or fixed timer.
+
+Fix-round-6 exact file accounting. Files block members modified by full path:
+- `app/e2e/legacy.spec.ts`
+- `app/src/worker/commit.ts`
+- `app/src/worker/importer.ts`
+
+Files outside the Files block modified or created by full path:
+- `app/e2e/helpers/import-cancel.ts` — new shared helpers arm the worker hold, release it only after the real Cancel click's RPC resolves, and discriminate the cancellation alert from the update toast.
+- `app/e2e/import.spec.ts` — the pre-existing CSV cancel test uses the same deterministic gate; the mandated five-repeat three-engine run reproduced its commit-before-click race in Firefox.
+- `app/src/worker/api.ts` — exposes the two `VITE_TEST_HOOKS=1`-gated hold/release RPCs in the existing test-hook lane.
+- `app/src/worker/client.ts` — typed client wrappers for those RPCs.
+- `app/src/worker/contract.test.ts` — pins the two added RPCs.
+- `app/src/worker/legacy.ts` — replaces the removed settle wait with the inert-in-production pre-commit gate.
+- `app/src/worker/legacy-plain.ts` — the same replacement at the plain-table commit boundary.
+- `app/src/worker/legacy-shared.ts` — deletes the settle helper.
+- `docs/decisions.md` — this entry.
+
+The CSV use is the same test-only correction, not a production behavior change: without `VITE_TEST_HOOKS=1` the gate returns immediately in both CSV and legacy commits.

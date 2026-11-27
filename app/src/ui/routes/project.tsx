@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import {
+  Button,
   Cell,
   Column,
   Row,
@@ -7,9 +8,13 @@ import {
   TableBody,
   TableHeader,
 } from '../components';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { dataApi } from '../../worker/client';
 import { useDatasets, useProjects, useRuns } from '../queries';
 import { EmptyState } from '../screens/EmptyState';
 import { OutputLog } from '../screens/analysis/OutputLog';
+import { legacyT } from '../../legacy/strings';
 import { t } from '../strings';
 import styles from './routes.module.css';
 
@@ -38,6 +43,14 @@ export function ProjectScreen({ project }: { project: string }) {
 
 function ProjectView({ projectId, name }: { projectId: string; name: string }) {
   const datasets = useDatasets(projectId);
+  const legacy = useQuery({
+    queryKey: ['legacyProject', projectId],
+    queryFn: () => dataApi.getLegacyProject(projectId),
+  });
+  const [sessionBanner] = useState(
+    () => sessionStorage.getItem(`epiora-reimported:${projectId}`) === '1',
+  );
+  const [moveState, setMoveState] = useState<'idle' | 'moving' | 'done' | 'error'>('idle');
   const runs = useRuns(projectId);
   const list = datasets.data;
   const runList = runs.data;
@@ -52,7 +65,36 @@ function ProjectView({ projectId, name }: { projectId: string; name: string }) {
         <Link to="/p/$project/analysis" params={{ project: projectId }}>
           {t.project.analysis}
         </Link>
+        {legacy.data !== null && legacy.data !== undefined && legacy.data.sourceFormat !== 'ei7_sql_server' && (
+          <Link to="/p/$project/reimport" params={{ project: projectId }}>
+            {legacyT.reimport}
+          </Link>
+        )}
       </div>
+      {sessionBanner && (
+        <section aria-label={legacyT.workingViewsLabel}>
+          <p>{legacyT.workingViewsBanner}</p>
+          {moveState === 'done' && <p>{legacyT.movedWorkingViews}</p>}
+          {moveState === 'error' && <p role="alert">{legacyT.moveWorkingViewsFailed}</p>}
+          {(moveState === 'idle' || moveState === 'error') && (
+            <Button
+              onPress={() => {
+                setMoveState('moving');
+                void dataApi.moveSessionsToCurrent(projectId).then(
+                  () => {
+                    sessionStorage.removeItem(`epiora-reimported:${projectId}`);
+                    setMoveState('done');
+                  },
+                  () => setMoveState('error'),
+                );
+              }}
+            >
+              {legacyT.moveWorkingViews}
+            </Button>
+          )}
+          {moveState === 'moving' && <p>{legacyT.movingWorkingViews}</p>}
+        </section>
+      )}
       <section>
         <h2>{t.project.datasets}</h2>
         {list === undefined ? (

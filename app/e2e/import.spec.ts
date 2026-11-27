@@ -4,6 +4,7 @@
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import { expectNoA11yViolations } from './helpers/axe';
+import { armImportCommitHold, cancelAlert, cancelHeldImport } from './helpers/import-cancel';
 
 const FIXTURES = new URL('../../fixtures/import/', import.meta.url);
 const UTF8_COMMA = readFileSync(new URL('utf8_comma/input.csv', FIXTURES), 'utf8');
@@ -201,14 +202,15 @@ test('cancel_during_write_leaves_no_dataset', async ({ page }) => {
   ].join('\n');
   await chooseFile(page, 'big.csv', 'text/csv', csv);
   await walkNewImportToConfirm(page);
+  await armImportCommitHold(page);
   await page.getByRole('button', { name: 'Import', exact: true }).click();
 
   await expect(
     page.getByRole('progressbar', { name: 'Write records' }),
   ).toBeVisible();
   await expectNoA11yViolations(page, 'wizard progress step');
-  await page.getByRole('button', { name: 'Cancel import' }).click();
-  await expect(page.getByRole('alert')).toContainText(/cancelled/i);
+  await cancelHeldImport(page, page.getByRole('button', { name: 'Cancel import' }));
+  await expect(cancelAlert(page)).toContainText(/cancelled/i);
 
   await expect(
     page.evaluate(

@@ -11,6 +11,7 @@
 // store conformance harness uses for StoreError.
 
 import { StoreError } from '../store/types';
+import { legacyErrorT } from '../legacy/strings';
 import { t } from '../ui/strings';
 
 export type RpcErrorCode =
@@ -103,6 +104,8 @@ export const WORKER_ERROR_CODES = [
   'not_found',
   'hash_mismatch',
   'cancelled',
+  'reimport_not_legacy',
+  'reimport_source_mismatch',
   'internal_error',
 ] as const;
 
@@ -119,6 +122,8 @@ const WORKER_CATEGORY: Record<(typeof WORKER_ERROR_CODES)[number], RpcErrorCode>
   not_found: 'StoreError',
   hash_mismatch: 'HashMismatch',
   cancelled: 'Cancelled',
+  reimport_not_legacy: 'ImportError',
+  reimport_source_mismatch: 'ImportError',
   internal_error: 'StoreError',
 };
 
@@ -138,7 +143,8 @@ export function categoryFor(detail: string): RpcErrorCode {
 
 function userMessageFor(detail: string): string {
   const messages = t.errors as Record<string, string | undefined>;
-  return messages[detail] ?? messages.internal_error ?? 'Something went wrong.';
+  const legacyMessages = legacyErrorT as Record<string, string | undefined>;
+  return messages[detail] ?? legacyMessages[detail] ?? messages.internal_error ?? 'Something went wrong.';
 }
 
 export class RpcError extends Error {
@@ -178,8 +184,10 @@ export function isWiredRpcError(e: unknown): e is WiredRpcError {
 /** The stable `code` a wasm-bound Rust error carries (`js_error` sets
  *  it on the thrown Error). */
 function rustCode(e: unknown): string | undefined {
-  if (e instanceof Error) {
-    const code = (e as unknown as { code?: unknown }).code;
+  // wasm-bindgen errors do not always survive the boundary as an
+  // `instanceof Error`; the stable `code` property is the contract.
+  if (typeof e === 'object' && e !== null) {
+    const code = (e as { code?: unknown }).code;
     if (typeof code === 'string') return code;
   }
   return undefined;

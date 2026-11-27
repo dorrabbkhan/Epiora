@@ -206,12 +206,12 @@ fn value_text(v: &Value) -> String {
         }
         Value::Date(d) => {
             let (y, m, dd) = civil_from_days(*d);
-            format!("{m}/{dd}/{y}")
+            format!("{m}/{dd}/{y:04}")
         }
         Value::Time(t) => format!("{}:{:02}:{:02}", t / 3600, t % 3600 / 60, t % 60),
         Value::DateTime(s) => {
             let (y, m, d, h, mi, sec) = crate::functions::calendar::civil_from_secs(*s);
-            format!("{m}/{d}/{y} {h}:{mi:02}:{sec:02}")
+            format!("{m}/{d}/{y:04} {h}:{mi:02}:{sec:02}")
         }
     }
 }

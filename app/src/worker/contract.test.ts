@@ -6,6 +6,7 @@
 
 import { readFileSync } from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
+import { legacyErrorT } from '../legacy/strings';
 import { t } from '../ui/strings';
 import {
   ENGINE_ERROR_CODES,
@@ -26,6 +27,10 @@ import { TYPES_CHECKED } from './contract.types';
 // cannot fetch the `?url` wasm; the browser suite drives the same
 // call unmocked) — what is asserted is the File→bytes conversion and
 // `dataFile` picking the data file over the `.prj` companion.
+vi.mock('@import/epiora_import_wasm', () => ({
+  default: vi.fn().mockResolvedValue(undefined),
+  sha256: vi.fn(() => 'file-sha256'),
+}));
 vi.mock('@legacy/epiora_legacy_wasm', () => ({
   default: vi.fn().mockResolvedValue(undefined),
   legacyNew: vi.fn(() => ({ free: vi.fn() })),
@@ -223,7 +228,10 @@ function rustCodes(path: string): string[] {
 
 describe('worker RPC contract', () => {
   it('every_detail_code_has_a_user_message', () => {
-    const messages = t.errors as Record<string, string | undefined>;
+    const messages = {
+      ...(t.errors as Record<string, string | undefined>),
+      ...(legacyErrorT as Record<string, string | undefined>),
+    };
     for (const code of ALL_CODES) {
       expect(messages[code], `missing userMessage for ${code}`).toBeTypeOf('string');
       expect(messages[code]!.length).toBeGreaterThan(0);
@@ -256,9 +264,20 @@ describe('worker RPC contract', () => {
     const a = api as unknown as Record<string, unknown>;
     for (const name of [
       'inspectLegacy',
+      'inspectLegacySqlServer',
+      'getLegacyProject',
       'commitLegacy',
+      'discardLegacyPreview',
       'planRefresh',
       'commitRefresh',
+      'discardRefreshPreview',
+      'inspectPlainLegacy',
+      'commitPlainLegacy',
+      'discardPlainPreview',
+      'beginLegacyImport',
+      '__holdNextImportCommit',
+      '__releaseImportCommitHold',
+      'moveSessionsToCurrent',
       'openSession',
       'applyCommand',
       'undoLast',

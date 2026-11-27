@@ -6,7 +6,8 @@
 //! of spec §4.3.
 
 use crate::error::ImportError;
-use epiora_core::dataset::{Column, ColumnData, Dataset, Value, ValueType};
+use epiora_core::dataset::{Column, ColumnData, ColumnMeta, Dataset, LabelSet, Value, ValueType};
+use std::collections::BTreeMap;
 
 /// The cell at `row` as a `Value`; `-0.0` is normalised to `0.0` so the
 /// canonical bytes of a rebuilt dataset and of stored JSON agree.
@@ -144,4 +145,19 @@ pub fn dataset_from_records(
         });
     }
     Ok(Dataset::new(id, version, columns)?)
+}
+
+/// [`dataset_from_records`] plus the v1.1 column metadata and label
+/// sets a legacy import persists beside its schema. The same
+/// validation as `Dataset::with_meta` applies; prompts and legacy
+/// names stay outside the hash, label sets inside it (spec §4.3).
+pub fn dataset_from_records_with_meta(
+    id: &str,
+    version: u64,
+    schema: &[(String, ValueType)],
+    rows: &[&str],
+    meta: Vec<ColumnMeta>,
+    label_sets: BTreeMap<String, LabelSet>,
+) -> Result<Dataset, ImportError> {
+    Ok(dataset_from_records(id, version, schema, rows)?.with_meta(meta, label_sets)?)
 }

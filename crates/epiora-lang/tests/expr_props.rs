@@ -5,7 +5,7 @@
 //! file is self-contained.
 
 use epiora_core::dataset::{Column, ColumnData, Dataset, Value};
-use epiora_lang::{eval_column, parse_expr, AsOf, EvalEnv, Expr, Lit};
+use epiora_lang::{eval_column, parse_expr, AsOf, BinOp, EvalEnv, Expr, Lit};
 use proptest::prelude::*;
 
 /// A small dataset: `x` has a missing middle cell, `flag` a boolean,
@@ -65,6 +65,34 @@ fn env() -> EvalEnv {
         .into_iter()
         .collect(),
     }
+}
+
+/// CI run 45898653776's minimal failure: the civil year of
+/// `Date(-683004)` is 99. The canonical print must spell it with a
+/// four-digit year so the two-digit-year pivot does not re-read it as
+/// 1999.
+#[test]
+fn date_year_99_print_parse_roundtrip_regression() {
+    let e = Expr::Binary {
+        op: BinOp::Or,
+        lhs: Box::new(Expr::Ident("x".to_string())),
+        rhs: Box::new(Expr::Literal(Lit::Date(-683_004))),
+    };
+    let printed = e.to_string();
+    let reparsed = parse_expr(&printed).unwrap_or_else(|err| panic!("{printed}: {err}"));
+    assert_eq!(reparsed, e);
+}
+
+/// The same minimal date inside LIKE — the other shape CI shrunk to.
+#[test]
+fn date_year_99_like_print_parse_roundtrip_regression() {
+    let e = Expr::Like {
+        operand: Box::new(Expr::Literal(Lit::Date(-683_004))),
+        pattern: "a*".to_string(),
+    };
+    let printed = e.to_string();
+    let reparsed = parse_expr(&printed).unwrap_or_else(|err| panic!("{printed}: {err}"));
+    assert_eq!(reparsed, e);
 }
 
 proptest! {

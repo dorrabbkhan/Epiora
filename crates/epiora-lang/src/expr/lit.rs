@@ -159,13 +159,22 @@ fn parse_date_text(text: &str) -> Option<Option<i32>> {
     else {
         return None;
     };
+    let y_len = y.len();
     let (Ok(m), Ok(d), Ok(y)) = (m.parse::<u32>(), d.parse::<u32>(), y.parse::<i32>()) else {
         return None;
     };
-    let y = match y {
-        0..=29 => y + 2000,
-        30..=99 => y + 1900,
-        _ => y,
+    // The pivot belongs to one- or two-digit year spellings only. A
+    // zero-padded four-digit spelling (`0099`) is exact, not `1999` —
+    // the distinction the canonical printer relies on for civil years
+    // before 100.
+    let y = if y_len <= 2 {
+        match y {
+            0..=29 => y + 2000,
+            30..=99 => y + 1900,
+            _ => y,
+        }
+    } else {
+        y
     };
     Some(crate::functions::calendar::days_from_civil_checked(y, m, d))
 }

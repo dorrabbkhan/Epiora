@@ -90,7 +90,7 @@ export interface SessionMem {
   recipeSha256: string;
 }
 
-const sessionState = new Map<string, SessionMem>();
+export const sessionState = new Map<string, SessionMem>();
 
 export function getSessionMem(sessionId: string): SessionMem {
   const s = sessionState.get(sessionId);
@@ -235,7 +235,7 @@ export async function openSession(
 
 /** The `manage` node's command JSON out of a parsed single-statement
  *  program — `applyCommand` takes exactly one cleaning command. */
-function manageCommand(node: unknown): unknown {
+export function manageCommand(node: unknown): unknown {
   const n = node as { manage?: unknown };
   if (n.manage === undefined) {
     throw rpc('internal_error', 'applyCommand expects a cleaning command');
