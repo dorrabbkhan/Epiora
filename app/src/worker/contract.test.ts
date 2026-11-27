@@ -273,6 +273,8 @@ describe('worker RPC contract', () => {
       'discardRefreshPreview',
       'inspectPlainLegacy',
       'commitPlainLegacy',
+      'discardPlainPreview',
+      'beginLegacyImport',
       'moveSessionsToCurrent',
       'openSession',
       'applyCommand',

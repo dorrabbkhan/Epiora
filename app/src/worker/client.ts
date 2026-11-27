@@ -63,6 +63,7 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
     inspectLegacy: (files, codePage) => call(r.inspectLegacy(files, codePage)),
     inspectLegacySqlServer: (tables) => call(r.inspectLegacySqlServer(tables)),
     getLegacyProject: (projectId) => call(r.getLegacyProject(projectId)),
+    beginLegacyImport: (previewId) => call(r.beginLegacyImport(previewId)),
     commitLegacy: (previewId, onProgress) =>
       call(r.commitLegacy(previewId, Comlink.proxy(onProgress))),
     discardLegacyPreview: (previewId) => call(r.discardLegacyPreview(previewId)),
@@ -73,6 +74,7 @@ export function wrapDataApi(worker: Worker): Remote<DataApi> {
     inspectPlainLegacy: (files, codePage) => call(r.inspectPlainLegacy(files, codePage)),
     commitPlainLegacy: (previewId, tables, onProgress) =>
       call(r.commitPlainLegacy(previewId, tables, Comlink.proxy(onProgress))),
+    discardPlainPreview: (previewId) => call(r.discardPlainPreview(previewId)),
     moveSessionsToCurrent: (projectId) => call(r.moveSessionsToCurrent(projectId)),
     openSession: (projectId, datasetId, version) =>
       call(r.openSession(projectId, datasetId, version)),

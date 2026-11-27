@@ -11,6 +11,7 @@ import {
   REIMPORT_DB,
   SAMPLE_DB,
   chooseFiles,
+  choosePlainBinaryDb,
   chooseReimportFile,
   importSample,
   walkToPreview,
@@ -166,6 +167,31 @@ test('cancel_mid_plain_table_import_rolls_back', async ({ page }) => {
     ),
   );
   expect(datasetCounts).toEqual([]);
+});
+
+test('plain_binary_column_warns_before_import_and_is_not_written', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto('/legacy');
+  await choosePlainBinaryDb(page);
+  await expect(page.getByRole('alert')).toContainText('not a recognised Epi Info project');
+  await page.getByRole('button', { name: 'Choose tables to import' }).click();
+  await expect(page.getByRole('checkbox', { name: 'measurements' })).toBeChecked();
+
+  const warnings = page.getByRole('grid', { name: 'Plain import warnings' });
+  const warning = warnings.getByRole('row', { name: /measurements/ });
+  await expect(warning).toContainText('payload');
+  await expect(warning).toContainText('binary data not imported');
+  await expectNoA11yViolations(page, 'plain binary column warning');
+
+  await page.getByRole('button', { name: 'Import selected tables' }).click();
+  await expect(page.getByRole('heading', { name: 'binary' })).toBeVisible({ timeout: 60_000 });
+  const columns = await page.evaluate(async () => {
+    const projects = await window.dataApi.listProjects();
+    const datasets = await window.dataApi.listDatasets(projects[0]!.id);
+    const page = await window.dataApi.getVersionPage(datasets[0]!.id, 1, 0, 10);
+    return page.columns.map((c) => c.name);
+  });
+  expect(columns).toEqual(['id', 'note']);
 });
 
 test('reimport_shows_diff_and_creates_versions', async ({ page }) => {

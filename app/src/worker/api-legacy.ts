@@ -21,6 +21,8 @@ export interface LegacyDataApi {
   inspectLegacySqlServer(tables: SqlServerTableInput[]): Promise<LegacyPreview>;
   /** Whether a project came from a legacy import. */
   getLegacyProject(projectId: string): Promise<LegacyProjectInfo | null>;
+  /** Starts one cancellable project/plain-table import attempt. */
+  beginLegacyImport(previewId: string): Promise<void>;
   /** Commits a `inspectLegacy` preview — one transaction. */
   commitLegacy(previewId: string, onProgress: (p: ImportProgress) => void): Promise<string>;
   /** Abandons an uncommitted legacy import preview. */
@@ -37,6 +39,8 @@ export interface LegacyDataApi {
     tables: string[],
     onProgress: (p: ImportProgress) => void,
   ): Promise<string>;
+  /** Abandons an uncommitted plain-table import preview. */
+  discardPlainPreview(previewId: string): Promise<void>;
   /** Move persisted working views onto current dataset versions. */
   moveSessionsToCurrent(projectId: string): Promise<MovedSession[]>;
 }
@@ -47,6 +51,9 @@ export const legacyApi: LegacyDataApi = {
   getLegacyProject: wire((projectId) =>
     withStore((s) => legacyRepo.project(s, projectId)),
   ),
+  beginLegacyImport: wire(async (previewId) => {
+    legacyWorker.beginLegacyImport(previewId);
+  }),
   commitLegacy: wire((previewId, onProgress) =>
     withStore((s) => legacyWorker.commitLegacy(s, previewId, onProgress)),
   ),
@@ -66,6 +73,9 @@ export const legacyApi: LegacyDataApi = {
   commitPlainLegacy: wire((previewId, tables, onProgress) =>
     withStore((s) => legacyWorker.commitPlainLegacy(s, previewId, tables, onProgress)),
   ),
+  discardPlainPreview: wire(async (previewId) => {
+    legacyWorker.discardPlainPreview(previewId);
+  }),
   moveSessionsToCurrent: wire((projectId) =>
     withStore((s) => moveSessionsToCurrent(s, projectId)),
   ),

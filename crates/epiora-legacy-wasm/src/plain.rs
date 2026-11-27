@@ -51,6 +51,44 @@ pub fn legacy_tables(h: &LegacyHandle) -> Result<JsValue, JsValue> {
     Ok(out.into())
 }
 
+#[wasm_bindgen(js_name = legacyPlainBinaryColumns)]
+pub fn legacy_plain_binary_columns(
+    h: &mut LegacyHandle,
+    names: js_sys::Array,
+) -> Result<JsValue, JsValue> {
+    let out = js_sys::Array::new();
+    for i in 0..names.length() {
+        let table = names.get(i).as_string().ok_or_else(|| {
+            js_error(&js_error_reason(
+                "plain table names must be strings".to_string(),
+            ))
+        })?;
+        let raw = h.source.table(&table).map_err(|e| js_error(&e))?;
+        for col in &raw.columns {
+            if matches!(&col.data, RawData::BinarySkipped) {
+                let obj = js_sys::Object::new();
+                let _ = Reflect::set(
+                    &obj,
+                    &JsValue::from_str("table"),
+                    &JsValue::from_str(&table),
+                );
+                let _ = Reflect::set(
+                    &obj,
+                    &JsValue::from_str("column"),
+                    &JsValue::from_str(&col.name),
+                );
+                let _ = Reflect::set(
+                    &obj,
+                    &JsValue::from_str("reason"),
+                    &JsValue::from_str("binary data not imported"),
+                );
+                out.push(&obj);
+            }
+        }
+    }
+    Ok(out.into())
+}
+
 /// `legacyPlainTables(h, names) -> { datasets, snapshots }` — decode
 /// the chosen ordinary tables as plain datasets. `datasets` carries
 /// `{name, records, hash}` for the commit metadata; `snapshots[i]`

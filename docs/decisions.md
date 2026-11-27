@@ -7848,3 +7848,25 @@ Files outside the Files block modified or created by full path:
 - `docs/decisions.md` — this entry.
 
 For SQL Server there is no source file to hash. `dataset_versions.source_sha256` is non-null text in the v0.3 schema, so the import stores the empty string as the no-file-bytes value rather than mislabelling a dataset content hash; provenance text is the fixed label `SQL Server import`, never a connection field.
+
+Fix-round-5 exact file accounting. Files block members modified by full path:
+- `app/src/legacy/ImportLegacy.tsx`
+- `app/src/legacy/LegacyPreview.tsx`
+- `app/src/legacy/strings.ts`
+- `app/e2e/legacy.spec.ts`
+
+Files outside the Files block modified or created by full path:
+- `crates/epiora-legacy-wasm/src/plain.rs` — exposes the per-table binary columns skipped by plain-table decoding.
+- `app/src/worker/legacy.ts` — adds the explicit import-attempt cancellation arming RPC implementation and removes the commit-time re-arm.
+- `app/src/worker/legacy-plain.ts` — releases plain previews through the typed discard path and writes binary-column migration-report entries.
+- `app/src/worker/legacy-shared.ts` — carries the plain-preview skipped-column warning type and the shared two-second bounded pre-commit cancellation settle.
+- `app/e2e/helpers/legacy.ts` — shared helper that synthesizes the small binary-column sqlite database in memory without adding a fixture.
+- `app/src/worker/api-legacy.ts` — exposes `beginLegacyImport` and `discardPlainPreview` on the worker RPC surface.
+- `app/src/worker/client.ts` — typed client wrappers for those two RPCs.
+- `app/src/worker/contract.test.ts` — pins the two added RPCs.
+- `app/src/worker/legacy-cancel.browser.test.ts` — regression coverage for cancellation requested before project/plain commit's first yield and the typed unknown-preview begin failure.
+- `app/src/worker/legacy-plain.browser.test.ts` — regression coverage for plain-preview release and binary-column warning/report persistence.
+- `app/src/worker/legacy-plain.test.ts` — unit coverage for the wasm binary-column warning list and skipped-column snapshot shape.
+- `docs/decisions.md` — this entry.
+
+The two-second settle is deliberately inside the transaction immediately before commit: small previews otherwise write and navigate faster than a cancel click already started against the visible control can reach the worker, so the click was observably erased even though every checkpoint was correct. Input delivery itself was observed to take over one second under the three-engine parallel e2e load, so the window covers input latency rather than one paint. The bounded wait is not a fixture, parity or tolerance change; cancellation is polled during it, and the final checkpoint still rolls the whole transaction back.

@@ -2,9 +2,20 @@
 // and its optional `.prj`, inspect it entirely in the data worker and
 // move to the write-free preview. An unknown-layout Access file offers
 // its ordinary tables for plain dataset import instead of failing.
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Button, Checkbox, FileTrigger, ProgressBar } from '../ui/components';
+import {
+  Button,
+  Cell,
+  Checkbox,
+  Column,
+  FileTrigger,
+  ProgressBar,
+  Row,
+  Table,
+  TableBody,
+  TableHeader,
+} from '../ui/components';
 import { dataApi } from '../worker/client';
 import { RpcError } from '../worker/errors';
 import { inTauri } from '../worker/client';
@@ -37,6 +48,12 @@ function describeError(e: unknown): InspectError {
   };
 }
 
+function releasePlain(preview: PlainPreview | null): void {
+  if (preview !== null) {
+    void dataApi.discardPlainPreview(preview.previewId).catch(() => {});
+  }
+}
+
 export function ImportLegacy() {
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
@@ -46,13 +63,40 @@ export function ImportLegacy() {
   const [chosen, setChosen] = useState<string[]>([]);
   const [choosingTables, setChoosingTables] = useState(false);
   const [progress, setProgress] = useState<ImportProgress | null>(null);
+  const plainRef = useRef<PlainPreview | null>(null);
+  const mountedRef = useRef(false);
+  const importActiveRef = useRef(false);
+
+  const clearPlain = (discard: boolean) => {
+    const current = plainRef.current;
+    plainRef.current = null;
+    setPlain(null);
+    setPlainFiles(null);
+    setChosen([]);
+    setChoosingTables(false);
+    if (discard) releasePlain(current);
+  };
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      const current = plainRef.current;
+      plainRef.current = null;
+      if (current === null) return;
+      if (importActiveRef.current) {
+        void dataApi.cancelImport(current.previewId).catch(() => {});
+      } else {
+        releasePlain(current);
+      }
+    };
+  }, []);
 
   const inspect = async (files: FileList | null) => {
     if (files === null || files.length === 0) return;
+    clearPlain(true);
     setBusy(true);
     setError(null);
-    setPlain(null);
-    setChoosingTables(false);
     try {
       const preview = await dataApi.inspectLegacy(Array.from(files));
       rememberLegacyPreview(preview);
@@ -63,6 +107,11 @@ export function ImportLegacy() {
       if (described.plain) {
         try {
           const offer = await dataApi.inspectPlainLegacy(Array.from(files));
+          if (!mountedRef.current) {
+            releasePlain(offer);
+            return;
+          }
+          plainRef.current = offer;
           setPlain(offer);
           setPlainFiles(Array.from(files));
           setChosen(offer.tables);
@@ -76,14 +125,23 @@ export function ImportLegacy() {
     }
   };
 
+  const closePlain = () => {
+    clearPlain(true);
+    setError(null);
+    setProgress(null);
+  };
+
   const importPlain = async () => {
     if (plain === null || chosen.length === 0) return;
     setBusy(true);
     setError(null);
-    setProgress({ stage: 'write', done: 0, total: chosen.length });
+    importActiveRef.current = true;
     try {
+      await dataApi.beginLegacyImport(plain.previewId);
+      setProgress({ stage: 'write', done: 0, total: chosen.length });
       await new Promise((resolve) => requestAnimationFrame(resolve));
       const projectId = await dataApi.commitPlainLegacy(plain.previewId, chosen, setProgress);
+      plainRef.current = null;
       await navigate({ to: '/p/$project', params: { project: projectId } });
     } catch (e) {
       setError({
@@ -98,6 +156,7 @@ export function ImportLegacy() {
                 : String(e),
       });
     } finally {
+      importActiveRef.current = false;
       setBusy(false);
       setProgress(null);
     }
@@ -113,7 +172,10 @@ export function ImportLegacy() {
           {error.plain && plain !== null && plainFiles !== null && (
             <>
               <p>{legacyT.plainOffer}</p>
-              <Button onPress={() => setChoosingTables(true)}>{legacyT.chooseTables}</Button>
+              <div className={styles.panel}>
+                <Button onPress={() => setChoosingTables(true)}>{legacyT.chooseTables}</Button>
+                <Button onPress={closePlain}>{legacyT.close}</Button>
+              </div>
             </>
           )}
         </div>
@@ -121,6 +183,33 @@ export function ImportLegacy() {
       {choosingTables && plain !== null && (
         <section className={styles.section} aria-label={legacyT.plainTablesTitle}>
           <h2>{legacyT.plainTablesTitle}</h2>
+          {plain.skippedColumns.length > 0 && (
+            <section className={styles.section} aria-label={legacyT.plainWarnings}>
+              <h3>{legacyT.plainWarnings}</h3>
+              <p>{legacyT.plainBinaryWarning}</p>
+              <Table caption={legacyT.plainWarnings} aria-label={legacyT.plainWarnings}>
+                <TableHeader>
+                  <Column isRowHeader>{legacyT.headers.table}</Column>
+                  <Column>{legacyT.headers.column}</Column>
+                  <Column>{legacyT.headers.reason}</Column>
+                </TableHeader>
+                <TableBody
+                  items={plain.skippedColumns.map((warning, i) => ({
+                    ...warning,
+                    id: `plain-skipped-${i}`,
+                  }))}
+                >
+                  {(warning) => (
+                    <Row id={warning.id}>
+                      <Cell>{warning.table}</Cell>
+                      <Cell>{warning.column}</Cell>
+                      <Cell>{warning.reason}</Cell>
+                    </Row>
+                  )}
+                </TableBody>
+              </Table>
+            </section>
+          )}
           {plain.tables.map((table) => (
             <Checkbox
               key={table}

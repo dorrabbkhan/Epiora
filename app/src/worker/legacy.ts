@@ -11,6 +11,7 @@ import { importer, legacy } from './engines';
 import { writeLegacyVersion } from './legacy-records';
 import { dataFile, pushFile } from './legacy-eptb';
 import { rpc } from './errors';
+import { hasPlainPreview } from './legacy-plain';
 import {
   cancelScopeRequested,
   clearCancelScope,
@@ -26,6 +27,7 @@ import {
   enrichProject,
   projectEntries,
   recordKeyJson,
+  settleBeforeCommit,
   toNameBytes,
   type FileInput,
   type LegacyPreview,
@@ -59,7 +61,6 @@ function makePreview(
   const previewId = crypto.randomUUID();
   const enriched = enrichProject(project, snapshots);
   previews.set(previewId, { sourceName, sourceSha256, project: enriched, snapshots });
-  registerCancelScope(previewId);
   return { previewId, project: enriched };
 }
 
@@ -84,6 +85,13 @@ export async function inspectLegacy(
   }
 }
 
+export function beginLegacyImport(previewId: string): void {
+  if (!previews.has(previewId) && !hasPlainPreview(previewId)) {
+    throw rpc('session_not_found', `legacy preview ${previewId} does not exist`);
+  }
+  registerCancelScope(previewId);
+}
+
 /** One transaction: the project row, its legacy identity, every view
  *  dataset + version 1 snapshot, links, programs, check code and the
  *  migration report. Every checkpoint reads the live cancel flag after
@@ -105,9 +113,6 @@ export async function commitLegacy(
       // A released progress proxy must not fail the import.
     }
   };
-  // Re-arm the scope on every attempt: a failed commit keeps the preview
-  // for retry even though its first attempt's scope has been cleared.
-  registerCancelScope(previewId);
   const checkCancel = () => throwWhenCancelled(() => cancelScopeRequested(previewId));
   try {
     await checkCancel();
@@ -196,6 +201,7 @@ export async function commitLegacy(
         version: 1,
         json: JSON.stringify(p.report),
       });
+      await settleBeforeCommit(checkCancel);
       emit('snapshot', 1, 1);
       // Last checkpoint before commit: cancellation remains a complete
       // rollback even when it lands during the final report write.
@@ -262,6 +268,7 @@ export type {
   LegacyPreview,
   LegacyProjectJson,
   PlainPreview,
+  PlainSkippedColumn,
   RefreshDiff,
   RefreshPlanJson,
   RefreshPreview,

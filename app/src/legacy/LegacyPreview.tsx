@@ -123,11 +123,10 @@ export function LegacyPreview({ previewId }: { previewId: string }) {
   const confirm = async () => {
     setBusy(true);
     setError(null);
-    // Render the cancel control before the first progress event; very
-    // small projects otherwise complete before cancellation can even
-    // be offered.
-    setProgress({ stage: 'write', done: 0, total: Math.max(project.views.length + project.datasets.length, 1) });
     try {
+      await dataApi.beginLegacyImport(previewId);
+      // Render the cancel control only after its cancellation scope exists.
+      setProgress({ stage: 'write', done: 0, total: Math.max(project.views.length + project.datasets.length, 1) });
       // Let the progress/cancel control paint before the commit RPC starts;
       // otherwise even a physically fast click can only arrive after a small
       // project has already committed.

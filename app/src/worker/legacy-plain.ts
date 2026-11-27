@@ -9,11 +9,11 @@ import { rpc } from './errors';
 import {
   cancelScopeRequested,
   clearCancelScope,
-  registerCancelScope,
   throwWhenCancelled,
 } from './importer';
 import { writeLegacyVersion } from './legacy-records';
 import * as datasets from '../store/repo/datasets';
+import * as legacyRepo from '../store/repo/legacy';
 import * as projects from '../store/repo/projects';
 import type { Store, Tx } from '../store/types';
 import type { ImportProgress } from './api';
@@ -21,9 +21,11 @@ import {
   fileStem,
   plainTableNames,
   recordKeyJson,
+  settleBeforeCommit,
   toNameBytes,
   type FileInput,
   type PlainPreview,
+  type PlainSkippedColumn,
   type PlainTableInfo,
 } from './legacy-shared';
 import type { LegacyHandle } from '@legacy/epiora_legacy_wasm';
@@ -36,6 +38,19 @@ interface PlainState {
 }
 
 const plainPreviews = new Map<string, PlainState>();
+
+export function hasPlainPreview(previewId: string): boolean {
+  return plainPreviews.has(previewId);
+}
+
+function releasePlainPreview(previewId: string): boolean {
+  const state = plainPreviews.get(previewId);
+  if (state === undefined) return false;
+  state.handle.free();
+  plainPreviews.delete(previewId);
+  clearCancelScope(previewId);
+  return true;
+}
 
 /** Reads the unknown-layout file once into a legacy batch source and
  *  offers its non-metadata tables. The handle stays with the preview so
@@ -55,9 +70,9 @@ export async function inspectPlainLegacy(
     }
     const previewId = crypto.randomUUID();
     const sourceSha256 = (await importer()).sha256(f.bytes);
+    const skippedColumns = leg.legacyPlainBinaryColumns(h, tables) as PlainSkippedColumn[];
     plainPreviews.set(previewId, { sourceName: f.name, sourceSha256, tables, handle: h });
-    registerCancelScope(previewId);
-    return { previewId, sourceName: f.name, tables };
+    return { previewId, sourceName: f.name, tables, skippedColumns };
   } catch (e) {
     h.free();
     throw e;
@@ -92,6 +107,7 @@ export async function commitPlainLegacy(
   try {
     await checkCancel();
     const leg = await legacy();
+    const skippedColumns = leg.legacyPlainBinaryColumns(state.handle, chosen) as PlainSkippedColumn[];
     const mapped = leg.legacyPlainTables(state.handle, chosen) as {
       datasets: PlainTableInfo[];
       snapshots: Uint8Array[];
@@ -124,19 +140,31 @@ export async function commitPlainLegacy(
         });
         emit('write', i + 1, chosen.length);
       }
+      if (skippedColumns.length > 0) {
+        await legacyRepo.insertMigrationReport(tx, {
+          projectId: project.id,
+          version: 1,
+          json: JSON.stringify(
+            skippedColumns.map((s) => ({
+              kind: 'column_not_imported',
+              item: `${s.table}/${s.column}`,
+              reason: s.reason,
+            })),
+          ),
+        });
+      }
+      await settleBeforeCommit(checkCancel);
       emit('snapshot', 1, 1);
       await checkCancel();
       return project.id;
     });
   } finally {
-    state.handle.free();
-    plainPreviews.delete(previewId);
-    clearCancelScope(previewId);
+    releasePlainPreview(previewId);
   }
 }
 
 export function discardPlainPreview(previewId: string): void {
-  plainPreviews.get(previewId)?.handle.free();
-  plainPreviews.delete(previewId);
-  clearCancelScope(previewId);
+  if (!releasePlainPreview(previewId)) {
+    throw rpc('session_not_found', `plain table preview ${previewId} does not exist`);
+  }
 }
