@@ -216,6 +216,18 @@ export interface DataApi extends LegacyDataApi {
   storageEstimate(): Promise<StorageEstimate>;
   requestPersistence(): Promise<boolean>;
   /**
+   * Test hook: arms a one-shot hold immediately before the next CSV or
+   * legacy import commit's transaction boundary; the promise resolves
+   * when the worker reaches it. Only functional in builds made with
+   * `VITE_TEST_HOOKS=1`.
+   */
+  __holdNextImportCommit(): Promise<void>;
+  /**
+   * Test hook: releases the armed import commit hold. Only functional in
+   * builds made with `VITE_TEST_HOOKS=1`.
+   */
+  __releaseImportCommitHold(): Promise<void>;
+  /**
    * Test hook (Task 8's `Store.__simulateQuotaOnNextWrite`, Task 11
    * e2e): the store's next mutating statement fails `quota_exceeded`.
    * Only functional in builds made with `VITE_TEST_HOOKS=1`.
@@ -336,6 +348,18 @@ export const api: DataApi = {
     return { usage: est.usage ?? 0, quota: est.quota ?? 0, persisted };
   }),
   requestPersistence: wire(async () => (await navigator.storage?.persist?.()) ?? false),
+  __holdNextImportCommit: wire(() => {
+    if (import.meta.env.VITE_TEST_HOOKS !== '1') {
+      return Promise.reject(rpc('not_found', 'test hooks are disabled in this build'));
+    }
+    return importer.holdNextImportCommit();
+  }),
+  __releaseImportCommitHold: wire(() => {
+    if (import.meta.env.VITE_TEST_HOOKS !== '1') {
+      return Promise.reject(rpc('not_found', 'test hooks are disabled in this build'));
+    }
+    return importer.releaseImportCommitHold();
+  }),
   __simulateQuotaOnNextWrite: wire(() => {
     if (import.meta.env.VITE_TEST_HOOKS !== '1') {
       return Promise.reject(rpc('not_found', 'test hooks are disabled in this build'));

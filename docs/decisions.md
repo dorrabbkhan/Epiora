@@ -7859,7 +7859,7 @@ Files outside the Files block modified or created by full path:
 - `crates/epiora-legacy-wasm/src/plain.rs` — exposes the per-table binary columns skipped by plain-table decoding.
 - `app/src/worker/legacy.ts` — adds the explicit import-attempt cancellation arming RPC implementation and removes the commit-time re-arm.
 - `app/src/worker/legacy-plain.ts` — releases plain previews through the typed discard path and writes binary-column migration-report entries.
-- `app/src/worker/legacy-shared.ts` — carries the plain-preview skipped-column warning type and the shared two-second bounded pre-commit cancellation settle.
+- `app/src/worker/legacy-shared.ts` — carries the plain-preview skipped-column warning type; the corrective round removed the round-5 settle helper entirely.
 - `app/e2e/helpers/legacy.ts` — shared helper that synthesizes the small binary-column sqlite database in memory without adding a fixture.
 - `app/src/worker/api-legacy.ts` — exposes `beginLegacyImport` and `discardPlainPreview` on the worker RPC surface.
 - `app/src/worker/client.ts` — typed client wrappers for those two RPCs.
@@ -7869,4 +7869,22 @@ Files outside the Files block modified or created by full path:
 - `app/src/worker/legacy-plain.test.ts` — unit coverage for the wasm binary-column warning list and skipped-column snapshot shape.
 - `docs/decisions.md` — this entry.
 
-The two-second settle is deliberately inside the transaction immediately before commit: small previews otherwise write and navigate faster than a cancel click already started against the visible control can reach the worker, so the click was observably erased even though every checkpoint was correct. Input delivery itself was observed to take over one second under the three-engine parallel e2e load, so the window covers input latency rather than one paint. The bounded wait is not a fixture, parity or tolerance change; cancellation is polled during it, and the final checkpoint still rolls the whole transaction back.
+Cancellation determinism comes from a test-only hook rather than production latency. `app/src/worker/importer.ts` implements a one-shot pre-commit hold that is inert unless the build was made with `VITE_TEST_HOOKS=1`; `app/src/worker/api.ts` exposes `__holdNextImportCommit` and `__releaseImportCommitHold` in that lane. The e2e test arms the hold before starting the import, waits until the worker reaches the point immediately before transaction commit, clicks the real Cancel control, waits for that click's `cancelImport` RPC to finish in the worker, then releases the hold. The final checkpoint after the last yield reads the live cancellation flag immediately before commit and rolls the transaction back. Production imports have no settle window, polling loop or fixed timer.
+
+Fix-round-6 exact file accounting. Files block members modified by full path:
+- `app/e2e/legacy.spec.ts`
+- `app/src/worker/commit.ts`
+- `app/src/worker/importer.ts`
+
+Files outside the Files block modified or created by full path:
+- `app/e2e/helpers/import-cancel.ts` — new shared helpers arm the worker hold, release it only after the real Cancel click's RPC resolves, and discriminate the cancellation alert from the update toast.
+- `app/e2e/import.spec.ts` — the pre-existing CSV cancel test uses the same deterministic gate; the mandated five-repeat three-engine run reproduced its commit-before-click race in Firefox.
+- `app/src/worker/api.ts` — exposes the two `VITE_TEST_HOOKS=1`-gated hold/release RPCs in the existing test-hook lane.
+- `app/src/worker/client.ts` — typed client wrappers for those RPCs.
+- `app/src/worker/contract.test.ts` — pins the two added RPCs.
+- `app/src/worker/legacy.ts` — replaces the removed settle wait with the inert-in-production pre-commit gate.
+- `app/src/worker/legacy-plain.ts` — the same replacement at the plain-table commit boundary.
+- `app/src/worker/legacy-shared.ts` — deletes the settle helper.
+- `docs/decisions.md` — this entry.
+
+The CSV use is the same test-only correction, not a production behavior change: without `VITE_TEST_HOOKS=1` the gate returns immediately in both CSV and legacy commits.

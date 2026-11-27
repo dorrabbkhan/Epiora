@@ -275,6 +275,8 @@ describe('worker RPC contract', () => {
       'commitPlainLegacy',
       'discardPlainPreview',
       'beginLegacyImport',
+      '__holdNextImportCommit',
+      '__releaseImportCommitHold',
       'moveSessionsToCurrent',
       'openSession',
       'applyCommand',

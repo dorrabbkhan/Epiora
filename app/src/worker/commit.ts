@@ -15,7 +15,13 @@ import type { CommitResult, ImportProgress } from './api';
 import { writeCommittedVersion } from './commit-version';
 import { importer } from './engines';
 import { rpc } from './errors';
-import { destroySession, getSession, importedFor, throwWhenCancelled } from './importer';
+import {
+  awaitImportCommitHold,
+  destroySession,
+  getSession,
+  importedFor,
+  throwWhenCancelled,
+} from './importer';
 import { loadEntry, serializeSettings } from './snapshots';
 import * as datasets from '../store/repo/datasets';
 import type { Store } from '../store/types';
@@ -135,6 +141,10 @@ export async function commitImport(
         checkCancel,
         emit,
       });
+      await awaitImportCommitHold();
+      // The shared write path has its own checkpoints; this one reads the
+      // live flag after the final pre-commit yield of the outer transaction.
+      await checkCancel();
       return { datasetId, version };
     });
     return result;

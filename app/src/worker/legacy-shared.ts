@@ -194,25 +194,6 @@ export function enrichProject(
   };
 }
 
-/** A short settle window immediately before a legacy commit. The
- *  store writes are fast enough that even a click started while the
- *  Cancel control is visible can otherwise reach the worker only after
- *  the transaction has committed. Browser input delivery itself can be
- *  delayed on a contended machine, so the window has to cover input
- *  latency rather than only one paint; two seconds keeps those visible
- *  clicks effective while still rolling every write back. Cancellation
- *  is polled so a settled cancel exits early. */
-const PRE_COMMIT_CANCEL_WINDOW_MS = 2_000;
-const PRE_COMMIT_CANCEL_POLL_MS = 50;
-
-export async function settleBeforeCommit(checkCancel: () => Promise<void>): Promise<void> {
-  const deadline = Date.now() + PRE_COMMIT_CANCEL_WINDOW_MS;
-  do {
-    await new Promise((resolve) => setTimeout(resolve, PRE_COMMIT_CANCEL_POLL_MS));
-    await checkCancel();
-  } while (Date.now() < deadline);
-}
-
 /** Tables offered for plain import: the same non-metadata list the
  *  legacy detector's `legacy_layout_unknown` contract uses. */
 export function plainTableNames(tables: string[]): string[] {

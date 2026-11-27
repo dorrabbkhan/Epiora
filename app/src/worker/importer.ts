@@ -48,6 +48,57 @@ export function cancelScopeRequested(id: string): boolean {
   return cancelledScopes.has(id);
 }
 
+interface ImportCommitHold {
+  entered: Promise<void>;
+  enteredResolve: () => void;
+  release: Promise<void>;
+  releaseResolve: () => void;
+}
+
+let importCommitHold: ImportCommitHold | null = null;
+
+function testHooksDisabled(): Promise<never> {
+  return Promise.reject(rpc('not_found', 'test hooks are disabled in this build'));
+}
+
+/** Test hook (`VITE_TEST_HOOKS=1` only): arms a one-shot gate at the
+ *  import commit boundary. The returned promise resolves when a commit
+ *  reaches that gate; `releaseImportCommitHold` releases the worker. */
+export function holdNextImportCommit(): Promise<void> {
+  if (import.meta.env.VITE_TEST_HOOKS !== '1') return testHooksDisabled();
+  if (importCommitHold !== null) return importCommitHold.entered;
+  let enteredResolve!: () => void;
+  let releaseResolve!: () => void;
+  const entered = new Promise<void>((resolve) => {
+    enteredResolve = resolve;
+  });
+  const release = new Promise<void>((resolve) => {
+    releaseResolve = resolve;
+  });
+  importCommitHold = { entered, enteredResolve, release, releaseResolve };
+  return entered;
+}
+
+/** Releases the one-shot import commit gate. Without an armed gate this
+ *  is a no-op so a failing test's teardown cannot create a new error. */
+export function releaseImportCommitHold(): Promise<void> {
+  if (import.meta.env.VITE_TEST_HOOKS !== '1') return testHooksDisabled();
+  importCommitHold?.releaseResolve();
+  return Promise.resolve();
+}
+
+/** Awaits an armed test-only import commit gate. Production builds never
+ *  consult the gate state: without `VITE_TEST_HOOKS=1` this returns in
+ *  the same microtask and the commit path has no test-only wait. */
+export async function awaitImportCommitHold(): Promise<void> {
+  if (import.meta.env.VITE_TEST_HOOKS !== '1') return;
+  const hold = importCommitHold;
+  if (hold === null) return;
+  hold.enteredResolve();
+  await hold.release;
+  if (importCommitHold === hold) importCommitHold = null;
+}
+
 /** Yields once so the cancel RPC can run, then reads the live flag and
  *  throws the stable `cancelled` code when it is set (shared by CSV and
  *  legacy commits). The callback shape is deliberate: passing a boolean

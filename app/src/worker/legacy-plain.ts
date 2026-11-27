@@ -7,6 +7,7 @@ import { importer, legacy } from './engines';
 import { dataFile, pushFile } from './legacy-eptb';
 import { rpc } from './errors';
 import {
+  awaitImportCommitHold,
   cancelScopeRequested,
   clearCancelScope,
   throwWhenCancelled,
@@ -21,7 +22,6 @@ import {
   fileStem,
   plainTableNames,
   recordKeyJson,
-  settleBeforeCommit,
   toNameBytes,
   type FileInput,
   type PlainPreview,
@@ -153,7 +153,7 @@ export async function commitPlainLegacy(
           ),
         });
       }
-      await settleBeforeCommit(checkCancel);
+      await awaitImportCommitHold();
       emit('snapshot', 1, 1);
       await checkCancel();
       return project.id;

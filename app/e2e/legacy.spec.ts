@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { spawn, type ChildProcess } from 'node:child_process';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { expectNoA11yViolations } from './helpers/axe';
+import { armImportCommitHold, cancelAlert, cancelHeldImport } from './helpers/import-cancel';
 import {
   MISMATCH_DB,
   PLAIN_MDB,
@@ -105,11 +106,11 @@ test('preview_lists_report_entries_before_writing', async ({ page }) => {
 test('cancel_mid_import_rolls_back', async ({ page }) => {
   test.setTimeout(90_000);
   await walkToPreview(page);
+  await armImportCommitHold(page);
   await page.getByRole('button', { name: 'Confirm import' }).click();
   const cancel = page.getByRole('button', { name: 'Cancel import' });
-  await expect(cancel).toBeVisible();
-  await cancel.click();
-  await expect(page.getByRole('alert')).toContainText(/cancelled/i);
+  await cancelHeldImport(page, cancel);
+  await expect(cancelAlert(page)).toContainText(/cancelled/i);
 
   await expect
     .poll(() => page.evaluate(() => window.dataApi.listProjects().then((p) => p.length)))
@@ -153,11 +154,11 @@ test('cancel_mid_plain_table_import_rolls_back', async ({ page }) => {
   await page.getByRole('button', { name: 'Choose tables to import' }).click();
   await expect(page.getByRole('checkbox', { name: 'hosppts' })).toBeChecked();
 
+  await armImportCommitHold(page);
   await page.getByRole('button', { name: 'Import selected tables' }).click();
   const cancel = page.getByRole('button', { name: 'Cancel import' });
-  await expect(cancel).toBeVisible();
-  await cancel.click();
-  await expect(page.getByRole('alert')).toContainText(/cancelled/i);
+  await cancelHeldImport(page, cancel);
+  await expect(cancelAlert(page)).toContainText(/cancelled/i);
   await expect
     .poll(() => page.evaluate(() => window.dataApi.listProjects().then((p) => p.length)))
     .toBe(0);

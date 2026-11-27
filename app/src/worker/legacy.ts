@@ -13,6 +13,7 @@ import { dataFile, pushFile } from './legacy-eptb';
 import { rpc } from './errors';
 import { hasPlainPreview } from './legacy-plain';
 import {
+  awaitImportCommitHold,
   cancelScopeRequested,
   clearCancelScope,
   registerCancelScope,
@@ -27,7 +28,6 @@ import {
   enrichProject,
   projectEntries,
   recordKeyJson,
-  settleBeforeCommit,
   toNameBytes,
   type FileInput,
   type LegacyPreview,
@@ -201,7 +201,7 @@ export async function commitLegacy(
         version: 1,
         json: JSON.stringify(p.report),
       });
-      await settleBeforeCommit(checkCancel);
+      await awaitImportCommitHold();
       emit('snapshot', 1, 1);
       // Last checkpoint before commit: cancellation remains a complete
       // rollback even when it lands during the final report write.
